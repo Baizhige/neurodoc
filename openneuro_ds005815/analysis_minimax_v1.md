@@ -1,0 +1,144 @@
+# YOTO (You Only Think Once): An EEG Dataset for Tracking Spontaneous Cognitive Transitions and Multimodal Stimuli Responses in Resting-State and Task Phases
+
+**Dataset**: `openneuro_ds005815` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005815
+**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 205 | **Channels**: 30 | **Sampling Rate**: 250 Hz
+
+## Paradigm
+
+Participants engaged in resting-state (eyes open/closed) and task phases involving unimodal and multimodal stimuli (visual and auditory) and mental imagery, providing self-reported vividness ratings. The YOTO paradigm investigates spontaneous cognitive transitions and mental imagery across stimulus modalities with numeric condition codes and named state markers.
+
+## Kernel Responsibilities
+
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation, stim
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds005815
+
+## Event Structure
+
+| Event ID | Count (total) | Type | Meta Level | Meaning |
+|----------|---------------|------|------------|---------|
+| `6`-`9` | 6720 each | short | raw | Stimulus condition codes (decode from events.tsv) |
+| `TrialProc` | 6528 | long | raw | Trial procedure marker |
+| `23` | 840 | short | raw | Stimulus/response code 23 |
+| `22` | 420 | short | raw | Stimulus/response code 22 |
+| `21` | 420 | short | raw | Stimulus/response code 21 |
+| `StartInstruction` | 66 | long | raw | Instruction block onset |
+| `Eyeclosed` | 66 | long | raw | Eyes-closed resting onset |
+| `FixationBreak` | 66 | short | raw | Fixation break event |
+| `EyeOpen` | 66 | long | raw | Eyes-open resting onset |
+| `EndInstruction` | 66 | long | raw | Instruction block offset |
+| `88` | 64 | short | raw | Response/trigger code 88 |
+| `30`-`35` | 280 each | short | raw | Imagery/rating condition codes |
+| `99` | 101 | admin | raw | Admin/session marker |
+| `1` | 81 | short | raw | Condition code 1 |
+| `2`-`5` | 68 each | short | raw | Condition codes 2-5 |
+
+> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
+## STIM Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: Needs verification
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+
+## Tasks
+
+### Primary Task 1: Mental Imagery Classification (Visual vs Auditory vs Multimodal)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, target_events = [`visual_square`, `visual_male_face`, `visual_female_face`, `auditory_vowel_a`, `auditory_vowel_i`, `auditory_vowel_o`, `auditory_tone_C`, `auditory_tone_D`, `auditory_tone_E`, `multimodal_square_auditory`, `multimodal_face_auditory`]
+- **Label Route**: `stim`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `visual_square` | 1 | Visual stimulus (square) |
+  | `visual_male_face` | 1 | Visual stimulus (male face) |
+  | `visual_female_face` | 1 | Visual stimulus (female face) |
+  | `auditory_vowel_a` | 2 | Auditory stimulus (vowel a) |
+  | `auditory_vowel_i` | 2 | Auditory stimulus (vowel i) |
+  | `auditory_vowel_o` | 2 | Auditory stimulus (vowel o) |
+  | `auditory_tone_C` | 2 | Auditory stimulus (tone C) |
+  | `auditory_tone_D` | 2 | Auditory stimulus (tone D) |
+  | `auditory_tone_E` | 2 | Auditory stimulus (tone E) |
+  | `multimodal_square_auditory` | 3 | Multimodal stimulus (visual square + auditory) |
+  | `multimodal_face_auditory` | 3 | Multimodal stimulus (face + auditory) |
+- **Super Meta Notes**: 
+- **Evidence**:
+  - DOI: 10.1038/s41597.025.05881.1 — This paper describes the YOTO dataset (OpenNeuro ds005815) for multisensory perception and mental imagery research, featuring 30-channel EEG recordings during visual, auditory, and multimodal stimulus presentation followed by 4s imagery phases, with technical validation using ERP and PSD analyses.
+- **Kernel Notes**: Epoch from stimulus onset (tmin=0s) through 4s imagery period (tmax=4s). Map raw stimulus event labels to modality categories (visual=1, auditory=2, multimodal=3). Exclude trials with missing self-report ratings.
+
+
+### Primary Task 2: Publisher-defined BIDS task: Rest1
+- **Task Type**: classification/segmentation
+- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
+- **Label Route**: `Annotation`
+- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
+- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds005815 DOI: https://doi.org/10.18112/openneuro.ds005815.v2.0.1
+
+
+### Primary Task 3: Publisher-defined BIDS task: Rest2
+- **Task Type**: classification/segmentation
+- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
+- **Label Route**: `Annotation`
+- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
+- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds005815 DOI: https://doi.org/10.18112/openneuro.ds005815.v2.0.1
+
+
+### Normal Task 1: Multi-task Cognitive (long_event)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5 s, target_events = see Target Definition
+- **Label Route**: `Annotation`
+- **Target Definition**: Event-to-label mapping table below.
+- **Notes**: Numerical codes require decoding from events.tsv. Eyes-open/closed markers (`EyeOpen`, `Eyeclosed`) can be used for resting-state analysis.
+
+ | Event | y | Meaning |
+ |-------|---|---------|
+ | `99` | 0 | Admin/session marker |
+ | `1` | 1 | Condition code 1 |
+ | `2` | 2 | Condition code 2 |
+ | `3` | 3 | Condition code 3 |
+ | `5` | 4 | Condition code 5 |
+ | `StartInstruction` | 5 | Instruction onset |
+ | `Eyeclosed` | 6 | Eyes-closed onset |
+ | `FixationBreak` | 7 | Fixation break |
+ | `EyeOpen` | 8 | Eyes-open onset |
+ | `EndInstruction` | 9 | Instruction offset |
+ | `88` | 10 | Response code 88 |
+ | `6` | 11 | Condition code 6 |
+ | `7` | 12 | Condition code 7 |
+ | `8` | 13 | Condition code 8 |
+ | `9` | 14 | Condition code 9 |
+ | `23` | 15 | Code 23 |
+ | `22` | 16 | Code 22 |
+ | `21` | 17 | Code 21 |
+ | `30` | 18 | Imagery code 30 |
+ | `35` | 19 | Imagery code 35 |
+ | `25` | 20 | Imagery code 25 |
+ | `32` | 21 | Imagery code 32 |
+ | `31` | 22 | Imagery code 31 |
+ | `27` | 23 | Imagery code 27 |
+ | `28` | 24 | Imagery code 28 |
+ | `24` | 25 | Imagery code 24 |
+ | `33` | 26 | Imagery code 33 |
+ | `26` | 27 | Imagery code 26 |
+ | `29` | 28 | Imagery code 29 |
+ | `34` | 29 | Imagery code 34 |
+
+## Data Quality Notes
+
+- Numerical event codes require mapping from dataset events.tsv or README.
+- Small dataset (20 subjects); low statistical power for rare conditions.
+- Apply bandpass filter (1-40 Hz) and artifact rejection prior to epoching.
+
+## References
+
+- **Reference**: `YOTO (You Only Think Once): An EEG Dataset for Tracking Spontaneous Cognitive Transitions and Multimodal Stimuli Responses in Resting-State and Task Phases`

@@ -1,0 +1,62 @@
+# EEG responses to continuous naturalistic speech
+
+**Dataset**: `openneuro_ds004408` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004408
+**Category**: High-level Mental | **Subjects**: 380 | **Files (Completed)**: 380
+**Channels**: 128 | **Sampling Rate**: 512 Hz
+
+## Paradigm
+
+Participants listened to continuous segments of an audiobook version of 'The Old Man and the Sea' to record EEG responses to naturalistic narrative speech and language processing. The study investigates low-frequency cortical entrainment to speech and phoneme-level processing. No trial-level event markers are present; recordings are continuous.
+
+## Kernel Responsibilities
+
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004408
+
+## Event Structure
+
+_No event markers detected (`no_events`). This dataset contains continuous EEG recordings during naturalistic speech listening without trial-level annotations._
+
+> **Event Type Description**:
+> - `short`: short stimulus onset marker (presentation duration <2 s), for `epoch_by_event_hdf5`
+> - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
+> - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
+> - `admin`: system/boundary marker, **not used for epoch**
+
+| Event ID | Count (total) | Type | Meta Level | Meaning |
+|----------|---------------|------|------------|---------|
+| `no_events` | N/A | admin | raw | No discrete event markers detected; use continuous segmentation or external metadata labels. |
+
+## Tasks
+
+### Primary Task 1: Publisher-defined BIDS task: Listening
+- **Task Type**: classification/segmentation
+- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
+- **Label Route**: `Annotation`
+- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
+- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004408 DOI: https://doi.org/10.18112/openneuro.ds004408.v1.0.8
+
+
+### Normal Task 1: Continuous Segmentation (segmentation)
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
+- **Label Route**: `Annotation`
+- **Target Definition**: N/A (unsupervised segmentation)
+- **Notes**: No trial markers; use sliding window segmentation. Large dataset (380 files). Suitable for EEG-speech alignment analysis using stimulus audio envelope.
+## Data Quality Notes
+
+- No trial-level event markers; continuous listening paradigm
+- Very large dataset (380 files); batch processing required
+- 128-channel EEG at 512 Hz
+
+## References
+
+- **Reference**: `Low-frequency cortical entrainment to speech reflects phoneme-level processing`
