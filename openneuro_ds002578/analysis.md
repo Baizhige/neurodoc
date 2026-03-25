@@ -1,0 +1,58 @@
+# Visual Oddball Task (256 channels)
+
+**Dataset**: `openneuro_ds002578` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002578
+**Category**: Sensory/Response | **Subjects**: N/A | **Files (Completed)**: 2 | **Channels**: 256.0 | **Sampling Rate**: 256.0 Hz
+
+## Paradigm
+
+A visual oddball task designed to study selective attention using event-related potentials with high-density 256-channel electrode coverage. Despite the task description implying trial-level stimuli (standard vs. oddball), no event markers were detected in the BIDS EEG files. The dataset contains only 2 completed files and is a very small subset.
+
+## Kernel Responsibilities
+
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002578
+
+## Event Structure
+
+| Event ID | Count (total) | Type | Meta Level | Meaning |
+|----------|---------------|------|------------|---------|
+| *(none)* | - | - | raw | No event markers detected in EEG files |
+
+> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
+> - `long`: sustained-state marker (>=2 s), for `epoch_by_long_event_hdf5`
+> - `rest`: resting-state segment marker, for `epoch_by_segmentation_hdf5`
+> - `admin`: system/boundary marker, **exclude** from epoch target_events
+
+## Tasks
+
+### Primary Task 1: ERP target detection (P300/Oddball)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
+- **Label Route**: `Annotation`
+- **Target Definition**: Target vs non-target stimulus events
+- **Evidence**: P300/oddball paradigm appears as core study objective. Source: https://openneuro.org/datasets/ds002578 DOI: https://doi.org/10.1523/JNEUROSCI.3477-07.2007
+
+
+### Normal Task 1: Resting / Continuous Segmentation (resting)
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
+- **Label Route**: `Annotation`
+- **Target Definition**: N/A (null (no trial-level labels available))
+- **Notes**: Only 2 completed files available - very small dataset. High-density 256-channel EEG provides spatial richness. Check events.tsv directly for potential trial markers not captured in locator pipeline.
+## Data Quality Notes
+
+- Only 2 completed EEG files - extremely limited dataset size.
+- No event markers detected despite visual oddball paradigm description.
+- High-density 256-channel array; verify electrode positions from channel info files.
+
+## References
+
+- **Reference**: `Visual Oddball Task (256 channels)`

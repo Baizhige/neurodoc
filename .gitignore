@@ -1,0 +1,34 @@
+# Project-specific exclusions
+/Script/
+**/references/
+**/references/**
+
+# Editor and workspace files
+.vscode/
+.idea/
+.claude/
+
+# OS-generated hidden files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# LaTeX / document build artifacts
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.synctex.gz
+
+# Temporary files
+*.tmp
+*.temp
+*~
