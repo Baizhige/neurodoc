@@ -7,28 +7,27 @@
 
 ## Paradigm
 
-This dataset contains a visual attention task with stimulus presentation and behavioral responses, recorded using high-density 256-channel EEG.
+This dataset contains a visual stimulus–response task recorded using high-density 256-channel EEG.
 
-Event information is present in both EEG annotations and BIDS `events.tsv` files. However, semantic labeling of events is incomplete:
+Event markers are present in both EEG annotations and BIDS `events.tsv` files. However, semantic labeling is largely missing:
 
-- The `trial_type` column is empty
-- Event meanings are not explicitly standardized
-- Raw event markers include stimulus-related and response-related signals
+- `trial_type` is completely empty
+- `stim_file` is empty
+- `response_time` is empty
 
-Therefore, while the dataset supports stimulus–response paradigms, the specific classification as a "visual oddball task" is not directly verifiable from the available event annotations alone.
+As a result, high-level experimental structure (e.g., target vs standard, oddball paradigm) cannot be directly verified from the dataset.
 
 ---
 
 ## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract raw event markers from EEG annotations and `events.tsv`
-- **Type 2 (Raw + Super meta integration)**: Required if semantic mapping (e.g., target vs standard) is needed
-- **Type 3 (Label-route orchestration)**: Route extracted labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`)
+- **Type 1 (Raw-meta extraction only)**: Extract raw event markers from annotations and `events.tsv`
+- **Type 2 (Raw + Super meta integration)**: Required for reconstructing semantic labels
+- **Type 3 (Label-route orchestration)**: Route extracted labels to EEGUnity-compatible channels
 
 > **Selected Mode**: Type 1 + Type 3  
-> **Why**: Raw event markers are present and can be extracted; semantic mapping is not directly available  
+> **Why**: Raw markers exist but lack semantic mapping  
 > **Primary Label Routes**: Annotation  
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002578
 
 ---
 
@@ -36,73 +35,47 @@ Therefore, while the dataset supports stimulus–response paradigms, the specifi
 
 | Event ID | Count (approx) | Type | Meta Level | Meaning |
 |----------|----------------|------|------------|---------|
-| `Picture` | ~2300 | short | raw | Visual stimulus presentation |
-| `Response` | ~2300 | short | raw | Behavioral response |
-| `31–45`, `203`, `217`, `237` | multiple | short | raw | Trigger codes (semantics unknown) |
-| `boundary` | few | admin | raw | Data discontinuity marker |
+| `Picture` | ~2970 | short | raw | Visual stimulus event |
+| `Response` | ~600 | short | raw | Behavioral response |
+| `31–45` | ~120 each | short | raw | Trigger codes (unknown semantics) |
+| `203`, `217`, `237` | rare | short | raw | Rare trigger events |
+| `boundary` | ~29 | admin | raw | Recording discontinuity |
 
 ### Notes
 
-- Event markers are present in both EEG annotations and `events.tsv`
 - Total events per file: ~4678–4679
-- `trial_type` column is empty → no high-level labels
-- `value` column likely contains trigger codes
-- `stim_file` contains stimulus file references
-- `response_time` provides behavioral timing information
-
-> **Event Type Definitions**  
-> - `short`: discrete events (stimulus or response)  
-> - `admin`: system markers (e.g., `boundary`, should be excluded from modeling)
+- `trial_type`, `stim_file`, `response_time` are all empty
+- `value` column contains all usable event information
+- Semantic interpretation requires external mapping
 
 ---
 
 ## Tasks
 
-### Primary Task 1: Stimulus–Response Reaction Time Modeling (Derived)
-
-- **Task Type**: regression / classification (optional)
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -1 s, tmax = 2 s
-- **Label Route**: Annotation
-- **Meta Level**: super
-
-#### Description
-
-Reaction time can be derived using:
-
-- stimulus events (`Picture`)
-- response events (`Response`)
-- `response_time` column (if valid)
-
-#### Notes
-
-- Requires mapping between stimulus and subsequent response
-- Event pairing logic must be implemented explicitly
-- No explicit `target` / `oddball` labels available
-
----
-
-### Normal Task 1: Continuous Segmentation
+### Normal Task: Continuous Segmentation
 
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
-- **Label Route**: Annotation
+- **Parameters**: segment_length = 2.0 s, overlap = 0.5
 
-#### Notes
+### Optional Task: Stimulus–Response Pairing (Requires Reconstruction)
 
-- Suitable fallback due to lack of standardized event labels
-- Can be applied across full continuous EEG recording
+- Requires:
+  - pairing `Picture` → `Response`
+  - decoding trigger codes (`31–45`)
+- Not directly supported by dataset metadata
 
 ---
 
 ## Data Quality Notes
 
-- Only 2 EEG files available → extremely limited dataset size
-- High-density 256-channel EEG
-- Event markers exist but lack semantic labeling (`trial_type` empty)
-- Presence of `boundary` events indicates discontinuities in the data
-- Trigger codes (`value`) require external mapping for interpretation
+- Only 2 EEG files → extremely small dataset
+- High-density (256 channels)
+- Event markers present but **no semantic labels**
+- `response_time` not recorded
+- `stim_file` not recorded
+- Presence of `boundary` events (discontinuities)
+- Trigger codes require manual decoding
 
 ---
 
