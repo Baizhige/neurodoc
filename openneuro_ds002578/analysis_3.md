@@ -70,12 +70,10 @@ Summary of task-relevant coded triggers:
 - **Label Route**: `Annotation`
 - **Meta Level**: raw
 - **Target Definition**:
-
   | Event | y | Meaning |
   |-------|---|---------|
   | `33`, `44` | 1 | Target / oddball stimulus |
   | `31`, `34`, `35`, `41`, `42`, `43`, `45` | 0 | Non-target / distractor stimulus |
-
 - **Notes**: event semantics are directly supported by `events.json`, but this is a downstream decoding formulation rather than the main analysis explicitly reported in the cited paper.
 
 ### Normal Task 2: Condition-code Classification
@@ -85,7 +83,6 @@ Summary of task-relevant coded triggers:
 - **Label Route**: `Annotation`
 - **Meta Level**: raw
 - **Target Definition**:
-
   | Event | y | Meaning |
   |-------|---|---------|
   | `31` | 31 | Non-target, attend 3 / cue 1 |
@@ -97,7 +94,6 @@ Summary of task-relevant coded triggers:
   | `43` | 43 | Non-target, attend 4 / cue 3 |
   | `44` | 44 | Target, attend 4 / cue 4 |
   | `45` | 45 | Non-target, attend 4 / cue 5 |
-
 - **Notes**: useful for finer-grained condition decoding, but not explicitly framed as the primary task in the cited paper.
 
 ### Normal Task 3: Continuous Segmentation
@@ -109,7 +105,6 @@ Summary of task-relevant coded triggers:
 - **Notes**: useful as a generic fallback, but this dataset does contain trial-related events, so segmentation should not replace event-based paradigms when task decoding is the goal.
 
 ## Data Quality Notes
-
 - The dataset is small: 2 subjects and 2 EEG recordings.
 - Event markers are present and abundant; the main issue is semantic normalization, not event absence.
 - EEG sidecars confirm 256 EEG channels and 256 Hz sampling.
@@ -117,7 +112,6 @@ Summary of task-relevant coded triggers:
 - `participants.tsv` contains a duplicated `participant_id` column header, which is a minor metadata formatting issue.
 
 ## References
-
 - `dataset_description.json`
 - `README`
 - `events.json`
