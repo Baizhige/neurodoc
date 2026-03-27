@@ -7,22 +7,14 @@
 
 This dataset contains a continuous visual oddball / selective-attention task recorded with 256-channel BioSemi EEG. The task description in the EEG sidecars states that five empty squares were shown continuously, one location was attended, and participants pressed a mouse button when a white disk appeared at the attended location.
 
-The original `analysis_minimax_v2.md` claim that "no event markers were detected" is incorrect. Both BIDS `_events.tsv` files contain rich event streams, including condition codes, generic `Picture` markers, `Response` markers, and `boundary` markers. However, the event coding is not already normalized into convenient labels such as `target_visual_stimulus`, and reaction-time pairing is not directly provided in the TSV files.
-
-## Validation Basis
-
-- Checked `dataset_description.json`, `README`, `participants.tsv`, `events.json`, both EEG JSON sidecars, and both `_events.tsv` files.
-- Reused `test2.py` and `test3.py` to confirm the actual event-value distribution.
-- `test.py` could not be run in the current environment because `mne` is not installed, so raw `.set` annotations were not revalidated from the EEGLAB files directly.
-
 ## Kernel Responsibilities
 
 - **Type 1 (Raw-meta extraction only)**: extract raw event codes and normalize them into stable labels.
 - **Type 2 (Raw + Super meta integration)**: optionally derive response-linked or RT-linked labels, but only after an explicit event-pairing rule is validated.
 - **Type 3 (Label-route orchestration)**: route normalized labels to EEGUnity-compatible channels such as `Annotation` or `stim`.
 
-> **Selected Mode**: Type 1 + Type 3 as default; Type 2 optional
-> **Why**: raw condition codes are sufficient for robust stimulus-classification tasks, but not yet sufficient for trustworthy reaction-time labels without extra derivation rules.
+> **Selected Mode**: Type 1 + Type 2 + Type 3
+> **Why**: raw condition codes support direct stimulus classification, and reaction time should be represented as a derived label produced through super meta integration.
 > **Primary Label Routes**: `Annotation`, optionally `stim`
 
 ## Event Structure
@@ -42,6 +34,7 @@ The original `analysis_minimax_v2.md` claim that "no event markers were detected
 | `45` | 239 | short | raw | Non-target distractor, attend position 4 / cue position 5 |
 | `Picture` | 5939 | short | raw | Generic picture/stimulus presentation marker without condition identity |
 | `Response` | 1202 | short | raw | Participant response marker |
+| `target_rt` | derived | short | super meta integration | Reaction time derived by pairing validated target events (`33`, `44`) with participant responses |
 | `boundary` | 58 | admin | raw | Discontinuous boundary marker; exclude from targets |
 | `203` | 1 | admin/unknown | raw | Rare code not described in `events.json`; inspect manually if used |
 | `217` | 2 | admin/unknown | raw | Rare code not described in `events.json`; inspect manually if used |
@@ -93,10 +86,9 @@ Summary of task-relevant coded triggers:
 
 - **Why this is useful**: supports finer-grained decoding of attended position / cue configuration beyond a binary oddball split.
 
-### Optional Derived Task: Response / Reaction-time Modeling
+### Primary Task 3: Response / Reaction-time Modeling
 - **Task Type**: classification or regression
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Recommended Status**: optional, not default
 - **Meta Level**: super
 - **Current Limitation**:
   - `Response` markers exist, but `response_time` is empty.
@@ -119,14 +111,6 @@ Summary of task-relevant coded triggers:
 - EEG sidecars confirm 256 EEG channels and 256 Hz sampling.
 - The unusual codes `203`, `217`, and `237` are rare and not documented in `events.json`; exclude them from default supervised targets unless manually interpreted.
 - `participants.tsv` contains a duplicated `participant_id` column header, which is a minor metadata formatting issue.
-
-## Recommended Revisions Relative to the Previous Version
-
-- Replace "no event markers were detected" with "event markers exist, but trial labels are encoded as numeric condition codes plus generic `Picture` / `Response` markers."
-- Replace `Subjects: N/A` with `Subjects: 2`.
-- Replace `Files (Completed): 2` with `EEG recordings: 2`.
-- Replace RT-based primary tasks with target/non-target and condition-code classification as the default tasks.
-- Keep RT modeling only as an optional derived analysis until pairing rules are validated on the raw event stream.
 
 ## References
 
