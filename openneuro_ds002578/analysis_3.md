@@ -55,11 +55,9 @@ Summary of task-relevant coded triggers:
 - **Label Route**: `Annotation`
 - **Meta Level**: super meta integration
 - **Target Definition**:
-
   | Event | y | Meaning |
   |-------|---|---------|
   | `33`, `44` | continuous | Reaction time for validated correct target-response trials |
-
 - **Super Meta Notes**: derive `target_rt` by pairing target-coded events (`33`, `44`) with their associated participant responses and retaining only correct target-response trials.
 - **Evidence**:
   - DOI: `10.1523/JNEUROSCI.3477-07.2007` studies this visual selective-attention oddball paradigm, analyzes correct target-response trials with responses 150-1000 ms after target onset, and relates single-trial EEG activity to reaction time. The paper also reports two 253-channel recordings used for source localization support.
