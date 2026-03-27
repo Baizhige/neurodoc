@@ -1,82 +1,119 @@
 # Visual Oddball Task (256 channels)
 
-**Dataset**: `openneuro_ds002578` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002578
-**Category**: Sensory/Response | **Subjects**: N/A | **Files (Completed)**: 2 | **Channels**: 256.0 | **Sampling Rate**: 256.0 Hz
+**Dataset**: `ds002578` | **Data collection**: 2004 | **URL**: https://openneuro.org/datasets/ds002578
+**Category**: Sensory/Response | **Subjects**: 2 | **EEG recordings**: 2 | **Channels**: 256 | **Sampling Rate**: 256 Hz
 
 ## Paradigm
 
-A visual oddball task designed to study selective attention using event-related potentials with high-density 256-channel electrode coverage. Despite the task description implying trial-level stimuli (standard vs. oddball), no event markers were detected in the BIDS EEG files. The dataset contains only 2 completed files and is a very small subset.
+This dataset contains a continuous visual oddball / selective-attention task recorded with 256-channel BioSemi EEG. The task description in the EEG sidecars states that five empty squares were shown continuously, one location was attended, and participants pressed a mouse button when a white disk appeared at the attended location.
 
 ## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+- **Type 1 (Raw-meta extraction only)**: extract raw event codes and normalize them into stable labels.
+- **Type 2 (Raw + Super meta integration)**: optionally derive response-linked or RT-linked labels, but only after an explicit event-pairing rule is validated.
+- **Type 3 (Label-route orchestration)**: route normalized labels to EEGUnity-compatible channels such as `Annotation` or `stim`.
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002578
+> **Selected Mode**: Type 1 + Type 2 + Type 3
+> **Why**: raw condition codes support direct stimulus classification, and reaction time should be represented as a derived label produced through super meta integration.
+> **Primary Label Routes**: `Annotation`, optionally `stim`
 
 ## Event Structure
 
+`events.json` defines the semantic meaning of the coded event values. Across both subjects, the verified totals are:
+
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| *(none)* | - | - | raw | No event markers detected in EEG files |
+| `33` | 240 | short | raw | Target, oddball, attend position 3 / cue position 3 |
+| `44` | 239 | short | raw | Target, oddball, attend position 4 / cue position 4 |
+| `31` | 240 | short | raw | Non-target distractor, attend position 3 / cue position 1 |
+| `34` | 239 | short | raw | Non-target distractor, attend position 3 / cue position 4 |
+| `35` | 240 | short | raw | Non-target distractor, attend position 3 / cue position 5 |
+| `41` | 238 | short | raw | Non-target distractor, attend position 4 / cue position 1 |
+| `42` | 239 | short | raw | Non-target distractor, attend position 4 / cue position 2 |
+| `43` | 240 | short | raw | Non-target distractor, attend position 4 / cue position 3 |
+| `45` | 239 | short | raw | Non-target distractor, attend position 4 / cue position 5 |
+| `Picture` | 5939 | short | raw | Generic picture/stimulus presentation marker without condition identity |
+| `Response` | 1202 | short | raw | Participant response marker |
+| `target_rt` | derived | short | super meta integration | Reaction time derived by pairing validated target events (`33`, `44`) with participant responses |
+| `boundary` | 58 | admin | raw | Discontinuous boundary marker; exclude from targets |
+| `203` | 1 | admin/unknown | raw | Rare code not described in `events.json`; inspect manually if used |
+| `217` | 2 | admin/unknown | raw | Rare code not described in `events.json`; inspect manually if used |
+| `237` | 1 | admin/unknown | raw | Rare code not described in `events.json`; inspect manually if used |
 
-> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-> - `long`: sustained-state marker (>=2 s), for `epoch_by_long_event_hdf5`
-> - `rest`: resting-state segment marker, for `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **exclude** from epoch target_events
+Summary of task-relevant coded triggers:
+
+- Target-coded events: `33`, `44` -> 479 total
+- Non-target-coded events: `31`, `34`, `35`, `41`, `42`, `43`, `45` -> 1675 total
+- The `trial_type`, `response_time`, and `stim_file` columns are present but entirely empty in both `_events.tsv` files.
 
 ## Tasks
 
-### Primary Task 1: Visual Oddball Target Detection with Reaction Time Classification
+### Primary Task 1: Target-response Reaction Time Analysis
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: `tmin = -0.2 s`, `tmax = 0.8 s`, `target_events = ['33', '44']`
+- **Label Route**: `Annotation`
+- **Meta Level**: super meta integration
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `33`, `44` | continuous | Reaction time for validated correct target-response trials |
+- **Super Meta Notes**: derive `target_rt` by pairing target-coded events (`33`, `44`) with their associated participant responses and retaining only correct target-response trials.
+- **Evidence**:
+  - DOI: `10.1523/JNEUROSCI.3477-07.2007` studies this visual selective-attention oddball paradigm, analyzes correct target-response trials with responses 150-1000 ms after target onset, and relates single-trial EEG activity to reaction time. The paper also reports two 253-channel recordings used for source localization support.
+- **Kernel Notes**: this is the most literature-supported primary task. The current BIDS `_events.tsv` files do not provide precomputed `response_time`, so trial construction and RT derivation must be done explicitly before label generation.
+
+### Normal Task 1: Target vs Non-target Oddball Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -1 s, tmax = 2 s, target_events = [`target_visual_stimulus`]
+- **Epoch Parameters**: `tmin = -0.2 s`, `tmax = 0.8 s`, `target_events = ['33', '44', '31', '34', '35', '41', '42', '43', '45']`
 - **Label Route**: `Annotation`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|
-  | `target_visual_stimulus` | 1 | Fast response (RT below median) |
-  | `target_visual_stimulus` | 0 | Slow response (RT above median) |
-- **Super Meta Notes**: Labels derived from raw target stimulus events combined with button press response times. Kernel step: Extract target stimulus onset events, compute RT from stimulus to button_press_response, binarize using median RT threshold (fast=1, slow=0).
-- **Evidence**:
-  - DOI: 10.1523/jneurosci.3477.07.2007 — This 2007 J Neurosci paper analyzes visual oddball EEG data to show that larger medial prefrontal theta (4.5 Hz) complexes precede faster motor responses (button presses), using ICA to decompose 31-channel (and 253-channel) target response epochs and correlate single-trial low-theta power with reaction time quantiles.
-- **Kernel Notes**: Verify event ID mapping from events.tsv. If `target_visual_stimulus` is not present, check for standard oddball event labels (e.g., 'target', 'oddball'). Button press events required for RT calculation; verify presence in raw data. Parameter tmax=2s allows capture of P300 response post-stimulus. (replaces Primary Task 1 from original analysis.md)
+  | `33`, `44` | 1 | Target / oddball stimulus |
+  | `31`, `34`, `35`, `41`, `42`, `43`, `45` | 0 | Non-target / distractor stimulus |
+- **Notes**: event semantics are directly supported by `events.json`, but this is a downstream decoding formulation rather than the main analysis explicitly reported in the cited paper.
 
-### Primary Task 2: Continuous Reaction Time Regression
-- **Task Type**: regression
+### Normal Task 2: Condition-code Classification
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -1 s, tmax = 2 s, target_events = [`target_visual_stimulus`]
+- **Epoch Parameters**: `tmin = -0.2 s`, `tmax = 0.8 s`, `target_events = ['31', '33', '34', '35', '41', '42', '43', '44', '45']`
 - **Label Route**: `Annotation`
-- **Meta Level**: super
+- **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|
-  | `target_visual_stimulus` | continuous | Reaction time in milliseconds |
-- **Super Meta Notes**: Derived from raw events [`target_visual_stimulus`, `button_press_response`] by computing time difference between target stimulus onset and button press. Kernel step: For each target stimulus epoch, find subsequent button press event, calculate RT = button_press_time - stimulus_onset_time.
-- **Evidence**:
-  - DOI: 10.1523/jneurosci.3477.07.2007 — This 2007 J Neurosci paper analyzes visual oddball EEG data to show that larger medial prefrontal theta (4.5 Hz) complexes precede faster motor responses (button presses), correlating single-trial low-theta power with continuous reaction time values.
-- **Kernel Notes**: Requires both target stimulus and button press events. Verify event IDs from events.tsv. Output continuous RT values in milliseconds (or seconds). If button press events unavailable, fall back to classification task above.
+  | `31` | 31 | Non-target, attend 3 / cue 1 |
+  | `33` | 33 | Target, attend 3 / cue 3 |
+  | `34` | 34 | Non-target, attend 3 / cue 4 |
+  | `35` | 35 | Non-target, attend 3 / cue 5 |
+  | `41` | 41 | Non-target, attend 4 / cue 1 |
+  | `42` | 42 | Non-target, attend 4 / cue 2 |
+  | `43` | 43 | Non-target, attend 4 / cue 3 |
+  | `44` | 44 | Target, attend 4 / cue 4 |
+  | `45` | 45 | Non-target, attend 4 / cue 5 |
+- **Notes**: useful for finer-grained condition decoding, but not explicitly framed as the primary task in the cited paper.
 
-### Normal Task 1: Resting / Continuous Segmentation
-- **Task Type**: regression
+### Normal Task 3: Continuous Segmentation
+- **Task Type**: regression / self-supervised pretraining support
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
+- **Epoch Parameters**: `segment_length = 2.0 s`, `overlap = 0.5`
 - **Label Route**: `Annotation`
-- **Target Definition**: N/A (null - no trial-level labels available)
-- **Notes**: Only 2 completed files available - very small dataset. High-density 256-channel EEG provides spatial richness. Check events.tsv directly for potential trial markers not captured in locator pipeline.
-
+- **Target Definition**: `null`
+- **Notes**: useful as a generic fallback, but this dataset does contain trial-related events, so segmentation should not replace event-based paradigms when task decoding is the goal.
 
 ## Data Quality Notes
-
-- Only 2 completed EEG files - extremely limited dataset size.
-- No event markers detected despite visual oddball paradigm description.
-- High-density 256-channel array; verify electrode positions from channel info files.
+- The dataset is small: 2 subjects and 2 EEG recordings.
+- Event markers are present and abundant; the main issue is semantic normalization, not event absence.
+- EEG sidecars confirm 256 EEG channels and 256 Hz sampling.
+- The unusual codes `203`, `217`, and `237` are rare and not documented in `events.json`; exclude them from default supervised targets unless manually interpreted.
+- `participants.tsv` contains a duplicated `participant_id` column header, which is a minor metadata formatting issue.
 
 ## References
-
-- **Reference**: `Visual Oddball Task (256 channels)`
+- `dataset_description.json`
+- `README`
+- `events.json`
+- `sub-001/eeg/sub-001_task-attention_events.tsv`
+- `sub-002/eeg/sub-002_task-attention_events.tsv`
