@@ -1,8 +1,13 @@
 # sleepdata_shhs
 
 **Dataset**: `sleepdata_shhs` | **Year**: 1995-2003 (SHHS-1: 1995-1998; SHHS-2: 2001-2003) | **URL**: https://sleepdata.org/datasets/shhs
-**Category**: Biological State | **Subjects**: 6,441 (SHHS-1); 3,295 follow-up (SHHS-2) | **Files (Completed)**: 5,786 EDF (SHHS-1) + 532 EDF (SHHS-2)
-**Channels**: 14 (per EDF) | **Sampling Rate**: 125 Hz (EEG/EMG/ECG primary), 50 Hz (EOG), 10 Hz (respiratory), 1 Hz (SpO2/HR); exported EDF channels are resampled to 125 Hz
+**Category**: Biological State | **Subjects**: 6,441 (SHHS-1); 3,295 follow-up (SHHS-2) | **Files (Completed)**: 5,793 EDF (SHHS-1) + 2,651 EDF (SHHS-2)
+**Channels**: ~14 (per EDF) | **Sampling Rate**: 
+- **SHHS-1**: 125 Hz (EEG/EMG/ECG), 50 Hz (EOG), 10 Hz (respiratory), 1 Hz (SpO2/HR)
+- **SHHS-2**: 125 Hz (EEG/EMG), 250 Hz (ECG), 64 Hz (EOG), 8 Hz (respiratory), 1 Hz (SpO2/HR)
+*(Note: exported NSRR EDF channels are often upsampled to a uniform 125 Hz, but native resolutions differ)*
+
+**Manual Review**: Jiping Cui
 
 ## Paradigm
 
@@ -63,10 +68,10 @@ Annotations are available in both original Profusion XML and NSRR-processed XML 
   | `Stage 3|3` or `Stage 4|4` | 3 | N3/SWS |
   | `REM|5` | 4 | REM |
 - **Evidence**:
-  - DOI: `10.5665/sleep.5774` — National Sleep Research Resource provides SHHS PSG data with expert sleep-stage annotations in 30-second epochs
+  - DOI: `10.5665/sleep.5774` — (Dataset & Labeling Baseline) The official NSRR resource paper validating the provision of SHHS PSG data with standardized expert sleep-stage annotations in 30-second epochs, enabling 5-class sleep staging benchmarks.
 - **Kernel Notes**: Stage 4 is rare; merge Stage 3 and Stage 4 into N3/SWS class for robust modeling. (replaces Normal Task 1 from original analysis.md)
 
-### Primary Task 2: Sleep Spindle Density Regression in N2 Sleep
+### Primary Task 2: Sleep Spindle Count Regression in N2 Sleep Epochs
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`Stage 2|2`]
@@ -75,11 +80,11 @@ Annotations are available in both original Profusion XML and NSRR-processed XML 
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|
-  | `Stage 2|2` epochs | continuous | Spindle density (spindles per minute) computed from N2 sleep EEG |
-- **Super Meta Notes**: Derived from raw EEG signal in N2 (`Stage 2|2`) epochs by wavelet band-pass filtering (FC=8-18 Hz) and spindle detection (0.3-3.0 s duration windows). Kernel step: Apply Morlet wavelet transform centered at 13.5 Hz, detect spindle events via amplitude thresholding, compute density = (spindle count / epoch duration in minutes).
+  | `Stage 2|2` epochs | integer | Absolute count of distinct sleep spindles detected within the 30-second N2 epoch |
+- **Super Meta Notes**: Derived from raw EEG signal in N2 epochs using automated detection algorithms (e.g., Luna). Kernel step: Apply Morlet wavelet transform (typically focusing on 11-15 Hz fast spindle band), detect events via amplitude thresholding (0.5-3.0 s duration windows), and aggregate the discrete integer count of spindles per 30-second epoch.
 - **Evidence**:
-  - DOI: `10.1038/ncomms15930` — Characterizes sleep spindles in 11,630 individuals from NSRR including SHHS (N=5,793), analyzing spindle density, amplitude, duration and frequency during N2 sleep as heritable quantitative traits
-- **Kernel Notes**: Requires EEG signal processing; compute spindle properties per N2 epoch. Spindle density is primary target; amplitude, duration, frequency are optional additional regression targets.
+  - DOI: `10.1038/ncomms15930` — Purcell et al. characterizes sleep spindles in 11,630 individuals from NSRR (including SHHS). While the paper aggregates macro-level spindle density for GWAS, the core methodology relies on precise micro-level automated spindle detection algorithms on N2 EEG, justifying epoch-level spindle quantification.
+- **Kernel Notes**: Avoid confusing macro-level "density" (subject-level trait) with micro-level "count" (epoch-level trait). This benchmark task predicts the absolute spindle count per 30s epoch. Advanced regression variants can target mean amplitude or peak frequency within the epoch.
 
 ### Normal Task 2: Sleep vs Wake Detection (binary)
 - **Task Type**: classification
@@ -129,12 +134,12 @@ Annotations are available in both original Profusion XML and NSRR-processed XML 
 - Desaturation labels may be missing or partially inconsistent in some files; consider deriving desaturation from raw `SaO2` traces when needed.
 - Class imbalance is expected (N2 dominant; Wake/N1 relatively sparse; Stage 4 rare).
 - Recordings are unattended home PSG and therefore may have higher motion/environmental artifact than in-lab PSG.
-- SHHS-2 ECG can differ in effective native sampling relative to SHHS-1; handle ECG separately if exact spectral comparability is required.
+- Hardware/Sampling Shift: SHHS-2 employs different native sampling rates compared to SHHS-1 (e.g., ECG is 250Hz vs 125Hz; EOG is 64Hz vs 50Hz; Respiratory is 8Hz vs 10Hz). The DataLoader must dynamically check signal headers rather than hardcoding frequencies.
 
 ## References
 
 - Quan, S.F. et al. (1997). The Sleep Heart Health Study: design, rationale, and methods. *Sleep*, 20(12), 1077-1085.
 - Redline, S. et al. (1998). Methods for obtaining and analyzing unattended polysomnography data for a multicenter study. *Sleep*, 21(7), 759-767.
 - Dean, D.A. et al. (2016). Scaling Up Scientific Discovery in Sleep Medicine: The National Sleep Research Resource. *Sleep*, 39(5), 1151-1164. DOI: https://doi.org/10.5665/sleep.5774
-- Zhang, G.Q. et al. (2018). The National Sleep Research Resource: making data findable, accessible, interoperable, reusable and promoting new research. *Sleep Medicine*, 10(5), 367-376.
+- Zhang, Y. et al. (2024). The National Sleep Research Resource: making data findable, accessible, interoperable, reusable and promoting sleep science. *Sleep*, 47(1), zsae088. DOI: https://doi.org/10.1093/sleep/zsae088
 - NSRR SHHS dataset page: https://sleepdata.org/datasets/shhs
