@@ -47,37 +47,13 @@ Subjects engaged in focused meditation sessions that were interrupted every two 
 
 ## Tasks
 
-### Primary Task 1: EEG ISA-GSR Phase-Amplitude Coupling Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`stimulus`]
-- **Label Route**: `Annotation`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `stimulus` | 1 | High d-prime group (high ISA-GSR coupling) |
-  | `stimulus` | 0 | Low d-prime group (low ISA-GSR coupling) |
-- **Super Meta Notes**: Derived from raw event(s) [`stimulus`, `response`] by computing d-prime of phase-amplitude coupling between EEG infraslow activity (0.01-0.1 Hz) phase and GSR amplitude during first 30s of each meditation trial; subjects divided into high/low coupling groups based on channel-average d-prime values. Kernel step: Load EEG and GSR signals, compute ISA phase via Hilbert transform, compute GSR amplitude envelope, calculate phase-amplitude coupling d-prime, threshold to create binary labels.
-- **Evidence**:
-  - DOI: 10.3389/fnins.2022.765585 — The paper analyzes coupling between EEG infraslow activity (0.01-0.1 Hz) phase and galvanic skin response amplitude during the first 30 seconds of each meditation trial from openneuro dataset ds001787, computing d-prime values and dividing subjects into high/low coupling groups.
-- **Kernel Notes**: Verify event ID mapping from events.tsv — the paper references 'meditation_onset' but this is not available in raw events; using 'stimulus' as proxy for meditation session probe. Also computes expert vs novice classification which can be added as separate label set. (replaces incomplete Primary Task 1 from original analysis.md)
-
-### Primary Task 2: Expert vs Novice Meditator Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`stimulus`]
-- **Label Route**: `Annotation`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `stimulus` | 1 | Expert meditator |
-  | `stimulus` | 0 | Novice meditator |
-- **Super Meta Notes**: Derived from raw event(s) [`stimulus`, `response`] by subject group assignment (expert vs novice) as defined in dataset demographics. Kernel step: Load subject metadata, map subject IDs to expertise level, create binary labels per trial.
-- **Evidence**:
-  - DOI: 10.3389/fnins.2022.765585 — The paper compares expert versus novice meditators in EEG ISA-GSR coupling analysis.
-- **Kernel Notes**: Requires subject demographic data from dataset; verify expertise level encoding in participants.tsv.
+Primary Task 1: Publisher-defined BIDS task: Meditation
+- Task Type: classification/segmentation
+- Epoch Method: epoch_by_segmentation_hdf5
+- Epoch Parameters: window_size = 5.0, overlap = 0.0
+- Label Route: Annotation
+- Target Definition: Sustained meditation state segments between probes.
+- Evidence: Publisher-defined state in OpenNeuro ds001787.
 
 ### Normal Task 1: Stimulus-Response ERP (binary)
 - **Task Type**: classification
