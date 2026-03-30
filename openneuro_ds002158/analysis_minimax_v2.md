@@ -2,7 +2,7 @@
 
 **Dataset**: `openneuro_ds002158` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002158
 **Category**: High-level Mental | **Subjects**: 119 | **Files (Completed)**: 119
-**Channels**: 64 | **Sampling Rate**: 5000 Hz
+**Channels**: 64 | **Sampling Rate**: 5000 Hz | **Manual Review**: Liu Peng |
 
 ## Paradigm
 
@@ -52,6 +52,7 @@ Participants performed speeded perceptual judgments and subsequently reported th
   | confidence (continuous 0-1) | Metacognitive confidence rating (0=sure error, 0.5=unsure, 1=sure correct) |
 - **Super Meta Notes**: Derived from misc channel `confidence` (visual analog scale responses). Kernel must extract `confidence` values from the misc channel and align with epochs time-locked to the response onset (using `unknown` as trial anchor; verify from events.tsv if `unknown` corresponds to response_onset or trial_start). The papers also used 0-200ms and 200-450ms post-response windows for decoding.
 - **Evidence**:
+  
   - DOI: 10.1073/pnas.1918335117 — EEG amplitude time-locked to first-order response onset used to model confidence via linear regression; multivariate EEG decoding derived single-trial confidence predictions.
 - **Kernel Notes**: High sampling rate (5000 Hz) requires downsampling. The `unknown` event serves as epoch anchor - verify from events.tsv that it corresponds to response onset (button press/visual hand appearance). Extract confidence values from misc channel as regression target. (replaces Normal Task 1 from original analysis.md)
 
