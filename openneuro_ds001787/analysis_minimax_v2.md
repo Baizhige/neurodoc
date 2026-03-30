@@ -48,12 +48,12 @@ Subjects engaged in focused meditation sessions that were interrupted every two 
 ## Tasks
 
 ### Primary Task 1: Publisher-defined BIDS task: Meditation
-- **Task Type: classification/segmentation
-- **Epoch Method: epoch_by_segmentation_hdf5
-- **Epoch Parameters: window_size = 5.0, overlap = 0.0
-- **Label Route: Annotation
-- **Target Definition: Sustained meditation state segments between probes.
-- **Evidence: Publisher-defined state in OpenNeuro ds001787.
+- **Task Type**: classification/segmentation
+- **Epoch Method**: epoch_by_segmentation_hdf5
+- **Epoch Parameters**: window_size = 5.0, overlap = 0.0
+- **Label Route**: Annotation
+- **Target Definition**: Sustained meditation state segments between probes.
+- **Evidence**: Publisher-defined state in OpenNeuro ds001787.
 
 ### Normal Task 1: Stimulus-Response ERP (binary)
 - **Task Type**: classification
