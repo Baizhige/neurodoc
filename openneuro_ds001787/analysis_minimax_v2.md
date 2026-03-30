@@ -47,7 +47,7 @@ Subjects engaged in focused meditation sessions that were interrupted every two 
 
 ## Tasks
 
-Primary Task 1: Publisher-defined BIDS task: Meditation
+### Primary Task 1: Publisher-defined BIDS task: Meditation
 - Task Type: classification/segmentation
 - Epoch Method: epoch_by_segmentation_hdf5
 - Epoch Parameters: window_size = 5.0, overlap = 0.0
