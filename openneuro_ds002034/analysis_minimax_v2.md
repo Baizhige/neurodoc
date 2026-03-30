@@ -1,7 +1,7 @@
 # Real-time EEG feedback on alpha power lateralization leads to behavioral improvements in a covert attention task
 
 **Dataset**: `openneuro_ds002034` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds002034
-**Category**: Action/Output | **Subjects**: 14 | **Files (Completed)**: 167 | **Channels**: 82.0 | **Sampling Rate**: 512.0 Hz | **Manual Review**: Liu Peng |
+**Category**: Action/Output | **Subjects**: 14 | **Files (Completed)**: 167 | **Channels**: 64 | **Sampling Rate**: 512.0 Hz | **Manual Review**: Liu Peng |
 
 ## Paradigm
 
