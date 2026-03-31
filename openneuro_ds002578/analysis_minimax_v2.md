@@ -13,7 +13,7 @@ This dataset contains a continuous visual oddball / selective-attention task rec
 - **Type 2 (Raw + Super meta integration)**: optionally derive response-linked or RT-linked labels, but only after an explicit event-pairing rule is validated.
 - **Type 3 (Label-route orchestration)**: route normalized labels to EEGUnity-compatible channels such as `Annotation` or `stim`.
 
-> **Selected Mode**: Type 1 + Type 2 + Type 3
+> **Selected Mode**: Type 2 + Type 3
 > **Why**: raw condition codes support direct stimulus classification, and reaction time should be represented as a derived label produced through super meta integration.
 > **Primary Label Routes**: `Annotation`, optionally `stim`
 
