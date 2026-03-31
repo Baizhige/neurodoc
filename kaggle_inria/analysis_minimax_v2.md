@@ -1,7 +1,7 @@
 # Kaggle BCI Challenge (INRIA) Dataset
 
 **Dataset**: `kaggle_inria` | **Year**: 2015 | **URL**: https://www.kaggle.com/c/inria-bci-challenge
-**Category**: Action/Output | **Subjects**: 26 | **Files (Completed)**: 130 | **Channels**: 58 | **Sampling Rate**: 200 Hz
+**Category**: Action/Output | **Subjects**: 26 | **Files (Completed)**: 130 | **Channels**: 56 | **Sampling Rate**: 200 Hz
 
 ## Paradigm
 
