@@ -24,7 +24,6 @@ Twenty-six subjects (ages 20-37) performed a P300-based BCI feedback task using 
 |----------|---------------|------|------------|---------|
 | `good feedback to P300` | varies (~1300) | short | raw | Feedback event: BCI output was correct |
 | `wrong feedback to P300` | varies (~650) | short | raw | Feedback event: BCI output was incorrect |
-| `unknown feedback to P300` | varies (~1560) | short | raw | Feedback event: label unknown (test sessions) |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
 >
@@ -41,8 +40,8 @@ Twenty-six subjects (ages 20-37) performed a P300-based BCI feedback task using 
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|
-  | `good feedback to P300` | 0 | Correct BCI feedback (classifier output matched user intent) |
-  | `wrong feedback to P300` | 1 | Incorrect BCI feedback (classifier output differed from user intent) |
+  | 0 | 0 | Correct BCI feedback (classifier output matched user intent) |
+  | 1 | 1 | Incorrect BCI feedback (classifier output differed from user intent) |
 - **Evidence**:
   - DOI: 10.1109/TBCAS.2022.3215962 — Validates EEGNet accelerator on ERN dataset with epochs [0, 1.3]s post feedback for binary classification of correct vs. incorrect BCI feedback.
   - DOI: 10.1016/j.inffus.2024.102316 — Uses ERN dataset from Kaggle BCI Challenge for adversarial filtering evaluation with epochs [0, 1.3]s post feedback onset.
