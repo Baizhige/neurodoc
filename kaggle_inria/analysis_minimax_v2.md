@@ -48,14 +48,6 @@ Twenty-six subjects (ages 20-37) performed a P300-based BCI feedback task using 
   - DOI: 10.1109/ACCESS.2024.3467154 — Evaluates DCAE defense on ERN dataset with tmin=0s, tmax=1.3s, bandpass [1,40]Hz.
 - **Kernel Notes**: FeedBackEvent channel (column 57) encodes feedback onset times; match labels from TrainLabels.csv by feedback ID (e.g., S01_Sess01_FB001). Exclude sessions with `unknown feedback to P300` (test set). Bandpass filter 1-40Hz recommended per paper preprocessing. (replaces Normal Task 1 from original analysis.md)
 
-### Normal Task 1: Subject Identification via Feedback-Related Potentials
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 1.3 s, target_events = [`good feedback to P300`, `wrong feedback to P300`]
-- **Label Route**: `Annotation`
-- **Target Definition**: Use feedback events to derive subject identity labels (26 subjects).
-- **Notes**: Task uses positive vs negative feedback-related ERP responses for biometric authentication. SVM with EMD-based features achieves up to 0.99 accuracy. Labels are derived from subject IDs, not feedback correctness.
-
 
 ## Data Quality Notes
 
