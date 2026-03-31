@@ -47,7 +47,6 @@ Twenty-six subjects (ages 20-37) performed a P300-based BCI feedback task using 
   - DOI: 10.1109/TBCAS.2022.3215962 — Validates EEGNet accelerator on ERN dataset with epochs [0, 1.3]s post feedback for binary classification of correct vs. incorrect BCI feedback.
   - DOI: 10.1016/j.inffus.2024.102316 — Uses ERN dataset from Kaggle BCI Challenge for adversarial filtering evaluation with epochs [0, 1.3]s post feedback onset.
   - DOI: 10.1109/ACCESS.2024.3467154 — Evaluates DCAE defense on ERN dataset with tmin=0s, tmax=1.3s, bandpass [1,40]Hz.
-  - DOI: 10.1088/1741-2552/aace8c — Evaluates EEGNet on ERN paradigm with epochs [0, 1.25]s post feedback.
 - **Kernel Notes**: FeedBackEvent channel (column 57) encodes feedback onset times; match labels from TrainLabels.csv by feedback ID (e.g., S01_Sess01_FB001). Exclude sessions with `unknown feedback to P300` (test set). Bandpass filter 1-40Hz recommended per paper preprocessing. (replaces Normal Task 1 from original analysis.md)
 
 ### Normal Task 1: Subject Identification via Feedback-Related Potentials
