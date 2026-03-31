@@ -1,11 +1,11 @@
 # Face processing EEG dataset for EEGLAB
 
-**Dataset**: `openneuro_ds002718` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds002718
-**Category**: High-level Mental | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 74.0 | **Sampling Rate**: 250.0 Hz
+**Dataset**: `openneuro_ds002718` | **Year**: 2015 | **URL**: https://openneuro.org/datasets/ds002718
+**Category**: High-level Mental | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 74 | **Sampling Rate**: 250.0 Hz
 
 ## Paradigm
 
-Participants viewed famous, unfamiliar, and scrambled face images and performed a subjective spatial symmetry judgment task (yes/no button press). The primary scientific question concerns the neural basis of face recognition, with ERP components (N170, N250) distinguishing famous from unfamiliar and scrambled faces. This is an EEGLAB tutorial dataset based on the SPM multimodal dataset (ds000117); events encode face category, presentation order (first vs. second), and latency of second presentation (early vs. late).
+Participants viewed famous faces, unfamiliar faces, and scrambled faces while making a left/right subjective symmetry judgment. Each image was presented twice, with the second presentation occurring either immediately or after a delayed lag. The EEGLAB repackaging merged the original runs, corrected event latencies, resampled the EEG to 250 Hz, and retained stimulus identity, response side/symmetry, presentation order, and repetition distance information in the event table.
 
 ## Kernel Responsibilities
 
@@ -16,109 +16,109 @@ Participants viewed famous, unfamiliar, and scrambled face images and performed 
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, misc
-> **Evidence Keywords**: response_time, regression target
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002718
+> **Evidence Keywords**: famous, unfamiliar, scrambled, repetition, symmetry judgment
 
 ## Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `famous_new` | 18 (files) | short | raw | Famous face - first presentation |
-| `unfamiliar_new` | 18 (files) | short | raw | Unfamiliar face - first presentation |
-| `scrambled_new` | 18 (files) | short | raw | Scrambled face - first presentation |
-| `famous_second_early` | 18 (files) | short | raw | Famous face - second presentation (early lag) |
-| `famous_second_late` | 18 (files) | short | raw | Famous face - second presentation (late lag) |
-| `unfamiliar_second_early` | 18 (files) | short | raw | Unfamiliar face - second presentation (early lag) |
-| `unfamiliar_second_late` | 18 (files) | short | raw | Unfamiliar face - second presentation (late lag) |
-| `scrambled_second_early` | 18 (files) | short | raw | Scrambled face - second presentation (early lag) |
-| `scrambled_second_late` | 18 (files) | short | raw | Scrambled face - second presentation (late lag) |
-| `right_sym` | 10 (files) | short | raw | Right-hand response: face judged symmetric |
-| `left_nonsym` | 10 (files) | short | raw | Left-hand response: face judged non-symmetric |
-| `left_sym` | 8 (files) | short | raw | Left-hand response: face judged symmetric |
-| `right_nonsym` | 8 (files) | short | raw | Right-hand response: face judged non-symmetric |
-| `boundary` | 18 (files) | admin | raw | Segment boundary marker - exclude |
+| `famous_new` | 2700 | short | raw | Initial presentation of a famous face |
+| `famous_second_early` | 1313 | short | raw | Immediate repeat of a famous face |
+| `famous_second_late` | 1291 | short | raw | Delayed repeat of a famous face |
+| `unfamiliar_new` | 2700 | short | raw | Initial presentation of an unfamiliar face |
+| `unfamiliar_second_early` | 1304 | short | raw | Immediate repeat of an unfamiliar face |
+| `unfamiliar_second_late` | 1316 | short | raw | Delayed repeat of an unfamiliar face |
+| `scrambled_new` | 2700 | short | raw | Initial presentation of a scrambled face |
+| `scrambled_second_early` | 1271 | short | raw | Immediate repeat of a scrambled face |
+| `scrambled_second_late` | 1334 | short | raw | Delayed repeat of a scrambled face |
+| `right_sym` | 4900 | short | raw | Right-button response indicating more symmetric than average |
+| `right_nonsym` | 3616 | short | raw | Right-button response indicating less symmetric than average |
+| `left_sym` | 3381 | short | raw | Left-button response indicating more symmetric than average |
+| `left_nonsym` | 3532 | short | raw | Left-button response indicating less symmetric than average |
+| `boundary` | 90 | admin | raw | Boundary marker introduced when original runs were merged |
+| `face_type` | 15929 | short | super meta integration | Collapsed face-category label from raw events: famous vs unfamiliar vs scrambled |
+| `repetition_status` | 15929 | short | super meta integration | Collapsed presentation-order label derived from `event_order`: first vs repeated |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-> - `long`: sustained-state marker (>=2 s), for `epoch_by_long_event_hdf5`
-> - `rest`: resting-state segment marker, for `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **exclude** from epoch target_events
+> - `short`: all stimulus and button-press events in this dataset are short events
+> - `admin`: `boundary` events should be excluded from epoch targets
+
 ## MISC Label Summary
 
 - **Route**: `misc`
-- **Role**: Stores derived/continuous labels that are not native raw event IDs.
-- **Candidate Labels**: `response_time`
-- **Kernel Note**: Keep derivation source, unit, and version metadata.
+- **Role**: Stores derived labels from native event-table fields.
+- **Candidate Labels**: `face_type`, `repetition_status`, `repetition_lag`, `response_hand`, `symmetry_judgment`
+- **Kernel Note**: The `response_time` column exists in the event tables but is empty in this EEGLAB repackaging, so reaction-time regression should not be treated as a supported default task.
 
 ## Tasks
 
-### Primary Task 1: Face Category Classification (famous vs unfamiliar vs scrambled)
+### Primary Task 1: Face Category Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`famous_new`, `unfamiliar_new`, `scrambled_new`]
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.2 s, target_events = [`famous_new`, `famous_second_early`, `famous_second_late`, `unfamiliar_new`, `unfamiliar_second_early`, `unfamiliar_second_late`, `scrambled_new`, `scrambled_second_early`, `scrambled_second_late`]
+- **Label Route**: `Annotation`
+- **Meta Level**: super
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `famous_*` | 0 | Famous / familiar face |
+  | `unfamiliar_*` | 1 | Unfamiliar face |
+  | `scrambled_*` | 2 | Scrambled face |
+- **Evidence**:
+  - DOI: `10.1038/sdata.2015.1` describes this dataset and states that, for technical validation, the repetition manipulation is ignored, leaving three trial-types: Familiar (Famous) Faces, Unfamiliar (Nonfamous) Faces, and Scrambled Faces.
+- **Kernel Notes**: This is the strongest literature-backed primary task for the repackaged EEG dataset. The raw `trial_type` values must be collapsed by face category rather than restricting analysis to only the `_new` events.
+
+### Normal Task 1: Repetition Effect Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.2 s, target_events = [`famous_new`, `famous_second_early`, `famous_second_late`, `unfamiliar_new`, `unfamiliar_second_early`, `unfamiliar_second_late`, `scrambled_new`, `scrambled_second_early`, `scrambled_second_late`]
+- **Label Route**: `Annotation`
+- **Meta Level**: super
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `*_new` | 0 | First presentation |
+  | `*_second_early`, `*_second_late` | 1 | Repeated presentation |
+- **Notes**: The event table explicitly preserves presentation order through both `trial_type` and `event_order`, so repetition can be analyzed directly even though the 2015 data descriptor chose to ignore this manipulation in its technical validation examples.
+
+### Normal Task 2: Repetition Lag Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.2 s, target_events = [`famous_second_early`, `famous_second_late`, `unfamiliar_second_early`, `unfamiliar_second_late`, `scrambled_second_early`, `scrambled_second_late`]
 - **Label Route**: `Annotation`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|
-  | `famous_new` | 0 | Famous face - first presentation |
-  | `unfamiliar_new` | 1 | Unfamiliar face - first presentation |
-  | `scrambled_new` | 2 | Scrambled face - first presentation |
-- **Evidence**:
-  - DOI: 10.1038/sdata.2015.1 — Three-class face category classification (famous/unfamiliar/scrambled) using ERP analysis (N170/N250 components) with epochs from -0.5s to +1.2s around stimulus onset
-- **Kernel Notes**: Normal Task 1 from original analysis.md is subsumed by this Primary Task. Response time regression is available via misc label route but not part of this primary classification task. The paper reports mean RT ~955ms for regression targets.
+  | `*_second_early` | 0 | Immediate repeat |
+  | `*_second_late` | 1 | Delayed repeat |
+- **Notes**: This task uses the explicit early/late repetition labels and is further supported by the native `trial_dist` and `time_dist` columns.
 
-### Primary Task 2: Repetition Effect Classification (first vs second presentation)
+### Normal Task 3: Symmetry Judgment Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s *, tmax = 1.2 s *, target_events = [`famous_new`, `famous_second_early`, `famous_second_late`, `unfamiliar_new`, `unfamiliar_second_early`, `unfamiliar_second_late`, `scrambled_new`, `scrambled_second_early`, `scrambled_second_late`]
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [`right_sym`, `left_nonsym`, `left_sym`, `right_nonsym`]
 - **Label Route**: `Annotation`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|
-  | `famous_new` | 0 | Famous face - first presentation |
-  | `famous_second_early` | 1 | Famous face - second presentation (early lag) |
-  | `famous_second_late` | 2 | Famous face - second presentation (late lag) |
-  | `unfamiliar_new` | 3 | Unfamiliar face - first presentation |
-  | `unfamiliar_second_early` | 4 | Unfamiliar face - second presentation (early lag) |
-  | `unfamiliar_second_late` | 5 | Unfamiliar face - second presentation (late lag) |
-  | `scrambled_new` | 6 | Scrambled face - first presentation |
-  | `scrambled_second_early` | 7 | Scrambled face - second presentation (early lag) |
-  | `scrambled_second_late` | 8 | Scrambled face - second presentation (late lag) |
-- **Evidence**:
-  - DOI: 10.1038/sdata.2015.1 — The original dataset analysis includes repetition effects (initial vs repeat presentations) with detailed timing for early vs late lag conditions
-- **Kernel Notes**: This 9-class task captures both face category and presentation order/repetition timing. For simpler binary repetition analysis, collapse first presentations (y=0,3,6) vs second presentations (any second_* event). (replaces Normal Task 1 from original analysis.md)
-
-### Normal Task 1: Symmetry Judgment Classification (response-based)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s *, tmax = 1.0 s *, target_events = [`right_sym`, `left_nonsym`, `left_sym`, `right_nonsym`]
-- **Label Route**: `Annotation`
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `right_sym` | 0 | Right-hand response: face judged symmetric |
-  | `left_nonsym` | 1 | Left-hand response: face judged non-symmetric |
-  | `left_sym` | 2 | Left-hand response: face judged symmetric |
-  | `right_nonsym` | 3 | Right-hand response: face judged non-symmetric |
-- **Notes**: Four-class response classification. Could be simplified to 2-class (symmetric vs non-symmetric) or 2-class (left-hand vs right-hand response). The `boundary` events should be excluded.
-
-### Normal Task 2: Response Time Regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.5 s *, target_events = [`famous_new`, `unfamiliar_new`, `scrambled_new`]
-- **Label Route**: `misc`
-- **Target Definition**: Continuous response_time values from behavioral data (mean ~955ms reported in original study)
-- **Notes**: Regression target: predict reaction time from EEG epochs. Requires alignment of behavioral response data with stimulus events. Kernel must extract RT from behavioral file and map to corresponding stimulus epochs.
-
+  | `right_sym` | 0 | Right-hand response: more symmetric |
+  | `left_nonsym` | 1 | Left-hand response: less symmetric |
+  | `left_sym` | 2 | Left-hand response: more symmetric |
+  | `right_nonsym` | 3 | Right-hand response: less symmetric |
+- **Notes**: This response-locked task is supported by explicit button-press events, but the original paper treats symmetry judgment mainly as an attention-maintenance task rather than the main scientific contrast.
 
 ## Data Quality Notes
 
-- Count column shows files-with-event (18 subjects), not individual trial counts - actual trial counts per category are much higher.
-- `boundary` events are segment/epoch boundary markers - do not epoch on these.
-- This is an EEGLAB tutorial dataset with well-documented preprocessing pipeline.
-- Verify channel count consistency across subjects before pooling.
+- The dataset contains 18 EEG subjects and 18 EEG event files.
+- EEG sidecars report `SamplingFrequency: 250` and `EEGChannelCount: 70`.
+- Channel files contain 74 recorded channels in total: 70 EEG channels plus 4 physiological channels (HEOG, VEOG, and 2 ECG/EKG channels).
+- The `response_time` column is present in the event tables but completely empty in this repackaged EEGLAB version.
+- Total event rows across subjects: 31,448.
+- `boundary` events appear because the original runs were merged during EEGLAB repackaging.
+- One subject uses `ECG` rather than `EKG` as the channel type label for the two cardiac channels; this is a minor metadata inconsistency.
 
 ## References
 
-- **Paper**: Multimodal Integration of M/EEG and f/MRI Data in SPM12 (DOI/ref: `ds000117`)
+- **Paper**: Wakeman, D. G. & Henson, R. N. A multi-subject, multi-modal human neuroimaging dataset. Sci Data 2, 150001 (2015). DOI: `10.1038/sdata.2015.1`
