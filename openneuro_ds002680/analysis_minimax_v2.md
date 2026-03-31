@@ -67,7 +67,6 @@ Participants performed two alternating visual go/no-go tasks: an animal categori
   | `*_distractor` stimulus classes | 0 | Distractor / no-go stimulus |
 - **Super Meta Notes**: Collapse the eight raw stimulus classes into a binary target-vs-distractor label by mapping all `*_target` values to target/go and all `*_distractor` values to distractor/no-go.
 - **Evidence**:
-  - DOI: `10.1016/j.cogbrainres.2003.11.010` studied this dataset design directly, with 14 subjects alternating an animal categorization task and a target-image recognition task, and compared ERP differences between correct target and correct distractor trials in both tasks.
   - DOI: `10.1038/s41598-023-27528-0` used this dataset's animal go/no-go condition to compare correct targets and correct distractors with 1 s epochs from -0.3 to 0.7 s, explicitly framing the contrast as go responses on animals versus no-go responses on non-animal images.
 - **Kernel Notes**: This primary task is literature-supported because target vs distractor is the comparison used in the published analyses. The binary label does not need to be inferred from response presence because target vs distractor identity is already encoded in the raw stimulus event value.
 
