@@ -45,7 +45,7 @@ Participants performed speeded perceptual judgments and subsequently reported th
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.6 s, target_events = [`response_onset`]
-- **Label Route**: `misc`
+- **Label Route**: `Annotation`
 - **Meta Level**: raw
 - **Target Definition**:
   

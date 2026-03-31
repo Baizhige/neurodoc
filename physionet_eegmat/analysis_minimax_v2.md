@@ -1,11 +1,11 @@
 # EEG During Mental Arithmetic Task
 
 **Dataset**: `physionet_eegmat` | **Year**: 2020 | **URL**: https://physionet.org/content/eegmat/1.0.0/
-**Category**: High-level Mental | **Subjects**: 36 | **Files (Completed)**: 72 | **Channels**: 21 | **Sampling Rate**: 500 Hz
+**Category**: High-level Mental | **Subjects**: 36 | **Files (Completed)**: 72 | **Channels**: 23 | **Sampling Rate**: 500 Hz | **Manual Review**: Liu Peng |
 
 ## Paradigm
 
-Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly female) completed a mental arithmetic task while EEG was recorded from 21 channels using a Neurocom 23-channel system with Ag/AgCl electrodes (Zyma et al., 2019). Each subject contributed two files: a background resting-state recording (suffix `_1.edf`) and a mental arithmetic task recording (suffix `_2.edf`). During the mental arithmetic task, subjects performed serial subtraction (e.g., counting backwards by 7s) while EEG was recorded. A separate `Count quality` field in `subject-info.csv` rates the subject's arithmetic performance as Good or Bad, providing a behavioral quality label.
+Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly female) completed a mental arithmetic task while EEG was recorded monopolarly using a Neurocom 23-channel system with Ag/AgCl electrodes (Zyma et al., 2019). Each subject contributed two files: a background resting-state recording (suffix `_1.edf`) and a mental arithmetic task recording (suffix `_2.edf`). During the mental arithmetic task, subjects performed serial subtraction (e.g. 3141 and 42) while EEG was recorded. A separate `Count quality` field in `subject-info.csv` rates the subject's arithmetic performance as Good or Bad, providing a behavioral quality label.
 
 ## Kernel Responsibilities
 
@@ -22,10 +22,10 @@ Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly fema
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Background EEG;Count Quality: Good` | 27 | long | raw | Resting-state recording, subject's arithmetic quality was Good |
-| `Background EEG;Count Quality: Bad` | 9 | long | raw | Resting-state recording, subject's arithmetic quality was Bad |
-| `Mental Arithmetic Task EEG;Count Quality: Good` | 27 | long | raw | Mental arithmetic recording, quality Good |
-| `Mental Arithmetic Task EEG;Count Quality: Bad` | 9 | long | raw | Mental arithmetic recording, quality Bad |
+| `Background EEG;Count Quality: Good` | 24 | long | raw | Resting-state recording, subject's arithmetic quality was Good |
+| `Background EEG;Count Quality: Bad` | 12 | long | raw | Resting-state recording, subject's arithmetic quality was Bad |
+| `Mental Arithmetic Task EEG;Count Quality: Good` | 24 | long | raw | Mental arithmetic recording, quality Good |
+| `Mental Arithmetic Task EEG;Count Quality: Bad` | 12 | long | raw | Mental arithmetic recording, quality Bad |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
 >
@@ -47,6 +47,7 @@ Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly fema
   | `Mental Arithmetic Task EEG;Count Quality: Good` | 1 | Mental arithmetic task |
   | `Mental Arithmetic Task EEG;Count Quality: Bad` | 1 | Mental arithmetic task |
 - **Evidence**:
+  
   - DOI: https://doi.org/10.13026/C2JQ1P — "The EEGMAT database contains 36 subjects with two 60-second EEG recordings each: background resting-state (_1.edf) and mental arithmetic task (_2.edf), with annotations encoding both condition type and count quality."
 - **Kernel Notes**: Parse event annotation prefix before semicolon to extract task label (Background vs Mental Arithmetic). Each recording is 60s long; sliding window epoching extracts overlapping 5s segments. (replaces Normal Task 1 from original analysis.md)
 
@@ -63,10 +64,9 @@ Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly fema
   | `Mental Arithmetic Task EEG;Count Quality: Good` | 1 | Good arithmetic performance |
 - **Evidence**:
   - DOI: https://doi.org/10.13026/C2JQ1P — "annotations encoding both condition type and count quality"
-  - DOI: 10.1038/s41598.026.36434.0 — "good counters show significantly increased synchronization (PC-entropy) in beta band during task vs rest, while poor counters show no significant changes"
-- **Kernel Notes**: Filter to Mental Arithmetic recordings only; parse suffix after semicolon for Count Quality label. Class imbalance expected (27 Good vs 9 Bad from dataset). (replaces Normal Task 2 from original analysis.md)
+- **Kernel Notes**: Filter to Mental Arithmetic recordings only; parse suffix after semicolon for Count Quality label. Class imbalance expected (24 Good vs 12 Bad from dataset). (replaces Normal Task 2 from original analysis.md)
 
-### Primary Task 3: Mental Stress Classification During Arithmetic Task
+### Normal Task 1: Mental Stress Classification During Arithmetic Task
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 5.0 s, overlap = 0.0 *, target_events = [`Mental Arithmetic Task EEG;Count Quality: Good`, `Mental Arithmetic Task EEG;Count Quality: Bad`]
@@ -76,9 +76,10 @@ Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly fema
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|
-  | `Mental Arithmetic Task EEG;Count Quality: Good` | 0 | Low-stress (good performers) |
-  | `Mental Arithmetic Task EEG;Count Quality: Bad` | 1 | High-stress (poor performers) |
+  | `Mental Arithmetic Task EEG;Count Quality: Good` | 0 | Low-stress (derived from good performers) |
+  | `Mental Arithmetic Task EEG;Count Quality: Bad` | 1 | High-stress (derived from poor performers) |
 - **Evidence**:
+  
   - DOI: 10.1109/wccest66994_2025.11389948 — "classify mental stress levels (High-stress vs Low-stress) by segmenting EEG into 5-second epochs, applying k-means clustering on frequency band powers"
 - **Kernel Notes**: Segment Mental Arithmetic recordings into 5s non-overlapping windows; compute log-band power in delta, theta, alpha, beta bands; apply k-means clustering to derive stress labels.
 
