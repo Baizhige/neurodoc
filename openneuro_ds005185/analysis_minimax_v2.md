@@ -77,6 +77,8 @@ Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG
 - All event markers are protocol annotations, not neural response labels.
 - 25-channel ear-EEG with limited spatial resolution.
 - PSG reference annotations required for sleep staging labels.
+- Directly using the.poly5 original file poses a risk of PSG signal Leakage (Data Leakage) due to poor electrode shielding.
+- Actual dataset collected in 2018-2020 (first published in 2019)
 
 ## References
 
