@@ -53,5 +53,4 @@ Participants performed a variety of internal mental tasks across multiple runs. 
 - **Artifacts**: Focus on EOG/EMC removal as mental arithmetic and speech tasks may induce subtle muscle tension or eye movements.
 - **Review Note**: Channels include 31 EEG + 1 EOG/ECG, totaling 32.
 
-## Meta
-| **Sampling Rate**: 500 Hz | **Manual Review**: [Your Name/ID] |
+
