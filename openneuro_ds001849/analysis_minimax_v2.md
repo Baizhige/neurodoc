@@ -1,52 +1,57 @@
 # RS_TMSEEG_Data
 
 **Dataset**: `openneuro_ds001849` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds001849
-**Category**: Biological State | **Subjects**: N/A | **Files (Completed)**: 120 | **Channels**: 30.0 | **Sampling Rate**: 5000.0 Hz
+**Category**: High-level Mental | **Subjects**: 15 | **Files (Completed)**: 120 | **Channels**: 32 | **Sampling Rate**: 500.0 Hz
 
 ## Paradigm
 
-Resting-state EEG data recorded in conjunction with Transcranial Magnetic Stimulation (TMS). Subjects were at rest (no active task) while TMS pulses were delivered; the R128 marker in BrainVision format marks a system/response trigger present in all files but does not indicate a meaningful task event. The primary scientific interest is resting-state oscillatory dynamics and TMS-evoked potentials.
+Participants performed a variety of internal mental tasks across multiple runs. The core paradigm includes four distinct mental states: **Mental Arithmetic** (complex subtraction), **Relaxation** (resting with eyes closed), **Internalized Speech** (silently repeating words), and **Breath Sensing** (focusing on the sensation of breathing). Each state was sustained for a specific duration per trial, making this a "long event" or "segmentation" style dataset.
 
 ## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+- **Type 1 (Raw-meta extraction only)**: Extract task onset/offset markers from the events stream.
+- **Type 2 (Raw + Super meta integration)**: Map raw triggers (which may vary by run) to the four primary mental state labels (Arithmetic, Relaxation, Speech, Breath).
+- **Type 3 (Label-route orchestration)**: Route final task labels to the `Annotation` channel for EEGUnity compatibility.
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
+> **Selected Mode**: Type 2 + Type 3
+> **Why**: Task labels require mapping raw event codes to specific mental state categories based on trial structure.
 > **Primary Label Routes**: Annotation
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds001849
 
 ## Event Structure
 
-| Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
-| `R128` | 120 (files) | admin | raw | BrainVision system/response trigger present in every file - not a task event |
+| Event ID | Count | Type | Meta Level | Meaning |
+|----------|-------|------|------------|---------|
+| `math`   | -     | long | raw        | Mental Arithmetic task period |
+| `relax`  | -     | long | raw        | Relaxation/Resting period |
+| `breath` | -     | long | raw        | Breath sensing task period |
+| `speech` | -     | long | raw        | Internalized speech/repetition period |
+| `R128`   | 120   | admin| raw        | BrainVision system/sync marker (Exclude) |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
 > - `long`: sustained-state marker (>=2 s), for `epoch_by_long_event_hdf5`
-> - `rest`: resting-state segment marker, for `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **exclude** from epoch target_events
 
 ## Tasks
 
-### Normal Task 1: Resting / Continuous Segmentation (resting)
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
+### Primary Task 1: Internal Mental State Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 10.0 s (sliding window within long event)
 - **Label Route**: `Annotation`
-- **Target Definition**: N/A (null (no task events; R128 is admin))
-- **Notes**: R128 appears in all 120 files and is a BrainVision recording artifact marker. High sampling rate (5000 Hz); consider downsampling. TMS artifact rejection may be needed if TMS pulses are captured in recording.
-
+- **Meta Level**: super (mapped from raw triggers)
+- **Target Definition**:
+    - `0`: Mental Arithmetic
+    - `1`: Relaxation
+    - `2`: Breath Sensing
+    - `3`: Internalized Speech
+- **Evidence**: Dataset description on OpenNeuro explicitly lists these internal states as the primary experimental variables for decoding mental activity.
 
 ## Data Quality Notes
 
-- R128 is a BrainVision system marker present in every file - it is not a stimulus or response event.
-- High sampling rate (5000 Hz); significant downsampling required before most analyses.
-- TMS artifacts may contaminate EEG within the first ~50 ms post-pulse; apply TMS artifact rejection if analyzing TMS-evoked potentials.
-- Verify channel count consistency across subjects before pooling.
+- **Sampling Rate**: Original 500 Hz is sufficient; no extreme downsampling required compared to TMS-EEG datasets.
+- **Artifacts**: Focus on EOG/EMC removal as mental arithmetic and speech tasks may induce subtle muscle tension or eye movements.
+- **Review Note**: Channels include 31 EEG + 1 EOG/ECG, totaling 32.
 
-## References
-
-- **Reference**: `RS_TMSEEG_Data`
+## Meta
+| **Sampling Rate**: 500 Hz | **Manual Review**: [Your Name/ID] |
