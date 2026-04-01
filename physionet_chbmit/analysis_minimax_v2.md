@@ -1,11 +1,11 @@
 # CHB-MIT Scalp EEG Database
 
 **Dataset**: `physionet_chbmit` | **Year**: 2010 | **URL**: https://physionet.org/content/chbmit/1.0.0/
-**Category**: Biological State | **Subjects**: 22 | **Files (Completed)**: 686 | **Channels**: 23 | **Sampling Rate**: 256 Hz
+**Category**: Biological State | **Subjects**: 23 | **Files (Completed)**: 686 | **Channels**: 23 | **Sampling Rate**: 256 Hz | **Manual Review**: Zhida Shang |
 
 ## Paradigm
 
-Twenty-two pediatric patients (5 males aged 3-22; 17 females aged 1.5-19) with intractable seizures were monitored at Children's Hospital Boston following withdrawal of anti-seizure medication to evaluate surgical candidacy (Shoeb & Guttag, 2010). Long-term continuous EEG was recorded from 23 scalp channels (bipolar montage following the 10-20 system) at 256 Hz with 16-bit resolution. The dataset contains 686 EEG files and 182 seizure events in total. Seizure onset and offset times are documented in per-subject summary text files (`chbNN-summary.txt`); the kernel parses these to create `seizure` annotations spanning each ictal period.
+This collection contains long-term scalp EEG recordings from 23 pediatric subjects with intractable seizures monitored at Children's Hospital Boston after anti-seizure medication withdrawal for seizure characterization and presurgical evaluation. The current PhysioNet release includes 664 `.edf` files, of which 129 contain one or more seizures, for a total of 198 annotated seizures. Seizure boundaries are given in the accompanying `.seizure` files, and `chbnn-summary.txt` provides montage information plus seizure start and end times in seconds from the beginning of each recording. Signals were sampled at 256 Hz with 16-bit resolution; most files contain 23 EEG channels using International 10-20 nomenclature, with a few records containing 24 or 26 channels plus occasional ECG, VNS, or dummy (`-`) signals. Historically, the original 23-case release covered 22 subjects because case `chb21` was obtained 1.5 years after case `chb01` from the same female subject; the later-added `chb24` brings the current collection to 23 subjects.
 
 ## Kernel Responsibilities
 
@@ -22,11 +22,11 @@ Twenty-two pediatric patients (5 males aged 3-22; 17 females aged 1.5-19) with i
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `seizure` | 182 | long | raw | Seizure period (onset to offset, variable duration) |
+| `seizure` | 198 | long | raw | Seizure period (onset to offset, variable duration) |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
 >
-> Files without seizures have no annotations; these ictal-free recordings serve as the negative (interictal) class.
+> Files without seizures have no annotations; these ictal-free recordings serve as post-ictal + interictal + pre-ictal.
 ## STIM Label Summary
 
 - **Route**: `stim`
@@ -38,10 +38,10 @@ Twenty-two pediatric patients (5 males aged 3-22; 17 females aged 1.5-19) with i
 
 ### Primary Task 1: Binary seizure detection (ictal vs interictal)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.0 s
 - **Label Route**: `Annotation`
-- **Meta Level**: raw
+- **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|-|
@@ -49,21 +49,21 @@ Twenty-two pediatric patients (5 males aged 3-22; 17 females aged 1.5-19) with i
   | (no annotation) | 0 | Interictal (seizure-free) |
 - **Evidence**:
   - DOI: 10.1016/j.bspc.2024.107379 — Uses 2-second epochs for ictal vs non-seizure classification on CHB-MIT
-  - DOI: 10.1038/s41598.025.18479.9 — Binary seizure detection (ictal vs non-seizure) on CHB-MIT
-  - DOI: 10.1038/s41598.025.98389.y — 5-second windows for binary seizure vs no-seizure classification
+  - DOI: 10.1038/s41598-025-18479-9 — Binary seizure detection (ictal vs non-seizure) on CHB-MIT
+  - DOI: 10.1038/s41598-025-98389-y — 5-second windows for binary seizure vs no-seizure classification
 - **Kernel Notes**: Extract seizure epochs using segmentation on the raw EEG. For interictal class, use seizure-free segments from files without seizure annotations or exclude periods within 5-10 s of seizure onset/offset. Severe class imbalance — apply undersampling or class weighting.
 
-### Primary Task 2: Seizure prediction (preictal vs interictal)
+### Primary Task 2: Binary seizure prediction (preictal vs interictal)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 10.0 s, overlap = 1.0 s (90% overlap) *
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: segment_length = 10.0 s, overlap = 5.0 s (50% overlap) *
 - **Label Route**: `Annotation`
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|-|
-  | preictal | 1 | Period 30 min before seizure onset |
-  | interictal | 0 | Seizure-free period >=4 hours before/after seizure |
+  | preictal | 1 | Period 5 to 35 minutes before seizure onset |
+  | interictal | 0 | 4 hours away from both the start and end of a seizure |
 - **Super Meta Notes**: Derived from raw event `seizure` by defining preictal as the 30-minute window preceding each seizure onset, and interictal as periods at least 4 hours before seizure onset or 4 hours after seizure offset. Kernel step: compute time differences from seizure onset timestamps to label windows.
 - **Evidence**:
   - DOI: 10.1088/1741-2552/ada0e5 — Uses 10 s intervals with 90% overlap for preictal vs interictal classification; preictal = 30 min before seizure, interictal >=4 hours away
