@@ -78,3 +78,6 @@ Subjects engaged in focused meditation sessions that were interrupted every two 
 ## References
 
 - **Reference**: `Arnaud Delorme (October 17, 2018; updated June 2024)`
+
+## Review
+| **Sampling Rate**: 256.0 Hz | **Manual Review**: Mingze Tang |
