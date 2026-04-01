@@ -42,7 +42,7 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 ### Primary Task 1: Affective Music Condition Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`]
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 40.0 s, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`]
 - **Label Route**: `Annotation`
 - **Meta Level**: raw
 - **Target Definition**:
