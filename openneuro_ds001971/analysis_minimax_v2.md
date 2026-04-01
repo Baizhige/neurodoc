@@ -68,5 +68,5 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 - MoBI dataset with 115 channels (High-Density EEG + Motion Capture). Ensure kernel isolates EEG channels for standard tasks.
 - Heavy motion artifacts expected; ICA is critical.
 
-## Review
+## Meta
 | **Sampling Rate**: 512.0 Hz | **Manual Review**: Mingze Tang |
