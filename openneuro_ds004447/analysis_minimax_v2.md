@@ -74,6 +74,7 @@ A brain-computer interface (BCI) task based on sensorimotor rhythms (SMR) record
 - Numerical event codes (1-4) require kernel-level decoding
 - Classes 3 and 4 (feet/tongue) only appear in 91 of 418 files
 - 130-channel high-density EEG with extended epochs
+- The dataset description does not match the actual document. Please use it with caution!!！
 
 ## References
 
