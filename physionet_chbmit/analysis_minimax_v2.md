@@ -70,7 +70,7 @@ This collection contains long-term scalp EEG recordings from 23 pediatric subjec
   - DOI: 10.1109/access.2020.2976866 — Seizure prediction with preictal (30-90 min before seizure) vs interictal using 30-second STFT windows
 - **Kernel Notes**: Requires precise timestamp computation. Preictal segments are the 30 minutes immediately preceding each seizure onset. Interictal segments must be at least 4 hours removed from any seizure. Exclude ictal periods entirely.
 
-### Normal Task 3: Three-class seizure state classification (preictal vs ictal vs interictal)
+### Normal Task 1: Three-class seizure state classification (preictal vs ictal vs interictal)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: segment_length = 4.0 s, overlap = 3.0 s (stride = 1.0 s)
