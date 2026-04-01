@@ -68,6 +68,7 @@ Participants performed a sensorimotor rhythm-based brain-computer interface task
 - Only one event code in metadata; class label may be in events.tsv columns rather than trial_type
 - 130-channel high-density EEG with extended epochs
 - 280 files; binary MI design
+- There is no left-hand task in the dataset description document. Please use it with caution!
 
 ## References
 
