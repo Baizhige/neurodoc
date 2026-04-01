@@ -56,7 +56,7 @@ This collection contains long-term scalp EEG recordings from 23 pediatric subjec
 ### Primary Task 2: Binary seizure prediction (preictal vs interictal)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: segment_length = 10.0 s, overlap = 5.0 s (50% overlap) *
+- **Epoch Parameters**: segment_length = 10.0 s, overlap = 5.0 s (50% overlap)
 - **Label Route**: `Annotation`
 - **Meta Level**: super
 - **Target Definition**:
@@ -70,9 +70,9 @@ This collection contains long-term scalp EEG recordings from 23 pediatric subjec
   - DOI: 10.1109/access.2020.2976866 — Seizure prediction with preictal (30-90 min before seizure) vs interictal using 30-second STFT windows
 - **Kernel Notes**: Requires precise timestamp computation. Preictal segments are the 30 minutes immediately preceding each seizure onset. Interictal segments must be at least 4 hours removed from any seizure. Exclude ictal periods entirely.
 
-### Primary Task 3: Three-class seizure state classification (preictal vs ictal vs interictal)
+### Normal Task 3: Three-class seizure state classification (preictal vs ictal vs interictal)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: segment_length = 4.0 s, overlap = 3.0 s (stride = 1.0 s)
 - **Label Route**: `Annotation`
 - **Meta Level**: super
@@ -80,33 +80,12 @@ This collection contains long-term scalp EEG recordings from 23 pediatric subjec
   | Event | y | Meaning |
   |-------|---|-|
   | ictal | 1 | Seizure period (annotated seizure interval) |
-  | preictal | 0 | 20 min before seizure onset * |
-  | interictal | 2 | Remaining seizure-free periods |
+  | preictal | 0 | Period 5 to 35 minutes before seizure onset |
+  | interictal | 2 | 4 hours away from both the start and end of a seizure |
 - **Super Meta Notes**: Derived from raw event `seizure` by defining preictal as the 20-minute window before seizure onset and interictal as all other seizure-free time. Advanced labeling may use signal features (Shannon entropy, mean voltage) to refine preictal vs interictal distinction within the 20-min window. Kernel step: segment with 4s windows, compute time-relative labels.
 - **Evidence**:
   - DOI: 10.54525/bbmd.1526069 — Three-class classification (pre-seizure/ictal/non-seizure) using 4-second EEG spectrogram windows with 3-second overlap on CHB-MIT
 - **Kernel Notes**: Segment all EEG into 4-second windows. Label windows overlapping seizure annotations as ictal (y=1). Label windows in the 20-minute pre-seizure window as preictal (y=0). Label remaining seizure-free windows as interictal (y=2). Consider using advanced signal features to further distinguish preictal from interictal within the 20-min window.
-
-### Normal Task 1: Seizure Detection - Ictal vs. Interictal (epoch_by_long_event + custom)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5` (for ictal files) + `epoch_by_segmentation_hdf5` (for interictal files)
-- **Epoch Parameters**: For seizure epochs: tmin = 0.0 s (annotation onset), use full duration; For interictal: sliding window 5.0 s, overlap = 2.5 s, target_events = see Target Definition
-- **Label Route**: `Annotation`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Files with no seizure annotations are entirely interictal; use `epoch_by_segmentation_hdf5` for those. Files with `seizure` annotations contain both ictal and pre/post-ictal segments; consider a buffer of 5-10 s before/after seizure onset as pre-ictal/post-ictal and exclude from clean interictal class. Severe class imbalance: seizure epochs (~182 events) vs. many hours of interictal EEG.
-
-| Event | y | Meaning |
-|-------|---|---------|
-| `seizure` | 1 | Ictal activity |
-| (no annotation) | 0 | Interictal (seizure-free) baseline |
-
-### Normal Task 2: Patient-Specific Seizure Detection (epoch_by_long_event)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event`
-- **Epoch Parameters**: Needs verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Needs verification.
-- **Notes**: Train per patient; subjects chb17 appears in three sub-cases (chb17a, chb17b, chb17c) and should be treated as a single subject.
 
 
 ## Data Quality Notes
