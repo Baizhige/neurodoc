@@ -1,7 +1,7 @@
 # RS_TMSEEG_Data
 
 **Dataset**: `openneuro_ds001849` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds001849
-**Category**: High-level Mental | **Subjects**: 15 | **Files (Completed)**: 120 | **Channels**: 32 | **Sampling Rate**: 500.0 Hz
+**Category**: High-level Mental | **Subjects**: 15 | **Files (Completed)**: 120 | **Channels**: 30 | **Sampling Rate**: 5000.0 Hz
 
 ## Paradigm
 
