@@ -87,7 +87,6 @@ This collection contains long-term scalp EEG recordings from 23 pediatric subjec
   - DOI: 10.54525/bbmd.1526069 — Three-class classification (pre-seizure/ictal/non-seizure) using 4-second EEG spectrogram windows with 3-second overlap on CHB-MIT
 - **Kernel Notes**: Segment all EEG into 4-second windows. Label windows overlapping seizure annotations as ictal (y=1). Label windows in the 20-minute pre-seizure window as preictal (y=0). Label remaining seizure-free windows as interictal (y=2). Consider using advanced signal features to further distinguish preictal from interictal within the 20-min window.
 
-
 ## Data Quality Notes
 
 - Severe class imbalance: the majority of recordings are seizure-free; balance by undersampling interictal or using cost-sensitive learning.
