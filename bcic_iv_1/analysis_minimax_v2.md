@@ -1,11 +1,11 @@
 # BCI Competition IV Dataset 1 (Motor Imagery, Uncued Classifier Application)
 
 **Dataset**: `bcic_iv_1` | **Year**: 2008 | **URL**: https://www.bbci.de/competition/iv/desc_1.html
-**Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 14 | **Channels**: 59 | **Sampling Rate**: 1000 Hz
+**Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 14 | **Channels**: 59 | **Sampling Rate**: 1000 Hz | **Manual Review**: Zhida Shang |
 
 ## Paradigm
 
-Seven subjects performed two-class motor imagery without feedback in an asynchronous (self-paced) BCI paradigm (BCI Competition IV, 2008). The two movement classes differed per subject, selected from: left hand, right hand, or foot imagery. A calibration phase used visual arrow cues with 4-second imagery intervals. The evaluation phase used acoustic cues (spoken words) with variable-duration imagery (1.5-8 s) and rest periods (1.5-8 s), simulating a realistic asynchronous BCI scenario. Both calibration and evaluation `.mat` files are provided per subject; the kernel reads class names and event positions directly from the `.mat` structure.
+Seven subjects performed two-class motor imagery without feedback in an asynchronous, uncued BCI paradigm. The two movement classes differed by subject and were selected from left hand, right hand, or foot imagery. In the calibration session, subjects received visual arrow cues and performed 4-second motor imagery trials; in the evaluation session, spoken cues indicated the imagery class, but the task was continuous and also included no-control intervals of 1.5-8 s between imagery periods of 1.5-8 s. The official challenge is continuous sample-wise discrimination of the two imagery classes versus no-control, rather than standard cue-locked trial classification. Calibration `.mat` files include class labels and marker information, whereas evaluation `.mat` files contain continuous EEG without cue/marker information.
 
 ## Kernel Responsibilities
 
@@ -22,9 +22,9 @@ Seven subjects performed two-class motor imagery without feedback in an asynchro
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `left` | ~100/subject | short | raw | Cue onset for left-hand motor imagery |
-| `right` | ~100/subject | short | raw | Cue onset for right-hand motor imagery (subjects assigned right class) |
-| `foot` | ~100/subject | short | raw | Cue onset for foot motor imagery (subjects assigned foot class) |
+| `Cue onset left` | ~100/subject | short | raw | Cue onset for left-hand motor imagery |
+| `Cue onset right` | ~100/subject | short | raw | Cue onset for right-hand motor imagery (subjects assigned right class) |
+| `Cue onset foot` | ~100/subject | short | raw | Cue onset for foot motor imagery (subjects assigned foot class) |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
 >
@@ -37,17 +37,16 @@ Seven subjects performed two-class motor imagery without feedback in an asynchro
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s, target_events = [`left`, `right`, `foot`]
 - **Label Route**: `Annotation`
-- **Meta Level**: raw
+- **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|
   | `left` | 0 | Left-hand motor imagery |
   | `right` or `foot` | 1 | Second motor imagery class (right-hand or foot, subject-specific) |
 - **Evidence**:
-  - DOI: 10.1016/j.neuroimage.2007.01.051 — BCI Competition IV Dataset 1 defines two-class motor imagery paradigm with calibration using 4s cue duration and 4s imagery intervals
   - DOI: 10.1109/tnsre.2020.3020975 — Uses BCI Competition IV Dataset 1 for two-class motor imagery classification with epochs from 2-6s time window relative to cue onset
-  - DOI: 10.1109/icoras_2016.7872610 — Tests SVM, k-NN, MLP-ANN, LR classifiers on two-class motor imagery from calibration data
-  - DOI: 10.1109/tnsre_2021.3071140 — Applies CTFSP algorithm to this dataset with sliding window approach [2-5]s, [2.5-5.5]s, [3-6]s
+  - DOI: 10.1109/icoras.2016.7872610 — Tests SVM, k-NN, MLP-ANN, LR classifiers on two-class motor imagery from calibration data
+  - DOI: 10.1109/tnsre.2021.3071140 — Applies CTFSP algorithm to this dataset with sliding window approach [2-5]s, [2.5-5.5]s, [3-6]s
 - **Kernel Notes**: Class labels are subject-specific (some subjects have left+right, others have left+foot); kernel must read class assignments from the `.mat` file `nfo.className` field. Calibration files contain cue markers with 4s imagery intervals; evaluation files have variable-length uncued periods. High sampling rate (1000 Hz); consider downsampling to ≤250 Hz for efficiency. (replaces Normal Task 1 from original analysis.md)
 
 
