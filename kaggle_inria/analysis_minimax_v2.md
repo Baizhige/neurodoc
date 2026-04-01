@@ -61,5 +61,5 @@ Twenty-six subjects (ages 20-37) performed a P300-based BCI feedback task using 
 - **Reference**: Inria BCI Challenge. Kaggle Competition 2015. https://www.kaggle.com/c/inria-bci-challenge
 - **Reference**: Margaux P, Maby E, Daligault S, Bertrand O, Mattout J. (2012). Objective and Subjective Evaluation of Online Error Correction during P300-Based Spelling. *Advances in Human-Computer Interaction*. DOI: https://doi.org/10.1155/2012/578295
 
-## Review
+## Meta
 | **Sampling Rate**: 200.0 Hz | **Manual Review**: Mingze Tang |
