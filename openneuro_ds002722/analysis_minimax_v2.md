@@ -72,3 +72,6 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 ## References
 
 - **Reference**: `Daly, I., Nicolaou, N., Williams, D., Hwang, F., Kirke, A., Miranda, E., Nasuto, S.J., Neural and physiological data from participants listening to affective music, Scientific Data, 2018.`
+
+## Review
+| **Sampling Rate**: 1000.0 Hz | **Manual Review**: Mingze Tang |
