@@ -17,6 +17,7 @@ A perceptual decision-making task investigating whether lonely individuals exhib
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004626
 
 ## Event Structure
@@ -72,7 +73,7 @@ A perceptual decision-making task investigating whether lonely individuals exhib
 - **Kernel Notes**: Exclude event IDs 255 (admin sync) and 999 (trial-end/admin) from epoching. Verify full decode table from events.tsv if more granular stimulus labels (e.g., angry vs neutral faces) are needed. (replaces Normal Task 1 from original analysis.md)
 
 ### Normal Task 1: Publisher-defined BIDS task: Dot Probe
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
 - **Label Route**: `Annotation`

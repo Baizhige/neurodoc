@@ -16,6 +16,7 @@ Participants performed three modes of speech production - overt (spoken aloud), 
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006465
 
 ## Event Structure

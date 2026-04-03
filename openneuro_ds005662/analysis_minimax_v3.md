@@ -16,6 +16,7 @@ Participants viewed rapid streams of videos depicting touch to a hand or an obje
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds005662
 
 ## Event Structure
@@ -96,7 +97,7 @@ _No event markers detected (`no_events`). This dataset contains continuous EEG r
   - DOI: 10.1038/s41597-026-06714-5 — Continuous valence prediction
 
 ### Normal Task 1: Continuous Segmentation (resting)
-- **Task Type**: segmentation
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5 s
 - **Label Route**: `Annotation`

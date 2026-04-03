@@ -17,6 +17,7 @@ Epilepsy patients performed a modified Sternberg verbal working memory task cons
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004752
 
 ## Event Structure

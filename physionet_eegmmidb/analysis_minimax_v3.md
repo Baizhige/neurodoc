@@ -16,6 +16,7 @@ One hundred and nine volunteers performed a series of motor movement and motor i
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://physionet.org/content/eegmmidb/1.0.0/
 
 ## Event Structure

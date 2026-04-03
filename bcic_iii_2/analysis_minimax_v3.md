@@ -16,6 +16,7 @@ Two subjects (A and B) attended to individual letters in a 6x6 character matrix 
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://www.bbci.de/competition/iii/download/
 
 ## Event Structure

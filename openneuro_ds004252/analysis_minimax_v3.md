@@ -17,6 +17,7 @@ A single participant viewed visual stimuli of objects at various rotations to in
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004252
 
 ## Event Structure

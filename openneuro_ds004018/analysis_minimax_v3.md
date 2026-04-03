@@ -17,6 +17,7 @@ Rapid Serial Visual Presentation (RSVP) of 200 object images at two presentation
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, misc
+> **Status**: wait_kernel_update
 > **Evidence Keywords**: regression target
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004018
 
@@ -72,7 +73,7 @@ Rapid Serial Visual Presentation (RSVP) of 200 object images at two presentation
   - DOI: 10.1016/j.neuroimage.2018.12.046 — Reports target vs distractor binary classification using LDA, with extended epoch window tmin=-0.1s to tmax=2.0s to capture N2/N4 components
 
 ### Normal Task 1: Super-meta task
-- **Task Type**: regression/classification
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s, target_events = [`stars`, `boats`]
 - **Label Route**: `misc`

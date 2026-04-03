@@ -16,6 +16,7 @@ A multimodal neuromarketing study where 42 participants browsed supermarket prod
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004588
 
 ## Event Structure

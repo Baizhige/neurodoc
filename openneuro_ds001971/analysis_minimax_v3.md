@@ -16,6 +16,7 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, stim, misc
+> **Status**: wait_manual_review
 > **Evidence Keywords**: response_time
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds001971
 

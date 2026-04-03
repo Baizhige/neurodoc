@@ -17,6 +17,7 @@ Participants performed visual naming and spelling tasks of visually presented ob
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, stim, misc
+> **Status**: wait_manual_review
 > **Evidence Keywords**: response_time, reaction time, regression target
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003420
 
@@ -49,7 +50,7 @@ Participants performed visual naming and spelling tasks of visually presented ob
 ## Tasks
 
 ### Primary Task 1: Brain Network State Segmentation in Picture Naming
-- **Task Type**: segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.6 s *, target_events = [`1`]
 - **Label Route**: `Annotation`

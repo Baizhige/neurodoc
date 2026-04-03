@@ -17,6 +17,7 @@ A simulated driving task assessing driver fatigue and performance through a spee
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004122
 
 ## Event Structure

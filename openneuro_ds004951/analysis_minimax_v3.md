@@ -16,6 +16,7 @@ Participants identified Braille letters presented via tactile stimulation to lef
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004951
 
 ## Event Structure

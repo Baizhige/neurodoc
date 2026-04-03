@@ -16,6 +16,7 @@ High-density EEG recorded in an operational context involving multiple condition
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_kernel_update
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004851
 
 ## Event Structure

@@ -16,6 +16,7 @@ Nine subjects (B01-B09) performed two-class cued motor imagery of the left and r
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://www.bbci.de/competition/iv/desc_2b.html
 
 ## Event Structure

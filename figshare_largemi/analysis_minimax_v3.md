@@ -23,6 +23,7 @@ Trials were cue-based with a blank screen rest period, followed by an arrow/cue 
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://figshare.com/collections/A_large_electroencephalographic_motor_imagery_dataset_for_electroencephalographic_brain_computer_interfaces/3917698
 
 ## Event Structure
@@ -125,7 +126,7 @@ Trials were cue-based with a blank screen rest period, followed by an arrow/cue 
 | `Pinkie MI` | 4 | Little finger MI |
 
 ### Normal Task 4: Resting-State Segmentation - NoMT Control (epoch_by_segmentation)
-- **Task Type**: segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: length = 3.0 s, overlap = 0.5 s
 - **Label Route**: `Annotation`

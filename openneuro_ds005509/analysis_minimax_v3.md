@@ -16,6 +16,7 @@ The Healthy Brain Network (HBN) EEG Release 5 is a large-scale, multi-task devel
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, stim, misc
+> **Status**: wait_manual_review
 > **Evidence Keywords**: response_time, externalizing, phenotypic, regression target
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds005509
 
@@ -102,7 +103,7 @@ The Healthy Brain Network (HBN) EEG Release 5 is a large-scale, multi-task devel
 - **Kernel Notes**: Exclude admin markers from supervised target sets.
 
 ### Normal Task 2: Raw-meta state decoding (long-event)
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5, target_events = see Target Definition
 - **Label Route**: `Annotation`
@@ -121,7 +122,7 @@ The Healthy Brain Network (HBN) EEG Release 5 is a large-scale, multi-task devel
 - **Kernel Notes**: Parse trial chains and write regression targets with unit/version metadata.
 
 ### Normal Task 4: Super-meta psychopathology-factor modeling
-- **Task Type**: regression (or discretized classification baseline)
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5` or `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: Needs verification, target_events = see Target Definition
 - **Label Route**: `misc`

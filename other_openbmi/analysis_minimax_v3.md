@@ -16,6 +16,7 @@ Fifty-four subjects (ages 19-32, mixed sex) performed two-class cued motor image
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://gigadb.org/dataset/view/id/100542/File_page/5
 
 ## Event Structure

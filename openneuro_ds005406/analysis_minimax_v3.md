@@ -16,6 +16,7 @@ A frequency-tagging EEG study measuring steady-state visual evoked potentials (S
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds005406
 
 ## Event Structure

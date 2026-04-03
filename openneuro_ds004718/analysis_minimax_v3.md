@@ -16,6 +16,7 @@ Naturalistic listening task where older Cantonese-speaking adults (65+) listened
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004718
 
 ## Event Structure

@@ -16,6 +16,7 @@ High-density resting-state EEG recordings were collected from three groups: ampu
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006921
 
 ## Event Structure
@@ -64,7 +65,7 @@ _No event markers detected (`no_events`). This dataset contains continuous resti
 - **Kernel Notes**: Requires metadata to distinguish eyes-open vs eyes-closed recordings. If unavailable, treat as single resting-state condition.
 
 ### Normal Task 1: Resting-State Segmentation (segmentation)
-- **Task Type**: segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5 s
 - **Label Route**: `Annotation`

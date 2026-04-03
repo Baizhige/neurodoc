@@ -16,6 +16,7 @@ The Sleep-EDF Database Expanded contains whole-night polysomnographic (PSG) slee
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://physionet.org/content/sleep-edfx/1.0.0/
 
 ## Event Structure

@@ -17,6 +17,7 @@ This dataset studies the directional characteristics of brain alpha waves during
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006848/versions/1.0.0
 
 ## Event Structure

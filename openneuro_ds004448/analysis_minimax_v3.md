@@ -17,6 +17,7 @@ Participants performed a sensorimotor rhythm-based brain-computer interface task
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_kernel_update
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004448
 
 ## Event Structure

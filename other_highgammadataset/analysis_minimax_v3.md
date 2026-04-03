@@ -16,6 +16,7 @@ Fourteen subjects performed four-class cued motor imagery (left hand, right hand
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://gin.g-node.org/robintibor/high-gamma-dataset/src/master/data
 
 ## Event Structure

@@ -16,6 +16,7 @@ Eighteen subjects (S1-S18) participated in an auditory attention decoding (AAD) 
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://zenodo.org/records/1199011
 
 ## Event Structure

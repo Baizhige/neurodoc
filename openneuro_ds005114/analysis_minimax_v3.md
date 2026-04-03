@@ -16,6 +16,7 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds005114
 
 ## Event Structure
@@ -45,7 +46,7 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
 ## Tasks
 
 ### Primary Task 1: Publisher-defined BIDS task: DPX
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification *, tmax = Needs verification *, target_events = [Needs verification]
 - **Label Route**: `Annotation`

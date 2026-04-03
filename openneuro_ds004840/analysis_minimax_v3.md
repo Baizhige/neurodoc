@@ -16,6 +16,7 @@ Electrophysiological recordings (EEG, ECG, EMG) of adult burn patients in a clin
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004840
 
 ## Event Structure

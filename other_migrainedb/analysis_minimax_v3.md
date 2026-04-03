@@ -16,6 +16,7 @@ Thirty-nine subjects (18 interictal migraine patients: M1-M18; 21 healthy contro
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://kilthub.cmu.edu/articles/dataset/Ultra_high-density_EEG_recording_of_interictal_migraine_and_controls_sensory_and_rest/12636731
 
 ## Event Structure
@@ -74,7 +75,7 @@ Thirty-nine subjects (18 interictal migraine patients: M1-M18; 21 healthy contro
 | `6Hz vision stimulation start` | 1 | 6 Hz flicker stimulus |
 
 ### Normal Task 2: Migraine Patient vs. Control - Resting State (epoch_by_segmentation)
-- **Task Type**: segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: length = 5.0 s, overlap = 2.5 s (within `resting state block start` / end boundaries)
 - **Label Route**: `Annotation`

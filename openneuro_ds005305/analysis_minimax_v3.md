@@ -16,6 +16,7 @@ Resting-state EEG microstates were recorded to correlate spontaneous brain dynam
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds005305
 
 ## Event Structure

@@ -17,6 +17,7 @@ Participants performed an auditory oddball task under three levels of environmen
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003620
 
 ## Event Structure

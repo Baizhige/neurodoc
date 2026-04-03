@@ -17,6 +17,7 @@ A mobile EEG study where participants performed a dichotic listening task (two c
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003801
 
 ## Event Structure

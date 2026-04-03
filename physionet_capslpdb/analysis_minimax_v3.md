@@ -16,6 +16,7 @@ One hundred and eight patients from the Sleep Disorders Center, Ospedale Civile 
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://physionet.org/content/capslpdb/1.0.0/
 
 ## Event Structure

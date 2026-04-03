@@ -16,6 +16,7 @@ Twenty-six subjects (ages 20-37) performed a P300-based BCI feedback task using 
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://www.kaggle.com/c/inria-bci-challenge
 
 ## Event Structure

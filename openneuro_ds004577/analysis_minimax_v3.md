@@ -16,6 +16,7 @@ Resting-state EEG recordings from 103 healthy infants (aged 1-12 months) during 
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004577
 
 ## Event Structure
@@ -37,7 +38,7 @@ _No task event markers. State markers (eyes_closed, eyes_open) and artifact mark
 ## Tasks
 
 ### Normal Task 1: Continuous Segmentation (resting/segmentation)
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
 - **Label Route**: `Annotation`

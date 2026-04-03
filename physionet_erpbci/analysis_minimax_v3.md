@@ -16,6 +16,7 @@ Participants spelled characters using a standard 6x6 matrix speller while EEG wa
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://physionet.org/content/erpbci/1.0.0/
 
 ## Event Structure

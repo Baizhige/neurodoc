@@ -17,6 +17,7 @@ The study measures subcortical Auditory Brainstem Responses (ABR) to continuous 
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004356
 
 ## Event Structure
@@ -71,7 +72,7 @@ The study measures subcortical Auditory Brainstem Responses (ABR) to continuous 
 - **Kernel Notes**: Extract continuous stimulus blocks (12s duration). Apply bandpass filtering appropriate for subcortical ABR analysis (e.g., 70-2000 Hz) or cortical analysis (e.g., 0.5-40 Hz). The paper analyzes both subcortical kernel [0,15]ms and cortical kernel [0,200]ms responses. Use label 0 for music categories, label 1 for speech categories. (replaces Primary Task 1 and Normal Task 1 from original analysis.md)
 
 ### Primary Task 2: Click Train ABR Control Task
-- **Task Type**: classification/analysis
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0 s, tmax = 12 s *, overlap = 0.0 *, target_events = [`click`]
 - **Label Route**: `Annotation`

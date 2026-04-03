@@ -16,6 +16,7 @@ Participants listened to 40 music clips from film scores while their EEG was rec
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, stim, misc
+> **Status**: wait_kernel_update
 > **Evidence Keywords**: regression target
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002721
 

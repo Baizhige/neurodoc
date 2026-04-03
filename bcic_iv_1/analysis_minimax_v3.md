@@ -16,6 +16,7 @@ Seven subjects performed two-class motor imagery without feedback in an asynchro
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://www.bbci.de/competition/iv/desc_1.html
 
 ## Event Structure

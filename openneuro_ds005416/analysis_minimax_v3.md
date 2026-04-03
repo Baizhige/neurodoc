@@ -16,6 +16,7 @@ Participants viewed resting and movement scenes in a Mixed Reality (MR) stereo v
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds005416
 
 ## Event Structure

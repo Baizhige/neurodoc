@@ -17,6 +17,7 @@ A visual working memory task performed in a virtual reality environment where pa
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, misc
+> **Status**: wait_manual_review
 > **Evidence Keywords**: regression target
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003702
 
@@ -97,7 +98,7 @@ A visual working memory task performed in a virtual reality environment where pa
 - **Kernel Notes**: Extract subject ID from BIDS directory structure (sub-XXX). Use as categorical label for classification.
 
 ### Normal Task 2: Super-meta task
-- **Task Type**: regression/classification
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4.0 s, overlap = 0.75
 - **Label Route**: `misc`

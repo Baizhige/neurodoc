@@ -16,6 +16,7 @@ Participants engaged in resting-state (eyes open/closed) and task phases involvi
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds005815
 
 ## Event Structure
@@ -72,7 +73,7 @@ Participants engaged in resting-state (eyes open/closed) and task phases involvi
 - **Kernel Notes**: Extract 4s epochs from imagery phase (post-stimulus onset). Verify event ID to modality mapping from events.tsv — current mapping uses numeric codes as best inference from available raw events; paper describes `visual_square`, `auditory_vowel_a` style labels which may be derived BIDS names.
 
 ### Primary Task 2: Publisher-defined BIDS task: Rest1
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = see Target Definition | segment_length = Needs verification, overlap = Needs verification
 - **Label Route**: `Annotation`
@@ -81,7 +82,7 @@ Participants engaged in resting-state (eyes open/closed) and task phases involvi
 
 
 ### Primary Task 3: Publisher-defined BIDS task: Rest2
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = see Target Definition | segment_length = Needs verification, overlap = Needs verification
 - **Label Route**: `Annotation`

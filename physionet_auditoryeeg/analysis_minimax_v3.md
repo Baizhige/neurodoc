@@ -16,6 +16,7 @@ Nineteen subjects (s01-s20, one subject absent) aged 21-31 participated in a bio
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, misc
+> **Status**: wait_kernel_update
 > **Evidence Keywords**: questionnaire
 > **Web Reference Used for Decision**: https://physionet.org/content/auditory-eeg/1.0.0/
 

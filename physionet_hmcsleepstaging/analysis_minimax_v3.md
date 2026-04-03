@@ -16,6 +16,7 @@ Seventy-seven overnight polysomnographic recordings from the Haaglanden Medisch 
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://physionet.org/content/hmc-sleep-staging/1.1/
 
 ## Event Structure

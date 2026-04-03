@@ -16,6 +16,7 @@ The TUH EEG Events Corpus (v2.0.1) provides time-stamped annotations of neurolog
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://isip.piconepress.com/projects/tuh_eeg/downloads/tuh_eeg_events/v2.0.1/
 
 ## Event Structure
@@ -36,7 +37,7 @@ The TUH EEG Events Corpus (v2.0.1) provides time-stamped annotations of neurolog
 ## Tasks
 
 ### Primary Task 1: Neurological EEG event detection/classification
-- **Task Type**: classification/detection
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
 - **Label Route**: `Annotation`

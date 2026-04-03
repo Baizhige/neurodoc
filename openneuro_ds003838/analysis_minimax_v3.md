@@ -17,6 +17,7 @@ Participants performed a classic digit span working memory task involving serial
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003838/versions/1.0.0
 
 ## Event Structure
@@ -85,7 +86,7 @@ Participants performed a classic digit span working memory task involving serial
 - **Kernel Notes**: Class labels represent cognitive load level (5=low, 9=medium, 13=high), ignoring recall outcome for load classification. Paper epoched [−1500 3500 ms]; kernel should verify timing from events.tsv. *Parameters marked with * are inferred from paper methodology, not explicitly stated for this exact dataset.
 
 ### Normal Task 1: Publisher-defined BIDS task: Mixed
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
 - **Label Route**: `Annotation`

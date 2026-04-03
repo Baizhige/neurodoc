@@ -16,6 +16,7 @@ The TUH EEG Artifact Corpus (v3.0.1) provides time-stamped, channel-level artifa
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, misc
+> **Status**: wait_manual_review
 > **Evidence Keywords**: confidence
 > **Web Reference Used for Decision**: https://isip.piconepress.com/projects/tuh_eeg/downloads/tuh_eeg_artifact/v3.0.1/
 

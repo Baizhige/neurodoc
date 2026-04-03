@@ -16,6 +16,7 @@ The Temple University Hospital EEG Corpus (v2.0.1) is the largest publicly avail
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://isip.piconepress.com/projects/tuh_eeg/downloads/tuh_eeg/v2.0.1/
 
 ## Event Structure
@@ -47,7 +48,7 @@ The Temple University Hospital EEG Corpus (v2.0.1) is the largest publicly avail
 - **Kernel Notes**: Extract 60-second non-overlapping epochs from raw EEG signals using epoch_by_segmentation_hdf5. Labels must be derived from clinical reports per recording (not from raw events). Ensure consistent sampling rate across recordings (resample to 250 Hz if needed). Feature extraction per paper: wavelet-based features recommended.
 
 ### Normal Task 1: Resting-State Segmentation (epoch_by_segmentation)
-- **Task Type**: segmentation
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: length = 5.0 s, overlap = 2.5 s
 - **Label Route**: `Annotation`

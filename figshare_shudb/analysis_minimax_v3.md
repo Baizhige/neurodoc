@@ -16,6 +16,7 @@ Twenty-one subjects (sub-001 to sub-021) performed cued left/right hand motor im
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://figshare.com/articles/software/shu_dataset/19228725/1
 
 ## Event Structure

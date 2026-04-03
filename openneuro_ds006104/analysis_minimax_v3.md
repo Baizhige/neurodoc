@@ -16,6 +16,7 @@ A phoneme discrimination task where participants listened to speech sounds - inc
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006104
 
 ## Event Structure

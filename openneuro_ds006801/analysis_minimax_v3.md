@@ -16,6 +16,7 @@ Resting-state EEG was recorded before and after an educational intervention in w
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006801
 
 ## Event Structure
@@ -29,7 +30,7 @@ Resting-state EEG was recorded before and after an educational intervention in w
 ## Tasks
 
 ### Normal Task 1: Resting-State Segmentation
-- **Task Type**: segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4.0 s *, overlap = 0.5 *
 - **Label Route**: `Annotation`

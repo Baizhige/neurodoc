@@ -16,6 +16,7 @@ Participants listened to music stimuli designed to elicit emotional responses (a
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002725
 
 ## Event Structure
@@ -54,7 +55,7 @@ Participants listened to music stimuli designed to elicit emotional responses (a
 - **Kernel Notes**: Event IDs 265 and 768 mapped to music conditions based on paper description of synthetic (generated) vs classical music trials. Verify mapping from events.tsv and dataset documentation. Epoch length 40s matches synthetic music trial duration; classical trials vary 2-3min.
 
 ### Primary Task 2: Affective State Classification (Valence/Arousal from FEELTRACE)
-- **Task Type**: regression (valence and arousal scores)
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0 s, tmax = 40 s, overlap = 0.5, target_events = [`synthetic_music`, `classical_music`] *
 - **Label Route**: `Annotation`

@@ -16,6 +16,7 @@ Participants used kinaesthetic motor imagery (imagining squeezing a ball) or rel
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002720
 
 ## Event Structure

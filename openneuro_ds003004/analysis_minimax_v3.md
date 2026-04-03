@@ -16,6 +16,7 @@ Participants used voice-guided imagery to induce and sustain 15 distinct emotion
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_kernel_update
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003004
 
 ## Event Structure

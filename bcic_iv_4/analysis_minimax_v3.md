@@ -16,6 +16,7 @@ Three subjects (sub1-sub3) performed individual finger flexions under instructio
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, stim, misc
+> **Status**: wait_kernel_update
 > **Evidence Keywords**: regression target
 > **Web Reference Used for Decision**: https://www.bbci.de/competition/iv/desc_4.html
 

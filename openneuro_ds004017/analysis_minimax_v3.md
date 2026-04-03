@@ -17,6 +17,7 @@ A pre-post intervention study assessing literacy and orthographic processing in 
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004017
 
 ## Event Structure
@@ -59,7 +60,7 @@ A pre-post intervention study assessing literacy and orthographic processing in 
 - **Kernel Notes**: Preprocessing: high-pass 0.1 Hz, low-pass 40 Hz, baseline correction -100ms to 0ms, downsample to 512 Hz. (replaces Normal Task 1 from original analysis.md)
 
 ### Normal Task 1: Pre-post intervention longitudinal analysis
-- **Task Type**: classification / regression
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -1.0 s, tmax = 2.0 s, target_events = [`100.0`, `200.0`, `10.0`, `20.0`]
 - **Label Route**: `Annotation`

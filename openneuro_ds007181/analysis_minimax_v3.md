@@ -16,6 +16,7 @@ Resting-state EEG (part of a PSG recording) was collected from patients with zos
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_kernel_update
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds007181
 
 ## Event Structure
@@ -50,7 +51,7 @@ _No event markers detected (`no_events`). This dataset contains continuous PSG/E
 - **Kernel Notes**: Verify sleep stage annotation label names from PSG/hypnogram files; align 30-second epoch windows to EEG data. (replaces Normal Task 1 from original analysis.md)
 
 ### Primary Task 2: Resting-state segmentation
-- **Task Type**: segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4.0 s *, overlap = 0.5 *, target_events = N/A
 - **Label Route**: `Annotation`

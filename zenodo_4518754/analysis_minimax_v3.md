@@ -16,6 +16,7 @@ Thirteen subjects listened to two simultaneously presented Dutch stories (left v
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://zenodo.org/records/4518754
 
 ## Event Structure

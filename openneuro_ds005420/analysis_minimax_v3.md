@@ -17,6 +17,7 @@ Spontaneous resting-state EEG was recorded in a cohort of females aged 60-80 yea
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds005420
 
 ## Event Structure
@@ -52,7 +53,7 @@ _No event markers detected (`no_events`). This dataset contains continuous resti
 - **Kernel Notes**: Verify BIDS task labels (Oa, Oc) map to eyes-open/eyes-closed from dataset README. Apply bandpass filter (0.5-40 Hz) and artifact rejection prior to segmentation. Use VGG-19 or CNN architecture for binary classification.
 
 ### Normal Task 1: Resting-State Segmentation (segmentation)
-- **Task Type**: segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4.0 s, overlap = 0.5 s
 - **Label Route**: `Annotation`

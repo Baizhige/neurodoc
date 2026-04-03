@@ -17,6 +17,7 @@ A reinforcement learning task involving probabilistic affective feedback to inve
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003753
 
 ## Event Structure
@@ -60,7 +61,7 @@ A reinforcement learning task involving probabilistic affective feedback to inve
 - **Kernel Notes**: Epoch relative to FB onset. Baseline correct -200 to 0 ms. Verify event ID mapping from events.tsv. (replaces Normal Task 1 from original analysis.md)
 
 ### Primary Task 2: Publisher-defined BIDS task: Probabilistic Selection
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
 - **Label Route**: `Annotation`

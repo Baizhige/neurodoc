@@ -16,6 +16,7 @@ Spontaneous brain activity was recorded during resting-state EEG, supplemented b
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006525
 
 ## Event Structure
@@ -33,7 +34,7 @@ Spontaneous brain activity was recorded during resting-state EEG, supplemented b
 ## Tasks
 
 ### Primary Task 1: Resting-State Brain State Discovery (cCAP/CAP Clustering)
-- **Task Type**: segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 1.0 s, overlap = 0.0 s
 - **Label Route**: `Annotation`

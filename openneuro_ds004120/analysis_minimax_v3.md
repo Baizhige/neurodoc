@@ -17,6 +17,7 @@ Subjects performed a 60-minute simulated driving task involving manual steering 
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004120
 
 ## Event Structure

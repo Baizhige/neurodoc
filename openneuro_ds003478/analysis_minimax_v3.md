@@ -17,6 +17,7 @@ Resting-state EEG recording featuring alternating one-minute intervals of eyes-o
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, stim, misc
+> **Status**: wait_manual_review
 > **Evidence Keywords**: regression target
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003478
 
