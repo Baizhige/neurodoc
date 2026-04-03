@@ -16,6 +16,7 @@ The SEED (SJTU Emotion EEG Dataset) was collected from 15 subjects who watched 1
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://bcmi.sjtu.edu.cn/home/seed/
 
 ## Event Structure

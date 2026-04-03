@@ -16,6 +16,7 @@ Infants viewed 200 distinct object images presented in rapid visual streams (RSV
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_kernel_update
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds005106
 
 ## Event Structure

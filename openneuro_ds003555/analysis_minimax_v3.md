@@ -17,6 +17,7 @@ Continuous sleep EEG recordings from pediatric patients with epilepsy, focused o
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003555
 
 ## Event Structure

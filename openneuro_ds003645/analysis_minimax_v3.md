@@ -17,6 +17,7 @@ Participants performed a simple perceptual task judging the spatial symmetry of 
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003645
 
 ## Event Structure

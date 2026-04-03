@@ -16,6 +16,7 @@ Fifty stroke patients (sub-01 to sub-50) performed a cued left/right hand motor 
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://figshare.com/articles/dataset/EEG_datasets_of_stroke_patients/21679035/5
 
 ## Event Structure

@@ -16,6 +16,7 @@ Subjects engaged in focused meditation sessions that were interrupted every two 
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, stim, misc
+> **Status**: wait_kernel_update
 > **Evidence Keywords**: response_time, regression target
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds001787
 

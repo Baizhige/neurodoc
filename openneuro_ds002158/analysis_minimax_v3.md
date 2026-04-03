@@ -17,6 +17,7 @@ Participants performed speeded perceptual judgments and subsequently reported th
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, misc
+> **Status**: wait_manual_review
 > **Evidence Keywords**: response_time, reaction time, confidence, regression target
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002158
 
@@ -56,7 +57,7 @@ Participants performed speeded perceptual judgments and subsequently reported th
 - **Kernel Notes**: High sampling rate (5000 Hz) requires downsampling. The `unknown` event serves as epoch anchor - verify from events.tsv that it corresponds to response onset (button press/visual hand appearance). Extract confidence values from misc channel as regression target. (replaces Normal Task 1 from original analysis.md)
 
 ### Normal Task 1: Publisher-defined BIDS task: Main
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
 - **Label Route**: `Annotation`
@@ -64,7 +65,7 @@ Participants performed speeded perceptual judgments and subsequently reported th
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds002158 DOI: https://doi.org/10.1073/pnas.1918335117
 
 ### Normal Task 2: Publisher-defined BIDS task: Rest
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
 - **Label Route**: `Annotation`

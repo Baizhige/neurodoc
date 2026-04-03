@@ -16,6 +16,7 @@ Longitudinal resting-state EEG recordings collected over four sessions spanning 
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_kernel_update
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds007176
 
 ## Event Structure
@@ -35,7 +36,7 @@ Longitudinal resting-state EEG recordings collected over four sessions spanning 
 ## Tasks
 
 ### Normal Task 1: Resting-State Segmentation (long_event)
-- **Task Type**: segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5 s, target_events = see Target Definition
 - **Label Route**: `stim`

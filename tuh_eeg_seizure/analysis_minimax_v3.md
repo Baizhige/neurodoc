@@ -16,6 +16,7 @@ The TUH EEG Seizure Corpus (v2.0.3) is the largest publicly available seizure de
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://isip.piconepress.com/projects/tuh_eeg/downloads/tuh_eeg_seizure/v2.0.3/
 
 ## Event Structure

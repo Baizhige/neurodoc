@@ -17,6 +17,7 @@ Resting-state EEG recorded from Parkinson's disease patients who received a plac
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003195
 
 ## Event Structure

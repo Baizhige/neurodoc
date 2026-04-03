@@ -16,6 +16,7 @@ Participants performed right-hand motor imagery and received neurofeedback (1D o
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002338
 
 ## Event Structure
@@ -67,11 +68,8 @@ Participants performed right-hand motor imagery and received neurofeedback (1D o
   - DOI: 10.1038/s41597-020-0498-3 — confirms S 99 indicates Rest block start, S 2 indicates Task block start
 - **Kernel Notes**: Exclude MRI artifacts marked by TPULSE/* markers. High sampling rate (5000 Hz); downsample to 200-500 Hz for ML. Use long-event epoching on Rest and Task-NF annotations (20s duration each).
 
-### Normal Task 1: (replaced by Primary Task 1)
-
 ## Data Quality Notes
 
 - MRI gradient artifacts contaminate EEG; TPULSE markers indicate artifact windows.
 - High sampling rate (5000 Hz); downsampling recommended.
 - Verify channel count consistency across subjects before pooling.
-

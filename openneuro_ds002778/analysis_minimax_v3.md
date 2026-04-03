@@ -16,6 +16,7 @@ Spontaneous scalp EEG recorded from patients with Parkinson's disease (PD) and h
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002778
 
 ## Event Structure

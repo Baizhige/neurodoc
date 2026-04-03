@@ -17,6 +17,7 @@ Subjects performed a sustained vigilance task simulating advanced security guard
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004106
 
 ## Event Structure

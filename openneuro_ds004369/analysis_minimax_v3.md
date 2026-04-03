@@ -17,6 +17,7 @@ A two-competing speaker paradigm where participants selectively attended to one 
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004369
 
 ## Event Structure
@@ -36,7 +37,7 @@ _No event markers detected (`no_events`). This dataset contains continuous EEG r
 ## Tasks
 
 ### Primary Task 1: Publisher-defined BIDS task: Attended Speaker Paradigm
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
 - **Label Route**: `Annotation`

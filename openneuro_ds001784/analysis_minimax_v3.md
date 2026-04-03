@@ -16,6 +16,7 @@ Participants with treatment-resistant depression performed a modified Multi-Sour
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds001784
 
 ## Event Structure
@@ -78,7 +79,7 @@ Participants with treatment-resistant depression performed a modified Multi-Sour
 - **Kernel Notes**: Use task label 'afmsit' from BIDS dataset. Epoch by event markers in events.tsv with task='afmsit'. Verify timing aligns with MSIT trial structure. (replaces Primary Task 2 from original analysis.md)
 
 ### Primary Task 4: BIDS task "rest"
-- **Task Type**: segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4.0 s *, overlap = 0.5 *
 - **Label Route**: `Annotation`

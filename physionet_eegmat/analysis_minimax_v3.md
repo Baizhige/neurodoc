@@ -16,6 +16,7 @@ Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly fema
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://physionet.org/content/eegmat/1.0.0/
 
 ## Event Structure

@@ -16,6 +16,7 @@ Fifteen subjects performed a dichotic listening auditory attention decoding (AAD
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://zenodo.org/records/4004271
 
 ## Event Structure

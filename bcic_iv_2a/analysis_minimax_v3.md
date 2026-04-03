@@ -16,6 +16,7 @@ Nine subjects (A01-A09) performed four-class cued motor imagery (BCI Competition
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://www.bbci.de/competition/iv/desc_2a.html
 
 ## Event Structure

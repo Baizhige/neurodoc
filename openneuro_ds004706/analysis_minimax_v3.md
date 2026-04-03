@@ -17,6 +17,7 @@ A hybrid spatial-navigation and free recall task where participants delivered it
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004706
 
 ## Event Structure

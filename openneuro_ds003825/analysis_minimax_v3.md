@@ -17,6 +17,7 @@ Participants viewed a large-scale set of 22,248 images spanning 1,854 object con
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003825
 
 ## Event Structure

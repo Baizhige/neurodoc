@@ -17,6 +17,7 @@ Five minutes of resting-state EEG recording used to compare spontaneous brain ac
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003947
 
 ## Event Structure
@@ -50,7 +51,7 @@ Five minutes of resting-state EEG recording used to compare spontaneous brain ac
 - **Kernel Notes**: Load participants.tsv to obtain diagnosis labels for each subject. Segment continuous EEG into 4-second non-overlapping windows. Assign subject-level diagnosis (FEP=1, control=0) to all corresponding epochs. Resample to 250 Hz or lower to reduce computational load (original 3000 Hz). (replaces Normal Task 1 from original analysis.md)
 
 ### Normal Task 1: Resting-state baseline characterization
-- **Task Type**: regression *
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s, overlap = 0.0 *
 - **Label Route**: `Annotation`

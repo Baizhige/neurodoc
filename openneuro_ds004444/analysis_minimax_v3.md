@@ -17,6 +17,7 @@ Brain-computer interfacing task based on sensorimotor rhythms (SMR) using high-d
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004444
 
 ## Event Structure

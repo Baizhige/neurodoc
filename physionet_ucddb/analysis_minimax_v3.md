@@ -16,6 +16,7 @@ Twenty-five patients suspected of sleep-disordered breathing underwent overnight
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://physionet.org/content/ucddb/1.0.0/
 
 ## Event Structure
@@ -57,7 +58,7 @@ Twenty-five patients suspected of sleep-disordered breathing underwent overnight
 - **Kernel Notes**: Exclude `Sleep stage 8` (undefined/artifact epochs). R&K stages 3 and 4 may optionally be merged to N3 per AASM standard if 5-class output is desired. Case B kernel handles `.rec` file reconstruction. (replaces Normal Task 1 from original analysis.md)
 
 ### Normal Task 2: Sleep Apnea Detection
-- **Task Type**: classification (binary)
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5` *or* `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = 0 s, tmax = 10 s, overlap = 0.5 *, target_events = [`apnea`, `non-apnea`] *
 - **Label Route**: `Annotation` *

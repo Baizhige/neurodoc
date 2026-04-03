@@ -16,6 +16,7 @@ Participants played a real MOBA (Multiplayer Online Battle Arena) game while 60-
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds005520
 
 ## Event Structure
@@ -78,7 +79,7 @@ Participants played a real MOBA (Multiplayer Online Battle Arena) game while 60-
 - **Kernel Notes**: Validate event ID mapping from events.tsv. Apply bandpass filter (1-40 Hz) and artifact rejection. (replaces Normal Task 1 from original analysis.md)
 
 ### Normal Task 1: Resting State Eye Open
-- **Task Type**: segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4.0 s *, overlap = 0.5 *
 - **Label Route**: `Annotation`
@@ -87,7 +88,7 @@ Participants played a real MOBA (Multiplayer Online Battle Arena) game while 60-
 - **Kernel Notes**: Verify from dataset README which runs correspond to eye-open resting. Apply preprocessing filter 1-40 Hz.
 
 ### Normal Task 2: Resting State Eye Closed
-- **Task Type**: segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4.0 s *, overlap = 0.5 *
 - **Label Route**: `Annotation`

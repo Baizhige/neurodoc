@@ -17,6 +17,7 @@ Longitudinal spontaneous EEG recordings from infants at 4, 8, and 12 months of a
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003710
 
 ## Event Structure

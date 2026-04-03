@@ -17,6 +17,7 @@ A large-scale study investigating the electrophysiological correlates of memory 
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, misc
+> **Status**: wait_manual_review
 > **Evidence Keywords**: confidence
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004395
 
@@ -84,7 +85,7 @@ A large-scale study investigating the electrophysiological correlates of memory 
 | `RECOG_LURE` | 1 | Recognition lure (not previously seen) |
 
 ### Primary Task 2: Publisher-defined BIDS task: Ltp FR
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification *, tmax = Needs verification *, target_events = [Needs verification *]
 - **Label Route**: `Annotation`
@@ -93,7 +94,7 @@ A large-scale study investigating the electrophysiological correlates of memory 
 - **Kernel Notes**: Verify epoch parameters and target_events mapping from events.tsv. BIDS task 'Ltp FR' corresponds to word encoding/free recall paradigm. Likely uses `WORD` (encoding) and `REC_WORD` (retrieval) events.
 
 ### Primary Task 3: Publisher-defined BIDS task: Ltp FR2
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification *, tmax = Needs verification *, target_events = [Needs verification *]
 - **Label Route**: `Annotation`
@@ -102,7 +103,7 @@ A large-scale study investigating the electrophysiological correlates of memory 
 - **Kernel Notes**: Verify epoch parameters and target_events mapping from events.tsv. BIDS task 'Ltp FR2' likely uses similar events to Ltp FR but with different word lists/trials.
 
 ### Primary Task 4: Publisher-defined BIDS task: VFFR
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification *, tmax = Needs verification *, target_events = [Needs verification *]
 - **Label Route**: `Annotation`

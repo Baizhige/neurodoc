@@ -16,6 +16,7 @@ Participants performed a one-dimensional cursor BCI task using mental imagery in
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://doi.org/10.6084/m9.figshare.7959572
 
 ## Event Structure

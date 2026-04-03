@@ -16,6 +16,7 @@ Intracranial EEG was recorded from drug-resistant epilepsy patients undergoing p
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds005169
 
 ## Event Structure

@@ -16,6 +16,7 @@ Twenty-two pediatric patients (5 males aged 3-22; 17 females aged 1.5-19) with i
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://physionet.org/content/chbmit/1.0.0/
 
 ## Event Structure

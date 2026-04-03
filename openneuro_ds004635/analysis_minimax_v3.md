@@ -17,6 +17,7 @@ Infants watched a series of engaging and relaxing videos to facilitate recording
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004635
 
 ## Event Structure
@@ -35,7 +36,7 @@ Infants watched a series of engaging and relaxing videos to facilitate recording
 ## Tasks
 
 ### Primary Task 1: EEG Microstate Segmentation
-- **Task Type**: segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 1 s *, overlap = 0.0 *
 - **Label Route**: `Annotation`

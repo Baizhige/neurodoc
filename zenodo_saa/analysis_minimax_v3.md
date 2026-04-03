@@ -16,6 +16,7 @@ Eighteen subjects (S12, S13, S15, S21, S27, S28, S31, S33, S36, S37, S38, S39, S
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://zenodo.org/records/3357164
 
 ## Event Structure

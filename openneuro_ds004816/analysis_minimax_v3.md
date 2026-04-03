@@ -16,6 +16,7 @@ A Rapid Serial Visual Presentation (RSVP) task investigating the neural dynamics
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004816
 
 ## Event Structure

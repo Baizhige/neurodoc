@@ -17,6 +17,7 @@ Young and older adults performed auditory-cued simple reaction time and go/no-go
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, misc
+> **Status**: wait_manual_review
 > **Evidence Keywords**: reaction time
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003690
 

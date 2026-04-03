@@ -16,6 +16,7 @@ EEG was recorded while participants engaged in social observation tasks, likely 
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006554
 
 ## Event Structure

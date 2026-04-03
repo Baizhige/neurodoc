@@ -17,6 +17,7 @@ Participants performed a visuospatial working memory task under a double-blind C
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003519
 
 ## Event Structure

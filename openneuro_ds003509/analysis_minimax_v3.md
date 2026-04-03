@@ -17,6 +17,7 @@ This study investigates mid-frontal theta deficits in Parkinson's disease (PD) p
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003509
 
 ## Event Structure

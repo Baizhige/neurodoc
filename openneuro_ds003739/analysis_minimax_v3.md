@@ -17,6 +17,7 @@ Participants performed walking on a treadmill-mounted balance beam while being s
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, misc
+> **Status**: wait_manual_review
 > **Evidence Keywords**: regression target
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003739
 
@@ -85,7 +86,7 @@ Participants performed walking on a treadmill-mounted balance beam while being s
 - **Kernel Notes**: Exclude admin markers from target labels.
 
 ### Normal Task 2: Super-meta task
-- **Task Type**: regression/classification
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5` or `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: Needs verification, target_events = see Target Definition
 - **Label Route**: `misc`

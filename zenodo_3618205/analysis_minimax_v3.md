@@ -16,6 +16,7 @@ Forty-four participants (22 normal-hearing, 22 hearing-impaired) underwent EEG r
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, misc
+> **Status**: wait_manual_review
 > **Evidence Keywords**: questionnaire
 > **Web Reference Used for Decision**: https://zenodo.org/records/3618205
 

@@ -16,6 +16,7 @@ Participants performed an attentional blink (AB) task using a Rapid Serial Visua
 > **Selected Mode**: Type 2 + Type 3
 > **Why**: Derived targets are needed beyond raw markers.
 > **Primary Label Routes**: Annotation, stim, misc
+> **Status**: wait_manual_review
 > **Evidence Keywords**: response_time, regression target
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds001810
 

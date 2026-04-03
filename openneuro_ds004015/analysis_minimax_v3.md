@@ -17,6 +17,7 @@ A two-competing speaker auditory attention paradigm in which participants were i
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004015
 
 ## Event Structure

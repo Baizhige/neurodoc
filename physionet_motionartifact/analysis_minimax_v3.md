@@ -16,6 +16,7 @@ Thirty-two recordings (23 EEG + 9 fNIRS) were collected from subjects performing
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://physionet.org/content/motion-artifact/1.0.0/
 
 ## Event Structure

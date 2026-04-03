@@ -17,6 +17,7 @@ Four minutes of uninterrupted eyes-closed resting-state EEG recorded from health
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
+> **Status**: wait_manual_review
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003775
 
 ## Event Structure
@@ -65,7 +66,7 @@ Four minutes of uninterrupted eyes-closed resting-state EEG recorded from health
 - **Kernel Notes**: Extract 5-second epochs from continuous resting-state signal using sliding window with 50% overlap. Load participant sex from dataset metadata (participants.tsv). Train binary classifier to predict sex from spectral features.
 
 ### Normal Task 1: Resting state EEG segmentation
-- **Task Type**: segmentation
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
 - **Label Route**: `Annotation`
