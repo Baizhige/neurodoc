@@ -2,6 +2,7 @@
 
 **Dataset**: `physionet_ucddb` | **Year**: 2011 | **URL**: https://physionet.org/content/ucddb/1.0.0/
 **Category**: Biological State | **Subjects**: 25 | **Files (Completed)**: 50 | **Channels**: variable | **Sampling Rate**: variable
+**Manual Review**: Jiping Cui
 
 ## Paradigm
 
@@ -38,7 +39,7 @@ Twenty-five patients suspected of sleep-disordered breathing underwent overnight
 | `device` | missing | N/A |
 ## Tasks
 
-### Classical Task 1: Sleep stage classification (6-class)
+### Classical Task 1: Sleep Stage Classification (5-class AASM)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`Sleep stage W`, `Sleep stage 1`, `Sleep stage 2`, `Sleep stage 3`, `Sleep stage 4`, `Sleep stage REM`]
@@ -48,28 +49,36 @@ Twenty-five patients suspected of sleep-disordered breathing underwent overnight
   | Event | y | Meaning |
   |-------|---|---------|
   | `Sleep stage W` | 0 | Wake |
-  | `Sleep stage 1` | 1 | NREM Stage 1 |
-  | `Sleep stage 2` | 2 | NREM Stage 2 |
-  | `Sleep stage 3` | 3 | NREM Stage 3 (slow-wave) |
-  | `Sleep stage 4` | 4 | NREM Stage 4 (deep SWS) |
-  | `Sleep stage REM` | 5 | REM sleep |
-- **Super Meta Notes**: (NOT APPLICABLE - Meta Level = raw)
+  | `Sleep stage 1` | 1 | NREM Stage 1 (N1) |
+  | `Sleep stage 2` | 2 | NREM Stage 2 (N2) |
+  | `Sleep stage 3` | 3 | NREM Stage 3 (Deep SWS, AASM N3) |
+  | `Sleep stage 4` | 3 | NREM Stage 4 merged into N3 per AASM standard |
+  | `Sleep stage REM` | 4 | REM sleep |
 - **Evidence**:
-  - DOI: 10.1371/journal.pone.0256111 — Uses the St. Vincent's Hospital/University College Dublin Sleep Apnea Database containing 25 overnight PSGs for 5-class sleep stage classification (W/N1/N2/N3/R), with R&K scored stages mapped to AASM 5-class format; uses 30s epochs (tmin=0s, tmax=30s).
-- **Kernel Notes**: Exclude `Sleep stage 8` (undefined/artifact epochs). R&K stages 3 and 4 may optionally be merged to N3 per AASM standard if 5-class output is desired. Case B kernel handles `.rec` file reconstruction. (replaces Potential Task 1 from original analysis.md)
+  - DOI: 10.1371/journal.pone.0256111 — Uses the UCD Sleep Apnea Database (25 overnight PSGs) for 5-class sleep stage classification (W/N1/N2/N3/R); explicitly maps R&K stages 3 and 4 to the single AASM N3 class; uses 30s epochs (tmin=0s, tmax=30s).
+- **Kernel Notes**: Kernel MUST map both `Sleep stage 3` and `Sleep stage 4` to y=3 (AASM N3). Exclude `Sleep stage 8` (undefined/artifact epochs). Case B kernel handles `.rec` file reconstruction.
 
-### Potential Task 2: Sleep Apnea Detection
+### Classical Task 2: Sleep Apnea Detection
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5` *or* `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 10 s, overlap = 0.5 *, target_events = [`apnea`, `non-apnea`] *
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 10.0 s, overlap = 0.5
 - **Label Route**: `event`
-- **Target Definition**: Requires verification - apnea event annotations not currently present in raw event list.
-- **Notes**: IEEE paper (10.1109/TENSYMP49402.2020.9230848) uses 10-second EEG frames for apnea/non-apnea classification. Raw EEG annotations for apnea events may need to be derived from external sources or respiratory signals in PSG. **This task requires verifying that apnea event annotations exist or can be derived from the dataset before implementation.**
+- **Meta Level**: super
+- **Target Definition**:
+  | Event Type in `_respevt.txt` | y | Meaning |
+  |------------------------------|---|---------|
+  | `APNEA-O`, `APNEA-C`, `APNEA-M` | 1 | Obstructive, Central, or Mixed Apnea |
+  | `HYP-O`, `HYP-C` | 1 | Obstructive or Central Hypopnea |
+  | Background (no event) | 0 | Non-apneic period |
+- **Evidence**:
+  - DOI: 10.1109/TENSYMP49402.2020.9230848 — Uses 10-second EEG frames from UCD sleep database for binary apnea/non-apnea classification.
+- **Kernel Notes**: Apnea/Hypopnea events are in companion `_respevt.txt` files with precise HH:MM:SS onset and duration. Kernel must parse these files, align timestamps with EEG recording onset, and map to 10-second sliding windows (label=1 if any apnea/hypopnea event overlaps the window, else 0).
 
 ## Data Quality Notes
 
 - Case B kernel; `.rec` files require EDF-via-tempfile workaround; `_lifecard.edf` ECG files are excluded (-> `unknown` annotations in locator).
-- Age and sex information may be in `SubjectDetails.xls` within the dataset; the kernel loads demographics from this file if available.
+- Comprehensive clinical demographics in `SubjectDetails.xls` for all 25 subjects: Age, Gender, BMI, and PSG AHI (Apnea-Hypopnea Index).
+- Sleep stages in `_stage.txt` are encoded as pure integers (0,1,2,3,4,5,8) representing 30s epochs — kernel must implement numeric-to-stage mapping.
 - R&K scoring system (stages 1-4 + REM); not directly comparable to AASM (N1/N2/N3) datasets.
 - Small dataset (25 subjects); combine with other sleep databases for robust model training.
 

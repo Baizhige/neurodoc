@@ -2,6 +2,7 @@
 
 **Dataset**: `openneuro_ds001787` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds001787
 **Category**: Biological State | **Subjects**: 24 | **Files (Completed)**: 40 | **Channels**: 80 | **Sampling Rate**: 256 Hz
+**Manual Review**: Mingze Tang
 
 ## Paradigm
 
@@ -32,10 +33,12 @@ Subjects engaged in focused meditation sessions that were interrupted every two 
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `response` | 2143 | event | raw | Unresolved from current kernel facts |
-| `stimulus` | 983 | event | raw | Unresolved from current kernel facts |
-| `STATUS` | 5 | event | raw | Unresolved from current kernel facts |
+| `response` | 2143 | event | raw | Participant button-press response to attention probe |
+| `stimulus` | 983 | event | raw | Probe stimulus onset (attention check) |
+| `STATUS` | 5 | admin | raw | BioSemi system status marker - exclude |
 <!-- AUTO-KERNEL-EVENT-STRUCTURE:END -->
+
+> **Manual Review Note**: Event meanings filled in and STATUS type corrected to `admin` by human reviewer (Mingze Tang). Kernel should verify event meanings against events.tsv and STATUS exclusion on next scan.
 
 
 ### MISC Label Summary

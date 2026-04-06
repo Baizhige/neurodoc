@@ -1,11 +1,14 @@
 # Ultra High-Density EEG - Interictal Migraine and Controls
 
 **Dataset**: `other_migrainedb` | **Year**: 2020 | **URL**: https://kilthub.cmu.edu/articles/dataset/Ultra_high-density_EEG_recording_of_interictal_migraine_and_controls_sensory_and_rest/12636731
-**Category**: Biological State | **Subjects**: 39 | **Files (Completed)**: 117 | **Channels**: 144 | **Sampling Rate**: 512 Hz
+**Category**: Biological State | **Subjects**: 36 | **Files (Completed)**: 117 | **Channels**: 128 | **Sampling Rate**: 512 Hz
+**Manual Review**: Jiping Cui
 
 ## Paradigm
 
-Thirty-nine subjects (18 interictal migraine patients: M1-M18; 21 healthy controls: C1-C21) underwent high-density EEG recording (BioSemi ActiveTwo, 144 channels, 512 Hz) in three task conditions (Chiang et al., 2020): (1) **SSVEP** - steady-state visual evoked potential, flickering stimuli at 4 Hz and 6 Hz; (2) **SSAEP** - steady-state auditory evoked potential, tone sequences at 4 Hz and 6 Hz; (3) **resting state**. The dataset enables comparison of sensory processing in migraine patients vs. healthy controls in the interictal (between-attack) period.
+Thirty-six subjects (18 interictal migraine patients: M1-M18; 18 healthy controls: C1-C21, with C2, C6, C12 missing data) underwent high-density EEG recording (BioSemi ActiveTwo, 128 channels, 512 Hz) in three task conditions (Chiang et al., 2020): (1) **SSVEP** - steady-state visual evoked potential, flickering stimuli at 4 Hz and 6 Hz; (2) **SSAEP** - steady-state auditory evoked potential, tone sequences at 4 Hz and 6 Hz; (3) **resting state**. The dataset enables comparison of sensory processing in migraine patients vs. healthy controls in the interictal (between-attack) period.
+
+*Note: Subject M13 is missing data for the SSAEP task, which accounts for some literature citing only 17 migraine patients.*
 
 
 ## File Scan Result
@@ -87,7 +90,7 @@ Thirty-nine subjects (18 interictal migraine patients: M1-M18; 21 healthy contro
 
 - Group labels must be derived from the subject ID prefix (M for migraine, C for control).
 - Age range: 19-54 years; sex: mixed male/female.
-- High channel count (144); spatial filtering / source localization may be useful.
+- High channel count (128); spatial filtering / source localization may be useful.
 - Sensory task and resting state recordings provide complementary views of migraine-related cortical changes.
 
 

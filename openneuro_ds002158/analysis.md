@@ -1,12 +1,13 @@
 # Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging
 
 **Dataset**: `openneuro_ds002158` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002158
-**Category**: High-level Mental | **Subjects**: 119 | **Files (Completed)**: 119
-**Channels**: 64 | **Sampling Rate**: 5000 Hz
+**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 949
+**Channels**: 63 | **Sampling Rate**: 5000 Hz
+**Manual Review**: Liu Peng
 
 ## Paradigm
 
-Participants performed speeded perceptual judgments and subsequently reported their confidence in either their own decisions or in observed decisions made by another person. The study used multimodal neuroimaging (EEG + fMRI) to isolate the neural correlates of metacognitive confidence, distinguishing whether confidence reflects the quality of perceptual evidence or post-decisional processes. The `confidence` rating is stored as a misc channel for regression analysis. High sampling rate (5000 Hz) requires downsampling before epoching.
+Participants performed speeded perceptual judgments and subsequently reported their confidence in either their own decisions or in observed decisions made by another person. The study used multimodal neuroimaging (EEG + fMRI) to isolate the neural correlates of metacognitive confidence, distinguishing whether confidence reflects the quality of perceptual evidence or post-decisional processes. Confidence estimates were collected using a visual analogue scale (VAS). High sampling rate (5000 Hz) requires downsampling before epoching.
 
 
 ## File Scan Result
@@ -52,22 +53,6 @@ Participants performed speeded perceptual judgments and subsequently reported th
 - **Evidence**:
   - DOI: 10.1073/pnas.1918335117 — EEG amplitude time-locked to first-order response onset used to model confidence via linear regression; multivariate EEG decoding derived single-trial confidence predictions.
 - **Kernel Notes**: High sampling rate (5000 Hz) requires downsampling. The `unknown` event serves as epoch anchor - verify from events.tsv that it corresponds to response onset (button press/visual hand appearance). Extract confidence values from misc channel as regression target. (replaces Potential Task 1 from original analysis.md)
-
-### Potential Task 1: Publisher-defined BIDS task: Main
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `event`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds002158 DOI: https://doi.org/10.1073/pnas.1918335117
-
-### Potential Task 2: Publisher-defined BIDS task: Rest
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `event`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds002158 DOI: https://doi.org/10.1073/pnas.1918335117
 
 ## Data Quality Notes
 

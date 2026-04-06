@@ -2,6 +2,7 @@
 
 **Dataset**: `openneuro_ds002722` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002722
 **Category**: High-level Mental | **Subjects**: 19 | **Files (Completed)**: 94 | **Channels**: 37 | **Sampling Rate**: 1000 Hz
+**Manual Review**: Mingze Tang
 
 ## Paradigm
 
@@ -39,8 +40,8 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 
 ### Classical Task 1: Affective Music Condition Classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`]
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 40.0 s, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:

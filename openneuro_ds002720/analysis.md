@@ -1,11 +1,12 @@
 # A dataset recorded during development of a tempo-based brain-computer music interface
 
-**Dataset**: `openneuro_ds002720` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002720
-**Category**: Action/Output | **Subjects**: 19 | **Files (Completed)**: 165 | **Channels**: 19 | **Sampling Rate**: 1000 Hz
+**Dataset**: `openneuro_ds002720` | **Year**: 2018 | **URL**: https://openneuro.org/datasets/ds002720
+**Category**: Action/Output | **Subjects**: 18 | **Files (Completed)**: 165 | **Channels**: 19 | **Sampling Rate**: 1000 Hz
+**Manual Review**: Mr.PJ
 
 ## Paradigm
 
-Participants used kinaesthetic motor imagery (imagining squeezing a ball) or relaxation to intentionally modulate the tempo of music in a continuous brain-computer music interface (BCMI) task. Event code 1 = motor_imagery (ball squeezing imagination) and code 2 = relaxation (rest), each lasting several seconds. The BCI decoded the EEG to adjust music tempo in real-time, creating a closed-loop feedback system.
+Participants used EEG self-regulation to control the tempo of music in a tempo-based brain-computer music interface (BCMI). One condition instructed participants to lower their alpha levels and the other instructed participants to raise their alpha levels. Each labeled event spans a full 20-second music clip interval. The dataset contains multiple runs per participant.
 
 
 ## File Scan Result
@@ -17,9 +18,10 @@ Participants used kinaesthetic motor imagery (imagining squeezing a ball) or rel
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `motor_imagery` (code 1) | 143 (files) | event | raw | Sustained motor imagery - imagining squeezing a ball |
-| `relaxation` (code 2) | 143 (files) | event | raw | Sustained relaxation period |
+| `1` | 1275 | event | raw | Lower alpha condition (20-second interval) |
+| `2` | 1250 | event | raw | Raise alpha condition (20-second interval) |
 
+> **Manual Review Note**: Event IDs corrected by human reviewer (Mr.PJ) — original entries used `motor_imagery`/`relaxation` derived from paradigm description; actual BIDS event IDs are numeric `1`/`2` per events.json. Kernel should confirm event ID format on next scan.
 
 ### Info
 
@@ -30,39 +32,43 @@ Participants used kinaesthetic motor imagery (imagining squeezing a ball) or rel
 | `device` | missing | N/A |
 ## Tasks
 
-### Classical Task 1: Motor imagery decoding for BCMI tempo control
+### Classical Task 1: Alpha-State BCMI Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 16 s, overlap = 0.0, target_events = [`motor_imagery`, `relaxation`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 20 s, overlap = 0.0, target_events = [`1`, `2`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|
-  | `motor_imagery` | 0 | Kinaesthetic motor imagery - imagining squeezing a ball |
-  | `relaxation` | 1 | Relaxation / rest period |
+  | `1` | 0 | Lower alpha condition |
+  | `2` | 1 | Raise alpha condition |
 - **Evidence**:
-  - DOI: `10.1038/s41597-020-0507-6` — The paper describes the 'BCMI tempo' dataset (openneuro_ds002720) recorded during development of a tempo-based BCMI where participants used kinaesthetic motor imagery to control music tempo, with EEG recorded from 19 channels during trials consisting of 4s fixation followed by 12s motor imagery tasks.
-- **Kernel Notes**: Extract sustained motor imagery and relaxation epochs from continuous EEG. Each trial consists of 4s fixation + 12s motor imagery task = 16s total window. Use epoch_by_long_event_hdf5 to slide a 16-second window through each annotation. Binary classification: motor imagery (y=0) vs relaxation (y=1).
+  - DOI: 10.1038/s41597-020-0507-6 — Describes the BCMI tempo dataset (openneuro_ds002720) recorded during development of a tempo-based BCMI where participants regulated alpha levels to control music tempo; event JSON explicitly defines event 1 as Lower alpha and event 2 as Raise alpha.
+- **Kernel Notes**: Use long-event decoding over the full 20-second labeled interval. Twenty-two event files are empty — not every EEG file contains labeled events.
 
-### Potential Task 1: Motor Imagery BCI Classification (binary)
+### Classical Task 2: Continuous Segmentation Within BCMI Runs
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s (motor imagery window), target_events = see Target Definition
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 4.0 s, overlap = 0.5
 - **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Motor imagery BCI task with multi-second imagination periods. Long 4-second epoch window captures the full motor imagery event. Specific kernel decodes raw codes (1->motor_imagery, 2->relaxation).
-
- | Event | y | Meaning |
- |-------|---|---------|
- | `motor_imagery` | 0 | Motor imagery - imagining squeezing a ball |
- | `relaxation` | 1 | Relaxation / rest period |
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `1` | 0 | Lower alpha condition segment |
+  | `2` | 1 | Raise alpha condition segment |
+- **Evidence**:
+  - DOI: 10.1038/s41597-020-0507-6 — Segmentation alternative for cases where full 20-second long-event decoding is not desired.
+- **Kernel Notes**: Segment within labeled 20-second windows. Filter out the 22 empty event files before processing.
 
 ## Data Quality Notes
 
-- 19-channel EEG is low density but suitable for BCI motor imagery decoding.
-- Count column (143 files) indicates files-with-event, not trial count per file.
-- Verify channel count consistency across subjects before pooling.
+- The dataset contains 18 subjects, not 19.
+- Twenty-two event files are empty — not every EEG file contains labeled events.
+- All non-empty events have duration exactly 20 seconds.
+- The event tables contain only `onset`, `duration`, and `trial_type`; no `response_time` or behavioral metadata.
+- All channel files contain 19 EEG channels with no auxiliary EOG/ECG channels.
 
 
 ## Kernel Responsibilities

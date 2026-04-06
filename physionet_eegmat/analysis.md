@@ -1,11 +1,12 @@
 # EEG During Mental Arithmetic Task
 
 **Dataset**: `physionet_eegmat` | **Year**: 2020 | **URL**: https://physionet.org/content/eegmat/1.0.0/
-**Category**: High-level Mental | **Subjects**: 36 | **Files (Completed)**: 72 | **Channels**: 21 | **Sampling Rate**: 500 Hz
+**Category**: High-level Mental | **Subjects**: 36 | **Files (Completed)**: 72 | **Channels**: 23 | **Sampling Rate**: 500 Hz
+**Manual Review**: Liu Peng
 
 ## Paradigm
 
-Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly female) completed a mental arithmetic task while EEG was recorded from 21 channels using a Neurocom 23-channel system with Ag/AgCl electrodes (Zyma et al., 2019). Each subject contributed two files: a background resting-state recording (suffix `_1.edf`) and a mental arithmetic task recording (suffix `_2.edf`). During the mental arithmetic task, subjects performed serial subtraction (e.g., counting backwards by 7s) while EEG was recorded. A separate `Count quality` field in `subject-info.csv` rates the subject's arithmetic performance as Good or Bad, providing a behavioral quality label.
+Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly female) completed a mental arithmetic task while EEG was recorded monopolarly using a Neurocom 23-channel system with Ag/AgCl electrodes (Zyma et al., 2019). Each subject contributed two files: a background resting-state recording (suffix `_1.edf`) and a mental arithmetic task recording (suffix `_2.edf`). During the mental arithmetic task, subjects performed serial subtraction (e.g., 3141 minus 42) while EEG was recorded. A separate `Count quality` field in `subject-info.csv` rates the subject's arithmetic performance as Good or Bad, providing a behavioral quality label.
 
 
 ## File Scan Result
@@ -17,13 +18,13 @@ Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly fema
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Background EEG;Count Quality: Good` | 27 | event | raw | Resting-state recording, subject's arithmetic quality was Good |
-| `Background EEG;Count Quality: Bad` | 9 | event | raw | Resting-state recording, subject's arithmetic quality was Bad |
-| `Mental Arithmetic Task EEG;Count Quality: Good` | 27 | event | raw | Mental arithmetic recording, quality Good |
-| `Mental Arithmetic Task EEG;Count Quality: Bad` | 9 | event | raw | Mental arithmetic recording, quality Bad |
+| `Background EEG;Count Quality: Good` | 24 | event | raw | Resting-state recording, subject's arithmetic quality was Good |
+| `Background EEG;Count Quality: Bad` | 12 | event | raw | Resting-state recording, subject's arithmetic quality was Bad |
+| `Mental Arithmetic Task EEG;Count Quality: Good` | 24 | event | raw | Mental arithmetic recording, quality Good |
+| `Mental Arithmetic Task EEG;Count Quality: Bad` | 12 | event | raw | Mental arithmetic recording, quality Bad |
 
->
-> Each annotation spans the entire recording. Counts are approximate (36 subjects x 2 files = 72 total; Good/Bad split estimated from subject distribution).
+> Each annotation spans the entire recording.
+> **Manual Review Note**: Good/Bad counts corrected from 27/9 to 24/12 by human reviewer (Liu Peng). Kernel should verify Good/Bad split from subject-info.csv on next scan.
 
 
 ### Info
@@ -66,7 +67,7 @@ Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly fema
 - **Evidence**:
   - DOI: 10.13026/C2JQ1P — "annotations encoding both condition type and count quality"
   - DOI: 10.1038/s41598-026-36434-0 — "good counters show significantly increased synchronization (PC-entropy) in beta band during task vs rest, while poor counters show no significant changes"
-- **Kernel Notes**: Filter to Mental Arithmetic recordings only; parse suffix after semicolon for Count Quality label. Class imbalance expected (27 Good vs 9 Bad from dataset). (replaces Potential Task 2 from original analysis.md)
+- **Kernel Notes**: Filter to Mental Arithmetic recordings only; parse suffix after semicolon for Count Quality label. Class imbalance expected (24 Good vs 12 Bad).
 
 ### Classical Task 3: Mental Stress Classification During Arithmetic Task
 - **Task Type**: classification
