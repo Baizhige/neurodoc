@@ -1,7 +1,7 @@
 # Face processing EEG dataset for EEGLAB
 
 **Dataset**: `openneuro_ds002718` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds002718
-**Category**: High-level Mental | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 74.0 | **Sampling Rate**: 250.0 Hz
+**Category**: High-level Mental | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 74 | **Sampling Rate**: 250 Hz
 
 ## Paradigm
 

@@ -1,7 +1,7 @@
 # DataSet1 - Visual Object Naming EEG
 
 **Dataset**: `openneuro_ds002791` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002791
-**Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 92 | **Channels**: 256.0 | **Sampling Rate**: 1000.0 Hz
+**Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 92 | **Channels**: 256 | **Sampling Rate**: 1000 Hz
 
 ## Paradigm
 

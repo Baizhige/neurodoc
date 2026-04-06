@@ -1,7 +1,7 @@
 # DataSet2 - Visual Object Naming EEG (High-Density)
 
 **Dataset**: `openneuro_ds002833` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002833
-**Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 80 | **Channels**: 257.0 | **Sampling Rate**: 1000.0 Hz
+**Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 80 | **Channels**: 257 | **Sampling Rate**: 1000 Hz
 
 ## Paradigm
 

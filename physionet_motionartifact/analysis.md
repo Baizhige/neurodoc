@@ -1,7 +1,7 @@
 # EEG/fNIRS Motion Artifact Dataset
 
 **Dataset**: `physionet_motionartifact` | **Year**: 2018 | **URL**: https://physionet.org/content/motion-artifact/1.0.0/
-**Category**: Others | **Subjects**: 32 | **Files (Completed)**: 32 | **Channels**: 10 (EEG) or 12 (fNIRS) | **Sampling Rate**: 2048 Hz (EEG), 200 Hz (fNIRS)
+**Category**: Others | **Subjects**: 32 | **Files (Completed)**: 32 | **Channels**: 10 | **Sampling Rate**: 2048 Hz (EEG), 200 Hz (fNIRS)
 
 ## Paradigm
 

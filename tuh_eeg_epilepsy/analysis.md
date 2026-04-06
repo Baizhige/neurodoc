@@ -1,7 +1,7 @@
 # TUH EEG Epilepsy Corpus
 
 **Dataset**: `tuh_eeg_epilepsy` | **Year**: 2022 | **URL**: https://isip.piconepress.com/projects/tuh_eeg/downloads/tuh_eeg_epilepsy/v2.0.1/
-**Category**: Biological State | **Subjects**: ~2298 sessions | **Files (Completed)**: 2298 | **Channels**: 17-41 | **Sampling Rate**: 250-1000 Hz
+**Category**: Biological State | **Subjects**: ~2298 | **Files (Completed)**: 2298 | **Channels**: 17-41 | **Sampling Rate**: 250-1000 Hz
 
 ## Paradigm
 

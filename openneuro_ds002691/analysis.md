@@ -1,7 +1,7 @@
 # Internal attention study
 
 **Dataset**: `openneuro_ds002691` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002691
-**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 20 | **Channels**: 32.0 | **Sampling Rate**: 250.0 Hz
+**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 20 | **Channels**: 32 | **Sampling Rate**: 250 Hz
 
 ## Paradigm
 

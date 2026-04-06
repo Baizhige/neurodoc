@@ -1,7 +1,7 @@
 # EEG meditation study
 
 **Dataset**: `openneuro_ds001787` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds001787
-**Category**: Biological State | **Subjects**: 24 | **Files (Completed)**: 40 | **Channels**: 80.0 | **Sampling Rate**: 256.0 Hz
+**Category**: Biological State | **Subjects**: 24 | **Files (Completed)**: 40 | **Channels**: 80 | **Sampling Rate**: 256 Hz
 
 ## Paradigm
 

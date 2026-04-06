@@ -1,7 +1,7 @@
 # EEG Dataset for Cursor BCI (Meng 2019)
 
 **Dataset**: `figshare_meng2019` | **Year**: 2019 | **URL**: https://doi.org/10.6084/m9.figshare.7959572
-**Category**: Action/Output | **Subjects**: N/A (see notes) | **Files (Completed)**: 126 | **Channels**: 64 | **Sampling Rate**: 128 Hz
+**Category**: Action/Output | **Subjects**: N/A | **Files (Completed)**: 126 | **Channels**: 64 | **Sampling Rate**: 128 Hz
 
 ## Paradigm
 

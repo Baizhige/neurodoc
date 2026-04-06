@@ -1,6 +1,6 @@
 # Sleep-EDF Database Expanded
 
-**Dataset**: `physionet_sleepedfx` | **Year**: 1992/2013 | **URL**: https://physionet.org/content/sleep-edfx/1.0.0/
+**Dataset**: `physionet_sleepedfx` | **Year**: 1992 | **URL**: https://physionet.org/content/sleep-edfx/1.0.0/
 **Category**: Biological State | **Subjects**: 58 | **Files (Completed)**: 197 | **Channels**: 7 | **Sampling Rate**: 100 Hz
 
 ## Paradigm

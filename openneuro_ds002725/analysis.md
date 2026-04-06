@@ -1,7 +1,7 @@
 # A dataset recording joint EEG-fMRI during affective music listening
 
 **Dataset**: `openneuro_ds002725` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002725
-**Category**: High-level Mental | **Subjects**: 21 | **Files (Completed)**: 105 | **Channels**: 47.0 | **Sampling Rate**: 1000.0 Hz
+**Category**: High-level Mental | **Subjects**: 21 | **Files (Completed)**: 105 | **Channels**: 47 | **Sampling Rate**: 1000 Hz
 
 ## Paradigm
 

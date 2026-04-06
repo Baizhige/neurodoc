@@ -2,7 +2,7 @@
 
 **Dataset**: `openneuro_ds004075` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004075
 **Category**: Others | **Subjects**: N/A | **Files (Completed)**: 115
-**Channels**: 64.0 | **Sampling Rate**: 1000.0 Hz
+**Channels**: 64 | **Sampling Rate**: 1000 Hz
 
 ## Paradigm
 

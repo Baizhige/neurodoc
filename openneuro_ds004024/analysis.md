@@ -1,7 +1,7 @@
 # TMS-EEG-MRI-fMRI-DWI data on paired associative stimulation and connectivity (Shirley Ryan AbilityLab, Chicago, IL)
 
 **Dataset**: `openneuro_ds004024` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004024
-**Category**: Sensory/Response | **Subjects**: 497 files | **Files (Completed)**: 497
+**Category**: Sensory/Response | **Subjects**: 497 | **Files (Completed)**: 497
 **Channels**: 69 | **Sampling Rate**: 20000 Hz
 
 ## Paradigm

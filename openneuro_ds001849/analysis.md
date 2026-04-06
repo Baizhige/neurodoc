@@ -1,7 +1,7 @@
 # RS_TMSEEG_Data
 
 **Dataset**: `openneuro_ds001849` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds001849
-**Category**: Biological State | **Subjects**: N/A | **Files (Completed)**: 120 | **Channels**: 30.0 | **Sampling Rate**: 5000.0 Hz
+**Category**: Biological State | **Subjects**: N/A | **Files (Completed)**: 120 | **Channels**: 30 | **Sampling Rate**: 5000 Hz
 
 ## Paradigm
 

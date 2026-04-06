@@ -1,7 +1,7 @@
 # KU Leuven Auditory Attention Decoding Dataset
 
 **Dataset**: `zenodo_kul` | **Year**: 2020 | **URL**: https://zenodo.org/records/4004271
-**Category**: High-level Mental | **Subjects**: 15 | **Files (Completed)**: 15 (Case B kernel) | **Channels**: 64 | **Sampling Rate**: 128 Hz
+**Category**: High-level Mental | **Subjects**: 15 | **Files (Completed)**: 15 | **Channels**: 64 | **Sampling Rate**: 128 Hz
 
 ## Paradigm
 

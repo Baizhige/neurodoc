@@ -1,7 +1,7 @@
 # A dataset recorded during development of a tempo-based brain-computer music interface
 
 **Dataset**: `openneuro_ds002720` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002720
-**Category**: Action/Output | **Subjects**: 19 | **Files (Completed)**: 165 | **Channels**: 19.0 | **Sampling Rate**: 1000.0 Hz
+**Category**: Action/Output | **Subjects**: 19 | **Files (Completed)**: 165 | **Channels**: 19 | **Sampling Rate**: 1000 Hz
 
 ## Paradigm
 

@@ -346,35 +346,47 @@ LLM 审核脚本负责：
 
 ### 第42条之二 `Status` 合法取值
 
-`Status` 仅允许以下三种机器可读写法：
+`Status` 仅允许以下四种机器可读写法：
 
 1. `wait_kernel_update`
 2. `wait_manual_review`
 3. `completed`
+4. `hallucination`
 
 不得使用上述写法之外的同义词、自然语言短句或大小写变体替代。
 
-### 第42条之二之一 `completed` 的权限边界
+### 第42条之二之一 `completed` 与 `hallucination` 的权限边界
 
-1. `completed` 仅能由管理员或人类审核员给出。
-2. LLM 审核脚本当前阶段不得主动将任何数据集判为 `completed`。
-3. 因此，LLM 审核脚本在当前阶段只应在 `wait_kernel_update` 与 `wait_manual_review` 之间作二选一判断。
-4. 若当前文本已经足以支撑既有任务、且未暴露明确的 kernel 结构性缺口，LLM 审核脚本也应暂时保守地给出 `wait_manual_review`，等待管理员或人类审核员最终确认是否提升为 `completed`。
+1. `completed` 与 `hallucination` 仅能由人类审核员给出，LLM 审核脚本不得主动判定为这两个值。
+2. LLM 审核脚本在当前阶段只应在 `wait_kernel_update` 与 `wait_manual_review` 之间作二选一判断。
+3. 若当前文本已经足以支撑既有任务、且未暴露明确的 kernel 结构性缺口，LLM 审核脚本也应保守地给出 `wait_manual_review`，等待人类审核员最终确认。
+4. 人类审核员完成审核后，最终状态必须为 `completed` 或 `hallucination`，不得将审核结果留在 `wait_manual_review` 或 `wait_kernel_update`。
+
+### 第42条之二之二 `hallucination` 的判定边界
+
+1. `hallucination` 是文档级别的严重缺陷标记，适用于整个 `analysis.md` 文档均无法信任的情形。
+2. 触发条件包括但不限于：
+   - 数据集 URL 失效且无法核实任何关键字段
+   - 文档描述与实际数据集内容完全对不上（牛头不对马脚）
+   - 任务定义、Event Structure、Paradigm 均无可信依据，且无法通过合理补充修复
+   - 数据集本身信息严重缺失，专家也无法给出可靠判断
+3. `hallucination` **不适用于**局部问题（如某个任务引用有误、部分通道描述不准确）；局部问题应在 `Data Quality Notes` 中记录，状态保持 `completed`。
+4. 收到 `hallucination` 标记的数据集，管理员将考虑删除该文档或安排重新扫描，不再要求审核员继续修复。
 
 ### 第42条之三 `Status` 判定规则
 
-1. `wait_kernel_update` 表示：当前文档文本已经明确暴露出 kernel 语义层面的结构性缺口，即 `Event Structure`、`MISC Label Summary`、`Label Route`、companion files 接入、`super meta` 的整合路径等内容尚不足以支撑既有任务稳定成立。
-2. `wait_manual_review` 表示：当前文档未明确暴露上述 kernel 结构性缺口，或虽然仍有疑点，但这些疑点主要属于人类审核确认、任务去留确认、最终放行确认，而不应被自动判定为”必须修改 kernel”。
-3. `completed` 表示：当前文档已提供足够可信、可追溯、可实现的信息，能够支撑后续 kernel 重构或 EEGUnity 导出；后续工作即使尚未真正编码，也不影响该文本状态成立。
-4. `Status` 反映的是”当前文本是否足够支撑 kernel 责任闭环”，而不是”代码是否已经写完”。
+1. `wait_kernel_update` 表示：当前文档文本已经明确暴露出 kernel 语义层面的结构性缺口，即 `Event Structure`、`MISC Label Summary`、`Label Route`、companion files 接入、`super meta` 的整合路径等内容尚不足以支撑既有任务稳定成立。此为 LLM 脚本或自动扫描阶段的中间状态。
+2. `wait_manual_review` 表示：当前文档未明确暴露上述 kernel 结构性缺口，或虽然仍有疑点，但这些疑点主要属于人类审核确认、任务去留确认、最终放行确认，而不应被自动判定为”必须修改 kernel”。此为 LLM 脚本的默认输出状态。
+3. `completed` 表示：人类审核员确认已完成对该文档的审核工作。即使存在已知质量问题，只要已在 `Data Quality Notes` 中记录，且整体文档可信、可推进，即可标记为 `completed`。`completed` 反映的是”审核员已尽职审核”，而非”文档零瑕疵”。
+4. `hallucination` 表示：人类审核员判断整个文档存在无法修复的严重缺陷，无法继续审核或推进 kernel 实现，应由管理员处理。
 5. 下列事项原则上不得单独作为 `wait_kernel_update` 的判定理由：
    - 常规预处理、滤波、重参考、下采样
    - artifact rejection、坏段剔除、坏文件筛除
    - 一般性数据质量控制
    - 训练参数、epoch 长度、模型超参数等实现细节
    - 仅凭文档外推测 kernel 现实中也许尚未写完或尚未验证
-6. 若文档语义上已经把相关事件、标签、companion files 或 metadata 接入路径说清楚，并以“当前方案已可成立”的口吻组织任务，则不应仅因实现层面的谨慎猜测而判为 `wait_kernel_update`。
-7. 当同一数据集同时存在多类问题时，判定优先级应为：`wait_manual_review` 高于 `wait_kernel_update`，`wait_kernel_update` 高于 `completed`。
+6. 若文档语义上已经把相关事件、标签、companion files 或 metadata 接入路径说清楚，并以”当前方案已可成立”的口吻组织任务，则不应仅因实现层面的谨慎猜测而判为 `wait_kernel_update`。
+7. 当同一数据集同时存在多类问题时，判定优先级应为：`hallucination` 高于其他所有值；`wait_manual_review` 高于 `wait_kernel_update`；`wait_kernel_update` 高于 `completed`。
 
 ### 第42条之四 blockquote 书写位置与顺序
 

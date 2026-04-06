@@ -1,7 +1,7 @@
 # Multi-Stimulus SSVEP Database
 
 **Dataset**: `physionet_mssvepdb` | **Year**: 2021 | **URL**: N/A
-**Category**: Sensory/Response | **Subjects**: 11 | **Files (Completed)**: 235 | **Channels**: 14 (Emotiv) or 256 (BrainProducts) | **Sampling Rate**: 128 Hz (dataset3) or 250 Hz (datasets 1-2)
+**Category**: Sensory/Response | **Subjects**: 11 | **Files (Completed)**: 235 | **Channels**: 14 | **Sampling Rate**: 128 Hz (dataset3) or 250 Hz (datasets 1-2)
 
 ## Paradigm
 

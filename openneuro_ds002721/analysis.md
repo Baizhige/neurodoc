@@ -1,7 +1,7 @@
 # An EEG dataset recorded during affective music listening
 
 **Dataset**: `openneuro_ds002721` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds002721
-**Category**: High-level Mental | **Subjects**: 31 | **Files (Completed)**: 185 | **Channels**: 19.0 | **Sampling Rate**: 1000.0 Hz
+**Category**: High-level Mental | **Subjects**: 31 | **Files (Completed)**: 185 | **Channels**: 19 | **Sampling Rate**: 1000 Hz
 
 ## Paradigm
 

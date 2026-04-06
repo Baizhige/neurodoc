@@ -1,7 +1,7 @@
 # Speech-in-Noise (SiN) Auditory Attention Decoding Dataset (Zenodo Mirror)
 
 **Dataset**: `zenodo_sin` | **Year**: 2021 | **URL**: N/A (Zenodo mirror of Mendeley SiN dataset)
-**Category**: High-level Mental | **Subjects**: 26 | **Files (Completed)**: 26 (Case B kernel) | **Channels**: 66 | **Sampling Rate**: 256 Hz
+**Category**: High-level Mental | **Subjects**: 26 | **Files (Completed)**: 26 | **Channels**: 66 | **Sampling Rate**: 256 Hz
 
 ## Paradigm
 

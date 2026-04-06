@@ -1,7 +1,7 @@
 # A dataset recorded during development of an affective brain-computer music interface: calibration session
 
 **Dataset**: `openneuro_ds002722` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002722
-**Category**: High-level Mental | **Subjects**: 19 | **Files (Completed)**: 94 | **Channels**: 37.0 | **Sampling Rate**: 1000.0 Hz
+**Category**: High-level Mental | **Subjects**: 19 | **Files (Completed)**: 94 | **Channels**: 37 | **Sampling Rate**: 1000 Hz
 
 ## Paradigm
 

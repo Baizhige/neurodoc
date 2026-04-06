@@ -1,7 +1,7 @@
 # Free walking study
 
 **Dataset**: `openneuro_ds003039` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds003039
-**Category**: Complex Applied | **Subjects**: 19 | **Files (Completed)**: 19 | **Channels**: 67.0 | **Sampling Rate**: 500.0 Hz
+**Category**: Complex Applied | **Subjects**: 19 | **Files (Completed)**: 19 | **Channels**: 67 | **Sampling Rate**: 500 Hz
 
 ## Paradigm
 

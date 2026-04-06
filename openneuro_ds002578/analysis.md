@@ -1,7 +1,7 @@
 # Visual Oddball Task (256 channels)
 
 **Dataset**: `openneuro_ds002578` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002578
-**Category**: Sensory/Response | **Subjects**: N/A | **Files (Completed)**: 2 | **Channels**: 256.0 | **Sampling Rate**: 256.0 Hz
+**Category**: Sensory/Response | **Subjects**: N/A | **Files (Completed)**: 2 | **Channels**: 256 | **Sampling Rate**: 256 Hz
 
 ## Paradigm
 

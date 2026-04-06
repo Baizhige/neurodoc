@@ -1,5 +1,6 @@
 {
   "url": "https://api.minimax.io/v1",
-  "key": "sk-api-TWKmb9gc7t3yJRbSUJ0Bf6YfbEEdLKO4ARPJDzMeO8NB0eXd7ZdYjdvHxIHFp3K-Dy4qzaGR1zd8WKwDnbmy29IjAqioIDBi0NCIGQHK0Sr5P_10qfIgH6o",
-  "model": "MiniMax-M2.7"
+  "key": "sk-cp-Jd80movHGOZz2m_2BKwQn-Sz5oOI1Q5wNqOqu-khgfEoqyJEX1Hu7LyxOwTwFs50zkUye1KCNYA_9KcyYTrggM-xJgTSHi8KMDdbhudsnV5-h2l9sRko81E",
+  "model": "MiniMax-M2.7",
+  "proxy": ""
 }
