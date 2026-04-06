@@ -2,6 +2,7 @@
 
 **Dataset**: `bcic_iv_1` | **Year**: 2008 | **URL**: https://www.bbci.de/competition/iv/desc_1.html
 **Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 14 | **Channels**: 59 | **Sampling Rate**: 1000 Hz
+**Manual Review**: Zhida Shang
 
 ## Paradigm
 
@@ -46,7 +47,6 @@ Seven subjects performed two-class motor imagery without feedback in an asynchro
   | `left` | 0 | Left-hand motor imagery |
   | `right` or `foot` | 1 | Second motor imagery class (right-hand or foot, subject-specific) |
 - **Evidence**:
-  - DOI: 10.1016/j.neuroimage.2007.01.051 — BCI Competition IV Dataset 1 defines two-class motor imagery paradigm with calibration using 4s cue duration and 4s imagery intervals
   - DOI: 10.1109/tnsre.2020.3020975 — Uses BCI Competition IV Dataset 1 for two-class motor imagery classification with epochs from 2-6s time window relative to cue onset
   - DOI: 10.1109/icoras.2016.7872610 — Tests SVM, k-NN, MLP-ANN, LR classifiers on two-class motor imagery from calibration data
   - DOI: 10.1109/tnsre.2021.3071140 — Applies CTFSP algorithm to this dataset with sliding window approach [2-5]s, [2.5-5.5]s, [3-6]s

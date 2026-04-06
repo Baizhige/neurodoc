@@ -3,6 +3,7 @@
 **Dataset**: `openneuro_ds004448` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004448
 **Category**: Action/Output | **Subjects**: 280 | **Files (Completed)**: 280
 **Channels**: 130 | **Sampling Rate**: 1000 Hz
+**Manual Review**: k857965791
 
 ## Paradigm
 
@@ -94,6 +95,7 @@ Participants performed a sensorimotor rhythm-based brain-computer interface task
 - Only one event code in metadata; class label may be in events.tsv columns rather than trial_type
 - 130-channel high-density EEG with extended epochs
 - 280 files; binary MI design
+- The dataset description document does not describe a left-hand task, though the actual data contains `left_hand_MI` events — use with caution.
 
 ## Kernel Responsibilities
 

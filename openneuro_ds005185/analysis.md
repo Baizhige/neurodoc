@@ -2,6 +2,7 @@
 
 **Dataset**: `openneuro_ds005185` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005185
 **Category**: Biological State | **Subjects**: 20 | **Files (Completed)**: 516 | **Channels**: 25 | **Sampling Rate**: 500 Hz
+**Manual Review**: k857965791
 
 ## Paradigm
 
@@ -78,6 +79,8 @@ Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG
 - All event markers are protocol annotations, not neural response labels.
 - 25-channel ear-EEG with limited spatial resolution.
 - PSG reference annotations required for sleep staging labels.
+- Using the original `.poly5` PSG file directly risks PSG signal leakage into EEG due to poor electrode shielding; use the pre-processed EEG files instead.
+- Actual data collection span: 2018-2020 (dataset first published 2019; OpenNeuro year reflects latest version).
 
 
 ## Kernel Responsibilities
