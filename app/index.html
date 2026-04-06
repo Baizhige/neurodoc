@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EEG Audit Tool</title>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --sidebar-w: 240px;
+  --right-w: 340px;
+  --step-bar-h: 52px;
+  --header-h: 48px;
+  --bg: #f5f6f8;
+  --panel: #fff;
+  --border: #dde1e7;
+  --accent: #3b82f6;
+  --accent-dark: #1d4ed8;
+  --text: #1e2430;
+  --muted: #6b7280;
+  --green: #10b981;
+  --yellow: #f59e0b;
+  --red: #ef4444;
+  --purple: #8b5cf6;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+/* Header */
+#header { height: var(--header-h); background: var(--text); color: #fff; display: flex; align-items: center; padding: 0 16px; gap: 12px; flex-shrink: 0; }
+#header h1 { font-size: 15px; font-weight: 600; }
+#header .spacer { flex: 1; }
+#btn-settings { background: rgba(255,255,255,0.15); border: none; color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+#btn-settings:hover { background: rgba(255,255,255,0.25); }
+#save-status { font-size: 12px; color: rgba(255,255,255,0.6); }
+
+/* Layout */
+#layout { display: flex; flex: 1; overflow: hidden; }
+
+/* Left sidebar */
+#sidebar { width: var(--sidebar-w); background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+#sidebar-head { padding: 12px; border-bottom: 1px solid var(--border); }
+#sidebar-head label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; }
+#filter-category { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; }
+#dataset-list { flex: 1; overflow-y: auto; padding: 6px 0; }
+.ds-item { padding: 8px 12px; cursor: pointer; border-left: 3px solid transparent; }
+.ds-item:hover { background: #f0f4ff; }
+.ds-item.active { background: #eff6ff; border-left-color: var(--accent); }
+.ds-name { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-meta { display: flex; align-items: center; gap: 6px; margin-top: 3px; }
+.ds-cat { font-size: 10px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px; }
+.badge { font-size: 10px; padding: 1px 6px; border-radius: 10px; font-weight: 500; flex-shrink: 0; }
+.badge-wait { background: #fef3c7; color: #92400e; }
+.badge-review { background: #dbeafe; color: #1e40af; }
+.badge-done { background: #d1fae5; color: #065f46; }
+.badge-rev { background: #fee2e2; color: #991b1b; }
+.badge-other { background: #e5e7eb; color: #374151; }
+
+/* Main */
+#main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+#step-bar { height: var(--step-bar-h); background: var(--panel); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 16px; gap: 4px; flex-shrink: 0; }
+.step-btn { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; border: none; background: none; cursor: pointer; font-size: 13px; color: var(--muted); transition: all .15s; }
+.step-btn .step-num { width: 20px; height: 20px; border-radius: 50%; background: #e5e7eb; color: var(--muted); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.step-btn.active { color: var(--accent); background: #eff6ff; }
+.step-btn.active .step-num { background: var(--accent); color: #fff; }
+.step-btn.done .step-num { background: var(--green); color: #fff; }
+.step-sep { color: var(--border); font-size: 18px; }
+
+#step-content { flex: 1; overflow-y: auto; padding: 20px; }
+
+#no-dataset { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--muted); font-size: 14px; }
+
+/* Bottom action bar */
+#action-bar { padding: 12px 20px; background: var(--panel); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+#ds-title { font-size: 13px; font-weight: 600; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.btn { padding: 7px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; font-weight: 500; transition: all .15s; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-dark); }
+.btn-secondary { background: #e5e7eb; color: var(--text); }
+.btn-secondary:hover { background: #d1d5db; }
+.btn-success { background: var(--green); color: #fff; }
+.btn-success:hover { background: #059669; }
+.btn:disabled { opacity: .5; cursor: default; }
+
+/* Right panel */
+#right { width: var(--right-w); background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+#right-tabs { display: flex; border-bottom: 1px solid var(--border); }
+.rtab { flex: 1; padding: 10px; border: none; background: none; cursor: pointer; font-size: 13px; color: var(--muted); border-bottom: 2px solid transparent; }
+.rtab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+#right-body { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+#pane-rulebook, #pane-chat { display: none; flex-direction: column; flex: 1; overflow: hidden; }
+#pane-rulebook.visible, #pane-chat.visible { display: flex; }
+
+/* Rulebook pane */
+#rulebook-search { padding: 10px; border-bottom: 1px solid var(--border); }
+#rulebook-search input { width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; }
+#rulebook-content { flex: 1; overflow-y: auto; padding: 12px; font-size: 12px; line-height: 1.6; }
+#rulebook-content h1, #rulebook-content h2 { font-size: 13px; font-weight: 700; margin: 12px 0 6px; color: var(--text); }
+#rulebook-content h3, #rulebook-content h4 { font-size: 12px; font-weight: 600; margin: 8px 0 4px; }
+#rulebook-content p { margin-bottom: 6px; }
+#rulebook-content ul, #rulebook-content ol { padding-left: 16px; margin-bottom: 6px; }
+#rulebook-content li { margin-bottom: 2px; }
+#rulebook-content code { background: #f3f4f6; padding: 1px 4px; border-radius: 3px; font-size: 11px; font-family: monospace; }
+#rulebook-content pre { background: #f3f4f6; padding: 8px; border-radius: 4px; overflow-x: auto; font-size: 11px; }
+#rulebook-content blockquote { border-left: 3px solid var(--border); padding-left: 8px; color: var(--muted); }
+#rulebook-content table { border-collapse: collapse; width: 100%; font-size: 11px; }
+#rulebook-content th, #rulebook-content td { border: 1px solid var(--border); padding: 4px 6px; }
+.rb-step-hint { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; font-size: 11px; color: var(--accent-dark); }
+
+/* Chat pane */
+#chat-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.chat-msg { max-width: 90%; }
+.chat-msg.user { align-self: flex-end; }
+.chat-msg.assistant { align-self: flex-start; }
+.chat-bubble { padding: 8px 12px; border-radius: 10px; font-size: 12px; line-height: 1.5; }
+.chat-msg.user .chat-bubble { background: var(--accent); color: #fff; border-bottom-right-radius: 2px; }
+.chat-msg.assistant .chat-bubble { background: #f3f4f6; color: var(--text); border-bottom-left-radius: 2px; }
+.chat-bubble p { margin-bottom: 4px; }
+.chat-bubble p:last-child { margin-bottom: 0; }
+.chat-bubble code { font-size: 11px; background: rgba(0,0,0,0.1); padding: 1px 3px; border-radius: 3px; }
+#chat-input-area { padding: 10px; border-top: 1px solid var(--border); }
+#chat-input-area textarea { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; resize: none; height: 64px; font-family: inherit; }
+#chat-send { margin-top: 6px; width: 100%; }
+#chat-context-label { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+
+/* Step editors */
+.section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 8px; }
+.form-row { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+.form-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 140px; }
+.form-group label { font-size: 11px; font-weight: 600; color: var(--muted); }
+.form-group input, .form-group select, .form-group textarea { padding: 7px 9px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; background: #fff; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+.form-group textarea { resize: vertical; }
+.full-textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: "Consolas", "Monaco", monospace; min-height: 200px; resize: vertical; line-height: 1.6; }
+.full-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+.card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.card-title { font-size: 13px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+
+/* Event table editor */
+.event-table-wrap { overflow-x: auto; margin-bottom: 8px; }
+table.event-table { border-collapse: collapse; width: 100%; font-size: 12px; }
+table.event-table th { background: #f8fafc; font-weight: 600; text-align: left; padding: 6px 8px; border: 1px solid var(--border); font-size: 11px; }
+table.event-table td { padding: 4px; border: 1px solid var(--border); vertical-align: top; }
+table.event-table td input, table.event-table td select { width: 100%; border: none; background: transparent; font-size: 12px; padding: 3px 4px; font-family: inherit; }
+table.event-table td input:focus, table.event-table td select:focus { outline: 1px solid var(--accent); border-radius: 3px; }
+table.event-table tr:hover td { background: #f9fafb; }
+.btn-row-add { font-size: 11px; color: var(--accent); background: none; border: 1px dashed var(--accent); border-radius: 4px; padding: 4px 10px; cursor: pointer; margin-top: 4px; }
+.btn-row-del { color: var(--red); background: none; border: none; cursor: pointer; padding: 2px 6px; font-size: 14px; }
+.info-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; }
+.info-complete { background: #d1fae5; color: #065f46; }
+.info-partial { background: #fef3c7; color: #92400e; }
+.info-incomplete { background: #fee2e2; color: #991b1b; }
+.info-missing { background: #e5e7eb; color: #374151; }
+
+/* KR step */
+.kr-field { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+.kr-field label { font-size: 13px; font-weight: 600; min-width: 160px; }
+.toggle-group { display: flex; gap: 0; }
+.toggle-opt { padding: 6px 16px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 13px; transition: all .1s; }
+.toggle-opt:first-child { border-radius: 6px 0 0 6px; }
+.toggle-opt:last-child { border-radius: 0 6px 6px 0; border-left: none; }
+.toggle-opt.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
+.status-select { padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; }
+
+/* Preview */
+.preview-wrap { background: #fafafa; border: 1px solid var(--border); border-radius: 6px; padding: 14px; font-size: 13px; line-height: 1.7; }
+.preview-wrap h1 { font-size: 16px; margin-bottom: 8px; }
+.preview-wrap h2 { font-size: 14px; margin: 12px 0 6px; }
+.preview-wrap h3 { font-size: 13px; margin: 8px 0 4px; }
+.preview-wrap table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+.preview-wrap th, .preview-wrap td { border: 1px solid var(--border); padding: 5px 8px; font-size: 12px; }
+.preview-wrap blockquote { border-left: 3px solid var(--border); padding-left: 10px; color: var(--muted); margin: 6px 0; }
+.preview-wrap code { background: #f3f4f6; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: monospace; }
+
+/* Tabs within step */
+.tab-strip { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 14px; }
+.tab-opt { padding: 7px 14px; border: none; background: none; cursor: pointer; font-size: 13px; color: var(--muted); border-bottom: 2px solid transparent; }
+.tab-opt.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+/* Settings modal */
+#modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 100; align-items: center; justify-content: center; }
+#modal-overlay.open { display: flex; }
+#modal { background: #fff; border-radius: 10px; padding: 24px; width: 420px; max-width: 90vw; }
+#modal h2 { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
+#modal .form-group { margin-bottom: 14px; }
+#modal .form-group label { font-size: 12px; font-weight: 600; color: var(--muted); display: block; margin-bottom: 5px; }
+#modal .form-group input { width: 100%; }
+#modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <h1>EEG Audit Tool</h1>
+  <div class="spacer"></div>
+  <span id="save-status"></span>
+  <button id="btn-settings" onclick="openSettings()">⚙ Settings</button>
+</div>
+
+<div id="layout">
+  <!-- Left sidebar -->
+  <div id="sidebar">
+    <div id="sidebar-head">
+      <label>Filter by Category</label>
+      <select id="filter-category" onchange="renderDatasetList()">
+        <option value="">All Categories</option>
+      </select>
+    </div>
+    <div id="dataset-list"></div>
+  </div>
+
+  <!-- Main -->
+  <div id="main">
+    <div id="step-bar">
+      <button class="step-btn active" id="step-btn-0" onclick="goStep(0)"><span class="step-num">1</span> Meta</button>
+      <span class="step-sep">›</span>
+      <button class="step-btn" id="step-btn-1" onclick="goStep(1)"><span class="step-num">2</span> Paradigm</button>
+      <span class="step-sep">›</span>
+      <button class="step-btn" id="step-btn-2" onclick="goStep(2)"><span class="step-num">3</span> File Scan</button>
+      <span class="step-sep">›</span>
+      <button class="step-btn" id="step-btn-3" onclick="goStep(3)"><span class="step-num">4</span> Tasks</button>
+      <span class="step-sep">›</span>
+      <button class="step-btn" id="step-btn-4" onclick="goStep(4)"><span class="step-num">5</span> DQN</button>
+      <span class="step-sep">›</span>
+      <button class="step-btn" id="step-btn-5" onclick="goStep(5)"><span class="step-num">6</span> Kernel</button>
+    </div>
+
+    <div id="step-content">
+      <div id="no-dataset">← Select a dataset to start reviewing</div>
+    </div>
+
+    <div id="action-bar" style="display:none">
+      <span id="ds-title"></span>
+      <div class="spacer" style="flex:1"></div>
+      <button class="btn btn-secondary" id="btn-prev" onclick="prevStep()" disabled>← Prev</button>
+      <button class="btn btn-secondary" id="btn-next" onclick="nextStep()">Next →</button>
+      <button class="btn btn-success" onclick="saveFile()">💾 Save File</button>
+    </div>
+  </div>
+
+  <!-- Right panel -->
+  <div id="right">
+    <div id="right-tabs">
+      <button class="rtab active" id="rtab-rulebook" onclick="switchRightTab('rulebook')">Rulebook</button>
+      <button class="rtab" id="rtab-chat" onclick="switchRightTab('chat')">LLM Chat</button>
+    </div>
+    <div id="right-body">
+      <div id="pane-rulebook" class="visible">
+        <div id="rulebook-search">
+          <input type="text" id="rb-search" placeholder="Search rulebook..." oninput="filterRulebook()">
+        </div>
+        <div id="rulebook-content">Loading rulebook…</div>
+      </div>
+      <div id="pane-chat">
+        <div id="chat-messages"></div>
+        <div id="chat-input-area">
+          <div id="chat-context-label">Context: current dataset + step</div>
+          <textarea id="chat-input" placeholder="Ask about this dataset or rules…" onkeydown="chatKeydown(event)"></textarea>
+          <button class="btn btn-primary btn-sm" id="chat-send" style="width:100%;margin-top:6px" onclick="sendChat()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Settings modal -->
+<div id="modal-overlay">
+  <div id="modal">
+    <h2>LLM Settings</h2>
+    <div class="form-group">
+      <label>API Base URL (OpenAI-compatible)</label>
+      <input type="text" id="cfg-url" placeholder="https://api.openai.com/v1">
+    </div>
+    <div class="form-group">
+      <label>API Key</label>
+      <input type="password" id="cfg-key" placeholder="sk-...">
+    </div>
+    <div class="form-group">
+      <label>Model</label>
+      <input type="text" id="cfg-model" placeholder="gpt-4o">
+    </div>
+    <div id="modal-actions">
+      <button class="btn btn-secondary" onclick="closeSettings()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSettings()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── State ────────────────────────────────────────────────────────────────────
+let allDatasets = [];
+let currentDataset = null;
+let rawContent = '';
+let currentStep = 0;
+let rulebookRaw = '';
+let llmHistory = [];
+let dirty = false;
+
+const STEP_LABELS = ['Meta', 'Paradigm', 'File Scan Result', 'Tasks', 'DQN', 'Kernel'];
+const STEP_RULEBOOK_HINTS = [
+  '第30条, Category, Meta, Manual Review',
+  '第31条, Paradigm',
+  '第七章, 第八章, Event Structure, File Scan Result, Info, MISC',
+  '第九章, 第十章, Tasks, Classical Task, Potential Task, Label Route, Target',
+  '第十一章, Data Quality',
+  '第十二章, Kernel Responsibilities, Super Meta, Status',
+];
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+async function init() {
+  await Promise.all([loadDatasets(), loadRulebook(), loadConfig()]);
+}
+
+async function loadDatasets() {
+  try {
+    const r = await fetch('/api/datasets');
+    allDatasets = await r.json();
+    populateCategoryFilter();
+    renderDatasetList();
+  } catch(e) { console.error(e); }
+}
+
+async function loadRulebook() {
+  try {
+    const r = await fetch('/api/rulebook');
+    const d = await r.json();
+    rulebookRaw = d.content;
+    renderRulebook();
+  } catch(e) {}
+}
+
+async function loadConfig() {
+  try {
+    const r = await fetch('/api/config');
+    const cfg = await r.json();
+    document.getElementById('cfg-url').value = cfg.url || '';
+    document.getElementById('cfg-key').value = cfg.key || '';
+    document.getElementById('cfg-model').value = cfg.model || '';
+  } catch(e) {}
+}
+
+// ─── Sidebar ──────────────────────────────────────────────────────────────────
+function populateCategoryFilter() {
+  const cats = [...new Set(allDatasets.map(d => d.category))].sort();
+  const sel = document.getElementById('filter-category');
+  sel.innerHTML = '<option value="">All Categories</option>';
+  cats.forEach(c => {
+    const o = document.createElement('option');
+    o.value = c; o.textContent = c;
+    sel.appendChild(o);
+  });
+}
+
+function renderDatasetList() {
+  const cat = document.getElementById('filter-category').value;
+  const filtered = cat ? allDatasets.filter(d => d.category === cat) : allDatasets;
+  const list = document.getElementById('dataset-list');
+  list.innerHTML = '';
+  filtered.forEach(d => {
+    const div = document.createElement('div');
+    div.className = 'ds-item' + (currentDataset === d.name ? ' active' : '');
+    div.onclick = () => selectDataset(d.name);
+    div.innerHTML = `<div class="ds-name">${d.name}</div>
+      <div class="ds-meta">
+        <span class="ds-cat">${d.category}</span>
+        <span class="badge ${statusBadgeClass(d.status)}">${d.status}</span>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function statusBadgeClass(s) {
+  if (!s || s === 'unknown') return 'badge-other';
+  if (s.includes('wait')) return 'badge-wait';
+  if (s.includes('review')) return 'badge-review';
+  if (s === 'reviewed') return 'badge-done';
+  if (s.includes('revis') || s.includes('error')) return 'badge-rev';
+  return 'badge-other';
+}
+
+async function selectDataset(name) {
+  if (dirty && !confirm('Unsaved changes — discard and switch?')) return;
+  currentDataset = name;
+  dirty = false;
+  currentStep = 0;
+  try {
+    const r = await fetch(`/api/dataset/${encodeURIComponent(name)}`);
+    const d = await r.json();
+    rawContent = d.content;
+  } catch(e) { alert('Failed to load dataset'); return; }
+  renderDatasetList();
+  document.getElementById('action-bar').style.display = 'flex';
+  document.getElementById('ds-title').textContent = name;
+  renderStep(0);
+  updateStepBar();
+}
+
+// ─── Step navigation ──────────────────────────────────────────────────────────
+function goStep(idx) {
+  collectStep(currentStep);
+  currentStep = idx;
+  renderStep(idx);
+  updateStepBar();
+}
+
+function prevStep() {
+  if (currentStep === 0) return;
+  collectStep(currentStep);
+  currentStep--;
+  renderStep(currentStep);
+  updateStepBar();
+}
+
+function nextStep() {
+  if (currentStep === 5) return;
+  collectStep(currentStep);
+  currentStep++;
+  renderStep(currentStep);
+  updateStepBar();
+}
+
+function updateStepBar() {
+  for (let i = 0; i < 6; i++) {
+    const btn = document.getElementById(`step-btn-${i}`);
+    btn.classList.toggle('active', i === currentStep);
+  }
+  document.getElementById('btn-prev').disabled = currentStep === 0;
+  document.getElementById('btn-next').disabled = currentStep === 5;
+  renderRulebook();
+  document.getElementById('chat-context-label').textContent =
+    `Context: ${currentDataset} — step ${currentStep + 1}: ${STEP_LABELS[currentStep]}`;
+}
+
+// ─── Section parsing helpers ──────────────────────────────────────────────────
+function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+function getSection(raw, heading) {
+  const re = new RegExp(`\\n## ${escRe(heading)}\\b([\\s\\S]*?)(?=\\n## |$)`);
+  const m = raw.match(re);
+  return m ? m[1].trim() : '';
+}
+
+function replaceSection(raw, heading, newBody) {
+  const re = new RegExp(`(\\n## ${escRe(heading)}\\b)[\\s\\S]*?(?=\\n## |$)`);
+  const replacement = `\n## ${heading}\n\n${newBody}\n`;
+  if (re.test(raw)) return raw.replace(re, replacement);
+  return raw.trimEnd() + `\n\n## ${heading}\n\n${newBody}\n`;
+}
+
+function getSubSection(sectionBody, heading) {
+  const re = new RegExp(`###\\s+${escRe(heading)}\\b([\\s\\S]*?)(?=\\n### |$)`);
+  const m = sectionBody.match(re);
+  return m ? m[1].trim() : '';
+}
+
+// Parse meta line: **Dataset**: `name` | **Year**: 2020 | ...
+function parseMeta(raw) {
+  const fields = {};
+  const metaLineM = raw.match(/\*\*Dataset\*\*[^\n]+/);
+  if (metaLineM) {
+    const line = metaLineM[0];
+    const pairs = line.split('|');
+    pairs.forEach(p => {
+      const m = p.match(/\*\*([^*]+)\*\*:\s*`?([^`|*\n]+)`?/);
+      if (m) fields[m[1].trim()] = m[2].trim();
+    });
+  }
+  // Second meta line
+  const metaLine2 = raw.match(/\*\*Category\*\*[^\n]+/);
+  if (metaLine2) {
+    metaLine2[0].split('|').forEach(p => {
+      const m = p.match(/\*\*([^*]+)\*\*:\s*`?([^`|*\n]+)`?/);
+      if (m) fields[m[1].trim()] = m[2].trim();
+    });
+  }
+  const titleM = raw.match(/^#\s+(.+)/m);
+  fields['_title'] = titleM ? titleM[1].trim() : '';
+  const mrM = raw.match(/\*\*Manual Review\*\*:\s*([^\n]+)/);
+  fields['_manualReview'] = mrM ? mrM[1].trim() : '';
+  return fields;
+}
+
+function serializeMeta(fields) {
+  const line1 = `**Dataset**: \`${fields['Dataset'] || ''}\` | **Year**: ${fields['Year'] || ''} | **URL**: ${fields['URL'] || ''}`;
+  const line2 = `**Category**: ${fields['Category'] || ''} | **Subjects**: ${fields['Subjects'] || ''} | **Files (Completed)**: ${fields['Files (Completed)'] || ''} | **Channels**: ${fields['Channels'] || ''} | **Sampling Rate**: ${fields['Sampling Rate'] || ''}`;
+  return line1 + '\n' + line2;
+}
+
+// ─── Step renderers ───────────────────────────────────────────────────────────
+function renderStep(idx) {
+  if (!currentDataset) return;
+  const content = document.getElementById('step-content');
+  content.innerHTML = '';
+  if (idx === 0) renderMeta(content);
+  else if (idx === 1) renderParadigm(content);
+  else if (idx === 2) renderFileScan(content);
+  else if (idx === 3) renderTasks(content);
+  else if (idx === 4) renderDQN(content);
+  else if (idx === 5) renderKernel(content);
+}
+
+// Step 1: Meta
+function renderMeta(content) {
+  const meta = parseMeta(rawContent);
+  const CATEGORIES = [
+    'Action/Output','Perception/Stimulus','Mental State','Clinical/Patient',
+    'Resting State','Social Cognition','Affective','Other'
+  ];
+  const catOpts = CATEGORIES.map(c =>
+    `<option value="${c}" ${meta['Category'] === c ? 'selected' : ''}>${c}</option>`
+  ).join('');
+  content.innerHTML = `
+  <div class="card">
+    <div class="card-title">Dataset Header</div>
+    <div class="form-row">
+      <div class="form-group" style="flex:2">
+        <label>Title</label>
+        <input id="m-title" value="${esc(meta['_title'])}">
+      </div>
+      <div class="form-group">
+        <label>Dataset ID</label>
+        <input id="m-dataset" value="${esc(meta['Dataset'] || '')}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Year</label>
+        <input id="m-year" value="${esc(meta['Year'] || '')}">
+      </div>
+      <div class="form-group" style="flex:3">
+        <label>URL</label>
+        <input id="m-url" value="${esc(meta['URL'] || '')}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Category</label>
+        <select id="m-category">${catOpts}<option value="${esc(meta['Category'] || '')}" selected>${esc(meta['Category'] || 'Unknown')}</option></select>
+      </div>
+      <div class="form-group">
+        <label>Subjects</label>
+        <input id="m-subjects" value="${esc(meta['Subjects'] || '')}">
+      </div>
+      <div class="form-group">
+        <label>Files (Completed)</label>
+        <input id="m-files" value="${esc(meta['Files (Completed)'] || '')}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Channels</label>
+        <input id="m-channels" value="${esc(meta['Channels'] || '')}">
+      </div>
+      <div class="form-group">
+        <label>Sampling Rate</label>
+        <input id="m-sr" value="${esc(meta['Sampling Rate'] || '')}">
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Manual Review Notes</div>
+    <textarea class="full-textarea" id="m-manual-review" style="min-height:80px" placeholder="Enter review notes…">${esc(meta['_manualReview'])}</textarea>
+  </div>`;
+}
+
+function collectMeta() {
+  const title = document.getElementById('m-title').value.trim();
+  const dataset = document.getElementById('m-dataset').value.trim();
+  const year = document.getElementById('m-year').value.trim();
+  const url = document.getElementById('m-url').value.trim();
+  const category = document.getElementById('m-category').value.trim();
+  const subjects = document.getElementById('m-subjects').value.trim();
+  const files = document.getElementById('m-files').value.trim();
+  const channels = document.getElementById('m-channels').value.trim();
+  const sr = document.getElementById('m-sr').value.trim();
+  const manualReview = document.getElementById('m-manual-review').value.trim();
+
+  const fields = { Dataset: dataset, Year: year, URL: url, Category: category,
+    Subjects: subjects, 'Files (Completed)': files, Channels: channels, 'Sampling Rate': sr };
+  const newMeta = serializeMeta(fields);
+  const newTitle = `# ${title}`;
+
+  // Replace title
+  rawContent = rawContent.replace(/^#\s+.+/m, newTitle);
+  // Replace meta lines (two consecutive lines starting with **)
+  rawContent = rawContent.replace(/\*\*Dataset\*\*[^\n]+\n\*\*Category\*\*[^\n]+/, newMeta);
+  // Handle Manual Review
+  if (manualReview) {
+    const mrRe = /\*\*Manual Review\*\*:\s*[^\n]+/;
+    if (mrRe.test(rawContent)) {
+      rawContent = rawContent.replace(mrRe, `**Manual Review**: ${manualReview}`);
+    } else {
+      // Insert after meta lines
+      rawContent = rawContent.replace(newMeta, newMeta + `\n**Manual Review**: ${manualReview}`);
+    }
+  } else {
+    rawContent = rawContent.replace(/\n?\*\*Manual Review\*\*:\s*[^\n]+/, '');
+  }
+  dirty = true;
+}
+
+// Step 2: Paradigm
+function renderParadigm(content) {
+  const body = getSection(rawContent, 'Paradigm');
+  content.innerHTML = `
+  <div class="tab-strip">
+    <button class="tab-opt active" id="tab-para-edit" onclick="switchParaTab('edit')">Edit</button>
+    <button class="tab-opt" id="tab-para-preview" onclick="switchParaTab('preview')">Preview</button>
+  </div>
+  <div id="para-edit-area">
+    <textarea class="full-textarea" id="para-body" style="min-height:320px">${esc(body)}</textarea>
+  </div>
+  <div id="para-preview-area" style="display:none">
+    <div class="preview-wrap" id="para-preview-html"></div>
+  </div>`;
+}
+
+function switchParaTab(mode) {
+  document.getElementById('tab-para-edit').classList.toggle('active', mode === 'edit');
+  document.getElementById('tab-para-preview').classList.toggle('active', mode === 'preview');
+  document.getElementById('para-edit-area').style.display = mode === 'edit' ? '' : 'none';
+  document.getElementById('para-preview-area').style.display = mode === 'preview' ? '' : 'none';
+  if (mode === 'preview') {
+    document.getElementById('para-preview-html').innerHTML =
+      marked.parse(document.getElementById('para-body').value);
+  }
+}
+
+function collectParadigm() {
+  const body = document.getElementById('para-body').value;
+  rawContent = replaceSection(rawContent, 'Paradigm', body);
+  dirty = true;
+}
+
+// Step 3: File Scan Result
+function renderFileScan(content) {
+  const fsrBody = getSection(rawContent, 'File Scan Result');
+
+  // Kernel blockquote
+  const kernelM = fsrBody.match(/>\s*\*\*Kernel\*\*:\s*(.+)/);
+  const sha256M = fsrBody.match(/>\s*\*\*SHA256\*\*:\s*(.+)/);
+  const kernelStr = kernelM ? kernelM[1].trim() : 'N/A';
+  const sha256Str = sha256M ? sha256M[1].trim() : 'N/A';
+
+  // Event Structure
+  const esBody = getSubSection(fsrBody, 'Event Structure');
+  const esTableHtml = buildEventTableEditor(esBody);
+
+  // MISC
+  const miscBody = getSubSection(fsrBody, 'MISC Label Summary');
+
+  // Info
+  const infoBody = getSubSection(fsrBody, 'Info');
+  const infoTableHtml = buildInfoTableEditor(infoBody);
+
+  // Notes under ES (blockquote after the table)
+  const esNoteM = esBody.match(/\n>([\s\S]+)$/);
+  const esNote = esNoteM ? esNoteM[1].replace(/^>\s?/gm, '').trim() : '';
+
+  content.innerHTML = `
+  <div class="card">
+    <div class="card-title">Kernel Fingerprint (read-only)</div>
+    <div style="background:#f8fafc;border:1px solid var(--border);border-radius:6px;padding:10px;font-size:12px;font-family:monospace;color:var(--muted)">
+      <div><strong>Kernel:</strong> ${esc(kernelStr)}</div>
+      <div><strong>SHA256:</strong> ${esc(sha256Str)}</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Event Structure</div>
+    <div class="event-table-wrap">${esTableHtml}</div>
+    <button class="btn-row-add" onclick="addEventRow()">+ Add row</button>
+    <div style="margin-top:10px">
+      <label class="section-label">Notes (blockquote)</label>
+      <textarea class="full-textarea" id="es-notes" style="min-height:60px">${esc(esNote)}</textarea>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">MISC Label Summary (optional)</div>
+    <textarea class="full-textarea" id="misc-body" style="min-height:100px">${esc(miscBody)}</textarea>
+  </div>
+  <div class="card">
+    <div class="card-title">Info</div>
+    <div class="event-table-wrap">${infoTableHtml}</div>
+  </div>`;
+}
+
+function parseMarkdownTable(text) {
+  const lines = text.split('\n').filter(l => l.trim().startsWith('|'));
+  if (lines.length < 2) return { headers: [], rows: [] };
+  const headers = lines[0].split('|').map(c => c.trim()).filter(Boolean);
+  const rows = [];
+  for (let i = 2; i < lines.length; i++) {
+    const cells = lines[i].split('|').map(c => c.trim()).filter(Boolean);
+    if (cells.length > 0) rows.push(cells);
+  }
+  return { headers, rows };
+}
+
+function buildEventTableEditor(esBody) {
+  const { headers, rows } = parseMarkdownTable(esBody);
+  const displayHeaders = headers.length ? headers : ['Event ID', 'Count (total)', 'Type', 'Meta Level', 'Meaning'];
+
+  let html = `<table class="event-table" id="event-table">
+    <thead><tr>
+      ${displayHeaders.map(h => `<th>${esc(h)}</th>`).join('')}
+      <th style="width:30px"></th>
+    </tr></thead>
+    <tbody id="event-tbody">`;
+
+  const dataRows = rows.length ? rows : [['', '', 'event', 'raw', '']];
+  dataRows.forEach((row, ri) => {
+    html += buildEventRow(row, displayHeaders, ri);
+  });
+  html += '</tbody></table>';
+  return html;
+}
+
+function buildEventRow(cells, headers, ri) {
+  const typeIdx = headers.findIndex(h => h.toLowerCase() === 'type');
+  const metaIdx = headers.findIndex(h => h.toLowerCase().includes('meta'));
+  let html = `<tr>`;
+  (headers || ['Event ID', 'Count (total)', 'Type', 'Meta Level', 'Meaning']).forEach((h, ci) => {
+    const val = (cells[ci] || '').replace(/^`|`$/g, '');
+    if (ci === typeIdx) {
+      html += `<td style="width:80px"><select class="es-type">
+        <option ${val === 'event' ? 'selected' : ''}>event</option>
+        <option ${val === 'admin' ? 'selected' : ''}>admin</option>
+      </select></td>`;
+    } else if (ci === metaIdx) {
+      html += `<td style="width:70px"><select class="es-meta">
+        <option ${val === 'raw' ? 'selected' : ''}>raw</option>
+        <option ${val === 'super' ? 'selected' : ''}>super</option>
+      </select></td>`;
+    } else {
+      html += `<td><input type="text" value="${esc(val)}"></td>`;
+    }
+  });
+  html += `<td><button class="btn-row-del" onclick="delEventRow(this)" title="Delete row">×</button></td></tr>`;
+  return html;
+}
+
+function addEventRow() {
+  const tbody = document.getElementById('event-tbody');
+  if (!tbody) return;
+  const headers = ['Event ID', 'Count (total)', 'Type', 'Meta Level', 'Meaning'];
+  const newRow = document.createElement('tr');
+  newRow.innerHTML = buildEventRow(['', '', 'event', 'raw', ''], headers, -1).replace(/^<tr>|<\/tr>$/g, '');
+  tbody.appendChild(newRow);
+}
+
+function delEventRow(btn) {
+  btn.closest('tr').remove();
+}
+
+function buildInfoTableEditor(infoBody) {
+  const { headers, rows } = parseMarkdownTable(infoBody);
+  const displayHeaders = headers.length ? headers : ['Field', 'Completeness', 'Notes'];
+  const COMPLETENESS = ['complete', 'partial', 'incomplete', 'missing'];
+
+  let html = `<table class="event-table" id="info-table"><thead><tr>
+    ${displayHeaders.map(h => `<th>${esc(h)}</th>`).join('')}
+  </tr></thead><tbody>`;
+  const dataRows = rows.length ? rows : [
+    ['subject_age', 'missing', 'N/A'],
+    ['subject_sex', 'missing', 'N/A'],
+    ['device', 'missing', 'N/A'],
+  ];
+  dataRows.forEach(row => {
+    const field = (row[0] || '').replace(/^`|`$/g, '');
+    const comp = (row[1] || 'missing');
+    const notes = (row[2] || 'N/A');
+    const compOpts = COMPLETENESS.map(c =>
+      `<option ${comp === c ? 'selected' : ''}>${c}</option>`).join('');
+    html += `<tr>
+      <td style="width:130px"><input type="text" value="${esc(field)}"></td>
+      <td style="width:110px"><select class="info-comp">${compOpts}</select></td>
+      <td><input type="text" value="${esc(notes)}"></td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  return html;
+}
+
+function collectFileScan() {
+  const fsrBody = getSection(rawContent, 'File Scan Result');
+  const kernelM = fsrBody.match(/>\s*\*\*Kernel\*\*:\s*(.+)/);
+  const sha256M = fsrBody.match(/>\s*\*\*SHA256\*\*:\s*(.+)/);
+  const kernelLine = kernelM ? kernelM[0] : '> **Kernel**: N/A';
+  const sha256Line = sha256M ? sha256M[0] : '> **SHA256**: N/A';
+
+  // Rebuild Event Structure
+  const esTable = serializeEventTable();
+  const esNotes = document.getElementById('es-notes').value.trim();
+  const esNoteBlock = esNotes ? '\n\n' + esNotes.split('\n').map(l => '> ' + l).join('\n') : '';
+  const esSection = `### Event Structure\n\n${esTable}${esNoteBlock}`;
+
+  // MISC
+  const miscVal = document.getElementById('misc-body').value.trim();
+  const miscSection = miscVal ? `\n\n### MISC Label Summary\n\n${miscVal}` : '';
+
+  // Info
+  const infoTable = serializeInfoTable();
+  const infoSection = `\n\n### Info\n\n${infoTable}`;
+
+  const newFsrBody = `${kernelLine}\n${sha256Line}\n\n${esSection}${miscSection}${infoSection}`;
+  rawContent = replaceSection(rawContent, 'File Scan Result', newFsrBody);
+  dirty = true;
+}
+
+function serializeEventTable() {
+  const table = document.getElementById('event-table');
+  if (!table) return '';
+  const headers = [...table.querySelectorAll('thead th')].map(th => th.textContent).filter(t => t !== '');
+  let md = '| ' + headers.join(' | ') + ' |\n';
+  md += '|' + headers.map(() => '---').join('|') + '|\n';
+  table.querySelectorAll('tbody tr').forEach(tr => {
+    const cells = [...tr.querySelectorAll('td')].slice(0, headers.length);
+    const vals = cells.map(td => {
+      const input = td.querySelector('input');
+      const select = td.querySelector('select');
+      if (input) return input.value.trim();
+      if (select) return select.value;
+      return td.textContent.trim();
+    });
+    md += '| ' + vals.map((v, i) => {
+      // wrap event ID in backticks if it looks like an ID
+      if (i === 0 && v && !v.startsWith('`')) return `\`${v}\``;
+      return v;
+    }).join(' | ') + ' |\n';
+  });
+  return md;
+}
+
+function serializeInfoTable() {
+  const table = document.getElementById('info-table');
+  if (!table) return '';
+  const headers = [...table.querySelectorAll('thead th')].map(th => th.textContent);
+  let md = '| ' + headers.join(' | ') + ' |\n';
+  md += '|' + headers.map(() => '---').join('|') + '|\n';
+  table.querySelectorAll('tbody tr').forEach(tr => {
+    const cells = [...tr.querySelectorAll('td')];
+    const vals = cells.map(td => {
+      const input = td.querySelector('input');
+      const select = td.querySelector('select');
+      if (input) return input.value.trim();
+      if (select) return select.value;
+      return '';
+    });
+    if (vals[0]) md += '| ' + [`\`${vals[0]}\``, vals[1], vals[2] || 'N/A'].join(' | ') + ' |\n';
+  });
+  return md;
+}
+
+// Step 4: Tasks
+function renderTasks(content) {
+  const body = getSection(rawContent, 'Tasks');
+  // Validate target_events against event table
+  const validation = validateTaskTargetEvents(body);
+  content.innerHTML = `
+  <div class="card" style="margin-bottom:10px">
+    <div class="card-title">Tasks <span style="font-size:11px;color:var(--muted);font-weight:400">(Markdown editor)</span></div>
+    ${validation ? `<div style="background:#fef3c7;border:1px solid #f59e0b;border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:12px;color:#92400e">${validation}</div>` : ''}
+    <textarea class="full-textarea" id="tasks-body" style="min-height:400px">${esc(body)}</textarea>
+  </div>`;
+}
+
+function validateTaskTargetEvents(tasksBody) {
+  // Get event IDs from the current event structure in rawContent
+  const fsrBody = getSection(rawContent, 'File Scan Result');
+  const esBody = getSubSection(fsrBody, 'Event Structure');
+  const { rows } = parseMarkdownTable(esBody);
+  const knownEvents = new Set(rows.map(r => (r[0] || '').replace(/^`|`$/g, '').trim()).filter(Boolean));
+  if (!knownEvents.size) return null;
+
+  // Extract target_events from tasks
+  const teMatches = [...tasksBody.matchAll(/target_events\s*=\s*\[([^\]]+)\]/g)];
+  const warnings = [];
+  teMatches.forEach(m => {
+    const events = [...m[1].matchAll(/`([^`]+)`/g)].map(e => e[1].trim());
+    events.forEach(ev => {
+      if (!knownEvents.has(ev)) {
+        warnings.push(`"${ev}" not in Event Structure`);
+      }
+    });
+  });
+  return warnings.length ? `⚠ Target event mismatch: ${warnings.join('; ')}` : null;
+}
+
+function collectTasks() {
+  const body = document.getElementById('tasks-body').value;
+  rawContent = replaceSection(rawContent, 'Tasks', body);
+  dirty = true;
+}
+
+// Step 5: DQN
+function renderDQN(content) {
+  const body = getSection(rawContent, 'Data Quality Notes');
+  content.innerHTML = `
+  <div class="card">
+    <div class="card-title">Data Quality Notes</div>
+    <textarea class="full-textarea" id="dqn-body" style="min-height:280px">${esc(body)}</textarea>
+  </div>`;
+}
+
+function collectDQN() {
+  const body = document.getElementById('dqn-body').value;
+  rawContent = replaceSection(rawContent, 'Data Quality Notes', body);
+  dirty = true;
+}
+
+// Step 6: Kernel Responsibilities
+function renderKernel(content) {
+  const krBody = getSection(rawContent, 'Kernel Responsibilities');
+  const smrM = krBody.match(/\*\*Super Meta Required\*\*:\s*(\S+)/);
+  const smr = smrM ? smrM[1].trim() : 'No';
+  const statusM = krBody.match(/\*\*Status\*\*:\s*(\S+)/);
+  const status = statusM ? statusM[1].trim() : 'wait_manual_review';
+
+  const STATUS_OPTS = [
+    'wait_manual_review', 'in_review', 'reviewed', 'needs_revision', 'error'
+  ];
+
+  content.innerHTML = `
+  <div class="card">
+    <div class="card-title">Kernel Responsibilities</div>
+    <div class="kr-field">
+      <label>Super Meta Required</label>
+      <div class="toggle-group">
+        <button class="toggle-opt ${smr === 'Yes' ? 'selected' : ''}" id="smr-yes" onclick="selectSMR('Yes')">Yes</button>
+        <button class="toggle-opt ${smr !== 'Yes' ? 'selected' : ''}" id="smr-no" onclick="selectSMR('No')">No</button>
+      </div>
+    </div>
+    <div class="kr-field">
+      <label>Status</label>
+      <select class="status-select" id="kr-status">
+        ${STATUS_OPTS.map(s => `<option value="${s}" ${status === s ? 'selected' : ''}>${s}</option>`).join('')}
+      </select>
+    </div>
+  </div>`;
+}
+
+function selectSMR(val) {
+  document.getElementById('smr-yes').classList.toggle('selected', val === 'Yes');
+  document.getElementById('smr-no').classList.toggle('selected', val !== 'Yes');
+}
+
+function collectKernel() {
+  const smrYes = document.getElementById('smr-yes');
+  const statusEl = document.getElementById('kr-status');
+  if (!smrYes || !statusEl) return;
+  const smr = smrYes.classList.contains('selected') ? 'Yes' : 'No';
+  const status = statusEl.value;
+  const newBody = `> **Super Meta Required**: ${smr}\n> **Status**: ${status}`;
+  rawContent = replaceSection(rawContent, 'Kernel Responsibilities', newBody);
+  // Update sidebar badge
+  const ds = allDatasets.find(d => d.name === currentDataset);
+  if (ds) { ds.status = status; renderDatasetList(); }
+  dirty = true;
+}
+
+// ─── Collect current step ─────────────────────────────────────────────────────
+function collectStep(idx) {
+  try {
+    if (idx === 0) collectMeta();
+    else if (idx === 1) collectParadigm();
+    else if (idx === 2) collectFileScan();
+    else if (idx === 3) collectTasks();
+    else if (idx === 4) collectDQN();
+    else if (idx === 5) collectKernel();
+  } catch(e) { console.warn('collectStep error', e); }
+}
+
+// ─── Save file ────────────────────────────────────────────────────────────────
+async function saveFile() {
+  collectStep(currentStep);
+  if (!currentDataset) return;
+  const saveStatus = document.getElementById('save-status');
+  saveStatus.textContent = 'Saving…';
+  try {
+    const r = await fetch(`/api/dataset/${encodeURIComponent(currentDataset)}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: rawContent }),
+    });
+    if (r.ok) {
+      dirty = false;
+      saveStatus.textContent = '✓ Saved';
+      setTimeout(() => saveStatus.textContent = '', 3000);
+    } else {
+      saveStatus.textContent = '✗ Error';
+    }
+  } catch(e) {
+    saveStatus.textContent = '✗ ' + e.message;
+  }
+}
+
+// ─── Rulebook ─────────────────────────────────────────────────────────────────
+function renderRulebook() {
+  const hint = STEP_RULEBOOK_HINTS[currentStep] || '';
+  const search = document.getElementById('rb-search').value.trim();
+  const query = search || hint;
+  let html = '';
+  if (hint && !search) {
+    html += `<div class="rb-step-hint">Step hints: ${hint}</div>`;
+  }
+  if (!rulebookRaw) { document.getElementById('rulebook-content').innerHTML = 'Loading…'; return; }
+
+  if (query) {
+    const terms = query.split(/[,\s]+/).filter(Boolean).map(t => t.toLowerCase());
+    // Show paragraphs/sections that contain any term
+    const lines = rulebookRaw.split('\n');
+    let sections = [];
+    let buf = [], inMatch = false;
+    lines.forEach(line => {
+      const isHeading = /^#{1,3}\s/.test(line);
+      if (isHeading) {
+        if (inMatch && buf.length) sections.push(buf.join('\n'));
+        buf = [line];
+        inMatch = terms.some(t => line.toLowerCase().includes(t));
+      } else {
+        buf.push(line);
+        if (!inMatch && terms.some(t => line.toLowerCase().includes(t))) inMatch = true;
+      }
+    });
+    if (inMatch && buf.length) sections.push(buf.join('\n'));
+    if (sections.length) {
+      html += marked.parse(sections.join('\n\n---\n\n'));
+    } else {
+      html += '<p style="color:var(--muted);font-size:12px">No matching sections found.</p>';
+      if (!search) html += marked.parse(rulebookRaw.slice(0, 3000) + '\n\n…');
+    }
+  } else {
+    html += marked.parse(rulebookRaw);
+  }
+  document.getElementById('rulebook-content').innerHTML = html;
+}
+
+function filterRulebook() { renderRulebook(); }
+
+// ─── LLM Chat ─────────────────────────────────────────────────────────────────
+function switchRightTab(tab) {
+  document.getElementById('rtab-rulebook').classList.toggle('active', tab === 'rulebook');
+  document.getElementById('rtab-chat').classList.toggle('active', tab === 'chat');
+  document.getElementById('pane-rulebook').classList.toggle('visible', tab === 'rulebook');
+  document.getElementById('pane-chat').classList.toggle('visible', tab === 'chat');
+}
+
+function chatKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  appendChat('user', msg);
+  llmHistory.push({ role: 'user', content: msg });
+
+  const systemPrompt = buildChatSystemPrompt();
+  const messages = [{ role: 'system', content: systemPrompt }, ...llmHistory];
+
+  appendChat('assistant', '…');
+  try {
+    const r = await fetch('/api/llm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages, stream: false }),
+    });
+    const d = await r.json();
+    const lastAssist = document.querySelector('#chat-messages .chat-msg.assistant:last-child .chat-bubble');
+    if (d.error) {
+      if (lastAssist) lastAssist.innerHTML = `<span style="color:var(--red)">${esc(d.error)}</span>`;
+    } else {
+      const reply = d.choices?.[0]?.message?.content || JSON.stringify(d);
+      if (lastAssist) lastAssist.innerHTML = marked.parse(reply);
+      llmHistory.push({ role: 'assistant', content: reply });
+    }
+  } catch(e) {
+    const lastAssist = document.querySelector('#chat-messages .chat-msg.assistant:last-child .chat-bubble');
+    if (lastAssist) lastAssist.textContent = 'Error: ' + e.message;
+  }
+}
+
+function buildChatSystemPrompt() {
+  const stepName = STEP_LABELS[currentStep];
+  const snippetLen = 1500;
+  const docSnippet = rawContent.length > snippetLen
+    ? rawContent.slice(0, snippetLen) + '\n…[truncated]'
+    : rawContent;
+  return `You are an EEG dataset documentation auditor. The user is reviewing the "${currentDataset}" dataset at step "${stepName}".
+
+Current document content (first ${snippetLen} chars):
+\`\`\`markdown
+${docSnippet}
+\`\`\`
+
+Help the user review and improve this documentation according to the EEG analysis rulebook. Be concise and specific.`;
+}
+
+function appendChat(role, text) {
+  const container = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = `chat-msg ${role}`;
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble';
+  bubble.innerHTML = role === 'assistant' ? marked.parse(text) : esc(text);
+  div.appendChild(bubble);
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+// ─── Settings ─────────────────────────────────────────────────────────────────
+function openSettings() {
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeSettings() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+async function saveSettings() {
+  const url = document.getElementById('cfg-url').value.trim();
+  const key = document.getElementById('cfg-key').value.trim();
+  const model = document.getElementById('cfg-model').value.trim();
+  await fetch('/api/config', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url, key, model }),
+  });
+  closeSettings();
+}
+document.getElementById('modal-overlay').onclick = function(e) {
+  if (e.target === this) closeSettings();
+};
+
+// ─── Utils ────────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── Start ────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>

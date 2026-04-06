@@ -7,55 +7,70 @@
 
 A multimodal neuroimaging study (EEG + MEG/MRI) investigating the spatiotemporal dynamics of visual processing in humans. Despite the dataset title implying an active visual processing task, no event markers are detectable in the BIDS EEG files. The visual stimulation protocol may be encoded in other modality files or events are not available in the EEG files processed by the locator pipeline.
 
-## Kernel Responsibilities
+## Subject Information
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+<!-- AUTO-KERNEL-SUBJECT-INFO:START -->
+> **Kernel Fact Source**: current kernel scan from `<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
+- **Record Count**: 168
+- **Age Completeness**: 168/168 (100.0%)
+- **Sex Completeness**: 168/168 (100.0%)
+- **Observed Age Examples**: `23`, `30`, `24`, `22`, `19`, `25`, `32`, `31`
+- **Observed Sex Examples**: `Male`, `Female`
+<!-- AUTO-KERNEL-SUBJECT-INFO:END -->
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002814
 
-## Event Structure
+## File Scan Result
+
+> **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds002814.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
+> **SHA256**: `e436e48f239db115957dccf5bc2307cb3ac75fbce463245b3e85cf82d5fd5c9e`
+
+### Event Structure
+
+<!-- AUTO-KERNEL-EVENT-STRUCTURE:START -->
+> **Kernel Fact Source**: current kernel scan from `<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
+> **Meaning Policy**: `Meaning` is interpretive; `Event ID / Count / Type / Meta Level` are kernel-derived facts.
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| *(none)* | - | - | raw | No event markers detected in EEG files |
+| `no_events` | N/A | admin | raw | No task-relevant event labels currently materialized by kernel |
+<!-- AUTO-KERNEL-EVENT-STRUCTURE:END -->
 
-> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-> - `long`: sustained-state marker (>=2 s), for `epoch_by_long_event_hdf5`
-> - `rest`: resting-state segment marker, for `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **exclude** from epoch target_events
 
+### Info
+
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
+| `device` | missing | N/A |
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Task category Selectivity
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds002814 DOI: https://doi.org/10.18112/openneuro.ds002814.v1.3.0
+### Classical Task 1: Visual Category Classification (5-class)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.6 s, target_events = [`stimulus_onset`, `category_presentation`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `stimulus_onset` (animals) | 0 | Animal category presentation |
+  | `stimulus_onset` (chairs) | 1 | Chair category presentation |
+  | `stimulus_onset` (faces) | 2 | Face category presentation |
+  | `stimulus_onset` (fruits) | 3 | Fruit category presentation |
+  | `stimulus_onset` (vehicles) | 4 | Vehicle category presentation |
+- **Evidence**:
+  - DOI: `10.1101/2022.05.12.491595` — Performs EEG category classification decoding among 5 visual object categories (animals, chairs, faces, fruits, vehicles) using SVM classifiers on epochs extracted from -100ms to +600ms relative to stimulus onset
+- **Kernel Notes**: Verify event ID mapping from events.tsv. Paper indicates stimulus_onset events exist for epoching. Labels may be stored in a separate condition or trial_type column rather than as separate event IDs. Map trial_type values (animal/chair/face/fruit/vehicle) to numeric class labels 0-4.
 
-
-### Primary Task 2: Publisher-defined BIDS task: TODO: full task name for category Selectivity
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds002814 DOI: https://doi.org/10.18112/openneuro.ds002814.v1.3.0
-
-
-### Normal Task 1: Resting / Continuous Segmentation (resting)
+### Potential Task 1: Resting / Continuous Segmentation
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
-- **Label Route**: `Annotation`
-- **Target Definition**: N/A (null (no trial-level labels available))
-- **Notes**: No event markers found in EEG locator metadata. High sampling rate (1200 Hz); downsampling recommended. Part of a multimodal dataset - check MEG/MRI files for corresponding event timing.
+- **Label Route**: `event`
+- **Target Definition**: N/A (null - no trial-level labels available)
+- **Notes**: High sampling rate (1200 Hz); downsampling recommended. Part of a multimodal dataset - check MEG/MRI files for corresponding event timing.
+
 ## Data Quality Notes
 
 - No event markers detected in any of the 168 EEG files.
@@ -63,6 +78,7 @@ A multimodal neuroimaging study (EEG + MEG/MRI) investigating the spatiotemporal
 - Part of multimodal dataset; MEG or MRI-derived event timing may be applicable if aligned.
 - Verify channel count consistency across subjects before pooling.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `A Multimodal Neuroimaging Dataset to Study Spatiotemporal Dynamics of Visual Processing in Humans`
+> **Super Meta Required**: No
+> **Status**: wait_kernel_update

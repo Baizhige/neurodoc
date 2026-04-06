@@ -8,34 +8,32 @@
 
 A reinforcement learning task (Probabilistic Selection Task) performed by participants following sad or happy mood manipulations. The paradigm mirrors Experiment 1 but compares sad and happy mood conditions rather than sad versus neutral. EEG was recorded to examine mood-dependent differences in reinforcement learning neural signatures.
 
-## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+## File Scan Result
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004317
+> **Kernel**: N/A
+> **SHA256**: N/A
 
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `STIM` | 50x~240 | short | raw | Stimulus onset (stimulus pair presented) |
-| `RESP` | 50x~230 | short | raw | Participant button-press response |
-| `FB` | 50x~240 | short | raw | Feedback onset (reward/punishment) |
-| `Correct` | 50x~198 | short | raw | Correct response outcome |
-| `Incorrect` | 50x~100 | short | raw | Incorrect response outcome |
-| `TESTING` | 50x~1664 | short | raw | Testing phase trial marker |
+| `STIM` | 50x~240 | event | raw | Stimulus onset (stimulus pair presented) |
+| `RESP` | 50x~230 | event | raw | Participant button-press response |
+| `FB` | 50x~240 | event | raw | Feedback onset (reward/punishment) |
+| `Correct` | 50x~198 | event | raw | Correct response outcome |
+| `Incorrect` | 50x~100 | event | raw | Incorrect response outcome |
+| `TESTING` | 50x~1664 | event | raw | Testing phase trial marker |
 | `STATUS` | 50 | admin | raw | System status marker |
 
-> **Event Type Description**:
-> - `short`: short stimulus onset marker (presentation duration <2 s), for `epoch_by_event_hdf5`
-> - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
-> - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **not used for epoch**
+
+### Info
+
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | missing | N/A |
+| `subject_sex` | missing | N/A |
+| `device` | missing | N/A |
 ## STIM Label Summary
 
 - **Route**: `stim`
@@ -45,33 +43,42 @@ A reinforcement learning task (Probabilistic Selection Task) performed by partic
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: PST
-- **Task Type**: classification/segmentation
+### Classical Task 1: Feedback Outcome Classification (Reward vs Punishment)
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004317 DOI: https://doi.org/10.18112/openneuro.ds004317.v1.0.3
+- **Epoch Parameters**: tmin = -2.0 s, tmax = 6.0 s, target_events = [`Correct`, `Incorrect`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `Correct` | 0 | Reward feedback (positive outcome) |
+  | `Incorrect` | 1 | Punishment feedback (negative outcome) |
+- **Evidence**:
+  - DOI: 10.1111/psyp.14276 — Used OpenNeuro dataset ds004317 (Experiment 2, N=50) to examine how mood induction affects Reward Positivity (RewP) and reward learning during a probabilistic selection task, epoching EEG data from -2000 to 6000 ms around feedback onset and classifying correct vs incorrect feedback trials.
+- **Kernel Notes**: Epoch around feedback onset (FB event). The 'Correct' and 'Incorrect' labels are embedded in the trial_type column of events.tsv. Baseline correct from -200 to 0 ms before feedback. This task corresponds to the Reward Positivity (RewP) analysis commonly used in reinforcement learning EEG studies. (replaces Classical Task 1 from original analysis.md)
 
-
-### Normal Task 1: Feedback Outcome Classification (binary)
+### Potential Task 1: Feedback Outcome Classification (binary)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset), target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: STATUS is an admin marker (exclude). TESTING events contain rich sub-labels in events.tsv. Better class balance than Experiment 1 (~198 correct vs ~100 incorrect in training phase).
 
 | Event | y | Meaning |
- |-------|---|------|
- | `Correct` | 0 | Correct response |
- | `Incorrect` | 1 | Incorrect response |
+|-------|---|---------|
+| `Correct` | 0 | Correct response |
+| `Incorrect` | 1 | Incorrect response |
+
 ## Data Quality Notes
 
 - STATUS is an admin/system marker and must not be included in target events
 - TESTING events contain rich sub-labels in events.tsv; the trial_type column provides full label strings
 - Better class balance than Experiment 1
 
-## References
 
-- **Reference**: `Mood Manipulation and PST, Experiment 2`
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

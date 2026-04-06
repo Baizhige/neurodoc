@@ -8,24 +8,19 @@
 
 The Sleep Heart Health Study (SHHS) is a multi-center NIH/NHLBI cohort investigating cardiovascular and other outcomes of sleep-disordered breathing. Participants aged 40+ underwent unattended overnight home polysomnography (PSG), collected by certified technicians. SHHS-1 enrolled 6,441 participants from major epidemiological cohorts, and 3,295 participants completed a second PSG approximately 5 years later (SHHS-2). The dataset includes full-night EEG, EOG, EMG, ECG, respiratory, and oximetry signals with expert sleep-stage annotation in 30-second epochs.
 
-## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+## File Scan Result
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://sleepdata.org/datasets/shhs
+> **Kernel**: N/A
+> **SHA256**: N/A
 
-## Event Structure
+### Event Structure
 
 Annotations are available in both original Profusion XML and NSRR-processed XML (`*-nsrr.xml`). The NSRR XML files contain three high-level `EventType` groups:
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Stages\|Stages` | ~100-400 annotations/file | long | raw | Sleep-stage labels in 30 s scoring epochs |
+| `Stages\|Stages` | ~100-400 annotations/file | event | raw | Sleep-stage labels in 30 s scoring epochs |
 | `Arousals\|Arousals` | variable | short/long | raw | Cortical arousal events |
 | `Respiratory\|Respiratory` | variable | short/long | raw | Respiratory events (apnea/hypopnea/desaturation-related) |
 
@@ -33,87 +28,95 @@ Annotations are available in both original Profusion XML and NSRR-processed XML 
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |--------|-------------|----|----------|-------|
-| `Wake\|0` | frequent | long | raw | Wake |
-| `Stage 1\|1` | lower frequency | long | raw | NREM Stage 1 (N1) |
-| `Stage 2\|2` | high frequency | long | raw | NREM Stage 2 (N2) |
-| `Stage 3\|3` | moderate | long | raw | Slow-wave sleep |
-| `Stage 4\|4` | rare | long | raw | Slow-wave sleep (legacy R&K stage) |
-| `REM\|5` | moderate | long | raw | REM sleep |
+| `Wake\|0` | frequent | event | raw | Wake |
+| `Stage 1\|1` | lower frequency | event | raw | NREM Stage 1 (N1) |
+| `Stage 2\|2` | high frequency | event | raw | NREM Stage 2 (N2) |
+| `Stage 3\|3` | moderate | event | raw | Slow-wave sleep |
+| `Stage 4\|4` | rare | event | raw | Slow-wave sleep (legacy R&K stage) |
+| `REM\|5` | moderate | event | raw | REM sleep |
 
-> **Event Type Description**:
-> - `short`: brief event marker (for event-locked analysis)
-> - `long`: sustained-state marker (for long-event epoching, including sleep stages)
-> - `rest`: resting-state segment marker when explicitly present
-> - `admin`: boundary/system marker, exclude from target labels
 
+### Info
+
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | missing | N/A |
+| `subject_sex` | missing | N/A |
+| `device` | missing | N/A |
 ## Tasks
 
-### Primary Task 1: Sleep stage classification
+### Classical Task 1: Sleep Stage Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
-- **Target Definition**: Sleep stage labels (W/N1/N2/N3/REM, dataset-specific mapping).
-- **Evidence**: SHHS references and scoring protocol explicitly center on PSG/EEG sleep staging. Source: https://doi.org/10.5665/sleep.5774
+- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`Stage 2|2`, `Stage 3|3`, `Stage 1|1`, `REM|5`, `Wake|0`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `Wake|0` | 0 | Wake |
+  | `Stage 1|1` | 1 | N1 |
+  | `Stage 2|2` | 2 | N2 |
+  | `Stage 3|3` or `Stage 4|4` | 3 | N3/SWS |
+  | `REM|5` | 4 | REM |
+- **Evidence**:
+  - DOI: `10.5665/sleep.5774` — National Sleep Research Resource provides SHHS PSG data with expert sleep-stage annotations in 30-second epochs
+- **Kernel Notes**: Stage 4 is rare; merge Stage 3 and Stage 4 into N3/SWS class for robust modeling. (replaces Potential Task 1 from original analysis.md)
 
-
-### Normal Task 1: Sleep Staging (5-class)
-- **Task Type**: classification
+### Classical Task 2: Sleep Spindle Density Regression in N2 Sleep
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0 (standard staging), target_events = see Target Definition
-- **Label Route**: `Annotation`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Stage 4 is rare in many files; merging Stage 3 and Stage 4 is recommended for robust modeling.
+- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`Stage 2|2`]
+- **Label Route**: `event`
+- **Meta Level**: super
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `Stage 2|2` epochs | continuous | Spindle density (spindles per minute) computed from N2 sleep EEG |
+- **Super Meta Notes**: Derived from raw EEG signal in N2 (`Stage 2|2`) epochs by wavelet band-pass filtering (FC=8-18 Hz) and spindle detection (0.3-3.0 s duration windows). Kernel step: Apply Morlet wavelet transform centered at 13.5 Hz, detect spindle events via amplitude thresholding, compute density = (spindle count / epoch duration in minutes).
+- **Evidence**:
+  - DOI: `10.1038/ncomms15930` — Characterizes sleep spindles in 11,630 individuals from NSRR including SHHS (N=5,793), analyzing spindle density, amplitude, duration and frequency during N2 sleep as heritable quantitative traits
+- **Kernel Notes**: Requires EEG signal processing; compute spindle properties per N2 epoch. Spindle density is primary target; amplitude, duration, frequency are optional additional regression targets.
 
-| Event | y | Meaning |
-|-------|---|---------|
-| `Wake\|0` | 0 | Wake |
-| `Stage 1\|1` | 1 | N1 |
-| `Stage 2\|2` | 2 | N2 |
-| `Stage 3\|3` or `Stage 4\|4` | 3 | N3/SWS |
-| `REM\|5` | 4 | REM |
-
-
-### Normal Task 2: Sleep vs Wake Detection (binary)
+### Potential Task 2: Sleep vs Wake Detection (binary)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Useful baseline task when class granularity is reduced.
 
 | Event | y | Meaning |
 |-------|---|---------|
-| `Wake\|0` | 0 | Awake |
+| `Wake|0` | 0 | Awake |
 | Any sleep stage (`1/2/3/4/5`) | 1 | Asleep |
 
-
-### Normal Task 3: Arousal Detection (binary)
+### Potential Task 3: Arousal Detection (binary)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5` (or long-event segmentation if arousal duration labels are available)
 - **Epoch Parameters**: tmin = -5.0 s, tmax = 5.0 s (event-centered), target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Negative sampling strategy should be explicitly controlled to avoid label leakage.
 
 | Event | y | Meaning |
 |-------|---|---------|
-| `Arousals\|Arousals` | 1 | Cortical arousal |
+| `Arousals|Arousals` | 1 | Cortical arousal |
 | Background non-arousal segments | 0 | Non-arousal |
 
-
-### Normal Task 4: Respiratory Event Detection (binary)
+### Potential Task 4: Respiratory Event Detection (binary)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5` or `epoch_by_long_event_hdf5` (depends on event duration granularity)
 - **Epoch Parameters**: task-dependent (for example, 10-30 s windows), target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Respiratory subtype definitions should be verified per XML file and NSRR conversion version.
 
 | Event | y | Meaning |
 |-------|---|---------|
-| `Respiratory\|Respiratory` (event windows) | 1 | Respiratory event |
+| `Respiratory|Respiratory` (event windows) | 1 | Respiratory event |
 | Non-event windows | 0 | Normal breathing/no event |
+
 ## Data Quality Notes
 
 - Mixed-rate channels are exported at 125 Hz in EDF; originally low-rate channels (EOG/respiratory/SpO2/HR) are upsampled during export.
@@ -124,10 +127,8 @@ Annotations are available in both original Profusion XML and NSRR-processed XML 
 - Recordings are unattended home PSG and therefore may have higher motion/environmental artifact than in-lab PSG.
 - SHHS-2 ECG can differ in effective native sampling relative to SHHS-1; handle ECG separately if exact spectral comparability is required.
 
-## References
 
-- Quan, S.F. et al. (1997). The Sleep Heart Health Study: design, rationale, and methods. *Sleep*, 20(12), 1077-1085.
-- Redline, S. et al. (1998). Methods for obtaining and analyzing unattended polysomnography data for a multicenter study. *Sleep*, 21(7), 759-767.
-- Dean, D.A. et al. (2016). Scaling Up Scientific Discovery in Sleep Medicine: The National Sleep Research Resource. *Sleep*, 39(5), 1151-1164. DOI: https://doi.org/10.5665/sleep.5774
-- Zhang, G.Q. et al. (2018). The National Sleep Research Resource: making data findable, accessible, interoperable, reusable and promoting new research. *Sleep Medicine*, 10(5), 367-376.
-- NSRR SHHS dataset page: https://sleepdata.org/datasets/shhs
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

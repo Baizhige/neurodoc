@@ -14,72 +14,85 @@ Thirteen subjects (A-M) participated in multiple EEG motor imagery sessions usin
 
 Trials were cue-based with a blank screen rest period, followed by an arrow/cue presentation indicating the imagery target. Each trial lasted approximately 3 seconds of imagery. NoMT sessions serve as control recordings without motor task events.
 
-## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+## File Scan Result
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://figshare.com/collections/A_large_electroencephalographic_motor_imagery_dataset_for_electroencephalographic_brain_computer_interfaces/3917698
+> **Kernel**: N/A
+> **SHA256**: N/A
 
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Left hand MI` | varies by protocol | short | raw | Left-hand motor imagery cue |
-| `Right hand MI` | varies by protocol | short | raw | Right-hand motor imagery cue |
-| `Passive state` | varies by protocol | short | raw | Passive / idle state (CLA/HaLT) |
-| `Left leg MI` | varies by protocol | short | raw | Left-leg motor imagery cue (HaLT) |
-| `Right leg MI` | varies by protocol | short | raw | Right-leg motor imagery cue (HaLT) |
-| `Tongue MI` | varies by protocol | short | raw | Tongue motor imagery cue (HaLT) |
-| `Thumb MI` | varies by protocol | short | raw | Thumb finger imagery cue (5F) |
-| `Index finger MI` | varies by protocol | short | raw | Index finger imagery cue (5F) |
-| `Middle finger MI` | varies by protocol | short | raw | Middle finger imagery cue (5F) |
-| `Ring finger MI` | varies by protocol | short | raw | Ring finger imagery cue (5F) |
-| `Pinkie MI` | varies by protocol | short | raw | Little finger imagery cue (5F) |
+| `Left hand MI` | varies by protocol | event | raw | Left-hand motor imagery cue |
+| `Right hand MI` | varies by protocol | event | raw | Right-hand motor imagery cue |
+| `Passive state` | varies by protocol | event | raw | Passive / idle state (CLA/HaLT) |
+| `Left leg MI` | varies by protocol | event | raw | Left-leg motor imagery cue (HaLT) |
+| `Right leg MI` | varies by protocol | event | raw | Right-leg motor imagery cue (HaLT) |
+| `Tongue MI` | varies by protocol | event | raw | Tongue motor imagery cue (HaLT) |
+| `Thumb MI` | varies by protocol | event | raw | Thumb finger imagery cue (5F) |
+| `Index finger MI` | varies by protocol | event | raw | Index finger imagery cue (5F) |
+| `Middle finger MI` | varies by protocol | event | raw | Middle finger imagery cue (5F) |
+| `Ring finger MI` | varies by protocol | event | raw | Ring finger imagery cue (5F) |
+| `Pinkie MI` | varies by protocol | event | raw | Little finger imagery cue (5F) |
 | `none` | all NoMT files | admin | raw | No motor task (NoMT protocol control) |
 
-> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-## STIM Label Summary
 
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: Needs verification
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+### Info
 
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | missing | N/A |
+| `subject_sex` | missing | N/A |
+| `device` | missing | N/A |
 ## Tasks
 
-### Primary Task 1: Motor imagery decoding
+### Classical Task 1: Multi-Paradigm Motor Imagery Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
-- **Target Definition**: Imagery class labels (e.g., left/right hand, feet, tongue; dataset-specific)
-- **Evidence**: Dataset references indicate MI BCI paradigm as core benchmark. Source: https://doi.org/10.1038/sdata.2018.211
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 0.85 s *, target_events = [`Left hand MI`, `Right hand MI`, `Passive state`, `Left leg MI`, `Right leg MI`, `Tongue MI`, `Thumb MI`, `Index finger MI`, `Middle finger MI`, `Ring finger MI`, `Pinkie MI`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `Left hand MI` | 0 | Left-hand motor imagery (marker 1) |
+  | `Right hand MI` | 1 | Right-hand motor imagery (marker 2) |
+  | `Passive state` | 2 | Passive/idle state (marker 3) |
+  | `Left leg MI` | 3 | Left-leg motor imagery (marker 4) |
+  | `Right leg MI` | 4 | Right-leg motor imagery (marker 6) |
+  | `Tongue MI` | 5 | Tongue motor imagery (marker 5) |
+  | `Thumb MI` | 6 | Thumb finger imagery (5F, marker 1) |
+  | `Index finger MI` | 7 | Index finger imagery (5F, marker 2) |
+  | `Middle finger MI` | 8 | Middle finger imagery (5F, marker 3) |
+  | `Ring finger MI` | 9 | Ring finger imagery (5F, marker 4) |
+  | `Pinkie MI` | 10 | Pinkie finger imagery (5F, marker 5) |
+- **Super Meta Notes**: (N/A - raw meta)
+- **Evidence**:
+  - DOI: 10.1038/sdata.2018.211 — Validates dataset with SVM classification using 0.85s epochs from stimulus onset, supporting multi-class MI across CLA (3-class), HaLT (6-class), and 5F (5-class finger) paradigms
+  - DOI: 10.1109/tnsre.2022.3186442 — Uses figshare_largemi for binary left vs right hand MI classification with 3-second epochs
+- **Kernel Notes**: Filter data by protocol type (CLA/HaLT/5F/FREEFORM) before analysis. Select relevant target_events subset per paradigm. The 0.85s epoch aligns with original dataset validation; 3.0s may also be used per newer papers.
 
+### Classical Task 2: Binary Left vs. Right Hand Motor Imagery
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 3.0 s, target_events = [`Left hand MI`, `Right hand MI`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `Left hand MI` | 0 | Left-hand motor imagery |
+  | `Right hand MI` | 1 | Right-hand motor imagery |
+- **Evidence**:
+  - DOI: 10.1109/tnsre.2022.3186442 — Binary classification of left vs right hand motor imagery using 3-second epoch window
+- **Kernel Notes**: Use CLA or FREEFORM protocol files. Exclude passive/other class events. (replaces Potential Task 1 from original analysis.md)
 
-### Normal Task 1: Left vs. Right Hand Motor Imagery Classification - CLA/FREEFORM (epoch_by_event)
+### Potential Task 2: 6-Class Motor Imagery Classification - HaLT (epoch_by_event)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 3.0 s, target_events = see Target Definition
-- **Label Route**: `Annotation`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: For CLA protocol, also include `Passive state` as class 2 (3-class task). Separate files by protocol type (CLA / FREEFORM / HaLT) for consistent multi-session analysis.
-
-| Event | y | Meaning |
-|-------|---|---------|
-| `Left hand MI` | 0 | Left-hand motor imagery |
-| `Right hand MI` | 1 | Right-hand motor imagery |
-
-
-### Normal Task 2: 6-Class Motor Imagery Classification - HaLT (epoch_by_event)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 3.0 s, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 
 | Event | y | Meaning |
@@ -91,12 +104,11 @@ Trials were cue-based with a blank screen rest period, followed by an arrow/cue 
 | `Right leg MI` | 4 | Right-leg MI |
 | `Tongue MI` | 5 | Tongue MI |
 
-
-### Normal Task 3: 5-Finger Motor Imagery Classification - 5F (epoch_by_event)
+### Potential Task 3: 5-Finger Motor Imagery Classification - 5F (epoch_by_event)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 3.0 s, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 
 | Event | y | Meaning |
@@ -107,14 +119,14 @@ Trials were cue-based with a blank screen rest period, followed by an arrow/cue 
 | `Ring finger MI` | 3 | Ring finger MI |
 | `Pinkie MI` | 4 | Little finger MI |
 
-
-### Normal Task 4: Resting-State Segmentation - NoMT Control (epoch_by_segmentation)
-- **Task Type**: segmentation
+### Potential Task 4: Resting-State Segmentation - NoMT Control (epoch_by_segmentation)
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: length = 3.0 s, overlap = 0.5 s
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: N/A (no events; use as unlabeled or negative class)
 - **Notes**: NoMT files have event annotation `none` set by kernel; use `epoch_by_segmentation_hdf5` for these files.
+
 ## Data Quality Notes
 
 - Multiple paradigms in one dataset; **always filter by protocol type before analysis** (use file path to identify protocol: `CLA`, `HaLT`, `FREEFORM`, `5F`, `NoMT`).
@@ -122,6 +134,8 @@ Trials were cue-based with a blank screen rest period, followed by an arrow/cue 
 - Subject demographics: 13 subjects (A-M), 9 female / 4 male, age ranges 20-35.
 - NoMT sessions have `none` annotations; exclude from MI analysis or use as rest class.
 
-## References
 
-- **Reference**: Kaya M, Binli MK, Ozbay E, Yanar H, Mishchenko Y (2018). A large electroencephalographic motor imagery dataset for electroencephalographic brain computer interfaces. *Scientific Data*, 5, 180211. https://doi.org/10.1038/sdata.2018.211
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

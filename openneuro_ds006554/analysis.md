@@ -7,81 +7,67 @@
 
 EEG was recorded while participants engaged in social observation tasks, likely involving ecological social stimuli such as videos or images of human social interactions. The rich numeric trigger coding (30 distinct codes) suggests a multi-factorial design with combinations of social condition, stimulus type, or response category. The paradigm examines neural correlates of social perception and mentalizing.
 
-## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+## File Scan Result
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006554
+> **Kernel**: N/A
+> **SHA256**: N/A
 
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `60` | 47 | short | raw | Social stimulus condition 60 |
-| `61` | 47 | short | raw | Social stimulus condition 61 |
-| `30` | 47 | short | raw | Social stimulus condition 30 |
-| `31` | 47 | short | raw | Social stimulus condition 31 |
-| `62` | 47 | short | raw | Social stimulus condition 62 |
-| `63` | 47 | short | raw | Social stimulus condition 63 |
-| `32` | 47 | short | raw | Social stimulus condition 32 |
-| `33` | 47 | short | raw | Social stimulus condition 33 |
-| `21` | 47 | short | raw | Social stimulus condition 21 |
-| `25` | 47 | short | raw | Social stimulus condition 25 |
-| `16` | 47 | short | raw | Social stimulus condition 16 |
-| `13` | 47 | short | raw | Social stimulus condition 13 |
-| `12` | 47 | short | raw | Social stimulus condition 12 |
-| `24` | 47 | short | raw | Social stimulus condition 24 |
-| `87` | 47 | short | raw | Social stimulus condition 87 |
-| `68` | 47 | short | raw | Social stimulus condition 68 |
-| `11` | 47 | short | raw | Social stimulus condition 11 |
-| `26` | 47 | short | raw | Social stimulus condition 26 |
-| `14` | 47 | short | raw | Social stimulus condition 14 |
-| `15` | 47 | short | raw | Social stimulus condition 15 |
-| `22` | 47 | short | raw | Social stimulus condition 22 |
-| `23` | 47 | short | raw | Social stimulus condition 23 |
-| `42` | 47 | short | raw | Social stimulus condition 42 |
-| `67` | 47 | short | raw | Social stimulus condition 67 |
-| `88` | 47 | short | raw | Social stimulus condition 88 |
-| `43` | 47 | short | raw | Social stimulus condition 43 |
-| `36` | 47 | short | raw | Social stimulus condition 36 |
-| `35` | 47 | short | raw | Social stimulus condition 35 |
-| `48` | 47 | short | raw | Social stimulus condition 48 |
-| `37` | 47 | short | raw | Social stimulus condition 37 |
+| `60` | 47 | event | raw | Social stimulus condition 60 |
+| `61` | 47 | event | raw | Social stimulus condition 61 |
+| `30` | 47 | event | raw | Social stimulus condition 30 |
+| `31` | 47 | event | raw | Social stimulus condition 31 |
+| `62` | 47 | event | raw | Social stimulus condition 62 |
+| `63` | 47 | event | raw | Social stimulus condition 63 |
+| `32` | 47 | event | raw | Social stimulus condition 32 |
+| `33` | 47 | event | raw | Social stimulus condition 33 |
+| `21` | 47 | event | raw | Social stimulus condition 21 |
+| `25` | 47 | event | raw | Social stimulus condition 25 |
+| `16` | 47 | event | raw | Social stimulus condition 16 |
+| `13` | 47 | event | raw | Social stimulus condition 13 |
+| `12` | 47 | event | raw | Social stimulus condition 12 |
+| `24` | 47 | event | raw | Social stimulus condition 24 |
+| `87` | 47 | event | raw | Social stimulus condition 87 |
+| `68` | 47 | event | raw | Social stimulus condition 68 |
+| `11` | 47 | event | raw | Social stimulus condition 11 |
+| `26` | 47 | event | raw | Social stimulus condition 26 |
+| `14` | 47 | event | raw | Social stimulus condition 14 |
+| `15` | 47 | event | raw | Social stimulus condition 15 |
+| `22` | 47 | event | raw | Social stimulus condition 22 |
+| `23` | 47 | event | raw | Social stimulus condition 23 |
+| `42` | 47 | event | raw | Social stimulus condition 42 |
+| `67` | 47 | event | raw | Social stimulus condition 67 |
+| `88` | 47 | event | raw | Social stimulus condition 88 |
+| `43` | 47 | event | raw | Social stimulus condition 43 |
+| `36` | 47 | event | raw | Social stimulus condition 36 |
+| `35` | 47 | event | raw | Social stimulus condition 35 |
+| `48` | 47 | event | raw | Social stimulus condition 48 |
+| `37` | 47 | event | raw | Social stimulus condition 37 |
 
-> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-## STIM Label Summary
 
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: Needs verification
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+### Info
 
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | missing | N/A |
+| `subject_sex` | missing | N/A |
+| `device` | missing | N/A |
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Social Observation
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds006554 DOI: https://doi.org/10.18112/openneuro.ds006554.v1.0.0
-
-
-### Normal Task 1: Social Condition Classification (epoch_by_event)
+### Potential Task 1: Social Condition Classification (epoch_by_event)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Numeric trigger codes require decoding from events.tsv. All 30 event types appear in all 47 files (perfectly balanced). Group codes by tens-digit (10s, 20s, 30s, 60s, 80s) as likely condition groupings.
 
  | Event | y | Meaning |
- |-------|---|---------|
+ |-------|---|-|
  | `60` | 0 | Social condition 60 |
  | `61` | 1 | Social condition 61 |
  | `30` | 2 | Social condition 30 |
@@ -112,12 +98,15 @@ EEG was recorded while participants engaged in social observation tasks, likely 
  | `35` | 27 | Social condition 35 |
  | `48` | 28 | Social condition 48 |
  | `37` | 29 | Social condition 37 |
+
 ## Data Quality Notes
 
 - Numeric trigger codes need decoding from events.tsv or README.
 - Large number of distinct event types (30); group codes before classification.
 - Apply bandpass filter (0.5-40 Hz) and artifact rejection prior to epoching.
 
-## References
 
-- **Reference**: `Social Observation EEG raw data`
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

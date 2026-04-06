@@ -7,38 +7,40 @@
 
 A suite of standardized ERP tasks from the ERP CORE compendium (Kappenman et al. 2021) measuring neural correlates of perception, cognition, and action in adults in relation to socioeconomic status and ADHD symptoms. Tasks include N170 (face perception), MMN (mismatch negativity), N2pc (visual attention), P3 (cognitive updating), N400 (semantic processing), ERN (error monitoring), and LRP (lateralized readiness potential).
 
-## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+## File Scan Result
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006018
+> **Kernel**: N/A
+> **SHA256**: N/A
 
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `S201` | 40081 | short | raw | ERP CORE stimulus code 201 |
-| `S 80` | 30199 | short | raw | ERP CORE stimulus code 80 |
-| `S212` | 10400 | short | raw | ERP CORE stimulus code 212 |
-| `S111` | 9971 | short | raw | ERP CORE stimulus code 111 |
-| `S222` | 9017 | short | raw | ERP CORE stimulus code 222 |
-| `S121` | 8449 | short | raw | ERP CORE stimulus code 121 |
-| `S 22` | 8268 | short | raw | ERP CORE stimulus code 22 |
-| `S 11` | 8263 | short | raw | ERP CORE stimulus code 11 |
-| `S 12` | 8252 | short | raw | ERP CORE stimulus code 12 |
-| `S 21` | 8244 | short | raw | ERP CORE stimulus code 21 |
-| `S 70` | 7977 | short | raw | ERP CORE stimulus code 70 |
-| `S202` | 6292 | short | raw | ERP CORE stimulus code 202 |
-| `S221` | 5197 | short | raw | ERP CORE stimulus code 221 |
-| `S122` | 4665 | short | raw | ERP CORE stimulus code 122 |
-| `S211` | 3707 | short | raw | ERP CORE stimulus code 211 |
+| `S201` | 40081 | event | raw | ERP CORE stimulus code 201 |
+| `S 80` | 30199 | event | raw | ERP CORE stimulus code 80 |
+| `S212` | 10400 | event | raw | ERP CORE stimulus code 212 |
+| `S111` | 9971 | event | raw | ERP CORE stimulus code 111 |
+| `S222` | 9017 | event | raw | ERP CORE stimulus code 222 |
+| `S121` | 8449 | event | raw | ERP CORE stimulus code 121 |
+| `S 22` | 8268 | event | raw | ERP CORE stimulus code 22 |
+| `S 11` | 8263 | event | raw | ERP CORE stimulus code 11 |
+| `S 12` | 8252 | event | raw | ERP CORE stimulus code 12 |
+| `S 21` | 8244 | event | raw | ERP CORE stimulus code 21 |
+| `S 70` | 7977 | event | raw | ERP CORE stimulus code 70 |
+| `S202` | 6292 | event | raw | ERP CORE stimulus code 202 |
+| `S221` | 5197 | event | raw | ERP CORE stimulus code 221 |
+| `S122` | 4665 | event | raw | ERP CORE stimulus code 122 |
+| `S211` | 3707 | event | raw | ERP CORE stimulus code 211 |
 
-> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
+
+### Info
+
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | missing | N/A |
+| `subject_sex` | missing | N/A |
+| `device` | missing | N/A |
 ## STIM Label Summary
 
 - **Route**: `stim`
@@ -48,38 +50,72 @@ A suite of standardized ERP tasks from the ERP CORE compendium (Kappenman et al.
 
 ## Tasks
 
-### Primary Task 1: ERP target detection (P300/Oddball)
+### Classical Task 1: Active Visual Oddball (P300) binary classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
-- **Target Definition**: Target vs non-target stimulus events
-- **Evidence**: P300/oddball paradigm appears as core study objective. Source: https://openneuro.org/datasets/ds006018 DOI: https://doi.org/10.18112/openneuro.ds006018.v1.2.2
+- **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s, target_events = [`S211`, `S 11`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `S 11` | 0 | Standard stimulus (non-target) |
+  | `S211` | 1 | Oddball/target stimulus (P300 eliciting) |
+- **Evidence**:
+  - DOI: `10.1109/bibm66473.2025.11356119` — Uses Active Visual Oddball (AVO) task from openneuro_ds006018 for binary single-trial classification of oddball versus standard stimuli under a P300 paradigm, with epochs extracted from -100ms to +1000ms around stimulus onset.
+  - DOI: `10.1038/s41597.025.05209.z` — Describes openneuro_ds006018 dataset containing EEG recordings from 127 young adults during ERP CORE paradigms including active visual oddball (P300), with stimulus event codes S211 (target) and S 11 (standard).
+- **Kernel Notes**: Map S 11 to standard (non-target) and S211 to oddball (target) labels. Apply baseline correction [-0.1, 0] s. Filter 0.1-40 Hz. Verify event ID mapping from events.tsv.
 
+### Classical Task 2: Passive Auditory Oddball (MMN) binary classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`S 80`, `S201`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|-|
+  | `S 80` | 0 | Standard tone (frequent) |
+  | `S201` | 1 | Deviant tone (oddball, MMN-eliciting) |
+- **Evidence**:
+  - DOI: `10.1038/s41597.025.05209.z` — Describes openneuro_ds006018 dataset containing EEG recordings during passive auditory oddball (MMN) paradigm with stimulus event codes S 80 (standard) and S201 (deviant).
+- **Kernel Notes**: Epoch standard MMN window [-0.2, 1.0] s. Apply standard MMN analysis pipeline. Verify event ID mapping from events.tsv.
 
-### Primary Task 2: Publisher-defined BIDS task: Passive Auditory Oddball
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds006018 DOI: https://doi.org/10.18112/openneuro.ds006018.v1.2.2
+### Classical Task 3: Visual Search (N2pc) classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`S122`, `S212`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|-|
+  | `S122` | 0 | Search array with target present (color-specific) |
+  | `S212` | 1 | Search array with different target color |
+- **Evidence**:
+  - DOI: `10.1038/s41597.025.05209.z` — Describes openneuro_ds006018 dataset containing EEG recordings during visual search task (N2pc paradigm) with stimulus event codes including S122 and S212.
+- **Kernel Notes**: N2pc requires contralateral-ipsilateral difference wave analysis. Verify event ID mapping from events.tsv.
 
+### Classical Task 4: Flanker Task (ERN) classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.8 s *, tmax = 0.5 s *, target_events = [`S111`, `S222`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|-|
+  | `S111` | 0 | Congruent flanker condition |
+  | `S222` | 1 | Incongruent flanker condition |
+- **Evidence**:
+  - DOI: `10.1038/s41597.025.05209.z` — Describes openneuro_ds006018 dataset containing EEG recordings during flanker tasks for cognitive electrophysiology with stimulus event codes S111 (congruent) and S222 (incongruent).
+- **Kernel Notes**: ERN analysis requires response-locked epochs. May require combining stimulus and response markers. Verify event ID mapping from events.tsv.
 
-### Primary Task 3: Publisher-defined BIDS task: Active Visual Oddball
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds006018 DOI: https://doi.org/10.18112/openneuro.ds006018.v1.2.2
-
-
-### Normal Task 1: ERP CORE Multi-paradigm (epoch_by_event)
+### Potential Task 1: ERP CORE Multi-paradigm (epoch_by_event)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Multi-paradigm ERP CORE dataset. `boundary` is admin and excluded. Codes encode task x condition combinations per ERP CORE documentation.
 
@@ -114,12 +150,15 @@ A suite of standardized ERP tasks from the ERP CORE compendium (Kappenman et al.
  | `S 13` | 26 | ERP code 13 |
  | `S 14` | 27 | ERP code 14 |
  | `S 42` | 28 | ERP code 42 |
+
 ## Data Quality Notes
 
 - Multi-paradigm dataset - participants completed multiple ERP CORE tasks; segment by task if needed.
 - `boundary` is an administrative marker, excluded from target_events.
 - Apply bandpass filter (0.1-40 Hz) and artifact rejection; baseline correct [-0.2, 0] s.
 
-## References
 
-- **Reference**: `Isbell, E., Peters, A. N., Richardson, D. M., & Rodas De Len, N. E. (2025). Cognitive electrophysiology in socioeconomic context in adulthood. Scientific Data, 12(1), 19.`
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

@@ -7,70 +7,88 @@
 
 Participants engaged in resting-state (eyes open/closed) and task phases involving unimodal and multimodal stimuli (visual and auditory) and mental imagery, providing self-reported vividness ratings. The YOTO paradigm investigates spontaneous cognitive transitions and mental imagery across stimulus modalities with numeric condition codes and named state markers.
 
-## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+## File Scan Result
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds005815
+> **Kernel**: N/A
+> **SHA256**: N/A
 
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `6`-`9` | 6720 each | short | raw | Stimulus condition codes (decode from events.tsv) |
-| `TrialProc` | 6528 | long | raw | Trial procedure marker |
-| `23` | 840 | short | raw | Stimulus/response code 23 |
-| `22` | 420 | short | raw | Stimulus/response code 22 |
-| `21` | 420 | short | raw | Stimulus/response code 21 |
-| `StartInstruction` | 66 | long | raw | Instruction block onset |
-| `Eyeclosed` | 66 | long | raw | Eyes-closed resting onset |
-| `FixationBreak` | 66 | short | raw | Fixation break event |
-| `EyeOpen` | 66 | long | raw | Eyes-open resting onset |
-| `EndInstruction` | 66 | long | raw | Instruction block offset |
-| `88` | 64 | short | raw | Response/trigger code 88 |
-| `30`-`35` | 280 each | short | raw | Imagery/rating condition codes |
+| `6`-`9` | 6720 each | event | raw | Stimulus condition codes (decode from events.tsv) |
+| `TrialProc` | 6528 | event | raw | Trial procedure marker |
+| `23` | 840 | event | raw | Stimulus/response code 23 |
+| `22` | 420 | event | raw | Stimulus/response code 22 |
+| `21` | 420 | event | raw | Stimulus/response code 21 |
+| `StartInstruction` | 66 | event | raw | Instruction block onset |
+| `Eyeclosed` | 66 | event | raw | Eyes-closed resting onset |
+| `FixationBreak` | 66 | event | raw | Fixation break event |
+| `EyeOpen` | 66 | event | raw | Eyes-open resting onset |
+| `EndInstruction` | 66 | event | raw | Instruction block offset |
+| `88` | 64 | event | raw | Response/trigger code 88 |
+| `30`-`35` | 280 each | event | raw | Imagery/rating condition codes |
 | `99` | 101 | admin | raw | Admin/session marker |
-| `1` | 81 | short | raw | Condition code 1 |
-| `2`-`5` | 68 each | short | raw | Condition codes 2-5 |
+| `1` | 81 | event | raw | Condition code 1 |
+| `2`-`5` | 68 each | event | raw | Condition codes 2-5 |
 
-> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-## STIM Label Summary
 
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: Needs verification
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+### Info
 
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | missing | N/A |
+| `subject_sex` | missing | N/A |
+| `device` | missing | N/A |
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Rest1
-- **Task Type**: classification/segmentation
+### Classical Task 1: Multi-class Mental Imagery Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s, tmax = 4.0 s, target_events = [`1`, `2`, `3`, `6`, `7`, `8`, `21`, `22`, `23`, `30`] *
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `1` | 1 | Visual stimuli condition code * |
+  | `6` | 1 | Visual stimuli condition code * |
+  | `21` | 1 | Visual stimuli condition code * |
+  | `2` | 2 | Auditory stimuli condition code * |
+  | `7` | 2 | Auditory stimuli condition code * |
+  | `22` | 2 | Auditory stimuli condition code * |
+  | `3` | 3 | Multimodal stimuli condition code * |
+  | `8` | 3 | Multimodal stimuli condition code * |
+  | `23` | 3 | Multimodal stimuli condition code * |
+- **Super Meta Notes**: (empty - Meta Level is raw)
+- **Evidence**:
+  - DOI: `10.1038/s41597-025-05881-1` — YOTO dataset validation paper showing visual/auditory/multimodal mental imagery classification with 3-class label mapping (visual=1, auditory=2, multimodal=3)
+- **Kernel Notes**: Extract 4s epochs from imagery phase (post-stimulus onset). Verify event ID to modality mapping from events.tsv — current mapping uses numeric codes as best inference from available raw events; paper describes `visual_square`, `auditory_vowel_a` style labels which may be derived BIDS names.
+
+### Classical Task 2: Publisher-defined BIDS task: Rest1
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
+- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = see Target Definition | segment_length = Needs verification, overlap = Needs verification
+- **Label Route**: `event`
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds005815 DOI: https://doi.org/10.18112/openneuro.ds005815.v2.0.1
+- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds005815 DOI: 10.18112/openneuro.ds005815.v2.0.1
 
 
-### Primary Task 2: Publisher-defined BIDS task: Rest2
-- **Task Type**: classification/segmentation
+### Classical Task 3: Publisher-defined BIDS task: Rest2
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
+- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = see Target Definition | segment_length = Needs verification, overlap = Needs verification
+- **Label Route**: `event`
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds005815 DOI: https://doi.org/10.18112/openneuro.ds005815.v2.0.1
+- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds005815 DOI: 10.18112/openneuro.ds005815.v2.0.1
 
 
-### Normal Task 1: Multi-task Cognitive (long_event)
+### Potential Task 1: Multi-task Cognitive (long_event)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5 s, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Numerical codes require decoding from events.tsv. Eyes-open/closed markers (`EyeOpen`, `Eyeclosed`) can be used for resting-state analysis.
 
@@ -106,12 +124,15 @@ Participants engaged in resting-state (eyes open/closed) and task phases involvi
  | `26` | 27 | Imagery code 26 |
  | `29` | 28 | Imagery code 29 |
  | `34` | 29 | Imagery code 34 |
+
 ## Data Quality Notes
 
 - Numerical event codes require mapping from dataset events.tsv or README.
 - Small dataset (20 subjects); low statistical power for rare conditions.
 - Apply bandpass filter (1-40 Hz) and artifact rejection prior to epoching.
 
-## References
 
-- **Reference**: `YOTO (You Only Think Once): An EEG Dataset for Tracking Spontaneous Cognitive Transitions and Multimodal Stimuli Responses in Resting-State and Task Phases`
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

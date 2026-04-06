@@ -8,34 +8,29 @@
 
 A mobile brain-body imaging experiment investigating brain activity during gait adaptation using abrupt and gradual split-belt treadmill walking. Participants walked on a split-belt treadmill with different belt speeds while EEG and gait events (heel strikes, toe-offs) were recorded to study locomotor adaptation and associated cortical dynamics.
 
-## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+## File Scan Result
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004475
+> **Kernel**: N/A
+> **SHA256**: N/A
 
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `LHS` | 30xx | short | raw | Left heel strike (gait event) |
-| `LTO` | 30xx | short | raw | Left toe-off (gait event) |
-| `RHS` | 30xx | short | raw | Right heel strike (gait event) |
-| `RTO` | 30xx | short | raw | Right toe-off (gait event) |
-| `TRIG` | 30xx | short | raw | External trigger marker |
-| `BUTTON` | 30xx | short | raw | Button press event |
-| `SB1` | 30 | long | raw | Split-belt block 1 start (tied speed) |
-| `SB2` | 30 | long | raw | Split-belt block 2 start (split speed) |
-| `B1` | 30 | long | raw | Baseline block 1 |
-| `B2` | 30 | long | raw | Baseline block 2 |
-| `B3` | 30 | long | raw | Baseline block 3 |
-| `P1` | 30 | long | raw | Perturbation block 1 |
-| `P2` | 30 | long | raw | Perturbation block 2 |
+| `LHS` | 30xx | event | raw | Left heel strike (gait event) |
+| `LTO` | 30xx | event | raw | Left toe-off (gait event) |
+| `RHS` | 30xx | event | raw | Right heel strike (gait event) |
+| `RTO` | 30xx | event | raw | Right toe-off (gait event) |
+| `TRIG` | 30xx | event | raw | External trigger marker |
+| `BUTTON` | 30xx | event | raw | Button press event |
+| `SB1` | 30 | event | raw | Split-belt block 1 start (tied speed) |
+| `SB2` | 30 | event | raw | Split-belt block 2 start (split speed) |
+| `B1` | 30 | event | raw | Baseline block 1 |
+| `B2` | 30 | event | raw | Baseline block 2 |
+| `B3` | 30 | event | raw | Baseline block 3 |
+| `P1` | 30 | event | raw | Perturbation block 1 |
+| `P2` | 30 | event | raw | Perturbation block 2 |
 | `End SB1` | 30 | admin | raw | End of split-belt block 1 |
 | `End SB2` | 30 | admin | raw | End of split-belt block 2 |
 | `End B1` | 30 | admin | raw | End of baseline block 1 |
@@ -46,43 +41,46 @@ A mobile brain-body imaging experiment investigating brain activity during gait 
 | `boundary` | 8 | admin | raw | Segment boundary marker |
 | `9633791` | 30 | admin | raw | Numerical system trigger |
 
-> **Event Type Description**:
-> - `short`: short stimulus onset marker (presentation duration <2 s), for `epoch_by_event_hdf5`
-> - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
-> - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **not used for epoch**
 
+### Info
+
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | missing | N/A |
+| `subject_sex` | missing | N/A |
+| `device` | missing | N/A |
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Task
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004475 DOI: https://doi.org/10.18112/openneuro.ds004475.v1.0.3
-
-
-### Normal Task 1: Gait Event Classification (multiclass)
+### Classical Task 1: Gait Event Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset), target_events = see Target Definition
-- **Label Route**: `Annotation`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: boundary and 9633791 are admin/system markers - exclude from target_events. Block markers (SB1/SB2/B1-3/P1-2) are experimental condition markers. End_* markers are admin events.
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`LHS`, `LTO`, `RHS`, `RTO`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `LHS` | 0 | Left heel strike |
+  | `LTO` | 1 | Left toe-off |
+  | `RHS` | 2 | Right heel strike |
+  | `RTO` | 3 | Right toe-off |
+- **Evidence**:
+  - DOI: `10.1113/jp284505` — This paper analyzes high-density EEG recorded during split-belt treadmill walking from 30 participants (dataset openneuro_ds004475) to examine spectral power changes in alpha, beta, and theta bands across gait adaptation stages, using gait events (heel strikes and toe-offs) detected from force plates as epoching points.
+- **Kernel Notes**: (replaces Potential Task 1 from original analysis.md)
 
-| Event | y | Meaning |
- |-------|---|------|
- | `LHS` | 0 | Left heel strike |
- | `LTO` | 1 | Left toe-off |
- | `RHS` | 2 | Right heel strike |
- | `RTO` | 3 | Right toe-off |
 ## Data Quality Notes
 
 - boundary and 9633791 must be excluded as admin markers
 - 260 channels includes motion capture channels; filter to EEG only
 - Gait event counts vary across walking conditions (tied vs. split-belt speeds)
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Mobile EEG split-belt walking study`
+> **Super Meta Required**: No
+> **Status**: wait_manual_review
+## Data Quality Notes
+
+- boundary and 9633791 must be excluded as admin markers
+- 260 channels includes motion capture channels; filter to EEG only
+- Gait event counts vary across walking conditions (tied vs. split-belt speeds)
+

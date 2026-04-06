@@ -7,33 +7,31 @@
 
 Participants performed the Probabilistic Selection Task (PST) in two sessions: a placebo session and a session with cabergoline (dopamine D2/D3 agonist). The PST involves learning to choose symbols with higher reward probability through feedback. Events encode training stimuli (Trn Stim), test stimuli (Tst Stim), feedback (FB), and outcome (correct/incorrect). The study investigates dopaminergic modulation of reinforcement learning.
 
-## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+## File Scan Result
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004532
+> **Kernel**: N/A
+> **SHA256**: N/A
 
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Trn Stim` | ~80xN | short | raw | Training stimulus onset |
-| `Tst Stim` | ~80xN | short | raw | Test stimulus onset |
-| `FB` | ~80xN | short | raw | Feedback onset |
-| `correct` | ~80xN | short | raw | Correct response outcome |
-| `incorrect` | ~80xN | short | raw | Incorrect response outcome |
+| `Trn Stim` | ~80xN | event | raw | Training stimulus onset |
+| `Tst Stim` | ~80xN | event | raw | Test stimulus onset |
+| `FB` | ~80xN | event | raw | Feedback onset |
+| `correct` | ~80xN | event | raw | Correct response outcome |
+| `incorrect` | ~80xN | event | raw | Incorrect response outcome |
 | `STATUS` | ~80xN | admin | raw | BrainVision hardware status marker |
 
-> **Event Type Description**:
-> - `short`: short stimulus onset marker (presentation duration <2 s), for `epoch_by_event_hdf5`
-> - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
-> - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **not used for epoch**
+
+### Info
+
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | missing | N/A |
+| `subject_sex` | missing | N/A |
+| `device` | missing | N/A |
 ## STIM Label Summary
 
 - **Route**: `stim`
@@ -43,33 +41,43 @@ Participants performed the Probabilistic Selection Task (PST) in two sessions: a
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: PST
-- **Task Type**: classification/segmentation
+### Classical Task 1: Binary Outcome Classification (correct vs incorrect)
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004532 DOI: https://doi.org/10.1038/ncomms6394
+- **Epoch Parameters**: tmin = -1.5 s *, tmax = 5.0 s *, target_events = [`FB`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `correct` | 0 | Correct response (reward) |
+  | `incorrect` | 1 | Incorrect response (punishment) |
+- **Super Meta Notes**: (NONE - meta_level is raw)
+- **Evidence**:
+  - DOI: 10.1038/ncomms6394 — Nature Communications paper presenting the original PST EEG study with 64-channel recordings at 500 Hz, demonstrating binary outcome classification (correct vs incorrect) using feedback-locked epochs (-1500 to 5000 ms) and confirming the dataset was used for reinforcement learning analysis.
+- **Kernel Notes**: Epoch around `FB` (feedback onset) to capture the neural response to outcome. Use `correct` and `incorrect` events occurring after each FB to derive labels. Baseline correction: -300 to -200 ms prior to feedback onset (per paper). (replaces Classical Task 1 from original analysis.md)
 
-
-### Normal Task 1: Outcome Classification (binary)
+### Potential Task 1: Outcome Classification (binary)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset), target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: STATUS is an admin event - exclude from target_events. Trn Stim and Tst Stim are stimulus onset events; FB is the feedback onset. correct/incorrect provide clear binary outcome labels.
 
 | Event | y | Meaning |
- |-------|---|------|
- | `correct` | 0 | Correct response outcome |
- | `incorrect` | 1 | Incorrect response outcome |
+|-------|---|---------|
+| `correct` | 0 | Correct response outcome |
+| `incorrect` | 1 | Incorrect response outcome |
+
 ## Data Quality Notes
 
 - 40 subjects x 2 sessions (placebo + cabergoline) = 80 files
 - STATUS markers are BrainVision hardware events, not task-related
 - Two sessions per subject enable within-subject drug effect analysis
 
-## References
 
-- **Reference**: `EEG: Probabilistic Selection Task (PST) + PST with Cabergoline Challenge`
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review
