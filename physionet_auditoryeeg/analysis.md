@@ -2,6 +2,7 @@
 
 **Dataset**: `physionet_auditoryeeg` | **Year**: 2021 | **URL**: https://physionet.org/content/auditory-eeg/1.0.0/
 **Category**: High-level Mental | **Subjects**: 19 | **Files (Completed)**: 205 | **Channels**: 13 | **Sampling Rate**: 200 Hz
+**Manual Review**: Liu Peng
 
 ## Paradigm
 

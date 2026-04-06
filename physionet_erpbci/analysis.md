@@ -2,6 +2,7 @@
 
 **Dataset**: `physionet_erpbci` | **Year**: 2013 | **URL**: https://physionet.org/content/erpbci/1.0.0/
 **Category**: Action/Output | **Subjects**: 21 | **Files (Completed)**: 245 | **Channels**: 70 | **Sampling Rate**: 2048 Hz
+**Manual Review**: Liu Peng
 
 ## Paradigm
 

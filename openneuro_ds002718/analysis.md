@@ -1,11 +1,12 @@
 # Face processing EEG dataset for EEGLAB
 
-**Dataset**: `openneuro_ds002718` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds002718
+**Dataset**: `openneuro_ds002718` | **Year**: 2015 | **URL**: https://openneuro.org/datasets/ds002718
 **Category**: High-level Mental | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 74 | **Sampling Rate**: 250 Hz
+**Manual Review**: Mr.PJ
 
 ## Paradigm
 
-Participants viewed famous, unfamiliar, and scrambled face images and performed a subjective spatial symmetry judgment task (yes/no button press). The primary scientific question concerns the neural basis of face recognition, with ERP components (N170, N250) distinguishing famous from unfamiliar and scrambled faces. This is an EEGLAB tutorial dataset based on the SPM multimodal dataset (ds000117); events encode face category, presentation order (first vs. second), and latency of second presentation (early vs. late).
+Participants viewed famous faces, unfamiliar faces, and scrambled faces while making a left/right subjective symmetry judgment. Each image was presented twice, with the second presentation occurring either immediately (early lag) or after a delay (late lag). The EEGLAB repackaging merged the original runs, corrected event latencies, resampled the EEG to 250 Hz, and retained stimulus identity, response side/symmetry, presentation order, and repetition distance information in the event table. This is based on the SPM multimodal dataset (ds000117).
 
 
 ## File Scan Result
@@ -17,21 +18,22 @@ Participants viewed famous, unfamiliar, and scrambled face images and performed 
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `famous_new` | 18 (files) | event | raw | Famous face - first presentation |
-| `unfamiliar_new` | 18 (files) | event | raw | Unfamiliar face - first presentation |
-| `scrambled_new` | 18 (files) | event | raw | Scrambled face - first presentation |
-| `famous_second_early` | 18 (files) | event | raw | Famous face - second presentation (early lag) |
-| `famous_second_late` | 18 (files) | event | raw | Famous face - second presentation (late lag) |
-| `unfamiliar_second_early` | 18 (files) | event | raw | Unfamiliar face - second presentation (early lag) |
-| `unfamiliar_second_late` | 18 (files) | event | raw | Unfamiliar face - second presentation (late lag) |
-| `scrambled_second_early` | 18 (files) | event | raw | Scrambled face - second presentation (early lag) |
-| `scrambled_second_late` | 18 (files) | event | raw | Scrambled face - second presentation (late lag) |
-| `right_sym` | 10 (files) | event | raw | Right-hand response: face judged symmetric |
-| `left_nonsym` | 10 (files) | event | raw | Left-hand response: face judged non-symmetric |
-| `left_sym` | 8 (files) | event | raw | Left-hand response: face judged symmetric |
-| `right_nonsym` | 8 (files) | event | raw | Right-hand response: face judged non-symmetric |
-| `boundary` | 18 (files) | admin | raw | Segment boundary marker - exclude |
+| `famous_new` | 2700 | event | raw | Initial presentation of a famous face |
+| `famous_second_early` | 1313 | event | raw | Immediate repeat of a famous face |
+| `famous_second_late` | 1291 | event | raw | Delayed repeat of a famous face |
+| `unfamiliar_new` | 2700 | event | raw | Initial presentation of an unfamiliar face |
+| `unfamiliar_second_early` | 1304 | event | raw | Immediate repeat of an unfamiliar face |
+| `unfamiliar_second_late` | 1316 | event | raw | Delayed repeat of an unfamiliar face |
+| `scrambled_new` | 2700 | event | raw | Initial presentation of a scrambled face |
+| `scrambled_second_early` | 1271 | event | raw | Immediate repeat of a scrambled face |
+| `scrambled_second_late` | 1334 | event | raw | Delayed repeat of a scrambled face |
+| `right_sym` | 4900 | event | raw | Right-button response: more symmetric than average |
+| `right_nonsym` | 3616 | event | raw | Right-button response: less symmetric than average |
+| `left_sym` | 3381 | event | raw | Left-button response: more symmetric than average |
+| `left_nonsym` | 3532 | event | raw | Left-button response: less symmetric than average |
+| `boundary` | 90 | admin | raw | Boundary marker introduced when original runs were merged; exclude |
 
+> **Manual Review Note**: Event counts updated by human reviewer (Mr.PJ) from actual trial totals — replaced "18 (files)" placeholders with per-event counts. Kernel should verify counts against events.tsv on next scan.
 
 ### MISC Label Summary
 
@@ -102,20 +104,13 @@ Participants viewed famous, unfamiliar, and scrambled face images and performed 
   | `right_nonsym` | 3 | Right-hand response: face judged non-symmetric |
 - **Notes**: Four-class response classification. Could be simplified to 2-class (symmetric vs non-symmetric) or 2-class (left-hand vs right-hand response). The `boundary` events should be excluded.
 
-### Potential Task 2: Response Time Regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.5 s *, target_events = [`famous_new`, `unfamiliar_new`, `scrambled_new`]
-- **Label Route**: `misc`
-- **Target Definition**: Continuous response_time values from behavioral data (mean ~955ms reported in original study)
-- **Notes**: Regression target: predict reaction time from EEG epochs. Requires alignment of behavioral response data with stimulus events. Kernel must extract RT from behavioral file and map to corresponding stimulus epochs.
-
 ## Data Quality Notes
 
-- Count column shows files-with-event (18 subjects), not individual trial counts - actual trial counts per category are much higher.
-- `boundary` events are segment/epoch boundary markers - do not epoch on these.
-- This is an EEGLAB tutorial dataset with well-documented preprocessing pipeline.
-- Verify channel count consistency across subjects before pooling.
+- The `response_time` column is present in the event tables but completely empty in this EEGLAB repackaging — RT regression is not a supported task for this dataset.
+- `boundary` events appear because the original runs were merged during EEGLAB repackaging; do not epoch on these.
+- EEG sidecars report `EEGChannelCount: 70`; channel files contain 74 channels total (70 EEG + 4 physiological: HEOG, VEOG, 2 ECG/EKG).
+- One subject uses `ECG` rather than `EKG` as the channel type label — minor metadata inconsistency.
+- Total event rows across subjects: 31,448.
 
 
 ## Kernel Responsibilities

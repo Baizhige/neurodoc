@@ -1,11 +1,12 @@
 # Go-nogo categorization and detection task
 
 **Dataset**: `openneuro_ds002680` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002680
-**Category**: Sensory/Response | **Subjects**: N/A | **Files (Completed)**: 350 | **Channels**: 31 | **Sampling Rate**: 1000 Hz
+**Category**: Sensory/Response | **Subjects**: 14 | **Files (Completed)**: 350 | **Channels**: 31 | **Sampling Rate**: 1000 Hz
+**Manual Review**: Mr.PJ
 
 ## Paradigm
 
-Participants performed a visual go/no-go paradigm involving rapid animal categorization and image recognition tasks with brief 20 ms stimulus presentations. Go trials required a button-press response when an animal was detected (or a target category matched); no-go trials required withholding response. Each run contains approximately 100 stimulus events and ~50 response events, suggesting roughly 50% go rate. The paradigm studies rapid visual processing and response inhibition.
+Participants performed two alternating visual go/no-go tasks: an animal categorization task and a target-image recognition task. Images were flashed for 20 ms, each run contained about 100 images, and participants responded by releasing a button for target images while withholding response for non-target images. The first recording phase contains 13 runs and the second recording phase contains 12 runs for each subject, for a total of 25 runs per subject.
 
 
 ## File Scan Result
@@ -17,9 +18,19 @@ Participants performed a visual go/no-go paradigm involving rapid animal categor
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `stimulus` | ~35,000 (350x100) | event | raw | Visual stimulus onset (20 ms image presentation) |
-| `response` | ~18,000 (350x52) | event | raw | Button-press go response |
+| `animal_target` | 6298 | event | raw | Target stimulus in the animal categorization task |
+| `animal_distractor` | 6300 | event | raw | Non-target stimulus in the animal categorization task |
+| `easy_target` | 4200 | event | raw | Easy target stimulus in the recognition task |
+| `easy_distractor` | 4200 | event | raw | Easy distractor stimulus in the recognition task |
+| `difficult_target` | 4198 | event | raw | Difficult target stimulus in the recognition task |
+| `difficult_distractor` | 4200 | event | raw | Difficult distractor stimulus in the recognition task |
+| `nonanimal_target` | 2800 | event | raw | Non-animal target stimulus in the recognition task |
+| `nonanimal_distractor` | 2800 | event | raw | Non-animal distractor stimulus in the recognition task |
+| `correct` | 16921 | event | raw | Correct behavioral response event |
+| `incorrect` | 745 | event | raw | Incorrect behavioral response event |
+| `response_time` | 17666 | event | raw | Native reaction-time value (ms), stored on stimulus rows with responses |
 
+> **Manual Review Note**: Event IDs and counts updated by human reviewer (Mr.PJ) from BIDS events.tsv — replaced placeholder `stimulus`/`response` entries with actual event names. Kernel should verify event names against events.tsv on next scan.
 
 ### MISC Label Summary
 
@@ -45,47 +56,76 @@ Participants performed a visual go/no-go paradigm involving rapid animal categor
 
 ## Tasks
 
-### Classical Task 1: Go/No-Go ERP Classification
+### Classical Task 1: Target-vs-Distractor ERP Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.3 s, tmax = 0.7 s, target_events = [`stimulus`]
+- **Epoch Parameters**: tmin = -0.3 s, tmax = 0.7 s, target_events = [`animal_target`, `animal_distractor`, `easy_target`, `easy_distractor`, `difficult_target`, `difficult_distractor`, `nonanimal_target`, `nonanimal_distractor`]
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|----------|
-  | `stimulus` → response follows | 1 | Go trial (animal target, button press made) |
-  | `stimulus` → no response follows | 0 | No-go trial (non-animal distractor, response withheld) |
-- **Super Meta Notes**: Derived from raw event(s) [`stimulus`, `response`] by checking if a response event occurs within 1-2 seconds after each stimulus. Kernel step: For each stimulus event, scan forward in time for a matching response; if found, label=1 (go), else label=0 (no-go).
+  |-------|---|---------|
+  | `animal_target` | 1 | Target / go stimulus |
+  | `easy_target` | 1 | Target / go stimulus |
+  | `difficult_target` | 1 | Target / go stimulus |
+  | `nonanimal_target` | 1 | Target / go stimulus |
+  | `animal_distractor` | 0 | Distractor / no-go stimulus |
+  | `easy_distractor` | 0 | Distractor / no-go stimulus |
+  | `difficult_distractor` | 0 | Distractor / no-go stimulus |
+  | `nonanimal_distractor` | 0 | Distractor / no-go stimulus |
 - **Evidence**:
-  - DOI: 10.1038/s41598-023-27528-0 — Uses openneuro_ds002680 to classify brain-evoked potentials between correct animal targets (go responses) and correct non-animal distractors (no-go responses) using epoch extraction from -0.3 to 0.7 seconds
-- **Kernel Notes**: Must implement go/no-go label derivation by checking response presence after each stimulus. Window of 1-2s post-stimulus is typical for response deadline. (replaces incomplete Classical Task from original analysis.md)
+  - DOI: 10.1038/s41598-023-27528-0 — Uses this dataset's animal go/no-go condition to compare correct targets and correct distractors with 1 s epochs from -0.3 to 0.7 s, explicitly framing the contrast as go responses on animals versus no-go responses on non-animal images.
+- **Kernel Notes**: Binary label collapses all *_target events to 1 and all *_distractor events to 0. Target identity is already encoded in the raw event value — no response-pairing inference needed.
 
-### Classical Task 2: Stimulus-Locked ERP Classification (broader window)
+### Classical Task 2: Stimulus-Class ERP Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -1.0 s, tmax = 2.0 s, target_events = [`stimulus`]
+- **Epoch Parameters**: tmin = -0.3 s, tmax = 0.7 s, target_events = [`animal_target`, `animal_distractor`, `easy_target`, `easy_distractor`, `difficult_target`, `difficult_distractor`, `nonanimal_target`, `nonanimal_distractor`]
 - **Label Route**: `event`
-- **Meta Level**: super
+- **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|----------|
-  | `stimulus` → response follows | 1 | Go trial (animal target) |
-  | `stimulus` → no response follows | 0 | No-go trial (non-animal distractor) |
-- **Super Meta Notes**: Same derivation as Classical Task 1 — labels computed by checking response presence after stimulus. Kernel step: Same as Classical Task 1.
+  |-------|---|---------|
+  | `animal_target` | 0 | Animal categorization target |
+  | `animal_distractor` | 1 | Animal categorization distractor |
+  | `easy_target` | 2 | Easy recognition target |
+  | `easy_distractor` | 3 | Easy recognition distractor |
+  | `difficult_target` | 4 | Difficult recognition target |
+  | `difficult_distractor` | 5 | Difficult recognition distractor |
+  | `nonanimal_target` | 6 | Non-animal recognition target |
+  | `nonanimal_distractor` | 7 | Non-animal recognition distractor |
 - **Evidence**:
-  - DOI: 10.1038/s41598-023-27528-0 — Reports initial analysis used tmin=-1.0s tmax=2.0s for epoch extraction to capture full ERP dynamics
-- **Kernel Notes**: Longer window captures later ERP components (N2, P3) useful for classification. Same label derivation logic as Classical Task 1.
+  - DOI: 10.1038/s41598-023-27528-0 — Reports the full 8-stimulus-class structure used in the paradigm.
+- **Kernel Notes**: Preserves the full task structure. The 8-way classification is a downstream decoding formulation rather than the primary contrast in cited papers.
 
-### Potential Task 1: Stimulus-Locked ERP / Reaction Time Regression (regression)
+### Classical Task 3: Stimulus-Locked Reaction Time Regression
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to stimulus onset), target_events = see Target Definition
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`animal_target`, `animal_distractor`, `easy_target`, `easy_distractor`, `difficult_target`, `difficult_distractor`, `nonanimal_target`, `nonanimal_distractor`]
 - **Label Route**: `misc`
-- **Target Definition**: N/A (null (regression only; stimulus serves as epoch anchor))
-- **Notes**: Go/no-go structure: ~100 stimuli per run, ~52 responses (go trials). Regression target is response_time on go trials. For classification, go vs no-go labels would need to be inferred from presence/absence of a response after each stimulus.
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `response_time` | continuous | Native reaction time (ms) from BIDS event table |
+- **Evidence**:
+  - DOI: 10.1038/s41598-023-27528-0 — Reaction time data is natively present in the BIDS event table for 17,666 stimulus rows.
+- **Kernel Notes**: Use the native `response_time` column on stimulus rows. RT is present for most target trials and some distractor false-alarm trials. Filter by correct/incorrect status before model construction.
 
-- **Regression target**: `response_time` (reaction time from stimulus to response, from misc channel)
+### Classical Task 4: Response Correctness Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.3 s, tmax = 0.7 s, target_events = [`correct`, `incorrect`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `correct` | 1 | Correct response |
+  | `incorrect` | 0 | Incorrect response |
+- **Evidence**:
+  - DOI: 10.1038/s41598-023-27528-0 — Response correctness events are explicit in the event table.
+- **Kernel Notes**: Response events are explicit and can be analyzed separately from stimulus-locked epochs for response-locked decoding.
 
 ## Data Quality Notes
 

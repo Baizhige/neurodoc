@@ -1,7 +1,8 @@
 # Real-time EEG feedback on alpha power lateralization leads to behavioral improvements in a covert attention task
 
 **Dataset**: `openneuro_ds002034` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds002034
-**Category**: Action/Output | **Subjects**: 14 | **Files (Completed)**: 167 | **Channels**: 82 | **Sampling Rate**: 512 Hz
+**Category**: Action/Output | **Subjects**: 14 | **Files (Completed)**: 167 | **Channels**: 64 | **Sampling Rate**: 512 Hz
+**Manual Review**: Liu Peng
 
 ## Paradigm
 
@@ -31,8 +32,8 @@ Participants performed a covert spatial attention task where they were trained t
 
 ### Classical Task 1: Covert Visuospatial Attention Decoding (Left vs Right Hemifield)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s (cue onset), tmax = 5.0 s *, target_events = [`left_cue`, `right_cue`]
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s, tmax = 5.0 s, overlap = 0.0, target_events = [`left_cue`, `right_cue`]
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
@@ -47,8 +48,8 @@ Participants performed a covert spatial attention task where they were trained t
 
 ### Classical Task 2: Alpha Lateralization Regression
 - **Task Type**: regression
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s (cue onset), tmax = 5.0 s *, overlap = 0.9375 * (62.5ms step / 1000ms window), target_events = [`left_cue`, `right_cue`]
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s, tmax = 5.0 s, overlap = 0.9375, target_events = [`left_cue`, `right_cue`]
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:

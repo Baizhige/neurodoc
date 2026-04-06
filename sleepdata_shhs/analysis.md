@@ -1,8 +1,9 @@
 # sleepdata_shhs
 
-**Dataset**: `sleepdata_shhs` | **Year**: 1995 | **URL**: https://sleepdata.org/datasets/shhs
+**Dataset**: `sleepdata_shhs` | **Year**: 1995-2003 | **URL**: https://sleepdata.org/datasets/shhs
 **Category**: Biological State | **Subjects**: 6441 | **Files (Completed)**: 5786
 **Channels**: 14 | **Sampling Rate**: 125 Hz (EEG/EMG/ECG primary), 50 Hz (EOG), 10 Hz (respiratory), 1 Hz (SpO2/HR); exported EDF channels are resampled to 125 Hz
+**Manual Review**: Jiping Cui
 
 ## Paradigm
 
@@ -21,8 +22,8 @@ Annotations are available in both original Profusion XML and NSRR-processed XML 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
 | `Stages\|Stages` | ~100-400 annotations/file | event | raw | Sleep-stage labels in 30 s scoring epochs |
-| `Arousals\|Arousals` | variable | short/long | raw | Cortical arousal events |
-| `Respiratory\|Respiratory` | variable | short/long | raw | Respiratory events (apnea/hypopnea/desaturation-related) |
+| `Arousals\|Arousals` | variable | event | raw | Cortical arousal events |
+| `Respiratory\|Respiratory` | variable | event | raw | Respiratory events (apnea/hypopnea/desaturation-related) |
 
 ### Sleep Stage Labels (inside `EventConcept`)
 
@@ -125,7 +126,7 @@ Annotations are available in both original Profusion XML and NSRR-processed XML 
 - Desaturation labels may be missing or partially inconsistent in some files; consider deriving desaturation from raw `SaO2` traces when needed.
 - Class imbalance is expected (N2 dominant; Wake/N1 relatively sparse; Stage 4 rare).
 - Recordings are unattended home PSG and therefore may have higher motion/environmental artifact than in-lab PSG.
-- SHHS-2 ECG can differ in effective native sampling relative to SHHS-1; handle ECG separately if exact spectral comparability is required.
+- Hardware/Sampling Shift between cohorts: SHHS-1 (1995-1998) and SHHS-2 (2001-2003) use different native sampling rates — SHHS-2 ECG is 250 Hz (vs 125 Hz), EOG is 64 Hz (vs 50 Hz), Respiratory is 8 Hz (vs 10 Hz). DataLoader must check signal headers dynamically rather than hardcoding frequencies.
 
 
 ## Kernel Responsibilities

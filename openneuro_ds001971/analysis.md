@@ -2,6 +2,7 @@
 
 **Dataset**: `openneuro_ds001971` | **Year**: 2019 | **URL**: https://openneuro.org/datasets/ds001971
 **Category**: Complex Applied | **Subjects**: 18 | **Files (Completed)**: 273 | **Channels**: 115 | **Sampling Rate**: 512 Hz
+**Manual Review**: Mingze Tang
 
 ## Paradigm
 
