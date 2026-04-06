@@ -1,11 +1,12 @@
 # CHB-MIT Scalp EEG Database
 
 **Dataset**: `physionet_chbmit` | **Year**: 2010 | **URL**: https://physionet.org/content/chbmit/1.0.0/
-**Category**: Biological State | **Subjects**: 22 | **Files (Completed)**: 686 | **Channels**: 23 | **Sampling Rate**: 256 Hz
+**Category**: Biological State | **Subjects**: 23 | **Files (Completed)**: 686 | **Channels**: 23 | **Sampling Rate**: 256 Hz
+**Manual Review**: Zhida Shang
 
 ## Paradigm
 
-Twenty-two pediatric patients (5 males aged 3-22; 17 females aged 1.5-19) with intractable seizures were monitored at Children's Hospital Boston following withdrawal of anti-seizure medication to evaluate surgical candidacy (Shoeb & Guttag, 2010). Long-term continuous EEG was recorded from 23 scalp channels (bipolar montage following the 10-20 system) at 256 Hz with 16-bit resolution. The dataset contains 686 EEG files and 182 seizure events in total. Seizure onset and offset times are documented in per-subject summary text files (`chbNN-summary.txt`); the kernel parses these to create `seizure` annotations spanning each ictal period.
+Twenty-three pediatric subjects (22 original cases plus chb24 added later; 5 males aged 3-22, 17 females aged 1.5-19, with chb24 age/sex unknown) with intractable seizures were monitored at Children's Hospital Boston following withdrawal of anti-seizure medication to evaluate surgical candidacy (Shoeb & Guttag, 2010). Note: case chb21 was recorded 1.5 years after chb01 from the same female subject. Long-term continuous EEG was recorded from 23 scalp channels (bipolar montage following the 10-20 system) at 256 Hz with 16-bit resolution. The dataset contains 686 EEG files, of which 129 contain one or more seizures, for a total of 198 annotated seizures. Seizure onset and offset times are documented in per-subject summary text files (`chbNN-summary.txt`); the kernel parses these to create `seizure` annotations spanning each ictal period.
 
 
 ## File Scan Result
@@ -17,10 +18,10 @@ Twenty-two pediatric patients (5 males aged 3-22; 17 females aged 1.5-19) with i
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `seizure` | 182 | event | raw | Seizure period (onset to offset, variable duration) |
+| `seizure` | 198 | event | raw | Seizure period (onset to offset, variable duration) |
 
->
 > Files without seizures have no annotations; these ictal-free recordings serve as the negative (interictal) class.
+> **Manual Review Note**: Seizure count corrected from 182 to 198 by human reviewer (Zhida Shang); subjects corrected from 22 to 23 (chb24 adds one subject). Kernel should re-verify total seizure count and subject list on next scan.
 
 
 ### Info
@@ -46,7 +47,7 @@ Twenty-two pediatric patients (5 males aged 3-22; 17 females aged 1.5-19) with i
 - **Evidence**:
   - DOI: 10.1016/j.bspc.2024.107379 — Uses 2-second epochs for ictal vs non-seizure classification on CHB-MIT
   - DOI: 10.1038/s41598-025-18479-9 — Binary seizure detection (ictal vs non-seizure) on CHB-MIT
-  - DOI: 10.1038/s41598.025.98389.y — 5-second windows for binary seizure vs no-seizure classification
+  - DOI: 10.1038/s41598-025-98389-y — 5-second windows for binary seizure vs no-seizure classification
 - **Kernel Notes**: Extract seizure epochs using segmentation on the raw EEG. For interictal class, use seizure-free segments from files without seizure annotations or exclude periods within 5-10 s of seizure onset/offset. Severe class imbalance — apply undersampling or class weighting.
 
 ### Classical Task 2: Seizure prediction (preictal vs interictal)

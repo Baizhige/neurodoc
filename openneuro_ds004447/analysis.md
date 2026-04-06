@@ -3,6 +3,7 @@
 **Dataset**: `openneuro_ds004447` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004447
 **Category**: Action/Output | **Subjects**: 418 | **Files (Completed)**: 418
 **Channels**: 130 | **Sampling Rate**: 1000 Hz
+**Manual Review**: k857965791
 
 ## Paradigm
 
@@ -70,6 +71,7 @@ A brain-computer interface (BCI) task based on sensorimotor rhythms (SMR) record
 - Numerical event codes (1-4) require kernel-level decoding
 - Classes 3 and 4 (feet/tongue) only appear in 91 of 418 files
 - 130-channel high-density EEG with extended epochs
+- The dataset description document does not match the actual data content — use with caution.
 
 
 ## Kernel Responsibilities
