@@ -7,25 +7,27 @@
 
 A phoneme discrimination task where participants listened to speech sounds - including single phonemes, phoneme pairs, and words - while undergoing transcranial magnetic stimulation (TMS) to test the role of speech motor cortex in auditory speech perception. Subjects provided button-press responses after each sound. The dataset supports decoding of speech perception from TMS-EEG.
 
-## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+## File Scan Result
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006104
+> **Kernel**: N/A
+> **SHA256**: N/A
 
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `TMS` | 29260 | short | raw | TMS pulse delivery |
-| `stimulus` | 29260 | short | raw | Auditory speech stimulus onset |
+| `TMS` | 29260 | event | raw | TMS pulse delivery |
+| `stimulus` | 29260 | event | raw | Auditory speech stimulus onset |
 
-> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
+
+### Info
+
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | missing | N/A |
+| `subject_sex` | missing | N/A |
+| `device` | missing | N/A |
 ## STIM Label Summary
 
 - **Route**: `stim`
@@ -35,38 +37,68 @@ A phoneme discrimination task where participants listened to speech sounds - inc
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Phonemes
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds006104 DOI: https://doi.org/10.18112/openneuro.ds006104.v1.0.1
+### Classical Task 1: Phoneme Category Classification (Consonant vs Vowel)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`stimulus`]
+- **Label Route**: `event`
+- **Meta Level**: super
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `consonant` | 0 | Consonant phoneme stimulus |
+  | `vowel` | 1 | Vowel phoneme stimulus |
+- **Super Meta Notes**: Derived from raw event `stimulus` by mapping stimulus onset to phoneme category labels based on stimulus presentation logs. Kernel step: Load stimulus metadata (CSV/log) and map each stimulus onset timestamp to its phonetic category (consonant/vowel).
+- **Evidence**:
+  - DOI: 10.1038/s41597-025-05187-2 — classifies consonant vs vowel phonemes from TMS-EEG during speech perception
+- **Kernel Notes**: Load phoneme label file; match stimulus timestamps to phoneme identity; extract consonant/vowel category. (replaces Classical Task 3 from original analysis.md)
 
+### Classical Task 2: Word Type Classification (Real vs Pseudoword)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`stimulus`]
+- **Label Route**: `event`
+- **Meta Level**: super
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `real_word` | 0 | Real word stimulus |
+  | `pseudoword` | 1 | Pseudoword stimulus |
+- **Super Meta Notes**: Derived from raw event `stimulus` by mapping stimulus onset to word type labels based on stimulus presentation logs. Kernel step: Load stimulus metadata and classify each stimulus as real word or pseudoword.
+- **Evidence**:
+  - DOI: 10.1038/s41597-025-05187-2 — classifies real words vs pseudowords from TMS-EEG during speech perception
+- **Kernel Notes**: Load word-type label file; match stimulus timestamps to word/pseudoword identity. (replaces Classical Task 2 from original analysis.md)
 
-### Primary Task 2: Publisher-defined BIDS task: Words
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds006104 DOI: https://doi.org/10.18112/openneuro.ds006104.v1.0.1
+### Classical Task 3: Single Phoneme Identity Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`stimulus`]
+- **Label Route**: `event`
+- **Meta Level**: super
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `/b/` | 0 | bilabial stop |
+  | `/p/` | 1 | bilabial stop (voiceless) |
+  | `/d/` | 2 | alveolar stop |
+  | `/t/` | 3 | alveolar stop (voiceless) |
+  | `/s/` | 4 | alveolar fricative |
+  | `/z/` | 5 | alveolar fricative (voiced) |
+  | `/i/` | 6 | high front vowel |
+  | `/ɛ/` | 7 | mid front vowel |
+  | `/ɑ/` | 8 | low back vowel |
+  | `/u/` | 9 | high back vowel |
+  | `/oʊ/` | 10 | diphthong |
+- **Super Meta Notes**: Derived from raw event `stimulus` by mapping stimulus onset to specific phoneme identity labels based on stimulus presentation logs. Kernel step: Load phoneme identity mapping; match each stimulus timestamp to its phoneme label.
+- **Evidence**:
+  - DOI: 10.1038/s41597-025-05187-2 — classifies single phoneme identity from TMS-EEG ERPs
+- **Kernel Notes**: Requires phoneme label file with stimulus-to-phoneme mapping. (replaces Classical Task 1 from original analysis.md)
 
-
-### Primary Task 3: Publisher-defined BIDS task: Single phoneme
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds006104 DOI: https://doi.org/10.18112/openneuro.ds006104.v1.0.1
-
-
-### Normal Task 1: TMS vs Stimulus Classification (epoch_by_event)
+### Potential Task 1: TMS vs Stimulus Classification (epoch_by_event)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Binary classification (TMS vs stimulus). TMS pulses produce large artifacts; apply TMS artifact rejection before epoching.
 
@@ -74,12 +106,15 @@ A phoneme discrimination task where participants listened to speech sounds - inc
  |-------|---|---------|
  | `TMS` | 0 | TMS pulse |
  | `stimulus` | 1 | Speech stimulus onset |
+
 ## Data Quality Notes
 
 - Very high sampling rate (2000 Hz); downsample to 500 Hz for most analyses.
 - TMS pulses produce large EEG artifacts requiring specialized artifact removal.
 - Apply bandpass filter (1-80 Hz) after TMS artifact correction.
 
-## References
 
-- **Reference**: `Moreira et al. "An open-access EEG dataset for speech decoding: Exploring the role of articulation and coarticulation"`
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

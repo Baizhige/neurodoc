@@ -8,80 +8,152 @@
 
 A pilot EEG study investigating the neural underpinnings of loneliness by contrasting social hypersensitivity (amplified neural responses to social stimuli) and hyperalertness (heightened attention to potential social threats). Participants viewed social and non-social stimuli while EEG was recorded. Trigger codes encode stimulus type, valence, and response conditions. Code 20 dominates the event structure (49,726 total) and may represent a high-frequency refresh or fixation signal.
 
-## Kernel Responsibilities
+## Subject Information
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+<!-- AUTO-KERNEL-SUBJECT-INFO:START -->
+> **Kernel Fact Source**: current kernel scan from `/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
+- **Record Count**: 79
+- **Age Completeness**: 0/79 (0.0%)
+- **Sex Completeness**: 78/79 (98.7%)
+- **Observed Age Examples**: N/A
+- **Observed Sex Examples**: `Female`, `Male`, `other`
+<!-- AUTO-KERNEL-SUBJECT-INFO:END -->
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004802
 
-## Event Structure
+## File Scan Result
+
+> **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds004802.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
+> **SHA256**: `91ebf6584f11451e6aace0e08d5a223a4ffd7cd0a64242e90fcfad7fa65898b6`
+
+### Event Structure
+
+<!-- AUTO-KERNEL-EVENT-STRUCTURE:START -->
+> **Kernel Fact Source**: current kernel scan from `/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
+> **Meaning Policy**: `Meaning` is interpretive; `Event ID / Count / Type / Meta Level` are kernel-derived facts.
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `20` | 49726 | short | raw | Dominant trigger (likely fixation/refresh signal) |
-| `111` | 4144 | short | raw | Trigger code 111 |
-| `25` | 2823 | short | raw | Trigger code 25 |
-| `24` | 2817 | short | raw | Trigger code 24 |
-| `21` | 2747 | short | raw | Trigger code 21 |
-| `23` | 2667 | short | raw | Trigger code 23 |
-| `22` | 2666 | short | raw | Trigger code 22 |
-| `42` | 2319 | short | raw | Trigger code 42 |
-| `44` | 2316 | short | raw | Trigger code 44 |
-| `43` | 2246 | short | raw | Trigger code 43 |
-| `61` | 2221 | short | raw | Trigger code 61 |
-| `62` | 2185 | short | raw | Trigger code 62 |
-| `65` | 2182 | short | raw | Trigger code 65 |
+| `20` | 49726 | event | raw | Unresolved from current kernel facts |
+| `111` | 4144 | event | raw | Unresolved from current kernel facts |
+| `25` | 2823 | event | raw | Unresolved from current kernel facts |
+| `24` | 2817 | event | raw | Unresolved from current kernel facts |
+| `21` | 2747 | event | raw | Unresolved from current kernel facts |
+| `23` | 2667 | event | raw | Unresolved from current kernel facts |
+| `22` | 2666 | event | raw | Unresolved from current kernel facts |
+| `42` | 2319 | event | raw | Unresolved from current kernel facts |
+| `44` | 2316 | event | raw | Unresolved from current kernel facts |
+| `43` | 2246 | event | raw | Unresolved from current kernel facts |
+| `61` | 2221 | event | raw | Unresolved from current kernel facts |
+| `62` | 2185 | event | raw | Unresolved from current kernel facts |
+| `65` | 2182 | event | raw | Unresolved from current kernel facts |
+| `45` | 2174 | event | raw | Unresolved from current kernel facts |
+| `41` | 2165 | event | raw | Unresolved from current kernel facts |
+| `63` | 2070 | event | raw | Unresolved from current kernel facts |
+| `64` | 2066 | event | raw | Unresolved from current kernel facts |
+| `26` | 1993 | event | raw | Unresolved from current kernel facts |
+| `46` | 1643 | event | raw | Unresolved from current kernel facts |
+| `66` | 1584 | event | raw | Unresolved from current kernel facts |
+| `47` | 969 | event | raw | Unresolved from current kernel facts |
+| `27` | 933 | event | raw | Unresolved from current kernel facts |
+| `67` | 715 | event | raw | Unresolved from current kernel facts |
+| `68` | 299 | event | raw | Unresolved from current kernel facts |
+| `16` | 264 | event | raw | Unresolved from current kernel facts |
+| `13` | 261 | event | raw | Unresolved from current kernel facts |
+| `200` | 259 | event | raw | Unresolved from current kernel facts |
+| `48` | 259 | event | raw | Unresolved from current kernel facts |
+| `31` | 224 | event | raw | Unresolved from current kernel facts |
+| `35` | 222 | event | raw | Unresolved from current kernel facts |
+| `53` | 190 | event | raw | Unresolved from current kernel facts |
+| `54` | 189 | event | raw | Unresolved from current kernel facts |
+| `12` | 188 | event | raw | Unresolved from current kernel facts |
+| `14` | 151 | event | raw | Unresolved from current kernel facts |
+| `11` | 150 | event | raw | Unresolved from current kernel facts |
+| `28` | 150 | event | raw | Unresolved from current kernel facts |
+| `33` | 150 | event | raw | Unresolved from current kernel facts |
+| `56` | 114 | event | raw | Unresolved from current kernel facts |
+| `15` | 112 | event | raw | Unresolved from current kernel facts |
+| `36` | 111 | event | raw | Unresolved from current kernel facts |
+| `17` | 76 | event | raw | Unresolved from current kernel facts |
+| `34` | 76 | event | raw | Unresolved from current kernel facts |
+| `55` | 76 | event | raw | Unresolved from current kernel facts |
+| `52` | 75 | event | raw | Unresolved from current kernel facts |
+| `57` | 75 | event | raw | Unresolved from current kernel facts |
+| `32` | 74 | event | raw | Unresolved from current kernel facts |
+| `51` | 38 | event | raw | Unresolved from current kernel facts |
+| `254` | 7 | event | raw | Unresolved from current kernel facts |
+| `100` | 5 | event | raw | Unresolved from current kernel facts |
+| `101` | 5 | event | raw | Unresolved from current kernel facts |
+| `65536` | 1 | event | raw | Unresolved from current kernel facts |
+<!-- AUTO-KERNEL-EVENT-STRUCTURE:END -->
 
-> **Event Type Description**:
-> - `short`: short stimulus onset marker (presentation duration <2 s), for `epoch_by_event_hdf5`
-> - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
-> - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **not used for epoch**
+
+### Info
+
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
+| `device` | missing | N/A |
 ## STIM Label Summary
 
+<!-- AUTO-KERNEL-STIM:START -->
+> **Kernel Fact Source**: current kernel scan from `/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
+> **Meaning Policy**: `Meaning` is interpretive; `Label / Source / Meta Level` are kernel-derived facts.
+
+| Label / Field | Source | Meta Level | Meaning |
+|---------------|--------|------------|---------|
+| `Status` | raw:stim_channel | raw | Unresolved from current kernel facts |
+<!-- AUTO-KERNEL-STIM:END -->
+
 - **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: Needs verification
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+- **Role**: Kernel-derived label summary for the current route only.
 
 ## Tasks
 
-### Primary Task 1: ERP target detection (P300/Oddball)
+### Classical Task 1: ERP target detection (P300/Oddball)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
-- **Target Definition**: Target vs non-target stimulus events
-- **Evidence**: P300/oddball paradigm appears as core study objective. Source: https://openneuro.org/datasets/ds004802 DOI: https://doi.org/10.18112/openneuro.ds004802.v1.0.0
+- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [Needs verification - see Kernel Notes]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | (unconfirmed) | 0 | Target stimulus * |
+  | (unconfirmed) | 1 | Non-target stimulus * |
+- **Kernel Notes**: Verify event ID mapping from events.tsv. This dataset uses codes for stimulus type, valence, and response conditions; confirm which codes correspond to target vs non-target for P300/oddball paradigm. Code 20 (n=49,726) appears to be fixation/refresh, not stimulus-related.
+- **Evidence**: DOI: 10.18112/openneuro.ds004802.v1.0.0 — "Loneliness in the Brain" pilot EEG study; paradigm involves social vs non-social stimuli, but exact target/non-target split not explicitly described in metadata.
 
-
-### Normal Task 1: Stimulus classification (multiclass)
+### Potential Task 1: Stimulus classification (multiclass)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset), target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
-- **Notes**: 30+ distinct trigger codes; full decode from events.tsv required. Code 20 dominates (49,726 total) - likely a high-frequency fixation or visual onset marker.
+- **Notes**: 30+ distinct trigger codes; full decode from events.tsv required. Code 20 dominates (49,726 total) - likely a fixation/refresh signal rather than stimulus.
 
 | Event | y | Meaning |
- |-------|---|------|
- | `20` | 0 | Primary stimulus trigger |
- | `111` | 1 | Trigger code 111 |
- | `25` | 2 | Trigger code 25 |
- | `24` | 3 | Trigger code 24 |
- | `21` | 4 | Trigger code 21 |
- | `23` | 5 | Trigger code 23 |
- | `22` | 6 | Trigger code 22 |
+|-------|---|------|
+| `20` | 0 | Primary stimulus trigger |
+| `111` | 1 | Trigger code 111 |
+| `25` | 2 | Trigger code 25 |
+| `24` | 3 | Trigger code 24 |
+| `21` | 4 | Trigger code 21 |
+| `23` | 5 | Trigger code 23 |
+| `22` | 6 | Trigger code 22 |
+| `42` | 7 | Trigger code 42 |
+| `44` | 8 | Trigger code 44 |
+| `43` | 9 | Trigger code 43 |
+| `61` | 10 | Trigger code 61 |
+| `62` | 11 | Trigger code 62 |
+| `65` | 12 | Trigger code 65 |
+
 ## Data Quality Notes
 
 - 30+ distinct trigger codes - check events.tsv decode table.
 - Code 20 (49,726 total) is anomalously high - may be a fixation/refresh signal rather than stimulus.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Loneliness in the Brain: Distinguishing Between Hypersensitivity and Hyperalertness`
+> **Super Meta Required**: No
+> **Status**: wait_kernel_update

@@ -7,48 +7,76 @@
 
 Resting-state EEG was collected from 149 participants (100 with Parkinson's disease and 49 healthy controls) who sat quietly with eyes open for approximately two minutes. The study characterizes spontaneous neural oscillatory patterns to differentiate PD patients from controls. No active task was required; participants fixated on a cross and remained still.
 
-## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+## File Scan Result
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004584
+> **Kernel**: N/A
+> **SHA256**: N/A
 
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
 | `boundary` | 149 | admin | raw | Segment boundary marker inserted by recording software (exclude) |
 
-> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
 
+### Info
+
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | missing | N/A |
+| `subject_sex` | missing | N/A |
+| `device` | missing | N/A |
 ## Tasks
 
-### Primary Task 1: Resting-state analysis baseline
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_segmentation_hdf5` or `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Condition/group labels from metadata when available
-- **Evidence**: Dataset is primarily resting-state or spontaneous-state EEG. Source: https://openneuro.org/datasets/ds004584 DOI: https://doi.org/10.21203/rs.3.rs-2666578/v1
+### Classical Task 1: Cognitive Impairment Classification from Resting-State EEG
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 4.0 s, overlap = 0.5
+- **Label Route**: `event`
+- **Meta Level**: super
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `cognitively_normal` | 0 | MoCA score >= 26 |
+  | `cognitive_impairment` | 1 | MoCA score < 26 |
+- **Super Meta Notes**: Derived from MoCA (Montreal Cognitive Assessment) scores in participants.tsv. Kernel step: Read MoCA column from participants.tsv, binarize with threshold 26, assign to each participant's all epochs.
+- **Evidence**:
+  - DOI: 10.21203/rs.3.rs-2666578/v1 — Shows LEAPD algorithm classifies cognitive impairment (MoCA<26) vs normal (MoCA>=26) from resting-state EEG with 80% accuracy on this dataset.
+  - DOI: 10.1038/s41531-023-00602-0 — Confirms same dataset (100 PD + 49 controls) used for cognitive impairment detection using linear predictive coding.
+- **Kernel Notes**: Extract continuous resting-state EEG (~2-3 min per subject). Apply sliding-window segmentation. Compute spectral features (alpha, beta power) or LPC coefficients per segment. Use participant-level MoCA-derived labels for training. (replaces Potential Task 1 from original analysis.md)
 
+### Classical Task 2: Parkinson's Disease vs Healthy Control Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 4.0 s, overlap = 0.5
+- **Label Route**: `event`
+- **Meta Level**: super
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `healthy_control` | 0 | Control participant (no Parkinson's disease) |
+  | `parkinsons_disease` | 1 | Participant with Parkinson's disease |
+- **Super Meta Notes**: Derived from participant group labels in participants.tsv. Kernel step: Read group/diagnosis column from participants.tsv, assign PD=1, control=0 to each participant's epochs.
+- **Evidence**:
+  - DOI: 10.1038/s41398-025-03506-0 — Uses resting-state EEG from this dataset to classify Parkinson's disease vs healthy controls using frontal Alpha inter-hemispheric synchronization.
+- **Kernel Notes**: Compute Alpha band (8-13 Hz) envelope correlations between contralateral/ipsilateral frontal channels using sliding windows. Extract synchronization features per segment. Use participant-level PD/control labels for training.
 
-### Normal Task 1: Resting State Segmentation (segmentation)
+### Potential Task 1: Resting State Segmentation (segmentation)
 - **Task Type**: classification
 - **Epoch Method**: `segmentation`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: None (no task events)
 - **Notes**: Only `boundary` admin markers present - pure resting-state dataset. Use sliding-window segmentation. PD vs. control group labels available from participants.tsv for downstream classification.
+
 ## Data Quality Notes
 
 - Only boundary markers present; no trial events for epoch-locked classification.
 - PD vs. control labels available in participants.tsv.
 
-## References
 
-- **Reference**: `Rest eyes open EEG dataset - Parkinson's disease and healthy controls`
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

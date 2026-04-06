@@ -8,61 +8,52 @@
 
 A high-density EEG dataset focused on sensorimotor rhythm-based brain-computer interfacing (BCI) with three motor imagery classes (left hand, right hand, feet). This is the second of four BMI-HDEEG datasets, using the same high-density setup as dataset 1 but with a three-class motor imagery design.
 
-## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+## File Scan Result
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004446
+> **Kernel**: N/A
+> **SHA256**: N/A
 
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `1` | 237xx | long | raw | Motor imagery cue - class 1 (left hand MI) |
-| `2` | 237xx | long | raw | Motor imagery cue - class 2 (right hand MI) |
-| `3` | 237xx | long | raw | Motor imagery cue - class 3 (feet MI) |
+| `1` | 237xx | event | raw | Motor imagery cue - class 1 (left hand MI) |
+| `2` | 237xx | event | raw | Motor imagery cue - class 2 (right hand MI) |
+| `3` | 237xx | event | raw | Motor imagery cue - class 3 (feet MI) |
 
-> **Event Type Description**:
-> - `short`: short stimulus onset marker (presentation duration <2 s), for `epoch_by_event_hdf5`
-> - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
-> - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **not used for epoch**
 
+### Info
+
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | missing | N/A |
+| `subject_sex` | missing | N/A |
+| `device` | missing | N/A |
 ## Tasks
 
-### Primary Task 1: Motor imagery decoding
+### Potential Task 1: Motor Imagery Classification (multiclass)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
-- **Target Definition**: Imagery class labels (e.g., left/right hand, feet, tongue; dataset-specific)
-- **Evidence**: Dataset references indicate MI BCI paradigm as core benchmark. Source: https://openneuro.org/datasets/ds004446 DOI: https://doi.org/10.18112/openneuro.ds004446.v1.0.1
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s, target_events = [`1`, `2`, `3`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `1` | 0 | Left hand motor imagery |
+  | `2` | 1 | Right hand motor imagery |
+  | `3` | 2 | Feet motor imagery |
+- **Kernel Notes**: Numerical event codes (1-3) require kernel-level decoding to semantic MI labels (left_hand_MI, right_hand_MI, feet_MI).
 
-
-### Normal Task 1: Motor Imagery Classification (multiclass)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s (relative to event onset), target_events = see Target Definition
-- **Label Route**: `Annotation`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Numerical codes 1-3 decoded by specific kernel to semantic MI labels. Same paradigm as dataset 1 (BMI-HDEEG) but 3-class design and different subjects.
-
-| Event | y | Meaning |
- |-------|---|------|
- | `left_hand_MI` | 0 | Left hand motor imagery |
- | `right_hand_MI` | 1 | Right hand motor imagery |
- | `feet_MI` | 2 | Feet motor imagery |
 ## Data Quality Notes
 
 - Numerical event codes (1-3) require kernel-level decoding to semantic MI labels
 - 130-channel high-density EEG with extended epochs
 - 237 files; smaller than dataset 1
 
-## References
 
-- **Reference**: `High-density scalp electroencephalogram dataset during sensorimotor rhythm-based brain-computer interfacing. Sci Data 10, 385 (2023)`
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review
