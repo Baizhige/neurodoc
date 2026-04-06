@@ -46,6 +46,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 .ds-item { padding: 8px 12px; cursor: pointer; border-left: 3px solid transparent; }
 .ds-item:hover { background: #f0f4ff; }
 .ds-item.active { background: #eff6ff; border-left-color: var(--accent); }
+.ds-item.ds-error { cursor: default; opacity: 0.7; }
+.ds-item.ds-error:hover { background: #fff1f2; }
 .ds-name { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ds-meta { display: flex; align-items: center; gap: 6px; margin-top: 3px; }
 .ds-cat { font-size: 10px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px; }
@@ -65,9 +67,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 .step-btn.active .step-num { background: var(--accent); color: #fff; }
 .step-btn.done .step-num { background: var(--green); color: #fff; }
 .step-sep { color: var(--border); font-size: 18px; }
-
 #step-content { flex: 1; overflow-y: auto; padding: 20px; }
-
 #no-dataset { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--muted); font-size: 14px; }
 
 /* Bottom action bar */
@@ -80,22 +80,42 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 .btn-secondary:hover { background: #d1d5db; }
 .btn-success { background: var(--green); color: #fff; }
 .btn-success:hover { background: #059669; }
+.btn-warning { background: var(--yellow); color: #fff; }
+.btn-warning:hover { background: #d97706; }
 .btn:disabled { opacity: .5; cursor: default; }
 
 /* Right panel */
 #right { width: var(--right-w); background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
 #right-tabs { display: flex; border-bottom: 1px solid var(--border); }
-.rtab { flex: 1; padding: 10px; border: none; background: none; cursor: pointer; font-size: 13px; color: var(--muted); border-bottom: 2px solid transparent; }
+.rtab { flex: 1; padding: 10px 6px; border: none; background: none; cursor: pointer; font-size: 12px; color: var(--muted); border-bottom: 2px solid transparent; }
 .rtab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
 #right-body { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
-#pane-rulebook, #pane-chat { display: none; flex-direction: column; flex: 1; overflow: hidden; }
-#pane-rulebook.visible, #pane-chat.visible { display: flex; }
+#pane-guide, #pane-rulebook, #pane-chat { display: none; flex-direction: column; flex: 1; overflow: hidden; }
+#pane-guide.visible, #pane-rulebook.visible, #pane-chat.visible { display: flex; }
 
-/* Rulebook pane */
+/* Step Guide */
+#guide-content { flex: 1; overflow-y: auto; padding: 12px; }
+.guide-step-title { font-size: 13px; font-weight: 700; color: var(--accent-dark); margin-bottom: 14px; padding: 8px 10px; background: #eff6ff; border-radius: 6px; border-left: 3px solid var(--accent); }
+.guide-section { margin-bottom: 16px; }
+.guide-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px; }
+.guide-section-title .sec-check-count { font-size: 10px; font-weight: 500; color: var(--green); margin-left: auto; }
+.guide-check { display: flex; gap: 8px; padding: 5px 6px; border-radius: 5px; margin-bottom: 2px; font-size: 12px; line-height: 1.5; color: var(--text); cursor: pointer; transition: background .1s; border: 1px solid transparent; }
+.guide-check:hover { background: #f8fafc; }
+.guide-check.checked { background: #f0fdf4; border-color: #bbf7d0; }
+.guide-check.highlight-warn { background: #fffbeb; border-color: #fcd34d !important; animation: pulse-warn 1s ease-in-out; }
+@keyframes pulse-warn { 0%,100% { border-color: #fcd34d; } 50% { border-color: #f59e0b; } }
+.guide-check-box { width: 16px; height: 16px; border: 2px solid var(--border); border-radius: 4px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all .1s; background: #fff; }
+.guide-check.checked .guide-check-box { background: var(--green); border-color: var(--green); }
+.guide-check.checked .guide-check-box::after { content: '✓'; color: #fff; font-size: 10px; font-weight: 700; }
+.guide-check-num { color: var(--accent); font-weight: 700; min-width: 18px; flex-shrink: 0; }
+.guide-check-text { flex: 1; }
+.guide-check code { background: #f3f4f6; padding: 1px 4px; border-radius: 3px; font-size: 11px; font-family: monospace; }
+
+/* Rulebook */
 #rulebook-search { padding: 10px; border-bottom: 1px solid var(--border); }
 #rulebook-search input { width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; }
 #rulebook-content { flex: 1; overflow-y: auto; padding: 12px; font-size: 12px; line-height: 1.6; }
-#rulebook-content h1, #rulebook-content h2 { font-size: 13px; font-weight: 700; margin: 12px 0 6px; color: var(--text); }
+#rulebook-content h1, #rulebook-content h2 { font-size: 13px; font-weight: 700; margin: 12px 0 6px; }
 #rulebook-content h3, #rulebook-content h4 { font-size: 12px; font-weight: 600; margin: 8px 0 4px; }
 #rulebook-content p { margin-bottom: 6px; }
 #rulebook-content ul, #rulebook-content ol { padding-left: 16px; margin-bottom: 6px; }
@@ -107,7 +127,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 #rulebook-content th, #rulebook-content td { border: 1px solid var(--border); padding: 4px 6px; }
 .rb-step-hint { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; font-size: 11px; color: var(--accent-dark); }
 
-/* Chat pane */
+/* Chat */
 #chat-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
 .chat-msg { max-width: 90%; }
 .chat-msg.user { align-self: flex-end; }
@@ -120,10 +140,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 .chat-bubble code { font-size: 11px; background: rgba(0,0,0,0.1); padding: 1px 3px; border-radius: 3px; }
 #chat-input-area { padding: 10px; border-top: 1px solid var(--border); }
 #chat-input-area textarea { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; resize: none; height: 64px; font-family: inherit; }
-#chat-send { margin-top: 6px; width: 100%; }
 #chat-context-label { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
 
-/* Step editors */
+/* Form */
 .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 8px; }
 .form-row { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
 .form-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 140px; }
@@ -131,12 +150,40 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 .form-group input, .form-group select, .form-group textarea { padding: 7px 9px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; background: #fff; }
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
 .form-group textarea { resize: vertical; }
-.full-textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: "Consolas", "Monaco", monospace; min-height: 200px; resize: vertical; line-height: 1.6; }
+.full-textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: "Consolas","Monaco",monospace; min-height: 200px; resize: vertical; line-height: 1.6; }
 .full-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
 .card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
 .card-title { font-size: 13px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+.field-readonly { background: #f3f4f6 !important; color: var(--muted) !important; cursor: not-allowed !important; }
+.field-hint { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
 
-/* Event table editor */
+/* Manual review */
+.mr-display { font-size: 13px; color: var(--text); padding: 6px 0; min-height: 24px; }
+.mr-display.empty { color: var(--muted); font-style: italic; }
+.mr-append-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+.mr-append-row input { flex: 1; padding: 6px 9px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; }
+.mr-append-row input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+
+/* Bullet list editor */
+.bullet-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.bullet-row { display: flex; align-items: flex-start; gap: 6px; }
+.bullet-dot { width: 20px; color: var(--muted); font-size: 14px; padding-top: 7px; flex-shrink: 0; text-align: center; }
+.bullet-input { flex: 1; padding: 6px 8px; border: 1px solid var(--border); border-radius: 5px; font-size: 13px; font-family: inherit; resize: vertical; min-height: 34px; }
+.bullet-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+.bullet-del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; padding: 4px; flex-shrink: 0; line-height: 1; }
+.bullet-del:hover { color: var(--red); }
+.btn-add-bullet { font-size: 12px; color: var(--accent); background: none; border: 1px dashed var(--accent); border-radius: 4px; padding: 4px 12px; cursor: pointer; }
+
+/* Evidence editor */
+.evidence-row { display: flex; gap: 6px; align-items: flex-start; margin-bottom: 6px; }
+.evidence-dot { color: var(--muted); font-size: 13px; padding-top: 8px; flex-shrink: 0; }
+.evidence-ref { width: 160px; flex-shrink: 0; padding: 6px 8px; border: 1px solid var(--border); border-radius: 5px; font-size: 12px; font-family: monospace; }
+.evidence-ref:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+.evidence-sep { color: var(--muted); font-size: 13px; padding-top: 8px; flex-shrink: 0; }
+.evidence-desc { flex: 1; padding: 6px 8px; border: 1px solid var(--border); border-radius: 5px; font-size: 12px; font-family: inherit; }
+.evidence-desc:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+
+/* Event table */
 .event-table-wrap { overflow-x: auto; margin-bottom: 8px; }
 table.event-table { border-collapse: collapse; width: 100%; font-size: 12px; }
 table.event-table th { background: #f8fafc; font-weight: 600; text-align: left; padding: 6px 8px; border: 1px solid var(--border); font-size: 11px; }
@@ -146,15 +193,25 @@ table.event-table td input:focus, table.event-table td select:focus { outline: 1
 table.event-table tr:hover td { background: #f9fafb; }
 .btn-row-add { font-size: 11px; color: var(--accent); background: none; border: 1px dashed var(--accent); border-radius: 4px; padding: 4px 10px; cursor: pointer; margin-top: 4px; }
 .btn-row-del { color: var(--red); background: none; border: none; cursor: pointer; padding: 2px 6px; font-size: 14px; }
-.info-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; }
-.info-complete { background: #d1fae5; color: #065f46; }
-.info-partial { background: #fef3c7; color: #92400e; }
-.info-incomplete { background: #fee2e2; color: #991b1b; }
-.info-missing { background: #e5e7eb; color: #374151; }
 
-/* KR step */
-.kr-field { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
-.kr-field label { font-size: 13px; font-weight: 600; min-width: 160px; }
+/* Tabs */
+.tab-strip { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 14px; }
+.tab-opt { padding: 7px 14px; border: none; background: none; cursor: pointer; font-size: 13px; color: var(--muted); border-bottom: 2px solid transparent; }
+.tab-opt.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+/* Preview wrap */
+.preview-wrap { background: #fafafa; border: 1px solid var(--border); border-radius: 6px; padding: 14px; font-size: 13px; line-height: 1.7; }
+.preview-wrap h1 { font-size: 16px; margin-bottom: 8px; }
+.preview-wrap h2 { font-size: 14px; margin: 12px 0 6px; }
+.preview-wrap h3 { font-size: 13px; margin: 8px 0 4px; }
+.preview-wrap table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+.preview-wrap th, .preview-wrap td { border: 1px solid var(--border); padding: 5px 8px; font-size: 12px; }
+.preview-wrap code { background: #f3f4f6; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: monospace; }
+.preview-wrap blockquote { border-left: 3px solid var(--border); padding-left: 10px; color: var(--muted); margin: 6px 0; }
+
+/* KR */
+.kr-field { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 14px; }
+.kr-field label { font-size: 13px; font-weight: 600; min-width: 160px; padding-top: 2px; }
 .toggle-group { display: flex; gap: 0; }
 .toggle-opt { padding: 6px 16px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 13px; transition: all .1s; }
 .toggle-opt:first-child { border-radius: 6px 0 0 6px; }
@@ -162,30 +219,99 @@ table.event-table tr:hover td { background: #f9fafb; }
 .toggle-opt.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
 .status-select { padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; }
 
-/* Preview */
-.preview-wrap { background: #fafafa; border: 1px solid var(--border); border-radius: 6px; padding: 14px; font-size: 13px; line-height: 1.7; }
-.preview-wrap h1 { font-size: 16px; margin-bottom: 8px; }
-.preview-wrap h2 { font-size: 14px; margin: 12px 0 6px; }
-.preview-wrap h3 { font-size: 13px; margin: 8px 0 4px; }
-.preview-wrap table { border-collapse: collapse; width: 100%; margin: 8px 0; }
-.preview-wrap th, .preview-wrap td { border: 1px solid var(--border); padding: 5px 8px; font-size: 12px; }
-.preview-wrap blockquote { border-left: 3px solid var(--border); padding-left: 10px; color: var(--muted); margin: 6px 0; }
-.preview-wrap code { background: #f3f4f6; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: monospace; }
+/* Doc error banner */
+.doc-error-banner { background: #fee2e2; border: 1px solid var(--red); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; }
+.doc-error-banner h3 { font-size: 13px; font-weight: 700; color: #991b1b; margin-bottom: 8px; }
+.doc-error-banner ul { padding-left: 16px; margin: 0; }
+.doc-error-banner li { font-size: 12px; color: #991b1b; margin-bottom: 3px; }
 
-/* Tabs within step */
-.tab-strip { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 14px; }
-.tab-opt { padding: 7px 14px; border: none; background: none; cursor: pointer; font-size: 13px; color: var(--muted); border-bottom: 2px solid transparent; }
-.tab-opt.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+/* Task cards */
+.task-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 14px; }
+.task-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.task-kind-group { display: flex; gap: 0; }
+.task-kind-btn { padding: 4px 12px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 12px; font-weight: 500; transition: all .1s; }
+.task-kind-btn:first-child { border-radius: 4px 0 0 4px; }
+.task-kind-btn:last-child { border-radius: 0 4px 4px 0; border-left: none; }
+.task-kind-btn.selected-classical { background: var(--accent); color: #fff; border-color: var(--accent); }
+.task-kind-btn.selected-potential { background: var(--purple); color: #fff; border-color: var(--purple); }
+.task-name-input { flex: 1; padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; }
+.task-name-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+.btn-del-task { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; background: none; cursor: pointer; color: var(--red); font-size: 16px; line-height: 1; }
+.btn-del-task:hover { background: #fee2e2; }
+.task-fields-row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.task-field { display: flex; flex-direction: column; gap: 3px; }
+.task-field label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.task-field select, .task-field input[type=text] { padding: 5px 7px; border: 1px solid var(--border); border-radius: 5px; font-size: 12px; font-family: inherit; background: #fff; }
+.task-field select:focus, .task-field input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
 
-/* Settings modal */
-#modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 100; align-items: center; justify-content: center; }
-#modal-overlay.open { display: flex; }
+/* Epoch params */
+.epoch-params-block { background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-bottom: 10px; }
+.epoch-params-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 10px; }
+.epoch-required-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.epoch-field { display: flex; flex-direction: column; gap: 3px; }
+.epoch-field label { font-size: 11px; font-weight: 600; color: var(--text); }
+.epoch-field .req-mark { color: var(--red); font-size: 11px; }
+.epoch-field input { padding: 5px 8px; border: 1px solid var(--border); border-radius: 5px; font-size: 12px; font-family: monospace; width: 100px; }
+.epoch-field input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+.epoch-field .unit { font-size: 11px; color: var(--muted); }
+.epoch-custom-title { font-size: 11px; color: var(--muted); margin-bottom: 6px; margin-top: 4px; }
+.epoch-custom-row { display: flex; gap: 6px; align-items: center; margin-bottom: 4px; }
+.epoch-custom-row input { padding: 4px 7px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: monospace; }
+.epoch-custom-row input:focus { outline: none; border-color: var(--accent); }
+.epoch-custom-key { width: 110px; }
+.epoch-custom-val { flex: 1; }
+.epoch-hint { font-size: 11px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+/* Target definition */
+.task-td-section { margin-bottom: 10px; }
+.task-td-section > label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); display: block; margin-bottom: 6px; }
+.td-table { border-collapse: collapse; width: 100%; font-size: 12px; margin-bottom: 4px; }
+.td-table th { background: #f8fafc; font-weight: 600; text-align: left; padding: 5px 7px; border: 1px solid var(--border); font-size: 11px; }
+.td-table td { padding: 3px; border: 1px solid var(--border); }
+.td-table td input { width: 100%; border: none; background: transparent; font-size: 12px; padding: 3px 4px; font-family: inherit; }
+.td-table td input:focus { outline: 1px solid var(--accent); border-radius: 3px; }
+.td-table tr:hover td { background: #f9fafb; }
+.misc-channel-wrap { display: flex; flex-direction: column; gap: 6px; }
+.misc-channel-wrap input { padding: 6px 8px; border: 1px solid var(--border); border-radius: 5px; font-size: 12px; font-family: monospace; }
+.misc-channel-wrap input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+.misc-warning { background: #fef3c7; border: 1px solid #f59e0b; border-radius: 5px; padding: 6px 10px; font-size: 11px; color: #92400e; }
+.task-text-field { margin-bottom: 10px; }
+.task-text-field > label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); display: block; margin-bottom: 6px; }
+.add-task-row { display: flex; gap: 8px; margin-bottom: 16px; }
+
+/* Modals */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 100; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
 #modal { background: #fff; border-radius: 10px; padding: 24px; width: 420px; max-width: 90vw; }
 #modal h2 { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
 #modal .form-group { margin-bottom: 14px; }
 #modal .form-group label { font-size: 12px; font-weight: 600; color: var(--muted); display: block; margin-bottom: 5px; }
 #modal .form-group input { width: 100%; }
 #modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+
+/* Error modal */
+#err-modal { background: #fff; border-radius: 10px; padding: 24px; width: 480px; max-width: 90vw; }
+#err-modal h2 { font-size: 14px; font-weight: 700; color: #991b1b; margin-bottom: 12px; }
+#err-modal ul { padding-left: 18px; margin-bottom: 14px; }
+#err-modal li { font-size: 13px; margin-bottom: 4px; }
+#err-modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+/* Preview modal */
+#preview-modal { background: #fff; border-radius: 10px; padding: 0; width: 860px; max-width: 96vw; max-height: 92vh; display: flex; flex-direction: column; }
+#preview-modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+#preview-modal-header h2 { font-size: 15px; font-weight: 700; flex: 1; }
+#preview-modal-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
+#preview-modal-footer { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
+#preview-markdown { font-size: 13px; line-height: 1.7; }
+#preview-markdown h1 { font-size: 18px; margin-bottom: 10px; }
+#preview-markdown h2 { font-size: 15px; font-weight: 700; margin: 16px 0 8px; padding-bottom: 4px; border-bottom: 2px solid var(--border); }
+#preview-markdown h3 { font-size: 13px; font-weight: 700; margin: 12px 0 6px; }
+#preview-markdown ul, #preview-markdown ol { padding-left: 20px; margin: 6px 0; }
+#preview-markdown li { margin-bottom: 3px; }
+#preview-markdown table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+#preview-markdown th, #preview-markdown td { border: 1px solid var(--border); padding: 5px 8px; font-size: 12px; }
+#preview-markdown code { background: #f3f4f6; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: monospace; }
+#preview-markdown blockquote { border-left: 3px solid var(--border); padding-left: 10px; color: var(--muted); margin: 8px 0; }
 </style>
 </head>
 <body>
@@ -194,11 +320,10 @@ table.event-table tr:hover td { background: #f9fafb; }
   <h1>EEG Audit Tool</h1>
   <div class="spacer"></div>
   <span id="save-status"></span>
-  <button id="btn-settings" onclick="openSettings()">⚙ Settings</button>
+  <button id="btn-settings" onclick="openSettings()">&#9881; Settings</button>
 </div>
 
 <div id="layout">
-  <!-- Left sidebar -->
   <div id="sidebar">
     <div id="sidebar-head">
       <label>Filter by Category</label>
@@ -209,54 +334,49 @@ table.event-table tr:hover td { background: #f9fafb; }
     <div id="dataset-list"></div>
   </div>
 
-  <!-- Main -->
   <div id="main">
     <div id="step-bar">
-      <button class="step-btn active" id="step-btn-0" onclick="goStep(0)"><span class="step-num">1</span> Meta</button>
+      <button class="step-btn active" id="step-btn-0" onclick="goStep(0)"><span class="step-num">1</span> Meta-Paradigm</button>
       <span class="step-sep">›</span>
-      <button class="step-btn" id="step-btn-1" onclick="goStep(1)"><span class="step-num">2</span> Paradigm</button>
+      <button class="step-btn" id="step-btn-1" onclick="goStep(1)"><span class="step-num">2</span> File Scan &amp; Tasks</button>
       <span class="step-sep">›</span>
-      <button class="step-btn" id="step-btn-2" onclick="goStep(2)"><span class="step-num">3</span> File Scan</button>
-      <span class="step-sep">›</span>
-      <button class="step-btn" id="step-btn-3" onclick="goStep(3)"><span class="step-num">4</span> Tasks</button>
-      <span class="step-sep">›</span>
-      <button class="step-btn" id="step-btn-4" onclick="goStep(4)"><span class="step-num">5</span> DQN</button>
-      <span class="step-sep">›</span>
-      <button class="step-btn" id="step-btn-5" onclick="goStep(5)"><span class="step-num">6</span> Kernel</button>
+      <button class="step-btn" id="step-btn-2" onclick="goStep(2)"><span class="step-num">3</span> DQN &amp; Kernel</button>
     </div>
-
     <div id="step-content">
-      <div id="no-dataset">← Select a dataset to start reviewing</div>
+      <div id="no-dataset">&#8592; Select a dataset to start reviewing</div>
     </div>
-
     <div id="action-bar" style="display:none">
       <span id="ds-title"></span>
-      <div class="spacer" style="flex:1"></div>
-      <button class="btn btn-secondary" id="btn-prev" onclick="prevStep()" disabled>← Prev</button>
-      <button class="btn btn-secondary" id="btn-next" onclick="nextStep()">Next →</button>
-      <button class="btn btn-success" onclick="saveFile()">💾 Save File</button>
+      <div class="spacer"></div>
+      <button class="btn btn-secondary" id="btn-prev" onclick="prevStep()" disabled>&#8592; Prev</button>
+      <button class="btn btn-secondary" id="btn-next" onclick="nextStep()">Next &#8594;</button>
+      <button class="btn btn-warning" id="btn-preview" onclick="confirmAndPreview()" style="display:none">&#128065; Confirm &amp; Preview</button>
+      <button class="btn btn-success" id="btn-save" onclick="saveFile()">&#128190; Save File</button>
     </div>
   </div>
 
-  <!-- Right panel -->
   <div id="right">
     <div id="right-tabs">
-      <button class="rtab active" id="rtab-rulebook" onclick="switchRightTab('rulebook')">Rulebook</button>
+      <button class="rtab active" id="rtab-guide" onclick="switchRightTab('guide')">Step Guide</button>
+      <button class="rtab" id="rtab-rulebook" onclick="switchRightTab('rulebook')">Rulebook</button>
       <button class="rtab" id="rtab-chat" onclick="switchRightTab('chat')">LLM Chat</button>
     </div>
     <div id="right-body">
-      <div id="pane-rulebook" class="visible">
+      <div id="pane-guide" class="visible">
+        <div id="guide-content"><p style="color:var(--muted);font-size:12px;padding:12px">Select a dataset to begin.</p></div>
+      </div>
+      <div id="pane-rulebook">
         <div id="rulebook-search">
           <input type="text" id="rb-search" placeholder="Search rulebook..." oninput="filterRulebook()">
         </div>
-        <div id="rulebook-content">Loading rulebook…</div>
+        <div id="rulebook-content">Loading rulebook&#8230;</div>
       </div>
       <div id="pane-chat">
         <div id="chat-messages"></div>
         <div id="chat-input-area">
           <div id="chat-context-label">Context: current dataset + step</div>
-          <textarea id="chat-input" placeholder="Ask about this dataset or rules…" onkeydown="chatKeydown(event)"></textarea>
-          <button class="btn btn-primary btn-sm" id="chat-send" style="width:100%;margin-top:6px" onclick="sendChat()">Send</button>
+          <textarea id="chat-input" placeholder="Ask about this dataset or rules&#8230;" onkeydown="chatKeydown(event)"></textarea>
+          <button class="btn btn-primary" style="width:100%;margin-top:6px" onclick="sendChat()">Send</button>
         </div>
       </div>
     </div>
@@ -264,21 +384,12 @@ table.event-table tr:hover td { background: #f9fafb; }
 </div>
 
 <!-- Settings modal -->
-<div id="modal-overlay">
+<div id="modal-overlay" class="modal-overlay">
   <div id="modal">
     <h2>LLM Settings</h2>
-    <div class="form-group">
-      <label>API Base URL (OpenAI-compatible)</label>
-      <input type="text" id="cfg-url" placeholder="https://api.openai.com/v1">
-    </div>
-    <div class="form-group">
-      <label>API Key</label>
-      <input type="password" id="cfg-key" placeholder="sk-...">
-    </div>
-    <div class="form-group">
-      <label>Model</label>
-      <input type="text" id="cfg-model" placeholder="gpt-4o">
-    </div>
+    <div class="form-group"><label>API Base URL</label><input type="text" id="cfg-url" placeholder="https://api.openai.com/v1"></div>
+    <div class="form-group"><label>API Key</label><input type="password" id="cfg-key" placeholder="sk-..."></div>
+    <div class="form-group"><label>Model</label><input type="text" id="cfg-model" placeholder="gpt-4o"></div>
     <div id="modal-actions">
       <button class="btn btn-secondary" onclick="closeSettings()">Cancel</button>
       <button class="btn btn-primary" onclick="saveSettings()">Save</button>
@@ -286,7 +397,128 @@ table.event-table tr:hover td { background: #f9fafb; }
   </div>
 </div>
 
+<!-- Error modal -->
+<div id="err-modal-overlay" class="modal-overlay">
+  <div id="err-modal">
+    <h2>&#9888; Document Structural Errors</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px">This document cannot be audited until structural errors are fixed. Edit the raw <code>analysis.md</code> directly.</p>
+    <ul id="err-modal-list"></ul>
+    <div id="err-modal-actions">
+      <button class="btn btn-secondary" onclick="closeErrModal()">Close</button>
+      <button class="btn btn-primary" onclick="viewRawContent()">View Raw</button>
+    </div>
+  </div>
+</div>
+
+<!-- Preview modal -->
+<div id="preview-modal-overlay" class="modal-overlay">
+  <div id="preview-modal">
+    <div id="preview-modal-header">
+      <h2>&#128065; Document Preview</h2>
+      <button class="btn btn-secondary" onclick="closePreview()">Close</button>
+      <button class="btn btn-success" onclick="saveFromPreview()">&#128190; Save File</button>
+    </div>
+    <div id="preview-modal-body">
+      <div id="preview-markdown"></div>
+    </div>
+  </div>
+</div>
+
 <script>
+// ─── Constants ────────────────────────────────────────────────────────────────
+const STEP_LABELS = ['Meta-Paradigm', 'File Scan & Tasks', 'DQN & Kernel'];
+
+const STEP_RULEBOOK_HINTS = [
+  '第22条 Dataset, 第25条 Category, 第30条 Manual Review, 第31条 Paradigm',
+  '第七章 File Scan, Event Structure, MISC, Info, 第九章 Tasks, Label Route, Target',
+  '第十一章 Data Quality, 第37条 Super Meta Required, 第42条 Status',
+];
+
+const VALID_CATEGORIES = ['Complex Applied','High-level Mental','Action/Output','Sensory/Response','Biological State','Others'];
+const EPOCH_METHODS = ['epoch_by_event_hdf5','epoch_by_long_event_hdf5','epoch_by_segmentation_hdf5'];
+const LABEL_ROUTES = ['event','misc','info'];
+const REQUIRED_SECTIONS = ['Paradigm','File Scan Result','Tasks','Data Quality Notes','Kernel Responsibilities'];
+const FORBIDDEN_SECTIONS = ['STIM Label Summary'];
+
+// Step guide content (flat items per step, sections for grouping)
+const STEP_GUIDE = [
+  {
+    title: 'Step 1: Meta-Paradigm',
+    sections: [
+      {
+        heading: 'Meta Fields',
+        items: [
+          { key: 's0-0', text: 'Verify <strong>Year</strong> — cross-check with official source or paper. Use <code>/</code> for multiple years.' },
+          { key: 's0-1', text: 'Verify <strong>URL</strong> — accessible, points to data info page (not a raw file download).' },
+          { key: 's0-2', text: 'Verify <strong>Category</strong> — must be one of 6 valid values. Correct only if clearly wrong.' },
+          { key: 's0-3', text: 'Verify <strong>Subjects</strong> — use actual usable count, not the advertised number. Note discrepancies in DQN.' },
+          { key: 's0-4', text: 'Verify <strong>Files (Completed)</strong> — do not edit manually. If incorrect, flag for kernel re-scan.' },
+          { key: 's0-5', text: 'Verify <strong>Channels</strong> — matches data files. Use <code>Variable</code> if complex.' },
+          { key: 's0-6', text: 'Verify <strong>Sampling Rate</strong> — matches data. Use <code>Variable</code> if differs across files.' },
+          { key: 's0-7', text: 'Add your name to <strong>Manual Review</strong> (append only).' },
+        ]
+      },
+      {
+        heading: 'Paradigm',
+        items: [
+          { key: 's0-8', text: 'Read the paradigm description in full.' },
+          { key: 's0-9', text: 'Check consistency with data directory and file structure.' },
+          { key: 's0-10', text: 'Cross-check with official dataset page or README.' },
+          { key: 's0-11', text: 'Cross-check with referenced papers — do not over-infer from experimental goals.' },
+          { key: 's0-12', text: 'Verify: paradigm does not claim tasks unsupported by actual labels in the data.' },
+        ]
+      }
+    ]
+  },
+  {
+    title: 'Step 2: File Scan & Tasks',
+    sections: [
+      {
+        heading: 'File Scan',
+        items: [
+          { key: 's1-0', text: '<strong>Kernel Fingerprint</strong> — read-only. <code>N/A</code> means no kernel yet; plan accordingly.' },
+          { key: 's1-1', text: '<strong>Event Structure</strong> — review each row: Type (event/admin) correct? Meta Level (raw/super) correct? Counts plausible?' },
+          { key: 's1-2', text: '<strong>MISC Label Summary</strong> — verify MISC channel names match actual data channel names.' },
+          { key: 's1-3', text: '<strong>Info</strong> — mark completeness honestly; missing subject/device info may affect task validity.' },
+        ]
+      },
+      {
+        heading: 'Tasks (check each task)',
+        items: [
+          { key: 's1-4', text: 'Verify <strong>Task Type</strong>: <code>classification</code> or <code>regression</code>.' },
+          { key: 's1-5', text: 'Verify <strong>Epoch Method</strong> matches the paradigm (event-locked vs. segmentation).' },
+          { key: 's1-6', text: 'Verify <strong>target_events</strong> all exist in the Event Structure table.' },
+          { key: 's1-7', text: 'Verify <strong>Label Route</strong> is correct (<code>event</code> / <code>misc</code> / <code>info</code>).' },
+          { key: 's1-8', text: 'Verify <strong>Target Definition</strong> is complete and consistent with Label Route.' },
+          { key: 's1-9', text: 'Review <strong>Evidence</strong>: references are relevant and credible?' },
+          { key: 's1-10', text: 'For <strong>Potential Tasks</strong>: verify they are genuinely uncertain, not confirmed Classical tasks.' },
+        ]
+      }
+    ]
+  },
+  {
+    title: 'Step 3: DQN & Kernel',
+    sections: [
+      {
+        heading: 'Data Quality Notes',
+        items: [
+          { key: 's2-0', text: 'All known data quality issues are documented (class imbalance, missing labels, corrupted files).' },
+          { key: 's2-1', text: 'Conflicts between official description and actual data are noted.' },
+          { key: 's2-2', text: 'No invented issues — only document what is actually observed.' },
+        ]
+      },
+      {
+        heading: 'Kernel Responsibilities',
+        items: [
+          { key: 's2-3', text: '<strong>Super Meta Required</strong> set correctly — <code>Yes</code> if any task has Meta Level = super.' },
+          { key: 's2-4', text: '<strong>Status</strong> set correctly — use the criteria in the hint text below the field.' },
+          { key: 's2-5', text: 'Document is sufficient for kernel implementation (events, label routes, companion files described).' },
+        ]
+      }
+    ]
+  }
+];
+
 // ─── State ────────────────────────────────────────────────────────────────────
 let allDatasets = [];
 let currentDataset = null;
@@ -295,20 +527,15 @@ let currentStep = 0;
 let rulebookRaw = '';
 let llmHistory = [];
 let dirty = false;
-
-const STEP_LABELS = ['Meta', 'Paradigm', 'File Scan Result', 'Tasks', 'DQN', 'Kernel'];
-const STEP_RULEBOOK_HINTS = [
-  '第30条, Category, Meta, Manual Review',
-  '第31条, Paradigm',
-  '第七章, 第八章, Event Structure, File Scan Result, Info, MISC',
-  '第九章, 第十章, Tasks, Classical Task, Potential Task, Label Route, Target',
-  '第十一章, Data Quality',
-  '第十二章, Kernel Responsibilities, Super Meta, Status',
-];
+let currentTasks = [];
+let pendingErrDataset = null;
+let guideChecks = {};   // key → boolean
+let previewSeen = false;
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 async function init() {
   await Promise.all([loadDatasets(), loadRulebook(), loadConfig()]);
+  validateAllDatasets();
 }
 
 async function loadDatasets() {
@@ -317,7 +544,19 @@ async function loadDatasets() {
     allDatasets = await r.json();
     populateCategoryFilter();
     renderDatasetList();
-  } catch(e) { console.error(e); }
+  } catch(e) {}
+}
+
+async function validateAllDatasets() {
+  for (const ds of allDatasets) {
+    try {
+      const r = await fetch(`/api/dataset/${encodeURIComponent(ds.name)}`);
+      const d = await r.json();
+      const errors = validateDocument(d.content);
+      if (errors.length) { ds._errors = errors; renderDatasetList(); }
+    } catch(e) {}
+    await new Promise(res => setTimeout(res, 80));
+  }
 }
 
 async function loadRulebook() {
@@ -339,16 +578,31 @@ async function loadConfig() {
   } catch(e) {}
 }
 
+// ─── Document Validation ──────────────────────────────────────────────────────
+function validateDocument(raw) {
+  const errors = [];
+  REQUIRED_SECTIONS.forEach(sec => {
+    if (!new RegExp(`\\n## ${escRe(sec)}\\s*(\\n|$)`).test('\n' + raw))
+      errors.push(`Missing required section: ## ${sec}`);
+  });
+  const allSecs = [...raw.matchAll(/\n## ([^\n]+)/g)].map(m => m[1].trim());
+  FORBIDDEN_SECTIONS.forEach(f => {
+    if (allSecs.some(s => s.includes(f)))
+      errors.push(`Forbidden/deprecated section: ## ${allSecs.find(s => s.includes(f))}`);
+  });
+  allSecs.forEach(sec => {
+    if (!REQUIRED_SECTIONS.includes(sec) && !FORBIDDEN_SECTIONS.some(f => sec.includes(f)))
+      errors.push(`Unexpected section: ## ${sec}`);
+  });
+  return errors;
+}
+
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 function populateCategoryFilter() {
   const cats = [...new Set(allDatasets.map(d => d.category))].sort();
   const sel = document.getElementById('filter-category');
   sel.innerHTML = '<option value="">All Categories</option>';
-  cats.forEach(c => {
-    const o = document.createElement('option');
-    o.value = c; o.textContent = c;
-    sel.appendChild(o);
-  });
+  cats.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; sel.appendChild(o); });
 }
 
 function renderDatasetList() {
@@ -357,620 +611,958 @@ function renderDatasetList() {
   const list = document.getElementById('dataset-list');
   list.innerHTML = '';
   filtered.forEach(d => {
+    const hasErr = d._errors && d._errors.length > 0;
     const div = document.createElement('div');
-    div.className = 'ds-item' + (currentDataset === d.name ? ' active' : '');
-    div.onclick = () => selectDataset(d.name);
-    div.innerHTML = `<div class="ds-name">${d.name}</div>
-      <div class="ds-meta">
-        <span class="ds-cat">${d.category}</span>
-        <span class="badge ${statusBadgeClass(d.status)}">${d.status}</span>
-      </div>`;
+    div.className = 'ds-item' + (currentDataset === d.name ? ' active' : '') + (hasErr ? ' ds-error' : '');
+    div.onclick = () => hasErr ? showErrModal(d) : selectDataset(d.name);
+    div.innerHTML = `<div class="ds-name">${esc(d.name)}</div>
+      <div class="ds-meta"><span class="ds-cat">${esc(d.category)}</span>
+      <span class="badge ${hasErr ? 'badge-rev' : statusBadgeClass(d.status)}">${hasErr ? 'error' : esc(d.status)}</span></div>`;
     list.appendChild(div);
   });
 }
 
 function statusBadgeClass(s) {
   if (!s || s === 'unknown') return 'badge-other';
+  if (s === 'wait_kernel_update') return 'badge-wait';
+  if (s === 'wait_manual_review') return 'badge-review';
+  if (s === 'completed') return 'badge-done';
   if (s.includes('wait')) return 'badge-wait';
   if (s.includes('review')) return 'badge-review';
-  if (s === 'reviewed') return 'badge-done';
-  if (s.includes('revis') || s.includes('error')) return 'badge-rev';
   return 'badge-other';
 }
 
+function showErrModal(ds) {
+  pendingErrDataset = ds.name;
+  document.getElementById('err-modal-list').innerHTML = ds._errors.map(e => `<li>${esc(e)}</li>`).join('');
+  document.getElementById('err-modal-overlay').classList.add('open');
+}
+function closeErrModal() { document.getElementById('err-modal-overlay').classList.remove('open'); pendingErrDataset = null; }
+async function viewRawContent() {
+  if (!pendingErrDataset) return;
+  closeErrModal();
+  try {
+    const r = await fetch(`/api/dataset/${encodeURIComponent(pendingErrDataset)}`);
+    const d = await r.json();
+    document.getElementById('action-bar').style.display = 'none';
+    const ds = allDatasets.find(x => x.name === pendingErrDataset);
+    document.getElementById('step-content').innerHTML = `
+      <div class="doc-error-banner"><h3>&#9888; Document has structural errors — read-only</h3>
+        <ul>${ds?._errors?.map(e=>`<li>${esc(e)}</li>`).join('')||''}</ul></div>
+      <textarea class="full-textarea" style="min-height:500px" readonly>${esc(d.content)}</textarea>`;
+  } catch(e) {}
+}
+document.getElementById('err-modal-overlay').onclick = function(e) { if (e.target===this) closeErrModal(); };
+
 async function selectDataset(name) {
   if (dirty && !confirm('Unsaved changes — discard and switch?')) return;
-  currentDataset = name;
-  dirty = false;
-  currentStep = 0;
+  currentDataset = name; dirty = false; currentStep = 0; previewSeen = false;
   try {
     const r = await fetch(`/api/dataset/${encodeURIComponent(name)}`);
     const d = await r.json();
     rawContent = d.content;
   } catch(e) { alert('Failed to load dataset'); return; }
+  const errors = validateDocument(rawContent);
+  const ds = allDatasets.find(d => d.name === name);
+  if (ds) ds._errors = errors.length ? errors : undefined;
   renderDatasetList();
+  if (errors.length) { showErrModal(ds || { name, _errors: errors }); return; }
+  llmHistory = [];
   document.getElementById('action-bar').style.display = 'flex';
   document.getElementById('ds-title').textContent = name;
   renderStep(0);
   updateStepBar();
 }
 
-// ─── Step navigation ──────────────────────────────────────────────────────────
-function goStep(idx) {
-  collectStep(currentStep);
-  currentStep = idx;
-  renderStep(idx);
-  updateStepBar();
-}
-
-function prevStep() {
-  if (currentStep === 0) return;
-  collectStep(currentStep);
-  currentStep--;
-  renderStep(currentStep);
-  updateStepBar();
-}
-
-function nextStep() {
-  if (currentStep === 5) return;
-  collectStep(currentStep);
-  currentStep++;
-  renderStep(currentStep);
-  updateStepBar();
-}
+// ─── Step Navigation ──────────────────────────────────────────────────────────
+function goStep(idx) { collectStep(currentStep); currentStep = idx; renderStep(idx); updateStepBar(); }
+function prevStep() { if (currentStep===0) return; collectStep(currentStep); currentStep--; renderStep(currentStep); updateStepBar(); }
+function nextStep() { if (currentStep===2) return; collectStep(currentStep); currentStep++; renderStep(currentStep); updateStepBar(); }
 
 function updateStepBar() {
-  for (let i = 0; i < 6; i++) {
+  for (let i=0;i<3;i++) {
     const btn = document.getElementById(`step-btn-${i}`);
-    btn.classList.toggle('active', i === currentStep);
+    btn.classList.toggle('active', i===currentStep);
   }
-  document.getElementById('btn-prev').disabled = currentStep === 0;
-  document.getElementById('btn-next').disabled = currentStep === 5;
-  renderRulebook();
+  document.getElementById('btn-prev').disabled = currentStep===0;
+  document.getElementById('btn-next').disabled = currentStep===2;
+  document.getElementById('btn-preview').style.display = currentStep===2 ? '' : 'none';
+  renderRulebook(); renderStepGuide();
   document.getElementById('chat-context-label').textContent =
-    `Context: ${currentDataset} — step ${currentStep + 1}: ${STEP_LABELS[currentStep]}`;
+    `Context: ${currentDataset} — step ${currentStep+1}: ${STEP_LABELS[currentStep]}`;
 }
 
-// ─── Section parsing helpers ──────────────────────────────────────────────────
+// ─── Parsing Helpers ──────────────────────────────────────────────────────────
 function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
-
-function getSection(raw, heading) {
-  const re = new RegExp(`\\n## ${escRe(heading)}\\b([\\s\\S]*?)(?=\\n## |$)`);
-  const m = raw.match(re);
-  return m ? m[1].trim() : '';
+function getSection(raw, h) {
+  const re = new RegExp(`\\n## ${escRe(h)}\\s*\\n([\\s\\S]*?)(?=\\n## |$)`);
+  const m = raw.match(re); return m ? m[1].trim() : '';
 }
-
-function replaceSection(raw, heading, newBody) {
-  const re = new RegExp(`(\\n## ${escRe(heading)}\\b)[\\s\\S]*?(?=\\n## |$)`);
-  const replacement = `\n## ${heading}\n\n${newBody}\n`;
-  if (re.test(raw)) return raw.replace(re, replacement);
-  return raw.trimEnd() + `\n\n## ${heading}\n\n${newBody}\n`;
+function replaceSection(raw, h, body) {
+  const re = new RegExp(`(\\n## ${escRe(h)}\\s*\\n)[\\s\\S]*?(?=\\n## |$)`);
+  const rep = `\n## ${h}\n\n${body}\n`;
+  return re.test(raw) ? raw.replace(re, rep) : raw.trimEnd() + `\n\n## ${h}\n\n${body}\n`;
 }
-
-function getSubSection(sectionBody, heading) {
-  const re = new RegExp(`###\\s+${escRe(heading)}\\b([\\s\\S]*?)(?=\\n### |$)`);
-  const m = sectionBody.match(re);
-  return m ? m[1].trim() : '';
+function getSubSection(body, h) {
+  const re = new RegExp(`###\\s+${escRe(h)}\\s*\\n([\\s\\S]*?)(?=\\n### |$)`);
+  const m = body.match(re); return m ? m[1].trim() : '';
 }
-
-// Parse meta line: **Dataset**: `name` | **Year**: 2020 | ...
 function parseMeta(raw) {
-  const fields = {};
-  const metaLineM = raw.match(/\*\*Dataset\*\*[^\n]+/);
-  if (metaLineM) {
-    const line = metaLineM[0];
-    const pairs = line.split('|');
-    pairs.forEach(p => {
-      const m = p.match(/\*\*([^*]+)\*\*:\s*`?([^`|*\n]+)`?/);
-      if (m) fields[m[1].trim()] = m[2].trim();
-    });
-  }
-  // Second meta line
-  const metaLine2 = raw.match(/\*\*Category\*\*[^\n]+/);
-  if (metaLine2) {
-    metaLine2[0].split('|').forEach(p => {
-      const m = p.match(/\*\*([^*]+)\*\*:\s*`?([^`|*\n]+)`?/);
-      if (m) fields[m[1].trim()] = m[2].trim();
-    });
-  }
-  const titleM = raw.match(/^#\s+(.+)/m);
-  fields['_title'] = titleM ? titleM[1].trim() : '';
-  const mrM = raw.match(/\*\*Manual Review\*\*:\s*([^\n]+)/);
-  fields['_manualReview'] = mrM ? mrM[1].trim() : '';
-  return fields;
+  const f = {};
+  const l1 = raw.match(/\*\*Dataset\*\*[^\n]+/);
+  if (l1) l1[0].split('|').forEach(p => { const m=p.match(/\*\*([^*]+)\*\*:\s*`?([^`|*\n]+)`?/); if(m) f[m[1].trim()]=m[2].trim(); });
+  const l2 = raw.match(/\*\*Category\*\*[^\n]+/);
+  if (l2) l2[0].split('|').forEach(p => { const m=p.match(/\*\*([^*]+)\*\*:\s*`?([^`|*\n]+)`?/); if(m) f[m[1].trim()]=m[2].trim(); });
+  const tm = raw.match(/^#\s+(.+)/m); f['_title'] = tm ? tm[1].trim() : '';
+  const mrm = raw.match(/\*\*Manual Review\*\*:\s*([^\n]+)/); f['_manualReview'] = mrm ? mrm[1].trim() : '';
+  return f;
+}
+function serializeMeta(f) {
+  return `**Dataset**: \`${f['Dataset']||''}\` | **Year**: ${f['Year']||''} | **URL**: ${f['URL']||''}\n**Category**: ${f['Category']||''} | **Subjects**: ${f['Subjects']||''} | **Files (Completed)**: ${f['Files (Completed)']||''} | **Channels**: ${f['Channels']||''} | **Sampling Rate**: ${f['Sampling Rate']||''}`;
+}
+function parseMarkdownTable(text) {
+  const lines = text.split('\n').filter(l => l.trim().startsWith('|'));
+  if (lines.length < 2) return { headers:[], rows:[] };
+  const headers = lines[0].split('|').map(c=>c.trim()).filter(Boolean);
+  const rows = [];
+  for (let i=2;i<lines.length;i++) { const c=lines[i].split('|').map(c=>c.trim()).filter(Boolean); if(c.length) rows.push(c); }
+  return { headers, rows };
 }
 
-function serializeMeta(fields) {
-  const line1 = `**Dataset**: \`${fields['Dataset'] || ''}\` | **Year**: ${fields['Year'] || ''} | **URL**: ${fields['URL'] || ''}`;
-  const line2 = `**Category**: ${fields['Category'] || ''} | **Subjects**: ${fields['Subjects'] || ''} | **Files (Completed)**: ${fields['Files (Completed)'] || ''} | **Channels**: ${fields['Channels'] || ''} | **Sampling Rate**: ${fields['Sampling Rate'] || ''}`;
-  return line1 + '\n' + line2;
+// ─── Bullet List Helpers ──────────────────────────────────────────────────────
+function parseBullets(text) {
+  return text.split('\n').filter(l => l.trim().startsWith('-')).map(l => l.replace(/^-\s*/,'').trim()).filter(Boolean);
+}
+function buildBulletEditor(id, items) {
+  const rows = (items.length ? items : ['']).map((item,i) =>
+    `<div class="bullet-row" id="${id}-row-${i}">
+      <span class="bullet-dot">•</span>
+      <textarea class="bullet-input" rows="1" oninput="autoResize(this)">${esc(item)}</textarea>
+      <button class="bullet-del" onclick="delBullet('${id}',this)" title="Remove">×</button>
+    </div>`
+  ).join('');
+  return `<div class="bullet-list" id="${id}-list">${rows}</div>
+    <button class="btn-add-bullet" onclick="addBullet('${id}')">+ Add item</button>`;
+}
+function addBullet(id) {
+  const list = document.getElementById(`${id}-list`);
+  if (!list) return;
+  const idx = list.children.length;
+  const row = document.createElement('div');
+  row.className = 'bullet-row';
+  row.innerHTML = `<span class="bullet-dot">•</span>
+    <textarea class="bullet-input" rows="1" oninput="autoResize(this)"></textarea>
+    <button class="bullet-del" onclick="delBullet('${id}',this)" title="Remove">×</button>`;
+  list.appendChild(row);
+  row.querySelector('textarea').focus();
+}
+function delBullet(id, btn) { btn.closest('.bullet-row').remove(); }
+function collectBullets(id) {
+  const list = document.getElementById(`${id}-list`);
+  if (!list) return '';
+  return [...list.querySelectorAll('.bullet-input')].map(t=>t.value.trim()).filter(Boolean).map(t=>`- ${t}`).join('\n');
+}
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = (el.scrollHeight) + 'px';
 }
 
-// ─── Step renderers ───────────────────────────────────────────────────────────
+// ─── Evidence Helpers ─────────────────────────────────────────────────────────
+function parseEvidence(text) {
+  const items = [];
+  text.split('\n').forEach(line => {
+    const l = line.replace(/^\s*-\s*/,'').trim();
+    if (!l) return;
+    // Match "DOI: ref — desc" or "ref — desc"
+    const m = l.match(/^(?:DOI:\s*)?([^\s—–-][^—–]*?)\s*[—–-]{1,2}\s*(.+)$/);
+    if (m) items.push({ ref: m[1].trim(), desc: m[2].trim() });
+    else items.push({ ref: l, desc: '' });
+  });
+  return items;
+}
+function buildEvidenceEditor(id, items) {
+  const rows = (items.length ? items : [{ref:'',desc:''}]).map((item,i) =>
+    `<div class="evidence-row">
+      <span class="evidence-dot">•</span>
+      <input class="evidence-ref" type="text" value="${esc(item.ref)}" placeholder="DOI or reference ID">
+      <span class="evidence-sep">—</span>
+      <input class="evidence-desc" type="text" value="${esc(item.desc)}" placeholder="Description">
+      <button class="bullet-del" onclick="this.closest('.evidence-row').remove()" title="Remove">×</button>
+    </div>`
+  ).join('');
+  return `<div id="${id}-list">${rows}</div>
+    <button class="btn-add-bullet" onclick="addEvidenceRow('${id}')">+ Add reference</button>`;
+}
+function addEvidenceRow(id) {
+  const list = document.getElementById(`${id}-list`);
+  if (!list) return;
+  const row = document.createElement('div');
+  row.className = 'evidence-row';
+  row.innerHTML = `<span class="evidence-dot">•</span>
+    <input class="evidence-ref" type="text" value="" placeholder="DOI or reference ID">
+    <span class="evidence-sep">—</span>
+    <input class="evidence-desc" type="text" value="" placeholder="Description">
+    <button class="bullet-del" onclick="this.closest('.evidence-row').remove()" title="Remove">×</button>`;
+  list.appendChild(row);
+  row.querySelector('input').focus();
+}
+function collectEvidence(id) {
+  const list = document.getElementById(`${id}-list`);
+  if (!list) return '';
+  const lines = [];
+  list.querySelectorAll('.evidence-row').forEach(row => {
+    const ref = row.querySelector('.evidence-ref')?.value.trim() || '';
+    const desc = row.querySelector('.evidence-desc')?.value.trim() || '';
+    if (ref || desc) lines.push(`  - DOI: ${ref} — ${desc}`);
+  });
+  return lines.join('\n');
+}
+
+// ─── Epoch Params Helpers ─────────────────────────────────────────────────────
+function parseEpochParams(epLine, method) {
+  const get = (key) => {
+    const m = epLine.match(new RegExp(`${escRe(key)}\\s*=\\s*([^,*\\]\\n]+)`));
+    return m ? m[1].replace(/\s*s\s*$/, '').replace(/\*/g, '').trim() : '';
+  };
+  const result = { tmin:'', tmax:'', overlap:'', segment_length:'', custom:[] };
+  result.tmin = get('tmin');
+  result.tmax = get('tmax');
+  result.overlap = get('overlap');
+  result.segment_length = get('segment_length');
+  // Extract custom params: any key=value not in required set
+  const required = new Set(['tmin','tmax','overlap','segment_length','target_events']);
+  const allPairs = [...epLine.matchAll(/(\w+)\s*=\s*([^,\n\]]+)/g)];
+  allPairs.forEach(m => {
+    const k = m[1].trim();
+    if (!required.has(k)) result.custom.push({ key: k, val: m[2].replace(/\*/g,'').trim() });
+  });
+  return result;
+}
+
+function buildEpochParamsEditor(ep, method, idx) {
+  const isEvent = method === 'epoch_by_event_hdf5';
+  const isLong = method === 'epoch_by_long_event_hdf5';
+  const isSeg = method === 'epoch_by_segmentation_hdf5';
+  const customRows = (ep.custom || []).map((c,ci) =>
+    `<div class="epoch-custom-row">
+      <input class="epoch-custom-key" type="text" value="${esc(c.key)}" placeholder="param_name">
+      <span style="color:var(--muted);font-size:12px">=</span>
+      <input class="epoch-custom-val" type="text" value="${esc(c.val)}" placeholder="value">
+      <button class="bullet-del" onclick="this.closest('.epoch-custom-row').remove()">×</button>
+    </div>`
+  ).join('');
+
+  let requiredHtml = '';
+  if (isEvent || isLong) {
+    requiredHtml = `
+      <div class="epoch-field">
+        <label>tmin <span class="req-mark">*</span> <span class="unit">(s)</span></label>
+        <input type="text" class="ep-tmin" value="${esc(ep.tmin)}" placeholder="e.g. 0">
+      </div>
+      <div class="epoch-field">
+        <label>tmax <span class="req-mark">*</span> <span class="unit">(s)</span></label>
+        <input type="text" class="ep-tmax" value="${esc(ep.tmax)}" placeholder="e.g. 0.667">
+      </div>
+      ${isLong ? `<div class="epoch-field">
+        <label>overlap <span class="req-mark">*</span> <span class="unit">(0–1)</span></label>
+        <input type="text" class="ep-overlap" value="${esc(ep.overlap)}" placeholder="e.g. 0.5">
+      </div>` : ''}`;
+  } else if (isSeg) {
+    requiredHtml = `
+      <div class="epoch-field">
+        <label>segment_length <span class="req-mark">*</span> <span class="unit">(s)</span></label>
+        <input type="text" class="ep-seg-len" value="${esc(ep.segment_length)}" placeholder="e.g. 4">
+      </div>
+      <div class="epoch-field">
+        <label>overlap <span class="req-mark">*</span> <span class="unit">(0–1)</span></label>
+        <input type="text" class="ep-overlap" value="${esc(ep.overlap)}" placeholder="e.g. 0.5">
+      </div>`;
+  }
+
+  return `<div class="epoch-params-block" id="ep-block-${idx}">
+    <div class="epoch-params-title">Epoch Parameters <span class="req-mark" style="font-size:10px">* required</span></div>
+    <div class="epoch-required-row">${requiredHtml}</div>
+    <div class="epoch-custom-title">Optional parameters (key = value)</div>
+    <div class="epoch-custom-list" id="ep-custom-${idx}">${customRows}</div>
+    <button class="btn-add-bullet" onclick="addEpochCustom(${idx})" style="margin-top:4px">+ Add param</button>
+    <div class="epoch-hint">Params map to <code>epoch_params</code> / <code>segment_params</code> in EEGUnity. Refer to <code>epoch_by_*_hdf5</code> signatures for valid keys (e.g. <code>baseline</code>, <code>reject</code>, <code>picks</code>).</div>
+  </div>`;
+}
+
+function addEpochCustom(idx) {
+  const list = document.getElementById(`ep-custom-${idx}`);
+  if (!list) return;
+  const row = document.createElement('div');
+  row.className = 'epoch-custom-row';
+  row.innerHTML = `<input class="epoch-custom-key" type="text" value="" placeholder="param_name">
+    <span style="color:var(--muted);font-size:12px">=</span>
+    <input class="epoch-custom-val" type="text" value="" placeholder="value">
+    <button class="bullet-del" onclick="this.closest('.epoch-custom-row').remove()">×</button>`;
+  list.appendChild(row);
+  row.querySelector('input').focus();
+}
+
+function collectEpochParams(card, idx, method) {
+  const block = card.querySelector(`#ep-block-${idx}`);
+  if (!block) return '';
+  const isEvent = method === 'epoch_by_event_hdf5';
+  const isLong = method === 'epoch_by_long_event_hdf5';
+  const isSeg = method === 'epoch_by_segmentation_hdf5';
+  const parts = [];
+  if (isEvent || isLong) {
+    const tmin = block.querySelector('.ep-tmin')?.value.trim() || '';
+    const tmax = block.querySelector('.ep-tmax')?.value.trim() || '';
+    if (tmin) parts.push(`tmin = ${tmin} s`);
+    if (tmax) parts.push(`tmax = ${tmax} s`);
+    if (isLong) {
+      const overlap = block.querySelector('.ep-overlap')?.value.trim() || '';
+      if (overlap) parts.push(`overlap = ${overlap}`);
+    }
+  } else if (isSeg) {
+    const sl = block.querySelector('.ep-seg-len')?.value.trim() || '';
+    const ov = block.querySelector('.ep-overlap')?.value.trim() || '';
+    if (sl) parts.push(`segment_length = ${sl} s`);
+    if (ov) parts.push(`overlap = ${ov}`);
+  }
+  block.querySelectorAll(`#ep-custom-${idx} .epoch-custom-row`).forEach(row => {
+    const k = row.querySelector('.epoch-custom-key')?.value.trim();
+    const v = row.querySelector('.epoch-custom-val')?.value.trim();
+    if (k && v) parts.push(`${k} = ${v}`);
+  });
+  return parts.join(', ');
+}
+
+// ─── Step Dispatch ────────────────────────────────────────────────────────────
 function renderStep(idx) {
   if (!currentDataset) return;
-  const content = document.getElementById('step-content');
-  content.innerHTML = '';
-  if (idx === 0) renderMeta(content);
-  else if (idx === 1) renderParadigm(content);
-  else if (idx === 2) renderFileScan(content);
-  else if (idx === 3) renderTasks(content);
-  else if (idx === 4) renderDQN(content);
-  else if (idx === 5) renderKernel(content);
+  const c = document.getElementById('step-content');
+  c.innerHTML = '';
+  if (idx===0) renderMetaParadigm(c);
+  else if (idx===1) renderFileScanTasks(c);
+  else if (idx===2) renderDQNKernel(c);
 }
 
-// Step 1: Meta
-function renderMeta(content) {
+// ─── Step 0: Meta-Paradigm ────────────────────────────────────────────────────
+function renderMetaParadigm(content) {
   const meta = parseMeta(rawContent);
-  const CATEGORIES = [
-    'Action/Output','Perception/Stimulus','Mental State','Clinical/Patient',
-    'Resting State','Social Cognition','Affective','Other'
-  ];
-  const catOpts = CATEGORIES.map(c =>
-    `<option value="${c}" ${meta['Category'] === c ? 'selected' : ''}>${c}</option>`
-  ).join('');
+  const catOpts = VALID_CATEGORIES.map(c => `<option value="${esc(c)}" ${meta['Category']===c?'selected':''}>${esc(c)}</option>`).join('');
+  const catInvalid = meta['Category'] && !VALID_CATEGORIES.includes(meta['Category']);
+  const catInvalidOpt = catInvalid ? `<option value="${esc(meta['Category'])}" selected style="color:var(--red)">[INVALID] ${esc(meta['Category'])}</option>` : '';
+  const mr = meta['_manualReview'] || '';
+  const paradigmBody = getSection(rawContent, 'Paradigm');
+
   content.innerHTML = `
   <div class="card">
-    <div class="card-title">Dataset Header</div>
+    <div class="card-title">Meta Fields</div>
     <div class="form-row">
-      <div class="form-group" style="flex:2">
-        <label>Title</label>
-        <input id="m-title" value="${esc(meta['_title'])}">
-      </div>
+      <div class="form-group" style="flex:2"><label>Title</label><input id="m-title" value="${esc(meta['_title'])}"></div>
       <div class="form-group">
-        <label>Dataset ID</label>
-        <input id="m-dataset" value="${esc(meta['Dataset'] || '')}">
+        <label>Dataset ID <span style="color:var(--muted);font-size:10px">(read-only, admin only)</span></label>
+        <input id="m-dataset" value="${esc(meta['Dataset']||'')}" class="field-readonly" readonly tabindex="-1">
       </div>
     </div>
     <div class="form-row">
-      <div class="form-group">
-        <label>Year</label>
-        <input id="m-year" value="${esc(meta['Year'] || '')}">
-      </div>
-      <div class="form-group" style="flex:3">
-        <label>URL</label>
-        <input id="m-url" value="${esc(meta['URL'] || '')}">
-      </div>
+      <div class="form-group"><label>Year</label><input id="m-year" value="${esc(meta['Year']||'')}"></div>
+      <div class="form-group" style="flex:3"><label>URL</label><input id="m-url" value="${esc(meta['URL']||'')}"></div>
     </div>
     <div class="form-row">
       <div class="form-group">
         <label>Category</label>
-        <select id="m-category">${catOpts}<option value="${esc(meta['Category'] || '')}" selected>${esc(meta['Category'] || 'Unknown')}</option></select>
+        <select id="m-category">${catInvalidOpt}${catOpts}</select>
       </div>
-      <div class="form-group">
-        <label>Subjects</label>
-        <input id="m-subjects" value="${esc(meta['Subjects'] || '')}">
-      </div>
-      <div class="form-group">
-        <label>Files (Completed)</label>
-        <input id="m-files" value="${esc(meta['Files (Completed)'] || '')}">
-      </div>
+      <div class="form-group"><label>Subjects</label><input id="m-subjects" value="${esc(meta['Subjects']||'')}"></div>
+      <div class="form-group"><label>Files (Completed)</label><input id="m-files" value="${esc(meta['Files (Completed)']||'')}"></div>
     </div>
     <div class="form-row">
-      <div class="form-group">
-        <label>Channels</label>
-        <input id="m-channels" value="${esc(meta['Channels'] || '')}">
-      </div>
-      <div class="form-group">
-        <label>Sampling Rate</label>
-        <input id="m-sr" value="${esc(meta['Sampling Rate'] || '')}">
+      <div class="form-group"><label>Channels</label><input id="m-channels" value="${esc(meta['Channels']||'')}"></div>
+      <div class="form-group"><label>Sampling Rate</label><input id="m-sr" value="${esc(meta['Sampling Rate']||'')}"></div>
+    </div>
+    <div style="border-top:1px solid var(--border);padding-top:12px;margin-top:4px">
+      <div class="section-label">Manual Review</div>
+      <div class="mr-display ${mr?'':'empty'}" id="mr-display">${mr?`Reviewed by: <strong>${esc(mr)}</strong>`:'Not yet reviewed.'}</div>
+      <div class="mr-append-row">
+        <input id="m-mr-append" placeholder="Enter your name to append&#8230;">
+        <button class="btn btn-secondary" onclick="appendManualReview()" style="white-space:nowrap;flex-shrink:0">Append Name</button>
       </div>
     </div>
   </div>
   <div class="card">
-    <div class="card-title">Manual Review Notes</div>
-    <textarea class="full-textarea" id="m-manual-review" style="min-height:80px" placeholder="Enter review notes…">${esc(meta['_manualReview'])}</textarea>
+    <div class="card-title">Paradigm</div>
+    <div class="tab-strip">
+      <button class="tab-opt active" id="tab-para-edit" onclick="switchParaTab('edit')">Edit</button>
+      <button class="tab-opt" id="tab-para-preview" onclick="switchParaTab('preview')">Preview</button>
+    </div>
+    <div id="para-edit-area"><textarea class="full-textarea" id="para-body" style="min-height:260px">${esc(paradigmBody)}</textarea></div>
+    <div id="para-preview-area" style="display:none"><div class="preview-wrap" id="para-preview-html"></div></div>
   </div>`;
 }
 
-function collectMeta() {
-  const title = document.getElementById('m-title').value.trim();
-  const dataset = document.getElementById('m-dataset').value.trim();
-  const year = document.getElementById('m-year').value.trim();
-  const url = document.getElementById('m-url').value.trim();
-  const category = document.getElementById('m-category').value.trim();
-  const subjects = document.getElementById('m-subjects').value.trim();
-  const files = document.getElementById('m-files').value.trim();
-  const channels = document.getElementById('m-channels').value.trim();
-  const sr = document.getElementById('m-sr').value.trim();
-  const manualReview = document.getElementById('m-manual-review').value.trim();
-
-  const fields = { Dataset: dataset, Year: year, URL: url, Category: category,
-    Subjects: subjects, 'Files (Completed)': files, Channels: channels, 'Sampling Rate': sr };
-  const newMeta = serializeMeta(fields);
-  const newTitle = `# ${title}`;
-
-  // Replace title
-  rawContent = rawContent.replace(/^#\s+.+/m, newTitle);
-  // Replace meta lines (two consecutive lines starting with **)
-  rawContent = rawContent.replace(/\*\*Dataset\*\*[^\n]+\n\*\*Category\*\*[^\n]+/, newMeta);
-  // Handle Manual Review
-  if (manualReview) {
-    const mrRe = /\*\*Manual Review\*\*:\s*[^\n]+/;
-    if (mrRe.test(rawContent)) {
-      rawContent = rawContent.replace(mrRe, `**Manual Review**: ${manualReview}`);
-    } else {
-      // Insert after meta lines
-      rawContent = rawContent.replace(newMeta, newMeta + `\n**Manual Review**: ${manualReview}`);
-    }
+function appendManualReview() {
+  const name = document.getElementById('m-mr-append').value.trim();
+  if (!name) return;
+  const mrRe = /\*\*Manual Review\*\*:\s*([^\n]+)/;
+  const m = rawContent.match(mrRe);
+  if (m) {
+    const existing = m[1].trim();
+    rawContent = rawContent.replace(mrRe, `**Manual Review**: ${existing ? existing + ' / ' + name : name}`);
   } else {
-    rawContent = rawContent.replace(/\n?\*\*Manual Review\*\*:\s*[^\n]+/, '');
+    const cat2 = rawContent.match(/\*\*Category\*\*[^\n]*/);
+    if (cat2) rawContent = rawContent.replace(cat2[0], cat2[0] + `\n**Manual Review**: ${name}`);
   }
   dirty = true;
-}
-
-// Step 2: Paradigm
-function renderParadigm(content) {
-  const body = getSection(rawContent, 'Paradigm');
-  content.innerHTML = `
-  <div class="tab-strip">
-    <button class="tab-opt active" id="tab-para-edit" onclick="switchParaTab('edit')">Edit</button>
-    <button class="tab-opt" id="tab-para-preview" onclick="switchParaTab('preview')">Preview</button>
-  </div>
-  <div id="para-edit-area">
-    <textarea class="full-textarea" id="para-body" style="min-height:320px">${esc(body)}</textarea>
-  </div>
-  <div id="para-preview-area" style="display:none">
-    <div class="preview-wrap" id="para-preview-html"></div>
-  </div>`;
+  document.getElementById('m-mr-append').value = '';
+  const meta = parseMeta(rawContent);
+  const mr = meta['_manualReview'] || '';
+  const disp = document.getElementById('mr-display');
+  if (disp) { disp.className = 'mr-display' + (mr?'':' empty'); disp.innerHTML = mr ? `Reviewed by: <strong>${esc(mr)}</strong>` : 'Not yet reviewed.'; }
 }
 
 function switchParaTab(mode) {
-  document.getElementById('tab-para-edit').classList.toggle('active', mode === 'edit');
-  document.getElementById('tab-para-preview').classList.toggle('active', mode === 'preview');
-  document.getElementById('para-edit-area').style.display = mode === 'edit' ? '' : 'none';
-  document.getElementById('para-preview-area').style.display = mode === 'preview' ? '' : 'none';
-  if (mode === 'preview') {
-    document.getElementById('para-preview-html').innerHTML =
-      marked.parse(document.getElementById('para-body').value);
-  }
+  document.getElementById('tab-para-edit').classList.toggle('active', mode==='edit');
+  document.getElementById('tab-para-preview').classList.toggle('active', mode==='preview');
+  document.getElementById('para-edit-area').style.display = mode==='edit' ? '' : 'none';
+  document.getElementById('para-preview-area').style.display = mode==='preview' ? '' : 'none';
+  if (mode==='preview') document.getElementById('para-preview-html').innerHTML = marked.parse(document.getElementById('para-body').value);
 }
 
-function collectParadigm() {
-  const body = document.getElementById('para-body').value;
-  rawContent = replaceSection(rawContent, 'Paradigm', body);
+function collectMetaParadigm() {
+  const title = document.getElementById('m-title')?.value.trim()||'';
+  const meta = parseMeta(rawContent);
+  const fields = { Dataset: meta['Dataset']||'', Year: document.getElementById('m-year')?.value.trim()||'',
+    URL: document.getElementById('m-url')?.value.trim()||'', Category: document.getElementById('m-category')?.value.trim()||'',
+    Subjects: document.getElementById('m-subjects')?.value.trim()||'', 'Files (Completed)': document.getElementById('m-files')?.value.trim()||'',
+    Channels: document.getElementById('m-channels')?.value.trim()||'', 'Sampling Rate': document.getElementById('m-sr')?.value.trim()||'' };
+  const newMeta = serializeMeta(fields);
+  if (title) rawContent = rawContent.replace(/^#\s+.+/m, `# ${title}`);
+  rawContent = rawContent.replace(/\*\*Dataset\*\*[^\n]+\n\*\*Category\*\*[^\n]+/, newMeta);
+  rawContent = replaceSection(rawContent, 'Paradigm', document.getElementById('para-body')?.value||'');
   dirty = true;
 }
 
-// Step 3: File Scan Result
-function renderFileScan(content) {
+// ─── Step 1: File Scan & Tasks ────────────────────────────────────────────────
+function renderFileScanTasks(content) {
   const fsrBody = getSection(rawContent, 'File Scan Result');
-
-  // Kernel blockquote
   const kernelM = fsrBody.match(/>\s*\*\*Kernel\*\*:\s*(.+)/);
   const sha256M = fsrBody.match(/>\s*\*\*SHA256\*\*:\s*(.+)/);
-  const kernelStr = kernelM ? kernelM[1].trim() : 'N/A';
-  const sha256Str = sha256M ? sha256M[1].trim() : 'N/A';
-
-  // Event Structure
   const esBody = getSubSection(fsrBody, 'Event Structure');
-  const esTableHtml = buildEventTableEditor(esBody);
-
-  // MISC
-  const miscBody = getSubSection(fsrBody, 'MISC Label Summary');
-
-  // Info
-  const infoBody = getSubSection(fsrBody, 'Info');
-  const infoTableHtml = buildInfoTableEditor(infoBody);
-
-  // Notes under ES (blockquote after the table)
   const esNoteM = esBody.match(/\n>([\s\S]+)$/);
-  const esNote = esNoteM ? esNoteM[1].replace(/^>\s?/gm, '').trim() : '';
+  const esNote = esNoteM ? esNoteM[1].replace(/^>\s?/gm,'').trim() : '';
+  const miscBody = getSubSection(fsrBody, 'MISC Label Summary');
+  const infoBody = getSubSection(fsrBody, 'Info');
+  const tasksBody = getSection(rawContent, 'Tasks');
+  currentTasks = parseTasks(tasksBody);
 
   content.innerHTML = `
-  <div class="card">
-    <div class="card-title">Kernel Fingerprint (read-only)</div>
-    <div style="background:#f8fafc;border:1px solid var(--border);border-radius:6px;padding:10px;font-size:12px;font-family:monospace;color:var(--muted)">
-      <div><strong>Kernel:</strong> ${esc(kernelStr)}</div>
-      <div><strong>SHA256:</strong> ${esc(sha256Str)}</div>
+  <div class="tab-strip" id="fst-tabs">
+    <button class="tab-opt active" id="fst-tab-scan" onclick="switchFSTTab('scan')">File Scan</button>
+    <button class="tab-opt" id="fst-tab-tasks" onclick="switchFSTTab('tasks')">Tasks (${currentTasks.length})</button>
+  </div>
+  <div id="fst-pane-scan">
+    <div class="card">
+      <div class="card-title">Kernel Fingerprint <span style="font-size:11px;font-weight:400;color:var(--muted)">(read-only)</span></div>
+      <div style="background:#f8fafc;border:1px solid var(--border);border-radius:6px;padding:10px;font-size:12px;font-family:monospace;color:var(--muted)">
+        <div><strong>Kernel:</strong> ${esc(kernelM?kernelM[1].trim():'N/A')}</div>
+        <div><strong>SHA256:</strong> ${esc(sha256M?sha256M[1].trim():'N/A')}</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Event Structure</div>
+      <div class="event-table-wrap">${buildEventTableEditor(esBody)}</div>
+      <button class="btn-row-add" onclick="addEventRow()">+ Add row</button>
+      <div style="margin-top:10px">
+        <label class="section-label">Notes (blockquote)</label>
+        <textarea class="full-textarea" id="es-notes" style="min-height:50px">${esc(esNote)}</textarea>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">MISC Label Summary <span style="font-size:11px;font-weight:400;color:var(--muted)">(optional)</span></div>
+      <textarea class="full-textarea" id="misc-body" style="min-height:80px">${esc(miscBody)}</textarea>
+    </div>
+    <div class="card">
+      <div class="card-title">Info</div>
+      <div class="event-table-wrap">${buildInfoTableEditor(infoBody)}</div>
     </div>
   </div>
-  <div class="card">
-    <div class="card-title">Event Structure</div>
-    <div class="event-table-wrap">${esTableHtml}</div>
-    <button class="btn-row-add" onclick="addEventRow()">+ Add row</button>
-    <div style="margin-top:10px">
-      <label class="section-label">Notes (blockquote)</label>
-      <textarea class="full-textarea" id="es-notes" style="min-height:60px">${esc(esNote)}</textarea>
+  <div id="fst-pane-tasks" style="display:none">
+    <div class="add-task-row">
+      <button class="btn btn-primary" onclick="addTask('Classical')">+ Classical Task</button>
+      <button class="btn btn-secondary" style="color:var(--purple);border-color:var(--purple)" onclick="addTask('Potential')">+ Potential Task</button>
     </div>
-  </div>
-  <div class="card">
-    <div class="card-title">MISC Label Summary (optional)</div>
-    <textarea class="full-textarea" id="misc-body" style="min-height:100px">${esc(miscBody)}</textarea>
-  </div>
-  <div class="card">
-    <div class="card-title">Info</div>
-    <div class="event-table-wrap">${infoTableHtml}</div>
+    <div id="task-cards-container"></div>
   </div>`;
+
+  renderTaskCards(document.getElementById('task-cards-container'));
 }
 
-function parseMarkdownTable(text) {
-  const lines = text.split('\n').filter(l => l.trim().startsWith('|'));
-  if (lines.length < 2) return { headers: [], rows: [] };
-  const headers = lines[0].split('|').map(c => c.trim()).filter(Boolean);
-  const rows = [];
-  for (let i = 2; i < lines.length; i++) {
-    const cells = lines[i].split('|').map(c => c.trim()).filter(Boolean);
-    if (cells.length > 0) rows.push(cells);
-  }
-  return { headers, rows };
+function switchFSTTab(tab) {
+  document.getElementById('fst-tab-scan').classList.toggle('active', tab==='scan');
+  document.getElementById('fst-tab-tasks').classList.toggle('active', tab==='tasks');
+  document.getElementById('fst-pane-scan').style.display = tab==='scan' ? '' : 'none';
+  document.getElementById('fst-pane-tasks').style.display = tab==='tasks' ? '' : 'none';
 }
 
+// ─── Event / Info Tables ──────────────────────────────────────────────────────
 function buildEventTableEditor(esBody) {
   const { headers, rows } = parseMarkdownTable(esBody);
-  const displayHeaders = headers.length ? headers : ['Event ID', 'Count (total)', 'Type', 'Meta Level', 'Meaning'];
-
-  let html = `<table class="event-table" id="event-table">
-    <thead><tr>
-      ${displayHeaders.map(h => `<th>${esc(h)}</th>`).join('')}
-      <th style="width:30px"></th>
-    </tr></thead>
-    <tbody id="event-tbody">`;
-
-  const dataRows = rows.length ? rows : [['', '', 'event', 'raw', '']];
-  dataRows.forEach((row, ri) => {
-    html += buildEventRow(row, displayHeaders, ri);
-  });
-  html += '</tbody></table>';
-  return html;
+  const hdrs = headers.length ? headers : ['Event ID','Count (total)','Type','Meta Level','Meaning'];
+  let html = `<table class="event-table" id="event-table"><thead><tr>${hdrs.map(h=>`<th>${esc(h)}</th>`).join('')}<th style="width:30px"></th></tr></thead><tbody id="event-tbody">`;
+  (rows.length ? rows : [['','','event','raw','']]).forEach(row => { html += buildEventRow(row, hdrs); });
+  return html + '</tbody></table>';
 }
-
-function buildEventRow(cells, headers, ri) {
-  const typeIdx = headers.findIndex(h => h.toLowerCase() === 'type');
-  const metaIdx = headers.findIndex(h => h.toLowerCase().includes('meta'));
-  let html = `<tr>`;
-  (headers || ['Event ID', 'Count (total)', 'Type', 'Meta Level', 'Meaning']).forEach((h, ci) => {
-    const val = (cells[ci] || '').replace(/^`|`$/g, '');
-    if (ci === typeIdx) {
-      html += `<td style="width:80px"><select class="es-type">
-        <option ${val === 'event' ? 'selected' : ''}>event</option>
-        <option ${val === 'admin' ? 'selected' : ''}>admin</option>
-      </select></td>`;
-    } else if (ci === metaIdx) {
-      html += `<td style="width:70px"><select class="es-meta">
-        <option ${val === 'raw' ? 'selected' : ''}>raw</option>
-        <option ${val === 'super' ? 'selected' : ''}>super</option>
-      </select></td>`;
-    } else {
-      html += `<td><input type="text" value="${esc(val)}"></td>`;
-    }
+function buildEventRow(cells, headers) {
+  const ti = headers.findIndex(h=>h.toLowerCase()==='type');
+  const mi = headers.findIndex(h=>h.toLowerCase().includes('meta'));
+  let html = '<tr>';
+  headers.forEach((h,ci) => {
+    const v = (cells[ci]||'').replace(/^`|`$/g,'');
+    if (ci===ti) html += `<td style="width:80px"><select><option ${v==='event'?'selected':''}>event</option><option ${v==='admin'?'selected':''}>admin</option></select></td>`;
+    else if (ci===mi) html += `<td style="width:70px"><select><option ${v==='raw'?'selected':''}>raw</option><option ${v==='super'?'selected':''}>super</option></select></td>`;
+    else html += `<td><input type="text" value="${esc(v)}"></td>`;
   });
-  html += `<td><button class="btn-row-del" onclick="delEventRow(this)" title="Delete row">×</button></td></tr>`;
-  return html;
+  return html + `<td><button class="btn-row-del" onclick="delEventRow(this)">×</button></td></tr>`;
 }
-
 function addEventRow() {
-  const tbody = document.getElementById('event-tbody');
-  if (!tbody) return;
-  const headers = ['Event ID', 'Count (total)', 'Type', 'Meta Level', 'Meaning'];
-  const newRow = document.createElement('tr');
-  newRow.innerHTML = buildEventRow(['', '', 'event', 'raw', ''], headers, -1).replace(/^<tr>|<\/tr>$/g, '');
-  tbody.appendChild(newRow);
+  const tbody = document.getElementById('event-tbody'); if (!tbody) return;
+  const tr = document.createElement('tr');
+  tr.innerHTML = buildEventRow(['','','event','raw',''],['Event ID','Count (total)','Type','Meta Level','Meaning']).replace(/^<tr>|<\/tr>$/g,'');
+  tbody.appendChild(tr);
 }
-
-function delEventRow(btn) {
-  btn.closest('tr').remove();
-}
+function delEventRow(btn) { btn.closest('tr').remove(); }
 
 function buildInfoTableEditor(infoBody) {
   const { headers, rows } = parseMarkdownTable(infoBody);
-  const displayHeaders = headers.length ? headers : ['Field', 'Completeness', 'Notes'];
-  const COMPLETENESS = ['complete', 'partial', 'incomplete', 'missing'];
-
-  let html = `<table class="event-table" id="info-table"><thead><tr>
-    ${displayHeaders.map(h => `<th>${esc(h)}</th>`).join('')}
-  </tr></thead><tbody>`;
-  const dataRows = rows.length ? rows : [
-    ['subject_age', 'missing', 'N/A'],
-    ['subject_sex', 'missing', 'N/A'],
-    ['device', 'missing', 'N/A'],
-  ];
-  dataRows.forEach(row => {
-    const field = (row[0] || '').replace(/^`|`$/g, '');
-    const comp = (row[1] || 'missing');
-    const notes = (row[2] || 'N/A');
-    const compOpts = COMPLETENESS.map(c =>
-      `<option ${comp === c ? 'selected' : ''}>${c}</option>`).join('');
-    html += `<tr>
-      <td style="width:130px"><input type="text" value="${esc(field)}"></td>
-      <td style="width:110px"><select class="info-comp">${compOpts}</select></td>
-      <td><input type="text" value="${esc(notes)}"></td>
-    </tr>`;
+  const hdrs = headers.length ? headers : ['Field','Completeness','Notes'];
+  const COMP = ['complete','partial','incomplete','missing'];
+  let html = `<table class="event-table" id="info-table"><thead><tr>${hdrs.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>`;
+  (rows.length ? rows : [['subject_age','missing','N/A'],['subject_sex','missing','N/A'],['device','missing','N/A']]).forEach(row => {
+    const field=(row[0]||'').replace(/^`|`$/g,''), comp=row[1]||'missing', notes=row[2]||'N/A';
+    const opts=COMP.map(c=>`<option ${comp===c?'selected':''}>${c}</option>`).join('');
+    html += `<tr><td style="width:130px"><input type="text" value="${esc(field)}"></td><td style="width:110px"><select>${opts}</select></td><td><input type="text" value="${esc(notes)}"></td></tr>`;
   });
-  html += '</tbody></table>';
-  return html;
+  return html + '</tbody></table>';
 }
-
-function collectFileScan() {
-  const fsrBody = getSection(rawContent, 'File Scan Result');
-  const kernelM = fsrBody.match(/>\s*\*\*Kernel\*\*:\s*(.+)/);
-  const sha256M = fsrBody.match(/>\s*\*\*SHA256\*\*:\s*(.+)/);
-  const kernelLine = kernelM ? kernelM[0] : '> **Kernel**: N/A';
-  const sha256Line = sha256M ? sha256M[0] : '> **SHA256**: N/A';
-
-  // Rebuild Event Structure
-  const esTable = serializeEventTable();
-  const esNotes = document.getElementById('es-notes').value.trim();
-  const esNoteBlock = esNotes ? '\n\n' + esNotes.split('\n').map(l => '> ' + l).join('\n') : '';
-  const esSection = `### Event Structure\n\n${esTable}${esNoteBlock}`;
-
-  // MISC
-  const miscVal = document.getElementById('misc-body').value.trim();
-  const miscSection = miscVal ? `\n\n### MISC Label Summary\n\n${miscVal}` : '';
-
-  // Info
-  const infoTable = serializeInfoTable();
-  const infoSection = `\n\n### Info\n\n${infoTable}`;
-
-  const newFsrBody = `${kernelLine}\n${sha256Line}\n\n${esSection}${miscSection}${infoSection}`;
-  rawContent = replaceSection(rawContent, 'File Scan Result', newFsrBody);
-  dirty = true;
-}
-
 function serializeEventTable() {
-  const table = document.getElementById('event-table');
-  if (!table) return '';
-  const headers = [...table.querySelectorAll('thead th')].map(th => th.textContent).filter(t => t !== '');
-  let md = '| ' + headers.join(' | ') + ' |\n';
-  md += '|' + headers.map(() => '---').join('|') + '|\n';
+  const table = document.getElementById('event-table'); if (!table) return '';
+  const headers = [...table.querySelectorAll('thead th')].map(th=>th.textContent).filter(t=>t!=='');
+  let md = '| '+headers.join(' | ')+' |\n|'+headers.map(()=>'---').join('|')+'|\n';
   table.querySelectorAll('tbody tr').forEach(tr => {
-    const cells = [...tr.querySelectorAll('td')].slice(0, headers.length);
-    const vals = cells.map(td => {
-      const input = td.querySelector('input');
-      const select = td.querySelector('select');
-      if (input) return input.value.trim();
-      if (select) return select.value;
-      return td.textContent.trim();
-    });
-    md += '| ' + vals.map((v, i) => {
-      // wrap event ID in backticks if it looks like an ID
-      if (i === 0 && v && !v.startsWith('`')) return `\`${v}\``;
-      return v;
-    }).join(' | ') + ' |\n';
+    const cells=[...tr.querySelectorAll('td')].slice(0,headers.length);
+    const vals=cells.map((td,i)=>{ const inp=td.querySelector('input'); const sel=td.querySelector('select'); if(inp) return inp.value.trim(); if(sel) return sel.value; return ''; });
+    if (vals.some(v=>v)) md+='| '+vals.map((v,i)=>i===0&&v&&!v.startsWith('`')?`\`${v}\``:v).join(' | ')+' |\n';
   });
   return md;
 }
-
 function serializeInfoTable() {
-  const table = document.getElementById('info-table');
-  if (!table) return '';
-  const headers = [...table.querySelectorAll('thead th')].map(th => th.textContent);
-  let md = '| ' + headers.join(' | ') + ' |\n';
-  md += '|' + headers.map(() => '---').join('|') + '|\n';
+  const table = document.getElementById('info-table'); if (!table) return '';
+  const headers = [...table.querySelectorAll('thead th')].map(th=>th.textContent);
+  let md = '| '+headers.join(' | ')+' |\n|'+headers.map(()=>'---').join('|')+'|\n';
   table.querySelectorAll('tbody tr').forEach(tr => {
-    const cells = [...tr.querySelectorAll('td')];
-    const vals = cells.map(td => {
-      const input = td.querySelector('input');
-      const select = td.querySelector('select');
-      if (input) return input.value.trim();
-      if (select) return select.value;
-      return '';
-    });
-    if (vals[0]) md += '| ' + [`\`${vals[0]}\``, vals[1], vals[2] || 'N/A'].join(' | ') + ' |\n';
+    const cells=[...tr.querySelectorAll('td')];
+    const vals=cells.map(td=>{ const i=td.querySelector('input'); const s=td.querySelector('select'); if(i) return i.value.trim(); if(s) return s.value; return ''; });
+    if (vals[0]) md+=`| \`${vals[0]}\` | ${vals[1]} | ${vals[2]||'N/A'} |\n`;
   });
   return md;
 }
 
-// Step 4: Tasks
-function renderTasks(content) {
-  const body = getSection(rawContent, 'Tasks');
-  // Validate target_events against event table
-  const validation = validateTaskTargetEvents(body);
-  content.innerHTML = `
-  <div class="card" style="margin-bottom:10px">
-    <div class="card-title">Tasks <span style="font-size:11px;color:var(--muted);font-weight:400">(Markdown editor)</span></div>
-    ${validation ? `<div style="background:#fef3c7;border:1px solid #f59e0b;border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:12px;color:#92400e">${validation}</div>` : ''}
-    <textarea class="full-textarea" id="tasks-body" style="min-height:400px">${esc(body)}</textarea>
-  </div>`;
+// ─── MISC Validation ──────────────────────────────────────────────────────────
+function getMiscChannels() {
+  const body = document.getElementById('misc-body')?.value || getSubSection(getSection(rawContent,'File Scan Result'),'MISC Label Summary');
+  const ch = new Set();
+  for (const m of body.matchAll(/`([^`]+)`/g)) ch.add(m[1]);
+  return ch;
+}
+function getMiscWarning(channelName) {
+  if (!channelName) return '⚠ MISC channel name is required.';
+  const ch = getMiscChannels();
+  if (ch.size===0) return '⚠ MISC Label Summary is empty. This task will require <code>wait_kernel_update</code> — kernel must provide this MISC channel.';
+  if (!ch.has(channelName)) return `⚠ "<code>${esc(channelName)}</code>" not found in MISC Label Summary (found: ${[...ch].map(c=>`<code>${esc(c)}</code>`).join(', ')}). Verify or flag as <code>wait_kernel_update</code>.`;
+  return null;
 }
 
-function validateTaskTargetEvents(tasksBody) {
-  // Get event IDs from the current event structure in rawContent
-  const fsrBody = getSection(rawContent, 'File Scan Result');
-  const esBody = getSubSection(fsrBody, 'Event Structure');
-  const { rows } = parseMarkdownTable(esBody);
-  const knownEvents = new Set(rows.map(r => (r[0] || '').replace(/^`|`$/g, '').trim()).filter(Boolean));
-  if (!knownEvents.size) return null;
+// ─── Task Parsing ─────────────────────────────────────────────────────────────
+function parseTasks(body) {
+  const tasks = [];
+  const parts = body.split(/(?=\n###\s+(?:Classical|Potential)\s+Task\s+\d+)/);
+  for (const part of parts) {
+    const hm = part.match(/###\s+(Classical|Potential)\s+Task\s+(\d+):\s*(.+)/);
+    if (!hm) continue;
+    const task = { kind:hm[1], num:parseInt(hm[2]), name:hm[3].trim(),
+      taskType:'classification', epochMethod:'epoch_by_event_hdf5',
+      epochParams:{ tmin:'', tmax:'', overlap:'', segment_length:'', custom:[] },
+      labelRoute:'event', metaLevel:'raw', targetRows:[], miscChannel:'', evidence:[], kernelNotes:'' };
 
-  // Extract target_events from tasks
-  const teMatches = [...tasksBody.matchAll(/target_events\s*=\s*\[([^\]]+)\]/g)];
-  const warnings = [];
-  teMatches.forEach(m => {
-    const events = [...m[1].matchAll(/`([^`]+)`/g)].map(e => e[1].trim());
-    events.forEach(ev => {
-      if (!knownEvents.has(ev)) {
-        warnings.push(`"${ev}" not in Event Structure`);
+    const fv = (field) => { const re=new RegExp(`\\*\\*${escRe(field)}\\*\\*:\\s*\`?([^\`\n]+)\`?`); const m=part.match(re); return m?m[1].trim():''; };
+    task.taskType = fv('Task Type') || 'classification';
+    task.epochMethod = fv('Epoch Method') || 'epoch_by_event_hdf5';
+    task.metaLevel = fv('Meta Level') || 'raw';
+    task.labelRoute = fv('Label Route') || 'event';
+    task.epochParams = parseEpochParams(fv('Epoch Parameters'), task.epochMethod);
+
+    const tdm = part.match(/\*\*Target Definition\*\*:\s*([\s\S]*?)(?=\n- \*\*\w|$)/);
+    if (tdm) {
+      const tdb = tdm[1].trim();
+      if (tdb.includes('|')) {
+        const { rows } = parseMarkdownTable(tdb);
+        task.targetRows = rows.map(r=>({ label:(r[0]||'').replace(/^`|`$/g,'').trim(), y:(r[1]||'').trim(), meaning:(r[2]||'').trim() }));
+      } else {
+        const mm = tdb.match(/`([^`]+)`/);
+        task.miscChannel = mm ? mm[1] : tdb.replace(/MISC\s+channel:?\s*/i,'').trim();
       }
-    });
-  });
-  return warnings.length ? `⚠ Target event mismatch: ${warnings.join('; ')}` : null;
+    }
+
+    const evm = part.match(/\*\*Evidence\*\*:\s*([\s\S]*?)(?=\n- \*\*\w|$)/);
+    if (evm) task.evidence = parseEvidence(evm[1].trim());
+
+    const knm = part.match(/\*\*Kernel Notes\*\*:\s*([\s\S]*)$/);
+    if (knm) task.kernelNotes = knm[1].trim();
+
+    tasks.push(task);
+  }
+  return tasks;
 }
 
-function collectTasks() {
-  const body = document.getElementById('tasks-body').value;
-  rawContent = replaceSection(rawContent, 'Tasks', body);
-  dirty = true;
+function serializeTasks(tasks) {
+  let classN=0, potN=0;
+  return tasks.map(task => {
+    const num = task.kind==='Classical' ? ++classN : ++potN;
+    let teStr = '';
+    if (task.labelRoute!=='misc' && task.targetRows.length)
+      teStr = `, target_events = [${task.targetRows.map(r=>`\`${r.label}\``).join(', ')}]`;
+    const epStr = task.epochParamsStr || '';
+
+    let targetDef = '';
+    if (task.labelRoute==='misc') {
+      targetDef = `MISC channel: \`${task.miscChannel}\``;
+    } else {
+      const col = task.labelRoute==='info' ? 'Info' : 'Event';
+      targetDef = `| ${col} | y | Meaning |\n  |-------|---|---------|`;
+      task.targetRows.forEach(r => { targetDef += `\n  | \`${r.label}\` | ${r.y} | ${r.meaning} |`; });
+    }
+
+    const evLines = (task.evidence||[]).map(e=>`  - DOI: ${e.ref} — ${e.desc}`).join('\n');
+
+    return `### ${task.kind} Task ${num}: ${task.name}
+- **Task Type**: ${task.taskType}
+- **Epoch Method**: \`${task.epochMethod}\`
+- **Epoch Parameters**: ${epStr}${teStr}
+- **Label Route**: \`${task.labelRoute}\`
+- **Meta Level**: ${task.metaLevel}
+- **Target Definition**:
+  ${targetDef}
+- **Evidence**:
+${evLines}
+- **Kernel Notes**: ${task.kernelNotes}`;
+  }).join('\n\n');
 }
 
-// Step 5: DQN
-function renderDQN(content) {
-  const body = getSection(rawContent, 'Data Quality Notes');
-  content.innerHTML = `
-  <div class="card">
-    <div class="card-title">Data Quality Notes</div>
-    <textarea class="full-textarea" id="dqn-body" style="min-height:280px">${esc(body)}</textarea>
+// ─── Task Card Rendering ──────────────────────────────────────────────────────
+function renderTaskCards(container) {
+  if (!container) return;
+  if (!currentTasks.length) {
+    container.innerHTML = `<div style="text-align:center;color:var(--muted);padding:32px;font-size:13px">No tasks. Use buttons above to add.</div>`;
+    return;
+  }
+  container.innerHTML = currentTasks.map((t,i) => buildTaskCard(t,i)).join('');
+  // Auto-resize textareas
+  container.querySelectorAll('.bullet-input').forEach(ta => autoResize(ta));
+}
+
+function buildTaskCard(task, idx) {
+  const classSelClass = task.kind==='Classical' ? 'selected-classical' : '';
+  const potSelClass = task.kind==='Potential' ? 'selected-potential' : '';
+  const epOpts = EPOCH_METHODS.map(m=>`<option value="${m}" ${task.epochMethod===m?'selected':''}>${m}</option>`).join('');
+  const lrOpts = LABEL_ROUTES.map(lr=>`<option value="${lr}" ${task.labelRoute===lr?'selected':''}>${lr}</option>`).join('');
+  const mlOpts = ['raw','super'].map(ml=>`<option value="${ml}" ${task.metaLevel===ml?'selected':''}>${ml}</option>`).join('');
+  const ttOpts = ['classification','regression'].map(tt=>`<option value="${tt}" ${task.taskType===tt?'selected':''}>${tt}</option>`).join('');
+
+  let targetDefHtml = '';
+  if (task.labelRoute==='misc') {
+    const w = getMiscWarning(task.miscChannel);
+    targetDefHtml = `<div class="misc-channel-wrap">
+      <input type="text" class="task-misc-channel" value="${esc(task.miscChannel)}"
+        placeholder="MISC channel name (must exist in MISC Label Summary)"
+        oninput="updateMiscWarning(${idx},this)">
+      ${w ? `<div class="misc-warning" id="misc-warn-${idx}">${w}</div>` : `<div class="misc-warning" id="misc-warn-${idx}" style="display:none"></div>`}
+    </div>`;
+  } else {
+    const col = task.labelRoute==='info' ? 'Info' : 'Event';
+    const rows = (task.targetRows.length ? task.targetRows : [{label:'',y:'',meaning:''}])
+      .map(r=>`<tr><td><input type="text" value="${esc(r.label)}" placeholder="id"></td><td><input type="text" value="${esc(r.y)}" placeholder="0/1" style="width:45px"></td><td><input type="text" value="${esc(r.meaning)}" placeholder="Meaning"></td><td><button class="btn-row-del" onclick="this.closest('tr').remove()">×</button></td></tr>`).join('');
+    targetDefHtml = `<table class="td-table" id="td-table-${idx}">
+      <thead><tr><th>${col}</th><th style="width:50px">y</th><th>Meaning</th><th style="width:30px"></th></tr></thead>
+      <tbody id="td-tbody-${idx}">${rows}</tbody></table>
+      <button class="btn-row-add" onclick="addTdRow(${idx})">+ Add row</button>`;
+  }
+
+  const epHtml = buildEpochParamsEditor(task.epochParams, task.epochMethod, idx);
+  const evHtml = buildEvidenceEditor(`ev-${idx}`, task.evidence||[]);
+
+  return `<div class="task-card" data-task-idx="${idx}">
+    <div class="task-card-header">
+      <div class="task-kind-group">
+        <button class="task-kind-btn ${classSelClass}" data-kind="Classical" onclick="selectTaskKind(${idx},'Classical',this)">Classical</button>
+        <button class="task-kind-btn ${potSelClass}" data-kind="Potential" onclick="selectTaskKind(${idx},'Potential',this)">Potential</button>
+      </div>
+      <input class="task-name-input" value="${esc(task.name)}" placeholder="Task name">
+      <button class="btn-del-task" onclick="deleteTask(${idx})">×</button>
+    </div>
+    <div class="task-fields-row">
+      <div class="task-field"><label>Task Type</label><select class="task-type-sel">${ttOpts}</select></div>
+      <div class="task-field" style="flex:2;min-width:200px"><label>Epoch Method</label>
+        <select class="task-epoch-method-sel" onchange="onEpochMethodChange(${idx},this)">${epOpts}</select></div>
+      <div class="task-field"><label>Label Route</label><select class="task-lr-sel" onchange="onLabelRouteChange(${idx},this)">${lrOpts}</select></div>
+      <div class="task-field"><label>Meta Level</label><select class="task-ml-sel">${mlOpts}</select></div>
+    </div>
+    <div id="ep-wrap-${idx}">${epHtml}</div>
+    <div class="task-td-section">
+      <label>Target Definition</label>
+      <div id="task-td-${idx}">${targetDefHtml}</div>
+    </div>
+    <div class="task-text-field">
+      <label>Evidence <span style="font-size:10px;font-weight:400;color:var(--muted)">— DOI: reference — description</span></label>
+      ${evHtml}
+    </div>
+    <div class="task-text-field">
+      <label>Kernel Notes</label>
+      ${buildBulletEditor(`kn-${idx}`, parseBullets(task.kernelNotes))}
+    </div>
   </div>`;
 }
 
-function collectDQN() {
-  const body = document.getElementById('dqn-body').value;
-  rawContent = replaceSection(rawContent, 'Data Quality Notes', body);
+function addTdRow(taskIdx) {
+  const tbody = document.getElementById(`td-tbody-${taskIdx}`); if (!tbody) return;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><input type="text" value="" placeholder="id"></td><td><input type="text" value="" placeholder="0/1" style="width:45px"></td><td><input type="text" value="" placeholder="Meaning"></td><td><button class="btn-row-del" onclick="this.closest('tr').remove()">×</button></td>`;
+  tbody.appendChild(tr);
+}
+function selectTaskKind(idx, kind, btn) {
+  const card = btn.closest('.task-card');
+  card.querySelectorAll('.task-kind-btn').forEach(b => b.classList.remove('selected-classical','selected-potential'));
+  btn.classList.add(kind==='Classical' ? 'selected-classical' : 'selected-potential');
+}
+function onEpochMethodChange(idx, sel) {
+  collectTaskCards();
+  if (currentTasks[idx]) currentTasks[idx].epochMethod = sel.value;
+  const wrap = document.getElementById(`ep-wrap-${idx}`);
+  if (wrap) wrap.innerHTML = buildEpochParamsEditor(currentTasks[idx]?.epochParams || {tmin:'',tmax:'',overlap:'',segment_length:'',custom:[]}, sel.value, idx);
+}
+function onLabelRouteChange(idx, sel) {
+  collectTaskCards();
+  const newLr = sel.value;
+  if (currentTasks[idx]) currentTasks[idx].labelRoute = newLr;
+  const task = currentTasks[idx] || {};
+  const tdDiv = document.getElementById(`task-td-${idx}`);
+  if (!tdDiv) return;
+  if (newLr==='misc') {
+    const w = getMiscWarning(task.miscChannel||'');
+    tdDiv.innerHTML = `<div class="misc-channel-wrap">
+      <input type="text" class="task-misc-channel" value="${esc(task.miscChannel||'')}"
+        placeholder="MISC channel name" oninput="updateMiscWarning(${idx},this)">
+      ${w?`<div class="misc-warning" id="misc-warn-${idx}">${w}</div>`:`<div class="misc-warning" id="misc-warn-${idx}" style="display:none"></div>`}
+    </div>`;
+  } else {
+    const col = newLr==='info' ? 'Info' : 'Event';
+    const rows = (task.targetRows||[{label:'',y:'',meaning:''}]).map(r=>
+      `<tr><td><input type="text" value="${esc(r.label)}" placeholder="id"></td><td><input type="text" value="${esc(r.y)}" placeholder="0/1" style="width:45px"></td><td><input type="text" value="${esc(r.meaning)}" placeholder="Meaning"></td><td><button class="btn-row-del" onclick="this.closest('tr').remove()">×</button></td></tr>`
+    ).join('');
+    tdDiv.innerHTML = `<table class="td-table" id="td-table-${idx}"><thead><tr><th>${col}</th><th style="width:50px">y</th><th>Meaning</th><th style="width:30px"></th></tr></thead><tbody id="td-tbody-${idx}">${rows}</tbody></table><button class="btn-row-add" onclick="addTdRow(${idx})">+ Add row</button>`;
+  }
+}
+function updateMiscWarning(idx, input) {
+  const w = getMiscWarning(input.value.trim());
+  const el = document.getElementById(`misc-warn-${idx}`);
+  if (!el) return;
+  el.innerHTML = w||''; el.style.display = w ? '' : 'none';
+}
+function addTask(kind) {
+  collectTaskCards();
+  currentTasks.push({ kind, num:0, name:'', taskType:'classification', epochMethod:'epoch_by_event_hdf5',
+    epochParams:{tmin:'',tmax:'',overlap:'',segment_length:'',custom:[]},
+    labelRoute:'event', metaLevel:'raw', targetRows:[], miscChannel:'', evidence:[], kernelNotes:'' });
+  renderTaskCards(document.getElementById('task-cards-container'));
+  const tb = document.getElementById('fst-tab-tasks'); if(tb) tb.textContent=`Tasks (${currentTasks.length})`;
+}
+function deleteTask(idx) {
+  if (!confirm('Remove this task?')) return;
+  collectTaskCards(); currentTasks.splice(idx,1);
+  renderTaskCards(document.getElementById('task-cards-container'));
+  const tb = document.getElementById('fst-tab-tasks'); if(tb) tb.textContent=`Tasks (${currentTasks.length})`;
+}
+
+function collectTaskCards() {
+  const cards = document.querySelectorAll('.task-card[data-task-idx]');
+  if (!cards.length) return;
+  currentTasks = [];
+  cards.forEach((card, i) => {
+    const kindBtn = card.querySelector('.task-kind-btn.selected-classical,.task-kind-btn.selected-potential');
+    const kind = kindBtn ? kindBtn.dataset.kind : 'Classical';
+    const method = card.querySelector('.task-epoch-method-sel')?.value || 'epoch_by_event_hdf5';
+    const lr = card.querySelector('.task-lr-sel')?.value || 'event';
+    const task = {
+      kind, num:0,
+      name: card.querySelector('.task-name-input')?.value.trim()||'',
+      taskType: card.querySelector('.task-type-sel')?.value||'classification',
+      epochMethod: method,
+      epochParams: {tmin:'',tmax:'',overlap:'',segment_length:'',custom:[]},
+      labelRoute: lr,
+      metaLevel: card.querySelector('.task-ml-sel')?.value||'raw',
+      targetRows: [], miscChannel: '', evidence: [], kernelNotes: '',
+      epochParamsStr: collectEpochParams(card, i, method),
+    };
+    if (lr==='misc') {
+      task.miscChannel = card.querySelector('.task-misc-channel')?.value.trim()||'';
+    } else {
+      card.querySelectorAll(`#td-tbody-${i} tr`).forEach(tr => {
+        const ins = tr.querySelectorAll('td input');
+        if (ins.length>=3) task.targetRows.push({ label:ins[0].value.trim(), y:ins[1].value.trim(), meaning:ins[2].value.trim() });
+      });
+    }
+    // Collect evidence
+    const evList = card.querySelector(`#ev-${i}-list`);
+    if (evList) evList.querySelectorAll('.evidence-row').forEach(row => {
+      const ref = row.querySelector('.evidence-ref')?.value.trim()||'';
+      const desc = row.querySelector('.evidence-desc')?.value.trim()||'';
+      if (ref||desc) task.evidence.push({ ref, desc });
+    });
+    // Collect kernel notes
+    const knList = card.querySelector(`#kn-${i}-list`);
+    if (knList) {
+      task.kernelNotes = [...knList.querySelectorAll('.bullet-input')].map(t=>t.value.trim()).filter(Boolean).join('\n');
+    }
+    currentTasks.push(task);
+  });
+}
+
+function collectFileScanTasks() {
+  const fsrBody = getSection(rawContent, 'File Scan Result');
+  const kernelLine = (fsrBody.match(/>\s*\*\*Kernel\*\*:\s*.+/)||['> **Kernel**: N/A'])[0];
+  const sha256Line = (fsrBody.match(/>\s*\*\*SHA256\*\*:\s*.+/)||['> **SHA256**: N/A'])[0];
+  const esTable = serializeEventTable();
+  const esNotes = document.getElementById('es-notes')?.value.trim()||'';
+  const esNoteBlock = esNotes ? '\n\n'+esNotes.split('\n').map(l=>'> '+l).join('\n') : '';
+  const miscVal = document.getElementById('misc-body')?.value.trim()||'';
+  const miscSection = miscVal ? `\n\n### MISC Label Summary\n\n${miscVal}` : '';
+  const infoTable = serializeInfoTable();
+  rawContent = replaceSection(rawContent, 'File Scan Result',
+    `${kernelLine}\n${sha256Line}\n\n### Event Structure\n\n${esTable}${esNoteBlock}${miscSection}\n\n### Info\n\n${infoTable}`);
+  collectTaskCards();
+  rawContent = replaceSection(rawContent, 'Tasks', serializeTasks(currentTasks));
   dirty = true;
 }
 
-// Step 6: Kernel Responsibilities
-function renderKernel(content) {
+// ─── Step 2: DQN & Kernel ─────────────────────────────────────────────────────
+function renderDQNKernel(content) {
+  const dqnBody = getSection(rawContent, 'Data Quality Notes');
+  const dqnBullets = parseBullets(dqnBody);
   const krBody = getSection(rawContent, 'Kernel Responsibilities');
   const smrM = krBody.match(/\*\*Super Meta Required\*\*:\s*(\S+)/);
   const smr = smrM ? smrM[1].trim() : 'No';
   const statusM = krBody.match(/\*\*Status\*\*:\s*(\S+)/);
   const status = statusM ? statusM[1].trim() : 'wait_manual_review';
-
-  const STATUS_OPTS = [
-    'wait_manual_review', 'in_review', 'reviewed', 'needs_revision', 'error'
-  ];
+  const STATUS_OPTS = ['wait_kernel_update','wait_manual_review','completed'];
+  const statusInvalid = status && !STATUS_OPTS.includes(status);
+  const statusInvalidOpt = statusInvalid ? `<option value="${esc(status)}" selected style="color:var(--red)">[INVALID] ${esc(status)}</option>` : '';
 
   content.innerHTML = `
+  <div class="card">
+    <div class="card-title">Data Quality Notes</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Add bullet points describing known data quality issues, conflicts, and caveats.</div>
+    ${buildBulletEditor('dqn', dqnBullets)}
+  </div>
   <div class="card">
     <div class="card-title">Kernel Responsibilities</div>
     <div class="kr-field">
       <label>Super Meta Required</label>
-      <div class="toggle-group">
-        <button class="toggle-opt ${smr === 'Yes' ? 'selected' : ''}" id="smr-yes" onclick="selectSMR('Yes')">Yes</button>
-        <button class="toggle-opt ${smr !== 'Yes' ? 'selected' : ''}" id="smr-no" onclick="selectSMR('No')">No</button>
+      <div>
+        <div class="toggle-group">
+          <button class="toggle-opt ${smr==='Yes'?'selected':''}" id="smr-yes" onclick="selectSMR('Yes')">Yes</button>
+          <button class="toggle-opt ${smr!=='Yes'?'selected':''}" id="smr-no" onclick="selectSMR('No')">No</button>
+        </div>
+        <div class="field-hint">Check the Tasks in Step 2 — if any task has <strong>Meta Level = super</strong>, select <strong>Yes</strong>. If all tasks use raw labels, select <strong>No</strong>.</div>
       </div>
     </div>
     <div class="kr-field">
       <label>Status</label>
-      <select class="status-select" id="kr-status">
-        ${STATUS_OPTS.map(s => `<option value="${s}" ${status === s ? 'selected' : ''}>${s}</option>`).join('')}
-      </select>
+      <div>
+        <select class="status-select" id="kr-status">
+          ${statusInvalidOpt}
+          ${STATUS_OPTS.map(s=>`<option value="${s}" ${status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+        <div class="field-hint">
+          <code>wait_kernel_update</code> — kernel structural gaps remain (Event Structure / Label Route / MISC issues)<br>
+          <code>wait_manual_review</code> — doc is sufficient, awaiting reviewer sign-off<br>
+          <code>completed</code> — admin or human reviewer confirmed complete (do not set yourself unless authorized)
+        </div>
+      </div>
     </div>
   </div>`;
+
+  // Re-init autoResize for any bullet inputs
+  setTimeout(() => {
+    content.querySelectorAll('.bullet-input').forEach(ta => autoResize(ta));
+  }, 0);
 }
 
 function selectSMR(val) {
-  document.getElementById('smr-yes').classList.toggle('selected', val === 'Yes');
-  document.getElementById('smr-no').classList.toggle('selected', val !== 'Yes');
+  document.getElementById('smr-yes').classList.toggle('selected', val==='Yes');
+  document.getElementById('smr-no').classList.toggle('selected', val!=='Yes');
 }
 
-function collectKernel() {
-  const smrYes = document.getElementById('smr-yes');
-  const statusEl = document.getElementById('kr-status');
-  if (!smrYes || !statusEl) return;
-  const smr = smrYes.classList.contains('selected') ? 'Yes' : 'No';
-  const status = statusEl.value;
-  const newBody = `> **Super Meta Required**: ${smr}\n> **Status**: ${status}`;
-  rawContent = replaceSection(rawContent, 'Kernel Responsibilities', newBody);
-  // Update sidebar badge
-  const ds = allDatasets.find(d => d.name === currentDataset);
-  if (ds) { ds.status = status; renderDatasetList(); }
+function collectDQNKernel() {
+  const dqnText = collectBullets('dqn');
+  rawContent = replaceSection(rawContent, 'Data Quality Notes', dqnText);
+  const smr = document.getElementById('smr-yes')?.classList.contains('selected') ? 'Yes' : 'No';
+  const status = document.getElementById('kr-status')?.value || 'wait_manual_review';
+  rawContent = replaceSection(rawContent, 'Kernel Responsibilities', `> **Super Meta Required**: ${smr}\n> **Status**: ${status}`);
+  const ds = allDatasets.find(d=>d.name===currentDataset);
+  if (ds) { ds.status=status; renderDatasetList(); }
   dirty = true;
 }
 
-// ─── Collect current step ─────────────────────────────────────────────────────
+// ─── Collect Step ─────────────────────────────────────────────────────────────
 function collectStep(idx) {
   try {
-    if (idx === 0) collectMeta();
-    else if (idx === 1) collectParadigm();
-    else if (idx === 2) collectFileScan();
-    else if (idx === 3) collectTasks();
-    else if (idx === 4) collectDQN();
-    else if (idx === 5) collectKernel();
-  } catch(e) { console.warn('collectStep error', e); }
+    if (idx===0) collectMetaParadigm();
+    else if (idx===1) collectFileScanTasks();
+    else if (idx===2) collectDQNKernel();
+  } catch(e) { console.warn('collectStep error',e); }
 }
 
-// ─── Save file ────────────────────────────────────────────────────────────────
+// ─── Confirm & Preview ────────────────────────────────────────────────────────
+function confirmAndPreview() {
+  collectStep(currentStep);
+  // Check guide items
+  const allItems = [];
+  STEP_GUIDE.forEach((step, si) => step.sections.forEach(sec => sec.items.forEach(item => allItems.push(item.key))));
+  const unchecked = allItems.filter(key => !guideChecks[key]);
+  if (unchecked.length > 0) {
+    // Highlight in guide
+    switchRightTab('guide');
+    renderStepGuide();
+    setTimeout(() => {
+      unchecked.forEach(key => {
+        const el = document.querySelector(`.guide-check[data-key="${key}"]`);
+        if (el) el.classList.add('highlight-warn');
+      });
+    }, 100);
+    if (!confirm(`${unchecked.length} step guide item(s) not yet checked. Proceed to preview anyway?`)) return;
+  }
+  // Open preview
+  document.getElementById('preview-markdown').innerHTML = marked.parse(rawContent);
+  document.getElementById('preview-modal-overlay').classList.add('open');
+  previewSeen = true;
+}
+
+function closePreview() { document.getElementById('preview-modal-overlay').classList.remove('open'); }
+
+async function saveFromPreview() {
+  closePreview();
+  await saveFile();
+}
+
+document.getElementById('preview-modal-overlay').onclick = function(e) { if (e.target===this) closePreview(); };
+
+// ─── Save File ────────────────────────────────────────────────────────────────
 async function saveFile() {
   collectStep(currentStep);
   if (!currentDataset) return;
@@ -978,164 +1570,122 @@ async function saveFile() {
   saveStatus.textContent = 'Saving…';
   try {
     const r = await fetch(`/api/dataset/${encodeURIComponent(currentDataset)}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'PUT', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content: rawContent }),
     });
-    if (r.ok) {
-      dirty = false;
-      saveStatus.textContent = '✓ Saved';
-      setTimeout(() => saveStatus.textContent = '', 3000);
-    } else {
-      saveStatus.textContent = '✗ Error';
-    }
-  } catch(e) {
-    saveStatus.textContent = '✗ ' + e.message;
-  }
+    if (r.ok) { dirty=false; saveStatus.textContent='✓ Saved'; setTimeout(()=>saveStatus.textContent='',3000); }
+    else saveStatus.textContent='✗ Error';
+  } catch(e) { saveStatus.textContent='✗ '+e.message; }
+}
+
+// ─── Step Guide ───────────────────────────────────────────────────────────────
+function toggleGuideCheck(key) {
+  guideChecks[key] = !guideChecks[key];
+  renderStepGuide();
+}
+
+function renderStepGuide() {
+  const container = document.getElementById('guide-content');
+  if (!currentDataset) { container.innerHTML='<p style="color:var(--muted);font-size:12px;padding:12px">Select a dataset to begin.</p>'; return; }
+  const guide = STEP_GUIDE[currentStep];
+  if (!guide) return;
+  let html = `<div class="guide-step-title">${esc(guide.title)}</div>`;
+  guide.sections.forEach(sec => {
+    const total = sec.items.length;
+    const done = sec.items.filter(item => guideChecks[item.key]).length;
+    html += `<div class="guide-section">
+      <div class="guide-section-title">${esc(sec.heading)}<span class="sec-check-count">${done}/${total}</span></div>`;
+    sec.items.forEach((item, i) => {
+      const checked = guideChecks[item.key] || false;
+      html += `<div class="guide-check ${checked?'checked':''}" data-key="${item.key}" onclick="toggleGuideCheck('${item.key}')">
+        <div class="guide-check-box"></div>
+        <span class="guide-check-num">${i+1}.</span>
+        <span class="guide-check-text">${item.text}</span>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  // Overall progress
+  const allItems = guide.sections.flatMap(s=>s.items);
+  const totalDone = allItems.filter(item=>guideChecks[item.key]).length;
+  html += `<div style="margin-top:8px;font-size:11px;color:var(--muted);text-align:right">${totalDone}/${allItems.length} checks complete for this step</div>`;
+  container.innerHTML = html;
+}
+
+// ─── Right Panel ──────────────────────────────────────────────────────────────
+function switchRightTab(tab) {
+  ['guide','rulebook','chat'].forEach(t => {
+    document.getElementById(`rtab-${t}`).classList.toggle('active', t===tab);
+    document.getElementById(`pane-${t}`).classList.toggle('visible', t===tab);
+  });
 }
 
 // ─── Rulebook ─────────────────────────────────────────────────────────────────
 function renderRulebook() {
-  const hint = STEP_RULEBOOK_HINTS[currentStep] || '';
-  const search = document.getElementById('rb-search').value.trim();
-  const query = search || hint;
+  const hint = STEP_RULEBOOK_HINTS[currentStep]||'';
+  const search = document.getElementById('rb-search')?.value.trim()||'';
+  const query = search||hint;
   let html = '';
-  if (hint && !search) {
-    html += `<div class="rb-step-hint">Step hints: ${hint}</div>`;
-  }
-  if (!rulebookRaw) { document.getElementById('rulebook-content').innerHTML = 'Loading…'; return; }
-
+  if (hint&&!search) html+=`<div class="rb-step-hint">Step hints: ${esc(hint)}</div>`;
+  if (!rulebookRaw) { document.getElementById('rulebook-content').innerHTML='Loading…'; return; }
   if (query) {
-    const terms = query.split(/[,\s]+/).filter(Boolean).map(t => t.toLowerCase());
-    // Show paragraphs/sections that contain any term
-    const lines = rulebookRaw.split('\n');
-    let sections = [];
-    let buf = [], inMatch = false;
+    const terms=query.split(/[,\s]+/).filter(Boolean).map(t=>t.toLowerCase());
+    const lines=rulebookRaw.split('\n'); let sections=[],buf=[],inMatch=false;
     lines.forEach(line => {
-      const isHeading = /^#{1,3}\s/.test(line);
-      if (isHeading) {
-        if (inMatch && buf.length) sections.push(buf.join('\n'));
-        buf = [line];
-        inMatch = terms.some(t => line.toLowerCase().includes(t));
-      } else {
-        buf.push(line);
-        if (!inMatch && terms.some(t => line.toLowerCase().includes(t))) inMatch = true;
-      }
+      const isH=/^#{1,3}\s/.test(line);
+      if (isH) { if(inMatch&&buf.length) sections.push(buf.join('\n')); buf=[line]; inMatch=terms.some(t=>line.toLowerCase().includes(t)); }
+      else { buf.push(line); if(!inMatch&&terms.some(t=>line.toLowerCase().includes(t))) inMatch=true; }
     });
-    if (inMatch && buf.length) sections.push(buf.join('\n'));
-    if (sections.length) {
-      html += marked.parse(sections.join('\n\n---\n\n'));
-    } else {
-      html += '<p style="color:var(--muted);font-size:12px">No matching sections found.</p>';
-      if (!search) html += marked.parse(rulebookRaw.slice(0, 3000) + '\n\n…');
-    }
-  } else {
-    html += marked.parse(rulebookRaw);
-  }
-  document.getElementById('rulebook-content').innerHTML = html;
+    if(inMatch&&buf.length) sections.push(buf.join('\n'));
+    html+=sections.length ? marked.parse(sections.join('\n\n---\n\n')) : '<p style="color:var(--muted);font-size:12px">No matching sections.</p>';
+    if (!sections.length&&!search) html+=marked.parse(rulebookRaw.slice(0,3000)+'\n\n…');
+  } else { html+=marked.parse(rulebookRaw); }
+  document.getElementById('rulebook-content').innerHTML=html;
 }
-
 function filterRulebook() { renderRulebook(); }
 
 // ─── LLM Chat ─────────────────────────────────────────────────────────────────
-function switchRightTab(tab) {
-  document.getElementById('rtab-rulebook').classList.toggle('active', tab === 'rulebook');
-  document.getElementById('rtab-chat').classList.toggle('active', tab === 'chat');
-  document.getElementById('pane-rulebook').classList.toggle('visible', tab === 'rulebook');
-  document.getElementById('pane-chat').classList.toggle('visible', tab === 'chat');
-}
-
-function chatKeydown(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
-}
-
+function chatKeydown(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();} }
 async function sendChat() {
-  const input = document.getElementById('chat-input');
-  const msg = input.value.trim();
-  if (!msg) return;
-  input.value = '';
-  appendChat('user', msg);
-  llmHistory.push({ role: 'user', content: msg });
-
-  const systemPrompt = buildChatSystemPrompt();
-  const messages = [{ role: 'system', content: systemPrompt }, ...llmHistory];
-
-  appendChat('assistant', '…');
+  const input=document.getElementById('chat-input');
+  const msg=input.value.trim(); if(!msg) return;
+  input.value=''; appendChat('user',msg); llmHistory.push({role:'user',content:msg});
+  appendChat('assistant','…');
   try {
-    const r = await fetch('/api/llm', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages, stream: false }),
-    });
-    const d = await r.json();
-    const lastAssist = document.querySelector('#chat-messages .chat-msg.assistant:last-child .chat-bubble');
-    if (d.error) {
-      if (lastAssist) lastAssist.innerHTML = `<span style="color:var(--red)">${esc(d.error)}</span>`;
-    } else {
-      const reply = d.choices?.[0]?.message?.content || JSON.stringify(d);
-      if (lastAssist) lastAssist.innerHTML = marked.parse(reply);
-      llmHistory.push({ role: 'assistant', content: reply });
-    }
-  } catch(e) {
-    const lastAssist = document.querySelector('#chat-messages .chat-msg.assistant:last-child .chat-bubble');
-    if (lastAssist) lastAssist.textContent = 'Error: ' + e.message;
-  }
+    const r=await fetch('/api/llm',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:[{role:'system',content:buildChatSystemPrompt()},...llmHistory],stream:false})});
+    const d=await r.json();
+    const la=document.querySelector('#chat-messages .chat-msg.assistant:last-child .chat-bubble');
+    if(d.error){ if(la) la.innerHTML=`<span style="color:var(--red)">${esc(d.error)}</span>`; }
+    else { const reply=d.choices?.[0]?.message?.content||JSON.stringify(d); if(la) la.innerHTML=marked.parse(reply); llmHistory.push({role:'assistant',content:reply}); }
+  } catch(e) { const la=document.querySelector('#chat-messages .chat-msg.assistant:last-child .chat-bubble'); if(la) la.textContent='Error: '+e.message; }
 }
-
 function buildChatSystemPrompt() {
-  const stepName = STEP_LABELS[currentStep];
-  const snippetLen = 1500;
-  const docSnippet = rawContent.length > snippetLen
-    ? rawContent.slice(0, snippetLen) + '\n…[truncated]'
-    : rawContent;
-  return `You are an EEG dataset documentation auditor. The user is reviewing the "${currentDataset}" dataset at step "${stepName}".
-
-Current document content (first ${snippetLen} chars):
-\`\`\`markdown
-${docSnippet}
-\`\`\`
-
-Help the user review and improve this documentation according to the EEG analysis rulebook. Be concise and specific.`;
+  const snip=rawContent.length>1500?rawContent.slice(0,1500)+'\n…':rawContent;
+  return `You are an EEG dataset documentation auditor reviewing "${currentDataset}" at step "${STEP_LABELS[currentStep]}".\n\nDocument:\n\`\`\`markdown\n${snip}\n\`\`\`\n\nBe concise and specific.`;
 }
-
-function appendChat(role, text) {
-  const container = document.getElementById('chat-messages');
-  const div = document.createElement('div');
-  div.className = `chat-msg ${role}`;
-  const bubble = document.createElement('div');
-  bubble.className = 'chat-bubble';
-  bubble.innerHTML = role === 'assistant' ? marked.parse(text) : esc(text);
-  div.appendChild(bubble);
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
+function appendChat(role,text) {
+  const c=document.getElementById('chat-messages');
+  const d=document.createElement('div'); d.className=`chat-msg ${role}`;
+  const b=document.createElement('div'); b.className='chat-bubble';
+  b.innerHTML=role==='assistant'?marked.parse(text):esc(text);
+  d.appendChild(b); c.appendChild(d); c.scrollTop=c.scrollHeight;
 }
 
 // ─── Settings ─────────────────────────────────────────────────────────────────
-function openSettings() {
-  document.getElementById('modal-overlay').classList.add('open');
-}
-function closeSettings() {
-  document.getElementById('modal-overlay').classList.remove('open');
-}
-async function saveSettings() {
-  const url = document.getElementById('cfg-url').value.trim();
-  const key = document.getElementById('cfg-key').value.trim();
-  const model = document.getElementById('cfg-model').value.trim();
-  await fetch('/api/config', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url, key, model }),
-  });
+function openSettings(){document.getElementById('modal-overlay').classList.add('open');}
+function closeSettings(){document.getElementById('modal-overlay').classList.remove('open');}
+async function saveSettings(){
+  const url=document.getElementById('cfg-url').value.trim();
+  const key=document.getElementById('cfg-key').value.trim();
+  const model=document.getElementById('cfg-model').value.trim();
+  await fetch('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url,key,model})});
   closeSettings();
 }
-document.getElementById('modal-overlay').onclick = function(e) {
-  if (e.target === this) closeSettings();
-};
+document.getElementById('modal-overlay').onclick=function(e){if(e.target===this)closeSettings();};
 
 // ─── Utils ────────────────────────────────────────────────────────────────────
-function esc(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 // ─── Start ────────────────────────────────────────────────────────────────────
 init();
