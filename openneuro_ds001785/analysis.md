@@ -1,7 +1,7 @@
 # Evidence accumulation relates to perceptual consciousness and monitoring
 
 **Dataset**: `openneuro_ds001785` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds001785
-**Category**: High-level Mental | **Subjects**: 21 | **Files (Completed)**: 54 | **Channels**: 71.0 | **Sampling Rate**: 1024.0 Hz
+**Category**: High-level Mental | **Subjects**: 21 | **Files (Completed)**: 54 | **Channels**: 71 | **Sampling Rate**: 1024 Hz
 
 ## Paradigm
 

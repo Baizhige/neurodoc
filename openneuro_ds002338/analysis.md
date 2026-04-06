@@ -1,7 +1,7 @@
 # A multi-modal human neuroimaging dataset for data integration: simultaneous EEG and fMRI acquisition during a motor imagery neurofeedback task: XP2
 
 **Dataset**: `openneuro_ds002338` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds002338
-**Category**: Action/Output | **Subjects**: 16 | **Files (Completed)**: 169 | **Channels**: 64.0 | **Sampling Rate**: 5000.0 Hz
+**Category**: Action/Output | **Subjects**: 16 | **Files (Completed)**: 169 | **Channels**: 64 | **Sampling Rate**: 5000 Hz
 
 ## Paradigm
 

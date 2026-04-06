@@ -1,7 +1,7 @@
 # UC San Diego Resting State EEG Data from Patients with Parkinson's Disease
 
 **Dataset**: `openneuro_ds002778` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002778
-**Category**: Biological State | **Subjects**: N/A | **Files (Completed)**: 46 | **Channels**: 41.0 | **Sampling Rate**: 512.0 Hz
+**Category**: Biological State | **Subjects**: N/A | **Files (Completed)**: 46 | **Channels**: 41 | **Sampling Rate**: 512 Hz
 
 ## Paradigm
 

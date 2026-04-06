@@ -1,7 +1,7 @@
 # TUH EEG Artifact Corpus
 
 **Dataset**: `tuh_eeg_artifact` | **Year**: 2022 | **URL**: https://isip.piconepress.com/projects/tuh_eeg/downloads/tuh_eeg_artifact/v3.0.1/
-**Category**: Others | **Subjects**: ~310 sessions | **Files (Completed)**: 310 | **Channels**: 27-128 | **Sampling Rate**: 250-1000 Hz
+**Category**: Others | **Subjects**: ~310 | **Files (Completed)**: 310 | **Channels**: 27-128 | **Sampling Rate**: 250-1000 Hz
 
 ## Paradigm
 

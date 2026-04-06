@@ -2,7 +2,7 @@
 
 **Dataset**: `openneuro_ds004284` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004284
 **Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 18
-**Channels**: 129.0 | **Sampling Rate**: 1000.0 Hz
+**Channels**: 129 | **Sampling Rate**: 1000 Hz
 
 ## Paradigm
 

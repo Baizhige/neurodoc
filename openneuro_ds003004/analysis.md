@@ -1,7 +1,7 @@
 # Imagined Emotion Study
 
 **Dataset**: `openneuro_ds003004` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003004
-**Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 34 | **Channels**: 219.0 | **Sampling Rate**: 256.0 Hz
+**Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 34 | **Channels**: 219 | **Sampling Rate**: 256 Hz
 
 ## Paradigm
 

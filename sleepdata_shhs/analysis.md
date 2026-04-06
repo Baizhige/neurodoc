@@ -1,8 +1,8 @@
 # sleepdata_shhs
 
-**Dataset**: `sleepdata_shhs` | **Year**: 1995-2003 (SHHS-1: 1995-1998; SHHS-2: 2001-2003) | **URL**: https://sleepdata.org/datasets/shhs
-**Category**: Biological State | **Subjects**: 6,441 (SHHS-1); 3,295 follow-up (SHHS-2) | **Files (Completed)**: 5,786 EDF (SHHS-1) + 532 EDF (SHHS-2)
-**Channels**: 14 (per EDF) | **Sampling Rate**: 125 Hz (EEG/EMG/ECG primary), 50 Hz (EOG), 10 Hz (respiratory), 1 Hz (SpO2/HR); exported EDF channels are resampled to 125 Hz
+**Dataset**: `sleepdata_shhs` | **Year**: 1995 | **URL**: https://sleepdata.org/datasets/shhs
+**Category**: Biological State | **Subjects**: 6441 | **Files (Completed)**: 5786
+**Channels**: 14 | **Sampling Rate**: 125 Hz (EEG/EMG/ECG primary), 50 Hz (EOG), 10 Hz (respiratory), 1 Hz (SpO2/HR); exported EDF channels are resampled to 125 Hz
 
 ## Paradigm
 

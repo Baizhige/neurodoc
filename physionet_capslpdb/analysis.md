@@ -1,7 +1,7 @@
 # CAP Sleep Database
 
 **Dataset**: `physionet_capslpdb` | **Year**: 2014 | **URL**: https://physionet.org/content/capslpdb/1.0.0/
-**Category**: Biological State | **Subjects**: 108 | **Files (Completed)**: 108 | **Channels**: 5-36 (variable) | **Sampling Rate**: 100-512 Hz (variable)
+**Category**: Biological State | **Subjects**: 108 | **Files (Completed)**: 108 | **Channels**: 5-36 | **Sampling Rate**: 100-512 Hz (variable)
 
 ## Paradigm
 

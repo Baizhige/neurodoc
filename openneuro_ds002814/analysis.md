@@ -1,7 +1,7 @@
 # A Multimodal Neuroimaging Dataset to Study Spatiotemporal Dynamics of Visual Processing in Humans
 
 **Dataset**: `openneuro_ds002814` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002814
-**Category**: Sensory/Response | **Subjects**: N/A | **Files (Completed)**: 168 | **Channels**: 68.0 | **Sampling Rate**: 1200.0 Hz
+**Category**: Sensory/Response | **Subjects**: N/A | **Files (Completed)**: 168 | **Channels**: 68 | **Sampling Rate**: 1200 Hz
 
 ## Paradigm
 

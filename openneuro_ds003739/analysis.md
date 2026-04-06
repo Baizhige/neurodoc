@@ -2,7 +2,7 @@
 
 **Dataset**: `openneuro_ds003739` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003739
 **Category**: Complex Applied | **Subjects**: N/A | **Files (Completed)**: 120
-**Channels**: 149.0 | **Sampling Rate**: 256.0 Hz
+**Channels**: 149 | **Sampling Rate**: 256 Hz
 
 ## Paradigm
 

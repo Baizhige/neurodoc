@@ -1,7 +1,7 @@
 # A dataset recorded during development of an affective brain-computer music interface: testing session
 
 **Dataset**: `openneuro_ds002723` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002723
-**Category**: Complex Applied | **Subjects**: 8 | **Files (Completed)**: 44 | **Channels**: 37.0 | **Sampling Rate**: 1000.0 Hz
+**Category**: Complex Applied | **Subjects**: 8 | **Files (Completed)**: 44 | **Channels**: 37 | **Sampling Rate**: 1000 Hz
 
 ## Paradigm
 

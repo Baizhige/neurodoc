@@ -1,7 +1,7 @@
 # Auditory-Visual Shift Study
 
 **Dataset**: `openneuro_ds002893` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds002893
-**Category**: Sensory/Response | **Subjects**: 49 | **Files (Completed)**: 52 | **Channels**: 36.0 | **Sampling Rate**: 250.0 Hz
+**Category**: Sensory/Response | **Subjects**: 49 | **Files (Completed)**: 52 | **Channels**: 36 | **Sampling Rate**: 250 Hz
 
 ## Paradigm
 

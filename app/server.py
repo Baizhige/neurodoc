@@ -7,10 +7,16 @@ Then open http://127.0.0.1:5000
 
 import json
 import re
-import urllib.request
-import urllib.error
 from pathlib import Path
 from flask import Flask, jsonify, request, send_from_directory, abort
+
+try:
+    import requests as _requests
+    _HAS_REQUESTS = True
+except ImportError:
+    import urllib.request
+    import urllib.error
+    _HAS_REQUESTS = False
 
 APP_DIR = Path(__file__).parent
 BASE_DIR = APP_DIR.parent
@@ -104,7 +110,7 @@ def api_config():
         if CONFIG_FILE.exists():
             cfg = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
         else:
-            cfg = {"url": "", "key": "", "model": ""}
+            cfg = {"url": "", "key": "", "model": "", "proxy": ""}
         return jsonify(cfg)
     data = request.get_json(silent=True) or {}
     CONFIG_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -116,34 +122,47 @@ def api_llm():
     cfg = {}
     if CONFIG_FILE.exists():
         cfg = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
-    url = cfg.get("url", "").rstrip("/")
+    base_url = cfg.get("url", "").rstrip("/")
     key = cfg.get("key", "")
     model = cfg.get("model", "")
-    if not url:
+    proxy = cfg.get("proxy", "").strip()
+    if not base_url:
         return jsonify({"error": "LLM URL not configured. Open Settings to configure."}), 400
 
     body = request.get_json(silent=True) or {}
     body["model"] = model
+    # remove stream flag — some providers reject it
+    body.pop("stream", None)
 
-    req_data = json.dumps(body).encode("utf-8")
-    req = urllib.request.Request(
-        f"{url}/chat/completions",
-        data=req_data,
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {key}",
-        },
-        method="POST",
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=90) as resp:
-            result = json.loads(resp.read().decode("utf-8"))
-        return jsonify(result)
-    except urllib.error.HTTPError as e:
-        body_err = e.read().decode("utf-8", errors="replace")
-        return jsonify({"error": f"HTTP {e.code}: {body_err}"}), 502
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    endpoint = f"{base_url}/chat/completions"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {key}",
+    }
+
+    if _HAS_REQUESTS:
+        proxies = {"http": proxy, "https": proxy} if proxy else None
+        try:
+            resp = _requests.post(endpoint, headers=headers, json=body,
+                                  timeout=90, proxies=proxies)
+            resp.raise_for_status()
+            return jsonify(resp.json())
+        except _requests.HTTPError as e:
+            return jsonify({"error": f"HTTP {e.response.status_code}: {e.response.text}"}), 502
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+    else:
+        # fallback: urllib (no proxy support)
+        import urllib.request, urllib.error
+        req_data = json.dumps(body).encode("utf-8")
+        req = urllib.request.Request(endpoint, data=req_data, headers=headers, method="POST")
+        try:
+            with urllib.request.urlopen(req, timeout=90) as r:
+                return jsonify(json.loads(r.read().decode("utf-8")))
+        except urllib.error.HTTPError as e:
+            return jsonify({"error": f"HTTP {e.code}: {e.read().decode('utf-8','replace')}"}), 502
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":

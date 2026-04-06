@@ -1,7 +1,7 @@
 # CockPart Multi-Paradigm EEG Dataset
 
 **Dataset**: `unknown_CockPartDataset` | **Year**: N/A | **URL**: N/A
-**Category**: High-level Mental | **Subjects**: varies by paradigm | **Files (Completed)**: 1590 (Case B kernel) | **Channels**: 128 | **Sampling Rate**: 128 Hz (N400/Natural Speech) / 512 Hz (Speech in Noise)
+**Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 1590 | **Channels**: 128 | **Sampling Rate**: 128 Hz (N400/Natural Speech) / 512 Hz (Speech in Noise)
 
 ## Paradigm
 

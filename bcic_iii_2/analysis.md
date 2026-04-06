@@ -1,7 +1,7 @@
 # BCI Competition III Dataset II (P300 Speller)
 
 **Dataset**: `bcic_iii_2` | **Year**: 2005 | **URL**: https://www.bbci.de/competition/iii/download/
-**Category**: Action/Output | **Subjects**: 2 | **Files (Completed)**: 4 (Case B kernel; 2 Train + 2 Test) | **Channels**: 64 | **Sampling Rate**: 240 Hz
+**Category**: Action/Output | **Subjects**: 2 | **Files (Completed)**: 4 | **Channels**: 64 | **Sampling Rate**: 240 Hz
 
 ## Paradigm
 

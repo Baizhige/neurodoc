@@ -1,7 +1,7 @@
 # UCD Sleep Apnea Database
 
 **Dataset**: `physionet_ucddb` | **Year**: 2011 | **URL**: https://physionet.org/content/ucddb/1.0.0/
-**Category**: Biological State | **Subjects**: 25 | **Files (Completed)**: 50 (Case B kernel; 25 PSG .rec + 25 ECG _lifecard.edf) | **Channels**: variable (PSG) | **Sampling Rate**: variable
+**Category**: Biological State | **Subjects**: 25 | **Files (Completed)**: 50 | **Channels**: variable | **Sampling Rate**: variable
 
 ## Paradigm
 
