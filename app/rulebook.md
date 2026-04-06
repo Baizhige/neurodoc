@@ -1,4 +1,4 @@
-# EEG Dataset `analysis_minimax_v2.md` 文档生成与审核规则
+# EEG Dataset `analysis.md` 文档生成与审核规则
 
 状态：草案 v0.5
 
@@ -29,7 +29,7 @@
 
 适用对象：LLM 审核脚本、人类审核员、维护者
 
-适用范围：本仓库内各数据集目录下的 `analysis_minimax_v2.md` 及后续同结构版本文档
+适用范围：本仓库内各数据集目录下的 `analysis.md` 及同结构版本文档
 
 ---
 
@@ -39,7 +39,7 @@
 
 ### 第1条 目的
 
-本规则用于统一 EEG 数据集 `analysis_minimax_v2.md` 文档的生成、审核、修订与复核行为，使相关文档能够同时服务于以下目标：
+本规则用于统一 EEG 数据集 `analysis.md` 文档的生成、审核、修订与复核行为，使相关文档能够同时服务于以下目标：
 
 1. 为人工审核员提供一致、明确、可执行的审核标准。
 2. 为 LLM 审核脚本提供稳定、可编程、可追溯的决策依据。
@@ -69,7 +69,7 @@
 
 ### 第4条 数据集文档
 
-本规则所称“数据集文档”，是指单个数据集目录下的 `analysis_minimax_v2.md` 或同结构后续版本文档。
+本规则所称“数据集文档”，是指单个数据集目录下的 `analysis.md` 或同结构后续版本文档。
 
 ### 第5条 Raw Meta
 
@@ -868,7 +868,7 @@ LLM 审核脚本负责：
 ### 第87条 废止说明
 
 1. `References Area` 属于早期文档版本的遗留栏目。
-2. 现行版本的 `analysis_minimax_v2.md` 原则上不应保留独立的 `References Area`。
+2. 现行版本的 `analysis.md` 原则上不应保留独立的 `References Area`。
 3. 与具体任务直接相关的来源，应写入对应 `Classical Task` 或 `Potential Task` 下的 `Evidence`。
 4. 与数据冲突、质量问题或审核裁定相关的来源，应写入对应说明段落或审核记录，而不再单独汇总为 `References Area`。
 
