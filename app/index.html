@@ -38,7 +38,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 #layout { display: flex; flex: 1; overflow: hidden; }
 
 /* Left sidebar */
-#sidebar { width: var(--sidebar-w); background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+#sidebar { width: var(--sidebar-w); background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; position: relative; overflow: hidden; transition: width .2s ease; }
+#sidebar.collapsed { width: 36px; }
+#sidebar-inner { display: flex; flex-direction: column; flex: 1; overflow: hidden; min-width: var(--sidebar-w); transition: opacity .15s; }
+#sidebar.collapsed #sidebar-inner { opacity: 0; pointer-events: none; }
 #sidebar-head { padding: 10px 12px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; }
 #sidebar-head label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; }
 #ds-search { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; }
@@ -99,7 +102,15 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 .btn:disabled { opacity: .5; cursor: default; }
 
 /* Right panel */
-#right { width: var(--right-w); background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+#right { width: var(--right-w); background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; position: relative; overflow: hidden; transition: width .2s ease; }
+#right.collapsed { width: 36px; }
+#right-inner { display: flex; flex-direction: column; flex: 1; overflow: hidden; min-width: var(--right-w); transition: opacity .15s; }
+#right.collapsed #right-inner { opacity: 0; pointer-events: none; }
+/* Panel toggle buttons (inner edge) */
+.panel-toggle { position: absolute; top: 50%; transform: translateY(-50%); width: 18px; height: 48px; background: var(--panel); border: 1px solid var(--border); cursor: pointer; font-size: 11px; color: var(--muted); display: flex; align-items: center; justify-content: center; z-index: 20; transition: background .15s, color .15s; line-height: 1; }
+.panel-toggle:hover { background: #eff6ff; color: var(--accent); }
+#sidebar-toggle { right: 0; border-right: none; border-radius: 4px 0 0 4px; }
+#right-toggle { left: 0; border-left: none; border-radius: 0 4px 4px 0; }
 #right-tabs { display: flex; border-bottom: 1px solid var(--border); }
 .rtab { flex: 1; padding: 10px 6px; border: none; background: none; cursor: pointer; font-size: 12px; color: var(--muted); border-bottom: 2px solid transparent; }
 .rtab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
@@ -352,14 +363,17 @@ table.event-table td textarea.meaning-cell:focus { outline: 1px solid var(--acce
 
 <div id="layout">
   <div id="sidebar">
-    <div id="sidebar-head">
-      <label>Search / Filter</label>
-      <input type="text" id="ds-search" placeholder="Search dataset name…" oninput="renderDatasetList()">
-      <select id="filter-category" onchange="renderDatasetList()">
-        <option value="">All Categories</option>
-      </select>
+    <button id="sidebar-toggle" class="panel-toggle" onclick="toggleSidebar()" title="Toggle sidebar">‹</button>
+    <div id="sidebar-inner">
+      <div id="sidebar-head">
+        <label>Search / Filter</label>
+        <input type="text" id="ds-search" placeholder="Search dataset name…" oninput="renderDatasetList()">
+        <select id="filter-category" onchange="renderDatasetList()">
+          <option value="">All Categories</option>
+        </select>
+      </div>
+      <div id="dataset-list"></div>
     </div>
-    <div id="dataset-list"></div>
   </div>
 
   <div id="main">
@@ -384,6 +398,8 @@ table.event-table td textarea.meaning-cell:focus { outline: 1px solid var(--acce
   </div>
 
   <div id="right">
+    <button id="right-toggle" class="panel-toggle" onclick="toggleRightPanel()" title="Toggle panel">›</button>
+    <div id="right-inner">
     <div id="right-tabs">
       <button class="rtab active" id="rtab-guide" onclick="switchRightTab('guide')">Step Guide</button>
       <button class="rtab" id="rtab-rulebook" onclick="switchRightTab('rulebook')">Rulebook</button>
@@ -413,6 +429,7 @@ table.event-table td textarea.meaning-cell:focus { outline: 1px solid var(--acce
         </div>
       </div>
     </div>
+    </div><!-- /#right-inner -->
   </div>
 </div>
 
@@ -576,6 +593,20 @@ const STEP_GUIDE = [
     ]
   }
 ];
+
+// ─── Panel collapse ───────────────────────────────────────────────────────────
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const btn = document.getElementById('sidebar-toggle');
+  sb.classList.toggle('collapsed');
+  btn.textContent = sb.classList.contains('collapsed') ? '›' : '‹';
+}
+function toggleRightPanel() {
+  const rp = document.getElementById('right');
+  const btn = document.getElementById('right-toggle');
+  rp.classList.toggle('collapsed');
+  btn.textContent = rp.classList.contains('collapsed') ? '‹' : '›';
+}
 
 // ─── State ────────────────────────────────────────────────────────────────────
 let allDatasets = [];
@@ -1044,6 +1075,7 @@ function renderMetaParadigm(content) {
   content.innerHTML = `
   <div class="card">
     <div class="card-title">Meta Fields</div>
+    <p class="field-hint" style="margin-bottom:12px">Verify all fields against the official dataset page. URL and Category are the most important to check.</p>
     <div class="form-row">
       <div class="form-group" style="flex:2"><label>Title</label><input id="m-title" value="${esc(meta['_title'])}"></div>
       <div class="form-group">
@@ -1052,20 +1084,30 @@ function renderMetaParadigm(content) {
       </div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>Year</label><input id="m-year" value="${esc(meta['Year']||'')}"></div>
+      <div class="form-group">
+        <label>Year</label>
+        <input id="m-year" value="${esc(meta['Year']||'')}">
+        <p class="field-hint">Publication or collection year. Multiple years allowed, e.g. <code style="font-size:10px;background:#f3f4f6;padding:1px 4px;border-radius:3px">2008/2015</code>.</p>
+      </div>
       <div class="form-group" style="flex:3"><label>URL</label>
         <div style="display:flex;gap:6px;align-items:center">
           <input id="m-url" value="${esc(meta['URL']||'')}" style="flex:1">
           <button type="button" title="Open URL in new tab" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;font-size:13px;flex-shrink:0" onclick="const u=document.getElementById('m-url').value.trim();if(u)window.open(u,'_blank');else alert('No URL set.')">↗</button>
         </div>
+        <p class="field-hint">Official dataset page or download page. Click ↗ to verify it opens correctly.</p>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group">
         <label>Category</label>
         <select id="m-category">${catInvalidOpt}${catOpts}</select>
+        <p class="field-hint">Paradigm type. Only change if clearly wrong (6 fixed values).</p>
       </div>
-      <div class="form-group"><label>Subjects</label><input id="m-subjects" value="${esc(meta['Subjects']||'')}"></div>
+      <div class="form-group">
+        <label>Subjects</label>
+        <input id="m-subjects" value="${esc(meta['Subjects']||'')}">
+        <p class="field-hint">Number of valid participants. Use actual available count, not official claimed count if different.</p>
+      </div>
       <div class="form-group"><label>Files (Completed) <span style="font-size:10px;color:var(--muted)">(read-only)</span></label><input id="m-files" value="${esc(meta['Files (Completed)']||'')}" class="field-readonly" readonly tabindex="-1"></div>
     </div>
     <div class="form-row">
@@ -1074,6 +1116,7 @@ function renderMetaParadigm(content) {
     </div>
     <div style="border-top:1px solid var(--border);padding-top:12px;margin-top:4px">
       <div class="section-label">Manual Review</div>
+      <p class="field-hint" style="margin-bottom:8px">Enter your name and click Append to sign off that you have reviewed this dataset.</p>
       <div class="mr-display ${mr?'':'empty'}" id="mr-display">${mr?`Reviewed by: <strong>${esc(mr)}</strong>`:'Not yet reviewed.'}</div>
       <div class="mr-append-row">
         <input id="m-mr-append" placeholder="Enter your name to append&#8230;">
@@ -1083,6 +1126,7 @@ function renderMetaParadigm(content) {
   </div>
   <div class="card">
     <div class="card-title">Paradigm</div>
+    <p class="field-hint" style="margin-bottom:10px">Describe the experimental setup, stimuli, recording conditions and subject protocol. Must be consistent with the official page and the actual data files.</p>
     <div class="tab-strip">
       <button class="tab-opt active" id="tab-para-edit" onclick="switchParaTab('edit')">Edit</button>
       <button class="tab-opt" id="tab-para-preview" onclick="switchParaTab('preview')">Preview</button>
@@ -1162,18 +1206,22 @@ function renderFileScanTasks(content) {
     </div>
     <div class="card">
       <div class="card-title">Event Structure <span style="font-size:11px;font-weight:400;color:var(--muted)">— Type &amp; Meaning editable; others read-only</span></div>
+      <p class="field-hint" style="margin-bottom:8px">Check <strong>Type</strong>: <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">event</code> = task-relevant stimulus/response; <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">admin</code> = boundary/artifact. Edit <strong>Meaning</strong> to be accurate. Only <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">event</code> rows can be used as target_events in Tasks.</p>
       <div class="event-table-wrap">${buildEventTableEditor(esBody)}</div>
       <div style="margin-top:10px">
         <label class="section-label">Notes (blockquote)</label>
+        <p class="field-hint" style="margin-bottom:6px">Optional. Record parsing ambiguities, multi-source events, or anything the scanner missed that the kernel team should know.</p>
         <textarea class="full-textarea" id="es-notes" style="min-height:50px">${esc(esNote)}</textarea>
       </div>
     </div>
     <div class="card">
       <div class="card-title">MISC Label Summary <span style="font-size:11px;font-weight:400;color:var(--muted)">(read-only)</span></div>
+      <p class="field-hint" style="margin-bottom:8px">Auto-generated by the kernel. Present only if a task uses <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">Label Route = misc</code> (continuous/scalar targets stored in MISC channels).</p>
       ${miscBody ? `<div class="preview-wrap" style="max-height:200px;overflow-y:auto">${marked.parse(miscBody)}</div>` : '<p style="font-size:12px;color:var(--muted)">No MISC Label Summary for this dataset.</p>'}
     </div>
     <div class="card">
       <div class="card-title">Info</div>
+      <p class="field-hint" style="margin-bottom:8px">Completeness (complete/partial/incomplete/missing) is auto-filled by the kernel scan. Fill in the <strong>Notes</strong> column for <strong>device</strong> manually — check the official README or dataset page for the recording hardware name.</p>
       <div class="event-table-wrap">${buildInfoTableEditor(infoBody)}</div>
     </div>
   </div>
@@ -1182,6 +1230,7 @@ function renderFileScanTasks(content) {
       <button class="btn btn-primary" onclick="addTask('Classical')">+ Classical Task</button>
       <button class="btn btn-secondary" style="color:var(--purple);border-color:var(--purple)" onclick="addTask('Potential')">+ Potential Task</button>
     </div>
+    <p class="field-hint" style="margin:4px 0 10px">Classical Tasks require at least one Evidence entry (DOI or URL) and fully specified parameters. Use Potential Tasks for plausible analyses that lack strong external evidence.</p>
     <div id="task-cards-container"></div>
   </div>`;
 
@@ -1419,8 +1468,16 @@ function buildTaskCard(task, idx) {
       <div class="task-field"><label>Task Type</label><select class="task-type-sel">${ttOpts}</select></div>
       <div class="task-field" style="flex:2;min-width:200px"><label>Epoch Method</label>
         <select class="task-epoch-method-sel" onchange="onEpochMethodChange(${idx},this)">${epOpts}</select></div>
-      <div class="task-field"><label>Label Route</label><select class="task-lr-sel" onchange="onLabelRouteChange(${idx},this)">${lrOpts}</select></div>
-      <div class="task-field"><label>Meta Level</label><select class="task-ml-sel">${mlOpts}</select></div>
+      <div class="task-field">
+        <label>Label Route</label>
+        <select class="task-lr-sel" onchange="onLabelRouteChange(${idx},this)">${lrOpts}</select>
+        <p class="field-hint" style="margin-top:3px"><code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">event</code> = event stream, <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">misc</code> = scalar/continuous channel, <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">info</code> = subject metadata</p>
+      </div>
+      <div class="task-field">
+        <label>Meta Level</label>
+        <select class="task-ml-sel">${mlOpts}</select>
+        <p class="field-hint" style="margin-top:3px"><code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">raw</code> = labels exist directly in data; <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">super</code> = derived via pairing/mapping/aggregation</p>
+      </div>
     </div>
     <div id="ep-wrap-${idx}">${epHtml}</div>
     <div class="task-td-section">
@@ -1429,6 +1486,7 @@ function buildTaskCard(task, idx) {
     </div>
     <div class="task-text-field">
       <label>Evidence <span style="font-size:10px;font-weight:400;color:var(--muted)">— DOI: reference — description</span></label>
+      <p class="field-hint" style="margin-bottom:6px">Paste a DOI (e.g. <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">10.1109/tnnls.2018.2789927</code>) or full URL. At least one is required for Classical Tasks. Verify each reference actually uses this dataset.</p>
       ${evHtml}
     </div>
     <div class="task-text-field">
@@ -1747,6 +1805,11 @@ async function saveFile() {
       dirty = false;
       saveStatus.textContent = '✓ Saved';
       setTimeout(() => saveStatus.textContent = '', 3000);
+      // Clear LLM chat and reset step guide checkboxes
+      llmHistory = [];
+      document.getElementById('chat-messages').innerHTML = '';
+      guideChecks = {};
+      renderStepGuide();
       // Get current status from document
       const statusM = rawContent.match(/\*\*Status\*\*:\s*(\S+)/);
       const status = statusM ? statusM[1].trim() : 'unknown';
