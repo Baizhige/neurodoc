@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EEG Kernel Scan Tool</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #1a1a1e; --bg2: #25252b; --bg3: #2e2e36;
+  --border: #3a3a44; --accent: #6c8ebf; --accent2: #5a7ab0;
+  --ok: #4caf77; --warn: #e8a838; --err: #d05555;
+  --text: #d8d8e0; --text2: #9898a8; --text3: #6868788;
+  --radius: 6px; --mono: 'Cascadia Code', 'Fira Code', monospace;
+}
+body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif;
+  font-size: 13px; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+header { background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: 8px 16px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+header h1 { font-size: 15px; font-weight: 600; color: var(--accent); }
+header .machine { color: var(--text2); font-size: 11px; margin-left: auto; }
+.main { display: flex; flex: 1; overflow: hidden; }
+
+/* Left panel - dataset list */
+.panel-left { width: 260px; border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; flex-shrink: 0; }
+.panel-left .toolbar { padding: 8px; border-bottom: 1px solid var(--border);
+  display: flex; gap: 6px; flex-wrap: wrap; }
+.panel-left .list { flex: 1; overflow-y: auto; }
+.ds-item { padding: 7px 10px; cursor: pointer; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 6px; user-select: none; }
+.ds-item:hover { background: var(--bg3); }
+.ds-item.selected { background: #1e2d42; border-left: 2px solid var(--accent); }
+.ds-item .name { flex: 1; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ds-item .badges { display: flex; gap: 3px; flex-shrink: 0; }
+.badge { font-size: 9px; padding: 1px 4px; border-radius: 3px; font-weight: 600; }
+.badge.k { background: #2a3d2a; color: var(--ok); }
+.badge.nok { background: #3d2a2a; color: var(--err); }
+.badge.cache { background: #2a2a3d; color: var(--accent); }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.status-dot.wait_kernel_update { background: var(--err); }
+.status-dot.wait_manual_review { background: var(--warn); }
+.status-dot.completed { background: var(--ok); }
+.status-dot.hallucination { background: #d08030; }
+.status-dot.unknown { background: var(--text2); }
+.cb { width: 14px; height: 14px; flex-shrink: 0; accent-color: var(--accent); }
+
+/* Center panel - controls */
+.panel-center { width: 320px; border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto; }
+.section { border-bottom: 1px solid var(--border); padding: 10px; }
+.section h3 { font-size: 11px; text-transform: uppercase; color: var(--text2);
+  letter-spacing: .6px; margin-bottom: 8px; }
+label { display: block; color: var(--text2); font-size: 11px; margin-bottom: 3px; }
+input[type=text], select, textarea {
+  width: 100%; background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); padding: 5px 8px; border-radius: var(--radius);
+  font-size: 12px; font-family: var(--mono); outline: none; }
+input[type=text]:focus, select:focus, textarea:focus { border-color: var(--accent); }
+textarea { resize: vertical; min-height: 60px; font-size: 11px; }
+.row { display: flex; gap: 6px; align-items: center; }
+.row label { margin: 0; white-space: nowrap; }
+.radio-group { display: flex; gap: 10px; }
+.radio-group label { display: flex; align-items: center; gap: 4px; cursor: pointer;
+  color: var(--text); font-size: 12px; margin: 0; }
+.hint { font-size: 10px; color: var(--text2); margin-top: 3px; line-height: 1.4; }
+.sample-info { background: var(--bg3); border-radius: var(--radius); padding: 6px 8px;
+  font-size: 11px; color: var(--warn); margin-top: 6px; font-family: var(--mono); }
+
+/* Right panel - diff viewer */
+.panel-right { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.panel-right .tabs { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.tab { padding: 7px 14px; cursor: pointer; font-size: 12px; border-bottom: 2px solid transparent;
+  color: var(--text2); }
+.tab.active { color: var(--text); border-color: var(--accent); }
+.tab-content { flex: 1; overflow-y: auto; padding: 10px; }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* Diff display */
+.diff-section { margin-bottom: 12px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.diff-header { background: var(--bg3); padding: 6px 10px; font-size: 11px; font-weight: 600;
+  display: flex; align-items: center; gap: 8px; }
+.diff-cols { display: grid; grid-template-columns: 1fr 1fr; }
+.diff-col { padding: 8px; }
+.diff-col.old { border-right: 1px solid var(--border); }
+.diff-col h4 { font-size: 10px; color: var(--text2); margin-bottom: 4px; }
+pre.diff-text { font-family: var(--mono); font-size: 11px; white-space: pre-wrap;
+  word-break: break-all; line-height: 1.5; color: var(--text); }
+pre.diff-text.new-text { color: #7ec88a; }
+pre.diff-text.old-text { color: #c87e7e; }
+
+/* Log / progress */
+.log-panel { border-top: 1px solid var(--border); padding: 8px 10px; background: var(--bg2);
+  flex-shrink: 0; max-height: 120px; overflow-y: auto; }
+.log-line { font-family: var(--mono); font-size: 11px; color: var(--text2); line-height: 1.6; }
+.log-line.err { color: var(--err); }
+.log-line.ok { color: var(--ok); }
+.progress-bar { height: 3px; background: var(--bg3); border-radius: 2px; margin-bottom: 6px; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .3s; }
+
+/* Buttons */
+btn, .btn { display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 11px; border-radius: var(--radius); border: none; cursor: pointer;
+  font-size: 12px; font-weight: 500; transition: opacity .15s; }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--accent2); }
+.btn-secondary { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover:not(:disabled) { background: #3a3a46; }
+.btn-ok { background: #2a4a2a; color: var(--ok); border: 1px solid #3a5a3a; }
+.btn-ok:hover:not(:disabled) { background: #305030; }
+.btn-warn { background: #4a3a1a; color: var(--warn); border: 1px solid #6a5a2a; }
+.btn-err { background: #4a2020; color: var(--err); border: 1px solid #6a3030; }
+.btn-sm { padding: 3px 7px; font-size: 11px; }
+
+/* Settings modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 100;
+  display: none; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius);
+  width: 480px; max-width: 95vw; padding: 16px; }
+.modal h2 { font-size: 14px; margin-bottom: 12px; }
+.form-row { margin-bottom: 10px; }
+.modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+
+/* Misc */
+.tag { font-size: 10px; background: var(--bg3); color: var(--text2); padding: 1px 5px;
+  border-radius: 3px; font-family: var(--mono); }
+.flex { display: flex; }
+.gap { gap: 6px; }
+.mt { margin-top: 6px; }
+.sep { height: 1px; background: var(--border); margin: 8px 0; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>EEG Kernel Scan Tool</h1>
+  <span id="hdr-eegunity" class="tag"></span>
+  <div class="machine" id="hdr-machine"></div>
+  <button class="btn btn-secondary btn-sm" onclick="openSettings()">Settings</button>
+</header>
+
+<div class="main">
+
+  <!-- LEFT: dataset list -->
+  <div class="panel-left">
+    <div class="toolbar">
+      <button class="btn btn-secondary btn-sm" onclick="selectAll()">All</button>
+      <button class="btn btn-secondary btn-sm" onclick="selectNone()">None</button>
+      <button class="btn btn-secondary btn-sm" onclick="loadDatasets()">Refresh</button>
+      <input type="text" id="ds-filter" placeholder="filter..." style="flex:1;min-width:0"
+        oninput="renderDatasets()">
+    </div>
+    <div class="list" id="ds-list"></div>
+  </div>
+
+  <!-- CENTER: scan controls -->
+  <div class="panel-center">
+
+    <div class="section">
+      <h3>Scan Mode</h3>
+      <div class="radio-group">
+        <label><input type="radio" name="mode" value="full" checked onchange="onModeChange()"> Full Scan</label>
+        <label><input type="radio" name="mode" value="sampled" onchange="onModeChange()"> AI Quick-run</label>
+      </div>
+      <div class="hint">Full scan loads all files. Quick-run asks AI to select a minimal sample.</div>
+    </div>
+
+    <div class="section" id="section-kernel">
+      <h3>Kernel Override</h3>
+      <label>Kernel path override (leave blank for auto-detect)</label>
+      <input type="text" id="kernel-override" placeholder="app_kernel/kernels/my_kernel.py">
+      <div class="hint">Auto-detects kernel by dataset name. Leave blank to use auto-detection or default parser (see Options).</div>
+    </div>
+
+    <div class="section">
+      <h3>Options</h3>
+      <label style="display:flex;align-items:center;gap:6px;color:var(--text);cursor:pointer">
+        <input type="checkbox" id="force-rescan"> Force rescan (ignore cache)
+      </label>
+      <div style="height:8px"></div>
+      <label style="display:flex;align-items:center;gap:6px;color:var(--text);cursor:pointer">
+        <input type="checkbox" id="use-default-parser"> Use default parser for datasets without kernel
+      </label>
+      <div class="hint">When checked, datasets without a kernel file use EEGUnity's built-in parser. When unchecked, such datasets are skipped.</div>
+    </div>
+
+    <div class="section" id="section-ai" style="display:none">
+      <h3>AI Quick-run</h3>
+      <div id="ai-status" class="hint">Select datasets and click "Get Sample" to ask AI for sampling recommendation.</div>
+      <div class="mt flex gap">
+        <button class="btn btn-secondary btn-sm" onclick="getAISample()" id="btn-ai-sample">Get Sample</button>
+        <button class="btn btn-secondary btn-sm" onclick="clearAISample()">Clear</button>
+      </div>
+      <div id="ai-results"></div>
+    </div>
+
+    <div class="section">
+      <div class="flex gap">
+        <button class="btn btn-primary" id="btn-scan" onclick="startScan()" style="flex:1">
+          Run Scan
+        </button>
+        <button class="btn btn-ok" id="btn-commit" onclick="commitSelected()" disabled style="flex:1">
+          Write to analysis.md
+        </button>
+      </div>
+      <div class="mt">
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+        <div id="scan-msg" class="hint"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Selected</h3>
+      <div id="sel-summary" class="hint">No datasets selected.</div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: diff viewer -->
+  <div class="panel-right">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('diff')">Diff Preview</div>
+      <div class="tab" onclick="switchTab('events')">Event Stats</div>
+      <div class="tab" onclick="switchTab('subjects')">Subject Info</div>
+      <div class="tab" onclick="switchTab('log')">Scan Log</div>
+    </div>
+    <div class="tab-content">
+      <div class="tab-pane active" id="pane-diff">
+        <div id="diff-content" style="color:var(--text2);font-size:12px">
+          Run a scan to see before/after diff.
+        </div>
+      </div>
+      <div class="tab-pane" id="pane-events">
+        <div id="events-content" style="color:var(--text2);font-size:12px">
+          Run a scan to see event statistics.
+        </div>
+      </div>
+      <div class="tab-pane" id="pane-subjects">
+        <div id="subjects-content" style="color:var(--text2);font-size:12px">
+          Run a scan to see subject info.
+        </div>
+      </div>
+      <div class="tab-pane" id="pane-log">
+        <div id="log-content"></div>
+      </div>
+    </div>
+    <div class="log-panel">
+      <div class="progress-bar"><div class="progress-fill" id="status-fill" style="width:0%"></div></div>
+      <div id="status-msg" class="log-line">Ready.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Settings modal -->
+<div class="modal-overlay" id="modal-settings">
+  <div class="modal">
+    <h2>Machine Settings</h2>
+    <div class="form-row">
+      <label>Machine ID <span class="tag" id="cfg-mid"></span></label>
+      <input type="text" id="cfg-hostname" disabled placeholder="hostname (auto)">
+    </div>
+    <div class="form-row">
+      <label>Dataset Root (where raw EEG folders live)</label>
+      <input type="text" id="cfg-dataset-root" placeholder="H:/ or /data/eeg">
+    </div>
+    <div class="form-row">
+      <label>EEGUnity Path (root of EEGUnity repo)</label>
+      <input type="text" id="cfg-eegunity-path" placeholder="E:/github_projects/EEGUnity">
+    </div>
+    <div class="sep"></div>
+    <div class="form-row">
+      <label>LLM API URL</label>
+      <input type="text" id="cfg-llm-url" placeholder="https://api.openai.com/v1">
+    </div>
+    <div class="form-row">
+      <label>LLM API Key</label>
+      <input type="text" id="cfg-llm-key" placeholder="sk-...">
+    </div>
+    <div class="form-row">
+      <label>LLM Model</label>
+      <input type="text" id="cfg-llm-model" placeholder="gpt-4o">
+    </div>
+    <div class="form-row">
+      <label>Proxy (optional)</label>
+      <input type="text" id="cfg-llm-proxy" placeholder="http://127.0.0.1:7890">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeSettings()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSettings()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---------------------------------------------------------------------------
+// State
+// ---------------------------------------------------------------------------
+let allDatasets = [];
+let selected = new Set();  // dataset names
+let scanResults = {};      // dataset → result from server
+let pendingCommits = {};   // dataset → new_content
+let aiSamples = {};        // dataset → {indices, reason}
+let pollTimer = null;
+let _lastStdoutLen = 0;
+
+// ---------------------------------------------------------------------------
+// Init
+// ---------------------------------------------------------------------------
+async function init() {
+  await loadConfig();
+  await loadDatasets();
+}
+
+let _llmConfigured = false;
+
+async function loadConfig() {
+  const r = await fetch('/api/config');
+  const cfg = await r.json();
+  document.getElementById('hdr-machine').textContent =
+    `${cfg.hostname || ''} · ${cfg.machine_id || ''}`;
+  document.getElementById('hdr-eegunity').textContent =
+    `EEGUnity ${cfg.eegunity_version || '?'}`;
+  // Populate modal
+  document.getElementById('cfg-mid').textContent = cfg.machine_id || '';
+  document.getElementById('cfg-hostname').value = cfg.hostname || '';
+  document.getElementById('cfg-dataset-root').value = cfg.dataset_root || '';
+  document.getElementById('cfg-eegunity-path').value = cfg.eegunity_path || '';
+  document.getElementById('cfg-llm-url').value = cfg.url || '';
+  document.getElementById('cfg-llm-key').value = cfg.key || '';
+  document.getElementById('cfg-llm-model').value = cfg.model || '';
+  document.getElementById('cfg-llm-proxy').value = cfg.proxy || '';
+  // Update AI Quick-run availability
+  _llmConfigured = !!(cfg.url && cfg.key && cfg.model);
+  updateAIQuickrunState();
+}
+
+function updateAIQuickrunState() {
+  const btn = document.getElementById('btn-ai-sample');
+  const hint = document.getElementById('ai-status');
+  if (!_llmConfigured) {
+    btn.disabled = true;
+    hint.innerHTML = '<span style="color:var(--err)">LLM not configured. Open Settings to add API URL, Key, and Model.</span>';
+  } else {
+    btn.disabled = false;
+    if (hint.textContent.startsWith('LLM not configured')) {
+      hint.textContent = 'Select datasets and click "Get Sample" to ask AI for sampling recommendation.';
+    }
+  }
+}
+
+async function loadDatasets() {
+  const r = await fetch('/api/datasets');
+  allDatasets = await r.json();
+  renderDatasets();
+  updateSelSummary();
+}
+
+function renderDatasets() {
+  const q = document.getElementById('ds-filter').value.toLowerCase();
+  const list = document.getElementById('ds-list');
+  list.innerHTML = '';
+  for (const ds of allDatasets) {
+    if (q && !ds.name.toLowerCase().includes(q)) continue;
+    const div = document.createElement('div');
+    div.className = 'ds-item' + (selected.has(ds.name) ? ' selected' : '');
+    const statusClass = ds.status || 'unknown';
+    const statusTitle = ds.status || 'unknown';
+    div.innerHTML = `
+      <input class="cb" type="checkbox" ${selected.has(ds.name) ? 'checked' : ''}
+        onchange="toggleDs('${ds.name}', this.checked)" onclick="event.stopPropagation()">
+      <div class="status-dot ${statusClass}" title="Status: ${statusTitle}"></div>
+      <div class="name" title="${ds.name} · ${statusTitle}">${ds.name}</div>
+      <div class="badges">
+        ${ds.has_kernel ? '<span class="badge k">K</span>' : '<span class="badge nok">NK</span>'}
+        ${ds.has_cache ? '<span class="badge cache">C</span>' : ''}
+        ${scanResults[ds.name] ? '<span class="badge k">✓</span>' : ''}
+      </div>`;
+    div.addEventListener('click', () => showResult(ds.name));
+    list.appendChild(div);
+  }
+}
+
+function toggleDs(name, checked) {
+  if (checked) selected.add(name);
+  else selected.delete(name);
+  renderDatasets();
+  updateSelSummary();
+}
+
+function selectAll() {
+  const q = document.getElementById('ds-filter').value.toLowerCase();
+  for (const ds of allDatasets) {
+    if (!q || ds.name.toLowerCase().includes(q)) selected.add(ds.name);
+  }
+  renderDatasets(); updateSelSummary();
+}
+
+function selectNone() {
+  selected.clear();
+  renderDatasets(); updateSelSummary();
+}
+
+function updateSelSummary() {
+  const n = selected.size;
+  const withKernel = [...selected].filter(name => {
+    const ds = allDatasets.find(d => d.name === name);
+    return ds && ds.has_kernel;
+  });
+  document.getElementById('sel-summary').textContent =
+    `${n} selected (${withKernel.length} have kernel, ${n - withKernel.length} missing)`;
+}
+
+// ---------------------------------------------------------------------------
+// Mode toggle
+// ---------------------------------------------------------------------------
+function onModeChange() {
+  const mode = document.querySelector('input[name=mode]:checked').value;
+  document.getElementById('section-ai').style.display = mode === 'sampled' ? '' : 'none';
+}
+
+// ---------------------------------------------------------------------------
+// AI Quick-run sampling
+// ---------------------------------------------------------------------------
+async function getAISample() {
+  if (!_llmConfigured) {
+    document.getElementById('ai-status').innerHTML =
+      '<span style="color:var(--err)">LLM not configured. Open Settings to add API URL, Key, and Model.</span>';
+    return;
+  }
+  const btn = document.getElementById('btn-ai-sample');
+  btn.disabled = true;
+  document.getElementById('ai-status').textContent = 'Asking AI...';
+  aiSamples = {};
+
+  const targets = [...selected].filter(name => {
+    const ds = allDatasets.find(d => d.name === name);
+    return ds && ds.has_cache;
+  });
+
+  if (targets.length === 0) {
+    document.getElementById('ai-status').textContent =
+      'No selected datasets have locator cache. Run full scan first.';
+    btn.disabled = false;
+    return;
+  }
+
+  const resultsEl = document.getElementById('ai-results');
+  resultsEl.innerHTML = '';
+
+  for (const ds of targets) {
+    const r = await fetch('/api/llm/sample', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({dataset: ds}),
+    });
+    const data = await r.json();
+    if (data.error) {
+      log(`AI sample error for ${ds}: ${data.error}`, 'err');
+      continue;
+    }
+    aiSamples[ds] = {indices: data.sampled_indices, reason: data.reason};
+    const el = document.createElement('div');
+    el.className = 'sample-info';
+    el.textContent = `${ds}: ${data.sampled_indices.length}/${data.total} files — ${data.reason}`;
+    resultsEl.appendChild(el);
+  }
+
+  document.getElementById('ai-status').textContent =
+    `Sampled ${Object.keys(aiSamples).length} dataset(s). Datasets without cache run full scan.`;
+  btn.disabled = false;
+}
+
+function clearAISample() {
+  aiSamples = {};
+  document.getElementById('ai-results').innerHTML = '';
+  document.getElementById('ai-status').textContent = 'Cleared.';
+}
+
+// ---------------------------------------------------------------------------
+// Scan
+// ---------------------------------------------------------------------------
+async function startScan() {
+  if (selected.size === 0) { alert('Select at least one dataset.'); return; }
+
+  const mode = document.querySelector('input[name=mode]:checked').value;
+  const kernelOverride = document.getElementById('kernel-override').value.trim();
+  const forceRescan = document.getElementById('force-rescan').checked;
+  const useDefaultParser = document.getElementById('use-default-parser').checked;
+
+  let datasets = [...selected];
+  if (!useDefaultParser) {
+    // Only include datasets that have a kernel (or a global override)
+    datasets = datasets.filter(name => {
+      const ds = allDatasets.find(d => d.name === name);
+      return ds && (ds.has_kernel || kernelOverride);
+    });
+    if (datasets.length === 0) {
+      alert('No selected datasets have a kernel. Check "Use default parser for datasets without kernel" or provide a kernel override.');
+      return;
+    }
+  }
+
+  // Build sampled_indices_map
+  const sampledMap = {};
+  if (mode === 'sampled') {
+    for (const [ds, s] of Object.entries(aiSamples)) {
+      if (selected.has(ds)) sampledMap[ds] = s.indices;
+    }
+  }
+
+  const kernelOverrides = {};
+  if (kernelOverride) {
+    for (const ds of datasets) kernelOverrides[ds] = kernelOverride;
+  }
+
+  document.getElementById('btn-scan').disabled = true;
+  document.getElementById('btn-commit').disabled = true;
+  pendingCommits = {};
+
+  log(`Starting ${mode} scan for ${datasets.length} dataset(s)...`);
+  setStatus(`Starting scan...`, 5);
+  switchTab('log');  // Show live stdout during scan
+
+  const r = await fetch('/api/scan/start', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      datasets, mode,
+      sampled_indices_map: sampledMap,
+      kernel_overrides: kernelOverrides,
+      force_rescan: forceRescan,
+    }),
+  });
+  const {job_id, error} = await r.json();
+  if (error) { log(error, 'err'); document.getElementById('btn-scan').disabled = false; return; }
+
+  pollJob(job_id);
+}
+
+function pollJob(jid) {
+  if (pollTimer) clearInterval(pollTimer);
+  _lastStdoutLen = 0;
+  pollTimer = setInterval(async () => {
+    const r = await fetch(`/api/scan/status/${jid}`);
+    const job = await r.json();
+    setStatus(job.message, job.progress);
+
+    // Append new stdout lines to the Log tab
+    const lines = job.stdout_lines || [];
+    if (lines.length > _lastStdoutLen) {
+      const newLines = lines.slice(_lastStdoutLen);
+      _lastStdoutLen = lines.length;
+      const logEl = document.getElementById('log-content');
+      for (const line of newLines) {
+        const div = document.createElement('div');
+        div.className = 'log-line';
+        div.style.fontFamily = 'var(--mono)';
+        div.style.fontSize = '10px';
+        div.textContent = line;
+        logEl.appendChild(div);
+      }
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    if (job.status === 'done') {
+      clearInterval(pollTimer);
+      document.getElementById('btn-scan').disabled = false;
+      onScanDone(job.result);
+    } else if (job.status === 'error') {
+      clearInterval(pollTimer);
+      document.getElementById('btn-scan').disabled = false;
+      log(job.error || 'Unknown error', 'err');
+    }
+  }, 800);
+}
+
+function onScanDone(results) {
+  scanResults = results;
+  renderDatasets();
+
+  let hasCommits = false;
+  for (const [ds, res] of Object.entries(results)) {
+    if (res.error) {
+      log(`${ds}: ERROR — ${res.error}`, 'err');
+    } else {
+      log(`${ds}: ${res.diffs.length} section(s) changed`, 'ok');
+      if (res.diffs.length > 0) {
+        pendingCommits[ds] = res.new_content;
+        hasCommits = true;
+      }
+    }
+  }
+
+  document.getElementById('btn-commit').disabled = !hasCommits;
+  setStatus('Scan complete.', 100);
+
+  // Show first result
+  const first = Object.keys(results)[0];
+  if (first) showResult(first);
+
+  switchTab('diff');
+}
+
+// ---------------------------------------------------------------------------
+// Show result in right panel
+// ---------------------------------------------------------------------------
+function showResult(name) {
+  const res = scanResults[name];
+  if (!res) return;
+
+  // Highlight in list
+  document.querySelectorAll('.ds-item').forEach(el => {
+    if (el.querySelector('.name').textContent === name) el.classList.add('selected');
+  });
+
+  renderDiff(name, res);
+  renderEvents(name, res);
+  renderSubjects(name, res);
+}
+
+function renderDiff(name, res) {
+  const el = document.getElementById('diff-content');
+  if (res.error) {
+    el.innerHTML = `<div style="color:var(--err)">${escHtml(res.error)}</div>`;
+    return;
+  }
+  if (!res.diffs || res.diffs.length === 0) {
+    el.innerHTML = `<div style="color:var(--ok)">No changes for ${name}.</div>`;
+    return;
+  }
+
+  const commitCb = pendingCommits[name]
+    ? `<button class="btn btn-ok btn-sm" onclick="commitOne('${name}')">Write ${name}</button>`
+    : '';
+
+  let html = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <strong>${name}</strong> — ${res.diffs.length} section(s) changed ${commitCb}
+    <span class="tag">${res.scan_result?.scan_type || ''} scan</span>
+  </div>`;
+
+  for (const diff of res.diffs) {
+    html += `<div class="diff-section">
+      <div class="diff-header"><span>${escHtml(diff.section)}</span></div>
+      <div class="diff-cols">
+        <div class="diff-col old">
+          <h4>Before</h4>
+          <pre class="diff-text old-text">${escHtml(diff.old)}</pre>
+        </div>
+        <div class="diff-col">
+          <h4>After</h4>
+          <pre class="diff-text new-text">${escHtml(diff.new)}</pre>
+        </div>
+      </div>
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+
+function renderEvents(name, res) {
+  const el = document.getElementById('events-content');
+  if (!res || res.error || !res.event_counts) {
+    el.innerHTML = `<div style="color:var(--text2)">No event data.</div>`;
+    return;
+  }
+  const counts = res.event_counts;
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  const sampled = res.scan_result?.sampled;
+
+  let html = `<div style="margin-bottom:8px"><strong>${name}</strong>`;
+  if (sampled) html += ` <span class="tag" style="color:var(--warn)">sampled scan</span>`;
+  html += `</div><table style="width:100%;border-collapse:collapse;font-size:12px;font-family:var(--mono)">
+    <tr style="border-bottom:1px solid var(--border);color:var(--text2)">
+      <th style="text-align:left;padding:3px 6px">Event ID</th>
+      <th style="text-align:right;padding:3px 6px">Count${sampled ? ' (sampled)' : ''}</th>
+    </tr>`;
+  for (const [eid, cnt] of sorted) {
+    html += `<tr style="border-bottom:1px solid var(--border)">
+      <td style="padding:3px 6px"><code>${escHtml(eid)}</code></td>
+      <td style="text-align:right;padding:3px 6px">${cnt}</td>
+    </tr>`;
+  }
+  html += '</table>';
+  el.innerHTML = html;
+}
+
+function renderSubjects(name, res) {
+  const el = document.getElementById('subjects-content');
+  if (!res || res.error || !res.subject_info) {
+    el.innerHTML = `<div style="color:var(--text2)">No subject info.</div>`;
+    return;
+  }
+  const s = res.subject_info;
+  const n = s.record_count;
+  el.innerHTML = `
+    <div style="margin-bottom:8px"><strong>${name}</strong></div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px">
+      <tr style="border-bottom:1px solid var(--border);color:var(--text2)">
+        <th style="text-align:left;padding:4px 8px">Field</th>
+        <th style="text-align:left;padding:4px 8px">Value</th>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:4px 8px;color:var(--text2)">Record Count</td>
+        <td style="padding:4px 8px;font-family:var(--mono)">${n}</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:4px 8px;color:var(--text2)">Age Completeness</td>
+        <td style="padding:4px 8px;font-family:var(--mono)">${s.age_complete}/${n}</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:4px 8px;color:var(--text2)">Sex Completeness</td>
+        <td style="padding:4px 8px;font-family:var(--mono)">${s.sex_complete}/${n}</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:4px 8px;color:var(--text2)">Device Completeness</td>
+        <td style="padding:4px 8px;font-family:var(--mono)">${s.device_complete}/${n}</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:4px 8px;color:var(--text2)">Age Examples</td>
+        <td style="padding:4px 8px;font-family:var(--mono)">${s.age_examples.join(', ') || 'N/A'}</td>
+      </tr>
+      <tr>
+        <td style="padding:4px 8px;color:var(--text2)">Sex Examples</td>
+        <td style="padding:4px 8px;font-family:var(--mono)">${s.sex_examples.join(', ') || 'N/A'}</td>
+      </tr>
+    </table>`;
+}
+
+// ---------------------------------------------------------------------------
+// Commit
+// ---------------------------------------------------------------------------
+async function commitOne(name) {
+  if (!pendingCommits[name]) return;
+  const r = await fetch('/api/scan/commit', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({commits: [{dataset: name, new_content: pendingCommits[name]}]}),
+  });
+  const data = await r.json();
+  if (data.written?.includes(name)) {
+    const transitioned = (data.transitions || []).includes(name);
+    log(`Written: ${name}` + (transitioned ? ' · Status: wait_kernel_update → wait_manual_review' : ''), 'ok');
+    delete pendingCommits[name];
+    document.getElementById('btn-commit').disabled = Object.keys(pendingCommits).length === 0;
+    await loadDatasets();
+  } else {
+    log(`Write failed for ${name}: ${JSON.stringify(data.errors)}`, 'err');
+  }
+}
+
+async function commitSelected() {
+  const commits = Object.entries(pendingCommits).map(([ds, c]) => ({dataset: ds, new_content: c}));
+  if (commits.length === 0) return;
+
+  const r = await fetch('/api/scan/commit', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({commits}),
+  });
+  const data = await r.json();
+  const transitions = data.transitions || [];
+  for (const ds of (data.written || [])) {
+    const t = transitions.includes(ds);
+    log(`Written: ${ds}` + (t ? ' · Status: wait_kernel_update → wait_manual_review' : ''), 'ok');
+    delete pendingCommits[ds];
+  }
+  for (const e of (data.errors || [])) {
+    log(`Error writing ${e.dataset}: ${e.error}`, 'err');
+  }
+  document.getElementById('btn-commit').disabled = Object.keys(pendingCommits).length === 0;
+  await loadDatasets();
+}
+
+// ---------------------------------------------------------------------------
+// Settings modal
+// ---------------------------------------------------------------------------
+function openSettings() {
+  document.getElementById('modal-settings').classList.add('open');
+}
+function closeSettings() {
+  document.getElementById('modal-settings').classList.remove('open');
+}
+async function saveSettings() {
+  const cfg = {
+    dataset_root: document.getElementById('cfg-dataset-root').value.trim(),
+    eegunity_path: document.getElementById('cfg-eegunity-path').value.trim(),
+    url: document.getElementById('cfg-llm-url').value.trim(),
+    key: document.getElementById('cfg-llm-key').value.trim(),
+    model: document.getElementById('cfg-llm-model').value.trim(),
+    proxy: document.getElementById('cfg-llm-proxy').value.trim(),
+  };
+  await fetch('/api/config', {method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(cfg)});
+  closeSettings();
+  await loadConfig();
+  log('Settings saved.', 'ok');
+}
+
+// ---------------------------------------------------------------------------
+// Tabs
+// ---------------------------------------------------------------------------
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    const names = ['diff', 'events', 'subjects', 'log'];
+    t.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById(`pane-${name}`).classList.add('active');
+}
+
+// ---------------------------------------------------------------------------
+// Log / status
+// ---------------------------------------------------------------------------
+function log(msg, cls = '') {
+  const el = document.getElementById('log-content');
+  const line = document.createElement('div');
+  line.className = 'log-line' + (cls ? ' ' + cls : '');
+  line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+}
+
+function setStatus(msg, pct) {
+  document.getElementById('status-msg').textContent = msg;
+  document.getElementById('status-fill').style.width = `${pct}%`;
+  document.getElementById('scan-msg').textContent = msg;
+  document.getElementById('progress-fill').style.width = `${pct}%`;
+}
+
+// ---------------------------------------------------------------------------
+// Util
+// ---------------------------------------------------------------------------
+function escHtml(s) {
+  return String(s ?? '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Start
+init();
+</script>
+</body>
+</html>
