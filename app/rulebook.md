@@ -101,6 +101,8 @@
 2. `STIM`：trigger/stim channel 路由，适用于以码值或触发脉冲形式表达的事件标签。
 3. `MISC`：misc channel 路由，适用于数值型辅助标签、连续量或不宜直接表示为事件名称的附属标签。
 
+> **已废止**：上述 `Annotation`、`STIM`、`MISC` 三值自 v0.4 起废止，不得在新文档中作为 `Label Route` 的取值使用。当前合法取值（`event`、`misc`、`info`）及其定义见第77条。本条保留仅供历史对照。
+
 ### 第9条 Task
 
 `Task` 是指文档中可直接指导 EEG 数据切窗、标签构造与监督学习配置的任务定义。
@@ -480,10 +482,9 @@ LLM 审核脚本负责：
 ### 第51条之一 与 `Status` 的联动
 
 1. 若当前 `Event Structure`、`MISC Label Summary`（如有）与 `Tasks Area` 之间，已经在文档语义上形成足够一致的证据链，则不应仅因预处理、artifact rejection、质量控制或实现细节而判为 `wait_kernel_update`。
-2. 若当前 `Event Structure` 的不足会直接导致 `Type 1/2/3` 责任无法闭环，例如原应进入文档的原始事件尚未登记、应进入 `MISC` 的连续目标尚无路由说明、companion files 或 `participants.tsv/events.tsv` 的接入方式尚未在文本中交代清楚，则 `Status` 原则上应为 `wait_kernel_update`。
-3. 若当前文档已经足以组成既有 `Classical Task` 或 `Potential Task` 的文本依据，但是否最终放行为 `completed` 仍需管理员或人类审核员确认，则 LLM 审核脚本应暂时判为 `wait_manual_review`。
-4. 若当前 `Event Structure` 不足以支撑现有任务，且问题主要来自任务定义本身是否成立、事件语义是否正确、证据是否冲突、标签映射是否应被删除或降级等人工裁定问题，则 `Status` 原则上应为 `wait_manual_review`。
-5. 仅当当前 `Event Structure` 与相关任务、路由说明、`MISC Label Summary`（如有）之间已形成足够一致且可追溯的实现依据，并经管理员或人类审核员确认后，`Status` 方可为 `completed`。
+2. 若当前文档已经足以组成既有 `Classical Task` 或 `Potential Task` 的文本依据，但是否最终放行为 `completed` 仍需管理员或人类审核员确认，则 LLM 审核脚本应暂时判为 `wait_manual_review`。
+3. 若当前 `Event Structure` 不足以支撑现有任务，且问题主要来自任务定义本身是否成立、事件语义是否正确、证据是否冲突、标签映射是否应被删除或降级等人工裁定问题，则 `Status` 原则上应为 `wait_manual_review`。
+4. 仅当当前 `Event Structure` 与相关任务、路由说明、`MISC Label Summary`（如有）之间已形成足够一致且可追溯的实现依据，并经管理员或人类审核员确认后，`Status` 方可为 `completed`。
 
 ### 第52条 上下文依赖事件
 
