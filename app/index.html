@@ -1916,6 +1916,8 @@ function chatKeydown(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();se
 async function sendChat() {
   const input=document.getElementById('chat-input');
   const msg=input.value.trim(); if(!msg) return;
+  // Sync current DOM edits into rawContent before building system prompt
+  if (currentDataset) collectStep(currentStep);
   input.value=''; appendChat('user',msg);
   llmHistory.push({role:'user',content:msg});
   const thinkingHtml='<div class="thinking-dots"><span>●</span><span>●</span><span>●</span></div>';
