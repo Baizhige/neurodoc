@@ -8,6 +8,7 @@
 .vscode/
 .idea/
 .claude/
+.codex
 
 # OS-generated hidden files
 .DS_Store
