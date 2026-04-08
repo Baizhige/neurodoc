@@ -76,6 +76,12 @@ textarea { resize: vertical; min-height: 60px; font-size: 11px; }
 .tab-pane { display: none; }
 .tab-pane.active { display: block; }
 
+/* Locator table */
+.locator-wrap { overflow: auto; max-height: calc(100vh - 160px); border: 1px solid var(--border); border-radius: var(--radius); }
+.locator-table { border-collapse: collapse; width: max-content; min-width: 100%; }
+.locator-table thead { position: sticky; top: 0; z-index: 1; background: var(--bg2); }
+.locator-filter-row th { background: var(--bg3); padding: 3px 4px; }
+
 /* Diff display */
 .diff-section { margin-bottom: 12px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
 .diff-header { background: var(--bg3); padding: 6px 10px; font-size: 11px; font-weight: 600;
@@ -227,6 +233,7 @@ btn, .btn { display: inline-flex; align-items: center; gap: 5px;
       <div class="tab active" onclick="switchTab('diff')">Diff Preview</div>
       <div class="tab" onclick="switchTab('events')">Event Stats</div>
       <div class="tab" onclick="switchTab('subjects')">Subject Info</div>
+      <div class="tab" onclick="switchTab('locator')">Locator</div>
       <div class="tab" onclick="switchTab('log')">Scan Log</div>
     </div>
     <div class="tab-content">
@@ -243,6 +250,11 @@ btn, .btn { display: inline-flex; align-items: center; gap: 5px;
       <div class="tab-pane" id="pane-subjects">
         <div id="subjects-content" style="color:var(--text2);font-size:12px">
           Run a scan to see subject info.
+        </div>
+      </div>
+      <div class="tab-pane" id="pane-locator">
+        <div id="locator-content">
+          <div style="color:var(--text2);font-size:12px">Select a dataset to view its locator cache.</div>
         </div>
       </div>
       <div class="tab-pane" id="pane-log">
@@ -390,7 +402,7 @@ function renderDatasets() {
         ${ds.has_cache ? '<span class="badge cache">C</span>' : ''}
         ${scanResults[ds.name] ? '<span class="badge k">✓</span>' : ''}
       </div>`;
-    div.addEventListener('click', () => showResult(ds.name));
+    div.addEventListener('click', () => { _activeLocatorDataset = ds.name; showResult(ds.name); });
     list.appendChild(div);
   }
 }
@@ -534,6 +546,7 @@ async function startScan() {
 
   log(`Starting ${mode} scan for ${datasets.length} dataset(s)...`);
   setStatus(`Starting scan...`, 5);
+  setScanningTabs(true);
   switchTab('log');  // Show live stdout during scan
 
   const r = await fetch('/api/scan/start', {
@@ -584,6 +597,7 @@ function pollJob(jid) {
     } else if (job.status === 'error') {
       clearInterval(pollTimer);
       document.getElementById('btn-scan').disabled = false;
+      setScanningTabs(false);
       log(job.error || 'Unknown error', 'err');
     }
   }, 800);
@@ -608,12 +622,17 @@ function onScanDone(results) {
 
   document.getElementById('btn-commit').disabled = !hasCommits;
   setStatus('Scan complete.', 100);
+  setScanningTabs(false);
 
   // Show first result
   const first = Object.keys(results)[0];
   if (first) showResult(first);
 
-  switchTab('diff');
+  // Only auto-jump to diff if user is still on the log tab (hasn't manually switched)
+  const activePaneId = document.querySelector('.tab-pane.active')?.id;
+  if (!activePaneId || activePaneId === 'pane-log') {
+    switchTab('diff');
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -631,6 +650,8 @@ function showResult(name) {
   renderDiff(name, res);
   renderEvents(name, res);
   renderSubjects(name, res);
+  _activeLocatorDataset = name;
+  _locatorData = null;  // invalidate cache so locator reloads
 }
 
 function renderDiff(name, res) {
@@ -741,6 +762,79 @@ function renderSubjects(name, res) {
 }
 
 // ---------------------------------------------------------------------------
+// Locator viewer
+// ---------------------------------------------------------------------------
+let _activeLocatorDataset = null;
+let _locatorData = null;  // {columns, rows}
+
+async function loadLocator(name) {
+  _activeLocatorDataset = name;
+  const el = document.getElementById('locator-content');
+  el.innerHTML = `<div style="color:var(--text2);font-size:12px">Loading…</div>`;
+  try {
+    const r = await fetch(`/api/dataset/${encodeURIComponent(name)}/locator`);
+    if (!r.ok) {
+      const j = await r.json().catch(() => ({}));
+      el.innerHTML = `<div style="color:var(--err);font-size:12px">${escHtml(j.error || 'Failed to load locator.')}</div>`;
+      return;
+    }
+    _locatorData = await r.json();
+    renderLocatorTable(el, _locatorData);
+  } catch(e) {
+    el.innerHTML = `<div style="color:var(--err);font-size:12px">${escHtml(String(e))}</div>`;
+  }
+}
+
+function renderLocatorTable(el, data) {
+  const { columns, rows } = data;
+  if (!columns || !rows) { el.innerHTML = '<div style="color:var(--text2)">Empty.</div>'; return; }
+
+  // Filter state per column
+  const filters = new Array(columns.length).fill('');
+
+  function applyFilters() {
+    const tbody = el.querySelector('tbody');
+    tbody.innerHTML = '';
+    const filtered = rows.filter(row =>
+      filters.every((f, ci) => !f || String(row[ci]).toLowerCase().includes(f.toLowerCase()))
+    );
+    for (const row of filtered) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = row.map(cell => `<td style="padding:2px 6px;border-bottom:1px solid var(--border);white-space:nowrap;font-family:var(--mono);font-size:11px">${escHtml(String(cell))}</td>`).join('');
+      tbody.appendChild(tr);
+    }
+    el.querySelector('.locator-count').textContent = `${filtered.length} / ${rows.length} rows`;
+  }
+
+  let html = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:12px">
+    <strong>${escHtml(_activeLocatorDataset)}</strong>
+    <span class="locator-count" style="color:var(--text2)"></span>
+  </div>
+  <div class="locator-wrap">
+    <table class="locator-table">
+      <thead>
+        <tr class="locator-filter-row">${columns.map((_, ci) =>
+          `<th style="padding:2px 4px"><input class="locator-filter" data-ci="${ci}" type="text" placeholder="filter…" style="width:100%;box-sizing:border-box;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:3px;padding:2px 4px;font-size:10px"></th>`
+        ).join('')}</tr>
+        <tr>${columns.map(c => `<th style="padding:3px 6px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;font-size:11px">${escHtml(c)}</th>`).join('')}</tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>`;
+
+  el.innerHTML = html;
+
+  el.querySelectorAll('.locator-filter').forEach(input => {
+    input.addEventListener('input', e => {
+      filters[+e.target.dataset.ci] = e.target.value;
+      applyFilters();
+    });
+  });
+
+  applyFilters();
+}
+
+// ---------------------------------------------------------------------------
 // Commit
 // ---------------------------------------------------------------------------
 async function commitOne(name) {
@@ -825,13 +919,26 @@ async function saveSettings() {
 // ---------------------------------------------------------------------------
 // Tabs
 // ---------------------------------------------------------------------------
+function setScanningTabs(scanning) {
+  // During a scan: disable all tabs except Scan Log (log is always accessible).
+  // After scan: re-enable everything.
+  const names = ['diff', 'events', 'subjects', 'locator', 'log'];
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    if (names[i] === 'log') return;
+    t.style.opacity = scanning ? '0.35' : '';
+    t.style.pointerEvents = scanning ? 'none' : '';
+    t.title = scanning ? 'Scan in progress…' : '';
+  });
+}
+
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach((t, i) => {
-    const names = ['diff', 'events', 'subjects', 'log'];
+    const names = ['diff', 'events', 'subjects', 'locator', 'log'];
     t.classList.toggle('active', names[i] === name);
   });
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
   document.getElementById(`pane-${name}`).classList.add('active');
+  if (name === 'locator' && _activeLocatorDataset) loadLocator(_activeLocatorDataset);
 }
 
 // ---------------------------------------------------------------------------

@@ -10,37 +10,34 @@ Nine subjects (B01-B09) performed two-class cued motor imagery of the left and r
 
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
 
+> **Kernel SHA256**: `2d9abc38f621e51629f0d04150eb25c050be75baa79967c83d8222f0f66353c1`
+> **EEGUnity Version**: `0.8.0`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|---|---|---|---|---|
-| `Start of a trial` | ~1520/subject | admin | raw | Trial-onset fixation cross (pre-cue) |
-| `Cue onset left (class 1)` | ~380/subject | event | raw | Left-hand motor imagery cue |
-| `Cue onset right (class 2)` | ~380/subject | event | raw | Right-hand motor imagery cue |
-| `BCI feedback (continuous)` | ~760/subject | admin | raw | BCI feedback period (sessions 3-5 only) |
-| `Idling EEG (eyes open)` | rare | admin | raw | Resting state with eyes open |
-| `Idling EEG (eyes closed)` | rare | admin | raw | Resting state with eyes closed |
-| `Rejected trial` | variable | admin | raw | Experimenter-rejected trial |
-| `Start of a new run` | ~40/subject | admin | raw | Run boundary marker |
-| `Horizontal eye movement` | rare | admin | raw | Eye artifact marker |
-| `Vertical eye movement` | rare | admin | raw | Eye artifact marker |
-| `Eye rotation` | rare | admin | raw | Eye artifact marker |
-| `Eye blinks` | rare | admin | raw | Eye artifact marker |
+|----------|---------------|------|------------|---------|
+| `Start of a trial` | 6240 | admin | raw | Trial-onset fixation cross (pre-cue) |
+| `Cue onset left (class 1)` | 4460 | event | raw | Left-hand motor imagery cue |
+| `Cue onset right (class 2)` | 4460 | event | raw | Right-hand motor imagery cue |
+| `BCI feedback (continuous)` | 1440 | admin | raw | BCI feedback period (sessions 3-5 only) |
+| `Rejected trial` | 1253 | admin | raw | Experimenter-rejected trial |
+| `Vertical eye movement` | 323 | admin | raw | Eye artifact marker |
+| `Eye blinks` | 263 | admin | raw | Eye artifact marker |
+| `Eye rotation` | 263 | admin | raw | Eye artifact marker |
+| `Start of a new run` | 252 | admin | raw | Run boundary marker |
+| `Horizontal eye movement` | 53 | admin | raw | Eye artifact marker |
+| `Idling EEG (eyes closed)` | 43 | admin | raw | Resting state with eyes closed |
+| `Idling EEG (eyes open)` | 43 | admin | raw | Resting state with eyes open |
 
-
-> Counts are approximate per subject (all sessions combined).
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | a device with Ag/AgCl electrode |
-
 
 ## Tasks
 

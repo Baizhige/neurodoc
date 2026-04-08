@@ -405,17 +405,16 @@ LLM 审核脚本负责：
 
 ### 第42条之五 Kernel 指纹
 
-1. `## File Scan Result` 节开头应以 blockquote 形式记录生成本扫描结果所用的 kernel 版本与哈希。
-2. 格式为（四行固定顺序）：
+1. `## File Scan Result` 节开头应以 blockquote 形式记录生成本扫描结果所用的 kernel 指纹信息。
+2. 格式为（三行固定顺序）：
    ```
-   > **Kernel**: EEGUnity vX.Y | `path/to/kernel.py`
-   > **SHA256**: `<full_hash>`
+   > **Kernel SHA256**: `<full_hash>`
    > **EEGUnity Version**: `vX.Y`
    > **Scan Type**: Full
    ```
-3. `EEGUnity vX.Y` 为扫描时所用 EEGUnity 版本号；`SHA256` 为 kernel 文件内容的哈希，由维护脚本自动计算，不应手工填写。
+3. `Kernel SHA256` 为 kernel 文件内容的哈希，由维护脚本自动计算，不应手工填写；`EEGUnity Version` 为扫描时所用 EEGUnity 版本号。
 4. `Scan Type` 取值为 `Full`（全量扫描）或 `Sampled (N/M files)`（采样扫描）。
-5. 若当前数据集尚无 kernel，`Kernel` 字段写 `N/A`，`SHA256` 字段写 `N/A`。
+5. 若当前数据集尚无 kernel，`Kernel SHA256` 字段写 `N/A`。
 6. 该 blockquote 由 app_kernel 自动维护，人类审核员与 LLM 不得手工修改哈希值。
 7. 不得在 `### Event Structure` 或其他子节中插入 HTML 注释标记（如 `<!-- AUTO-KERNEL-... -->`）；所有 kernel 派生信息均直接写入标准 Markdown 格式。
 

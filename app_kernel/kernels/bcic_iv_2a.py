@@ -20,17 +20,22 @@ import numpy as np
 import scipy.io as scio
 
 
+# Annotator: Human, 2026-04-08
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
-    "A01": {"sex": "female", "age": 22},
-    "A02": {"sex": "female", "age": 24},
-    "A03": {"sex": "male", "age": 26},
-    "A04": {"sex": "female", "age": 24},
-    "A05": {"sex": "male", "age": 24},
-    "A06": {"sex": "female", "age": 23},
-    "A07": {"sex": "male", "age": 25},
-    "A08": {"sex": "male", "age": 23},
-    "A09": {"sex": "male", "age": 17},
+    "A01": {"sex": "female", "age": "22"},
+    "A02": {"sex": "female", "age": "24"},
+    "A03": {"sex": "male",   "age": "26"},
+    "A04": {"sex": "female", "age": "24"},
+    "A05": {"sex": "male",   "age": "24"},
+    "A06": {"sex": "female", "age": "23"},
+    "A07": {"sex": "male",   "age": "25"},
+    "A08": {"sex": "male",   "age": "23"},
+    "A09": {"sex": "male",   "age": "17"},
 }
+# Source: BCI Competition IV 2a electrode layout, desc_2a.pdf Table 1
+# EEG-Fz/C3/Cz/C4/Pz retain their names in GDF; numbered channels EEG-0..EEG-16
+# correspond to FC3..P2 in order. EEG-Pz maps to POz (position 22 in the cap).
+# Annotator: Human, 2026-04-08
 _EEG_CHANNEL_NAMES = {
     "Fz",
     "FC3",
