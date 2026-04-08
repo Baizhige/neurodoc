@@ -266,12 +266,17 @@ btn, .btn { display: inline-flex; align-items: center; gap: 5px;
       <input type="text" id="cfg-hostname" disabled placeholder="hostname (auto)">
     </div>
     <div class="form-row">
-      <label>Dataset Root (where raw EEG folders live)</label>
-      <input type="text" id="cfg-dataset-root" placeholder="H:/ or /data/eeg">
+      <label>Dataset Directories <span style="font-size:11px;font-weight:400;opacity:.7">(searched in order, first match used)</span></label>
+      <div id="cfg-dataset-roots-list" style="display:flex;flex-direction:column;gap:4px;margin-bottom:4px"></div>
+      <button type="button" class="btn btn-secondary btn-sm" onclick="addDatasetRootRow('')" style="align-self:flex-start">+ Add directory</button>
     </div>
     <div class="form-row">
-      <label>EEGUnity Path (root of EEGUnity repo)</label>
-      <input type="text" id="cfg-eegunity-path" placeholder="E:/github_projects/EEGUnity">
+      <label>EEGUnity Path (parent directory containing the eegunity package)</label>
+      <input type="text" id="cfg-eegunity-path" placeholder="/path/to/Script or E:/EEGUnity">
+    </div>
+    <div class="form-row">
+      <label>Scan Workers <span style="font-size:11px;font-weight:400;opacity:.7">(num_workers for UnifiedDataset, max 32)</span></label>
+      <input type="number" id="cfg-num-workers" min="1" max="32" style="width:80px">
     </div>
     <div class="sep"></div>
     <div class="form-row">
@@ -329,8 +334,12 @@ async function loadConfig() {
   // Populate modal
   document.getElementById('cfg-mid').textContent = cfg.machine_id || '';
   document.getElementById('cfg-hostname').value = cfg.hostname || '';
-  document.getElementById('cfg-dataset-root').value = cfg.dataset_root || '';
+  // Dataset roots list
+  const roots = cfg.dataset_roots || [];
+  document.getElementById('cfg-dataset-roots-list').innerHTML = '';
+  (roots.length ? roots : ['']).forEach(r => addDatasetRootRow(r));
   document.getElementById('cfg-eegunity-path').value = cfg.eegunity_path || '';
+  document.getElementById('cfg-num-workers').value = cfg.num_workers ?? 4;
   document.getElementById('cfg-llm-url').value = cfg.url || '';
   document.getElementById('cfg-llm-key').value = cfg.key || '';
   document.getElementById('cfg-llm-model').value = cfg.model || '';
@@ -785,10 +794,22 @@ function openSettings() {
 function closeSettings() {
   document.getElementById('modal-settings').classList.remove('open');
 }
+function addDatasetRootRow(value) {
+  const list = document.getElementById('cfg-dataset-roots-list');
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;gap:6px;align-items:center';
+  row.innerHTML = `<input type="text" value="${value.replace(/"/g,'&quot;')}" placeholder="/data/eeg or H:/raw_eeg" style="flex:1">
+    <button type="button" onclick="this.closest('div').remove()" style="background:none;border:none;cursor:pointer;color:#ef4444;font-size:16px;line-height:1;padding:2px 4px">×</button>`;
+  list.appendChild(row);
+}
+
 async function saveSettings() {
+  const roots = Array.from(document.getElementById('cfg-dataset-roots-list').querySelectorAll('input'))
+    .map(i => i.value.trim()).filter(Boolean);
   const cfg = {
-    dataset_root: document.getElementById('cfg-dataset-root').value.trim(),
+    dataset_roots: roots,
     eegunity_path: document.getElementById('cfg-eegunity-path').value.trim(),
+    num_workers: parseInt(document.getElementById('cfg-num-workers').value) || 4,
     url: document.getElementById('cfg-llm-url').value.trim(),
     key: document.getElementById('cfg-llm-key').value.trim(),
     model: document.getElementById('cfg-llm-model').value.trim(),

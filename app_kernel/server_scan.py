@@ -77,7 +77,7 @@ def api_config_get():
 def api_config_post():
     data = request.get_json(silent=True) or {}
     # Machine-local fields (dataset paths + per-machine LLM overrides)
-    machine_keys = {"dataset_root", "eegunity_path", "url", "key", "model", "proxy"}
+    machine_keys = {"dataset_roots", "eegunity_path", "num_workers", "url", "key", "model", "proxy"}
     machine_data = {k: v for k, v in data.items() if k in machine_keys}
     engine.save_machine_config(machine_data)
     return jsonify({"ok": True})
@@ -151,11 +151,12 @@ def api_scan_start():
         return jsonify({"error": "No datasets selected"}), 400
 
     cfg = engine.load_machine_config()
-    dataset_root = cfg.get("dataset_root", "")
+    dataset_roots = cfg.get("dataset_roots", [])
     eegunity_path = cfg.get("eegunity_path", "")
+    num_workers = int(cfg.get("num_workers", 1))
 
-    if not dataset_root:
-        return jsonify({"error": "dataset_root not configured. Open Settings."}), 400
+    if not dataset_roots:
+        return jsonify({"error": "No dataset directories configured. Open Settings."}), 400
 
     jid = _new_job()
 
@@ -196,10 +197,11 @@ def api_scan_start():
                     _cb("Loaded from cache", 80)
                 else:
                     df = engine.run_full_scan(
-                        ds_name, dataset_root, kernel_path, eegunity_path,
+                        ds_name, dataset_roots, kernel_path, eegunity_path,
                         progress_cb=_cb,
                         stdout_lines=job_stdout,
                         sampled_indices=sampled_indices,
+                        num_workers=num_workers,
                     )
 
                 # Extract structured results

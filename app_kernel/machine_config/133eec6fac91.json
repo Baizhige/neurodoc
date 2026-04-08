@@ -1,0 +1,14 @@
+{
+    "dataset_roots": [
+        "/home/public/eeg_dataset/openneuro_raw",
+        "/home/public/eeg_dataset/raw_datasets"
+    ],
+    "eegunity_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script",
+    "num_workers": 32,
+    "machine_id": "133eec6fac91",
+    "hostname": "zgchen",
+    "url": "",
+    "key": "",
+    "model": "",
+    "proxy": ""
+}

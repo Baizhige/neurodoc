@@ -42,13 +42,23 @@ def get_config_path() -> Path:
     return APP_KERNEL_DIR / "machine_config" / f"{get_machine_id()}.json"
 
 
-def load_machine_config() -> Dict[str, str]:
+def load_machine_config() -> Dict:
+    import os as _os
+    _default_workers = min(32, _os.cpu_count() or 4)
     p = get_config_path()
     if p.exists():
-        return json.loads(p.read_text(encoding="utf-8"))
+        cfg = json.loads(p.read_text(encoding="utf-8"))
+        # Migrate legacy single dataset_root → dataset_roots list
+        if "dataset_root" in cfg and "dataset_roots" not in cfg:
+            old = cfg.pop("dataset_root")
+            cfg["dataset_roots"] = [old] if old else []
+        cfg.setdefault("dataset_roots", [])
+        cfg.setdefault("num_workers", _default_workers)
+        return cfg
     return {
-        "dataset_root": "",
+        "dataset_roots": [],
         "eegunity_path": "",
+        "num_workers": _default_workers,
         "machine_id": get_machine_id(),
         "hostname": platform.node(),
         "url": "",
@@ -81,6 +91,21 @@ def load_llm_config() -> Dict[str, str]:
         if mc.get(key):
             cfg[key] = mc[key]
     return cfg
+
+
+# ---------------------------------------------------------------------------
+# Dataset root search
+# ---------------------------------------------------------------------------
+
+def find_dataset_path(dataset_name: str, dataset_roots: List[str]) -> Optional[str]:
+    """Search dataset_roots in order; return first directory that contains dataset_name."""
+    for root in dataset_roots:
+        if not root:
+            continue
+        candidate = Path(root) / dataset_name
+        if candidate.is_dir():
+            return str(candidate)
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -165,6 +190,15 @@ def locator_cache_exists(dataset_name: str) -> bool:
 def load_locator_cache(dataset_name: str) -> pd.DataFrame:
     p = get_locator_cache_path(dataset_name)
     df = pd.read_csv(p)
+    # Back-fill subject columns for stage1 caches that predate this field
+    if "description_json" in df.columns:
+        if "subject_age" not in df.columns or "subject_sex" not in df.columns:
+            _add_subject_columns(df)
+    else:
+        if "subject_age" not in df.columns:
+            df["subject_age"] = None
+        if "subject_sex" not in df.columns:
+            df["subject_sex"] = None
     return df
 
 
@@ -223,6 +257,29 @@ class _TeeBuffer(io.StringIO):
 # EEGUnity scan
 # ---------------------------------------------------------------------------
 
+def _add_subject_columns(locator: pd.DataFrame) -> None:
+    """Extract subject_age and subject_sex as flat columns from description_json (in-place)."""
+    ages, sexes = [], []
+    for val in locator.get("description_json", []):
+        try:
+            desc = json.loads(str(val))
+        except Exception:
+            try:
+                desc = ast.literal_eval(str(val))
+            except Exception:
+                desc = {}
+        eegu = desc.get("eegunity_description", {})
+        if isinstance(eegu, str):
+            try:
+                eegu = json.loads(eegu)
+            except Exception:
+                eegu = {}
+        ages.append(eegu.get("age", None))
+        sexes.append(eegu.get("sex", None))
+    locator["subject_age"] = ages
+    locator["subject_sex"] = sexes
+
+
 def _extract_description_batch(udataset, stdout_lines: List[str]) -> None:
     """Add description_json column to locator from raw.info['description']."""
     locator = udataset.get_shared_attr()["locator"]
@@ -243,20 +300,23 @@ def _extract_description_batch(udataset, stdout_lines: List[str]) -> None:
 
 def run_full_scan(
     dataset_name: str,
-    dataset_root: str,
+    dataset_roots: List[str],
     kernel_path: Optional[str],
     eegunity_path: str,
     progress_cb=None,
     stdout_lines: Optional[List[str]] = None,
     sampled_indices: Optional[List[int]] = None,
+    num_workers: int = 1,
 ) -> pd.DataFrame:
     """
     Run EEGUnity scan for a dataset, return enriched locator DataFrame.
 
+    dataset_roots: list of directories to search for dataset_name (first match used).
     kernel_path: relative or absolute path to kernel .py file, or None for default parser.
     sampled_indices: if set, only process these row indices (quick-run).
     progress_cb: callable(step: str, pct: int)
     stdout_lines: shared list; EEGUnity stdout is appended here in real-time.
+    num_workers: parallel workers for UnifiedDataset instantiation.
     """
     if stdout_lines is None:
         stdout_lines = []
@@ -264,7 +324,12 @@ def run_full_scan(
     _ensure_eegunity_in_path(eegunity_path)
     from eegunity import UnifiedDataset
 
-    dataset_path = str(Path(dataset_root) / dataset_name)
+    dataset_path = find_dataset_path(dataset_name, dataset_roots)
+    if not dataset_path:
+        searched = ", ".join(dataset_roots) or "(none configured)"
+        raise FileNotFoundError(
+            f"Dataset '{dataset_name}' not found in any configured directory: {searched}"
+        )
 
     # Resolve kernel path
     abs_kernel: Optional[str] = None
@@ -290,6 +355,7 @@ def run_full_scan(
             dataset_path=dataset_path,
             domain_tag=dataset_name,
             verbose="WARNING",
+            num_workers=num_workers,
         )
         if abs_kernel:
             ud_kwargs["kernel_spec"] = abs_kernel
@@ -319,6 +385,7 @@ def run_full_scan(
             progress_cb("Extracting subject metadata...", 75)
 
         _extract_description_batch(ud, stdout_lines)
+        _add_subject_columns(ud.get_shared_attr()["locator"])
 
         if progress_cb:
             progress_cb("Saving locator cache...", 92)
@@ -444,6 +511,7 @@ _SHA256_LINE_RE = re.compile(r"^> \*\*SHA256\*\*:.*$", re.MULTILINE)
 _EEGUNITY_VER_RE = re.compile(r"^> \*\*EEGUnity Version\*\*:.*$", re.MULTILINE)
 _SCAN_TYPE_RE = re.compile(r"^> \*\*Scan Type\*\*:.*$", re.MULTILINE)
 
+# Legacy AUTO marker constants — kept only for stripping old-format documents
 _AUTO_EVENT_START = "<!-- AUTO-KERNEL-EVENT-STRUCTURE:START -->"
 _AUTO_EVENT_END = "<!-- AUTO-KERNEL-EVENT-STRUCTURE:END -->"
 _AUTO_SUBJECT_START = "<!-- AUTO-KERNEL-SUBJECT-INFO:START -->"
@@ -453,6 +521,19 @@ _TABLE_ROW_RE = re.compile(
     r"^\|\s*`?([^`|\n]+?)`?\s*\|\s*([^|\n]*?)\s*\|\s*([^|\n]*?)\s*\|\s*([^|\n]*?)\s*\|\s*([^|\n]*?)\s*\|",
     re.MULTILINE,
 )
+
+
+def _strip_auto_markers(content: str) -> str:
+    """Remove legacy AUTO HTML comment markers and associated generated lines."""
+    content = content.replace(_AUTO_EVENT_START + "\n", "").replace(_AUTO_EVENT_START, "")
+    content = content.replace("\n" + _AUTO_EVENT_END, "").replace(_AUTO_EVENT_END, "")
+    content = re.sub(r"^> \*\*Meaning Policy\*\*:.*\n?", "", content, flags=re.MULTILINE)
+    content = re.sub(
+        r"<!-- AUTO-KERNEL-SUBJECT-INFO:START -->.*?<!-- AUTO-KERNEL-SUBJECT-INFO:END -->\n?",
+        "", content, flags=re.DOTALL,
+    )
+    content = re.sub(r"\n{3,}", "\n\n", content)
+    return content
 
 
 def _parse_event_table(md_block: str) -> Dict[str, Dict]:
@@ -465,6 +546,20 @@ def _parse_event_table(md_block: str) -> Dict[str, Dict]:
     return result
 
 
+def _event_table_changed(existing: Dict[str, Dict], new_counts: Dict[str, int]) -> bool:
+    """Return True if event set or any count differs between existing table and new scan."""
+    if set(existing.keys()) != set(new_counts.keys()):
+        return True
+    for eid, count in new_counts.items():
+        try:
+            old_str = existing[eid].get("count", "").lstrip("~").strip()
+            if int(old_str) != count:
+                return True
+        except (ValueError, KeyError):
+            return True
+    return False
+
+
 def _build_event_table(existing: Dict[str, Dict], new_counts: Dict[str, int], sampled: bool) -> str:
     header = (
         "| Event ID | Count (total) | Type | Meta Level | Meaning |\n"
@@ -473,45 +568,52 @@ def _build_event_table(existing: Dict[str, Dict], new_counts: Dict[str, int], sa
     rows = []
     for eid, count in sorted(new_counts.items(), key=lambda x: -x[1]):
         existing_row = existing.get(eid, {})
-        old_meaning = existing_row.get("meaning", "")
-        meaning = old_meaning if (old_meaning and "unresolved" not in old_meaning.lower()) else "Unresolved from kernel scan"
-        typ = existing_row.get("type", "event")
-        meta = existing_row.get("meta_level", "raw")
+        if existing_row:
+            # Existing event: preserve Type, Meta Level, Meaning exactly
+            typ = existing_row.get("type", "event")
+            meta = existing_row.get("meta_level", "raw")
+            meaning = existing_row.get("meaning", "")
+        else:
+            # New event: empty Meaning placeholder
+            typ = "event"
+            meta = "raw"
+            meaning = ""
         count_str = f"~{count}" if sampled else str(count)
         rows.append(f"| `{eid}` | {count_str} | {typ} | {meta} | {meaning} |")
-    for eid, row in existing.items():
-        if eid not in new_counts:
-            rows.append(
-                f"| `{eid}` | {row['count']} | {row['type']} | {row['meta_level']} "
-                f"| {row['meaning']} *(not seen in scan)* |"
-            )
+    # Events absent from new scan are simply omitted (deleted)
     return header + "\n" + "\n".join(rows)
 
 
-def _build_subject_info_block(info: Dict) -> str:
-    n = info["record_count"]
-    age_ex = ", ".join(f"`{x}`" for x in info["age_examples"]) or "N/A"
-    sex_ex = ", ".join(f"`{x}`" for x in info["sex_examples"]) or "N/A"
-    return (
-        f"{_AUTO_SUBJECT_START}\n"
-        f"- **Record Count**: {n}\n"
-        f"- **Age Completeness**: {info['age_complete']}/{n} ({_completeness_label(info['age_complete'], n)})\n"
-        f"- **Sex Completeness**: {info['sex_complete']}/{n} ({_completeness_label(info['sex_complete'], n)})\n"
-        f"- **Observed Age Examples**: {age_ex}\n"
-        f"- **Observed Sex Examples**: {sex_ex}\n"
-        f"{_AUTO_SUBJECT_END}"
-    )
+def _parse_info_table(md_block: str) -> Dict[str, Dict]:
+    """Parse ### Info table rows → {field: {completeness, notes}}."""
+    result = {}
+    for m in re.finditer(
+        r"^\|\s*`?([^`|\n]+?)`?\s*\|\s*([^|\n]*?)\s*\|\s*([^|\n]*?)\s*\|",
+        md_block, re.MULTILINE,
+    ):
+        field, completeness, notes = [x.strip() for x in m.groups()]
+        if field.lower() in ("field", "---", ""):
+            continue
+        result[field] = {"completeness": completeness, "notes": notes}
+    return result
 
 
-def _build_info_table(info: Dict) -> str:
+def _build_info_table_smart(info: Dict, existing_rows: Dict[str, Dict]) -> str:
+    """Build ### Info data rows only (no header), preserving Notes where Completeness is unchanged."""
     n = info["record_count"]
-    return (
-        "| Field | Completeness | Notes |\n"
-        "|---|---|---|\n"
-        f"| `subject_age` | {_completeness_label(info['age_complete'], n)} | N/A |\n"
-        f"| `subject_sex` | {_completeness_label(info['sex_complete'], n)} | N/A |\n"
-        f"| `device` | {_completeness_label(info['device_complete'], n)} | N/A |"
-    )
+    rows_data = [
+        ("subject_age", _completeness_label(info["age_complete"], n)),
+        ("subject_sex", _completeness_label(info["sex_complete"], n)),
+        ("device", _completeness_label(info["device_complete"], n)),
+    ]
+    lines = []
+    for field, new_comp in rows_data:
+        old = existing_rows.get(field, {})
+        old_comp = old.get("completeness", "")
+        old_notes = old.get("notes", "N/A")
+        notes = "N/A" if (old_comp and old_comp != new_comp) else (old_notes or "N/A")
+        lines.append(f"| `{field}` | {new_comp} | {notes} |")
+    return "\n".join(lines)
 
 
 def merge_scan_results(
@@ -521,9 +623,12 @@ def merge_scan_results(
     """
     Merge scan results into analysis.md content.
     Returns (new_content, diff_list).
+
+    Diff contains at most one entry covering the entire ## File Scan Result block.
+    No HTML comment markers are added; legacy markers are stripped on first pass.
     """
-    new_content = analysis_content
-    diffs = []
+    # Strip legacy AUTO markers from old-format documents first
+    new_content = _strip_auto_markers(analysis_content)
 
     kernel_path = scan_result.get("kernel_path") or ""
     kernel_sha256 = scan_result["kernel_sha256"]
@@ -537,81 +642,74 @@ def merge_scan_results(
     scan_type_str = f"Sampled ({sampled_n}/{total_n} files)" if sampled else "Full"
     kernel_label = f"`{kernel_path}`" if kernel_path else "*(no kernel — default parser)*"
 
-    # --- File Scan Result header ---
-    file_scan_m = _FILE_SCAN_RE.search(new_content)
-    if file_scan_m:
-        block = file_scan_m.group(2)
-        old_block = block
+    # Capture old ## File Scan Result block for diff (after marker stripping)
+    fsr_m0 = _FILE_SCAN_RE.search(new_content)
+    old_fsr_text = fsr_m0.group(0).rstrip() if fsr_m0 else ""
+
+    # ── 1. Update kernel fingerprint header ──────────────────────────────────
+    fsr_m = _FILE_SCAN_RE.search(new_content)
+    if fsr_m:
+        block = fsr_m.group(2)
         new_kernel_line = f"> **Kernel**: EEGUnity {eegunity_version} | {kernel_label}"
-        new_sha_line = f"> **SHA256**: `{kernel_sha256}`"
-        new_ver_line = f"> **EEGUnity Version**: `{eegunity_version}`"
-        new_scan_line = f"> **Scan Type**: {scan_type_str}"
+        new_sha_line    = f"> **SHA256**: `{kernel_sha256}`"
+        new_ver_line    = f"> **EEGUnity Version**: `{eegunity_version}`"
+        new_scan_line   = f"> **Scan Type**: {scan_type_str}"
 
-        block = _KERNEL_LINE_RE.sub(new_kernel_line, block) if _KERNEL_LINE_RE.search(block) else new_kernel_line + "\n" + block
-        block = _SHA256_LINE_RE.sub(new_sha_line, block) if _SHA256_LINE_RE.search(block) else block + "\n" + new_sha_line
-        block = _EEGUNITY_VER_RE.sub(new_ver_line, block) if _EEGUNITY_VER_RE.search(block) else block.rstrip() + "\n" + new_ver_line
-        block = _SCAN_TYPE_RE.sub(new_scan_line, block) if _SCAN_TYPE_RE.search(block) else block.rstrip() + "\n" + new_scan_line
+        block = _KERNEL_LINE_RE.sub(new_kernel_line, block) \
+            if _KERNEL_LINE_RE.search(block) else new_kernel_line + "\n" + block
+        block = _SHA256_LINE_RE.sub(new_sha_line, block) \
+            if _SHA256_LINE_RE.search(block) else block + "\n" + new_sha_line
 
-        if old_block != block:
-            diffs.append({"section": "File Scan Header", "old": old_block.strip(), "new": block.strip()})
-        new_content = new_content[:file_scan_m.start(2)] + block + new_content[file_scan_m.end(2):]
+        # EEGUnity Version: update or insert after SHA256
+        if _EEGUNITY_VER_RE.search(block):
+            block = _EEGUNITY_VER_RE.sub(new_ver_line, block)
+        else:
+            block = _SHA256_LINE_RE.sub(lambda m: m.group(0) + "\n" + new_ver_line, block)
 
-    # --- Event Structure ---
-    auto_start = new_content.find(_AUTO_EVENT_START)
-    auto_end = new_content.find(_AUTO_EVENT_END)
+        # Scan Type: update or insert after EEGUnity Version
+        if _SCAN_TYPE_RE.search(block):
+            block = _SCAN_TYPE_RE.sub(new_scan_line, block)
+        else:
+            block = _EEGUNITY_VER_RE.sub(lambda m: m.group(0) + "\n" + new_scan_line, block)
 
-    if auto_start != -1 and auto_end != -1:
-        existing = _parse_event_table(new_content[auto_start: auto_end + len(_AUTO_EVENT_END)])
-    else:
-        es_m = re.search(r"### Event Structure\s*\n(.*?)(?=\n###|\n## |\Z)", new_content, re.DOTALL)
-        existing = _parse_event_table(es_m.group(1)) if es_m else {}
+        new_content = new_content[:fsr_m.start(2)] + block + new_content[fsr_m.end(2):]
 
-    new_table = _build_event_table(existing, event_counts, sampled)
-    new_auto_block = (
-        f"{_AUTO_EVENT_START}\n"
-        f"> **Meaning Policy**: `Meaning` is interpretive; "
-        f"`Event ID / Count / Type / Meta Level` are kernel-derived facts.\n\n"
-        f"{new_table}\n"
-        f"{_AUTO_EVENT_END}"
-    )
+    # ── 2. Update Event Structure table ─────────────────────────────────────
+    es_m = re.search(r"(### Event Structure\s*\n)(.*?)(?=\n###|\n## |\Z)", new_content, re.DOTALL)
+    if es_m:
+        es_inner = es_m.group(2)
+        existing = _parse_event_table(es_inner)
+        changed = _event_table_changed(existing, event_counts)
+        new_table = _build_event_table(existing, event_counts, sampled)
 
-    if auto_start != -1 and auto_end != -1:
-        old_auto = new_content[auto_start: auto_end + len(_AUTO_EVENT_END)]
-        if old_auto != new_auto_block:
-            diffs.append({"section": "Event Structure", "old": old_auto, "new": new_auto_block})
-        new_content = new_content[:auto_start] + new_auto_block + new_content[auto_end + len(_AUTO_EVENT_END):]
-    else:
-        es_m2 = re.search(r"(### Event Structure\s*\n)(.*?)(?=\n###|\n## |\Z)", new_content, re.DOTALL)
-        if es_m2:
-            old_inner = es_m2.group(2)
-            # Preserve any Manual Review Notes outside the AUTO block
-            manual_notes = re.findall(r"(> \*\*Manual Review Note\*\*:.*?)(?=\n>|\n\n|\Z)", old_inner, re.DOTALL)
-            notes_str = "\n\n" + "\n\n".join(n.strip() for n in manual_notes) if manual_notes else ""
-            new_inner = "\n" + new_auto_block + notes_str + "\n\n"
-            diffs.append({"section": "Event Structure", "old": old_inner, "new": new_inner})
-            new_content = new_content[:es_m2.start(2)] + new_inner + new_content[es_m2.end(2):]
+        if changed:
+            # Clear the blockquote Note after the table
+            new_es_inner = "\n" + new_table + "\n\n"
+        else:
+            # Preserve existing blockquote Note (lines starting with "> " after the table)
+            note_m = re.search(r"\n((?:> [^\n]*\n?)+)\s*$", es_inner)
+            note_str = "\n" + note_m.group(1).rstrip() if note_m else ""
+            new_es_inner = "\n" + new_table + note_str + "\n\n"
 
-    # --- Subject Info block (AUTO markers, optional) ---
-    new_subj = _build_subject_info_block(subject_info)
-    subj_start = new_content.find(_AUTO_SUBJECT_START)
-    subj_end = new_content.find(_AUTO_SUBJECT_END)
-    if subj_start != -1 and subj_end != -1:
-        old_subj = new_content[subj_start: subj_end + len(_AUTO_SUBJECT_END)]
-        if old_subj != new_subj:
-            diffs.append({"section": "Subject Info", "old": old_subj, "new": new_subj})
-        new_content = new_content[:subj_start] + new_subj + new_content[subj_end + len(_AUTO_SUBJECT_END):]
+        new_content = new_content[:es_m.start(2)] + new_es_inner + new_content[es_m.end(2):]
 
-    # --- Info table ---
-    info_tbl = _build_info_table(subject_info)
+    # ── 3. Update Info table (preserve Notes where Completeness unchanged) ───
     info_m = re.search(
         r"(### Info\s*\n\| Field.*?\n\|[-| ]+\n)(.*?)(?=\n###|\n## |\Z)",
         new_content, re.DOTALL,
     )
     if info_m:
-        old_info = info_m.group(2).strip()
-        if old_info != info_tbl:
-            diffs.append({"section": "Info Table", "old": old_info, "new": info_tbl})
-        new_content = new_content[:info_m.start(2)] + info_tbl + "\n" + new_content[info_m.end(2):]
+        existing_info = _parse_info_table(info_m.group(2))
+        new_info_tbl = _build_info_table_smart(subject_info, existing_info)
+        new_content = new_content[:info_m.start(2)] + new_info_tbl + "\n" + new_content[info_m.end(2):]
+
+    # ── Produce single diff for entire File Scan Result block ───────────────
+    fsr_m_new = _FILE_SCAN_RE.search(new_content)
+    new_fsr_text = fsr_m_new.group(0).rstrip() if fsr_m_new else ""
+
+    diffs = []
+    if old_fsr_text != new_fsr_text:
+        diffs.append({"section": "File Scan Result", "old": old_fsr_text, "new": new_fsr_text})
 
     return new_content, diffs
 
