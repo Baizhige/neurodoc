@@ -168,7 +168,7 @@ def get_kernel_sha256(kernel_path: str) -> str:
 
 LOCATOR_CACHE_DIR = APP_KERNEL_DIR / "locator_cache"
 
-REQUIRED_CACHE_COLS = {"event_id", "event_id_num", "description_json"}
+REQUIRED_CACHE_COLS = {"event_id", "event_id_num"}
 
 
 def get_locator_cache_path(dataset_name: str) -> Path:
@@ -190,15 +190,17 @@ def locator_cache_exists(dataset_name: str) -> bool:
 def load_locator_cache(dataset_name: str) -> pd.DataFrame:
     p = get_locator_cache_path(dataset_name)
     df = pd.read_csv(p)
-    # Back-fill subject columns for stage1 caches that predate this field
-    if "description_json" in df.columns:
-        if "subject_age" not in df.columns or "subject_sex" not in df.columns:
+    # Back-fill subject columns for legacy caches
+    if "subject_age" not in df.columns or "subject_sex" not in df.columns:
+        if "description_json" in df.columns:
+            # Old format: had description_json — extract from it
             _add_subject_columns(df)
-    else:
-        if "subject_age" not in df.columns:
+        else:
             df["subject_age"] = None
-        if "subject_sex" not in df.columns:
             df["subject_sex"] = None
+    # Drop description_json if present (legacy column, no longer stored)
+    if "description_json" in df.columns:
+        df = df.drop(columns=["description_json"])
     return df
 
 
@@ -281,20 +283,46 @@ def _add_subject_columns(locator: pd.DataFrame) -> None:
 
 
 def _extract_description_batch(udataset, stdout_lines: List[str]) -> None:
-    """Add description_json column to locator from raw.info['description']."""
+    """Extract subject_age and subject_sex directly from raw.info['description'] (no intermediate column).
+
+    Uses eeg_parser.get_data(i) — not the standalone get_data_row() — so that the
+    dataset kernel is applied and raw.info['description'] contains the eegunity_description
+    JSON written by the kernel's apply() method.
+    """
     locator = udataset.get_shared_attr()["locator"]
     total = len(locator)
-    results = []
-    for i, (_, row) in enumerate(locator.iterrows()):
+    ages, sexes, ch_names_list = [], [], []
+    for i in range(total):
         try:
-            raw = udataset.eeg_parser.get_data_row(row, preload=False)
-            desc = raw.info.get("description", "{}")
-            results.append(str(desc))
+            raw = udataset.eeg_parser.get_data(i, preload=False)
+            # Post-kernel channel names (kernel may have renamed channels)
+            ch_names_list.append(", ".join(raw.ch_names))
+            # Subject info from eegunity_description written by kernel
+            desc_str = raw.info.get("description", "{}")
+            try:
+                desc = json.loads(str(desc_str))
+            except Exception:
+                try:
+                    desc = ast.literal_eval(str(desc_str))
+                except Exception:
+                    desc = {}
+            eegu = desc.get("eegunity_description", {})
+            if isinstance(eegu, str):
+                try:
+                    eegu = json.loads(eegu)
+                except Exception:
+                    eegu = {}
+            ages.append(eegu.get("age", None))
+            sexes.append(eegu.get("sex", None))
         except Exception:
-            results.append("{}")
+            ch_names_list.append(locator.iloc[i].get("Channel Names", ""))
+            ages.append(None)
+            sexes.append(None)
         if (i + 1) % max(1, total // 10) == 0 or i == total - 1:
             stdout_lines.append(f"  Subject info: {i+1}/{total} files")
-    locator["description_json"] = results
+    locator["Channel Names"] = ch_names_list
+    locator["subject_age"] = ages
+    locator["subject_sex"] = sexes
     udataset.get_shared_attr()["locator"] = locator
 
 
@@ -384,8 +412,7 @@ def run_full_scan(
         if progress_cb:
             progress_cb("Extracting subject metadata...", 75)
 
-        _extract_description_batch(ud, stdout_lines)
-        _add_subject_columns(ud.get_shared_attr()["locator"])
+        _extract_description_batch(ud, stdout_lines)  # writes subject_age/subject_sex directly
 
         if progress_cb:
             progress_cb("Saving locator cache...", 92)
@@ -414,15 +441,6 @@ def _parse_event_id_num(s: str) -> Dict[str, int]:
         return {}
 
 
-def _parse_description_json(s: str) -> Dict:
-    try:
-        return json.loads(str(s))
-    except Exception:
-        try:
-            return ast.literal_eval(str(s))
-        except Exception:
-            return {}
-
 
 def extract_event_stats(df: pd.DataFrame) -> Dict[str, int]:
     """Aggregate event_id_num across all rows → {event_id: total_count}."""
@@ -435,33 +453,22 @@ def extract_event_stats(df: pd.DataFrame) -> Dict[str, int]:
 
 
 def extract_subject_info(df: pd.DataFrame) -> Dict[str, Any]:
-    """Extract age/sex/device completeness from description_json column."""
-    ages, sexes, devices = [], [], []
-    for val in df.get("description_json", []):
-        desc = _parse_description_json(val)
-        eegu = desc.get("eegunity_description", {})
-        if isinstance(eegu, str):
-            try:
-                eegu = json.loads(eegu)
-            except Exception:
-                eegu = {}
-        ages.append(eegu.get("age", None))
-        sexes.append(eegu.get("sex", None))
-        devices.append(eegu.get("amplifier", None))
-
+    """Extract age/sex/device completeness from subject_age/subject_sex columns."""
     def _is_valid(v):
         return v is not None and str(v).strip().lower() not in ("", "unknown", "nan", "none")
 
+    ages = list(df.get("subject_age", [None] * len(df)))
+    sexes = list(df.get("subject_sex", [None] * len(df)))
+    # device is not yet a flat column; default to 0
     n = len(df)
     age_ok = sum(1 for a in ages if _is_valid(a))
     sex_ok = sum(1 for s in sexes if _is_valid(s))
-    dev_ok = sum(1 for d in devices if _is_valid(d))
 
     return {
         "record_count": n,
         "age_complete": age_ok,
         "sex_complete": sex_ok,
-        "device_complete": dev_ok,
+        "device_complete": 0,
         "age_examples": list({str(a) for a in ages if _is_valid(a)})[:6],
         "sex_examples": list({str(s) for s in sexes if _is_valid(s)})[:4],
     }
@@ -506,8 +513,8 @@ _FILE_SCAN_RE = re.compile(
     r"(## File Scan Result\s*\n)(.*?)(?=\n## |\Z)",
     re.DOTALL,
 )
-_KERNEL_LINE_RE = re.compile(r"^> \*\*Kernel\*\*:.*$", re.MULTILINE)
-_SHA256_LINE_RE = re.compile(r"^> \*\*SHA256\*\*:.*$", re.MULTILINE)
+_KERNEL_LINE_RE = re.compile(r"^> \*\*Kernel\*\*:.*$", re.MULTILINE)  # legacy, for removal
+_SHA256_LINE_RE = re.compile(r"^> \*\*(?:Kernel )?SHA256\*\*:.*$", re.MULTILINE)
 _EEGUNITY_VER_RE = re.compile(r"^> \*\*EEGUnity Version\*\*:.*$", re.MULTILINE)
 _SCAN_TYPE_RE = re.compile(r"^> \*\*Scan Type\*\*:.*$", re.MULTILINE)
 
@@ -640,7 +647,6 @@ def merge_scan_results(
     total_n = scan_result.get("total_n", 0)
 
     scan_type_str = f"Sampled ({sampled_n}/{total_n} files)" if sampled else "Full"
-    kernel_label = f"`{kernel_path}`" if kernel_path else "*(no kernel — default parser)*"
 
     # Capture old ## File Scan Result block for diff (after marker stripping)
     fsr_m0 = _FILE_SCAN_RE.search(new_content)
@@ -650,17 +656,19 @@ def merge_scan_results(
     fsr_m = _FILE_SCAN_RE.search(new_content)
     if fsr_m:
         block = fsr_m.group(2)
-        new_kernel_line = f"> **Kernel**: EEGUnity {eegunity_version} | {kernel_label}"
-        new_sha_line    = f"> **SHA256**: `{kernel_sha256}`"
-        new_ver_line    = f"> **EEGUnity Version**: `{eegunity_version}`"
-        new_scan_line   = f"> **Scan Type**: {scan_type_str}"
+        new_sha_line  = f"> **Kernel SHA256**: `{kernel_sha256}`"
+        new_ver_line  = f"> **EEGUnity Version**: `{eegunity_version}`"
+        new_scan_line = f"> **Scan Type**: {scan_type_str}"
 
-        block = _KERNEL_LINE_RE.sub(new_kernel_line, block) \
-            if _KERNEL_LINE_RE.search(block) else new_kernel_line + "\n" + block
+        # Remove legacy > **Kernel**: line if present
+        block = _KERNEL_LINE_RE.sub("", block)
+        block = re.sub(r"\n{2,}", "\n", block)  # collapse any blank line left behind
+
+        # Kernel SHA256: update (matches old SHA256 or new Kernel SHA256) or insert at top
         block = _SHA256_LINE_RE.sub(new_sha_line, block) \
-            if _SHA256_LINE_RE.search(block) else block + "\n" + new_sha_line
+            if _SHA256_LINE_RE.search(block) else new_sha_line + "\n" + block.lstrip("\n")
 
-        # EEGUnity Version: update or insert after SHA256
+        # EEGUnity Version: update or insert after Kernel SHA256
         if _EEGUNITY_VER_RE.search(block):
             block = _EEGUNITY_VER_RE.sub(new_ver_line, block)
         else:

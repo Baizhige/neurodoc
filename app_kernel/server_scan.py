@@ -109,6 +109,26 @@ def api_detect_kernel(name):
     return jsonify({"kernel_path": kp, "sha256": sha})
 
 
+@app.route("/api/dataset/<name>/locator")
+def api_locator(name):
+    """Return locator cache as JSON table for the viewer."""
+    if ".." in name:
+        abort(400)
+    if not engine.locator_cache_exists(name):
+        return jsonify({"error": "No locator cache for this dataset."}), 404
+    try:
+        import pandas as pd
+        df = engine.load_locator_cache(name)
+        # Replace NaN with empty string for JSON serialisation
+        df = df.fillna("").astype(str)
+        return jsonify({
+            "columns": list(df.columns),
+            "rows": df.values.tolist(),
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route("/api/dataset/<name>/cache")
 def api_cache_info(name):
     exists = engine.locator_cache_exists(name)

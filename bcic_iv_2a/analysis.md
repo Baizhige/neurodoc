@@ -10,35 +10,32 @@ Nine subjects (A01-A09) performed four-class cued motor imagery (BCI Competition
 
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
 
+> **Kernel SHA256**: `2a6c938f8173dde37b855f2d8139a8c35acff6738dfa73b10ce10f473eb9f693`
+> **EEGUnity Version**: `0.8.0`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|---|---|---|---|---|
-| `Start of a trial` | ~576/subject | admin | raw | Trial-onset fixation cross (pre-cue marker) |
-| `Cue onset left (class 1)` | ~144/subject | event | raw | Left-hand motor imagery cue |
-| `Cue onset right (class 2)` | ~144/subject | event | raw | Right-hand motor imagery cue |
-| `Cue onset foot (class 3)` | ~144/subject | event | raw | Feet motor imagery cue |
-| `Cue onset tongue (class 4)` | ~144/subject | event | raw | Tongue motor imagery cue |
-| `Idling EEG (eyes open)` | ~9/subject | admin | raw | Resting state with eyes open |
-| `Idling EEG (eyes closed)` | ~9/subject | admin | raw | Resting state with eyes closed |
-| `Rejected trial` | variable | admin | raw | Trial rejected by experimenter |
-| `Start of a new run` | ~12/subject | admin | raw | Run boundary marker |
-| `Eye movements` | rare | admin | raw | Artifactual eye movement event |
+|----------|---------------|------|------------|---------|
+| `Start of a trial` | 4896 | admin | raw | Trial-onset fixation cross (pre-cue marker) |
+| `Cue onset tongue (class 4)` | 1656 | event | raw | Tongue motor imagery cue |
+| `Cue onset foot (class 3)` | 1375 | event | raw | Feet motor imagery cue |
+| `Cue onset left (class 1)` | 1224 | event | raw | Left-hand motor imagery cue |
+| `Cue onset right (class 2)` | 1224 | event | raw | Right-hand motor imagery cue |
+| `Rejected trial` | 488 | admin | raw | Trial rejected by experimenter |
+| `Start of a new run` | 153 | admin | raw | Run boundary marker |
+| `Eye movements` | 18 | admin | raw | Artifactual eye movement event |
+| `Idling EEG (eyes closed)` | 17 | admin | raw | Resting state with eyes closed |
+| `Idling EEG (eyes open)` | 17 | admin | raw | Resting state with eyes open |
 
-
-> Counts are approximate per subject (Training + Evaluation combined).
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
-| `device` | complete | a device with Ag/AgCl |
-
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
+| `device` | missing | N/A |
 
 ## Tasks
 

@@ -1,6 +1,11 @@
 # Project-specific exclusions
 /Script/
 /.pdf_archive/
+# app_kernel — per-machine data (locator caches and machine configs are local only)
+/app_kernel/locator_cache/**
+!/app_kernel/locator_cache/.gitkeep
+/app_kernel/machine_config/**
+!/app_kernel/machine_config/.gitkeep
 **/references/
 **/references/**
 
