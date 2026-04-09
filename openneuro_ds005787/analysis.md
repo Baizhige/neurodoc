@@ -10,6 +10,7 @@ The NOD-EEG dataset contains 64-channel EEG recordings from a stimulus-response 
 
 ## File Scan Result
 
+
 > **Kernel**: N/A
 > **SHA256**: N/A
 
@@ -30,12 +31,6 @@ The NOD-EEG dataset contains 64-channel EEG recordings from a stimulus-response 
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stim_on`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

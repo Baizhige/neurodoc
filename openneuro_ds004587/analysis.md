@@ -7,18 +7,10 @@
 
 Participants performed perceptual judgements on visual targets embedded within three classic visual illusions - Ebbinghaus, Muller-Lyer, and Vertical-Horizontal - to measure individual differences in illusion sensitivity and perceptual bias. The study investigates how prior experience and personality shape perceptual decision-making. EEG was recorded at 10 kHz; actual stimulus-event markers appear not to have been stored in events.tsv.
 
-## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+## File Scan Result
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004587
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -32,6 +24,10 @@ Participants performed perceptual judgements on visual targets embedded within t
 | `Comment/rc pre` | 3 | admin | raw | Pre-recording comment (exclude) |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
+
+### Info
+
+No stimulus/response trial events captured in events.tsv. All markers are administrative or artifact annotations.
 
 ## Tasks
 
@@ -57,6 +53,15 @@ Participants performed perceptual judgements on visual targets embedded within t
 - Very high sampling rate (10 kHz) - downsample before analysis.
 - Paper reference (ARSQ 2.0) may be a metadata mismatch; verify README.
 
-## References
 
-- **Reference**: `The ARSQ 2.0 reveals age and personality effects on mind-wandering experiences`
+## Kernel Responsibilities
+
+
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004587

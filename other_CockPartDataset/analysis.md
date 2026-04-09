@@ -17,18 +17,9 @@ A multi-paradigm EEG corpus comprising four experimental subdatasets, all record
 
 The Case B kernel dispatches loading to the appropriate paradigm-specific method based on the file path.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: N/A (local/private dataset description)
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -43,6 +34,10 @@ The Case B kernel dispatches loading to the appropriate paradigm-specific method
 >
 > Case B kernel: N400 epoch arrays are concatenated into a single continuous raw signal; each epoch onset is annotated individually. Natural Speech and SiN paradigms provide single whole-recording annotations per file.
 
+### Info
+
+Dataset origin and publication unknown. Multi-paradigm EEG corpus (CockPart Dataset). No associated publication identified.
+
 ## Tasks
 
 ### Normal Task 1: N400 Language ERP - High-Cloze vs. Low-Cloze (epoch_by_event)
@@ -54,7 +49,7 @@ The Case B kernel dispatches loading to the appropriate paradigm-specific method
 - **Notes**: Filter to N400 paradigm files (`N400/EEG/Subject{N}.mat`). Case B kernel concatenates hiCloze (150) then loCloze (150) epochs; epoch window (0.8 s) matches the original pre-epoched length. sfreq = 128 Hz.
 
 | Event | y | Meaning |
-|-------|---|---------|
+|-------| --- | --- |
 | `N400_hiCloze` | 0 | High-cloze (predictable) word - N400 attenuated |
 | `N400_loCloze` | 1 | Low-cloze (unpredictable) word - N400 enhanced |
 
@@ -68,7 +63,7 @@ The Case B kernel dispatches loading to the appropriate paradigm-specific method
 - **Notes**: Filter to Natural Speech and Natural Speech - Reverse paradigm files. sfreq = 128 Hz. Multiple runs per subject; run files are independent.
 
 | Event | y | Meaning |
-|-------|---|---------|
+|-------| --- | --- |
 | `NaturalSpeech` | 0 | Listening to natural (forward) speech |
 | `NaturalSpeechReverse` | 1 | Listening to reversed (backward) speech |
 
@@ -82,7 +77,7 @@ The Case B kernel dispatches loading to the appropriate paradigm-specific method
 - **Notes**: Filter to Speech in Noise paradigm files. sfreq = 512 Hz. Condition (audio/video) inferred from filename suffix (`_a_` or `_v_`).
 
 | Event | y | Meaning |
-|-------|---|---------|
+|-------| --- | --- |
 | `SiN_audio` | 0 | Speech-in-Noise audio-only condition |
 | `SiN_video` | 1 | Speech-in-Noise video-only condition |
 
@@ -95,6 +90,7 @@ The Case B kernel dispatches loading to the appropriate paradigm-specific method
 - **Target Definition**: `N400_hiCloze` vs `N400_loCloze` trial labels from the N400 subset.
 - **Evidence**: Primary task inferred from internal dataset documentation only; external publication/reference is not yet available.
 - **Notes**: Demoted from Primary Task because no external DOI/URL source is available.
+
 ## Data Quality Notes
 
 - Case B kernel: `.mat` files contain pre-epoched arrays or raw continuous EEG depending on the paradigm; paradigm is inferred from the directory structure in the file path.
@@ -103,6 +99,13 @@ The Case B kernel dispatches loading to the appropriate paradigm-specific method
 - Dataset origin and publication unknown; provenance requires verification before publication.
 - No age or sex information available.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: Unknown provenance. Multi-paradigm EEG corpus (CockPart Dataset). No associated publication identified.
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: N/A (local/private dataset description)

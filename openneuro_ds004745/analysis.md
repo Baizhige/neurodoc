@@ -8,18 +8,6 @@
 
 Participants performed Steady-State Visual Evoked Potential (SSVEP) tasks at stimulation frequencies of 2 Hz, 4 Hz, and 8 Hz, under both static artifact-free and voluntary movement artifact conditions. The dataset was created to test artifact removal algorithms for SSVEP-based BCIs under realistic conditions with deliberate motion contamination. Multiple trigger codes mark different frequency and artifact conditions.
 
-## Subject Information
-
-<!-- AUTO-KERNEL-SUBJECT-INFO:START -->
-> **Kernel Fact Source**: current kernel scan from `<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-- **Record Count**: 6
-- **Age Completeness**: 0/6 (0.0%)
-- **Sex Completeness**: 0/6 (0.0%)
-- **Observed Age Examples**: N/A
-- **Observed Sex Examples**: N/A
-<!-- AUTO-KERNEL-SUBJECT-INFO:END -->
-
-
 ## File Scan Result
 
 > **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds004745.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
@@ -80,7 +68,7 @@ Participants performed Steady-State Visual Evoked Potential (SSVEP) tasks at sti
 - **Notes**: Only 6 subjects - very small dataset. Full trigger decode needed from events.tsv. Deliberate motion artifacts present in some trials.
 
 | Event | y | Meaning |
-|-------|---|------|
+|-------|--|--------|
 | `2` | 0 | 2 Hz SSVEP condition |
 | `4` | 1 | 4 Hz SSVEP condition |
 | `8` | 2 | 8 Hz SSVEP condition |

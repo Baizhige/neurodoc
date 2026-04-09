@@ -7,18 +7,9 @@
 
 Participants imagined animals and tools in response to auditory cues while EEG was recorded. Each trial consisted of an audio cue followed by a sustained auditory imagery period (~5 s). The study investigates EEG correlates of semantic imagery for living (animals) vs non-living (tools) concepts in the auditory domain.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004517
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -33,6 +24,14 @@ Participants imagined animals and tools in response to auditory cues while EEG w
 > - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
 > - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **not used for epoch**
+
+### MISC Label Summary
+
+No MISC labels identified in this dataset.
+
+### Info
+
+Dataset contains standard 32-channel EEG recordings with auditory cue and imagery task events. File structure follows BIDS format with task events properly annotated.
 
 ## Tasks
 
@@ -54,15 +53,23 @@ Participants imagined animals and tools in response to auditory cues while EEG w
 - **Notes**: Imagery tasks are sustained (~5 s) - use long_event epoching. audio_animal/audio_tool are short cue onsets; rest events are inter-block resting periods.
 
 | Event | y | Meaning |
- |-------|---|------|
- | `animal_auditory_imagery_task` | 0 | Auditory imagery of animals |
- | `tool_auditory_imagery_task` | 1 | Auditory imagery of tools |
+|-------|---|---------|
+| `animal_auditory_imagery_task` | 0 | Auditory imagery of animals |
+| `tool_auditory_imagery_task` | 1 | Auditory imagery of tools |
+
 ## Data Quality Notes
 
 - 32 EEG channels
 - Sustained imagery periods (~5 s) are suitable for long_event epoching
 - 20 subjects with balanced animal/tool imagery conditions
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004517

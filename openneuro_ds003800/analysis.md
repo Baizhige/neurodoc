@@ -29,12 +29,6 @@ Elderly participants with dementia received 40 Hz amplitude-modulated (AM) audit
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Stimulus`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

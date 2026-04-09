@@ -7,18 +7,6 @@
 
 A multimodal neuroimaging study (EEG + MEG/MRI) investigating the spatiotemporal dynamics of visual processing in humans. Despite the dataset title implying an active visual processing task, no event markers are detectable in the BIDS EEG files. The visual stimulation protocol may be encoded in other modality files or events are not available in the EEG files processed by the locator pipeline.
 
-## Subject Information
-
-<!-- AUTO-KERNEL-SUBJECT-INFO:START -->
-> **Kernel Fact Source**: current kernel scan from `<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-- **Record Count**: 168
-- **Age Completeness**: 168/168 (100.0%)
-- **Sex Completeness**: 168/168 (100.0%)
-- **Observed Age Examples**: `23`, `30`, `24`, `22`, `19`, `25`, `32`, `31`
-- **Observed Sex Examples**: `Male`, `Female`
-<!-- AUTO-KERNEL-SUBJECT-INFO:END -->
-
-
 ## File Scan Result
 
 > **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds002814.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
@@ -43,6 +31,11 @@ A multimodal neuroimaging study (EEG + MEG/MRI) investigating the spatiotemporal
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+| `record_count` | complete | 168 records |
+| `age_completeness` | complete | 168/168 (100.0%) |
+| `sex_completeness` | complete | 168/168 (100.0%) |
+| `observed_age_examples` | N/A | `23`, `30`, `24`, `22`, `19`, `25`, `32`, `31` |
+| `observed_sex_examples` | N/A | `Male`, `Female` |
 ## Tasks
 
 ### Classical Task 1: Visual Category Classification (5-class)

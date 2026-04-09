@@ -40,7 +40,6 @@ The Healthy Brain Network (HBN) EEG Release 9 is a large-scale, multi-task devel
 - **Candidate Labels**: `externalizing_factor`, `p_factor`, `response_time`
 - **Kernel Note**: Keep derivation source, unit, and version metadata.
 
-
 ### Info
 
 | Field | Completeness | Notes |
@@ -48,12 +47,9 @@ The Healthy Brain Network (HBN) EEG Release 9 is a large-scale, multi-task devel
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stim_ON`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+| **STIM Route** | — | Trigger-channel or stimulus-marker based labeling |
+| **Candidate Trigger Labels** | — | `stim_ON` |
+| **STIM Kernel Note** | — | Keep trigger decoding table versioned and auditable |
 
 ## Tasks
 
@@ -65,7 +61,7 @@ The Healthy Brain Network (HBN) EEG Release 9 is a large-scale, multi-task devel
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|--------|
   | `ADHD` | 0/1 | Attention-Deficit/Hyperactivity Disorder diagnosis |
   | `ANX (anxiety)` | 0/1 | Anxiety disorder diagnosis |
   | `SLD` | 0/1 | Specific Learning Disorder diagnosis |
@@ -87,7 +83,7 @@ The Healthy Brain Network (HBN) EEG Release 9 is a large-scale, multi-task devel
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|--------|
   | `SCARED GAD` | float | Screen for Child Anxiety Related Disorders - Generalized Anxiety |
   | `SWAN IN` | float | Sustained Attention (Inattention) subscale score |
   | `SWAN HY` | float | Sustained Attention (Hyperactivity) subscale score |
@@ -108,7 +104,7 @@ The Healthy Brain Network (HBN) EEG Release 9 is a large-scale, multi-task devel
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|--------|
   | `left_target` | 0 | Left-side target stimulus presented |
   | `right_target` | 1 | Right-side target stimulus presented |
 - **Evidence**:
@@ -123,7 +119,7 @@ The Healthy Brain Network (HBN) EEG Release 9 is a large-scale, multi-task devel
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|--------|
   | `instructed_toOpenEyes` | 0 | Eyes-open resting block |
   | `instructed_toCloseEyes` | 1 | Eyes-closed resting block |
 - **Evidence**:

@@ -7,18 +7,9 @@
 
 Participants navigated a virtual architectural environment using keyboard controls while EEG was recorded to investigate neural responses to architectural affordances - the action possibilities offered by built spaces. The study examines how the brain processes spatial features (doors, corridors, rooms) that afford specific navigational actions. SAM (Self-Assessment Manikin) rating events mark periodic subjective valence/arousal/dominance assessments.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004980
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -39,6 +30,10 @@ Participants navigated a virtual architectural environment using keyboard contro
 | `ColliderRoom2 has been entered` | 1523 | short | raw | Room 2 entered |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
+
+### Info
+
+- File scan not yet completed. Placeholder for future file structure details.
 
 ## Tasks
 
@@ -67,11 +62,19 @@ Participants navigated a virtual architectural environment using keyboard contro
  | `Door opened` | 3 | Door affordance activated |
  | `ColliderRoom1 has been entered` | 4 | Room 1 entered |
  | `ColliderRoom2 has been entered` | 5 | Room 2 entered |
+
 ## Data Quality Notes
 
 - 30+ unique event types; focus on key presses and spatial boundary events.
 - SAM rating events mark active rating periods - exclude from navigation classification.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `EEG data set for an architectural affordances task`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004980

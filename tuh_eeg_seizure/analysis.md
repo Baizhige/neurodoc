@@ -7,34 +7,35 @@
 
 The TUH EEG Seizure Corpus (v2.0.3) is the largest publicly available seizure detection dataset, containing 7,361 clinical EEG recordings from ~675 unique patients with time-stamped seizure annotations (Shah et al., 2020). Expert neurologists labeled each segment as background (bckg) or one of five seizure types using companion CSV sidecar files (channel, start_time, stop_time, label). The dataset is pre-split into train and dev sets (directory path contains `/train/` or `/dev/`). Recording lengths range from a few minutes to several hours.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
 
+> **Kernel SHA256**: `79affa516f7074d9405abede4f1d0ce3fe72507bfd35d9c597125e101aab87e0`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `bckg` | ~75000 | event | raw | Background - no seizure activity |
-| `gnsz` | varies | event | raw | Generalized non-specific seizure |
-| `fnsz` | varies | event | raw | Focal non-specific seizure |
-| `cpsz` | varies | event | raw | Complex partial seizure |
-| `absz` | varies | event | raw | Absence seizure |
-| `tnsz` | varies | event | raw | Tonic seizure |
-
->
-> `bckg` (background) is overwhelmingly the most frequent label. Seizure events are annotated with onset, offset, and type from CSV sidecars.
+| `absz` | 121 | event | raw | Absence seizure |
+| `bckg` | 15454 | event | raw | Background - no seizure activity |
+| `cpsz` | 1520 | event | raw | Complex partial seizure |
+| `fnsz` | 4891 | event | raw | Focal non-specific seizure |
+| `gnsz` | 2491 | event | raw | Generalized non-specific seizure |
+| `mysz` | 3 | event | raw |  |
+| `seiz` | 146 | event | raw |  |
+| `spsz` | 57 | event | raw |  |
+| `tcsz` | 199 | event | raw |  |
+| `tnsz` | 126 | event | raw | Tonic seizure |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Binary Seizure Detection (Seizure vs Background)
@@ -90,7 +91,6 @@ The TUH EEG Seizure Corpus (v2.0.3) is the largest publicly available seizure de
 - Train/dev split is pre-defined; respect it for evaluation. Split encoded in file path (`/train/`, `/dev/`).
 - Sex is not reliably available.
 - Long recordings may span multiple seizure episodes; temporal context is important.
-
 
 ## Kernel Responsibilities
 

@@ -7,7 +7,6 @@
 
 Participants identified Braille letters presented via tactile stimulation to left or right index fingers while EEG was recorded. The study investigates cortical plasticity by comparing sighted controls and congenitally blind individuals in processing Braille letter information. Stimulus codes S1-S16 mark individual Braille letter presentations (3,316-3,319 each); S101 and S222 (63,609/63,607) dominate and likely mark response-correct/response-incorrect feedback or block boundaries; S200 (10,535) is a block marker; S253 (9,211) and S254/S255 are admin/system markers.
 
-
 ## File Scan Result
 
 > **Kernel**: N/A
@@ -31,6 +30,12 @@ Participants identified Braille letters presented via tactile stimulation to lef
 | `Stimulus/S255` | ~437 | admin | raw | BrainVision admin sync marker (exclude) |
 | `New Segment/` | rare | admin | raw | BrainVision segment boundary (exclude) |
 
+### MISC Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `Stimulus/S101`, `Stimulus/S222`, `Stimulus/S200`, `Stimulus/S253`, `Stimulus/S 16`, `Stimulus/S 6`, `Stimulus/S 15`, `Stimulus/S 11`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -39,12 +44,6 @@ Participants identified Braille letters presented via tactile stimulation to lef
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Stimulus/S101`, `Stimulus/S222`, `Stimulus/S200`, `Stimulus/S253`, `Stimulus/S 16`, `Stimulus/S 6`, `Stimulus/S 15`, `Stimulus/S 11`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -104,7 +103,6 @@ Participants identified Braille letters presented via tactile stimulation to lef
 - `Stimulus/S101` and `Stimulus/S222` are very high-frequency (63k each) - likely feedback or block markers, exclude from classification.
 - `New Segment/`, `Stimulus/S253`, `Stimulus/S254`, `Stimulus/S255` are admin/system - exclude.
 - Dataset includes sighted controls and congenitally blind participants; group label in participants.tsv.
-
 
 ## Kernel Responsibilities
 

@@ -7,7 +7,6 @@
 
 Resting-state EEG recordings with eyes open and eyes closed were conducted under two conditions: normal sleep and 24-hour sleep deprivation. The study investigates how sleep loss modulates spontaneous brain activity. Subjects participated in two sessions (normal sleep vs sleep-deprived). Files are split by condition (eyesopen/eyesclosed) with 5-minute continuous blocks. Event marker `S 33` (60 total) appears as a resting-state session marker in a subset of files; all other S-codes are rare system markers.
 
-
 ## File Scan Result
 
 > **Kernel**: N/A
@@ -24,6 +23,12 @@ Resting-state EEG recordings with eyes open and eyes closed were conducted under
 | `S119` | 7 | admin | raw | Rare system marker (exclude) |
 | `S 66` | 7 | admin | raw | Rare system marker (exclude) |
 
+**STIM Label Summary**
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `S 33`, `S 45`, `S 44`, `S 55`, `S119`, `S 66`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -32,12 +37,6 @@ Resting-state EEG recordings with eyes open and eyes closed were conducted under
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `S 33`, `S 45`, `S 44`, `S 55`, `S119`, `S 66`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

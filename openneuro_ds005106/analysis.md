@@ -7,18 +7,6 @@
 
 Infants viewed 200 distinct object images presented in rapid visual streams (RSVP) while EEG was recorded to study the development of visual object representations. Each numeric trigger code corresponds to one of 200 object IDs; code -1 is a baseline/inter-stimulus marker. The dataset enables decoding of object-specific neural representations in the infant brain.
 
-## Subject Information
-
-<!-- AUTO-KERNEL-SUBJECT-INFO:START -->
-> **Kernel Fact Source**: current kernel scan from `<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-- **Record Count**: 42
-- **Age Completeness**: 0/42 (0.0%)
-- **Sex Completeness**: 42/42 (100.0%)
-- **Observed Age Examples**: N/A
-- **Observed Sex Examples**: `Male`, `Female`
-<!-- AUTO-KERNEL-SUBJECT-INFO:END -->
-
-
 ## File Scan Result
 
 > **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds005106.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`

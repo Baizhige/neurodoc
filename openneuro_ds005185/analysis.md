@@ -8,7 +8,6 @@
 
 Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG) in a home environment collected in 2019. Participants self-applied in-ear EEG electrodes over multiple nights for sleep staging and feasibility assessment. Event markers are Danish-language protocol annotations (lights out, going to bed, waking up), synchronization pulses, and calibration periods. The dominant event is `trigger` (30,726 total) - a PSG synchronization pulse. Sleep stage labels are derived from PSG annotations rather than EEG event markers.
 
-
 ## File Scan Result
 
 > **Kernel**: N/A
@@ -28,7 +27,6 @@ Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG
 | `Biocalibrations start` | 11 | admin | raw | Biocalibration start (exclude) |
 | `Vagen` / `vagen` | 13 | event | raw | "Awake" (Danish) |
 
-
 ### Info
 
 | Field | Completeness | Notes |
@@ -36,14 +34,9 @@ Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `trigger`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
+
 
 ### Classical Task 1: Sleep stage classification (W/N1/N2/N3/REM)
 - **Task Type**: classification
@@ -81,7 +74,6 @@ Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG
 - PSG reference annotations required for sleep staging labels.
 - Using the original `.poly5` PSG file directly risks PSG signal leakage into EEG due to poor electrode shielding; use the pre-processed EEG files instead.
 - Actual data collection span: 2018-2020 (dataset first published 2019; OpenNeuro year reflects latest version).
-
 
 ## Kernel Responsibilities
 

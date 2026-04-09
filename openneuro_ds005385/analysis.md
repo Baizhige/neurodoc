@@ -23,7 +23,6 @@ Resting-state EEG was recorded with eyes open and eyes closed before and after a
 | `S 14`-`S 16` | 68 each | event | raw | Resting-state condition (higher count subset) |
 | `S196`-`S207` | ~205-207 each | event | raw | Session/condition index codes |
 
-
 ### Info
 
 | Field | Completeness | Notes |
@@ -31,12 +30,6 @@ Resting-state EEG was recorded with eyes open and eyes closed before and after a
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `S 4`, `S 7`, `S 11`, `S 19`, `S 14`, `S 16`, `S196`, `S207`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

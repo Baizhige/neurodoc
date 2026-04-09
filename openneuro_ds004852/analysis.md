@@ -7,18 +7,9 @@
 
 An EEG dataset (InsurgentCivilian) recorded during a social-cognitive paradigm where participants were likely required to classify ambiguous human figures as insurgents or civilians, a common threat-detection paradigm used in military research. Shares the identical event structure with STRONG (ds004849) and ODE (ds004850), suggesting these are companion recordings from the same experimental series.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004852
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -37,12 +28,17 @@ An EEG dataset (InsurgentCivilian) recorded during a social-cognitive paradigm w
 | `51011` | 170 | short | raw | Trigger code |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-## STIM Label Summary
+
+### MISC Label Summary
 
 - **Route**: `stim`
 - **Role**: Trigger-channel or stimulus-marker based labeling.
 - **Candidate Trigger Labels**: Needs verification
 - **Kernel Note**: Keep trigger decoding table versioned and auditable.
+
+### Info
+
+- Single aggregated file; scan completed.
 
 ## Tasks
 
@@ -77,11 +73,19 @@ An EEG dataset (InsurgentCivilian) recorded during a social-cognitive paradigm w
  | `71011` | 9 | Trigger code |
  | `2201` | 10 | Trigger code |
  | `51011` | 11 | Trigger code |
+
 ## Data Quality Notes
 
 - Single aggregated file; individual subject data not separable.
 - Identical event structure to ds004849 and ds004850 - companion recordings.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `InsurgentCivilian`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation, stim
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004852

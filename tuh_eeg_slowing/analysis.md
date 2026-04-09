@@ -7,18 +7,9 @@
 
 The TUH EEG Slowing Corpus (v2.0.1) contains 112 clinical EEG recordings with time-stamped annotations for EEG slowing, seizure activity, and background segments. Expert annotators labeled each segment using companion CSV sidecar files (channel, start_time, stop_time, label). EEG slowing (diffuse or focal slow-wave activity) is a neurological biomarker of conditions such as encephalopathy, stroke, or post-ictal states. The corpus enables the development of algorithms to automatically detect and localize EEG slowing.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://isip.piconepress.com/projects/tuh_eeg/downloads/tuh_eeg_slowing/v2.0.1/
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -29,6 +20,10 @@ The TUH EEG Slowing Corpus (v2.0.1) contains 112 clinical EEG recordings with ti
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
 >
 > Multiple annotations may appear in a single recording (e.g., `bckg + slow`, `bckg + seiz`). Per the CSV analysis, top events include `seiz:22`, `seiz:43`, `slow:64`, and `bckg:43,slow:63`.
+
+### Info
+
+Additional file scan metadata not available.
 
 ## Tasks
 
@@ -50,7 +45,7 @@ The TUH EEG Slowing Corpus (v2.0.1) contains 112 clinical EEG recordings with ti
 - **Notes**: Exclude `seiz` events if slowing-specific detection is the goal, or include as a third class. CSV sidecars required.
 
 | Event | y | Meaning |
-|-------|---|---------|
+|-------|----|---------|
 | `bckg` | 0 | Normal background EEG |
 | `slow` | 1 | EEG slowing |
 
@@ -63,10 +58,11 @@ The TUH EEG Slowing Corpus (v2.0.1) contains 112 clinical EEG recordings with ti
 - **Target Definition**: Event-to-label mapping table below.
 
 | Event | y | Meaning |
-|-------|---|---------|
+|-------|----|---------|
 | `bckg` | 0 | Background |
 | `slow` | 1 | Slowing |
 | `seiz` | 2 | Seizure |
+
 ## Data Quality Notes
 
 - Small dataset (112 files, ~47 subjects); limited sample size.
@@ -75,6 +71,13 @@ The TUH EEG Slowing Corpus (v2.0.1) contains 112 clinical EEG recordings with ti
 - Annotations may overlap (e.g., slowing + seizure in the same segment); handle compound annotations carefully.
 - Sex is not reliably available.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: TUH EEG Slowing Corpus v2.0.1. Obeid I, Picone J (2016). The Temple University Hospital EEG Data Corpus. https://isip.piconepress.com/projects/tuh_eeg/
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://isip.piconepress.com/projects/tuh_eeg/downloads/tuh_eeg_slowing/v2.0.1/

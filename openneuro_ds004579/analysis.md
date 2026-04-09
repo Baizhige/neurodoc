@@ -36,12 +36,6 @@ Participants performed an interval timing task where they estimated durations of
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `S 1`, `S 2`, `S 3`, `S 4`, `S 5`, `S 6`, `S 7`, `S255`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -54,7 +48,7 @@ Participants performed an interval timing task where they estimated durations of
 - **Notes**: boundary and S255 are admin events - exclude from target_events. R 3 is a response event - can be used as an additional classification target. S255 is a BrainVision system marker (overflow/sync), not a task event.
 
 | Event | y | Meaning |
- |-------|---|------|
+|-------|---|------|
  | `S 1` | 0 | Timing condition 1 |
  | `S 2` | 1 | Timing condition 2 |
  | `S 3` | 2 | Timing condition 3 |

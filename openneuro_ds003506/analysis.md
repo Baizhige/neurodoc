@@ -9,6 +9,7 @@
 This study investigates the Reward Positivity (RewP) EEG component in Parkinson's disease (PD) patients compared to matched healthy controls. Participants completed a reinforcement learning task with both volitional and instructed choices, earning rewards or receiving no-reward feedback based on their selections. The RewP, a frontocentral ERP component, scales with reward prediction error and mirrors dopamine-driven learning. The study examines whether PD diminishes this signal, given dopaminergic dysfunction in PD.
 
 
+
 ## File Scan Result
 
 > **Kernel**: N/A
@@ -33,12 +34,6 @@ This study investigates the Reward Positivity (RewP) EEG component in Parkinson'
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Imperative Stimulus`, `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

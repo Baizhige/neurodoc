@@ -8,18 +8,9 @@
 
 Participants performed a three-armed bandit gambling task with oscillating reinforcement probabilities to investigate reward processing and reward prediction error signals in EEG. Each trial includes a stimulus presentation (choice between Left, Right, or Up options), a button-press response, and outcome feedback (Win, Loss, or Null). The Fixation event marks trial onset. STATUS is a BioSemi admin marker.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003458
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -41,12 +32,17 @@ Participants performed a three-armed bandit gambling task with oscillating reinf
 > - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
 > - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **not used for epoch**
-## STIM Label Summary
+
+### MISC Label Summary
 
 - **Route**: `stim`
 - **Role**: Trigger-channel or stimulus-marker based labeling.
 - **Candidate Trigger Labels**: `Stimulus (Left`, `STATUS`
 - **Kernel Note**: Keep trigger decoding table versioned and auditable.
+
+### Info
+
+[Placeholder for file scan metadata]
 
 ## Tasks
 
@@ -68,10 +64,11 @@ Participants performed a three-armed bandit gambling task with oscillating reinf
 - **Notes**: `STATUS` is a BioSemi admin marker - excluded. Event label `Stimulus (Left` contains a parenthesis fragment - this is a truncated label; the full label may span `Stimulus (Left`, `Right`, `Up)`. Feedback events are the primary scientific targets for reward prediction error analysis. `Response` marks button-press choices.
 
 | Event | y | Meaning |
- |-------|---|------|
- | `Feedback Win` | 0 | Win feedback (reward received) |
- | `Feedback Loss` | 1 | Loss feedback (no reward) |
- | `Feedback Null` | 2 | Null/neutral feedback |
+|-------|---|---------|
+| `Feedback Win` | 0 | Win feedback (reward received) |
+| `Feedback Loss` | 1 | Loss feedback (no reward) |
+| `Feedback Null` | 2 | Null/neutral feedback |
+
 ## Data Quality Notes
 
 - Event label `Stimulus (Left` is a truncated label fragment - verify full label from events.tsv.
@@ -79,6 +76,13 @@ Participants performed a three-armed bandit gambling task with oscillating reinf
 - Small dataset: 23 subjects, 1 file each.
 - Verify channel count consistency across subjects before pooling.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `EEG: Three armed bandit gambling task`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation, stim
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003458

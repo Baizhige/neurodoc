@@ -8,7 +8,6 @@
 
 Resting-state EEG recorded before and after a six-month Neuroepo drug administration period to evaluate neuroprotective effects in Parkinson's disease patients. The protocol includes resting-state (eyes closed / eyes open), hyperventilation periods, and photic stimulation sections. This is a clinical neurological assessment battery recorded in Spanish (event labels in Spanish).
 
-
 ## File Scan Result
 
 > **Kernel**: N/A
@@ -31,6 +30,12 @@ Resting-state EEG recorded before and after a six-month Neuroepo drug administra
 | `HPVOJOS ABIERTOS` | 6 (files) | event | raw | Eyes-open during hyperventilation |
 | `HEPERVENTILACION OJOS ABIERTOS` | 1 (file) | event | raw | Hyperventilation eyes-open variant |
 
+### MISC Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `photic stimulation`, `fotoestimulacion`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -39,12 +44,6 @@ Resting-state EEG recorded before and after a six-month Neuroepo drug administra
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `photic stimulation`, `fotoestimulacion`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -91,7 +90,6 @@ Resting-state EEG recorded before and after a six-month Neuroepo drug administra
 - `photic stimulation` / `fotoestimulacion` are duplicate labels for the same condition.
 - `discontinuity` events mark recording gaps - exclude from epoch analysis.
 - Verify channel count consistency across subjects before pooling.
-
 
 ## Kernel Responsibilities
 

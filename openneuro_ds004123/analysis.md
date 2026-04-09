@@ -8,21 +8,12 @@
 
 Subjects performed a simulated driving task with varying levels of visual traffic complexity (low, medium, high density of surrounding vehicles) while correcting for lateral vehicle perturbations. EEG was recorded to assess how increasing traffic complexity interacts with fatigue-related neural signatures. Part of the BCIT driving fatigue dataset series examining environmental complexity effects on driver workload.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004123
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|----------|---------------|------|------------|----------|
 | `4311` | 30 files | short | raw | Lateral perturbation type 1 |
 | `4312` | 30 files | short | raw | Lateral perturbation type 2 |
 | `4210` | 30 files | short | raw | Perturbation onset |
@@ -52,6 +43,10 @@ Subjects performed a simulated driving task with varying levels of visual traffi
 > - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **not used for epoch**
 
+### Info
+
+Placeholder for additional file scan metadata.
+
 ## Tasks
 
 ### Primary Task 1: Motor imagery decoding
@@ -72,16 +67,23 @@ Subjects performed a simulated driving task with varying levels of visual traffi
 - **Notes**: Traffic complexity conditions (3210/3230/3240) are the primary manipulation variable. Only 30 subjects - small cohort. Full event code decoding requires BCIT codebook.
 
 | Event | y | Meaning |
- |-------|---|------|
- | `3210` | 0 | Low traffic complexity |
- | `3230` | 1 | Medium traffic complexity |
- | `3240` | 2 | High traffic complexity |
+|-------|---|------|
+| `3210` | 0 | Low traffic complexity |
+| `3230` | 1 | Medium traffic complexity |
+| `3240` | 2 | High traffic complexity |
 ## Data Quality Notes
 
 - 30 subjects - smallest subject count in the BCIT driving series
 - 30 distinct event types; full decoding requires BCIT codebook documentation
 - Traffic complexity codes (3210/3230/3240) are the key classification targets
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `BCIT Traffic Complexity`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004123

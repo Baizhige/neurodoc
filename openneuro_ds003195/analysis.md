@@ -39,12 +39,6 @@ Resting-state EEG recorded from Parkinson's disease patients who received a plac
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `photic stimulation`, `fotoestimulacion`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

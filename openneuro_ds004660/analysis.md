@@ -8,21 +8,12 @@
 
 A military-relevant cognitive workload study conducted at TNO research institute, involving multiple hierarchically encoded task conditions represented by 5-digit numeric trigger codes. The paradigm likely involves surveillance, target detection, or dual-task conditions common in defense research. Event codes encode task type, difficulty level, and stimulus properties in a hierarchical scheme.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004660
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|----------|---------------|------|------------|----------|
 | `14211` | 42922 | short | raw | Hierarchical task code - primary condition |
 | `14212` | 42922 | short | raw | Hierarchical task code - primary condition variant |
 | `21111` | 9228 | short | raw | Hierarchical task code |
@@ -41,12 +32,18 @@ A military-relevant cognitive workload study conducted at TNO research institute
 > - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
 > - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **not used for epoch**
-## STIM Label Summary
+
+### MISC Label Summary
 
 - **Route**: `stim`
 - **Role**: Trigger-channel or stimulus-marker based labeling.
 - **Candidate Trigger Labels**: Needs verification
 - **Kernel Note**: Keep trigger decoding table versioned and auditable.
+
+
+### Info
+
+All event codes are 5-digit hierarchical numeric identifiers - full decode needed. 30+ unique event types; group by high-level condition category for practical classification.
 
 ## Tasks
 
@@ -68,20 +65,28 @@ A military-relevant cognitive workload study conducted at TNO research institute
 - **Notes**: All codes are hierarchically structured 5-digit identifiers. Full decode table required from TNO dataset README or associated paper.
 
 | Event | y | Meaning |
- |-------|---|------|
- | `14211` | 0 | Primary task code |
- | `14212` | 1 | Primary task code variant |
- | `21111` | 2 | Task code |
- | `14112` | 3 | Task code |
- | `14111` | 4 | Task code |
- | `13001` | 5 | Task code |
- | `13002` | 6 | Task code |
- | `21201` | 7 | Task code |
+|-------|---|--------|
+| `14211` | 0 | Primary task code |
+| `14212` | 1 | Primary task code variant |
+| `21111` | 2 | Task code |
+| `14112` | 3 | Task code |
+| `14111` | 4 | Task code |
+| `13001` | 5 | Task code |
+| `13002` | 6 | Task code |
+| `21201` | 7 | Task code |
+
 ## Data Quality Notes
 
-- All event codes are 5-digit hierarchical numeric identifiers - full decode needed.
-- 30+ unique event types; group by high-level condition category for practical classification.
+All event codes are 5-digit hierarchical numeric identifiers - full decode needed.
+30+ unique event types; group by high-level condition category for practical classification.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `TNO`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation, stim
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004660

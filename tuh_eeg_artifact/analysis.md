@@ -7,43 +7,44 @@
 
 The TUH EEG Artifact Corpus (v3.0.1) provides time-stamped, channel-level artifact annotations on 310 clinical EEG recordings selected from the TUH EEG Corpus. Expert annotators labeled artifact segments with type and temporal boundaries, stored in companion CSV sidecar files. Each annotation includes: channel name, start time, stop time, label, and confidence score. Multiple artifact types may co-occur within a recording.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
 
+> **Kernel SHA256**: `ea71b385fd265312a7bce9d712214ded6de63091c53c5d85dbdb592f50061155`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `eyem` | varies | event | raw | Eye movement artifact |
-| `musc` | varies | event | raw | Muscle (EMG) artifact |
-| `elec` | varies | event | raw | Electrode artifact (pop, movement) |
-| `chew` | varies | event | raw | Chewing artifact |
-| `shiv` | varies | event | raw | Shivering artifact |
-| `elpp` | varies | event | raw | Electrode pop |
-| `null` | varies | admin | raw | No artifact (clean segment) |
-
->
-> Artifact annotations are channel-level and time-stamped. Multiple artifact types may appear in a single recording; combined labels (e.g., `musc_elec`, `eyem_musc`) are also present.
+| `chew` | 6482 | event | raw | Chewing artifact |
+| `chew_elec` | 152 | event | raw |  |
+| `chew_musc` | 243 | event | raw |  |
+| `elec` | 33130 | event | raw | Electrode artifact (pop, movement) |
+| `elpp` | 172 | event | raw | Electrode pop |
+| `eyem` | 38569 | event | raw | Eye movement artifact |
+| `eyem_chew` | 864 | event | raw |  |
+| `eyem_elec` | 2422 | event | raw |  |
+| `eyem_musc` | 18677 | event | raw |  |
+| `eyem_shiv` | 45 | event | raw |  |
+| `musc` | 51052 | event | raw | Muscle (EMG) artifact |
+| `musc_elec` | 7651 | event | raw |  |
+| `shiv` | 613 | event | raw | Shivering artifact |
+| `shiv_elec` | 1 | event | raw |  |
 
 
 ### MISC Label Summary
-
 - **Route**: `misc`
 - **Role**: Stores derived/continuous labels that are not native raw event IDs.
 - **Candidate Labels**: `confidence`
 - **Kernel Note**: Keep derivation source, unit, and version metadata.
-
-
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Artifact Type Classification (Multiclass)
@@ -108,7 +109,6 @@ The TUH EEG Artifact Corpus (v3.0.1) provides time-stamped, channel-level artifa
 | `shiv` | 4 | Shivering |
 | `elpp` | 5 | Electrode pop |
 
-
 ### Potential Task 2: Artifact vs. Clean EEG Detection (epoch_by_event)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -130,7 +130,6 @@ The TUH EEG Artifact Corpus (v3.0.1) provides time-stamped, channel-level artifa
 - Combined label types (e.g., `eyem_musc`) create label ambiguity; standardize before training.
 - Variable channel count and sampling rate; normalize before cross-recording analysis.
 - Sex is not reliably available.
-
 
 ## Kernel Responsibilities
 

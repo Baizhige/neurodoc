@@ -7,18 +7,6 @@
 
 Participants completed a reinforcement learning task using a 3-armed bandit paradigm incorporating alcohol-related and neutral beverage cues to study decision-making in hazardous drinkers versus controls. On each trial, a cue was presented followed by a three-arm choice and probabilistic win/loss feedback. The study examines electrophysiological markers of cue-driven exploration and aberrant reinforcement learning.
 
-## Subject Information
-
-<!-- AUTO-KERNEL-SUBJECT-INFO:START -->
-> **Kernel Fact Source**: current kernel scan from `<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-- **Record Count**: 53
-- **Age Completeness**: 53/53 (100.0%)
-- **Sex Completeness**: 53/53 (100.0%)
-- **Observed Age Examples**: `43`, `50`, `22`, `18`, `31`, `24`, `44`, `38`
-- **Observed Sex Examples**: `Female`, `Male`
-<!-- AUTO-KERNEL-SUBJECT-INFO:END -->
-
-
 ## File Scan Result
 
 > **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds004595.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`

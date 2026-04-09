@@ -8,19 +8,9 @@
 
 Participants performed a battery of executive function tasks including a visual N-back working memory task (stimuli A/B/C/D), a Sustained Attention to Response Task (SART, target/nontarget), and a Local-Global hierarchical stimulus task (largeH/largeT x smallH/smallT). The study assessed the effect of neurofeedback training on executive function performance.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 2 + Type 3
-> **Why**: Derived targets are needed beyond raw markers.
-> **Primary Label Routes**: Annotation, stim, misc
-> **Evidence Keywords**: reaction time
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004350
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -46,19 +36,17 @@ Participants performed a battery of executive function tasks including a visual 
 > - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
 > - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **not used for epoch**
-## MISC Label Summary
+
+### MISC Label Summary
 
 - **Route**: `misc`
 - **Role**: Stores derived/continuous labels that are not native raw event IDs.
 - **Candidate Labels**: `reaction_time`
 - **Kernel Note**: Keep derivation source, unit, and version metadata.
 
-## STIM Label Summary
+### Info
 
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: Needs verification
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+- **stim Label Summary**: Trigger-channel or stimulus-marker based labeling. Candidate trigger labels require verification. Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -98,15 +86,24 @@ Participants performed a battery of executive function tasks including a visual 
 - **Notes**: Numerical codes (1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 128, 255) are likely system/artifact markers - exclude from target_events. Multiple tasks in one dataset; files are per-task. Separate HDF5 files per task recommended.
 
 | Event | y | Meaning |
- |-------|---|------|
- | `nontarget` | 0 | Non-target (go) stimulus |
- | `target` | 1 | Target (no-go) stimulus |
+|-------|---|--------|
+| `nontarget` | 0 | Non-target (go) stimulus |
+| `target` | 1 | Target (no-go) stimulus |
+
 ## Data Quality Notes
 
 - Multiple distinct tasks (SART, N-back, Local-Global) in same dataset; files are per-task
 - Numerical trigger codes (1-255) are system markers, not task events
 - 480 files across 24 subjects (multiple sessions/tasks per subject)
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Executive Functionning Study for Assessing the Effect of Neurofeedback`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 2 + Type 3
+> **Why**: Derived targets are needed beyond raw markers.
+> **Primary Label Routes**: Annotation, stim, misc
+> **Evidence Keywords**: reaction time
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004350

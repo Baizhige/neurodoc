@@ -7,18 +7,9 @@
 
 The `VisualSituationalAwareness` task investigates neural correlates of situational awareness during visual monitoring. Subjects viewed structured visual scenes with EEG recorded across multiple runs. The 5-digit hierarchical trigger codes encode stimulus category, load level, and response type. Codes 22301/22302 (3,384 each) and 22501/22502 (2,331/2,325) dominate; code 32000 (1,099) likely marks scene/trial boundaries. Codes ending in 01/02 mark paired conditions (onset/offset or left/right).
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004843
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -39,12 +30,11 @@ The `VisualSituationalAwareness` task investigates neural correlates of situatio
 | `12202` | 306 | short | raw | Condition 1-2-2, variant 02 |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-## STIM Label Summary
 
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: Needs verification
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+### Info
+
+Placeholder for additional file scan metadata.
+
 
 ## Tasks
 
@@ -81,6 +71,13 @@ The `VisualSituationalAwareness` task investigates neural correlates of situatio
 - 5-digit hierarchical codes require decode from README or paper.
 - `32000` is a boundary/transition marker - exclude from epoching.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `T16 - Visual Situational Awareness EEG`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation, stim
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004843

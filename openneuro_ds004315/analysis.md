@@ -26,6 +26,12 @@ A reinforcement learning task (Probabilistic Selection Task) consisting of train
 | `TESTING` | 50x~1700 | event | raw | Testing phase trial marker |
 | `STATUS` | 50 | admin | raw | System status marker |
 
+### MISC Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `STIM`, `STATUS`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -34,12 +40,6 @@ A reinforcement learning task (Probabilistic Selection Task) consisting of train
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `STIM`, `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -68,7 +68,7 @@ A reinforcement learning task (Probabilistic Selection Task) consisting of train
 - **Notes**: STATUS is an admin marker (exclude). TESTING events have rich sub-labels in the actual events.tsv (e.g., "TESTING: Right Press, Correct") useful for further analysis. Class imbalance: Correct >> Incorrect.
 
 | Event | y | Meaning |
-|-------|---|----------|
+|-------|---|
 | `Correct` | 0 | Correct response |
 | `Incorrect` | 1 | Incorrect response |
 

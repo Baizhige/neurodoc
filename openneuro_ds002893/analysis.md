@@ -7,18 +7,9 @@
 
 An interleaved dual-oddball task in which subjects selectively attended to either auditory or visual stimuli while switching between modalities based on spoken and printed attention cue instructions. The study investigated modality-specificity of sensory aging in vision and audition using event-related potentials. Attention states (`attend_auditory`, `attend_visual`) are sustained conditions lasting multiple trials; `shift_attention` marks the transition cue between modalities.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002893
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -30,6 +21,14 @@ An interleaved dual-oddball task in which subjects selectively attended to eithe
 > - `long`: sustained-state marker (>=2 s), for `epoch_by_long_event_hdf5`
 > - `rest`: resting-state segment marker, for `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **exclude** from epoch target_events
+
+### MISC Label Summary
+
+No MISC labels identified in current scan.
+
+### Info
+
+No additional file scan info at this time.
 
 ## Tasks
 
@@ -54,6 +53,7 @@ An interleaved dual-oddball task in which subjects selectively attended to eithe
  |-------|---|---------|
  | `attend_auditory` | 0 | Sustained auditory attention block |
  | `attend_visual` | 1 | Sustained visual attention block |
+
 ## Data Quality Notes
 
 - `shift_attention` marks attention shift cues - not a sustained state; exclude from classification target.
@@ -61,6 +61,13 @@ An interleaved dual-oddball task in which subjects selectively attended to eithe
 - Older adult participants (aging study); verify age distribution from participants.tsv.
 - Verify channel count consistency across subjects before pooling.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Modality-specificity of sensory aging in vision and audition: evidence from event-related potentials. Brain research, 1215, pp.53-68.`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002893

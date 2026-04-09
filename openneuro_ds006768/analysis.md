@@ -7,18 +7,9 @@
 
 Subjects completed a Multiple Object Monitoring (MOM) task requiring sustained visual attention to track multiple moving objects simultaneously. In each trial, a subset of objects is designated as targets at the start, then all objects move during a tracking period, and subjects report which objects were targets. EEG captures neural correlates of visual attention load and tracking accuracy. Events mark trial onset, target designation, and distractor appearances.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006768
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -27,6 +18,14 @@ Subjects completed a Multiple Object Monitoring (MOM) task requiring sustained v
 | `distractor` | 11004 | short | raw | Distractor object onset |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
+
+### MISC Label Summary
+
+No MISC labels identified in this dataset.
+
+### Info
+
+No additional scan information available.
 
 ## Tasks
 
@@ -58,6 +57,13 @@ Subjects completed a Multiple Object Monitoring (MOM) task requiring sustained v
 - `event` is a generic trial marker; prefer specific `target`/`distractor` events for classification.
 - Apply bandpass filter (0.5-40 Hz) and artifact rejection prior to epoching.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Multiple Object Monitoring (EEG)`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006768

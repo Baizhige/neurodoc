@@ -16,7 +16,7 @@ The Healthy Brain Network (HBN) EEG Release 4 is a large-scale, multi-task devel
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|----------|---------------|------|------------|----------|
 | `stim_ON` | 35171 | event | raw | Contrast detection stimulus onset |
 | `fixpoint_ON` | 35072 | event | raw | Fixation point onset (trial start cue) |
 | `contrastTrial_start` | 20646 | event | raw | Contrast detection trial block onset |
@@ -48,12 +48,6 @@ The Healthy Brain Network (HBN) EEG Release 4 is a large-scale, multi-task devel
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stim_ON`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

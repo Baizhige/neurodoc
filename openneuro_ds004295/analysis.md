@@ -47,12 +47,6 @@ A reversal learning task comparing brain activity during reward gain (monetary) 
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `S 81`, `S 61`, `S 75`, `S 71`, `S 52`, `S 51`, `S 55`, `S 72`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -70,7 +64,7 @@ A reversal learning task comparing brain activity during reward gain (monetary) 
 - **Super Meta Notes**: N/A
 - **Evidence**:
   - DOI: 10.1111/psyp.14235 — Single-trial regression with feedback valence as predictor examining frontal midline theta (FMθ) responses to positive vs negative feedback in reward and punishment reversal learning tasks.
-- **Kernel Notes**: Verify event ID mapping from events.tsv. The paper uses feedback valence (positive vs negative) as the classification target. Based on dataset event structure patterns, S 52 is inferred as positive feedback and S 51 as negative feedback. Kernel should cross-validate against stimulus events (S 71, S 72, S 75, S 80, S 81) to confirm timing and correct mapping. (replaces Potential Task 1 from original analysis.md)
+- **Kernel Notes**: Verify event ID mapping from events.tsv. The paper uses feedback valence (positive vs negative) as the classification target. Based on dataset event structure patterns, S 52 is inferred as positive feedback and S 51 is negative feedback. Kernel should cross-validate against stimulus events (S 71, S 72, S 75, S 80, S 81) to confirm timing and correct mapping. (replaces Potential Task 1 from original analysis.md)
 
 ### Potential Task 1: Reversal Learning Classification (multiclass)
 - **Task Type**: classification

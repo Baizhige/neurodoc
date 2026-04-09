@@ -7,34 +7,31 @@
 
 The TUH EEG Events Corpus (v2.0.1) provides time-stamped annotations of neurological events in 518 clinical EEG recordings from ~370 unique patients (Shah et al., 2018). Expert neurologists annotated six event types at temporal and spatial resolution using companion `.rec` sidecar files (4-column format: channel, start_time, stop_time, label_code). Events include epileptiform discharges, background EEG, and artifact. All recordings are sampled at 250 Hz with 24-33 channels.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
 
+> **Kernel SHA256**: `9c93f64e385e08686b90b12f5de77c778e1be7fb1cc6420c41ee7a4cc817dacd`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `background` | varies | event | raw | Normal background EEG activity |
-| `spike and sharp wave` | varies | event | raw | Spike or sharp wave discharge |
-| `generalized periodic epileptiform discharges` | varies | event | raw | GPEDs - generalized periodic epileptiform pattern |
-| `periodic lateralized epileptiform discharges` | varies | event | raw | PLEDs - lateralized epileptiform pattern |
-| `eye movement` | varies | event | raw | Eye movement artifact |
-| `artifact` | varies | event | raw | Non-specific artifact |
-
->
-> Label codes from `.rec` files: 1=spike and sharp wave, 2=generalized periodic epileptiform discharges, 3=periodic lateralized epileptiform discharges, 4=eye movement, 5=artifact, 6=background.
+| `artifact` | 13257 | event | raw | Non-specific artifact |
+| `background` | 73372 | event | raw | Normal background EEG activity |
+| `eye movement` | 1399 | event | raw | Eye movement artifact |
+| `generalized periodic epileptiform discharges` | 15931 | event | raw | GPEDs - generalized periodic epileptiform pattern |
+| `periodic lateralized epileptiform discharges` | 8182 | event | raw | PLEDs - lateralized epileptiform pattern |
+| `spike and sharp wave` | 1212 | event | raw | Spike or sharp wave discharge |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Neurological EEG event detection/classification
@@ -44,7 +41,6 @@ The TUH EEG Events Corpus (v2.0.1) provides time-stamped annotations of neurolog
 - **Label Route**: `event`
 - **Target Definition**: Event classes from expert annotations (e.g., spikes, periodic discharges, artifacts, background).
 - **Evidence**: TUH EEG Events Corpus provides time-stamped multi-class event annotations as the primary benchmark target. Source: https://isip.piconepress.com/projects/tuh_eeg/ DOI: 10.1109/globalsip.2013.6736803
-
 
 ### Potential Task 1: EEG Event Classification (epoch_by_event)
 - **Task Type**: classification
@@ -60,7 +56,6 @@ The TUH EEG Events Corpus (v2.0.1) provides time-stamped annotations of neurolog
 | `spike and sharp wave` | 1 | Epileptiform spike/sharp wave |
 | `generalized periodic epileptiform discharges` | 2 | GPEDs |
 | `periodic lateralized epileptiform discharges` | 3 | PLEDs |
-
 
 ### Potential Task 2: Epileptiform vs. Normal EEG Detection (epoch_by_event)
 - **Task Type**: classification
@@ -82,7 +77,6 @@ The TUH EEG Events Corpus (v2.0.1) provides time-stamped annotations of neurolog
 - Background annotations are long events; epileptiform events are short - class length mismatch may cause imbalance.
 - Uniform sampling rate (250 Hz) and consistent channel count (24-33); relatively homogeneous compared to other TUH subsets.
 - Sex is not reliably available.
-
 
 ## Kernel Responsibilities
 

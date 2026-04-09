@@ -37,12 +37,10 @@ Participants performed an auditory deviant detection task and a one-back sound l
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Stimulus/S 1`, `Stimulus/S 2`, `Stimulus/S 3`, `Stimulus/S 4`, `Stimulus/S 5`, `Stimulus/S 6`, `Stimulus/S 7`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+| `stim_label_route` | present | Route: `stim` |
+| `stim_label_role` | present | Trigger-channel or stimulus-marker based labeling |
+| `candidate_trigger_labels` | present | `Stimulus/S 1`, `Stimulus/S 2`, `Stimulus/S 3`, `Stimulus/S 4`, `Stimulus/S 5`, `Stimulus/S 6`, `Stimulus/S 7` |
+| `kernel_note` | present | Keep trigger decoding table versioned and auditable |
 
 ## Tasks
 
@@ -54,7 +52,7 @@ Participants performed an auditory deviant detection task and a one-back sound l
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|--|--------|
   | `Stimulus/S 1` | 0 | Elevation 37.5° |
   | `Stimulus/S 2` | 1 | Elevation 12.5° |
   | `Stimulus/S 3` | 2 | Elevation -12.5° |
@@ -73,7 +71,7 @@ Participants performed an auditory deviant detection task and a one-back sound l
 - **Label Route**: `event`
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|--|--------|
   | `Stimulus/S 7` | 0 | Deviant stimulus (rare) |
 - **Evidence**:
   - DOI: 10.18112/openneuro.ds004256.v1.0.5
@@ -86,7 +84,7 @@ Participants performed an auditory deviant detection task and a one-back sound l
 - **Label Route**: `event`
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|--|--------|
   | `Stimulus/S 1` | 0 | Oneback condition 1 |
   | `Stimulus/S 2` | 1 | Oneback condition 2 |
   | `Stimulus/S 3` | 2 | Oneback condition 3 |

@@ -20,6 +20,12 @@ The dataset records somatosensory evoked potentials (SEPs) in response to mixed 
 |----------|---------------|------|------------|---------|
 | `stimulus` | 399x~500 | event | raw | Electrical nerve stimulation onset |
 
+### MISC Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `stimulus`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -28,12 +34,6 @@ The dataset records somatosensory evoked potentials (SEPs) in response to mixed 
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stimulus`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

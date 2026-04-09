@@ -11,13 +11,14 @@ Participants played a continuous 8-bit style video game while EEG was recorded t
 
 ## File Scan Result
 
+
 > **Kernel**: N/A
 > **SHA256**: N/A
 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|----------|---------------|------|------------|----------|
 | `ODDBALL STANDARD` | 17 | event | raw | Standard tone in oddball task (frequent) |
 | `ODDBALL RARE` | 17 | event | raw | Rare/target tone in oddball task (infrequent) |
 | `ODDBALL START` | 17 | event | raw | Oddball task block start marker |
@@ -42,12 +43,6 @@ Participants played a continuous 8-bit style video game while EEG was recorded t
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -105,6 +100,7 @@ Participants played a continuous 8-bit style video game while EEG was recorded t
 
 - 65-channel EEG recorded during naturalistic, continuous task; higher artifact rate expected from movement and engagement.
 - Some sessions may be game-only (no oddball/gambling); verify event presence per file.
+
 
 
 ## Kernel Responsibilities

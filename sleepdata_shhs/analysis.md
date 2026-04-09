@@ -21,21 +21,20 @@ Annotations are available in both original Profusion XML and NSRR-processed XML 
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Stages\|Stages` | ~100-400 annotations/file | event | raw | Sleep-stage labels in 30 s scoring epochs |
-| `Arousals\|Arousals` | variable | event | raw | Cortical arousal events |
-| `Respiratory\|Respiratory` | variable | event | raw | Respiratory events (apnea/hypopnea/desaturation-related) |
+| `Stages|Stages` | ~100-400 annotations/file | event | raw | Sleep-stage labels in 30 s scoring epochs |
+| `Arousals|Arousals` | variable | event | raw | Cortical arousal events |
+| `Respiratory|Respiratory` | variable | event | raw | Respiratory events (apnea/hypopnea/desaturation-related) |
 
-### Sleep Stage Labels (inside `EventConcept`)
+The `Stages|Stages` event type uses the following `EventConcept` labels (inside `EventConcept`):
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |--------|-------------|----|----------|-------|
-| `Wake\|0` | frequent | event | raw | Wake |
-| `Stage 1\|1` | lower frequency | event | raw | NREM Stage 1 (N1) |
-| `Stage 2\|2` | high frequency | event | raw | NREM Stage 2 (N2) |
-| `Stage 3\|3` | moderate | event | raw | Slow-wave sleep |
-| `Stage 4\|4` | rare | event | raw | Slow-wave sleep (legacy R&K stage) |
-| `REM\|5` | moderate | event | raw | REM sleep |
-
+| `Wake|0` | frequent | event | raw | Wake |
+| `Stage 1|1` | lower frequency | event | raw | NREM Stage 1 (N1) |
+| `Stage 2|2` | high frequency | event | raw | NREM Stage 2 (N2) |
+| `Stage 3|3` | moderate | event | raw | Slow-wave sleep |
+| `Stage 4|4` | rare | event | raw | Slow-wave sleep (legacy R&K stage) |
+| `REM|5` | moderate | event | raw | REM sleep |
 
 ### Info
 

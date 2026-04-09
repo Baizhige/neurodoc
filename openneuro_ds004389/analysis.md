@@ -8,18 +8,9 @@
 
 Simultaneous EEG, epidural spinal cord (ESG), nerve conduction (ENG), and EMG recordings during resting state and various conditions of mixed and sensory nerve stimulation of the arms and legs to evoke somatosensory potentials. The study compares spinal cord vs. cortical potentials for different stimulation types and sites.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004389
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -30,12 +21,17 @@ Simultaneous EEG, epidural spinal cord (ESG), nerve conduction (ENG), and EMG re
 > - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
 > - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **not used for epoch**
-## STIM Label Summary
 
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stimulus`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+### MISC Label Summary
+
+- **Route**: `misc`
+- **Role**: Auxiliary marker/annotation routing for non-primary stimulus triggers.
+- **Candidate Labels**: `stimulus`
+- **Kernel Note**: Trigger decoding table versioned and auditable.
+
+### Info
+
+No additional metadata files detected.
 
 ## Tasks
 
@@ -75,14 +71,22 @@ Simultaneous EEG, epidural spinal cord (ESG), nerve conduction (ENG), and EMG re
 - **Notes**: Only one event class; suitable for evoked potential analysis. Multiple nerve sites (median mixed, median sensory, tibial) and stimulation conditions encoded in file/run naming.
 
 | Event | y | Meaning |
- |-------|---|------|
- | `stimulus` | 0 | Nerve stimulation onset |
+|-------|--|--------|
+| `stimulus` | 0 | Nerve stimulation onset |
+
 ## Data Quality Notes
 
 - Very high sampling rate (10 kHz) for SEP/ESG; downsampling required for standard EEG analysis
 - 90 channels includes ESG, ENG, EMG, EOG, ECG channels - filter to EEG channels only
 - 260 files across 26 subjects (multiple runs/conditions per subject)
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation.`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation, stim
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004389

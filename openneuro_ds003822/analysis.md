@@ -35,12 +35,6 @@ A reinforcement learning task using probabilistic affective feedback to investig
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -52,7 +46,7 @@ A reinforcement learning task using probabilistic affective feedback to investig
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|---|
   | `FB type` reward conditions | 1 | Rewarding/positive feedback (puppy, green +1) |
   | `FB type` punishment conditions | 0 | Punishing/negative feedback (chair, negative, yellow bar, red -1) |
 - **Super Meta Notes**: Labels derived from experimental conditions (MOTIVATION: win vs avoid) combined with raw FB type markers. Kernel step: decode trial_type column in events.tsv to identify win vs avoid conditions for each FB type event, then apply label mapping.
@@ -69,7 +63,7 @@ A reinforcement learning task using probabilistic affective feedback to investig
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|---|
   | `FB type` picture feedback | 1 | Picture feedback (puppy, chair, cloud, sun, negative_image) |
   | `FB type` point feedback | 0 | Point feedback (green_+1, yellow_bar, red_-1) |
 - **Super Meta Notes**: Labels derived from PICTURE TYPE condition (point vs picture) combined with raw FB type markers. Kernel step: decode trial_type column in events.tsv to identify picture vs point conditions for each FB type event.
@@ -97,7 +91,7 @@ A reinforcement learning task using probabilistic affective feedback to investig
 - **Label Route**: `event`
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|---|
   | `Response Accurate` | 1 | Correct/accurate response |
   | `Response Inaccurate` | 0 | Incorrect/inaccurate response |
 - **Notes**: Response accuracy events appear 25 times each (once per subject). Epoch around accuracy feedback to capture error-related potentials (N200, ERN) if applicable. (replaces Classical Task 1 from original analysis.md)

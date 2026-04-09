@@ -7,18 +7,6 @@
 
 Longitudinal resting-state EEG recordings collected over four sessions spanning two years to evaluate test-retest reliability of quantitative EEG measures. Recordings are continuous resting-state without structured task events. The dataset enables assessment of EEG biomarker stability across sessions and time points.
 
-## Subject Information
-
-<!-- AUTO-KERNEL-SUBJECT-INFO:START -->
-> **Kernel Fact Source**: current kernel scan from `<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-- **Record Count**: 300
-- **Age Completeness**: 300/300 (100.0%)
-- **Sex Completeness**: 300/300 (100.0%)
-- **Observed Age Examples**: `55`, `52`, `46`, `42`, `48`, `62`, `59`, `24`
-- **Observed Sex Examples**: `Male`, `Female`
-<!-- AUTO-KERNEL-SUBJECT-INFO:END -->
-
-
 ## File Scan Result
 
 > **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds007176.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
@@ -34,7 +22,6 @@ Longitudinal resting-state EEG recordings collected over four sessions spanning 
 |----------|---------------|------|------------|---------|
 | `Stimulus/S  1` | 2 | event | raw | Unresolved from current kernel facts |
 <!-- AUTO-KERNEL-EVENT-STRUCTURE:END -->
-
 
 ### Info
 

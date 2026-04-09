@@ -35,12 +35,10 @@ A double-blind, crossover pharmacological study investigating the effects of d-a
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+| **STIM Label Summary** | — | — |
+| **Route** | `stim` | Trigger-channel or stimulus-marker based labeling |
+| **Candidate Trigger Labels** | `STATUS` | Must be excluded from analysis |
+| **Kernel Note** | Keep trigger decoding table versioned and auditable |
 
 ## Tasks
 
@@ -58,7 +56,7 @@ A double-blind, crossover pharmacological study investigating the effects of d-a
   | `39 PST` | 2 | PST event 39 (neutral/other feedback or condition C) |
 - **Kernel Notes**: Verify event ID mapping from events.tsv. Paper epochs around feedback onset (-500 to +1000ms) to classify reward vs punishment conditions using RewP ERP. The three PST event codes likely encode different feedback outcomes (reward/punishment/neutral). Map labels based on dataset documentation.
 - **Evidence**:
-  - DOI: 10.1007/s00213.022.06082.z — Epochs EEG around feedback onset (-500 to +1000ms) to examine reward positivity (RewP) ERP and delta-band responses to reward vs punishment feedback in probabilistic selection task.
+  - DOI: 10.1007/s00213-022-06082.z — Epochs EEG around feedback onset (-500 to +1000ms) to examine reward positivity (RewP) ERP and delta-band responses to reward vs punishment feedback in probabilistic selection task.
 
 ### Potential Task 1: 5CCPT Attention Task (multiclass)
 - **Task Type**: classification

@@ -38,12 +38,9 @@ Participants with orthopedic impairment performed four distinct motor imagery ta
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `S 2`, `S 7`, `S 8`, `S 9`, `S 10`, `S 3`, `S 4`, `S 5`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+| `stim_route` | present | Trigger-channel or stimulus-marker based labeling |
+| `candidate_trigger_labels` | present | `S 2`, `S 7`, `S 8`, `S 9`, `S 10`, `S 3`, `S 4`, `S 5` |
+| `kernel_note` | present | Keep trigger decoding table versioned and auditable |
 
 ## Tasks
 

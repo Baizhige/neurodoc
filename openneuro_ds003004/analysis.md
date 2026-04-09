@@ -7,18 +7,6 @@
 
 Participants used voice-guided imagery to induce and sustain 15 distinct emotional states, using button presses to indicate the onset and offset of each imagined emotion. Despite the paradigm involving discrete emotional state onsets (button presses), no event markers were detected in the BIDS EEG files by the locator pipeline. The button-press events may be stored in separate behavioral logs or were not encoded in the EEG trigger channel.
 
-## Subject Information
-
-<!-- AUTO-KERNEL-SUBJECT-INFO:START -->
-> **Kernel Fact Source**: current kernel scan from `<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-- **Record Count**: 34
-- **Age Completeness**: 34/34 (100.0%)
-- **Sex Completeness**: 34/34 (100.0%)
-- **Observed Age Examples**: `23`, `21`, `22`, `29`, `26`, `24`, `25`, `20`
-- **Observed Sex Examples**: `Female`, `Male`
-<!-- AUTO-KERNEL-SUBJECT-INFO:END -->
-
-
 ## File Scan Result
 
 > **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds003004.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
@@ -31,7 +19,7 @@ Participants used voice-guided imagery to induce and sustain 15 distinct emotion
 > **Meaning Policy**: `Meaning` is interpretive; `Event ID / Count / Type / Meta Level` are kernel-derived facts.
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|----------|---------------|------|------------|----------|
 | `press` | 703 | event | raw | Unresolved from current kernel facts |
 | `exit` | 558 | event | raw | Exit |
 | `enter` | 508 | event | raw | Enter |
@@ -64,7 +52,6 @@ Participants used voice-guided imagery to induce and sustain 15 distinct emotion
 | `FeelingItInstructionsButton` | 18 | event | raw | Feeling it instructions button |
 <!-- AUTO-KERNEL-EVENT-STRUCTURE:END -->
 
-
 ### Info
 
 | Field | Completeness | Notes |
@@ -72,6 +59,7 @@ Participants used voice-guided imagery to induce and sustain 15 distinct emotion
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: 15-class Imagined Emotion Classification
@@ -82,7 +70,7 @@ Participants used voice-guided imagery to induce and sustain 15 distinct emotion
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|----------|
   | `button_press_onset` | 0 | love |
   | `button_press_onset` | 1 | joy |
   | `button_press_onset` | 2 | happiness |
@@ -111,7 +99,7 @@ Participants used voice-guided imagery to induce and sustain 15 distinct emotion
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|----------|
   | `positive_valence` | 0 | positive valence (love, joy, happiness, relief, contentment, excitement, awe, compassion) |
   | `negative_valence` | 1 | negative valence (anger, jealousy, disgust, frustration, fear, sadness, grief) |
 - **Super Meta Notes**: Derived from raw event(s) [`button_press_onset`] by grouping 15 emotion conditions into binary valence categories. Excluded first 60s and last 10s of each emotion block per original FBCSP analysis. Kernel step: For each 6s segment, assign valence label based on which emotion block the segment falls within (positive=8 emotions, negative=7 emotions).

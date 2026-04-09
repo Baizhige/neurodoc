@@ -17,9 +17,15 @@ Participants listened to sequences of three-chord musical progressions in an odd
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|----------|---------------|------|------------|----------|
 | `STATUS` | 34 | admin | raw | System status marker (only detected event) |
 
+### MISC Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `STATUS`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -28,12 +34,6 @@ Participants listened to sequences of three-chord musical progressions in an odd
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

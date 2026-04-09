@@ -7,18 +7,9 @@
 
 Participants completed Flanker, Stroop, and Go/no-go tasks to evaluate the psychometric reliability and convergent/divergent validity of error-related ERP components (ERN and Pe). The study tests whether error-related components are stable within individuals across tasks and sessions. Three task files per subject yield the 546-file count. `cor`/`err` mark correct/error responses; `con`/`inc` mark congruent/incongruent Flanker/Stroop trials; `go`/`ng`/`neu` mark Go/no-go trial types.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004602
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -32,6 +23,12 @@ Participants completed Flanker, Stroop, and Go/no-go tasks to evaluate the psych
 | `boundary` | 545 | admin | raw | Segment boundary marker (exclude) |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
+
+### Info
+
+- **Event file format**: HDF5
+- **Sampling rate**: 500 Hz
+- **Channel count**: 129
 
 ## Tasks
 
@@ -53,7 +50,7 @@ Participants completed Flanker, Stroop, and Go/no-go tasks to evaluate the psych
 - **Notes**: boundary (545) is admin - exclude. cor (169,236) >> err (24,198) - significant class imbalance; undersample cor or use weighted loss. con/inc/go/ng/neu usable for separate task-level analyses.
 
  | Event | y | Meaning |
- |-------|---|---------|
+ |-------|--|--------|
  | `cor` | 0 | Correct response (ERN/Pe absent) |
  | `err` | 1 | Error response (ERN/Pe present) |
 
@@ -67,7 +64,7 @@ Participants completed Flanker, Stroop, and Go/no-go tasks to evaluate the psych
 - **Notes**: 54,498 vs 47,242 - reasonably balanced. Filter by Flanker/Stroop task files only.
 
  | Event | y | Meaning |
- |-------|---|---------|
+ |-------|--|--------|
  | `con` | 0 | Congruent trial |
  | `inc` | 1 | Incongruent trial |
 ## Data Quality Notes
@@ -76,6 +73,13 @@ Participants completed Flanker, Stroop, and Go/no-go tasks to evaluate the psych
 - 3 task files per subject (Flanker, Stroop, Go/no-go); filter by task for task-specific analyses.
 - High channel count (129) may include non-EEG channels - verify channel types.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Registered Replication Report of ERN/Pe Psychometrics`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004602

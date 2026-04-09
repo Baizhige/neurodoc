@@ -7,18 +7,9 @@
 
 Participants listened to 40-second synthetic music clips designed to induce specific affective states (varying valence and arousal) during the training phase of an affective brain-computer music interface. This is the training session companion to ds002722 (calibration) and ds002723 (testing). Codes 1-9 encode the nine target affective music conditions.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002724
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -36,6 +27,8 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 > - `long`: sustained-state marker (>=2 s), for `epoch_by_long_event_hdf5`
 > - `rest`: resting-state segment marker, for `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **exclude** from epoch target_events
+
+### Info
 
 ## Tasks
 
@@ -67,6 +60,7 @@ Participants listened to 40-second synthetic music clips designed to induce spec
  | `7` | 6 | Music condition 7 |
  | `8` | 7 | Music condition 8 |
  | `9` | 8 | Music condition 9 |
+
 ## Data Quality Notes
 
 - Well-balanced event counts across all 9 conditions (94-96 files each).
@@ -74,6 +68,13 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 - Decode code-to-affective-state mapping from Daly et al. 2018 (Scientific Data).
 - Verify channel count consistency across subjects before pooling.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Daly, I., Nicolaou, N., Williams, D., Hwang, F., Kirke, A., Miranda, E., Nasuto, S.J., Neural and physiological data from participants listening to affective music, Scientific Data, 2018.`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002724

@@ -8,29 +8,33 @@
 
 A two-competing speaker auditory attention paradigm in which participants were instructed to selectively attend to one of two simultaneously presented audiobooks under varying spatial (same location vs. different locations) and loudness conditions. EEG was recorded using a cEEGrid around-the-ear electrode array. The dataset is intended for auditory attention decoding (AAD) research using ear-worn EEG.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
 
+> **Kernel SHA256**: `3845a0c331dc5f16a329a15339e10b0bc56df899f063f2efaa8ccce6f8a59519`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
-
-_No event markers detected (`no_events`). This dataset contains continuous EEG recordings without trial-level annotations; stimulus delivery is continuous (audiobook streams)._
-
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `no_events` | N/A | admin | raw | No discrete event markers detected; use continuous segmentation or external metadata labels. |
+| `Beep` | 36 | event | raw |  |
+| `Calib_End` | 21 | event | raw |  |
+| `Calib_Start` | 21 | event | raw |  |
+| `StartTrigger` | 186 | event | raw |  |
+| `beam` | 420 | event | raw |  |
+| `beep` | 720 | event | raw |  |
+| `boundary` | 36 | event | raw |  |
+| `omni` | 420 | event | raw |  |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
+| `subject_age` | complete | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Auditory Attention Classification (Attended vs Ignored Speaker)
@@ -62,7 +66,6 @@ _No event markers detected (`no_events`). This dataset contains continuous EEG r
 - Only 18 around-the-ear channels (cEEGrid) - very limited spatial coverage
 - No discrete event markers; continuous stimulus paradigm
 - Attended speaker condition metadata needed from external files for supervised learning
-
 
 ## Kernel Responsibilities
 

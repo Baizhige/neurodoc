@@ -148,6 +148,27 @@ kernel 负责将原始数据中的标签信息标准化，输出为 EEGUnity / M
 2. raw meta 是所有 kernel **必须实现**的基础层，不得缺失。
 3. raw meta 事件的描述字符串应与数据集 `analysis.md` 的 `### Event Structure` 表格中的 `Event ID` 列保持一致；若二者不一致，应以 kernel 实际输出为准并同步修正 `analysis.md`。
 
+### 第13条之1 多范式数据集的范式前缀约定
+
+当单一数据集包含**多个范式**（paradigm），且不同范式之间存在**重叠的事件编码**（即相同数字码在不同范式中代表不同语义），kernel 应在所有事件描述字符串前加上范式标识前缀，以消除歧义。
+
+1. **触发条件**：同一数据集下存在多个范式，且不同范式的事件编码存在重叠（如 CLA 和 HaLT 均使用编码 1 表示左手 MI，但 NoMT 使用编码 1 表示左手 cue）。
+2. **前缀格式**：`<PARADIGM>: <event_label>`，其中 `<PARADIGM>` 为范式名称（大写或数据集约定的缩写），`<event_label>` 为该范式中该编码的语义描述。示例：`CLA: left hand MI`、`HaLT: right hand MI`、`NoMT: left hand cue`。
+3. **分类依据**：此类标签仍归类为 **raw meta**，因为范式标识来源于原始文件名或路径前缀，不引入任何语义推断；前缀提取本质上是文件名解析，非语义派生。
+4. **行政标记（admin codes）**：若数据集中存在用途不明确的管理标记编码（如 91 / 92 / 99），在尚未确认其具体含义的情况下，统一使用 `admin: marker-<code>` 格式，**不加范式前缀**，以标示其跨范式的共用属性，并在 kernel 文件顶部注释中说明已知的观测规律。
+5. **同步要求**：范式前缀的引入必须同步更新对应数据集的 `analysis.md` 中 `### Event Structure` 表格，确保 `Event ID` 列与 kernel 实际输出保持一致。
+6. **范式检测逻辑**：kernel 文件应提供独立的范式检测函数（如 `_detect_paradigm(file_name)`），基于文件名前缀进行匹配，并在 kernel 文件顶部注释中说明检测顺序（如 FREEFORM 须先于 FREE 或 CLA 检查，以防前缀歧义）。
+
+```python
+# 示例：范式前缀事件映射表
+_PARADIGM_LABEL_MAP = {
+    "CLA": {1: "CLA: left hand MI", 2: "CLA: right hand MI"},
+    "HaLT": {1: "HaLT: left hand MI", 2: "HaLT: right hand MI",
+             91: "admin: marker-91"},  # admin codes: no paradigm prefix
+    "NoMT": {1: "NoMT: left hand cue"},  # passive cue, not MI
+}
+```
+
 ### 第14条 super meta
 
 1. **super meta**（对应 `analysis.md` 中 `Meta Level = super`）：kernel 可在 raw meta 基础上进一步构建语义派生标签，例如将多个 raw 事件组合为高层试次类型，或引入外部信息对事件打标。

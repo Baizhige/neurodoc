@@ -24,6 +24,8 @@ A test-retest reliability study recording EEG during five cognitive/resting cond
 | `S 33` | 357 | event | raw | Eyes-open resting state block label |
 | `Sync Off` | ~270000 | admin | raw | Periodic sync signal (~150/file), not a trial event |
 
+**Stim/Trigger Label Note**: Route `stim` - trigger-channel or stimulus-marker based labeling. Candidate trigger labels: `S 44`, `S 77`, `S 66`, `S 55`, `S 33`. Kernel note: Keep trigger decoding table versioned and auditable.
+
 
 ### Info
 
@@ -32,12 +34,6 @@ A test-retest reliability study recording EEG during five cognitive/resting cond
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `S 44`, `S 77`, `S 66`, `S 55`, `S 33`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -58,6 +54,7 @@ A test-retest reliability study recording EEG during five cognitive/resting cond
 - **Evidence**:
   - DOI: 10.1038/s41597-022-01607-9 — Paper presents the openneuro_ds004148 dataset and describes decoding five EEG mental states (eyes-open, eyes-closed, memory, music, subtraction) using 5-min state blocks segmented into 4-s epochs with Welch method (4s window, no overlap).
 - **Kernel Notes**: Segment continuous 5-min recordings into 4-s non-overlapping windows; extract spectral features (power spectrum, functional connectivity, microstates); train classifier to predict one of five mental states.
+
 
 ### Classical Task 2: Sex Classification from Resting-State EEG
 - **Task Type**: classification

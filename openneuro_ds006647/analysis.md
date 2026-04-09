@@ -7,18 +7,9 @@
 
 Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic control texts on five subjective dimensions: Aesthetic Appeal, Vivid Imagery, Being Moved, Originality, and Creativity. EEG was recorded during reading using a 64-channel BioSemi system. The study investigates neural correlates of aesthetic and creative cognition during poetry processing. BioSemi EDF trigger codes (65280-65288) encode stimulus onset and condition types.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006647
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -34,12 +25,17 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 | `boundary` | 5 | admin | raw | Segment boundary marker |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-## STIM Label Summary
+
+### MISC Label Summary
 
 - **Route**: `stim`
 - **Role**: Trigger-channel or stimulus-marker based labeling.
 - **Candidate Trigger Labels**: Needs verification
 - **Kernel Note**: Keep trigger decoding table versioned and auditable.
+
+### Info
+
+Placeholder for additional file scan metadata as needed.
 
 ## Tasks
 
@@ -77,6 +73,13 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 - `boundary` is a segment boundary marker and must be excluded from analysis.
 - BioSemi EDF trigger codes 65280-65288 need decoding from events.tsv.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Poetry EEG Study`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation, stim
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006647

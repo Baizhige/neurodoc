@@ -8,7 +8,6 @@
 
 A mobile brain-body imaging experiment investigating brain activity during gait adaptation using abrupt and gradual split-belt treadmill walking. Participants walked on a split-belt treadmill with different belt speeds while EEG and gait events (heel strikes, toe-offs) were recorded to study locomotor adaptation and associated cortical dynamics.
 
-
 ## File Scan Result
 
 > **Kernel**: N/A
@@ -17,7 +16,7 @@ A mobile brain-body imaging experiment investigating brain activity during gait 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|----------|---------------|------|------------|----------|
 | `LHS` | 30xx | event | raw | Left heel strike (gait event) |
 | `LTO` | 30xx | event | raw | Left toe-off (gait event) |
 | `RHS` | 30xx | event | raw | Right heel strike (gait event) |
@@ -41,7 +40,6 @@ A mobile brain-body imaging experiment investigating brain activity during gait 
 | `boundary` | 8 | admin | raw | Segment boundary marker |
 | `9633791` | 30 | admin | raw | Numerical system trigger |
 
-
 ### Info
 
 | Field | Completeness | Notes |
@@ -49,6 +47,7 @@ A mobile brain-body imaging experiment investigating brain activity during gait 
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Gait Event Classification
@@ -59,7 +58,7 @@ A mobile brain-body imaging experiment investigating brain activity during gait 
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|----------|
   | `LHS` | 0 | Left heel strike |
   | `LTO` | 1 | Left toe-off |
   | `RHS` | 2 | Right heel strike |
@@ -78,9 +77,3 @@ A mobile brain-body imaging experiment investigating brain activity during gait 
 
 > **Super Meta Required**: No
 > **Status**: wait_manual_review
-## Data Quality Notes
-
-- boundary and 9633791 must be excluded as admin markers
-- 260 channels includes motion capture channels; filter to EEG only
-- Gait event counts vary across walking conditions (tied vs. split-belt speeds)
-

@@ -10,41 +10,42 @@ Thirty-six subjects (18 interictal migraine patients: M1-M18; 18 healthy control
 
 *Note: Subject M13 is missing data for the SSAEP task, which accounts for some literature citing only 17 migraine patients.*
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
 
+> **Kernel SHA256**: `544fe6fad1eb26fcf2b990ee48fcaf4bfecaad1ae0564a4eb2d9cfa0fd06fb2b`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `4Hz vision stimulation start` | varies | event | raw | SSVEP 4 Hz flicker onset |
-| `6Hz vision stimulation start` | varies | event | raw | SSVEP 6 Hz flicker onset |
-| `4Hz vision feedback end` | varies | admin | raw | SSVEP 4 Hz block end marker |
-| `6Hz vision feedback end` | varies | admin | raw | SSVEP 6 Hz block end marker |
-| `4Hz auditory stimulation start` | varies | event | raw | SSAEP 4 Hz tone onset |
-| `6Hz auditory stimulation start` | varies | event | raw | SSAEP 6 Hz tone onset |
-| `4Hz auditory feedback end` | varies | admin | raw | SSAEP 4 Hz block end marker |
-| `6Hz auditory feedback end` | varies | admin | raw | SSAEP 6 Hz block end marker |
-| `resting state block start` | varies | event | raw | Resting state block onset |
-| `resting state block end` | varies | admin | raw | Resting state block end marker |
+| `4Hz auditory feedback end for Health` | 221 | event | raw |  |
+| `4Hz auditory feedback end for migraine` | 181 | event | raw |  |
+| `4Hz auditory stimulation start for Health` | 2100 | event | raw |  |
+| `4Hz auditory stimulation start for migraine` | 1706 | event | raw |  |
+| `4Hz vision feedback end for Health` | 226 | event | raw |  |
+| `4Hz vision feedback end for migraine` | 200 | event | raw |  |
+| `4Hz vision stimulation start for Health` | 2016 | event | raw |  |
+| `4Hz vision stimulation start for migraine` | 1787 | event | raw |  |
+| `6Hz auditory feedback end for Health` | 176 | event | raw |  |
+| `6Hz auditory feedback end for migraine` | 137 | event | raw |  |
+| `6Hz auditory stimulation start for Health` | 2099 | event | raw |  |
+| `6Hz auditory stimulation start for migraine` | 1705 | event | raw |  |
+| `6Hz vision feedback end for Health` | 165 | event | raw |  |
+| `6Hz vision feedback end for migraine` | 150 | event | raw |  |
+| `6Hz vision stimulation start for Health` | 2016 | event | raw |  |
+| `6Hz vision stimulation start for migraine` | 1779 | event | raw |  |
+| `resting Health` | 21 | event | raw |  |
+| `resting migraine` | 18 | event | raw |  |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | partial (108/117) | N/A |
+| `subject_sex` | partial (108/117) | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `4Hz vision stimulation start`, `6Hz vision stimulation start`, `4Hz auditory stimulation start`, `6Hz auditory stimulation start`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -92,7 +93,6 @@ Thirty-six subjects (18 interictal migraine patients: M1-M18; 18 healthy control
 - Age range: 19-54 years; sex: mixed male/female.
 - High channel count (128); spatial filtering / source localization may be useful.
 - Sensory task and resting state recordings provide complementary views of migraine-related cortical changes.
-
 
 ## Kernel Responsibilities
 

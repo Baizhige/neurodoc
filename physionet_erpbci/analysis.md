@@ -8,32 +8,29 @@
 
 Participants spelled characters using a standard 6x6 matrix speller while EEG was recorded with a BioSemi ActiveTwo system (64 EEG + 2 earlobe reference + 4 EOG channels) at 2048 Hz (Riccio et al., 2013). Each row and column of the 6x6 character matrix was randomly intensified for 100 ms with a 50 ms gap (150 ms SOA). Each row/column flashed approximately 20 times per trial, and participants mentally counted target character flashes to sustain attention. The kernel processes raw row/column flash events and classifies each as `seen` (target - the row or column containing the attended character flashed) or `unseen` (non-target) for both rows and columns separately.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
 
+> **Kernel SHA256**: `e0a11f6326ce932b8d655a71963420e1b77d7b011e8ab2e0e3a96f36b3fac752`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `seen (row)` | varies | event | raw | Target row flash (attended character's row lit up) |
-| `seen (column)` | varies | event | raw | Target column flash (attended character's column lit up) |
-| `unseen (row)` | varies | event | raw | Non-target row flash |
-| `unseen (column)` | varies | event | raw | Non-target column flash |
-
->
-> Each 6x6 speller has 6 rows + 6 columns = 12 flashes per sequence; 2 are target (1 row + 1 column), 10 are non-target.
+| `seen (column)` | 2391 | event | raw | Target column flash (attended character's column lit up) |
+| `seen (row)` | 2005 | event | raw | Target row flash (attended character's row lit up) |
+| `unseen (column)` | 11819 | event | raw | Non-target column flash |
+| `unseen (row)` | 9614 | event | raw | Non-target row flash |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: P300 Target vs. Non-Target Classification in Matrix Speller
@@ -73,7 +70,6 @@ Participants spelled characters using a standard 6x6 matrix speller while EEG wa
 - Class imbalance: 2 target flashes vs. 10 non-target flashes per sequence (1:5 ratio); balance with oversampling or cost-sensitive learning.
 - EOG channels present (4 channels); apply artifact rejection before P300 classification.
 - Age and sex information are not available.
-
 
 ## Kernel Responsibilities
 

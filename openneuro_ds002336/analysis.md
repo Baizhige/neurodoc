@@ -39,12 +39,6 @@ Simultaneous EEG-fMRI acquisition during a kinesthetic motor imagery neurofeedba
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Stimulus/S 99`, `Stimulus/S 2`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

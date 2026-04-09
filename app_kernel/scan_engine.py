@@ -1,11 +1,12 @@
-"""
-scan_engine.py — Core logic for app_scan.
+﻿"""
+scan_engine.py 鈥?Core logic for app_scan.
 Handles: machine identity, locator cache, EEGUnity scan, analysis.md merge.
 """
 
 from __future__ import annotations
 
 import ast
+import datetime as dt
 import hashlib
 import io
 import json
@@ -48,7 +49,7 @@ def load_machine_config() -> Dict:
     p = get_config_path()
     if p.exists():
         cfg = json.loads(p.read_text(encoding="utf-8"))
-        # Migrate legacy single dataset_root → dataset_roots list
+        # Migrate legacy single dataset_root 鈫?dataset_roots list
         if "dataset_root" in cfg and "dataset_roots" not in cfg:
             old = cfg.pop("dataset_root")
             cfg["dataset_roots"] = [old] if old else []
@@ -167,13 +168,41 @@ def get_kernel_sha256(kernel_path: str) -> str:
 # ---------------------------------------------------------------------------
 
 LOCATOR_CACHE_DIR = APP_KERNEL_DIR / "locator_cache"
+CACHE_SCHEMA_VERSION = 2
 
-REQUIRED_CACHE_COLS = {"event_id", "event_id_num"}
+# Accept any cache that still has the default EEGUnity locator columns.
+# Event/subject columns are treated as derived metadata and may be refreshed later.
+REQUIRED_CACHE_COLS = [
+    "File Path",
+    "Domain Tag",
+    "File Type",
+    "Data Shape",
+    "Channel Names",
+    "Number of Channels",
+    "Sampling Rate",
+    "Duration",
+    "Completeness Check",
+]
+REQUIRED_CACHE_COLS_SET = set(REQUIRED_CACHE_COLS)
+
+def _get_cache_dir() -> Path:
+    return LOCATOR_CACHE_DIR / get_machine_id()
+
+
+def _metadata_cache_stem(dataset_name: str, kernel_sha256: str) -> str:
+    return f"{dataset_name}__meta__{kernel_sha256}"
 
 
 def get_locator_cache_path(dataset_name: str) -> Path:
-    mid = get_machine_id()
-    return LOCATOR_CACHE_DIR / mid / f"{dataset_name}.csv"
+    return _get_cache_dir() / f"{dataset_name}.csv"
+
+
+def get_metadata_cache_csv_path(dataset_name: str, kernel_sha256: str) -> Path:
+    return _get_cache_dir() / f"{_metadata_cache_stem(dataset_name, kernel_sha256)}.csv"
+
+
+def get_metadata_cache_meta_path(dataset_name: str, kernel_sha256: str) -> Path:
+    return _get_cache_dir() / f"{_metadata_cache_stem(dataset_name, kernel_sha256)}.json"
 
 
 def locator_cache_exists(dataset_name: str) -> bool:
@@ -181,34 +210,10 @@ def locator_cache_exists(dataset_name: str) -> bool:
     if not p.exists():
         return False
     try:
-        df = pd.read_csv(p, nrows=1)
-        return REQUIRED_CACHE_COLS.issubset(set(df.columns))
+        df = pd.read_csv(p, nrows=0)
+        return REQUIRED_CACHE_COLS_SET.issubset(set(df.columns))
     except Exception:
         return False
-
-
-def load_locator_cache(dataset_name: str) -> pd.DataFrame:
-    p = get_locator_cache_path(dataset_name)
-    df = pd.read_csv(p)
-    # Back-fill subject columns for legacy caches
-    if "subject_age" not in df.columns or "subject_sex" not in df.columns:
-        if "description_json" in df.columns:
-            # Old format: had description_json — extract from it
-            _add_subject_columns(df)
-        else:
-            df["subject_age"] = None
-            df["subject_sex"] = None
-    # Drop description_json if present (legacy column, no longer stored)
-    if "description_json" in df.columns:
-        df = df.drop(columns=["description_json"])
-    return df
-
-
-def save_locator_cache(dataset_name: str, df: pd.DataFrame) -> None:
-    p = get_locator_cache_path(dataset_name)
-    p.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(p, index=False)
-
 
 def check_locator_paths(df: pd.DataFrame) -> Tuple[bool, List[str]]:
     """Check if File Path values in locator exist. Returns (all_ok, missing_list)."""
@@ -217,6 +222,99 @@ def check_locator_paths(df: pd.DataFrame) -> Tuple[bool, List[str]]:
         if not os.path.exists(str(fp)):
             missing.append(str(fp))
     return len(missing) == 0, missing
+
+
+def _ensure_base_locator_columns(df: pd.DataFrame) -> pd.DataFrame:
+    result = df.copy()
+    for col in REQUIRED_CACHE_COLS:
+        if col not in result.columns:
+            result[col] = None
+    return result[[col for col in REQUIRED_CACHE_COLS if col in result.columns]]
+
+
+def _load_legacy_subject_columns(df: pd.DataFrame) -> pd.DataFrame:
+    result = df.copy()
+    if "subject_age" not in result.columns or "subject_sex" not in result.columns:
+        if "description_json" in result.columns:
+            _add_subject_columns(result)
+        else:
+            result["subject_age"] = None
+            result["subject_sex"] = None
+    if "description_json" in result.columns:
+        result = result.drop(columns=["description_json"])
+    return result
+
+
+def load_locator_cache(dataset_name: str) -> pd.DataFrame:
+    """Load the machine-local base locator cache."""
+    p = get_locator_cache_path(dataset_name)
+    df = pd.read_csv(p)
+    return _ensure_base_locator_columns(df)
+
+
+def save_locator_cache(dataset_name: str, df: pd.DataFrame) -> None:
+    """Persist the machine-local base locator cache."""
+    p = get_locator_cache_path(dataset_name)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    _ensure_base_locator_columns(df).to_csv(p, index=False)
+
+
+def load_metadata_cache(dataset_name: str, kernel_sha256: str) -> pd.DataFrame:
+    """Load the full metadata cache for a specific kernel fingerprint."""
+    p = get_metadata_cache_csv_path(dataset_name, kernel_sha256)
+    df = pd.read_csv(p)
+    return _normalize_scan_result_frame(_load_legacy_subject_columns(df))
+
+
+def save_metadata_cache(
+    dataset_name: str,
+    kernel_sha256: str,
+    eegunity_version: str,
+    kernel_path: str,
+    dataset_path: str,
+    df: pd.DataFrame,
+) -> None:
+    csv_path = get_metadata_cache_csv_path(dataset_name, kernel_sha256)
+    meta_path = get_metadata_cache_meta_path(dataset_name, kernel_sha256)
+    csv_path.parent.mkdir(parents=True, exist_ok=True)
+    clean_df = _normalize_scan_result_frame(df)
+    clean_df.to_csv(csv_path, index=False)
+    meta = {
+        "dataset": dataset_name,
+        "kernel_sha256": kernel_sha256,
+        "kernel_path": kernel_path or "",
+        "eegunity_version": eegunity_version,
+        "cache_schema_version": CACHE_SCHEMA_VERSION,
+        "dataset_path": dataset_path,
+        "created_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "row_count": int(len(clean_df)),
+        "csv_path": str(csv_path),
+    }
+    meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def load_metadata_cache_info(dataset_name: str, kernel_sha256: str) -> Optional[Dict[str, Any]]:
+    p = get_metadata_cache_meta_path(dataset_name, kernel_sha256)
+    if not p.exists():
+        return None
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
+def metadata_cache_exists(dataset_name: str, kernel_sha256: str, eegunity_version: str) -> bool:
+    csv_path = get_metadata_cache_csv_path(dataset_name, kernel_sha256)
+    if not csv_path.exists():
+        return False
+    info = load_metadata_cache_info(dataset_name, kernel_sha256)
+    if not info:
+        return False
+    return (
+        info.get("kernel_sha256") == kernel_sha256
+        and info.get("eegunity_version") == eegunity_version
+        and int(info.get("cache_schema_version", -1)) == CACHE_SCHEMA_VERSION
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -232,6 +330,8 @@ class _TeeBuffer(io.StringIO):
         self._lock = threading.Lock()
         self._buf = ""
 
+    _MAX_LINES = 20  # rolling cap — keeps memory bounded during long scans
+
     def write(self, s: str) -> int:
         with self._lock:
             self._buf += s
@@ -241,6 +341,8 @@ class _TeeBuffer(io.StringIO):
                 stripped = line.strip()
                 if stripped:
                     self._lines.append(stripped)
+                    if len(self._lines) > self._MAX_LINES:
+                        del self._lines[:-self._MAX_LINES]
         # Also write to original
         try:
             self._original.write(s)
@@ -283,21 +385,48 @@ def _add_subject_columns(locator: pd.DataFrame) -> None:
 
 
 def _extract_description_batch(udataset, stdout_lines: List[str]) -> None:
-    """Extract subject_age and subject_sex directly from raw.info['description'] (no intermediate column).
+    """Parse subject_age / subject_sex from the 'description' column already in the locator.
 
-    Uses eeg_parser.get_data(i) — not the standalone get_data_row() — so that the
-    dataset kernel is applied and raw.info['description'] contains the eegunity_description
-    JSON written by the kernel's apply() method.
+    Fast path: when get_meta() has already populated the 'description' column,
+    this function is pure-pandas with zero file IO.
+    Legacy path: falls back to per-file reload when 'description' column is absent
+    (EEGUnity version without get_meta).
     """
     locator = udataset.get_shared_attr()["locator"]
+
+    if "description" in locator.columns:
+        # Fast path: pure-pandas, zero file IO
+        ages, sexes = [], []
+        for _, row in locator.iterrows():
+            desc_str = row.get("description", "")
+            try:
+                desc = json.loads(str(desc_str)) if desc_str else {}
+            except Exception:
+                try:
+                    desc = ast.literal_eval(str(desc_str))
+                except Exception:
+                    desc = {}
+            eegu = desc.get("eegunity_description", {})
+            if isinstance(eegu, str):
+                try:
+                    eegu = json.loads(eegu)
+                except Exception:
+                    eegu = {}
+            ages.append(eegu.get("age", None))
+            sexes.append(eegu.get("sex", None))
+        locator["subject_age"] = ages
+        locator["subject_sex"] = sexes
+        udataset.get_shared_attr()["locator"] = locator
+        stdout_lines.append(f"  Subject info parsed from locator ({len(locator)} rows, no reload)")
+        return
+
+    # Legacy path: per-file reload (EEGUnity without get_meta)
     total = len(locator)
     ages, sexes, ch_names_list = [], [], []
     for i in range(total):
         try:
             raw = udataset.eeg_parser.get_data(i, preload=False)
-            # Post-kernel channel names (kernel may have renamed channels)
             ch_names_list.append(", ".join(raw.ch_names))
-            # Subject info from eegunity_description written by kernel
             desc_str = raw.info.get("description", "{}")
             try:
                 desc = json.loads(str(desc_str))
@@ -319,138 +448,11 @@ def _extract_description_batch(udataset, stdout_lines: List[str]) -> None:
             ages.append(None)
             sexes.append(None)
         if (i + 1) % max(1, total // 10) == 0 or i == total - 1:
-            stdout_lines.append(f"  Subject info: {i+1}/{total} files")
+            stdout_lines.append(f"  Subject info (legacy reload): {i+1}/{total}")
     locator["Channel Names"] = ch_names_list
     locator["subject_age"] = ages
     locator["subject_sex"] = sexes
     udataset.get_shared_attr()["locator"] = locator
-
-
-def run_full_scan(
-    dataset_name: str,
-    dataset_roots: List[str],
-    kernel_path: Optional[str],
-    eegunity_path: str,
-    progress_cb=None,
-    stdout_lines: Optional[List[str]] = None,
-    sampled_indices: Optional[List[int]] = None,
-    num_workers: int = 1,
-) -> pd.DataFrame:
-    """
-    Run EEGUnity scan for a dataset, return enriched locator DataFrame.
-
-    dataset_roots: list of directories to search for dataset_name (first match used).
-    kernel_path: relative or absolute path to kernel .py file, or None for default parser.
-    sampled_indices: if set, only process these row indices (quick-run).
-    progress_cb: callable(step: str, pct: int)
-    stdout_lines: shared list; EEGUnity stdout is appended here in real-time.
-    num_workers: parallel workers for UnifiedDataset instantiation.
-    """
-    if stdout_lines is None:
-        stdout_lines = []
-
-    _ensure_eegunity_in_path(eegunity_path)
-    from eegunity import UnifiedDataset
-
-    dataset_path = find_dataset_path(dataset_name, dataset_roots)
-    if not dataset_path:
-        searched = ", ".join(dataset_roots) or "(none configured)"
-        raise FileNotFoundError(
-            f"Dataset '{dataset_name}' not found in any configured directory: {searched}"
-        )
-
-    # Resolve kernel path
-    abs_kernel: Optional[str] = None
-    if kernel_path:
-        p = Path(kernel_path)
-        abs_kernel = str(p) if p.is_absolute() else str(BIDS_ROOT / kernel_path)
-
-    # --- Redirect stdout to capture EEGUnity output ---
-    orig_stdout = sys.stdout
-    tee = _TeeBuffer(stdout_lines, orig_stdout)
-    sys.stdout = tee
-
-    try:
-        if progress_cb:
-            progress_cb("Scanning dataset directory...", 5)
-        stdout_lines.append(f"[Scan] Dataset: {dataset_name}, path: {dataset_path}")
-        if abs_kernel:
-            stdout_lines.append(f"[Scan] Kernel: {abs_kernel}")
-        else:
-            stdout_lines.append("[Scan] No kernel — using default EEGUnity parser")
-
-        ud_kwargs = dict(
-            dataset_path=dataset_path,
-            domain_tag=dataset_name,
-            verbose="WARNING",
-            num_workers=num_workers,
-        )
-        if abs_kernel:
-            ud_kwargs["kernel_spec"] = abs_kernel
-
-        ud = UnifiedDataset(**ud_kwargs)
-        n_files = len(ud.get_shared_attr()["locator"])
-        stdout_lines.append(f"[Scan] Found {n_files} file(s) in locator")
-
-        if progress_cb:
-            progress_cb(f"Extracting events ({n_files} files)...", 20)
-
-        if sampled_indices is not None:
-            locator = ud.get_shared_attr()["locator"].copy()
-            full_locator = locator.copy()
-            sampled = locator.iloc[sampled_indices].copy()
-            stdout_lines.append(f"[Scan] Quick-run: processing {len(sampled_indices)}/{n_files} files")
-            ud.get_shared_attr()["locator"] = sampled
-            ud.eeg_batch.get_events(miss_bad_data=True)
-            sampled_result = ud.get_shared_attr()["locator"]
-            full_locator.loc[sampled_indices, "event_id"] = sampled_result["event_id"].values
-            full_locator.loc[sampled_indices, "event_id_num"] = sampled_result["event_id_num"].values
-            ud.get_shared_attr()["locator"] = full_locator
-        else:
-            ud.eeg_batch.get_events(miss_bad_data=True)
-
-        if progress_cb:
-            progress_cb("Extracting subject metadata...", 75)
-
-        _extract_description_batch(ud, stdout_lines)  # writes subject_age/subject_sex directly
-
-        if progress_cb:
-            progress_cb("Saving locator cache...", 92)
-
-        result_df = ud.get_shared_attr()["locator"].copy()
-        save_locator_cache(dataset_name, result_df)
-        stdout_lines.append(f"[Scan] Cache saved: {get_locator_cache_path(dataset_name)}")
-
-        if progress_cb:
-            progress_cb("Done", 100)
-
-    finally:
-        sys.stdout = orig_stdout
-
-    return result_df
-
-
-# ---------------------------------------------------------------------------
-# Structured result extraction from locator
-# ---------------------------------------------------------------------------
-
-def _parse_event_id_num(s: str) -> Dict[str, int]:
-    try:
-        return ast.literal_eval(str(s))
-    except Exception:
-        return {}
-
-
-
-def extract_event_stats(df: pd.DataFrame) -> Dict[str, int]:
-    """Aggregate event_id_num across all rows → {event_id: total_count}."""
-    totals: Dict[str, int] = {}
-    for val in df.get("event_id_num", []):
-        d = _parse_event_id_num(val)
-        for k, v in d.items():
-            totals[k] = totals.get(k, 0) + v
-    return totals
-
 
 def extract_subject_info(df: pd.DataFrame) -> Dict[str, Any]:
     """Extract age/sex/device completeness from subject_age/subject_sex columns."""
@@ -474,6 +476,259 @@ def extract_subject_info(df: pd.DataFrame) -> Dict[str, Any]:
     }
 
 
+def _coerce_scalar(value: Any) -> Any:
+    if hasattr(value, "item"):
+        try:
+            value = value.item()
+        except Exception:
+            pass
+    return value
+
+
+def _coerce_int(value: Any) -> Optional[int]:
+    value = _coerce_scalar(value)
+    if value is None:
+        return None
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float):
+        return int(value) if value.is_integer() else int(round(value))
+    s = str(value).strip()
+    if not s:
+        return None
+    try:
+        return int(s)
+    except Exception:
+        try:
+            f = float(s)
+            return int(f) if f.is_integer() else int(round(f))
+        except Exception:
+            return None
+
+
+def _normalize_mapping_text(text: str) -> str:
+    patterns = [
+        (r"np\.str_\((\".*?\"|'.*?')\)", r"\1"),
+        (r"np\.bytes_\((\".*?\"|'.*?')\)", r"\1"),
+        (r"np\.(?:int|uint)\d+\((-?\d+)\)", r"\1"),
+        (r"np\.float\d+\((-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)\)", r"\1"),
+        (r"np\.bool_\((True|False)\)", r"\1"),
+    ]
+    norm = str(text)
+    for pattern, repl in patterns:
+        norm = re.sub(pattern, repl, norm)
+    return norm
+
+
+def _parse_mapping_cell(value: Any) -> Dict[str, int]:
+    if value is None:
+        return {}
+    value = _coerce_scalar(value)
+    if isinstance(value, dict):
+        result: Dict[str, int] = {}
+        for k, v in value.items():
+            iv = _coerce_int(v)
+            if iv is None:
+                continue
+            result[str(_coerce_scalar(k))] = iv
+        return result
+
+    text = str(value).strip()
+    if not text or text.lower() in ("nan", "none", "{}"):
+        return {}
+
+    candidates = [text]
+    normalized = _normalize_mapping_text(text)
+    if normalized != text:
+        candidates.append(normalized)
+
+    for candidate in candidates:
+        for parser in (json.loads, ast.literal_eval):
+            try:
+                parsed = parser(candidate)
+            except Exception:
+                continue
+            if isinstance(parsed, dict):
+                result = {}
+                for k, v in parsed.items():
+                    iv = _coerce_int(v)
+                    if iv is None:
+                        continue
+                    result[str(_coerce_scalar(k))] = iv
+                return result
+    return {}
+
+
+def _serialize_mapping_cell(value: Any) -> str:
+    parsed = _parse_mapping_cell(value)
+    if not parsed:
+        return "{}"
+    return json.dumps(parsed, ensure_ascii=False, sort_keys=True)
+
+
+def _normalize_scan_result_frame(df: pd.DataFrame) -> pd.DataFrame:
+    result = _load_legacy_subject_columns(df)
+    for col in ("event_id", "event_id_num"):
+        if col in result.columns:
+            result[col] = result[col].apply(_serialize_mapping_cell)
+    return result
+
+
+def _normalize_sampled_indices(sampled_indices: Optional[List[int]], n_files: int) -> Optional[List[int]]:
+    if sampled_indices is None:
+        return None
+    cleaned = sorted({int(i) for i in sampled_indices if 0 <= int(i) < n_files})
+    return cleaned or None
+
+
+def run_full_scan(
+    dataset_name: str,
+    dataset_roots: List[str],
+    kernel_path: Optional[str],
+    eegunity_path: str,
+    progress_cb=None,
+    stdout_lines: Optional[List[str]] = None,
+    sampled_indices: Optional[List[int]] = None,
+    num_workers: int = 1,
+    persist_base_cache: bool = True,
+    persist_metadata_cache: bool = False,
+    kernel_sha256: str = "",
+    eegunity_version: str = "",
+) -> pd.DataFrame:
+    """
+    Run EEGUnity scan and return the locator rows that belong to this scan.
+
+    Full scans can optionally persist:
+    - a machine-local base locator cache (no kernel metadata)
+    - a kernel-versioned metadata cache
+
+    Sampled scans never persist metadata caches and only return sampled rows.
+    """
+    if stdout_lines is None:
+        stdout_lines = []
+
+    _ensure_eegunity_in_path(eegunity_path)
+    from eegunity import UnifiedDataset
+
+    dataset_path = find_dataset_path(dataset_name, dataset_roots)
+    if not dataset_path:
+        searched = ", ".join(dataset_roots) or "(none configured)"
+        raise FileNotFoundError(
+            f"Dataset '{dataset_name}' not found in any configured directory: {searched}"
+        )
+
+    abs_kernel: Optional[str] = None
+    if kernel_path:
+        p = Path(kernel_path)
+        abs_kernel = str(p) if p.is_absolute() else str(BIDS_ROOT / kernel_path)
+
+    orig_stdout = sys.stdout
+    tee = _TeeBuffer(stdout_lines, orig_stdout)
+    sys.stdout = tee
+
+    try:
+        if progress_cb:
+            progress_cb("Scanning dataset directory...", 5)
+        stdout_lines.append(f"[Scan] Dataset: {dataset_name}, path: {dataset_path}")
+        if abs_kernel:
+            stdout_lines.append(f"[Scan] Kernel: {abs_kernel}")
+        else:
+            stdout_lines.append("[Scan] No kernel - using default EEGUnity parser")
+
+        ud_kwargs = dict(
+            dataset_path=dataset_path,
+            domain_tag=dataset_name,
+            verbose="WARNING",
+            num_workers=num_workers,
+        )
+        if abs_kernel:
+            ud_kwargs["kernel_spec"] = abs_kernel
+
+        ud = UnifiedDataset(**ud_kwargs)
+        base_locator = _ensure_base_locator_columns(ud.get_shared_attr()["locator"].copy())
+        n_files = len(base_locator)
+        stdout_lines.append(f"[Scan] Found {n_files} file(s) in locator")
+
+        if persist_base_cache:
+            save_locator_cache(dataset_name, base_locator)
+            stdout_lines.append(f"[Scan] Base locator cache saved: {get_locator_cache_path(dataset_name)}")
+
+        sampled_requested = sampled_indices is not None
+        sampled_indices = _normalize_sampled_indices(sampled_indices, n_files)
+        if sampled_requested and sampled_indices is None:
+            raise ValueError("Sampled scan received no valid locator indices.")
+        if sampled_indices is not None:
+            working_locator = ud.get_shared_attr()["locator"].iloc[sampled_indices].copy()
+            stdout_lines.append(f"[Scan] Quick-run: processing {len(sampled_indices)}/{n_files} files")
+        else:
+            working_locator = ud.get_shared_attr()["locator"].copy()
+
+        ud.get_shared_attr()["locator"] = working_locator
+
+        if progress_cb:
+            progress_cb(f"Extracting events ({len(working_locator)} files)...", 20)
+        if hasattr(ud.eeg_batch, "get_meta"):
+            ud.eeg_batch.get_meta(miss_bad_data=True)
+        else:
+            ud.eeg_batch.get_events(miss_bad_data=True)
+
+        if progress_cb:
+            progress_cb("Extracting subject metadata...", 75)
+        _extract_description_batch(ud, stdout_lines)
+
+        result_df = _normalize_scan_result_frame(ud.get_shared_attr()["locator"].copy())
+
+        if persist_metadata_cache and sampled_indices is None:
+            if progress_cb:
+                progress_cb("Saving metadata cache...", 92)
+            save_metadata_cache(
+                dataset_name=dataset_name,
+                kernel_sha256=kernel_sha256 or get_kernel_sha256(kernel_path or ""),
+                eegunity_version=eegunity_version or get_eegunity_version(eegunity_path),
+                kernel_path=kernel_path or "",
+                dataset_path=dataset_path,
+                df=result_df,
+            )
+            stdout_lines.append(
+                f"[Scan] Metadata cache saved: {get_metadata_cache_csv_path(dataset_name, kernel_sha256 or get_kernel_sha256(kernel_path or ''))}"
+            )
+        elif progress_cb:
+            progress_cb("Finalizing scan...", 92)
+
+        if progress_cb:
+            progress_cb("Done", 100)
+
+    finally:
+        sys.stdout = orig_stdout
+
+    return result_df
+
+
+def _parse_event_id_num(s: Any) -> Dict[str, int]:
+    return _parse_mapping_cell(s)
+
+
+def extract_event_stats(df: pd.DataFrame) -> Dict[str, int]:
+    """Aggregate event_id_num across all rows -> {event_id: total_count}."""
+    totals: Dict[str, int] = {}
+    for val in df.get("event_id_num", []):
+        d = _parse_event_id_num(val)
+        for k, v in d.items():
+            totals[k] = totals.get(k, 0) + int(v)
+    return totals
+
+
+def locator_to_table_data(df: pd.DataFrame) -> Dict[str, Any]:
+    """Convert a locator DataFrame into the JSON table payload used by the UI."""
+    clean_df = df.fillna("").astype(str)
+    return {
+        "columns": list(clean_df.columns),
+        "rows": clean_df.values.tolist(),
+    }
+
+
 def _completeness_label(ok: int, total: int) -> str:
     if total == 0:
         return "missing"
@@ -486,7 +741,7 @@ def _completeness_label(ok: int, total: int) -> str:
 
 
 # ---------------------------------------------------------------------------
-# analysis.md — Status field helpers
+# analysis.md 鈥?Status field helpers
 # ---------------------------------------------------------------------------
 
 _STATUS_RE = re.compile(r"^(> \*\*Status\*\*:\s*)(\S+)\s*$", re.MULTILINE)
@@ -518,7 +773,7 @@ _SHA256_LINE_RE = re.compile(r"^> \*\*(?:Kernel )?SHA256\*\*:.*$", re.MULTILINE)
 _EEGUNITY_VER_RE = re.compile(r"^> \*\*EEGUnity Version\*\*:.*$", re.MULTILINE)
 _SCAN_TYPE_RE = re.compile(r"^> \*\*Scan Type\*\*:.*$", re.MULTILINE)
 
-# Legacy AUTO marker constants — kept only for stripping old-format documents
+# Legacy AUTO marker constants 鈥?kept only for stripping old-format documents
 _AUTO_EVENT_START = "<!-- AUTO-KERNEL-EVENT-STRUCTURE:START -->"
 _AUTO_EVENT_END = "<!-- AUTO-KERNEL-EVENT-STRUCTURE:END -->"
 _AUTO_SUBJECT_START = "<!-- AUTO-KERNEL-SUBJECT-INFO:START -->"
@@ -573,7 +828,7 @@ def _build_event_table(existing: Dict[str, Dict], new_counts: Dict[str, int], sa
         "|----------|---------------|------|------------|---------|"
     )
     rows = []
-    for eid, count in sorted(new_counts.items(), key=lambda x: -x[1]):
+    for eid, count in sorted(new_counts.items(), key=lambda x: x[0]):
         existing_row = existing.get(eid, {})
         if existing_row:
             # Existing event: preserve Type, Meta Level, Meaning exactly
@@ -592,7 +847,7 @@ def _build_event_table(existing: Dict[str, Dict], new_counts: Dict[str, int], sa
 
 
 def _parse_info_table(md_block: str) -> Dict[str, Dict]:
-    """Parse ### Info table rows → {field: {completeness, notes}}."""
+    """Parse ### Info table rows 鈫?{field: {completeness, notes}}."""
     result = {}
     for m in re.finditer(
         r"^\|\s*`?([^`|\n]+?)`?\s*\|\s*([^|\n]*?)\s*\|\s*([^|\n]*?)\s*\|",
@@ -652,7 +907,7 @@ def merge_scan_results(
     fsr_m0 = _FILE_SCAN_RE.search(new_content)
     old_fsr_text = fsr_m0.group(0).rstrip() if fsr_m0 else ""
 
-    # ── 1. Update kernel fingerprint header ──────────────────────────────────
+    # 鈹€鈹€ 1. Update kernel fingerprint header 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
     fsr_m = _FILE_SCAN_RE.search(new_content)
     if fsr_m:
         block = fsr_m.group(2)
@@ -682,7 +937,7 @@ def merge_scan_results(
 
         new_content = new_content[:fsr_m.start(2)] + block + new_content[fsr_m.end(2):]
 
-    # ── 2. Update Event Structure table ─────────────────────────────────────
+    # 鈹€鈹€ 2. Update Event Structure table 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
     es_m = re.search(r"(### Event Structure\s*\n)(.*?)(?=\n###|\n## |\Z)", new_content, re.DOTALL)
     if es_m:
         es_inner = es_m.group(2)
@@ -701,7 +956,7 @@ def merge_scan_results(
 
         new_content = new_content[:es_m.start(2)] + new_es_inner + new_content[es_m.end(2):]
 
-    # ── 3. Update Info table (preserve Notes where Completeness unchanged) ───
+    # 鈹€鈹€ 3. Update Info table (preserve Notes where Completeness unchanged) 鈹€鈹€鈹€
     info_m = re.search(
         r"(### Info\s*\n\| Field.*?\n\|[-| ]+\n)(.*?)(?=\n###|\n## |\Z)",
         new_content, re.DOTALL,
@@ -711,7 +966,7 @@ def merge_scan_results(
         new_info_tbl = _build_info_table_smart(subject_info, existing_info)
         new_content = new_content[:info_m.start(2)] + new_info_tbl + "\n" + new_content[info_m.end(2):]
 
-    # ── Produce single diff for entire File Scan Result block ───────────────
+    # 鈹€鈹€ Produce single diff for entire File Scan Result block 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
     fsr_m_new = _FILE_SCAN_RE.search(new_content)
     new_fsr_text = fsr_m_new.group(0).rstrip() if fsr_m_new else ""
 
@@ -741,9 +996,28 @@ EXCLUDE_DIRS = {"Script", "app", "app_kernel", ".git", ".claude"}
 
 _META_STATUS_RE = re.compile(r"\*\*Status\*\*:\s*(\S+)")
 _META_CATEGORY_RE = re.compile(r"\*\*Category\*\*:\s*([^|*\n]+)")
+_DOC_SHA256_RE = re.compile(r"^> \*\*(?:Kernel )?SHA256\*\*:\s*`([^`]*)`", re.MULTILINE)
+
+
+def _read_doc_sha256(content: str) -> str:
+    """Extract the Kernel SHA256 recorded in analysis.md content.
+
+    Returns empty string when absent, N/A, or any placeholder that signals
+    the document has never been scanned with a kernel.
+    """
+    m = _DOC_SHA256_RE.search(content)
+    if not m:
+        return ""
+    val = m.group(1).strip()
+    if val.lower() in ("n/a", "na", "no_kernel", "file_not_found", ""):
+        return ""
+    return val
 
 
 def list_datasets() -> List[Dict]:
+    cfg = load_machine_config()
+    dataset_roots = cfg.get("dataset_roots", [])
+
     result = []
     for entry in sorted(BIDS_ROOT.iterdir()):
         if not entry.is_dir():
@@ -765,6 +1039,16 @@ def list_datasets() -> List[Dict]:
 
         kernel = detect_kernel_path(entry.name)
         cache_ok = locator_cache_exists(entry.name)
+        dataset_found = bool(find_dataset_path(entry.name, dataset_roots))
+
+        # Kernel SHA256 staleness check
+        kernel_sha256_outdated = False
+        if kernel:
+            doc_sha = _read_doc_sha256(content)
+            cur_sha = get_kernel_sha256(kernel)
+            # Outdated when: doc is blank/N/A (never scanned) OR hashes differ
+            kernel_sha256_outdated = (doc_sha == "" or doc_sha != cur_sha)
+
         result.append({
             "name": entry.name,
             "status": status,
@@ -772,6 +1056,8 @@ def list_datasets() -> List[Dict]:
             "has_kernel": kernel is not None,
             "kernel_path": kernel or "",
             "has_cache": cache_ok,
+            "dataset_found": dataset_found,
+            "kernel_sha256_outdated": kernel_sha256_outdated,
         })
     return result
 
@@ -780,35 +1066,345 @@ def list_datasets() -> List[Dict]:
 # LLM sampling prompt builder
 # ---------------------------------------------------------------------------
 
-def build_sampling_prompt(dataset_name: str, df: pd.DataFrame) -> str:
-    """Build prompt for LLM to recommend which files to sample for quick-run."""
-    n = len(df)
-    paths = df.get("File Path", pd.Series([], dtype=str)).tolist()
-    common = os.path.commonprefix([str(p) for p in paths]) if paths else ""
-    short_paths = [str(p)[len(common):] for p in paths]
+_GENERIC_PREFIXES = {
+    "sub", "subj", "subject", "s", "p", "participant",
+    "run", "ses", "session", "file", "data", "eeg", "rec",
+}
 
-    rows_info = []
-    for i, (_, row) in enumerate(df.iterrows()):
-        rows_info.append({
-            "idx": i,
-            "path_suffix": short_paths[i] if i < len(short_paths) else "",
-            "size_shape": str(row.get("Data Shape", "?")),
+_TASK_LABELS = {
+    "artifact": "Artifact",
+    "erp": "ERP",
+    "mi": "MI",
+    "p300": "P300",
+    "ssvep": "SSVEP",
+}
+
+_PROTOCOL_LABELS = {
+    "5f": "5F",
+    "cla": "CLA",
+    "freeform": "FREEFORM",
+    "freedom": "FREEFORM",
+    "halt": "HaLT",
+    "nomt": "NoMT",
+}
+
+
+def _normalize_sampling_path(path_str: str) -> str:
+    return str(path_str).replace("\\", "/").strip()
+
+
+def _sampling_path_parts(path_str: str) -> List[str]:
+    return [part for part in _normalize_sampling_path(path_str).split("/") if part and part != "."]
+
+
+def _sampling_common_parts(paths: List[str]) -> List[str]:
+    split_paths = [_sampling_path_parts(p) for p in paths if str(p).strip()]
+    if not split_paths:
+        return []
+    common: List[str] = []
+    for idx in range(min(len(parts) for parts in split_paths)):
+        val = split_paths[0][idx]
+        if all(parts[idx] == val for parts in split_paths[1:]):
+            common.append(val)
+        else:
+            break
+    return common
+
+
+def _relative_sampling_parts(path_str: str, common_parts: List[str]) -> List[str]:
+    parts = _sampling_path_parts(path_str)
+    i = 0
+    max_i = min(len(parts), len(common_parts))
+    while i < max_i and parts[i] == common_parts[i]:
+        i += 1
+    return parts[i:] or parts[-1:]
+
+
+def _format_sampling_number(value: Any) -> str:
+    s = str(value).strip()
+    if s.lower() in ("", "nan", "none"):
+        return ""
+    try:
+        f = float(s)
+        if f.is_integer():
+            return str(int(f))
+        return f"{f:g}"
+    except Exception:
+        return s
+
+
+def _channel_signature(row: pd.Series) -> Tuple[str, str]:
+    nch = _format_sampling_number(row.get("Number of Channels", ""))
+    sfreq = _format_sampling_number(row.get("Sampling Rate", ""))
+    ch_names = str(row.get("Channel Names", "")).strip().lower()
+    ch_names = ",".join(part.strip() for part in ch_names.split(",") if part.strip())
+    ch_hash = hashlib.md5(ch_names.encode("utf-8")).hexdigest()[:6] if ch_names else ""
+    key = f"{nch}|{sfreq}|{ch_hash}"
+    label_bits = []
+    if nch:
+        label_bits.append(f"{nch}ch")
+    if sfreq:
+        label_bits.append(f"{sfreq}Hz")
+    return key, "@".join(label_bits) if label_bits else "structure-unknown"
+
+
+def _extract_experiment_label(text: str) -> Optional[str]:
+    m = re.search(r"(?i)(?:^|[^a-z0-9])exp(?:eriment)?[_-]?0*(\d+)(?:$|[^a-z0-9])", text)
+    return f"Exp{int(m.group(1))}" if m else None
+
+
+def _extract_task_label(text: str) -> Optional[str]:
+    m = re.search(r"(?i)(?:^|[_-])eeg[_-](mi|ssvep|erp|artifact|p300)(?:$|[_-])", text)
+    if not m:
+        m = re.search(r"(?i)(?:^|[_-])(mi|ssvep|erp|artifact|p300)(?:$|[_-])", text)
+    return _TASK_LABELS.get(m.group(1).lower()) if m else None
+
+
+def _extract_protocol_label(stem: str) -> Optional[str]:
+    m = re.match(r"(?i)^(5f|cla|halt|freeform|freedom|nomt)(?=subject|[-_]|[A-Z]|$)", stem)
+    return _PROTOCOL_LABELS.get(m.group(1).lower()) if m else None
+
+
+def _is_noise_part(part: str) -> bool:
+    low = part.lower()
+    if low in _GENERIC_PREFIXES or low in {"openbmi", "dataset", "raw", "files"}:
+        return True
+    if re.fullmatch(r"(?:subj(?:ect)?|sub|participant)[a-z0-9]+", low):
+        return True
+    if re.fullmatch(r"(?:sess(?:ion)?|ses|run|trial|record|rec|block)\d+[a-z]*", low):
+        return True
+    if re.fullmatch(r"s\d{1,3}", low):
+        return True
+    if re.fullmatch(r"\d{4,}", low):
+        return True
+    return False
+
+
+def _fallback_dir_group(rel_parts: List[str]) -> Optional[str]:
+    for part in rel_parts[:-1]:
+        if not _is_noise_part(part):
+            return part
+    return None
+
+
+def _fallback_stem_group(stem: str) -> Optional[str]:
+    m = re.match(r"([A-Za-z][A-Za-z0-9]{1,24})", stem)
+    if not m:
+        return None
+    candidate = m.group(1)
+    if _is_noise_part(candidate):
+        return None
+    return candidate
+
+
+def _infer_group(rel_parts: List[str], row: pd.Series) -> Tuple[str, str]:
+    joined = "/".join(rel_parts)
+    stem = Path(rel_parts[-1]).stem
+
+    for text in rel_parts[:-1]:
+        label = _extract_experiment_label(text)
+        if label:
+            return label, "experiment"
+
+    for text in (joined, stem):
+        label = _extract_experiment_label(text)
+        if label:
+            return label, "experiment"
+
+    label = _extract_task_label(stem)
+    if label:
+        return label, "task"
+
+    label = _extract_protocol_label(stem)
+    if label:
+        return label, "protocol"
+
+    label = _fallback_dir_group(rel_parts)
+    if label:
+        return label, "directory"
+
+    label = _fallback_stem_group(stem)
+    if label:
+        return label, "stem"
+
+    _, structure_label = _channel_signature(row)
+    return structure_label, "structure"
+
+
+def _pick_group_representative(records: List[Dict[str, Any]]) -> Dict[str, Any]:
+    fingerprint_counts: Dict[str, int] = {}
+    for record in records:
+        key = record["structure_key"]
+        fingerprint_counts[key] = fingerprint_counts.get(key, 0) + 1
+    dominant_key = max(
+        fingerprint_counts.items(),
+        key=lambda item: (item[1], item[0]),
+    )[0]
+
+    def _duration_value(record: Dict[str, Any]) -> float:
+        try:
+            return float(record["duration_s"])
+        except Exception:
+            return float("inf")
+
+    return min(
+        records,
+        key=lambda record: (
+            record["structure_key"] != dominant_key,
+            record["completeness"] != "Completed",
+            len(record["file"]),
+            _duration_value(record),
+            record["idx"],
+        ),
+    )
+
+
+def _select_local_groups(group_list: List[Dict[str, Any]], max_sample: int) -> List[Dict[str, Any]]:
+    if len(group_list) <= max_sample:
+        return list(group_list)
+
+    remaining = list(group_list)
+    selected: List[Dict[str, Any]] = []
+    seen_structures = set()
+
+    while remaining and len(selected) < max_sample:
+        best = max(
+            remaining,
+            key=lambda item: (
+                sum(1 for label in item["structure_labels"] if label not in seen_structures),
+                item["count"],
+                -item["first_index"],
+            ),
+        )
+        selected.append(best)
+        seen_structures.update(best["structure_labels"])
+        remaining.remove(best)
+
+    selected.sort(key=lambda item: (item["first_index"], item["group"]))
+    return selected
+
+
+def _prepare_sampling_records(df: pd.DataFrame) -> Tuple[pd.DataFrame, List[Dict[str, Any]]]:
+    data_mask = df.get("Completeness Check", pd.Series(dtype=str)).astype(str).str.strip() != "Unavailable"
+    data_df = df[data_mask].copy()
+    if data_df.empty:
+        data_df = df.copy()
+
+    paths = data_df.get("File Path", pd.Series([], dtype=str)).astype(str).tolist()
+    common_parts = _sampling_common_parts(paths)
+    records: List[Dict[str, Any]] = []
+    for idx, row in data_df.iterrows():
+        path_str = str(row.get("File Path", ""))
+        rel_parts = _relative_sampling_parts(path_str, common_parts)
+        rel_path = "/".join(rel_parts)
+        structure_key, structure_label = _channel_signature(row)
+        group_label, group_source = _infer_group(rel_parts, row)
+        records.append({
+            "idx": idx,
+            "file": rel_path,
+            "group": group_label,
+            "group_source": group_source,
+            "shape": str(row.get("Data Shape", "?")),
             "duration_s": str(row.get("Duration", "?")),
             "completeness": str(row.get("Completeness Check", "?")),
-            "has_events": bool(str(row.get("event_id", "")).strip() not in ("", "nan")),
+            "structure_key": structure_key,
+            "structure_label": structure_label,
+        })
+    return data_df, records
+
+
+def prepare_sampling_plan(dataset_name: str, df: pd.DataFrame, max_sample: int = 10) -> Dict[str, Any]:
+    data_df, records = _prepare_sampling_records(df)
+    groups: Dict[str, Dict[str, Any]] = {}
+    for record in records:
+        bucket = groups.setdefault(record["group"], {
+            "group": record["group"],
+            "group_source": record["group_source"],
+            "records": [],
+            "structure_labels": set(),
+            "first_index": record["idx"],
+        })
+        bucket["records"].append(record)
+        bucket["structure_labels"].add(record["structure_label"])
+        bucket["first_index"] = min(bucket["first_index"], record["idx"])
+
+    group_list: List[Dict[str, Any]] = []
+    for group in groups.values():
+        rep = _pick_group_representative(group["records"])
+        group_list.append({
+            "group": group["group"],
+            "group_source": group["group_source"],
+            "count": len(group["records"]),
+            "first_index": group["first_index"],
+            "representative": rep,
+            "structure_labels": sorted(group["structure_labels"]),
+            "example_files": [r["file"] for r in group["records"][:2]],
         })
 
-    return (
+    group_list.sort(key=lambda item: (item["first_index"], item["group"]))
+    local_groups = _select_local_groups(group_list, max_sample)
+    plan = {
+        "dataset_name": dataset_name,
+        "total_rows": len(df),
+        "data_rows": len(data_df),
+        "group_count": len(group_list),
+        "groups": group_list,
+        "local_groups": local_groups,
+        "sampled_indices": [item["representative"]["idx"] for item in local_groups],
+        "groups_covered": [item["group"] for item in local_groups],
+    }
+    if len(group_list) <= max_sample:
+        plan["strategy"] = "local"
+        plan["reason"] = (
+            f"Local path-aware grouping found {len(group_list)} representative group(s), "
+            f"which fits within the sample limit of {max_sample}."
+        )
+    else:
+        plan["strategy"] = "llm"
+        plan["reason"] = (
+            f"Local grouping found {len(group_list)} candidate group(s), which exceeds "
+            f"the sample limit of {max_sample}; an LLM can prioritize the most useful ones."
+        )
+    return plan
+
+
+def build_sampling_prompt(dataset_name: str, plan: Dict[str, Any], max_sample: int = 10) -> str:
+    group_rows = []
+    for item in plan["groups"]:
+        rep = item["representative"]
+        group_rows.append({
+            "group": item["group"],
+            "group_source": item["group_source"],
+            "count": item["count"],
+            "structure": item["structure_labels"],
+            "representative_idx": rep["idx"],
+            "representative_file": rep["file"],
+            "representative_shape": rep["shape"],
+            "representative_duration_s": rep["duration_s"],
+            "examples": item["example_files"],
+        })
+
+    prompt = (
         f"You are helping select a minimal but representative sample of EEG files "
-        f"to quickly scan event statistics for dataset '{dataset_name}' ({n} total files).\n\n"
-        f"File list (path suffixes only, common prefix removed):\n"
-        + json.dumps(rows_info, indent=2)
-        + "\n\nSelect the minimal set of file indices that:\n"
-        "1. Covers all distinct event types likely present\n"
-        "2. Represents variation in file structure (different shapes/durations)\n"
-        "3. Prefers files with 'Completed' completeness check\n"
-        "4. Skips files that already have events cached (has_events=true) unless necessary\n\n"
-        "Return a JSON object ONLY with key 'sampled_indices' (list of integers) "
-        "and 'reason' (one sentence explanation).\n"
-        "Example: {\"sampled_indices\": [0, 5, 12], \"reason\": \"...\"}"
+        f"for dataset '{dataset_name}'.\n\n"
+        f"Total locator rows: {plan['total_rows']}. EEG data rows: {plan['data_rows']}.\n"
+        f"Local path-aware grouping found {plan['group_count']} candidate groups.\n"
+        "Each group below already has one locally chosen representative file. "
+        "Prefer covering distinct experiments/paradigms/tasks first, and use channel/sampling "
+        "structure only as a secondary tie-breaker.\n\n"
+        "Group summary:\n"
+        + json.dumps(group_rows, indent=2)
+        + f"\n\nTask: Select at most {max_sample} representative_idx values.\n"
+        "1. Prioritize broad paradigm / experiment coverage.\n"
+        "2. Avoid selecting multiple groups that look structurally redundant unless necessary.\n"
+        "3. Keep exactly one representative per chosen group.\n\n"
+        "Return a JSON object ONLY with:\n"
+        '  "sampled_indices": [representative_idx integers]\n'
+        '  "groups_covered": [group labels]\n'
+        '  "reason": one sentence explanation\n\n'
+        'Example: {"sampled_indices": [0, 42, 84], "groups_covered": ["Exp1", "Exp2", "Exp3"], "reason": "..."}'
     )
+    return prompt
+
+
+

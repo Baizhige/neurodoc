@@ -7,30 +7,26 @@
 
 The SEED (SJTU Emotion EEG Dataset) was collected from 15 subjects who watched 15 emotional film clips (positive, neutral, negative) across three sessions (Zheng & Lu, 2015). EEG was recorded from 62 channels using an ESI NeuroScan system (Neuroscan cap) at 1000 Hz. Fifteen emotional video clips (~4 minutes each) were shown in each session, with sessions repeated on different days (up to 3 sessions per subject). Valence labels (+1 positive, 0 neutral, -1 negative) for each clip are stored in separate `*_label.mat` files; they are **not embedded** in the `.cnt` EEG recordings. The kernel does not extract emotion labels from EEG annotations; labels must be loaded externally.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
 
+> **Kernel SHA256**: `b0fb53a13b65ddd627a459885811c0110078172e3fe0af22802920a04880cb10`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `0` | ~81 | admin | raw | File-level marker from `.cnt` format (no experimental meaning) |
-| `255` | rare | admin | raw | End-of-file or reset marker in `.cnt` format |
 
->
-> **Critical**: Emotion valence labels (+1, 0, -1) are stored in companion `*_label.mat` files, NOT in the EEG event annotations. Events `0` and `255` are format-level markers with no experimental significance.
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Three-class Emotion Valence Classification (Positive/Neutral/Negative)
@@ -96,7 +92,6 @@ The SEED (SJTU Emotion EEG Dataset) was collected from 15 subjects who watched 1
 - 3 sessions per subject on different days; within-session and cross-session analyses are common.
 - 15 video clips per session x 3 sessions x 15 subjects = 675 trials total.
 - NeuroScan `.cnt` format; 62-channel standard 10-20 EEG montage.
-
 
 ## Kernel Responsibilities
 

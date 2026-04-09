@@ -7,18 +7,9 @@
 
 Participants walked two different outdoor routes, once while performing a self-paced button-pressing task, to study brain activity during naturalistic free-walking gait. This is a mobile EEG study; no trial-level event markers are detectable in the EEG files. Button-press events from the self-paced task may be available in separate behavioral logs.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003039
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -28,6 +19,10 @@ Participants walked two different outdoor routes, once while performing a self-p
 > - `long`: sustained-state marker (>=2 s), for `epoch_by_long_event_hdf5`
 > - `rest`: resting-state segment marker, for `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **exclude** from epoch target_events
+
+### Info
+
+*Info placeholder: File scan details to be populated.*
 
 ## Tasks
 
@@ -47,6 +42,7 @@ Participants walked two different outdoor routes, once while performing a self-p
 - **Label Route**: `Annotation`
 - **Target Definition**: N/A (null (no trial-level events in EEG files))
 - **Notes**: Mobile EEG during naturalistic walking. Motion artifacts are expected; ICA-based artifact removal recommended. Route condition (route A vs route B) may be available as a subject-level metadata label.
+
 ## Data Quality Notes
 
 - Mobile EEG with significant motion artifacts from walking - ICA and motion artifact rejection required.
@@ -54,6 +50,14 @@ Participants walked two different outdoor routes, once while performing a self-p
 - 67-channel mobile EEG system; verify electrode positions.
 - Verify channel count consistency across subjects before pooling.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Nadine Jacobsen (March, 2020)`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003039

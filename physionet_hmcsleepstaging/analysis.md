@@ -8,36 +8,29 @@
 
 One hundred and fifty-one (151) overnight polysomnographic recordings from the Haaglanden Medisch Centrum (HMC) Sleep Center, Netherlands, were collected and annotated using the AASM (American Academy of Sleep Medicine) scoring rules. EEG was recorded from 4 bipolar derivations (F4-M1, C4-M1, O2-M1, C3-M2), supplemented by chin EMG, two EOG channels (E1-M2, E2-M2), and ECG, all at 256 Hz. Expert sleep technicians scored each 30-second epoch as Wake, N1, N2, N3, or REM. Light-on and light-off events mark the intended sleep period boundaries.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `c64f05a92bbd474b29e1b669b21059d23994732634081f3cf43a6f989b7ff3a3`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Sleep stage W` | 23681 | event | raw | Wake (30-second epoch) |
-| `Sleep stage W,` | 5 | event | raw | Wake with trailing comma (dirty data — strip before use) |
-| `Sleep stage N1` | 15548 | event | raw | NREM Stage 1 (AASM) |
-| `Sleep stage N2` | 50083 | event | raw | NREM Stage 2 (AASM) |
-| `Sleep stage N3` | 26671 | event | raw | NREM Stage 3 - slow-wave sleep (AASM) |
-| `Sleep stage R` | 21255 | event | raw | REM sleep (AASM) |
-| `Lights off` | 151 | admin | raw | Start of intended sleep period |
-| `Lights on` | 151 | admin | raw | End of intended sleep period |
-
-> Counts are exact totals across all 151 recordings. Each sleep stage annotation spans exactly 30 seconds.
-> **Manual Review Note**: Subject count corrected 77→151, event counts updated, REM ID corrected from `Sleep stage R (REM)` to `Sleep stage R`, and `Sleep stage W,` dirty-data entry added — all by human reviewer (Jiping Cui). Kernel should re-verify counts and REM annotation string on next scan.
+| `Sleep stage N1` | 8103 | event | raw | NREM Stage 1 (AASM) |
+| `Sleep stage N2` | 24969 | event | raw | NREM Stage 2 (AASM) |
+| `Sleep stage N3` | 13243 | event | raw | NREM Stage 3 - slow-wave sleep (AASM) |
+| `Sleep stage R` | 10974 | event | raw | REM sleep (AASM) |
+| `Sleep stage W` | 12217 | event | raw | Wake (30-second epoch) |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: 5-Class Sleep Stage Classification (AASM)
@@ -82,7 +75,6 @@ One hundred and fifty-one (151) overnight polysomnographic recordings from the H
 - Aggregated demographics: 85 Male / 66 Female, Mean Age 53.9 ± 15.4. Individual subject-to-demographic mapping is not in public metadata due to strict EDF de-identification (Header: 'X X X').
 - N1 is relatively rare; class imbalance between stages is expected.
 - Five annotations carry a trailing comma (`Sleep stage W,`); strip commas from annotation strings before processing.
-
 
 ## Kernel Responsibilities
 

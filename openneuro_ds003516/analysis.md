@@ -8,26 +8,33 @@
 
 Participants performed a cocktail-party selective auditory attention task with two competing speakers. They listened to audio books from one speaker (attended stream) while their own name was occasionally presented in the ignored stream. This paradigm investigates the neural correlates of selective attention and the salience of self-referential stimuli (own name) in the unattended auditory channel. No discrete trial-level event markers were recorded in the EEG data.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
 
+> **Kernel SHA256**: `1151f4dbbc9cb6482aa3aaaf7cabe4a85835f042cfbdd222fc9797af4de178bf`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| - | - | - | raw | No event markers detected; continuous EEG recording |
+| `Beep` | 25 | event | raw |  |
+| `Calib_End` | 8 | event | raw |  |
+| `Calib_Start` | 25 | event | raw |  |
+| `StartTrigger` | 125 | event | raw |  |
+| `beam` | 500 | event | raw |  |
+| `beep` | 500 | event | raw |  |
+| `boundary` | 175 | event | raw |  |
+| `omni` | 500 | event | raw |  |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Neural Speech Envelope Tracking (Attended vs Ignored)
@@ -75,7 +82,6 @@ Participants performed a cocktail-party selective auditory attention task with t
 
 - No event markers present; cannot epoch by stimulus onset.
 - Continuous EEG during selective attention task; audio stimuli timing not embedded in EEG annotations.
-
 
 ## Kernel Responsibilities
 

@@ -26,6 +26,7 @@ Participants performed a threshold-level vibrotactile detection task in which a 
 | `conf` | large | event | raw | Confidence rating onset |
 | `conf-resp` | large | event | raw | Confidence rating button-press response |
 
+**STIM Route Trigger Table**: `stim-thr`, `stim-adapt` are stimulus-marker based labels used as alternative epoch triggers if SDT label counts are imbalanced. Keep trigger decoding table versioned and auditable.
 
 ### MISC Label Summary
 
@@ -42,12 +43,6 @@ Participants performed a threshold-level vibrotactile detection task in which a 
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stim-thr`, `stim-adapt`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

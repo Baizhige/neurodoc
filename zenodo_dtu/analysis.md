@@ -31,12 +31,6 @@ Eighteen subjects (S1-S18) participated in an auditory attention decoding (AAD) 
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stimu`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -65,7 +59,7 @@ Eighteen subjects (S1-S18) participated in an auditory attention decoding (AAD) 
 - **Notes**: Annotations are per-trial; trial boundaries from `data.stimu` onset times. If the dataset's `.mat` file is missing `stimu` or `attended` fields, the kernel will produce `unknown` annotations.
 
 | Event | y | Meaning |
-|-------|---|---------|
+|-------|--|---------|
 | `attend_speaker_1` | 0 | Attend to speaker 1 |
 | `attend_speaker_2` | 1 | Attend to speaker 2 |
 

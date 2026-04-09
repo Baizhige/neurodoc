@@ -7,18 +7,9 @@
 
 A dual-task paradigm combining a guided visual search task (tracking a red annulus) with an auditory N-back working memory task to study cognitive interference. Event code `10` marks the dominant condition (likely standard/no-target trials, 29,820 total) and `11` marks the minority condition (likely target/match trials, 2,948 total). The large imbalance between codes suggests `10` = non-target and `11` = N-back target detection.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004661
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -26,6 +17,10 @@ A dual-task paradigm combining a guided visual search task (tracking a red annul
 | `11` | 2948 | short | raw | N-back target match (minority condition) |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
+
+### Info
+
+- **Reference**: `Ries, et al., 2016`
 
 ## Tasks
 
@@ -50,12 +45,20 @@ A dual-task paradigm combining a guided visual search task (tracking a red annul
  |-------|---|---------|
  | `10` | 0 | Non-target trial |
  | `11` | 1 | N-back target match |
+
 ## Data Quality Notes
 
 - Only 2 event codes; binary classification.
 - Strong class imbalance (~10:1); undersample majority class.
 - Low sampling rate (128 Hz); limited for high-frequency analyses.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Ries, et al., 2016`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004661

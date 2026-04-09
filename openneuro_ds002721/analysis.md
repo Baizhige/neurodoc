@@ -7,18 +7,6 @@
 
 Participants listened to 40 music clips from film scores while their EEG was recorded, to investigate the neural correlates of music-induced emotional states. Each 40-second music clip is marked at onset with a numeric trigger code (800-908 range encode specific music tracks; 32768 and 257 are likely system markers). The study is part of a series with ds002722 (calibration) and ds002723/ds002724 (BCI sessions). Emotion ratings may be available in behavioral logs.
 
-## Subject Information
-
-<!-- AUTO-KERNEL-SUBJECT-INFO:START -->
-> **Kernel Fact Source**: current kernel scan from `<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-- **Record Count**: 185
-- **Age Completeness**: 185/185 (100.0%)
-- **Sex Completeness**: 185/185 (100.0%)
-- **Observed Age Examples**: `31`, `29`, `39`, `49`, `23`, `63`, `34`, `36`
-- **Observed Sex Examples**: `Male`, `Female`
-<!-- AUTO-KERNEL-SUBJECT-INFO:END -->
-
-
 ## File Scan Result
 
 > **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds002721.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
