@@ -7,7 +7,6 @@
 
 The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure sustained attention via simultaneous EEG and fMRI recording. Participants detect rare city scenes (targets, S245) within a stream of common mountain scenes (standards, S155). Additional tasks include resting state, visual checkerboard stimulation, and mental imagery. MRI synchronization pulses (TR, Sync On) and cardiac (qrs) signals are also recorded.
 
-
 ## File Scan Result
 
 > **Kernel**: N/A
@@ -26,7 +25,6 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
 | `S254` | 813 | event | raw | Response / button press |
 | `[]` | 15 | admin | raw | Empty/null event |
 
-
 ### Info
 
 | Field | Completeness | Notes |
@@ -34,12 +32,6 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `S155`, `S245`, `S254`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -51,7 +43,7 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|-----|---------|
   | correct_trial | 0 | Correct commission (S245+press) or correct omission (S155+no press) |
   | incorrect_trial | 1 | Commission error (S155+press) or omission error (S245+no press) |
 - **Super Meta Notes**: Derived from raw events [`S155`, `S245`, `S254`]. For each stimulus event (S155 or S245), kernel must check whether S254 occurred within the trial window (0-2s) to determine if response was correct. Labels: correct commission = S245 + S254 within window; correct omission = S155 + no S254; commission error = S155 + S254 within window; omission error = S245 + no S254. Combine correct commission + correct omission into y=0, commission error + omission error into y=1.
@@ -67,7 +59,7 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|-----|---------|
   | in_zone | 0 | Low RT variability (sustained attention maintained) |
   | out_zone | 1 | High RT variability (attention lapses) |
 - **Super Meta Notes**: Derived from raw events [`S155`, `S245`]. Kernel must compute RT variability across consecutive correct trials within a rolling window. If variability < threshold → in_zone (y=0), if > threshold → out_zone (y=1). Requires reaction time extraction from S254 events.
@@ -83,7 +75,7 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|-----|---------|
   | `S155` | 0 | Standard stimulus (mountain scene, withhold response) |
   | `S245` | 1 | Target stimulus (city scene, press button) |
 - **Evidence**:
@@ -99,7 +91,7 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
 - **Notes**: Primary scientific contrast is S155 (standard) vs S245 (target) for gradCPT attention decoding. `Sync On`, `TR`, `qrs`, `T 1` are MRI/cardiac markers. Very high sampling rate (5000 Hz); downsample before processing.
 
  | Event | y | Meaning |
- |-------|---|---------|
+ |-------|-----|---------|
  | `Sync On` | 0 | MRI sync pulse |
  | `S155` | 1 | Standard (mountain) |
  | `TR` | 2 | MRI TR marker |
@@ -114,7 +106,6 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
 - Very high sampling rate (5000 Hz); downsample to <=1000 Hz for most analyses.
 - `Sync On`, `TR`, `qrs` are MRI/cardiac markers and should be excluded from stimulus-locked analysis.
 - Simultaneous EEG-fMRI data requires MRI artifact correction (template subtraction or similar).
-
 
 ## Kernel Responsibilities
 

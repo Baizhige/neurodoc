@@ -8,7 +8,6 @@
 
 Participants performed a visuospatial working memory task under a double-blind Cabergoline (dopamine D2/D3 agonist) drug challenge to investigate pharmacological modulation of working memory processing. The task involved memorizing spatial locations of stimuli followed by a probe stimulus requiring a match/non-match judgment. Distractor stimuli were presented during the retention interval. The study examines individual differences in working memory capacity and dopaminergic modulation.
 
-
 ## File Scan Result
 
 > **Kernel**: N/A
@@ -23,7 +22,6 @@ Participants performed a visuospatial working memory task under a double-blind C
 | `Response` | 108 | event | raw | Participant button-press response |
 | `STATUS` | 54 | admin | raw | System status marker |
 
-
 ### Info
 
 | Field | Completeness | Notes |
@@ -31,12 +29,6 @@ Participants performed a visuospatial working memory task under a double-blind C
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Stim Onset`, `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -90,7 +82,6 @@ Participants performed a visuospatial working memory task under a double-blind C
 - 54 files for 27 subjects; two sessions per subject (drug/placebo crossover design).
 - Drug condition information should be in participants.tsv or scans.tsv.
 - Limited event types; primary utility is ERP characterization of encoding and retrieval phases.
-
 
 ## Kernel Responsibilities
 

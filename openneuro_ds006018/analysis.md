@@ -41,12 +41,6 @@ A suite of standardized ERP tasks from the ERP CORE compendium (Kappenman et al.
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `S201`, `S 80`, `S212`, `S111`, `S222`, `S121`, `S 22`, `S 11`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -63,7 +57,7 @@ A suite of standardized ERP tasks from the ERP CORE compendium (Kappenman et al.
   | `S211` | 1 | Oddball/target stimulus (P300 eliciting) |
 - **Evidence**:
   - DOI: `10.1109/bibm66473.2025.11356119` — Uses Active Visual Oddball (AVO) task from openneuro_ds006018 for binary single-trial classification of oddball versus standard stimuli under a P300 paradigm, with epochs extracted from -100ms to +1000ms around stimulus onset.
-  - DOI: `10.1038/s41597.025.05209.z` — Describes openneuro_ds006018 dataset containing EEG recordings from 127 young adults during ERP CORE paradigms including active visual oddball (P300), with stimulus event codes S211 (target) and S 11 (standard).
+  - DOI: `10.1038/s41597-025-05209-z` — Describes openneuro_ds006018 dataset containing EEG recordings from 127 young adults during ERP CORE paradigms including active visual oddball (P300), with stimulus event codes S211 (target) and S 11 (standard).
 - **Kernel Notes**: Map S 11 to standard (non-target) and S211 to oddball (target) labels. Apply baseline correction [-0.1, 0] s. Filter 0.1-40 Hz. Verify event ID mapping from events.tsv.
 
 ### Classical Task 2: Passive Auditory Oddball (MMN) binary classification
@@ -78,7 +72,7 @@ A suite of standardized ERP tasks from the ERP CORE compendium (Kappenman et al.
   | `S 80` | 0 | Standard tone (frequent) |
   | `S201` | 1 | Deviant tone (oddball, MMN-eliciting) |
 - **Evidence**:
-  - DOI: `10.1038/s41597.025.05209.z` — Describes openneuro_ds006018 dataset containing EEG recordings during passive auditory oddball (MMN) paradigm with stimulus event codes S 80 (standard) and S201 (deviant).
+  - DOI: `10.1038/s41597-025-05209-z` — Describes openneuro_ds006018 dataset containing EEG recordings during passive auditory oddball (MMN) paradigm with stimulus event codes S 80 (standard) and S201 (deviant).
 - **Kernel Notes**: Epoch standard MMN window [-0.2, 1.0] s. Apply standard MMN analysis pipeline. Verify event ID mapping from events.tsv.
 
 ### Classical Task 3: Visual Search (N2pc) classification
@@ -93,7 +87,7 @@ A suite of standardized ERP tasks from the ERP CORE compendium (Kappenman et al.
   | `S122` | 0 | Search array with target present (color-specific) |
   | `S212` | 1 | Search array with different target color |
 - **Evidence**:
-  - DOI: `10.1038/s41597.025.05209.z` — Describes openneuro_ds006018 dataset containing EEG recordings during visual search task (N2pc paradigm) with stimulus event codes including S122 and S212.
+  - DOI: `10.1038/s41597-025-05209-z` — Describes openneuro_ds006018 dataset containing EEG recordings during visual search task (N2pc paradigm) with stimulus event codes including S122 and S212.
 - **Kernel Notes**: N2pc requires contralateral-ipsilateral difference wave analysis. Verify event ID mapping from events.tsv.
 
 ### Classical Task 4: Flanker Task (ERN) classification
@@ -108,7 +102,7 @@ A suite of standardized ERP tasks from the ERP CORE compendium (Kappenman et al.
   | `S111` | 0 | Congruent flanker condition |
   | `S222` | 1 | Incongruent flanker condition |
 - **Evidence**:
-  - DOI: `10.1038/s41597.025.05209.z` — Describes openneuro_ds006018 dataset containing EEG recordings during flanker tasks for cognitive electrophysiology with stimulus event codes S111 (congruent) and S222 (incongruent).
+  - DOI: `10.1038/s41597-025-05209-z` — Describes openneuro_ds006018 dataset containing EEG recordings during flanker tasks for cognitive electrophysiology with stimulus event codes S111 (congruent) and S222 (incongruent).
 - **Kernel Notes**: ERN analysis requires response-locked epochs. May require combining stimulus and response markers. Verify event ID mapping from events.tsv.
 
 ### Potential Task 1: ERP CORE Multi-paradigm (epoch_by_event)

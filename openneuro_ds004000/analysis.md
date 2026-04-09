@@ -8,7 +8,6 @@
 
 A social decision-making study in which patients with psychosis and healthy controls played the Ultimatum Game in both responder and proposer roles across multiple blocks. EEG was recorded while participants decided to accept or reject monetary offers from a human or computer partner, enabling investigation of fairness processing and social cognition differences in psychosis.
 
-
 ## File Scan Result
 
 > **Kernel**: N/A
@@ -34,7 +33,6 @@ A social decision-making study in which patients with psychosis and healthy cont
 | `Response/R 1` | 6 files | event | raw | Button press response |
 | `Response/R 3` | 1 file | event | raw | Button press response |
 
-
 ### Info
 
 | Field | Completeness | Notes |
@@ -42,12 +40,6 @@ A social decision-making study in which patients with psychosis and healthy cont
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Stimulus/S 1`, `Stimulus/S 2`, `Stimulus/S 3`, `Stimulus/S 4`, `Stimulus/S 64`, `Stimulus/S 96`, `Stimulus/S128`, `Stimulus/S160`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -88,7 +80,6 @@ A social decision-making study in which patients with psychosis and healthy cont
 - Large number of distinct Stimulus/ codes; full mapping requires consulting the study protocol
 - UserDefined/Blink and Time 0/ are administrative markers to exclude
 - 43 subjects x ~2 sessions = 84 files; verify session structure
-
 
 ## Kernel Responsibilities
 

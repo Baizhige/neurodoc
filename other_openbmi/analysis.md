@@ -1,22 +1,23 @@
 # OpenBMI Motor Imagery EEG Dataset
 
-**Dataset**: `other_openbmi` | **Year**: 2019 | **URL**: https://gigadb.org/dataset/view/id/100542/File_page/5
+**Dataset**: `other_openbmi` | **Year**: 2019 | **URL**: https://gigadb.org/dataset/100542
 **Category**: Action/Output | **Subjects**: 54 | **Files (Completed)**: 108 | **Channels**: 62 | **Sampling Rate**: 1000 Hz
+**Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
-Fifty-four subjects (ages 19-32, mixed sex) performed two-class cued motor imagery of the left and right hand across two sessions each (Lee et al., 2019). EEG was recorded from 62 channels (BrainAmp, Brain Products; Ag/AgCl cap) at 1000 Hz. Each session contained 100 trials per class (50 left + 50 right hand MI), yielding 200 trials per session per subject. The motor imagery epoch lasts 3 seconds. Trial onset times and class labels are stored in MATLAB struct fields (`EEG_MI_train.t` for sample indices and `EEG_MI_train.y_class` for labels); the kernel extracts these and creates 3-second MNE annotations.
-
+Fifty-four healthy subjects (24–35 years old; 25 females) participated in the OpenBMI experiments, which were recorded across two sessions on different days. For the motor imagery (MI) paradigm, EEG was acquired at 1000 Hz using a BrainAmp amplifier (Brain Products, Munich, Germany) with 62 Ag/AgCl EEG electrodes. The binary MI task comprised left- and right-hand imagery. In each trial, subjects first fixated on a central cross for 3 s and then performed the cued imagery task for 4 s according to a left or right arrow. Each MI session consisted of two phases, an offline training phase and an online test phase, and each phase contained 100 trials with balanced left- and right-hand imagery tasks. In the validation procedure reported in the paper, MI decoding was performed using 20 electrodes over the motor cortex, and EEG epochs were extracted from 1000 to 3500 ms relative to stimulus onset.
 
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `66f8dfdbe76e3ef8af50220928aa968f28bfe243dc447a9f51c7bc9df487ecf9`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|---|---|---|---|---|
 | `left hand MI` | 5400 | event | raw | Left-hand motor imagery trial onset (50/session x 2 sessions x 54 subjects) |
 | `right hand MI` | 5400 | event | raw | Right-hand motor imagery trial onset (50/session x 2 sessions x 54 subjects) |
 
@@ -25,9 +26,11 @@ Fifty-four subjects (ages 19-32, mixed sex) performed two-class cued motor image
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | partial (108/436) | N/A |
+| `subject_sex` | partial (108/436) | N/A |
 | `device` | missing | N/A |
+
+
 ## Tasks
 
 ### Classical Task 1: Motor imagery decoding - Left vs. Right Hand
@@ -44,18 +47,11 @@ Fifty-four subjects (ages 19-32, mixed sex) performed two-class cued motor image
 - **Evidence**:
   - DOI: 10.1093/gigascience/giz002 — OpenBMI dataset with 54 subjects performing binary motor imagery (left vs right hand) across two sessions, using EEG epochs for CSP+LDA classification
   - DOI: 10.1016/j.neunet.2020.12.013 — Uses OpenBMI dataset for deep CNN-based transfer learning achieving 84.19% average accuracy
-- **Kernel Notes**: Class labels may vary by paper; some works (e.g., Lee et al., 2019 in Neural Networks) use inverse mapping (left=1, right=0). Verify label mapping from y_class field or events.tsv. Dataset spec: 3-second MI epoch; papers analyze 1000-3500ms window for CSP features. (replaces Potential Task 1 from original analysis.md)
+- **Kernel Notes**: 
 
 ## Data Quality Notes
-
-- Subject demographics: 54 subjects, ages 19-32, mixed sex.
-- Two sessions per subject enable cross-session analysis and session-to-session learning stability.
-- High sampling rate (1000 Hz); consider downsampling to 250 Hz for computational efficiency.
-- MATLAB struct-based event extraction; requires `EEG_MI_train` field to be present in `.mat` file.
-- 62-channel standard 10-20 montage with Ag/AgCl electrodes.
-
 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: completed

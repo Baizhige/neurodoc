@@ -7,7 +7,6 @@
 
 Participants performed an attentional blink (AB) task using a Rapid Serial Visual Presentation (RSVP) stream to identify two targets (T1 and T2) embedded in a stream of distractors. EEG was recorded before, during, and after receiving anodal or cathodal transcranial Direct Current Stimulation (tDCS) to study how cortical excitability modulates the attentional blink - the impaired detection of T2 when it follows T1 within ~500 ms. BioSemi STATUS channel encodes trial conditions as numeric codes.
 
-
 ## File Scan Result
 
 > **Kernel**: N/A
@@ -43,12 +42,6 @@ Participants performed an attentional blink (AB) task using a Rapid Serial Visua
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stimulus_onset`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

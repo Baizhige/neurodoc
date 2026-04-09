@@ -48,6 +48,12 @@ High-density EEG recordings were collected during a visual stimulation task usin
 | `Stimulus/S 54` | 31 | event | raw | Visual stimulus condition S54 |
 | `Stimulus/S 4` | 31 | event | raw | Visual stimulus condition S4 |
 
+### MISC Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `Stimulus/S 5`, `Stimulus/S 2`, `Stimulus/S 42`, `Stimulus/S 11`, `Stimulus/S 51`, `Stimulus/S 8`, `Stimulus/S 45`, `Stimulus/S 56`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -56,12 +62,6 @@ High-density EEG recordings were collected during a visual stimulation task usin
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Stimulus/S 5`, `Stimulus/S 2`, `Stimulus/S 42`, `Stimulus/S 11`, `Stimulus/S 51`, `Stimulus/S 8`, `Stimulus/S 45`, `Stimulus/S 56`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

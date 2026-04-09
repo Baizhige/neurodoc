@@ -8,18 +8,6 @@
 
 Subjects engaged in focused meditation sessions that were interrupted every two minutes by a brief probe assessing concentration level and mind-wandering. EEG was recorded continuously with stimulus markers at probe onsets and response markers at button-press responses. The study examined neural correlates of sustained attention and mind-wandering during meditation using ERP and time-frequency analysis.
 
-## Subject Information
-
-<!-- AUTO-KERNEL-SUBJECT-INFO:START -->
-> **Kernel Fact Source**: current kernel scan from `/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-- **Record Count**: 40
-- **Age Completeness**: 38/40 (95.0%)
-- **Sex Completeness**: 40/40 (100.0%)
-- **Observed Age Examples**: `32.0`, `35.0`, `41.0`, `29.0`, `34.0`, `43.0`, `33.0`, `62.0`
-- **Observed Sex Examples**: `Male`, `Female`
-<!-- AUTO-KERNEL-SUBJECT-INFO:END -->
-
-
 ## File Scan Result
 
 > **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds001787.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
@@ -30,6 +18,7 @@ Subjects engaged in focused meditation sessions that were interrupted every two 
 <!-- AUTO-KERNEL-EVENT-STRUCTURE:START -->
 > **Kernel Fact Source**: current kernel scan from `/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
 > **Meaning Policy**: `Meaning` is interpretive; `Event ID / Count / Type / Meta Level` are kernel-derived facts.
+
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -63,6 +52,16 @@ Subjects engaged in focused meditation sessions that were interrupted every two 
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+
+
+**Subject Info**:
+> **Kernel Fact Source**: current kernel scan from `/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
+- **Record Count**: 40
+- **Age Completeness**: 38/40 (95.0%)
+- **Sex Completeness**: 40/40 (100.0%)
+- **Observed Age Examples**: `32.0`, `35.0`, `41.0`, `29.0`, `34.0`, `43.0`, `33.0`, `62.0`
+- **Observed Sex Examples**: `Male`, `Female`
+
 ## Tasks
 
 ### Classical Task 1: EEG ISA-GSR Phase-Amplitude Coupling Classification

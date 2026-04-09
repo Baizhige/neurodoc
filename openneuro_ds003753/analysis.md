@@ -32,12 +32,6 @@ A reinforcement learning task involving probabilistic affective feedback to inve
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -78,3 +72,6 @@ A reinforcement learning task involving probabilistic affective feedback to inve
 
 > **Super Meta Required**: Yes
 > **Status**: wait_manual_review
+- **Stim Labeling**: Route `stim` with trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `STATUS`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.

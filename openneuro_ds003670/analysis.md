@@ -8,7 +8,6 @@
 
 Participants performed a continuous tracking task (CTT) requiring them to maintain a ball at the center of a screen to assess vigilance and sustained alertness. Simultaneously, multi-site transcranial electrical stimulation (tES) was applied at varying dose combinations (sham, low, high) to modulate arousal and attention. EEG, ECG, and behavioral tracking data were recorded concurrently. The study aims to identify optimal tES parameters for enhancing cognitive performance.
 
-
 ## File Scan Result
 
 > **Kernel**: N/A
@@ -23,7 +22,6 @@ Participants performed a continuous tracking task (CTT) requiring them to mainta
 | `Block Start` | 62 | event | raw | Task block onset marker |
 | `STATUS` | 62 | admin | raw | System status marker |
 
-
 ### Info
 
 | Field | Completeness | Notes |
@@ -31,12 +29,9 @@ Participants performed a continuous tracking task (CTT) requiring them to mainta
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Stimulation Start`, `Stimulation Stop`, `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+| `stim_route` | N/A | `stim` - Trigger-channel or stimulus-marker based labeling |
+| `stim_candidate_labels` | N/A | `Stimulation Start`, `Stimulation Stop`, `STATUS` |
+| `kernel_note` | N/A | Keep trigger decoding table versioned and auditable |
 
 ## Tasks
 
@@ -90,7 +85,6 @@ Participants performed a continuous tracking task (CTT) requiring them to mainta
 - Very high sampling rate (2000 Hz); downsample to 250-500 Hz for standard EEG analyses.
 - tES artifacts present during stimulation periods; independent component analysis required.
 - ECG channels included; can be used for cardiac artifact removal.
-
 
 ## Kernel Responsibilities
 

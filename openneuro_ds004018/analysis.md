@@ -8,18 +8,6 @@
 
 Rapid Serial Visual Presentation (RSVP) of 200 object images at two presentation frequencies (5 Hz and 20 Hz) to investigate the temporal dynamics of visual object representations. Images were categorized as "stars" or "boats" (two superordinate categories), allowing investigation of how presentation rate affects category-level neural decoding. This is a very small dataset (2 subjects).
 
-## Subject Information
-
-<!-- AUTO-KERNEL-SUBJECT-INFO:START -->
-> **Kernel Fact Source**: current kernel scan from `/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-- **Record Count**: 2
-- **Age Completeness**: 2/2 (100.0%)
-- **Sex Completeness**: 2/2 (100.0%)
-- **Observed Age Examples**: `32.0`
-- **Observed Sex Examples**: `Male`
-<!-- AUTO-KERNEL-SUBJECT-INFO:END -->
-
-
 ## File Scan Result
 
 > **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds004018.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
@@ -69,7 +57,7 @@ Rapid Serial Visual Presentation (RSVP) of 200 object images at two presentation
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|-------|---------|
   | `stars` | 0 | Star/celestial category RSVP image onset |
   | `boats` | 1 | Boat/vehicle category RSVP image onset |
 - **Evidence**:
@@ -84,7 +72,7 @@ Rapid Serial Visual Presentation (RSVP) of 200 object images at two presentation
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|-------|---------|
   | target | 1 | Target stimulus in RSVP stream |
   | distractor | 0 | Non-target distractor stimulus |
 - **Super Meta Notes**: Derived from raw event(s) [`stars`, `boats`] by analyzing trial-level target/distractor annotations in original study metadata. Kernel step: Load target vs distractor labels from original stimulus file (e.g., stimlist.csv) and merge with epoch timestamps based on presentation order.

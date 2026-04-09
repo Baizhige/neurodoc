@@ -98,7 +98,8 @@ class PhysionetHmcSleepStagingKernel:
         eps = _duration_epsilon(raw)
         for _, row_events in df.iterrows():
             event_type = str(row_events["Annotation"]).strip().rstrip(",")
-            if not str(event_type).startswith("Sleep stage "):
+            if not (str(event_type).startswith("Sleep stage ") or
+                    event_type in ("Lights off", "Lights on")):
                 continue
 
             try:

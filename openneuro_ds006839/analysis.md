@@ -7,18 +7,9 @@
 
 Participants performed an attentional task within a virtual reality environment while receiving sham neurofeedback with positive, negative, or control feedback valences. The study investigates alpha-band modulation in response to perceived performance feedback without actual neurofeedback. Numeric trigger codes mark trial onsets and feedback conditions. The paradigm examines placebo effects of neurofeedback on neural oscillations and attention.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006839
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -29,12 +20,17 @@ Participants performed an attentional task within a virtual reality environment 
 | `0` | 98 | admin | raw | Null/reset event |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-## STIM Label Summary
+
+### MISC Label Summary
 
 - **Route**: `stim`
 - **Role**: Trigger-channel or stimulus-marker based labeling.
 - **Candidate Trigger Labels**: Needs verification
 - **Kernel Note**: Keep trigger decoding table versioned and auditable.
+
+### Info
+
+- Numeric trigger codes require decoding from events.tsv or README.
 
 ## Tasks
 
@@ -86,6 +82,13 @@ Participants performed an attentional task within a virtual reality environment 
 - VR environment may introduce motion artifact; check for movement-related noise.
 - Numeric trigger codes require decoding from events.tsv or README.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `EEG recordings during sham neurofeedback in virtual reality`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation, stim
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006839

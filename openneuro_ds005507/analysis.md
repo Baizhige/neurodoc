@@ -42,7 +42,6 @@ The Healthy Brain Network (HBN) EEG Release 3 is a large-scale, multi-task devel
 - **Candidate Labels**: `externalizing_factor`, `p_factor`, `response_time`
 - **Kernel Note**: Keep derivation source, unit, and version metadata.
 
-
 ### Info
 
 | Field | Completeness | Notes |
@@ -50,12 +49,6 @@ The Healthy Brain Network (HBN) EEG Release 3 is a large-scale, multi-task devel
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stim_ON`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

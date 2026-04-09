@@ -56,12 +56,6 @@ Multi-task EEG battery investigating hemispheric asymmetries across resting stat
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Stimulus/S111`, `Stimulus/S223`, `Stimulus/S212`, `Stimulus/S214`, `Stimulus/S211`, `Stimulus/S123`, `Stimulus/S114`, `Stimulus/S112`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

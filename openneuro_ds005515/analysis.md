@@ -49,12 +49,6 @@ The Healthy Brain Network (HBN) EEG Release 10 is a large-scale, multi-task deve
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stim_ON`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -66,7 +60,7 @@ The Healthy Brain Network (HBN) EEG Release 10 is a large-scale, multi-task deve
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|--------|
   | `left_target` | 0 | Left-tilted stimulus onset (contrast change) |
   | `right_target` | 1 | Right-tilted stimulus onset (contrast change) |
 - **Evidence**:
@@ -81,7 +75,7 @@ The Healthy Brain Network (HBN) EEG Release 10 is a large-scale, multi-task deve
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|--------|
   | `resting_start` | 0 | Resting-state block onset |
   | `video_start` | 1 | Naturalistic video viewing onset |
   | `contrastTrial_start` | 2 | Contrast detection trial block onset |

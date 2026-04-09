@@ -33,6 +33,12 @@ Participants passively viewed game boards depicting varying numbers of game piec
 | `Stimulus/S118` | 863 | event | raw | Stimulus condition (3-digit code) |
 | `Stimulus/S218` | 863 | event | raw | Stimulus condition (3-digit code) |
 
+### MISC Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `Stimulus/S 95`, `Stimulus/S 21`, `Stimulus/S 11`, `Stimulus/S 15`, `Stimulus/S127`, `Stimulus/S223`, `Stimulus/S111`, `Stimulus/S124`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -41,12 +47,6 @@ Participants passively viewed game boards depicting varying numbers of game piec
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Stimulus/S 95`, `Stimulus/S 21`, `Stimulus/S 11`, `Stimulus/S 15`, `Stimulus/S127`, `Stimulus/S223`, `Stimulus/S111`, `Stimulus/S124`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

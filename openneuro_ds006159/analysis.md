@@ -7,18 +7,9 @@
 
 An experimental study investigating the neural correlates of implicit learning using a BioSemi EEG system. Participants underwent repeated exposure to structured sequences without explicit instructions to learn the underlying patterns. No trial-level event annotations are present in the dataset; the EEG is recorded as a continuous stream during the implicit learning protocol.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006159
-
-## Event Structure
+### Event Structure
 
 _No event markers detected (`no_events`). This dataset contains continuous EEG recordings without trial-level annotations._
 
@@ -28,12 +19,16 @@ _No event markers detected (`no_events`). This dataset contains continuous EEG r
 |----------|---------------|------|------------|---------|
 | `no_events` | N/A | admin | raw | No discrete event markers detected; use continuous segmentation or external metadata labels. |
 
+### Info
+
+No additional scan result info available.
+
 ## Tasks
 
 ### Primary Task 1: Publisher-defined BIDS task: Implicitlearn
 - **Task Type**: classification/segmentation
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
+- **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, target_events = [Needs Verification]
 - **Label Route**: `Annotation`
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds006159 DOI: https://doi.org/10.18112/openneuro.ds006159.v1.0.0
@@ -46,11 +41,19 @@ _No event markers detected (`no_events`). This dataset contains continuous EEG r
 - **Label Route**: `Annotation`
 - **Target Definition**: N/A (no event markers; segmentation only)
 - **Notes**: No trial-level events available; purely continuous EEG. Labels must be derived from external metadata (e.g., block condition labels from participants.tsv if available).
+
 ## Data Quality Notes
 
 - No event markers present; continuous-only processing.
 - Apply bandpass filter (0.5-40 Hz) and artifact rejection prior to segmentation.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006159

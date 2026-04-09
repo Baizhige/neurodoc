@@ -26,17 +26,12 @@ Participants performed an oddball task with cross-modal stimuli (visual and audi
 
 ### Info
 
+
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `S 1`, `S 2`, `S 3`, `S255`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

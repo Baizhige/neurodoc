@@ -7,18 +7,9 @@
 
 Participants learned to produce and judge short, medium, and long temporal intervals through interleaved production and perception tasks with visual feedback. Trigger codes encode condition combinations: tens digit indicates task type and interval length (1x=production, 2x-6x=other conditions), units digit indicates subcondition or phase. The study investigates how humans scale temporal interval representations.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004200
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -48,12 +39,10 @@ Participants learned to produce and judge short, medium, and long temporal inter
 | `2` | ~20 | admin | raw | Block/session boundary marker |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-## STIM Label Summary
 
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: Needs verification
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+### Info
+
+[Placeholder content]
 
 ## Tasks
 
@@ -99,11 +88,19 @@ Participants learned to produce and judge short, medium, and long temporal inter
  | `47` | 20 | Feedback 4 |
  | `57` | 21 | Feedback 5 |
  | `67` | 22 | Feedback 6 |
+
 ## Data Quality Notes
 
 - Numerical trigger codes require decode from paper
 - Small dataset (N=20)
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Temporal Scaling`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation, stim
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004200

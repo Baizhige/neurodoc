@@ -7,7 +7,6 @@
 
 Participants learned and performed specific rhythmic drumming patterns at varying tempos using keyboard keys, receiving adaptive visual feedback on timing accuracy. EEG was recorded continuously during drumming training. Each key press generates a Stimulus event marker; the dataset contains thousands of drumming events per participant (2300-4700 Stimulus events per file).
 
-
 ## File Scan Result
 
 > **Kernel**: N/A
@@ -21,6 +20,12 @@ Participants learned and performed specific rhythmic drumming patterns at varyin
 | `New Segment` | 21 | admin | raw | Recording segment boundary |
 | `Comment` | 21 | admin | raw | Experimenter comment marker |
 
+### MISC Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `Stimulus`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -29,12 +34,6 @@ Participants learned and performed specific rhythmic drumming patterns at varyin
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Stimulus`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -46,7 +45,7 @@ Participants learned and performed specific rhythmic drumming patterns at varyin
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|----|---------|
   | `Stimulus` | continuous | Drum key press / beat onset |
   | `feedback_onset` * | continuous | Feedback onset (needs verification from events.tsv) |
 - **Super Meta Notes**: (none - raw meta level)
@@ -66,7 +65,7 @@ Participants learned and performed specific rhythmic drumming patterns at varyin
 - **Label Route**: `event`
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|----|---------|
   | `Stimulus` | 0 | Drum key press / beat onset |
 - **Notes**: Only one event class. Useful for stimulus-locked ERP analysis. New Segment and Comment are admin events, excluded.
 
@@ -80,8 +79,3 @@ Participants learned and performed specific rhythmic drumming patterns at varyin
 
 > **Super Meta Required**: No
 > **Status**: wait_manual_review
-## Data Quality Notes
-
-- Very high event rate; check for event jitter in timing accuracy analysis
-- Only 21 subjects; limited generalizability
-

@@ -21,6 +21,12 @@ A multimodal neuroimaging database of healthy middle-aged adults (50-63 years) c
 | `stimulus` | 27862 | event | raw | Stimulus onset (MSIT or Sternberg item) |
 | `response` | 24051 | event | raw | Participant button-press response |
 
+### MISC Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `stimulus`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -29,12 +35,6 @@ A multimodal neuroimaging database of healthy middle-aged adults (50-63 years) c
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stimulus`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -92,6 +92,7 @@ A multimodal neuroimaging database of healthy middle-aged adults (50-63 years) c
 - **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: 233 files = 79 subjects x ~3 sessions. Resting-state sessions have no stimulus events; only task sessions contribute stimulus/response epochs.
+
 
 | Event | y | Meaning |
  |-------|---|------|

@@ -33,12 +33,6 @@ Participants engaged in naturalistic listening to excerpts of "Le Petit Prince" 
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Stimulus/S 11`, `Stimulus/S 31`, `Stimulus/S 32`, `Stimulus/S 33`, `Stimulus/S 34`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

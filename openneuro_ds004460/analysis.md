@@ -27,6 +27,12 @@ Participants performed a spatial orientation task in a virtual environment, navi
 | `('/Event/Category/Experimental stimulus/Instruction/Read/'` | 40 | event | raw | Read instruction stimulus |
 | `duration` | 40 | admin | raw | Duration annotation |
 
+### MISC Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `('/Event/Category/Experimental stimulus/Instruction/Attend/'`, `('/Event/Category/Experimental stimulus/Instruction/Read/'`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -35,12 +41,6 @@ Participants performed a spatial orientation task in a virtual environment, navi
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `('/Event/Category/Experimental stimulus/Instruction/Attend/'`, `('/Event/Category/Experimental stimulus/Instruction/Read/'`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

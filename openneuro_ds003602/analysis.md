@@ -8,18 +8,9 @@
 
 This study investigates neurobehavioral mechanisms linking childhood sexual abuse (CSA) history and problem drinking in women using affective picture viewing and startle paradigms. Participants viewed negative, neutral, and positive images including alcohol-related and non-alcohol-related content while EEG, EMG (startle), and physiological measures were recorded. Resting-state blocks (eyes open/closed) were also included. The study examines how trauma history modulates emotional reactivity and appetitive motivation for alcohol cues.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003602
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -48,12 +39,17 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 > - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
 > - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **not used for epoch**
-## STIM Label Summary
+
+### MISC Label Summary
 
 - **Route**: `stim`
 - **Role**: Trigger-channel or stimulus-marker based labeling.
 - **Candidate Trigger Labels**: `NegStim`, `NeuStim`, `PosStim`, `NegAlcStimWithoutStartle`, `NeuAlcStimWithoutStartle`, `PosAlcStimWithoutStartle`, `NegNonAlcStimWithoutStartle`, `NeuNonAlcStimWithoutStartle`
 - **Kernel Note**: Keep trigger decoding table versioned and auditable.
+
+### Info
+
+[Placeholder for additional file scan result information]
 
 ## Tasks
 
@@ -75,16 +71,24 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 - **Notes**: Balanced across valence conditions (~230 per category). Large dataset (699 files). Alcohol-related vs non-alcohol-related stimulus distinction available for secondary analysis.
 
 | Event | y | Meaning |
- |-------|---|------|
+|-------|---|--------|
 | `NegStim` | 0 | Negative pictures |
 | `NeuStim` | 1 | Neutral image |
 | `PosStim` | 2 | Positive pictures |
+
 ## Data Quality Notes
 
 - Large dataset with 30+ distinct event types; group by valence (Neg/Neu/Pos) and content (Alc/NonAlc) for tractable analysis.
 - Eyes Open/Closed markers are resting-state block delimiters, not trial-level stimuli.
 - `ignore` and `EndOfRest` are administrative markers; exclude from epoching.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms. OpenNeuro ds003602.`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation, stim
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003602

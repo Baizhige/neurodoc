@@ -8,7 +8,6 @@
 
 An auditory three-stimulus oddball task in which participants pressed a key in response to infrequent target tones among frequent standard tones and rare distractor tones. The paradigm is designed to elicit P300 event-related potentials. Event labels `stimulus` (tone onset) and `response` (keypress) are present in all 39 files; `STATUS` appears as a BioSemi admin marker in 2 files.
 
-
 ## File Scan Result
 
 > **Kernel**: N/A
@@ -22,14 +21,12 @@ An auditory three-stimulus oddball task in which participants pressed a key in r
 | `response` | 39 (files) | event | raw | Participant keypress response |
 | `STATUS` | 2 (files) | admin | raw | BioSemi system status marker - exclude |
 
-
 ### MISC Label Summary
 
 - **Route**: `misc`
 - **Role**: Stores derived/continuous labels that are not native raw event IDs.
 - **Candidate Labels**: `reaction_time`, `response_time`
 - **Kernel Note**: Keep derivation source, unit, and version metadata.
-
 
 ### Info
 
@@ -38,14 +35,9 @@ An auditory three-stimulus oddball task in which participants pressed a key in r
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stimulus`, `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
+
 
 ### Classical Task 1: Auditory Oddball Target vs Standard Classification
 - **Task Type**: classification
@@ -72,7 +64,7 @@ An auditory three-stimulus oddball task in which participants pressed a key in r
 - **Notes**: `STATUS` is a BioSemi CM_in_range admin marker - excluded. `response` marks keypresses; reaction time computed per trial. The events.tsv `trial_type` may further distinguish standard, target, and distractor tone types - check for sub-classification.
 
 | Event | y | Meaning |
-|-------|---|------|
+|-------|---|---------|
 | `stimulus` | 0 | Auditory tone onset |
 
 - **Regression target**:`response_time`(reaction time from stimulus to response, from misc channel)

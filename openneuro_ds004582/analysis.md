@@ -7,18 +7,9 @@
 
 Participants viewed fake face images with different emotional expressions while EEG was recorded. The dataset contains continuous EEG recordings; only hardware/metadata markers (New Segment, Comment) are present in the event files rather than trial-level stimulus markers. No trial-level event markers are available for epoch-based analysis.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004582
-
-## Event Structure
+### Event Structure
 
 _No task event markers detected (`no_events`). Only hardware/metadata markers present._
 
@@ -32,12 +23,20 @@ _No task event markers detected (`no_events`). Only hardware/metadata markers pr
 > - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **not used for epoch**
 
+### MISC Label Summary
+
+No MISC labels detected in this dataset.
+
+### Info
+
+No additional scan information available.
+
 ## Tasks
 
 ### Primary Task 1: Publisher-defined BIDS task: FF
 - **Task Type**: classification/segmentation
 - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
+- **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, overlap = Needs Verification, target_events = [Needs Verification] | segment_length = Needs Verification, overlap = Needs Verification
 - **Label Route**: `Annotation`
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004582 DOI: https://doi.org/10.18112/openneuro.ds004582.v1.0.0
@@ -56,6 +55,13 @@ _No task event markers detected (`no_events`). Only hardware/metadata markers pr
 - New Segment/ is a hardware-only event and should not be used for epoching
 - 30 subjects with continuous EEG recordings
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `FakeFaceEmo_data`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004582

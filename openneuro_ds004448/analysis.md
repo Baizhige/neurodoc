@@ -9,18 +9,6 @@
 
 Participants performed a sensorimotor rhythm-based brain-computer interface task using high-density scalp EEG. This is the fourth BMI-HDEEG dataset with a two-class (binary) motor imagery design (left hand vs. right hand). Only one event code is present in the data, suggesting the class label is encoded differently.
 
-## Subject Information
-
-<!-- AUTO-KERNEL-SUBJECT-INFO:START -->
-> **Kernel Fact Source**: current kernel scan from `/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-- **Record Count**: 280
-- **Age Completeness**: 280/280 (100.0%)
-- **Sex Completeness**: 280/280 (100.0%)
-- **Observed Age Examples**: `23`, `22`, `24`, `21`, `33`, `50`, `20`, `58`
-- **Observed Sex Examples**: `Male`, `Female`
-<!-- AUTO-KERNEL-SUBJECT-INFO:END -->
-
-
 ## File Scan Result
 
 > **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds004448.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
@@ -45,19 +33,6 @@ Participants performed a sensorimotor rhythm-based brain-computer interface task
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-<!-- AUTO-KERNEL-STIM:START -->
-> **Kernel Fact Source**: current kernel scan from `/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-> **Meaning Policy**: `Meaning` is interpretive; `Label / Source / Meta Level` are kernel-derived facts.
-
-| Label / Field | Source | Meta Level | Meaning |
-|---------------|--------|------------|---------|
-| `Status` | raw:stim_channel | raw | Unresolved from current kernel facts |
-<!-- AUTO-KERNEL-STIM:END -->
-
-- **Route**: `stim`
-- **Role**: Kernel-derived label summary for the current route only.
 
 ## Tasks
 
@@ -86,9 +61,9 @@ Participants performed a sensorimotor rhythm-based brain-computer interface task
 - **Notes**: Only one numerical code (1) visible in locator_meta; actual binary class label likely encoded in events.tsv metadata columns or file-level metadata. Specific kernel required.
 
 | Event | y | Meaning |
- |-------|---|------|
- | `left_hand_MI` | 0 | Left hand motor imagery |
- | `right_hand_MI` | 1 | Right hand motor imagery |
+|-------|---|------|
+| `left_hand_MI` | 0 | Left hand motor imagery |
+| `right_hand_MI` | 1 | Right hand motor imagery |
 
 ## Data Quality Notes
 

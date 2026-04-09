@@ -7,7 +7,6 @@
 
 Naturalistic nightly sleep monitoring using ear-EEG (in-ear electrodes) and polysomnography (PSG) in an ecological home environment where participants self-applied the recording equipment. The study investigates the feasibility of home-based sleep staging using miniaturized ear-EEG compared to gold-standard PSG. The `trigger` event marks synchronization pulses between the ear-EEG and PSG systems.
 
-
 ## File Scan Result
 
 > **Kernel**: N/A
@@ -19,6 +18,12 @@ Naturalistic nightly sleep monitoring using ear-EEG (in-ear electrodes) and poly
 |----------|---------------|------|------------|---------|
 | `trigger` | 175 | event | raw | Synchronization trigger between ear-EEG and PSG |
 
+### MISC Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `trigger`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -27,12 +32,6 @@ Naturalistic nightly sleep monitoring using ear-EEG (in-ear electrodes) and poly
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `trigger`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -61,7 +60,6 @@ Naturalistic nightly sleep monitoring using ear-EEG (in-ear electrodes) and poly
 - Only 5 channels (ear-EEG) - very limited spatial resolution.
 - No sleep stage labels in events.tsv; PSG annotations needed for staging.
 - Home-recorded data - subject-specific motion and environmental artifacts expected.
-
 
 ## Kernel Responsibilities
 

@@ -26,7 +26,6 @@ Participants played real table tennis matches in two conditions: cooperative (ra
 | `STATUS` | ~19xN | admin | raw | BrainVision hardware status marker |
 | `M 1` | ~19xN | admin | raw | Miscellaneous hardware marker |
 
-
 ### Info
 
 | Field | Completeness | Notes |
@@ -34,12 +33,6 @@ Participants played real table tennis matches in two conditions: cooperative (ra
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -76,7 +69,6 @@ Participants played real table tennis matches in two conditions: cooperative (ra
 
 - Real-world mobile EEG with significant motion artifacts expected
 - STATUS and M 1 are hardware markers, not task events
-
 
 ## Kernel Responsibilities
 

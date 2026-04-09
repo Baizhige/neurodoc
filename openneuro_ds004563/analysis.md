@@ -7,19 +7,9 @@
 
 Participants either saw someone else being touched (vicarious touch, event 4) or felt touch themselves (direct touch, event 1). EEG was recorded to investigate overlapping neural patterns between observed and experienced tactile stimulation. The study tests whether vicarious touch engages somatosensory cortex similarly to directly felt touch.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 2 + Type 3
-> **Why**: Derived targets are needed beyond raw markers.
-> **Primary Label Routes**: Annotation, misc
-> **Evidence Keywords**: regression target
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004563
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -31,14 +21,20 @@ Participants either saw someone else being touched (vicarious touch, event 4) or
 > - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
 > - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **not used for epoch**
-## MISC Label Summary
+
+### MISC Label Summary
 
 - **Route**: `misc`
 - **Role**: Stores derived labels (super meta) not directly present in raw event IDs.
 - **Candidate Labels**: Needs verification
 - **Kernel Note**: Document derivation logic, source fields, units, and version tags.
 
+### Info
+
+No additional scan information available.
+
 ## Tasks
+
 
 ### Primary Task 1: Publisher-defined BIDS task: Touch decoding
 - **Task Type**: classification/segmentation
@@ -68,11 +64,20 @@ Participants either saw someone else being touched (vicarious touch, event 4) or
 
 - **Regression Target / Label**: Needs verification
 - **Kernel Notes**: Derive and version super-meta in kernel.
+
 ## Data Quality Notes
 
 - 29 subjects with binary condition structure
 - 64 channels at 512 Hz
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Vicarious touch: overlapping neural patterns between seeing and feeling touch`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 2 + Type 3
+> **Why**: Derived targets are needed beyond raw markers.
+> **Primary Label Routes**: Annotation, misc
+> **Evidence Keywords**: regression target
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004563

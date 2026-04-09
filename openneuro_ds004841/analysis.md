@@ -7,18 +7,9 @@
 
 Participants monitored a semi-autonomous vehicle system and performed local situational awareness tasks within a simulated environment, with EEG recorded to characterize cognitive states during supervised automation. Event codes are hierarchically structured 7-digit identifiers encoding operational state and task type.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004841
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -36,6 +27,9 @@ Participants monitored a semi-autonomous vehicle system and performed local situ
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
 
+### Info
+[Placeholder for file scan metadata]
+
 ## Tasks
 
 ### Primary Task 1: Publisher-defined BIDS task: Drive On Mission
@@ -45,7 +39,6 @@ Participants monitored a semi-autonomous vehicle system and performed local situ
 - **Label Route**: `Annotation`
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004841 DOI: https://doi.org/10.18112/openneuro.ds004841.v1.0.1
-
 
 ### Normal Task 1: Operational State Classification (multiclass)
 - **Task Type**: classification
@@ -63,11 +56,19 @@ Participants monitored a semi-autonomous vehicle system and performed local situ
  | `4310000` | 3 | Operational state code |
  | `4100001` | 4 | Operational state code |
  | `4320000` | 5 | Operational state code |
+
 ## Data Quality Notes
 
 - 7-digit hierarchical numeric codes - full decode needed.
 - Only 11 subjects; limited sample size for generalization.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `TX14. ReadMe: TX14 dataset`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004841

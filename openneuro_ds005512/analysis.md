@@ -48,12 +48,6 @@ The Healthy Brain Network (HBN) EEG Release 8 is a large-scale, multi-task devel
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stim_ON`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

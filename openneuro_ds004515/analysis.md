@@ -23,6 +23,12 @@ Participants (light and heavy drinkers) performed a reinforcement learning task 
 | `FB` | ~42xN | event | raw | Feedback onset |
 | `STATUS` | ~42xN | admin | raw | BrainVision hardware status marker |
 
+### MISC Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `STATUS`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -31,12 +37,6 @@ Participants (light and heavy drinkers) performed a reinforcement learning task 
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

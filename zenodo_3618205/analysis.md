@@ -7,40 +7,35 @@
 
 Forty-four participants (22 normal-hearing, 22 hearing-impaired) underwent EEG recording in three tasks (Fuglsang et al., 2020): (1) **selective auditory attention** - two-talker competing speech; attend to one of two simultaneously presented speakers; (2) **MMN** - mismatch negativity; passive listening to a standard tone sequence with occasional deviant tones; (3) **resting state** - eyes open and closed. EEG was recorded with BioSemi ActiveTwo (64 channels + reference + auxiliary = ~73 total channels, 512 Hz). Nineteen of the 44 subjects also had in-ear EEG recorded. Event annotations are stored in BIDS-format `_events.tsv` sidecar files.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
 
+> **Kernel SHA256**: `25fd07109b6a06499cc25ac1d336133aca00fb8d8a4ab201224974d4adc3b637`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `attend_left` | varies | event | raw | Subject attends to the left-ear speaker (selective attention trial) |
-| `attend_right` | varies | event | raw | Subject attends to the right-ear speaker (selective attention trial) |
-| (MMN deviant events) | varies | event | raw | Deviant tone stimulus onset (MMN paradigm) |
-| (resting state marker) | varies | event | raw | Resting state block onset |
-
->
-> Exact event codes from BIDS `_events.tsv` sidecars. Selective attention trial labels and MMN deviant markers are both present; parse task type from filename.
+| `attend_left` | 1056 | event | raw | Subject attends to the left-ear speaker (selective attention trial) |
+| `attend_right` | 1056 | event | raw | Subject attends to the right-ear speaker (selective attention trial) |
+| `event_192` | 2567 | event | raw |  |
+| `event_224` | 2577 | event | raw |  |
+| `event_240` | 7560 | event | raw |  |
 
 
 ### MISC Label Summary
-
 - **Route**: `misc`
 - **Role**: Stores derived labels (super meta) not directly present in raw event IDs.
 - **Candidate Labels**: Needs verification
 - **Kernel Note**: Document derivation logic, source fields, units, and version tags.
-
-
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Potential Task 1: Auditory Attention Decoding - Left vs. Right (epoch_by_long_event)
@@ -56,7 +51,6 @@ Forty-four participants (22 normal-hearing, 22 hearing-impaired) underwent EEG r
 | `attend_left` | 0 | Attend to left-ear speaker |
 | `attend_right` | 1 | Attend to right-ear speaker |
 
-
 ### Potential Task 2: Normal-Hearing vs. Hearing-Impaired Group Comparison (epoch_by_long_event)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
@@ -70,7 +64,6 @@ Forty-four participants (22 normal-hearing, 22 hearing-impaired) underwent EEG r
 - Three distinct task types (selective attention, MMN, rest); always filter files by task type before analysis.
 - 19 subjects also have in-ear EEG recordings; these appear as additional channels or separate files.
 - Hearing-impaired subjects may have different audiological profiles; audiogram data is available in the dataset.
-
 
 ## Kernel Responsibilities
 

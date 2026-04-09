@@ -10,8 +10,7 @@ Nine subjects (A01-A09) performed four-class cued motor imagery (BCI Competition
 
 ## File Scan Result
 
-
-> **Kernel SHA256**: `2a6c938f8173dde37b855f2d8139a8c35acff6738dfa73b10ce10f473eb9f693`
+> **Kernel SHA256**: `489182843c6974d9f77d2a7ccd1f1bad91a5f3eb1d01dfc7e15b3321e4eb8803`
 > **EEGUnity Version**: `0.8.0`
 > **Scan Type**: Full
 ### Event Structure

@@ -7,19 +7,9 @@
 
 Participants performed near-threshold visual detection tasks across three cueing conditions: no-cue (0% validity), noninformative cue (50% validity), and informative cue (100% validity). The study examines how spatial attention modulates near-threshold detection performance and associated EEG signatures. Stimuli were brief visual Gabor patches presented at or near detection threshold, and participants reported detection via button press. Behavioral columns (gabor_contrast, subjective_r, objective_r, response_time) stored in events.tsv enable regression analyses.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 2 + Type 3
-> **Why**: Derived targets are needed beyond raw markers.
-> **Primary Label Routes**: Annotation, stim, misc
-> **Evidence Keywords**: response_time
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006171
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -40,19 +30,17 @@ Participants performed near-threshold visual detection tasks across three cueing
 | `104` | 1529 | short | raw | No-cue - correct rejection (nocue_CR) |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-## MISC Label Summary
+
+### MISC Label Summary
 
 - **Route**: `misc`
 - **Role**: Stores derived/continuous labels that are not native raw event IDs.
 - **Candidate Labels**: `response_time`
 - **Kernel Note**: Keep derivation source, unit, and version metadata.
 
-## STIM Label Summary
+### Info
 
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: Needs verification
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+[Placeholder: File scan details not provided]
 
 ## Tasks
 
@@ -89,12 +77,21 @@ Participants performed near-threshold visual detection tasks across three cueing
  | `100pct_miss` | 11 | 100%-validity cue - miss |
  | `100pct_FA` | 12 | 100%-validity cue - false alarm |
  | `100pct_CR` | 13 | 100%-validity cue - correct rejection |
+
 ## Data Quality Notes
 
 - BioSemi 128/256-channel system; code `128` is a hardware boundary marker, not a stimulus.
 - Continuous behavioral columns (gabor_contrast, subjective_r, objective_r, response_time) available for regression.
 - Apply bandpass filter (0.1-40 Hz) and artifact rejection prior to epoching.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `EEG data during three near-threshold visual detection tasks: a no-cue task, a noninformative cue task (50% validity), and an informative cue task (100% validity)`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 2 + Type 3
+> **Why**: Derived targets are needed beyond raw markers.
+> **Primary Label Routes**: Annotation, stim, misc
+> **Evidence Keywords**: response_time
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006171

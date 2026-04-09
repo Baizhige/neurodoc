@@ -8,18 +8,6 @@
 
 Participants passively perceived rhythmic auditory tone sequences and visual flashing stimuli that occasionally omitted an expected beat, to study predictive neural activity (mismatch responses) versus sensory evoked responses. The paradigm investigates how the brain generates predictions based on temporal regularities and detects violations of expected rhythmic patterns. Only BioSemi STATUS admin markers are detectable in the locator metadata; no decoded trial events are available from the locator pipeline.
 
-## Subject Information
-
-<!-- AUTO-KERNEL-SUBJECT-INFO:START -->
-> **Kernel Fact Source**: current kernel scan from `/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-- **Record Count**: 18
-- **Age Completeness**: 0/18 (0.0%)
-- **Sex Completeness**: 0/18 (0.0%)
-- **Observed Age Examples**: N/A
-- **Observed Sex Examples**: N/A
-<!-- AUTO-KERNEL-SUBJECT-INFO:END -->
-
-
 ## File Scan Result
 
 > **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds002218.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
@@ -51,6 +39,7 @@ Participants passively perceived rhythmic auditory tone sequences and visual fla
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Auditory/Visual Rhythm Omission Classification (Beta Band Entrainment)

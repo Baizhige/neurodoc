@@ -8,19 +8,9 @@
 
 A visual motion discrimination task involving left/right direction decisions on random dot kinematogram (RDK) stimuli followed by a metacognitive confidence assessment using a visual analog scale. The numerical trigger codes encode stimulus direction, coherence level, response direction, confidence level, and feedback. The dataset supports both motion perception classification and confidence/metacognition regression.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 2 + Type 3
-> **Why**: Derived targets are needed beyond raw markers.
-> **Primary Label Routes**: Annotation, stim, misc
-> **Evidence Keywords**: response_time, confidence, regression target
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004367
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -37,19 +27,17 @@ A visual motion discrimination task involving left/right direction decisions on 
 > - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
 > - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **not used for epoch**
-## MISC Label Summary
+
+### MISC Label Summary
 
 - **Route**: `misc`
 - **Role**: Stores derived/continuous labels that are not native raw event IDs.
 - **Candidate Labels**: `confidence`, `response_time`
 - **Kernel Note**: Keep derivation source, unit, and version metadata.
 
-## STIM Label Summary
+### Info
 
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: Needs verification
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+- **STIM Label Summary**: Route `stim`, role trigger-channel or stimulus-marker based labeling. Candidate Trigger Labels: Needs verification. Kernel Note: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -71,20 +59,29 @@ A visual motion discrimination task involving left/right direction decisions on 
 - **Notes**: Numerical trigger codes require specific kernel decoding. Regression target: response_time and confidence from misc channels.
 
 | Event | y | Meaning |
- |-------|---|------|
- | `motion_stimulus_onset` | 0 | Motion stimulus onset |
- | `left_response` | 1 | Left direction response |
- | `right_response` | 2 | Right direction response |
- | `confidence_low` | 3 | Low confidence rating |
- | `confidence_medium` | 4 | Medium confidence rating |
- | `confidence_high` | 5 | High confidence rating |
- | `feedback_onset` | 6 | Feedback onset |
+|-------|---|-------|
+| `motion_stimulus_onset` | 0 | Motion stimulus onset |
+| `left_response` | 1 | Left direction response |
+| `right_response` | 2 | Right direction response |
+| `confidence_low` | 3 | Low confidence rating |
+| `confidence_medium` | 4 | Medium confidence rating |
+| `confidence_high` | 5 | High confidence rating |
+| `feedback_onset` | 6 | Feedback onset |
+
 ## Data Quality Notes
 
 - All event IDs are numerical codes requiring kernel-level decoding
 - 68 channels includes EOG/ECG channels
 - 42 subjects but only 40 files completed
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Meta-rdk: Raw EEG data`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 2 + Type 3
+> **Why**: Derived targets are needed beyond raw markers.
+> **Primary Label Routes**: Annotation, stim, misc
+> **Evidence Keywords**: response_time, confidence, regression target
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004367

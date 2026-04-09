@@ -8,18 +8,9 @@
 
 Participants evaluated their support for sociopolitical protest photographs following social influence cues from a fictitious community to assess how moral conviction and metacognitive ability modulate information processing. EEG was recorded while participants viewed protest photos (supporting or opposing social movements), received social feedback (high/low/medium agreement), and provided attitude ratings. The study examined how moral convictions and metacognitive ability shape early and late stages of social information processing.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004067
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -49,7 +40,8 @@ Participants evaluated their support for sociopolitical protest photographs foll
 > - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
 > - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **not used for epoch**
-## STIM Label Summary
+
+### Info
 
 - **Route**: `stim`
 - **Role**: Trigger-channel or stimulus-marker based labeling.
@@ -76,15 +68,23 @@ Participants evaluated their support for sociopolitical protest photographs foll
 - **Notes**: ProtestStart/End, ClipTaskStart/End, Social*start/end, Heroic*start/end, RestStart/End, and S 2 are all admin/structural markers to exclude. Resp1-Resp5 encode 5-point rating responses and can be used for regression. Social cues (SocLow/Med/High) can be used for a 3-class social influence task.
 
 | Event | y | Meaning |
- |-------|---|------|
- | `Stimulus/PhotoSupport` | 0 | Support-framing sociopolitical protest photo |
- | `Stimulus/PhotoOppose` | 1 | Oppose-framing sociopolitical protest photo |
+|-------|---|-------|
+| `Stimulus/PhotoSupport` | 0 | Support-framing sociopolitical protest photo |
+| `Stimulus/PhotoOppose` | 1 | Oppose-framing sociopolitical protest photo |
+
 ## Data Quality Notes
 
 - Large number of event types; careful exclusion of admin markers required
 - RestStart/RestEnd delimit resting-state blocks within the recording
 - High sampling rate (2000 Hz); consider downsampling to 500-1000 Hz
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Moral conviction and metacognitive ability shape multiple stages of information processing`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation, stim
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004067

@@ -32,12 +32,8 @@ A multi-modal neuroimaging study using Paired Associative Stimulation (PAS) comb
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Stimulus/A`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+| `stim_route` | N/A | Trigger-channel or stimulus-marker based labeling via `stim` route |
+| `candidate_trigger_labels` | N/A | `Stimulus/A` |
 
 ## Tasks
 
@@ -85,3 +81,4 @@ A multi-modal neuroimaging study using Paired Associative Stimulation (PAS) comb
 
 > **Super Meta Required**: Yes
 > **Status**: wait_manual_review
+> **Trigger Decoding**: Keep trigger decoding table versioned and auditable.

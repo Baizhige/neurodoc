@@ -30,12 +30,6 @@ Intracranial EEG was recorded from drug-resistant epilepsy patients undergoing p
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Comment/prestim`, `Comment/poststim`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

@@ -8,35 +8,32 @@
 
 Twenty-five patients suspected of sleep-disordered breathing underwent overnight polysomnographic (PSG) monitoring at University College Dublin (UCD). PSG files are stored in `.rec` format (EDF-compatible) and contain multiple physiological signals. Sleep stages were scored by expert technicians and stored in companion `_stage.txt` files (30-second epochs: Wake, Stage 1-4, REM). Companion `_lifecard.edf` ECG files are co-located per subject but are not EEG recordings and are skipped by the kernel (-> `unknown` annotations). The Case B kernel reconstructs continuous raw signals from the non-standard `.rec` format.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
 
+> **Kernel SHA256**: `ef8114aa4ce30e7dc890cb3f6b4943c6e8b9bab7d638a7e409dd4a091a7fdaa2`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Sleep stage W` | 4707 | event | raw | Wake (30-second epoch) |
 | `Sleep stage 1` | 3016 | event | raw | NREM Stage 1 (R&K) |
 | `Sleep stage 2` | 3403 | event | raw | NREM Stage 2 (R&K) |
 | `Sleep stage 3` | 6985 | event | raw | NREM Stage 3 - slow-wave sleep (R&K) |
 | `Sleep stage 4` | 673 | event | raw | NREM Stage 4 - deep SWS (R&K) |
-| `Sleep stage REM` | 1990 | event | raw | REM sleep |
 | `Sleep stage 8` | 15 | admin | raw | Undefined/artifact epoch (exclude from classification) |
-
->
-> Counts are totals across all 25 PSG files. `Sleep stage 8` indicates undefined or movement-time epochs. ECG `_lifecard.edf` files yield `unknown` annotations and should be excluded.
+| `Sleep stage REM` | 1990 | event | raw | REM sleep |
+| `Sleep stage W` | 4707 | event | raw | Wake (30-second epoch) |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Sleep Stage Classification (5-class AASM)
@@ -81,7 +78,6 @@ Twenty-five patients suspected of sleep-disordered breathing underwent overnight
 - Sleep stages in `_stage.txt` are encoded as pure integers (0,1,2,3,4,5,8) representing 30s epochs — kernel must implement numeric-to-stage mapping.
 - R&K scoring system (stages 1-4 + REM); not directly comparable to AASM (N1/N2/N3) datasets.
 - Small dataset (25 subjects); combine with other sleep databases for robust model training.
-
 
 ## Kernel Responsibilities
 

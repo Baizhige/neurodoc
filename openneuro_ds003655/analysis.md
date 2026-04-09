@@ -43,12 +43,6 @@ A modified Sternberg working memory task requiring either simple retention or me
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -60,7 +54,7 @@ A modified Sternberg working memory task requiring either simple retention or me
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|-------|
   | `probe` (condition: R) | 0 | Retention (simple maintenance) condition |
   | `probe` (condition: M) | 1 | Manipulation (alphabetization) condition |
 - **Super Meta Notes**: Derived from raw event `probe` by extracting condition subtype from trial metadata (R=Retention, M=Manipulation). Kernel step: Parse trial condition from events.tsv trial_type column, extract 'R' or 'M' suffix to produce binary label.
@@ -76,7 +70,7 @@ A modified Sternberg working memory task requiring either simple retention or me
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|-------|
   | `delay period` (R condition) | 0 | Retention condition during delay |
   | `delay period` (M condition) | 1 | Manipulation condition during delay |
 - **Super Meta Notes**: Derived from raw event `delay period` by extracting condition subtype. Kernel step: Parse trial_type column to identify 'R' (retention) vs 'M' (manipulation) suffix.
@@ -93,7 +87,7 @@ A modified Sternberg working memory task requiring either simple retention or me
 - **Notes**: Probe events are short (<1 s); suitable for ERP epoching. Match/non-match accuracy from Response events can be used as trial-level correctness labels.
 
 | Event | y | Meaning |
-|-------|---|---------|
+|-------|---|-------|
 | `probe: 5R` / `6R` / `7R` | 0 | Keep condition detection |
 | `probe: 5M` / `6M` / `7M` | 1 | Operating condition detection |
 
@@ -104,7 +98,7 @@ A modified Sternberg working memory task requiring either simple retention or me
 - **Label Route**: `event`
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|-------|
   | `encoding` (R condition) | 0 | Encoding phase for retention |
   | `encoding` (M condition) | 1 | Encoding phase for manipulation |
 - **Notes**: Epochs around encoding onset capture initial letter sequence processing. Condition labels derived from trial_type metadata.

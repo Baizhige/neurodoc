@@ -26,6 +26,12 @@ A reinforcement learning task (Probabilistic Selection Task) performed by partic
 | `TESTING` | 50x~1664 | event | raw | Testing phase trial marker |
 | `STATUS` | 50 | admin | raw | System status marker |
 
+### MISC Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `STIM`, `STATUS`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -34,14 +40,9 @@ A reinforcement learning task (Probabilistic Selection Task) performed by partic
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `STIM`, `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
+
 
 ### Classical Task 1: Feedback Outcome Classification (Reward vs Punishment)
 - **Task Type**: classification
@@ -76,7 +77,6 @@ A reinforcement learning task (Probabilistic Selection Task) performed by partic
 - STATUS is an admin/system marker and must not be included in target events
 - TESTING events contain rich sub-labels in events.tsv; the trial_type column provides full label strings
 - Better class balance than Experiment 1
-
 
 ## Kernel Responsibilities
 

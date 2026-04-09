@@ -7,18 +7,9 @@
 
 Patients undergoing presurgical evaluation for drug-resistant epilepsy received intracranial electrical stimulation to map cortical function. The stimulation protocol targeted regions that, when stimulated, evoked negative motor responses (involuntary movement inhibition or arrest). EEG was recorded from intracranial electrodes during pre-stimulation (prestim) and post-stimulation (poststim) periods to characterize neural activity changes associated with negative motor mapping.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006519
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -26,12 +17,17 @@ Patients undergoing presurgical evaluation for drug-resistant epilepsy received 
 | `Comment/poststim` | 35 | short | raw | Post-stimulation period onset |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-## STIM Label Summary
 
-- **Route**: `stim`
+### MISC Label Summary
+
+- **Route**: `misc`
 - **Role**: Trigger-channel or stimulus-marker based labeling.
 - **Candidate Trigger Labels**: `Comment/prestim`, `Comment/poststim`
 - **Kernel Note**: Keep trigger decoding table versioned and auditable.
+
+### Info
+
+No additional scan notes provided.
 
 ## Tasks
 
@@ -56,12 +52,20 @@ Patients undergoing presurgical evaluation for drug-resistant epilepsy received 
  |-------|---|---------|
  | `Comment/prestim` | 0 | Pre-stimulation baseline period |
  | `Comment/poststim` | 1 | Post-stimulation response period |
+
 ## Data Quality Notes
 
 - Intracranial EEG dataset; electrode montage is patient-specific and non-standard.
 - Very high sampling rate (4096 Hz); downsampling to <=1000 Hz recommended.
 - Small dataset (35 files, 23 subjects); limited sample size.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Dataset of intracranial EEG during cortical stimulations evoking negative motor responses`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation, stim
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006519

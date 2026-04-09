@@ -10,28 +10,27 @@ Participants performed a one-dimensional cursor BCI task using mental imagery in
 
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
 
+> **Kernel SHA256**: `611ecb0061d5421f7b3f18f42bbe84280cb89edb888a676dde2ba49e90154dd2`
+> **EEGUnity Version**: `0.8.0`
+> **Scan Type**: Sampled (3/126 files)
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|---|---|---|---|---|
-| `target cursor plus` | varies | event | raw | Target positioned above center; subject imagines right movement |
-| `target cursor minus` | varies | event | raw | Target positioned below center; subject imagines left movement |
-| `target rest` | varies | event | raw | Target at center; subject imagines neutral/rest state |
-| `result cursor plus` | varies | event | raw | BCI decoded + direction (feedback signal) |
-| `result cursor minus` | varies | event | raw | BCI decoded - direction (feedback signal) |
+|----------|---------------|------|------------|---------|
+| `result cursor minus` | ~166 | event | raw | BCI decoded - direction (feedback signal) |
+| `result cursor plus` | ~168 | event | raw | BCI decoded + direction (feedback signal) |
+| `target cursor minus` | ~183 | event | raw | Target positioned below center; subject imagines left movement |
+| `target cursor plus` | ~182 | event | raw | Target positioned above center; subject imagines right movement |
+| `target rest` | ~365 | event | raw | Target at center; subject imagines neutral/rest state |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
+| `subject_age` | complete | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | Exp1 and Exp2 used a Neuroscan SynAmps RT amplifier, while Exp3 used a Biosemi Active Two system. |
-
 
 ## Tasks
 

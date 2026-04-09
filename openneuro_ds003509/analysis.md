@@ -37,12 +37,6 @@ This study investigates mid-frontal theta deficits in Parkinson's disease (PD) p
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Trn Stim`, `Test Stim`, `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -54,7 +48,7 @@ This study investigates mid-frontal theta deficits in Parkinson's disease (PD) p
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|---|---------|
   | `Trn Stim` | 0 | Congruent trial (stimulus-response compatible) |
   | `Trn Stim` | 1 | Incongruent trial (stimulus-response conflict) |
   | `Test Stim` | 0 | Congruent trial (stimulus-response compatible) |
@@ -64,6 +58,7 @@ This study investigates mid-frontal theta deficits in Parkinson's disease (PD) p
   - DOI: `10.1016/j.neuropsychologia.2018.05.020` — SVM classification of congruent vs incongruent Simon trials using theta-band time-frequency ROI features from conflict/error contrasts.
 - **Kernel Notes**: Verify event ID mapping from events.tsv. The raw events `Trn Stim` and `Test Stim` contain congruent/incongruent subtypes in the trial_type column that must be extracted. Baseline window: -300 to -200 ms prior to stimulus.
 
+
 ### Classical Task 2: Response Outcome Classification (Correct vs Error)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -72,7 +67,7 @@ This study investigates mid-frontal theta deficits in Parkinson's disease (PD) p
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|---|---------|
   | `correct` | 1 | Correct response |
   | `incorrect` | 0 | Error/incorrect response |
 - **Evidence**:

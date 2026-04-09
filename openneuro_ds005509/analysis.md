@@ -48,12 +48,6 @@ The Healthy Brain Network (HBN) EEG Release 5 is a large-scale, multi-task devel
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stim_ON`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -94,6 +88,7 @@ The Healthy Brain Network (HBN) EEG Release 5 is a large-scale, multi-task devel
   - DOI: 10.1016/j.neuroimage.2020.117001 — EEG functional connectivity from the HBN Biobank identifies associations between phase-coupling networks and phenotypic/demographic measures (age, sex, IQ, ADHD, SES, anxiety, CBCL) using multivariate distance matrix regression.
 - **Kernel Notes**: Requires join between EEG epochs and phenotypic CSV tables by subject ID. Use subject-wise train/test splits to prevent leakage. Resting-state blocks identified by `resting_start` and `instructed_toOpenEyes`/`instructed_toCloseEyes` annotations.
 
+
 ### Potential Task 1: Raw-meta event decoding and classification (event-level)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -102,6 +97,7 @@ The Healthy Brain Network (HBN) EEG Release 5 is a large-scale, multi-task devel
 - **Target Definition**: Use non-admin events such as `left_target`, `right_target`, `trialResponse`, `stim_ON`.
 
 - **Kernel Notes**: Exclude admin markers from supervised target sets.
+
 
 ### Potential Task 2: Raw-meta state decoding (long-event)
 - **Task Type**: classification

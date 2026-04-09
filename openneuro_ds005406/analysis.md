@@ -36,12 +36,6 @@ A frequency-tagging EEG study measuring steady-state visual evoked potentials (S
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Stimulus/S 41`, `Stimulus/S 21`, `Stimulus/S 22`, `Stimulus/S 42`, `Stimulus/S 31`, `Stimulus/S 32`, `Stimulus/S 11`, `Stimulus/S 12`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -86,7 +80,6 @@ A frequency-tagging EEG study measuring steady-state visual evoked potentials (S
 
 - New Segment/ and Stimulus/S255 are administrative - exclude.
 - Frequency-tagging paradigm; SSVEP analysis may be more appropriate than traditional ERP epoching.
-
 
 ## Kernel Responsibilities
 

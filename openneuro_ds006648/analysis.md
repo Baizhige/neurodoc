@@ -1,24 +1,10 @@
-# Poetry Assessment EEG Dataset 1
-
-**Dataset**: `openneuro_ds006648` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006648
-**Category**: High-level Mental | **Subjects**: 47 | **Files (Completed)**: 47 | **Channels**: 70 | **Sampling Rate**: 512 Hz
-
 ## Paradigm
 
 Participants read and evaluated 210 short English-language texts including Haikus and Senryus on five subjective dimensions related to aesthetic and creative cognition: Aesthetic Appeal, Vivid Imagery, Being Moved, Originality, and Creativity. EEG was recorded during reading using a 64-channel BioSemi system (70 channels total including references). This is the first of two poetry datasets (companion to ds006647) with full N=47 subject coverage.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006648
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -33,11 +19,10 @@ Participants read and evaluated 210 short English-language texts including Haiku
 | `65280` | 18 | short | raw | BioSemi trigger - rare/practice condition |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-## STIM Label Summary
+
+### Info
 
 - **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: Needs verification
 - **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
@@ -76,6 +61,13 @@ Participants read and evaluated 210 short English-language texts including Haiku
 - BioSemi trigger codes need decoding from events.tsv to determine poetry/non-poetry mapping.
 - Apply bandpass filter (0.5-40 Hz) and artifact rejection prior to epoching.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Poetry Assessment EEG Dataset 1`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation, stim
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006648

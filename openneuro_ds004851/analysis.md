@@ -7,18 +7,6 @@
 
 High-density EEG recorded in an operational context involving multiple conditions encoded as 4-digit numeric trigger codes. The code structure suggests stimulus classes (1xxx: classical task events, 7xxx/8xxx: secondary stimulus categories) within a cognitive workload or situational awareness paradigm.
 
-## Subject Information
-
-<!-- AUTO-KERNEL-SUBJECT-INFO:START -->
-> **Kernel Fact Source**: current kernel scan from `/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-- **Record Count**: 65
-- **Age Completeness**: 0/65 (0.0%)
-- **Sex Completeness**: 0/65 (0.0%)
-- **Observed Age Examples**: N/A
-- **Observed Sex Examples**: N/A
-<!-- AUTO-KERNEL-SUBJECT-INFO:END -->
-
-
 ## File Scan Result
 
 > **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds004851.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
@@ -118,6 +106,7 @@ High-density EEG recorded in an operational context involving multiple condition
 - **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Very high sampling rate (2048 Hz) - downsample before analysis. Full decode table required from dataset README.
+
 
  | Event | y | Meaning |
  |-------|---|---------|

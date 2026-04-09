@@ -86,6 +86,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 .step-sep { color: var(--border); font-size: 18px; }
 #step-content { flex: 1; overflow-y: auto; padding: 20px; }
 #no-dataset { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--muted); font-size: 14px; }
+#doc-toolbar { display: flex; align-items: center; gap: 10px; padding: 12px 20px 0; }
+#bulk-fix-status { font-size: 12px; color: var(--muted); }
 
 /* Bottom action bar */
 #action-bar { padding: 12px 20px; background: var(--panel); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
@@ -333,6 +335,11 @@ table.event-table td textarea.meaning-cell:focus { outline: 1px solid var(--acce
 #err-modal ul { padding-left: 18px; margin-bottom: 14px; }
 #err-modal li { font-size: 13px; margin-bottom: 4px; }
 #err-modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+/* Fix-confirm modal */
+#fix-confirm-modal { background: #fff; border-radius: 10px; padding: 24px; width: 700px; max-width: 94vw; max-height: 90vh; display: flex; flex-direction: column; }
+#fix-confirm-modal h2 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+#fix-confirm-textarea { flex: 1; min-height: 300px; font-family: monospace; font-size: 12px; border: 1px solid var(--border); border-radius: 6px; padding: 10px; resize: vertical; overflow-y: auto; }
+#fix-confirm-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 12px; flex-shrink: 0; }
 
 /* Preview modal */
 #preview-modal { background: #fff; border-radius: 10px; padding: 0; width: 860px; max-width: 96vw; max-height: 92vh; display: flex; flex-direction: column; }
@@ -383,6 +390,10 @@ table.event-table td textarea.meaning-cell:focus { outline: 1px solid var(--acce
       <button class="step-btn" id="step-btn-1" onclick="goStep(1)"><span class="step-num">2</span> File Scan &amp; Tasks</button>
       <span class="step-sep">›</span>
       <button class="step-btn" id="step-btn-2" onclick="goStep(2)"><span class="step-num">3</span> DQN &amp; Kernel</button>
+    </div>
+    <div id="doc-toolbar">
+      <button class="btn btn-primary" id="btn-fix-all-llm" onclick="fixAllErrorsWithLLM()">Fix All Errors with LLM</button>
+      <span id="bulk-fix-status"></span>
     </div>
     <div id="step-content">
       <div id="no-dataset">&#8592; Select a dataset to start reviewing</div>
@@ -448,6 +459,20 @@ table.event-table td textarea.meaning-cell:focus { outline: 1px solid var(--acce
   </div>
 </div>
 
+<!-- Modify Task with AI modal -->
+<div id="modify-task-overlay" class="modal-overlay">
+  <div id="modal" style="width:500px;max-width:92vw">
+    <h2>Modify Task with AI</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Describe what to change. The LLM will rewrite this task following all documentation rules. Review the result before saving.</p>
+    <textarea id="modify-task-instruction" style="width:100%;height:90px;border:1px solid var(--border);border-radius:6px;padding:8px;font-size:12px;font-family:inherit;resize:vertical" placeholder="e.g. Change tmax to 4.0 s and add a binary left vs right target definition"></textarea>
+    <div id="modify-task-status" style="font-size:11px;color:var(--red);margin-top:6px;min-height:16px"></div>
+    <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end">
+      <button class="btn btn-secondary" onclick="closeModifyTaskModal()">Cancel</button>
+      <button id="btn-apply-modify" class="btn btn-primary" onclick="applyModifyTask()">Apply</button>
+    </div>
+  </div>
+</div>
+
 <!-- Error modal -->
 <div id="err-modal-overlay" class="modal-overlay">
   <div id="err-modal">
@@ -456,7 +481,22 @@ table.event-table td textarea.meaning-cell:focus { outline: 1px solid var(--acce
     <ul id="err-modal-list"></ul>
     <div id="err-modal-actions">
       <button class="btn btn-secondary" onclick="closeErrModal()">Close</button>
-      <button class="btn btn-primary" onclick="viewRawContent()">View Raw</button>
+      <button class="btn btn-secondary" onclick="viewRawContent()">View Raw</button>
+      <button id="btn-fix-llm" class="btn btn-primary" onclick="fixWithLLM()">Fix with LLM</button>
+    </div>
+  </div>
+</div>
+
+<!-- Fix-confirm modal -->
+<div id="fix-confirm-overlay" class="modal-overlay">
+  <div id="fix-confirm-modal">
+    <h2 id="fix-confirm-title">LLM Fix Result</h2>
+    <div id="fix-confirm-warnings" style="margin-bottom:8px;font-size:12px"></div>
+    <p style="font-size:11px;color:var(--muted);margin-bottom:6px">Review the fixed content below. You may edit it directly before accepting.</p>
+    <textarea id="fix-confirm-textarea"></textarea>
+    <div id="fix-confirm-actions">
+      <button class="btn btn-secondary" onclick="closeFix()">Cancel</button>
+      <button class="btn btn-primary" onclick="acceptFix()">Accept &amp; Load</button>
     </div>
   </div>
 </div>
@@ -499,8 +539,6 @@ const STEP_RULEBOOK_HINTS = [
 const VALID_CATEGORIES = ['Complex Applied','High-level Mental','Action/Output','Sensory/Response','Biological State','Others'];
 const EPOCH_METHODS = ['epoch_by_event_hdf5','epoch_by_long_event_hdf5','epoch_by_segmentation_hdf5'];
 const LABEL_ROUTES = ['event','misc','info'];
-const REQUIRED_SECTIONS = ['Paradigm','File Scan Result','Tasks','Data Quality Notes','Kernel Responsibilities'];
-const FORBIDDEN_SECTIONS = ['STIM Label Summary'];
 
 // Step guide content (flat items per step, sections for grouping)
 const STEP_GUIDE = [
@@ -620,33 +658,28 @@ let currentTasks = [];
 let pendingErrDataset = null;
 let guideChecks = {};   // key → boolean
 let previewSeen = false;
+let _batchFixRunning = false;
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 async function init() {
   await Promise.all([loadDatasets(), loadRulebook(), loadConfig()]);
-  validateAllDatasets();
 }
 
 async function loadDatasets() {
   try {
     const r = await fetch('/api/datasets');
-    allDatasets = await r.json();
+    const datasets = await r.json();
+    allDatasets = datasets.map(ds => ({
+      ...ds,
+      _errors: ds.template_errors || []
+    }));
     populateCategoryFilter();
     renderDatasetList();
+    updateBulkFixButton();
   } catch(e) {}
 }
 
-async function validateAllDatasets() {
-  for (const ds of allDatasets) {
-    try {
-      const r = await fetch(`/api/dataset/${encodeURIComponent(ds.name)}`);
-      const d = await r.json();
-      const errors = validateDocument(d.content);
-      if (errors.length) { ds._errors = errors; renderDatasetList(); }
-    } catch(e) {}
-    await new Promise(res => setTimeout(res, 80));
-  }
-}
+async function validateAllDatasets() {}
 
 async function loadRulebook() {
   try {
@@ -669,22 +702,33 @@ async function loadConfig() {
 }
 
 // ─── Document Validation ──────────────────────────────────────────────────────
-function validateDocument(raw) {
-  const errors = [];
-  REQUIRED_SECTIONS.forEach(sec => {
-    if (!new RegExp(`\\n## ${escRe(sec)}\\s*(\\n|$)`).test('\n' + raw))
-      errors.push(`Missing required section: ## ${sec}`);
+async function checkTemplateContent(content) {
+  const r = await fetch('/api/template/check', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content })
   });
-  const allSecs = [...raw.matchAll(/\n## ([^\n]+)/g)].map(m => m[1].trim());
-  FORBIDDEN_SECTIONS.forEach(f => {
-    if (allSecs.some(s => s.includes(f)))
-      errors.push(`Forbidden/deprecated section: ## ${allSecs.find(s => s.includes(f))}`);
-  });
-  allSecs.forEach(sec => {
-    if (!REQUIRED_SECTIONS.includes(sec) && !FORBIDDEN_SECTIONS.some(f => sec.includes(f)))
-      errors.push(`Unexpected section: ## ${sec}`);
-  });
-  return errors;
+  return await readJsonResponse(r);
+}
+
+async function readJsonResponse(resp) {
+  const raw = await resp.text();
+  let data = null;
+  try {
+    data = raw ? JSON.parse(raw) : {};
+  } catch (err) {
+    const snippet = raw.replace(/\s+/g, ' ').trim().slice(0, 240) || `HTTP ${resp.status}`;
+    throw new Error(`Server returned a non-JSON response: ${snippet}`);
+  }
+  if (!resp.ok) {
+    throw new Error(
+      data?.error ||
+      (data?.template_check?.errors || []).join(' | ') ||
+      (data?.template_errors ? JSON.stringify(data.template_errors) : '') ||
+      `HTTP ${resp.status}`
+    );
+  }
+  return data;
 }
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
@@ -714,6 +758,144 @@ function renderDatasetList() {
       <span class="badge ${hasErr ? 'badge-rev' : statusBadgeClass(d.status)}">${hasErr ? 'error' : esc(d.status)}</span></div>`;
     list.appendChild(div);
   });
+  updateBulkFixButton();
+}
+
+function getLoadedInvalidDatasets() {
+  return allDatasets.filter(ds => Array.isArray(ds._errors) && ds._errors.length > 0);
+}
+
+function updateBulkFixButton(message = '') {
+  const btn = document.getElementById('btn-fix-all-llm');
+  const status = document.getElementById('bulk-fix-status');
+  if (!btn || !status) return;
+
+  const invalid = getLoadedInvalidDatasets();
+  btn.disabled = _batchFixRunning || invalid.length === 0;
+  btn.textContent = _batchFixRunning
+    ? 'Fixing…'
+    : invalid.length > 0
+      ? `Fix All Errors with LLM (${invalid.length})`
+      : 'Fix All Errors with LLM';
+
+  if (message) {
+    status.textContent = message;
+    status.style.color = 'var(--muted)';
+    return;
+  }
+
+  if (_batchFixRunning) {
+    status.style.color = 'var(--muted)';
+    return;
+  }
+
+  if (invalid.length === 0) {
+    status.textContent = 'All loaded datasets match the required template.';
+    status.style.color = 'var(--green)';
+  } else {
+    status.textContent = `${invalid.length} loaded dataset(s) currently have structural template errors.`;
+    status.style.color = 'var(--muted)';
+  }
+}
+
+async function requestTemplateFix(dsName) {
+  const resp = await fetch(`/api/template/fix_with_llm/${encodeURIComponent(dsName)}`, {
+    method: 'POST'
+  });
+  return await readJsonResponse(resp);
+}
+
+async function writeDatasetContent(dsName, content) {
+  const r = await fetch(`/api/dataset/${encodeURIComponent(dsName)}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content })
+  });
+  return await readJsonResponse(r);
+}
+
+function formatBatchNameList(items, limit = 8) {
+  const names = items.map(item => typeof item === 'string' ? item : item.name);
+  if (names.length <= limit) return names.join(', ');
+  return `${names.slice(0, limit).join(', ')} (+${names.length - limit} more)`;
+}
+
+async function fixAllErrorsWithLLM() {
+  const targets = getLoadedInvalidDatasets();
+  if (targets.length === 0) {
+    alert('All loaded datasets already match the required template.');
+    return;
+  }
+
+  const confirmed = confirm(
+    `Run LLM auto-fix for all structural template errors in ${targets.length} loaded dataset(s)?\n\n` +
+    `Only documents that fully pass the shared template checker will be saved automatically.`
+  );
+  if (!confirmed) return;
+
+  _batchFixRunning = true;
+  closeErrModal();
+  closeFix();
+  updateBulkFixButton(`Preparing batch auto-fix for ${targets.length} dataset(s)...`);
+
+  const written = [];
+  const unresolved = [];
+  const failed = [];
+
+  try {
+    for (let i = 0; i < targets.length; i++) {
+      const ds = targets[i];
+      updateBulkFixButton(`Fixing ${i + 1}/${targets.length}: ${ds.name}`);
+
+      try {
+        const rd = await requestTemplateFix(ds.name);
+        const fixedContent = rd.fixed_content || '';
+        if (!fixedContent.trim()) throw new Error('LLM returned empty content.');
+
+        const remainingErrors = rd.template_check?.errors || [];
+        if (remainingErrors.length) {
+          unresolved.push({name: ds.name, error: remainingErrors.join(' | ')});
+          continue;
+        }
+
+        await writeDatasetContent(ds.name, fixedContent);
+        written.push(ds.name);
+      } catch (err) {
+        failed.push({name: ds.name, error: err.message || String(err)});
+      }
+    }
+  } finally {
+    _batchFixRunning = false;
+  }
+
+  await loadDatasets();
+
+  if (!currentDataset) {
+    document.getElementById('action-bar').style.display = 'none';
+    document.getElementById('step-content').innerHTML =
+      '<div id="no-dataset">&#8592; Select a dataset to start reviewing</div>';
+  }
+
+  const summary = [];
+  if (written.length) {
+    summary.push(`Saved ${written.length} dataset(s): ${formatBatchNameList(written)}`);
+  }
+  if (unresolved.length) {
+    summary.push(`LLM returned unresolved template errors for ${unresolved.length} dataset(s): ${formatBatchNameList(unresolved)}`);
+  }
+  if (failed.length) {
+    summary.push(`Failed ${failed.length} dataset(s): ${failed.map(item => `${item.name}: ${item.error}`).join(' | ')}`);
+  }
+  if (!summary.length) {
+    summary.push('No datasets were updated.');
+  }
+
+  updateBulkFixButton(
+    written.length
+      ? `Batch auto-fix finished. Saved ${written.length} dataset(s).`
+      : 'Batch auto-fix finished with no saved datasets.'
+  );
+  alert(summary.join('\n\n'));
 }
 
 function statusBadgeClass(s) {
@@ -733,14 +915,101 @@ function showErrModal(ds) {
   document.getElementById('err-modal-overlay').classList.add('open');
 }
 function closeErrModal() { document.getElementById('err-modal-overlay').classList.remove('open'); pendingErrDataset = null; }
+
+let _fixingDataset = null;
+
+async function fixWithLLM() {
+  if (!pendingErrDataset) return;
+  const dsName = pendingErrDataset;
+  _fixingDataset = dsName;   // preserve before closeErrModal nullifies pendingErrDataset
+  const btn = document.getElementById('btn-fix-llm');
+  btn.disabled = true; btn.textContent = 'Fixing…';
+
+  try {
+    const rd = await requestTemplateFix(dsName);
+    const fixedContent = rd.fixed_content || '';
+
+    if (!fixedContent.trim()) throw new Error('LLM returned empty content.');
+
+    // Validate the fixed content and show confirmation modal
+    const remainingErrors = rd.template_check?.errors || [];
+    const warnings = document.getElementById('fix-confirm-warnings');
+    if (remainingErrors.length) {
+      warnings.innerHTML =
+        `<div style="background:#fef3c7;border:1px solid #f59e0b;border-radius:6px;padding:8px 10px;color:#92400e">` +
+        `<strong>⚠ ${remainingErrors.length} error(s) remain after fix</strong> — review and edit manually before accepting:<ul style="margin:4px 0 0;padding-left:16px">` +
+        remainingErrors.map(e => `<li>${esc(e)}</li>`).join('') + `</ul></div>`;
+    } else {
+      warnings.innerHTML =
+        `<div style="background:#dcfce7;border:1px solid #86efac;border-radius:6px;padding:8px 10px;color:#166534">` +
+        `✓ All structural errors resolved — ready to load.</div>`;
+    }
+
+    document.getElementById('fix-confirm-title').textContent = `LLM Fix Result — ${dsName}`;
+    document.getElementById('fix-confirm-textarea').value = fixedContent;
+    closeErrModal();
+    document.getElementById('fix-confirm-overlay').classList.add('open');
+
+  } catch(e) {
+    alert('Fix with LLM failed:\n' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Fix with LLM';
+  }
+}
+
+function closeFix() {
+  document.getElementById('fix-confirm-overlay').classList.remove('open');
+}
+
+async function acceptFix() {
+  const dsName = _fixingDataset || pendingErrDataset || currentDataset;
+  const content = document.getElementById('fix-confirm-textarea').value;
+  if (!dsName || !content) return;
+
+  // Final validation before accepting
+  const check = await checkTemplateContent(content);
+  const remaining = check.errors || [];
+  if (remaining.length) {
+    alert(
+      `${remaining.length} structural error(s) still remain.\n\n` +
+      remaining.join('\n')
+    );
+    return;
+  }
+
+  // Write fixed content to disk
+  try {
+    const d = await writeDatasetContent(dsName, content);
+    if (!d.ok) {
+      throw new Error(
+        d.error ||
+        (d.template_check?.errors || []).join('\n') ||
+        'Save failed'
+      );
+    }
+  } catch(e) {
+    alert('Failed to save fixed content:\n' + e.message);
+    return;
+  }
+
+  closeFix();
+  _fixingDataset = null;
+  // Reload dataset into the normal audit flow
+  await selectDataset(dsName);
+}
+
+document.getElementById('fix-confirm-overlay').onclick = function(e) {
+  if (e.target === this) closeFix();
+};
 async function viewRawContent() {
   if (!pendingErrDataset) return;
+  const dsName = pendingErrDataset;
   closeErrModal();
   try {
-    const r = await fetch(`/api/dataset/${encodeURIComponent(pendingErrDataset)}`);
+    const r = await fetch(`/api/dataset/${encodeURIComponent(dsName)}`);
     const d = await r.json();
     document.getElementById('action-bar').style.display = 'none';
-    const ds = allDatasets.find(x => x.name === pendingErrDataset);
+    const ds = allDatasets.find(x => x.name === dsName);
     document.getElementById('step-content').innerHTML = `
       <div class="doc-error-banner"><h3>&#9888; Document has structural errors — read-only</h3>
         <ul>${ds?._errors?.map(e=>`<li>${esc(e)}</li>`).join('')||''}</ul></div>
@@ -752,14 +1021,16 @@ document.getElementById('err-modal-overlay').onclick = function(e) { if (e.targe
 async function selectDataset(name) {
   if (dirty && !confirm('Unsaved changes — discard and switch?')) return;
   currentDataset = name; dirty = false; currentStep = 0; previewSeen = false;
+  let errors = [];
+  let ds = allDatasets.find(d => d.name === name);
   try {
     const r = await fetch(`/api/dataset/${encodeURIComponent(name)}`);
     const d = await r.json();
     rawContent = d.content;
+    errors = d.template_check?.errors || [];
+    ds = allDatasets.find(item => item.name === name);
+    if (ds) ds._errors = errors;
   } catch(e) { alert('Failed to load dataset'); return; }
-  const errors = validateDocument(rawContent);
-  const ds = allDatasets.find(d => d.name === name);
-  if (ds) ds._errors = errors.length ? errors : undefined;
   renderDatasetList();
   if (errors.length) { showErrModal(ds || { name, _errors: errors }); return; }
   llmHistory = [];
@@ -878,9 +1149,12 @@ function parseEvidence(text) {
 }
 function doiLink(ref) {
   const v = ref.trim();
-  const isDoi = /^10\.\d{4,}\//.test(v);
-  if (isDoi) return `<a href="https://doi.org/${encodeURIComponent(v)}" target="_blank" class="doi-link" style="color:var(--accent)" title="Open DOI">↗</a>`;
-  return `<span class="doi-link" style="color:var(--border);cursor:default">↗</span>`;
+  if (!v) return `<span class="doi-link" style="color:var(--border);cursor:default">↗</span>`;
+  if (/^10\.\d{4,}\//.test(v))
+    return `<a href="https://doi.org/${encodeURIComponent(v)}" target="_blank" class="doi-link" style="color:var(--accent)" title="Open DOI">↗</a>`;
+  if (/^https?:\/\//.test(v))
+    return `<a href="${v}" target="_blank" class="doi-link" style="color:var(--accent)" title="Open URL">↗</a>`;
+  return `<span class="doi-link" style="color:var(--border);cursor:default" title="${esc(v)}">↗</span>`;
 }
 function buildEvidenceEditor(id, items) {
   const rows = (items.length ? items : [{ref:'',desc:''}]).map((item,i) =>
@@ -1181,8 +1455,8 @@ function collectMetaParadigm() {
 // ─── Step 1: File Scan & Tasks ────────────────────────────────────────────────
 function renderFileScanTasks(content) {
   const fsrBody = getSection(rawContent, 'File Scan Result');
-  const kernelM = fsrBody.match(/>\s*\*\*Kernel\*\*:\s*(.+)/);
-  const sha256M = fsrBody.match(/>\s*\*\*SHA256\*\*:\s*(.+)/);
+  const fpMatch = fsrBody.match(/^((?:>.*\n?)*)/);
+  const fingerprintBlock = fpMatch ? fpMatch[1].trim() : '';
   const esBody = getSubSection(fsrBody, 'Event Structure');
   const esNoteM = esBody.match(/\n>([\s\S]+)$/);
   const esNote = esNoteM ? esNoteM[1].replace(/^>\s?/gm,'').trim() : '';
@@ -1199,13 +1473,10 @@ function renderFileScanTasks(content) {
   <div id="fst-pane-scan">
     <div class="card">
       <div class="card-title">Kernel Fingerprint <span style="font-size:11px;font-weight:400;color:var(--muted)">(read-only)</span></div>
-      <div style="background:#f8fafc;border:1px solid var(--border);border-radius:6px;padding:10px;font-size:12px;font-family:monospace;color:var(--muted)">
-        <div><strong>Kernel:</strong> ${esc(kernelM?kernelM[1].trim():'N/A')}</div>
-        <div><strong>SHA256:</strong> ${esc(sha256M?sha256M[1].trim():'N/A')}</div>
-      </div>
+      <div class="preview-wrap" style="font-size:12px">${fingerprintBlock ? marked.parse(fingerprintBlock) : '<span style="color:var(--muted)">N/A</span>'}</div>
     </div>
     <div class="card">
-      <div class="card-title">Event Structure <span style="font-size:11px;font-weight:400;color:var(--muted)">— Type &amp; Meaning editable; others read-only</span></div>
+      <div class="card-title" style="display:flex;align-items:center;gap:8px">Event Structure <span style="font-size:11px;font-weight:400;color:var(--muted)">— Type &amp; Meaning editable; others read-only</span><button id="btn-ai-meanings" class="btn btn-secondary" style="margin-left:auto;font-size:11px;padding:2px 10px" onclick="getAIMeanings()">Get AI Meaning</button></div>
       <p class="field-hint" style="margin-bottom:8px">Check <strong>Type</strong>: <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">event</code> = task-relevant stimulus/response; <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">admin</code> = boundary/artifact. Edit <strong>Meaning</strong> to be accurate. Only <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">event</code> rows can be used as target_events in Tasks.</p>
       <div class="event-table-wrap">${buildEventTableEditor(esBody)}</div>
       <div style="margin-top:10px">
@@ -1226,6 +1497,14 @@ function renderFileScanTasks(content) {
     </div>
   </div>
   <div id="fst-pane-tasks" style="display:none">
+    <div class="card" style="margin-bottom:12px;background:#f8fafc;border-color:#e2e8f0">
+      <div class="card-title" style="display:flex;align-items:center;gap:8px">
+        Regenerate Tasks from References
+        <button id="btn-regen-tasks" class="btn btn-secondary" style="margin-left:auto;font-size:11px;padding:2px 10px" onclick="regenTasksFromRefs()">Regenerate All Tasks</button>
+      </div>
+      <p class="field-hint" style="margin-bottom:6px">Reads every file in <code>references/</code>, runs Phase-1 analysis per paper, then synthesises the full Tasks section. <strong>This will overwrite all existing tasks.</strong></p>
+      <div id="regen-progress" style="display:none;font-size:12px;padding:6px 0;color:var(--muted)"></div>
+    </div>
     <div class="add-task-row">
       <button class="btn btn-primary" onclick="addTask('Classical')">+ Classical Task</button>
       <button class="btn btn-secondary" style="color:var(--purple);border-color:var(--purple)" onclick="addTask('Potential')">+ Potential Task</button>
@@ -1392,7 +1671,14 @@ function serializeTasks(tasks) {
       task.targetRows.forEach(r => { targetDef += `\n  | \`${r.label}\` | ${r.y} | ${r.meaning} |`; });
     }
 
-    const evLines = (task.evidence||[]).map(e=>`  - DOI: ${e.ref} — ${e.desc}`).join('\n');
+    const evLines = (task.evidence||[]).map(e => {
+      const ref = (e.ref||'').trim();
+      const desc = (e.desc||'').trim();
+      if (ref && desc) return `  - ${ref} — ${desc}`;
+      if (ref) return `  - ${ref}`;
+      if (desc) return `  - ${desc}`;
+      return '';
+    }).filter(Boolean).join('\n');
 
     return `### ${task.kind} Task ${num}: ${task.name}
 - **Task Type**: ${task.taskType}
@@ -1462,6 +1748,8 @@ function buildTaskCard(task, idx) {
         <button class="task-kind-btn ${potSelClass}" data-kind="Potential" onclick="selectTaskKind(${idx},'Potential',this)">Potential</button>
       </div>
       <input class="task-name-input" value="${esc(task.name)}" placeholder="Task name">
+      <button class="btn btn-secondary" style="font-size:10px;padding:1px 8px;white-space:nowrap" onclick="openModifyTaskModal(${idx})">Modify with AI</button>
+      <button class="btn btn-secondary" style="font-size:10px;padding:1px 8px;white-space:nowrap" onclick="duplicateTask(${idx})" title="Duplicate this task">Duplicate</button>
       <button class="btn-del-task" onclick="deleteTask(${idx})">×</button>
     </div>
     <div class="task-fields-row">
@@ -1555,6 +1843,16 @@ function deleteTask(idx) {
   renderTaskCards(document.getElementById('task-cards-container'));
   const tb = document.getElementById('fst-tab-tasks'); if(tb) tb.textContent=`Tasks (${currentTasks.length})`;
 }
+function duplicateTask(idx) {
+  collectTaskCards();
+  const clone = JSON.parse(JSON.stringify(currentTasks[idx]));
+  currentTasks.splice(idx + 1, 0, clone);
+  renderTaskCards(document.getElementById('task-cards-container'));
+  const tb = document.getElementById('fst-tab-tasks'); if(tb) tb.textContent=`Tasks (${currentTasks.length})`;
+  // Scroll the new card into view
+  const cards = document.querySelectorAll('#task-cards-container .task-card');
+  if (cards[idx + 1]) cards[idx + 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
 function collectTaskCards() {
   const cards = document.querySelectorAll('.task-card[data-task-idx]');
@@ -1602,8 +1900,9 @@ function collectTaskCards() {
 
 function collectFileScanTasks() {
   const fsrBody = getSection(rawContent, 'File Scan Result');
-  const kernelLine = (fsrBody.match(/>\s*\*\*Kernel\*\*:\s*.+/)||['> **Kernel**: N/A'])[0];
-  const sha256Line = (fsrBody.match(/>\s*\*\*SHA256\*\*:\s*.+/)||['> **SHA256**: N/A'])[0];
+  const fpMatch2 = fsrBody.match(/^((?:>.*\n?)*)/);
+  const fingerprintBlock2 = fpMatch2 ? fpMatch2[1].trim() : '';
+  const fingerprintSection = fingerprintBlock2 ? `${fingerprintBlock2}\n\n` : '';
   const esTable = serializeEventTable();
   const esNotes = document.getElementById('es-notes')?.value.trim()||'';
   const esNoteBlock = esNotes ? '\n\n'+esNotes.split('\n').map(l=>'> '+l).join('\n') : '';
@@ -1612,11 +1911,370 @@ function collectFileScanTasks() {
   const miscSection = miscVal ? `\n\n### MISC Label Summary\n\n${miscVal}` : '';
   const infoTable = serializeInfoTable();
   rawContent = replaceSection(rawContent, 'File Scan Result',
-    `${kernelLine}\n${sha256Line}\n\n### Event Structure\n\n${esTable}${esNoteBlock}${miscSection}\n\n### Info\n\n${infoTable}`);
+    `${fingerprintSection}### Event Structure\n\n${esTable}${esNoteBlock}${miscSection}\n\n### Info\n\n${infoTable}`);
   collectTaskCards();
   rawContent = replaceSection(rawContent, 'Tasks', serializeTasks(currentTasks));
   dirty = true;
 }
+
+// ─── Get AI Meanings ──────────────────────────────────────────────────────────
+async function getAIMeanings() {
+  if (!confirm('This will overwrite all existing Meanings with AI-generated content. Proceed?')) return;
+
+  const btn = document.getElementById('btn-ai-meanings');
+  if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
+
+  try {
+    const table = document.getElementById('event-table');
+    if (!table) throw new Error('Event table not found. Make sure you are on the File Scan tab.');
+
+    const headers = [...table.querySelectorAll('thead th')].map(th => th.textContent);
+    const idIdx   = headers.findIndex(h => h.toLowerCase().includes('event id'));
+    const typeIdx = headers.findIndex(h => h.toLowerCase() === 'type');
+    const meanIdx = headers.findIndex(h => h.toLowerCase().includes('meaning'));
+    if (idIdx < 0 || meanIdx < 0) throw new Error('Could not locate Event ID or Meaning columns.');
+
+    // Collect event rows from DOM (reflects unsaved edits)
+    const rows = [];
+    table.querySelectorAll('tbody tr').forEach(tr => {
+      const cells = [...tr.querySelectorAll('td')];
+      const id   = (cells[idIdx]?.querySelector('input')?.value || '').trim().replace(/^`|`$/g, '');
+      const type = cells[typeIdx]?.querySelector('select')?.value || '';
+      if (id) rows.push({ id, type });
+    });
+    if (!rows.length) throw new Error('No event rows found in the table.');
+
+    const eventList = rows.map(r => `- "${r.id}" (Type: ${r.type})`).join('\n');
+    const paradigmText = getSection(rawContent, 'Paradigm');
+
+    const systemPrompt = `You are an EEG dataset documentation assistant. Your task is to generate concise, accurate Meaning descriptions for EEG event markers in an Event Structure table.
+
+Rules:
+- English only, brief phrase style — NOT full sentences
+- 5–15 words per Meaning
+- Describe what the event represents in the experimental context
+- For motor imagery cues: specify the body part, action, and paradigm group if the Event ID encodes it (e.g. "[CLA] Left-hand motor imagery cue")
+- For admin/boundary markers: describe their role (e.g. "Trial boundary / session end marker")
+- Use the Paradigm description to resolve ambiguous or abbreviated event names
+
+Good Meaning examples from other EEG datasets:
+- "Left-hand motor imagery cue"
+- "Flash of the row or column containing the target character"
+- "BCI decoded + direction (feedback signal)"
+- "Target positioned above center; subject imagines right movement"
+- "Cue onset for foot motor imagery"
+- "Onset of each character sequence (boundary marker)"
+
+Respond ONLY with a valid JSON object mapping each Event ID string (exact, no backticks) to its Meaning string. No explanation, no markdown fences, no extra text.`;
+
+    const userMsg = `Dataset: ${currentDataset}
+
+## Paradigm
+${paradigmText}
+
+## Events to label
+${eventList}
+
+Return a JSON object with a Meaning for every Event ID listed above.`;
+
+    const r = await fetch('/api/llm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user',   content: userMsg }
+      ]})
+    });
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+
+    let raw = (d.choices?.[0]?.message?.content || '').trim();
+    // Strip <think>...</think> blocks emitted by reasoning models (e.g. DeepSeek-R1)
+    raw = raw.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+    // Strip optional markdown code fences the LLM may add despite instructions
+    raw = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+
+    let meanings;
+    try { meanings = JSON.parse(raw); }
+    catch(e) { throw new Error('LLM returned invalid JSON:\n' + raw.slice(0, 300)); }
+
+    // Fill Meaning textareas
+    table.querySelectorAll('tbody tr').forEach(tr => {
+      const cells = [...tr.querySelectorAll('td')];
+      const id = (cells[idIdx]?.querySelector('input')?.value || '').trim().replace(/^`|`$/g, '');
+      if (id && meanings[id] !== undefined) {
+        const ta = cells[meanIdx]?.querySelector('textarea');
+        if (ta) { ta.value = meanings[id]; autoResize(ta); }
+      }
+    });
+  } catch(e) {
+    alert('AI Meaning generation failed:\n' + e.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Get AI Meaning'; }
+  }
+}
+
+// ─── Regenerate Tasks from References (Feature 1) ────────────────────────────
+async function regenTasksFromRefs() {
+  if (!currentDataset) { alert('No dataset selected.'); return; }
+  if (!confirm(
+    'This will overwrite ALL existing tasks by:\n' +
+    '  Phase 0: Extract DOI/URL per reference\n' +
+    '  Phase 1: Analyse each reference for task evidence\n' +
+    '  Phase 2-1: Determine epoch alignment\n' +
+    '  Phase 2-2: Synthesise tasks + self-check\n\n' +
+    'This may take several minutes. Proceed?'
+  )) return;
+
+  const btn  = document.getElementById('btn-regen-tasks');
+  const prog = document.getElementById('regen-progress');
+  btn.disabled = true; btn.textContent = 'Running…';
+  prog.style.display = '';
+
+  const setProgress = (html) => { prog.innerHTML = html; };
+
+  try {
+    // ── Phase 0: list files ───────────────────────────────────────────────────
+    setProgress('Loading reference list…');
+    const listResp = await fetch(`/api/refs/${encodeURIComponent(currentDataset)}`);
+    const listData = await listResp.json();
+    if (listData.error && !listData.files?.length) throw new Error(listData.error);
+    const files = listData.files || [];
+    if (!files.length) throw new Error('No reference files found in references/ directory.');
+
+    const total = files.length;
+
+    // ── Phase 0: DOI/URL extraction (parallel pool of 4) ─────────────────────
+    setProgress(`Phase 0: Extracting references from ${total} files…`);
+    const p0Results = {};
+    const POOL = 4;
+    let p0done = 0;
+    for (let i = 0; i < files.length; i += POOL) {
+      const chunk = files.slice(i, i + POOL);
+      const settled = await Promise.allSettled(chunk.map(f =>
+        fetch(`/api/refs/phase0/${encodeURIComponent(currentDataset)}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ file: f })
+        }).then(r => r.json())
+      ));
+      for (let j = 0; j < settled.length; j++) {
+        p0done++;
+        const res = settled[j];
+        const fname = chunk[j];
+        if (res.status === 'fulfilled' && !res.value.error) {
+          p0Results[fname] = res.value;
+        }
+      }
+      const found = Object.values(p0Results).filter(r => r.ref).length;
+      setProgress(`Phase 0: ${p0done}/${total} files — ${found} refs identified…`);
+    }
+    const p0found = Object.values(p0Results).filter(r => r.ref).length;
+    const p0llm   = Object.values(p0Results).filter(r => r.source === 'llm').length;
+    setProgress(
+      `✓ Phase 0 complete: ${p0found}/${total} refs found (${p0llm} via LLM fallback)<br>` +
+      `Running Phase 1: per-file relevance analysis…`
+    );
+
+    // ── Phase 1: relevance + task extraction (parallel pool of 4) ────────────
+    const extractions = [];
+    let p1done = 0;
+    for (let i = 0; i < files.length; i += POOL) {
+      const chunk = files.slice(i, i + POOL);
+      const settled = await Promise.allSettled(chunk.map(f =>
+        fetch(`/api/refs/phase1/${encodeURIComponent(currentDataset)}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ file: f, p0: p0Results[f] || {} })
+        }).then(r => r.json())
+      ));
+      for (const res of settled) {
+        p1done++;
+        if (res.status === 'fulfilled' && !res.value.error) {
+          extractions.push(res.value);
+        }
+      }
+      const relevant = extractions.filter(e => e.classification === 'relevant').length;
+      const partial  = extractions.filter(e => e.classification === 'partial').length;
+      setProgress(
+        `✓ Phase 0 complete (${p0found}/${total} refs)<br>` +
+        `Phase 1: ${p1done}/${total} analyzed — ${relevant} relevant, ${partial} partial…`
+      );
+    }
+
+    const relevant = extractions.filter(e => e.classification === 'relevant');
+    const partial  = extractions.filter(e => e.classification === 'partial');
+    const allUseful = [...relevant, ...partial];
+
+    setProgress(
+      `✓ Phase 0 complete (${p0found}/${total} refs)<br>` +
+      `✓ Phase 1 complete: ${relevant.length} relevant, ${partial.length} partial, ` +
+      `${extractions.length - relevant.length - partial.length} irrelevant/junk<br>` +
+      `Running Phase 2-1: epoch alignment analysis…`
+    );
+
+    // ── Phase 2 (2-1 + 2-2 in server): synthesis ─────────────────────────────
+    const p2Resp = await fetch(`/api/tasks/phase2/${encodeURIComponent(currentDataset)}`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ extractions: allUseful })
+    });
+    const p2Data = await p2Resp.json();
+    if (p2Data.error) throw new Error(p2Data.error);
+
+    const p21 = p2Data.p21 || {};
+    const p21line = p21.alignment
+      ? `alignment=${p21.alignment}, ` +
+        (p21.recommendations||[]).map(r =>
+          `[${r.paradigm_label}] tmin=${r.tmin} tmax=${r.tmax}`).join('; ')
+      : 'alignment unclear';
+
+    setProgress(
+      `✓ Phase 0 complete (${p0found}/${total} refs)<br>` +
+      `✓ Phase 1 complete: ${relevant.length} relevant, ${partial.length} partial<br>` +
+      `✓ Phase 2-1 complete: ${p21line}<br>` +
+      `Running Phase 2-2: task synthesis + self-check…`
+    );
+
+    const tasksSection = p2Data.tasks_section || '';
+    const tasksBody = tasksSection.replace(/^##\s*Tasks\s*\n+/, '');
+
+    rawContent = replaceSection(rawContent, 'Tasks', tasksBody);
+    currentTasks = parseTasks(tasksBody);
+    renderTaskCards(document.getElementById('task-cards-container'));
+    const tb = document.getElementById('fst-tab-tasks');
+    if (tb) tb.textContent = `Tasks (${currentTasks.length})`;
+    dirty = true;
+
+    const nC = p2Data.num_classical_tasks >= 0
+      ? p2Data.num_classical_tasks
+      : currentTasks.filter(t => t.kind === 'Classical').length;
+    const nP = p2Data.num_potential_tasks >= 0
+      ? p2Data.num_potential_tasks
+      : currentTasks.filter(t => t.kind === 'Potential').length;
+    const checkNote = p2Data.self_check_notes ? ` | Check: ${esc(p2Data.self_check_notes)}` : '';
+
+    setProgress(
+      `✓ Phase 0 complete (${p0found}/${total} refs)<br>` +
+      `✓ Phase 1 complete: ${relevant.length} relevant, ${partial.length} partial<br>` +
+      `✓ Phase 2-1 complete: ${p21line}<br>` +
+      `<span style="color:#16a34a">✓ Done — ${nC} Classical + ${nP} Potential tasks. ` +
+      `${esc(p2Data.summary||'')}${checkNote}</span>`
+    );
+  } catch(e) {
+    setProgress(`<span style="color:var(--red)">Error: ${esc(e.message)}</span>`);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Regenerate All Tasks';
+  }
+}
+
+// ─── Modify Single Task with AI (Feature 2) ───────────────────────────────────
+let _modifyTaskIdx = -1;
+
+function openModifyTaskModal(idx) {
+  collectTaskCards();  // sync DOM → currentTasks before modal opens
+  _modifyTaskIdx = idx;
+  const task = currentTasks[idx];
+  const title = task ? `${task.kind} Task: ${task.name || '(unnamed)'}` : `Task #${idx + 1}`;
+  document.querySelector('#modify-task-overlay h2').textContent = `Modify with AI — ${title}`;
+  document.getElementById('modify-task-instruction').value = '';
+  document.getElementById('modify-task-status').textContent = '';
+  document.getElementById('btn-apply-modify').disabled = false;
+  document.getElementById('btn-apply-modify').textContent = 'Apply';
+  document.getElementById('modify-task-overlay').classList.add('open');
+}
+
+function closeModifyTaskModal() {
+  document.getElementById('modify-task-overlay').classList.remove('open');
+  _modifyTaskIdx = -1;
+}
+
+async function applyModifyTask() {
+  const idx = _modifyTaskIdx;
+  if (idx < 0 || idx >= currentTasks.length) return;
+  const instruction = document.getElementById('modify-task-instruction').value.trim();
+  if (!instruction) { alert('Please enter an instruction.'); return; }
+
+  const btn    = document.getElementById('btn-apply-modify');
+  const status = document.getElementById('modify-task-status');
+  btn.disabled = true; btn.textContent = 'Applying…'; status.textContent = '';
+
+  // Serialise just this one task (serializeTasks renumbers — use a placeholder copy)
+  const taskCopy = { ...currentTasks[idx] };
+  const taskMd = serializeTasks([taskCopy]);
+
+  const systemPrompt =
+`You are an EEG dataset documentation expert. Modify a single Task block in analysis.md.
+
+You receive: the full analysis.md for context, the Task block to modify, and a user instruction.
+
+Rules:
+- Modify ONLY what the instruction specifies; keep all other fields unchanged
+- Task heading: "### Classical Task N: Name" or "### Potential Task N: Name" (preserve original type/number)
+- Event IDs in target_events MUST come from the Event Structure table in analysis.md
+- Valid epoch methods: epoch_by_event_hdf5, epoch_by_long_event_hdf5, epoch_by_segmentation_hdf5
+- Do NOT fabricate DOIs — only use DOIs explicitly in the task or instruction
+- Return ONLY valid JSON, no surrounding text:
+{"task_markdown": "### Classical Task 1: Name\\n- **Task Type**: ...\\n..."}`;
+
+  const userMsg =
+`Dataset: ${currentDataset}
+
+=== Full analysis.md ===
+${rawContent}
+
+=== Task to modify ===
+${taskMd}
+
+=== Instruction ===
+${instruction}`;
+
+  try {
+    const r = await fetch('/api/llm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user',   content: userMsg }
+      ]})
+    });
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+
+    let raw = (d.choices?.[0]?.message?.content || '').trim();
+    raw = raw.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+    raw = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+
+    let parsed;
+    try {
+      parsed = JSON.parse(raw);
+    } catch(_) {
+      // Fallback: find ### heading block directly
+      const mFb = raw.match(/(###\s+(?:Classical|Potential)\s+Task[\s\S]+)/);
+      if (mFb) parsed = { task_markdown: mFb[1].trim() };
+      else throw new Error('LLM returned invalid JSON:\n' + raw.slice(0, 300));
+    }
+
+    const taskMarkdown = (parsed.task_markdown || '').trim();
+    if (!taskMarkdown) throw new Error('LLM returned empty task_markdown.');
+
+    // Parse the returned task block
+    const parsedTasks = parseTasks('\n' + taskMarkdown);
+    if (!parsedTasks.length) throw new Error('Could not parse the modified task block. Check LLM output.');
+
+    // Preserve original kind/num to avoid renumbering confusion
+    parsedTasks[0].kind = parsedTasks[0].kind || currentTasks[idx].kind;
+    currentTasks[idx] = parsedTasks[0];
+    renderTaskCards(document.getElementById('task-cards-container'));
+    dirty = true;
+    closeModifyTaskModal();
+  } catch(e) {
+    status.textContent = 'Error: ' + e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Apply';
+  }
+}
+
+document.getElementById('modify-task-overlay').onclick = function(e) {
+  if (e.target === this) closeModifyTaskModal();
+};
 
 // ─── Step 2: DQN & Kernel ─────────────────────────────────────────────────────
 function renderDQNKernel(content) {
@@ -1802,9 +2460,12 @@ async function saveFile() {
       body: JSON.stringify({ content: rawContent }),
     });
     if (r.ok) {
+      const d = await r.json().catch(() => ({}));
       dirty = false;
       saveStatus.textContent = '✓ Saved';
       setTimeout(() => saveStatus.textContent = '', 3000);
+      const ds = allDatasets.find(item => item.name === currentDataset);
+      if (ds) ds._errors = d.template_check?.errors || [];
       // Clear LLM chat and reset step guide checkboxes
       llmHistory = [];
       document.getElementById('chat-messages').innerHTML = '';
@@ -1815,7 +2476,14 @@ async function saveFile() {
       const status = statusM ? statusM[1].trim() : 'unknown';
       showSaveComplete(status);
     } else {
-      saveStatus.textContent = '✗ Error';
+      const d = await r.json().catch(() => ({}));
+      saveStatus.textContent =
+        '✗ ' +
+        (
+          d.error ||
+          (d.template_check?.errors || []).join(' | ') ||
+          'Save failed'
+        );
     }
   } catch(e) { saveStatus.textContent = '✗ ' + e.message; }
 }

@@ -8,18 +8,6 @@
 
 A pilot EEG study investigating the neural underpinnings of loneliness by contrasting social hypersensitivity (amplified neural responses to social stimuli) and hyperalertness (heightened attention to potential social threats). Participants viewed social and non-social stimuli while EEG was recorded. Trigger codes encode stimulus type, valence, and response conditions. Code 20 dominates the event structure (49,726 total) and may represent a high-frequency refresh or fixation signal.
 
-## Subject Information
-
-<!-- AUTO-KERNEL-SUBJECT-INFO:START -->
-> **Kernel Fact Source**: current kernel scan from `/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-- **Record Count**: 79
-- **Age Completeness**: 0/79 (0.0%)
-- **Sex Completeness**: 78/79 (98.7%)
-- **Observed Age Examples**: N/A
-- **Observed Sex Examples**: `Female`, `Male`, `other`
-<!-- AUTO-KERNEL-SUBJECT-INFO:END -->
-
-
 ## File Scan Result
 
 > **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds004802.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
@@ -32,7 +20,7 @@ A pilot EEG study investigating the neural underpinnings of loneliness by contra
 > **Meaning Policy**: `Meaning` is interpretive; `Event ID / Count / Type / Meta Level` are kernel-derived facts.
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|----------|---------------|------|------------|----------|
 | `20` | 49726 | event | raw | Unresolved from current kernel facts |
 | `111` | 4144 | event | raw | Unresolved from current kernel facts |
 | `25` | 2823 | event | raw | Unresolved from current kernel facts |
@@ -86,7 +74,6 @@ A pilot EEG study investigating the neural underpinnings of loneliness by contra
 | `65536` | 1 | event | raw | Unresolved from current kernel facts |
 <!-- AUTO-KERNEL-EVENT-STRUCTURE:END -->
 
-
 ### Info
 
 | Field | Completeness | Notes |
@@ -94,19 +81,6 @@ A pilot EEG study investigating the neural underpinnings of loneliness by contra
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-<!-- AUTO-KERNEL-STIM:START -->
-> **Kernel Fact Source**: current kernel scan from `/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-> **Meaning Policy**: `Meaning` is interpretive; `Label / Source / Meta Level` are kernel-derived facts.
-
-| Label / Field | Source | Meta Level | Meaning |
-|---------------|--------|------------|---------|
-| `Status` | raw:stim_channel | raw | Unresolved from current kernel facts |
-<!-- AUTO-KERNEL-STIM:END -->
-
-- **Route**: `stim`
-- **Role**: Kernel-derived label summary for the current route only.
 
 ## Tasks
 

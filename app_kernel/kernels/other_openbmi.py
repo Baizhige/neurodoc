@@ -170,26 +170,15 @@ class OpenBMIKernel:
         sfreq = raw.info["sfreq"]
         onsets, durations, descriptions = [], [], []
 
-        for block_key, block_label in [("EEG_MI_train", "train"), ("EEG_MI_test", "test")]:
-            if block_key not in mat:
-                continue
-            block = mat[block_key]
-
-            t = np.asarray(block["t"]).flatten()          # sample indices (absolute)
+        # EEGUnity loads only EEG_MI_train.x as the raw signal.
+        # EEG_MI_test is not appended, so only train-block trials are injected.
+        block = mat.get("EEG_MI_train")
+        if block is not None:
+            t = np.asarray(block["t"]).flatten()       # sample indices within train block
             y_class = np.asarray(block["y_class"]).flatten()
 
-            # Determine offset in the continuous raw signal.
-            # raw was built from train block first, then test block appended.
-            # Offset for test = n_samples_train
-            if block_label == "test":
-                # train block length
-                x_train = np.asarray(mat["EEG_MI_train"]["x"])
-                offset_samples = x_train.shape[0]
-            else:
-                offset_samples = 0
-
             for sample_idx, label in zip(t, y_class):
-                onset_s = (offset_samples + sample_idx) / sfreq
+                onset_s = float(sample_idx) / sfreq
                 desc = _LABEL_MAP.get(str(label).strip().lower(), str(label))
                 onsets.append(onset_s)
                 durations.append(_EPOCH_DURATION_S)

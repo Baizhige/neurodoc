@@ -1,25 +1,10 @@
-# Trance channeling EEG study
-
-**Dataset**: `openneuro_ds004040` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004040
-**Category**: High-level Mental | **Subjects**: 13 | **Files (Completed)**: 26
-**Channels**: 64 | **Sampling Rate**: 512 Hz
-
 ## Paradigm
 
 Participants who are experienced trance channelers performed alternating 5-minute blocks of trance channeling (a mediumistic altered state of consciousness) and matched resting state conditions across two separate sessions. The study investigates neural correlates of voluntarily induced altered states of consciousness compared to wakeful rest. Labels for trance vs. rest blocks must be derived from the session/task structure rather than discrete event markers.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004040
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -30,12 +15,12 @@ Participants who are experienced trance channelers performed alternating 5-minut
 > - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
 > - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **not used for epoch**
-## STIM Label Summary
 
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+### Info
+
+- **Files Scanned**: 26 files (13 subjects × 2 sessions)
+- **Sampling Rate**: 512 Hz
+- **Channels**: 64
 
 ## Tasks
 
@@ -61,6 +46,13 @@ Participants who are experienced trance channelers performed alternating 5-minut
 - Small sample (13 specialized subjects who practice trance channeling)
 - Two sessions per subject - verify session labeling in BIDS structure
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Trance channeling EEG study`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation, stim
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004040

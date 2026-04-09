@@ -50,12 +50,6 @@ The Healthy Brain Network (HBN) EEG Release 11 is a large-scale, multi-task deve
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stim_ON`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -83,7 +77,7 @@ The Healthy Brain Network (HBN) EEG Release 11 is a large-scale, multi-task deve
 ### Classical Task 2: Publisher-defined BIDS task: Despicable Me
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
+- **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, overlap = Needs Verification, target_events = [Needs Verification] | segment_length = Needs Verification, overlap = Needs Verification
 - **Label Route**: `event`
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://eeg2025.github.io/ DOI: https://doi.org/10.1101/089060
@@ -92,7 +86,7 @@ The Healthy Brain Network (HBN) EEG Release 11 is a large-scale, multi-task deve
 ### Classical Task 3: Publisher-defined BIDS task: Surround Supp
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
+- **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, overlap = Needs Verification, target_events = [Needs Verification] | segment_length = Needs Verification, overlap = Needs Verification
 - **Label Route**: `event`
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://eeg2025.github.io/ DOI: https://doi.org/10.1101/089060
@@ -101,7 +95,7 @@ The Healthy Brain Network (HBN) EEG Release 11 is a large-scale, multi-task deve
 ### Classical Task 4: Publisher-defined BIDS task: Funwith Fractals
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
+- **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, overlap = Needs Verification, target_events = [Needs Verification] | segment_length = Needs Verification, overlap = Needs Verification
 - **Label Route**: `event`
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://eeg2025.github.io/ DOI: https://doi.org/10.1101/089060
@@ -137,7 +131,7 @@ The Healthy Brain Network (HBN) EEG Release 11 is a large-scale, multi-task deve
 ### Potential Task 4: Super-meta psychopathology-factor modeling
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5` or `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: Needs verification, target_events = see Target Definition
+- **Epoch Parameters**: Needs Verification, target_events = see Target Definition
 - **Label Route**: `misc`
 - **Target Definition**: Continuous target value as defined by kernel and label route.
 

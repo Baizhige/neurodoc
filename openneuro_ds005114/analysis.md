@@ -7,7 +7,6 @@
 
 The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance Task, was used to assess proactive versus reactive cognitive control in sub-acute mild traumatic brain injury (mTBI) patients and healthy controls. Participants responded to cue-probe pairs (CueA/CueB x Probe aX/aY/bY), enabling decomposition of context-maintenance and response-inhibition processes via P3a/P3b ERP components.
 
-
 ## File Scan Result
 
 > **Kernel**: N/A
@@ -29,7 +28,6 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
 | `Feedback: ProbeErr` | 3626 | event | raw | Error feedback |
 | `CueBOnset` | 2661 | event | raw | Cue B stimulus onset |
 
-
 ### Info
 
 | Field | Completeness | Notes |
@@ -37,12 +35,7 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `STATUS`, `Practice: filler trigger`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+| **Trigger Labels** | N/A | STATUS (19,463) and Practice: filler trigger (15,787) are admin events - exclude from training. Trigger decoding table should be versioned and auditable. |
 
 ## Tasks
 
@@ -54,7 +47,7 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|--------|
   | `CueAOnset` | 0 | Cue A onset |
   | `CueBOnset` | 1 | Cue B onset |
   | `Probe_aX_onset` | 2 | Probe aX (AX trial - expected) |
@@ -71,7 +64,7 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
 - **Label Route**: `event`
 - **Target Definition**:
  | Event | y | Meaning |
- |-------|---|---------|
+ |-------|---|--------|
  | `CueAOnset` | 0 | Cue A onset |
  | `CueBOnset` | 1 | Cue B onset |
  | `Probe_aX_onset` | 2 | Probe aX (AX trial - expected) |
@@ -90,8 +83,3 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
 
 > **Super Meta Required**: No
 > **Status**: wait_manual_review
-## Data Quality Notes
-
-- STATUS and Practice filler triggers must be excluded from training.
-- Dataset includes mTBI patients and healthy controls - group label in participants.tsv.
-

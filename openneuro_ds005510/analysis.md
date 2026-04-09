@@ -48,12 +48,6 @@ The Healthy Brain Network (HBN) EEG Release 6 is a large-scale, multi-task devel
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stim_ON`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -65,7 +59,7 @@ The Healthy Brain Network (HBN) EEG Release 6 is a large-scale, multi-task devel
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|-|
   | `resting_start` | continuous | Resting-state EEG epochs for FC computation |
   | `instructed_toOpenEyes` | continuous | Eyes-open resting |
   | `instructed_toCloseEyes` | continuous | Eyes-closed resting |
@@ -82,7 +76,7 @@ The Healthy Brain Network (HBN) EEG Release 6 is a large-scale, multi-task devel
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|-|
   | N/A (continuous) | N/A | Video viewing segments (Despicable Me movie) |
 - **Evidence**:
   - DOI: `10.1016/j.neuroimage.2020.117001` — Paper mentions video viewing (Despicable Me, The Present, Diary of a Wimpy Kid, Fun with Fractals) as part of the EEG recording paradigm.
@@ -96,7 +90,7 @@ The Healthy Brain Network (HBN) EEG Release 6 is a large-scale, multi-task devel
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|-|
   | N/A (continuous) | N/A | Sequence learning task segments (Seq Learning6target, Seq Learning8target) |
 - **Evidence**:
   - DOI: `10.1016/j.neuroimage.2020.117001` — Paper references inhibition/excitation paradigm task included in HBN EEG recordings.

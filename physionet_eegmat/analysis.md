@@ -8,32 +8,29 @@
 
 Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly female) completed a mental arithmetic task while EEG was recorded monopolarly using a Neurocom 23-channel system with Ag/AgCl electrodes (Zyma et al., 2019). Each subject contributed two files: a background resting-state recording (suffix `_1.edf`) and a mental arithmetic task recording (suffix `_2.edf`). During the mental arithmetic task, subjects performed serial subtraction (e.g., 3141 minus 42) while EEG was recorded. A separate `Count quality` field in `subject-info.csv` rates the subject's arithmetic performance as Good or Bad, providing a behavioral quality label.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
 
+> **Kernel SHA256**: `2d377403dfb36e0b6ad6454cf2d69b00d8096cf9a7ebb560a8baff950dedaad6`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Background EEG;Count Quality: Good` | 24 | event | raw | Resting-state recording, subject's arithmetic quality was Good |
-| `Background EEG;Count Quality: Bad` | 12 | event | raw | Resting-state recording, subject's arithmetic quality was Bad |
-| `Mental Arithmetic Task EEG;Count Quality: Good` | 24 | event | raw | Mental arithmetic recording, quality Good |
-| `Mental Arithmetic Task EEG;Count Quality: Bad` | 12 | event | raw | Mental arithmetic recording, quality Bad |
-
-> Each annotation spans the entire recording.
-> **Manual Review Note**: Good/Bad counts corrected from 27/9 to 24/12 by human reviewer (Liu Peng). Kernel should verify Good/Bad split from subject-info.csv on next scan.
+| `Background EEG;Count Quality: Bad` | 10 | event | raw | Resting-state recording, subject's arithmetic quality was Bad |
+| `Background EEG;Count Quality: Good` | 26 | event | raw | Resting-state recording, subject's arithmetic quality was Good |
+| `Mental Arithmetic Task EEG;Count Quality: Bad` | 10 | event | raw | Mental arithmetic recording, quality Bad |
+| `Mental Arithmetic Task EEG;Count Quality: Good` | 26 | event | raw | Mental arithmetic recording, quality Good |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Mental Arithmetic Task vs Resting State Classification
@@ -91,7 +88,6 @@ Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly fema
 - Count quality (Good/Bad) is embedded in the annotation description after the semicolon; always parse carefully.
 - ECG channel present (channel `A2-A1`) in some recordings; exclude from EEG feature extraction.
 - Small dataset (36 subjects x 2 = 72 files); limited generalization.
-
 
 ## Kernel Responsibilities
 

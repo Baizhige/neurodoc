@@ -8,34 +8,30 @@
 
 Fifty stroke patients (sub-01 to sub-50) performed a cued left/right hand motor imagery task (ZhenTec NT1 amplifier, Ag/AgCl cap). EEG was recorded from 29 scalp channels plus 2 EOG channels (HEOL, VEOR). Each recording session contained 20 trials per hand class (20 left + 20 right = 40 trials total). Each trial comprised three phases: an instruction period (visual cue indicating the target hand), a motor imagery period (subject imagines the indicated hand movement), and a break period (rest). The dataset is designed to study MI-based BCI performance in stroke rehabilitation. Subject ages range from 31 to 77 years (median 57.5), with predominantly right-handed subjects (48/50) and a male-majority cohort (39M/11F).
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `fb851de3e4dbb6b9db1391ae068830a750d9dcec09ea21d253d9bcad876d6f4d`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
+| `Break beginning - Left hand` | 1000 | admin | raw | Rest/break period following a left-hand trial |
+| `Break beginning - Right hand` | 1000 | admin | raw | Rest/break period following a right-hand trial |
 | `Instruction beginning - Left hand` | 1000 | admin | raw | Instruction cue onset for left-hand trial |
 | `Instruction beginning - Right hand` | 1000 | admin | raw | Instruction cue onset for right-hand trial |
 | `Motor imagery beginning - Left hand` | 1000 | event | raw | Left-hand motor imagery period onset |
 | `Motor imagery beginning - Right hand` | 1000 | event | raw | Right-hand motor imagery period onset |
-| `Break beginning - Left hand` | 1000 | admin | raw | Rest/break period following a left-hand trial |
-| `Break beginning - Right hand` | 1000 | admin | raw | Rest/break period following a right-hand trial |
-
->
-> Counts are totals across all 50 subjects (20 per class per recording x 50 subjects).
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Motor Imagery Classification (Left vs. Right Hand)
@@ -70,7 +66,6 @@ Fifty stroke patients (sub-01 to sub-50) performed a cued left/right hand motor 
 - EOG channels present (HEOL, VEOR); apply artifact rejection or EOG regression before MI classification.
 - Two left-handed subjects (sub-06, sub-15); consider excluding or annotating for lateralization analyses.
 - Age range 31-77 years (median 57.5); age-related EEG changes may confound MI classification.
-
 
 ## Kernel Responsibilities
 

@@ -7,7 +7,6 @@
 
 EEG was recorded during interaction with an exoskeleton in a gait or robotic-assisted movement task. Participants performed motor tasks with varying exoskeleton assistance levels and movement conditions. BrainVision trigger codes (S-prefixed) encode specific movement phases, assistance levels, and stimulus conditions across 30 categories.
 
-
 ## File Scan Result
 
 > **Kernel**: N/A
@@ -49,6 +48,13 @@ EEG was recorded during interaction with an exoskeleton in a gait or robotic-ass
 | `S122` | 1275 | event | raw | Exo stimulus condition S122 |
 
 
+### MISC Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `S21`, `S22`, `S12`, `S11`, `S32`, `S31`, `S41`, `S42`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+
 ### Info
 
 | Field | Completeness | Notes |
@@ -56,12 +62,6 @@ EEG was recorded during interaction with an exoskeleton in a gait or robotic-ass
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `S21`, `S22`, `S12`, `S11`, `S32`, `S31`, `S41`, `S42`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -153,7 +153,6 @@ EEG was recorded during interaction with an exoskeleton in a gait or robotic-ass
 - BrainVision format; 30 S-coded stimulus conditions require README decoding.
 - `S255` (saturation marker) and `start` events in some files; exclude from analysis.
 - Apply bandpass filter (0.5-40 Hz) and artifact rejection prior to epoching.
-
 
 ## Kernel Responsibilities
 

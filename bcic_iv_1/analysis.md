@@ -8,31 +8,28 @@
 
 Seven subjects performed two-class motor imagery without feedback in an asynchronous (self-paced) BCI paradigm (BCI Competition IV, 2008). The two movement classes differed per subject, selected from: left hand, right hand, or foot imagery. A calibration phase used visual arrow cues with 4-second imagery intervals. The evaluation phase used acoustic cues (spoken words) with variable-duration imagery (1.5-8 s) and rest periods (1.5-8 s), simulating a realistic asynchronous BCI scenario. Both calibration and evaluation `.mat` files are provided per subject; the kernel reads class names and event positions directly from the `.mat` structure.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
 
+> **Kernel SHA256**: `be708ccaca35d8c1b12185468ac158b74a29c36fa810b3dc09073853c425cde5`
+> **EEGUnity Version**: `0.8.0`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `left` | ~100/subject | event | raw | Cue onset for left-hand motor imagery |
-| `right` | ~100/subject | event | raw | Cue onset for right-hand motor imagery (subjects assigned right class) |
-| `foot` | ~100/subject | event | raw | Cue onset for foot motor imagery (subjects assigned foot class) |
-
->
-> Class labels vary per subject: some subjects have `left` + `right`, others have `left` + `foot`. Event names are loaded dynamically from `nfo.className` in the `.mat` file. Counts shown are approximate per calibration file.
+| `foot` | 200 | event | raw | Cue onset for foot motor imagery (subjects assigned foot class) |
+| `left` | 500 | event | raw | Cue onset for left-hand motor imagery |
+| `right` | 300 | event | raw | Cue onset for right-hand motor imagery (subjects assigned right class) |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Two-Class Motor Imagery Classification
@@ -58,7 +55,6 @@ Seven subjects performed two-class motor imagery without feedback in an asynchro
 - No age or sex information is available in the public release.
 - Evaluation phase has variable trial durations and idle periods; the idle state is unlabeled and should be identified by absence of annotations.
 - High sampling rate (1000 Hz); memory-intensive; downsampling recommended.
-
 
 ## Kernel Responsibilities
 

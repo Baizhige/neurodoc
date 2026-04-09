@@ -11,6 +11,7 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 
 ## File Scan Result
 
+
 > **Kernel**: N/A
 > **SHA256**: N/A
 
@@ -23,6 +24,7 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 | `DelayTempo` | 232 (files) | event | raw | Sustained walking to delayed tempo auditory cue |
 | `AdvanceTempo` | 230 (files) | event | raw | Sustained walking to advanced tempo auditory cue |
 | `STATUS` | 39 | admin | raw | BioSemi system status marker - exclude |
+
 
 
 ### MISC Label Summary
@@ -40,12 +42,6 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

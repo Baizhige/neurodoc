@@ -30,6 +30,12 @@ Participants performed right-hand motor imagery and received neurofeedback (1D o
 | `TPULSE/TEND` | 34 | admin | raw | MRI T-pulse end - exclude |
 | `Stimulus/S 35` | 2 | admin | raw | Sparse BrainVision code - exclude |
 
+### MISC Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `Stimulus/S 99`, `Stimulus/S 2`, `Stimulus/S101`, `Stimulus/S 35`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -38,12 +44,6 @@ Participants performed right-hand motor imagery and received neurofeedback (1D o
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Stimulus/S 99`, `Stimulus/S 2`, `Stimulus/S101`, `Stimulus/S 35`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

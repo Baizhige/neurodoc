@@ -7,27 +7,25 @@
 
 The TUH EEG Epilepsy Corpus (v2.0.1) is a clinically labeled subset of the TUH EEG Corpus where each recording is classified as **epilepsy** or **no epilepsy** based on patients' established clinical diagnoses (not real-time EEG pattern) recorded in hospital notes. Unlike tuh_eeg_seizure, the epilepsy label reflects a patient-level diagnosis, not the presence of ictal activity in the specific recording. The label is extracted from the directory path (`00_epilepsy/` or `01_no_epilepsy/`) and assigned as a single whole-recording annotation by the kernel.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+*Placeholder: File scan results pending completion.*
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://isip.piconepress.com/projects/tuh_eeg/downloads/tuh_eeg_epilepsy/v2.0.1/
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|----------|---------------|------|------------|----------|
 | `epilepsy:1` | 1785 | long | raw | Patient has a diagnosis of epilepsy (whole-recording label) |
 | `no epilepsy:1` | 513 | long | raw | Patient does not have epilepsy (whole-recording label) |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
 >
 > Each recording has exactly one annotation spanning its full duration.
+
+### Info
+
+- Variable channels (17-41) and sampling rates (250-1000 Hz)
+- Class distribution: 1785 epilepsy vs. 513 no-epilepsy (~3.5:1 ratio)
 
 ## Tasks
 
@@ -49,9 +47,10 @@ The TUH EEG Epilepsy Corpus (v2.0.1) is a clinically labeled subset of the TUH E
 - **Notes**: Parse label prefix before the colon. Class imbalance: 1785 epilepsy vs. 513 no-epilepsy (~3.5:1); apply class-balancing. Label is a **patient-level diagnosis**, not an EEG event; the EEG recording may or may not contain ictal activity.
 
 | Event | y | Meaning |
-|-------|---|---------|
+|-------|---|--------|
 | `epilepsy:1` | 1 | Epilepsy diagnosis |
 | `no epilepsy:1` | 0 | No epilepsy diagnosis |
+
 ## Data Quality Notes
 
 - Class imbalance: epilepsy (77.6%) vs. no epilepsy (22.4%); balance before training.
@@ -59,6 +58,13 @@ The TUH EEG Epilepsy Corpus (v2.0.1) is a clinically labeled subset of the TUH E
 - Variable channels (17-41) and sampling rates (250-1000 Hz); normalize before cross-recording analysis.
 - Sex is not reliably available.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: TUH EEG Epilepsy Corpus v2.0.1. Obeid I, Picone J (2016). The Temple University Hospital EEG Data Corpus. https://isip.piconepress.com/projects/tuh_eeg/
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://isip.piconepress.com/projects/tuh_eeg/downloads/tuh_eeg_epilepsy/v2.0.1/

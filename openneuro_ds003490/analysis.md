@@ -33,14 +33,9 @@ A three-stimulus auditory oddball task (standard tones, target tones requiring b
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
+
 
 ### Classical Task 1: Parkinson's Disease vs Healthy Control Classification
 - **Task Type**: classification
@@ -74,6 +69,7 @@ A three-stimulus auditory oddball task (standard tones, target tones requiring b
 | `Standard Tone` | 0 | Frequent standard tone (non-target) |
 | `Novel Tone` | 1 | Rare novel distractor tone (P3a) |
 | `Target Tone` | 2 | Infrequent target tone (P3b) |
+
 
 
 ### Potential Task 2: Resting State Classification (binary)

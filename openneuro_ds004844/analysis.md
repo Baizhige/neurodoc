@@ -7,18 +7,9 @@
 
 Simulated semi-automated driving in a leader-follower paradigm focused on predicting and influencing trust-based decisions regarding control authority hand-off and take-over between human and automation. EEG was recorded during sustained driving across multiple automation levels. Event codes are hierarchically structured 7-digit identifiers encoding driving state and automation mode.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004844
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -37,6 +28,10 @@ Simulated semi-automated driving in a leader-follower paradigm focused on predic
 | `1410002` | 1591 | long | raw | Driving state code |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
+
+### Info
+
+No additional info required.
 
 ## Tasks
 
@@ -72,6 +67,13 @@ Simulated semi-automated driving in a leader-follower paradigm focused on predic
 - All event codes are 7-digit hierarchical numeric identifiers - full decode needed.
 - 40+ unique codes; group by condition category for practical classification.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Predicting and influencing trust-based decisions about control authority hand-off and take-over during simulated, semi-automated driving in a leader-follower paradigm`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004844

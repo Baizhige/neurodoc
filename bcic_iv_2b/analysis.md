@@ -10,8 +10,7 @@ Nine subjects (B01-B09) performed two-class cued motor imagery of the left and r
 
 ## File Scan Result
 
-
-> **Kernel SHA256**: `2d9abc38f621e51629f0d04150eb25c050be75baa79967c83d8222f0f66353c1`
+> **Kernel SHA256**: `f8318b338ce28894e9eb4e28cfcd174ed8fe180a3c6730d7756c660f2518fadc`
 > **EEGUnity Version**: `0.8.0`
 > **Scan Type**: Full
 ### Event Structure

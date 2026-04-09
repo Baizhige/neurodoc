@@ -7,18 +7,9 @@
 
 Participants experienced electrical muscle stimulation that actuated their hand movements in three conditions: stimulation (involuntary movement), pretest (voluntary movement before stimulation), and posttest (voluntary movement after stimulation). EEG was recorded to investigate illusory sense of agency over externally-driven movements. The study explores how prior voluntary movement influences agency attribution over stimulation-induced movements.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004561
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -31,12 +22,18 @@ Participants experienced electrical muscle stimulation that actuated their hand 
 > - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
 > - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **not used for epoch**
-## STIM Label Summary
+
+### MISC Label Summary
 
 - **Route**: `stim`
 - **Role**: Trigger-channel or stimulus-marker based labeling.
 - **Candidate Trigger Labels**: `stimulation`
 - **Kernel Note**: Keep trigger decoding table versioned and auditable.
+
+### Info
+
+- **Primary Label Routes**: Annotation, stim
+- **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004561
 
 ## Tasks
 
@@ -58,15 +55,21 @@ Participants experienced electrical muscle stimulation that actuated their hand 
 - **Notes**: 3-class classification of agency conditions. stimulation = externally actuated movement, pretest/posttest = voluntary movements before/after stimulation session.
 
 | Event | y | Meaning |
- |-------|---|------|
- | `stimulation` | 0 | Electrical stimulation (involuntary movement) |
- | `pretest` | 1 | Pre-stimulation voluntary movement |
- | `posttest` | 2 | Post-stimulation voluntary movement |
+|-------|---|------|
+| `stimulation` | 0 | Electrical stimulation (involuntary movement) |
+| `pretest` | 1 | Pre-stimulation voluntary movement |
+| `posttest` | 2 | Post-stimulation voluntary movement |
+
 ## Data Quality Notes
 
 - 20 subjects with balanced condition structure
 - 64 channels at 512 Hz provides good temporal resolution for movement-related potentials
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Illusion of Agency over Electrically-Actuated Movements`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.

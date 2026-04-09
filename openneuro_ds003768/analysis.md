@@ -23,6 +23,10 @@ Simultaneous EEG-fMRI recordings were acquired during resting-state wakefulness 
 | `Stimulus/S 3` | 183 | event | raw | BrainVision S3 trigger (sleep stage marker) |
 | `Response/R128` | 252 | admin | raw | BrainVision R128 response trigger |
 
+**Route**: `stim`
+**Role**: Trigger-channel or stimulus-marker based labeling.
+**Candidate Trigger Labels**: `Stimulus/S 1`, `Stimulus/S 2`, `Stimulus/S 3`
+**Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -31,12 +35,6 @@ Simultaneous EEG-fMRI recordings were acquired during resting-state wakefulness 
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Stimulus/S 1`, `Stimulus/S 2`, `Stimulus/S 3`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -48,7 +46,7 @@ Simultaneous EEG-fMRI recordings were acquired during resting-state wakefulness 
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---\u2500------|
   | S1 trigger | 0 | Wake (W) |
   | S1 trigger | 1 | NREM1 (N1) |
   | S2 trigger | 2 | NREM2 (N2) |
@@ -67,7 +65,7 @@ Simultaneous EEG-fMRI recordings were acquired during resting-state wakefulness 
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---\u2500------|
   | S1/S2/S3 triggers | 0 | Awake (W) |
   | S1/S2/S3 triggers | 1 | Sleep (NREM2) or Anesthesia |
 - **Super Meta Notes**: Derived from raw events [`Stimulus/S 1`, `Stimulus/S 2`, `Stimulus/S 3`]. Sleep stage labels scored by RPT from EEG enable binary wake vs sleep classification. Kernel step: Extract 20-sec epochs aligned to S1/S2/S3, then binarize labels (W=awake, N1/N2/N3=sleep).
@@ -84,7 +82,7 @@ Simultaneous EEG-fMRI recordings were acquired during resting-state wakefulness 
 - **Notes**: S1/S2/S3 likely encode sleep stage transitions (Wake, NREM1/2/3, REM); exact mapping must be confirmed from events.tsv or dataset documentation. Sleep stages are sustained states (>=2 s); use long-event epoching. Very high sampling rate (5000 Hz); downsample to 250 Hz for standard sleep scoring.
 
 | Event | y | Meaning |
-|-------|---|------|
+|-------\u2500--|------|
 | `Stimulus/S 1` | 0 | Sleep stage 1 (need to confirm the specific sleep stage from events.tsv) |
 | `Stimulus/S 2` | 1 | Sleep Stage 2 |
 | `Stimulus/S 3` | 2 | Sleep Stage 3 |

@@ -7,18 +7,13 @@
 
 Eleven subjects performed steady-state visual evoked potential (SSVEP) tasks across three recording datasets with different EEG hardware (Nakanishi et al., 2018). Subjects fixated on flickering visual stimuli at different frequencies while EEG was recorded. Datasets 1 and 2 used a BrainProducts system (256 channels, 250 Hz); dataset 3 used an Emotiv EPOC (14 channels, 128 Hz). Each recording corresponds to one SSVEP stimulus condition (frequency). The kernel creates a single whole-recording `SSVEP` annotation for each file; the stimulus frequency is encoded in the filename/subdirectory.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+- **Scan Status**: Pending
+- **Files Expected**: TBD
+- **Files Found**: TBD
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://www.physionet.org/
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -28,12 +23,18 @@ Eleven subjects performed steady-state visual evoked potential (SSVEP) tasks acr
 >
 > Stimulus frequency information must be parsed from the filename or subdirectory (e.g., frequency in Hz). Each file corresponds to one stimulus frequency condition.
 
+### Info
+
+- **Dataset Overview**: Multi-stimulus SSVEP EEG database with 11 subjects across 3 recording sessions
+- **Stimulus Frequencies**: Encoded in filenames; must be parsed for classification targets
+- **Hardware**: BrainProducts (datasets 1-2) or Emotiv EPOC (dataset 3)
+
 ## Tasks
 
 ### Primary Task 1: SSVEP target/frequency decoding
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5` or `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification] | tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification]
+- **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, target_events = [Needs Verification] | tmin = Needs Verification, tmax = Needs Verification, overlap = Needs Verification, target_events = [Needs Verification]
 - **Label Route**: `stim` or `Annotation`
 - **Target Definition**: Stimulus frequency or target index
 - **Evidence**: SSVEP paradigm is explicitly stated in dataset metadata/reference. Source: https://www.physionet.org/ DOI: https://doi.org/10.1109/tbme.2017.2694818
@@ -53,6 +54,13 @@ Eleven subjects performed steady-state visual evoked potential (SSVEP) tasks acr
 - Age range: 24-39 years; sex: ~171 male / 64 female recording sessions.
 - For SSVEP analysis, focus on occipital channels (Oz, O1, O2, POz) from the BrainProducts recordings.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: Nakanishi M et al. (2018). Enhancing Detection of SSVEPs for a High-Speed Brain Speller Using Task-Related Component Analysis. *IEEE Trans. Biomed. Eng.* https://www.physionet.org/
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation
+> **Web Reference Used for Decision**: https://www.physionet.org/

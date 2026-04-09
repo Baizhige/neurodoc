@@ -7,18 +7,9 @@
 
 Participants performed the Simon conflict task in which stimulus location (left/right) could be congruent or incongruent with the required response direction. S 1 and S 2 encode congruent and incongruent trial types respectively; S 3 marks rare/catch trials. The study investigates conflict monitoring and executive control neural signatures (N2, P3 ERP components).
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004580
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -33,12 +24,11 @@ Participants performed the Simon conflict task in which stimulus location (left/
 > - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
 > - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **not used for epoch**
-## STIM Label Summary
+
+### Info
 
 - **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
 - **Candidate Trigger Labels**: `S 1`, `S 2`, `S 3`, `S255`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -60,15 +50,23 @@ Participants performed the Simon conflict task in which stimulus location (left/
 - **Notes**: boundary and S255 are admin events - exclude from target_events. S255 is a BrainVision system marker (overflow/sync), not a task event. S 3 (rare trials) can be optionally included as a third class.
 
 | Event | y | Meaning |
- |-------|---|------|
- | `S 1` | 0 | Congruent trial |
- | `S 2` | 1 | Incongruent trial |
+|-------|---|---------|
+| `S 1` | 0 | Congruent trial |
+| `S 2` | 1 | Incongruent trial |
+
 ## Data Quality Notes
 
 - boundary and S255 must be excluded from epoching
 - Balanced S 1 and S 2 counts (~384 vs ~383 per subject)
 - 30 subjects with consistent congruent/incongruent structure
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Simon-conflict Task`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation, stim
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004580

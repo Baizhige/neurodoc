@@ -42,12 +42,6 @@ Participants performed kinesthetic motor imagery of grasping movements with the 
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `OVTK_StimulationId_BaselineStart`, `OVTK_StimulationId_BaselineStop`, `OVTK_StimulationId_Beep`, `OVTK_StimulationId_Train`, `OVTK_StimulationId_ExperimentStart`, `OVTK_StimulationId_ExperimentStop`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

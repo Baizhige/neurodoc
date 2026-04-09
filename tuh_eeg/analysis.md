@@ -34,12 +34,10 @@ The Temple University Hospital EEG Corpus (v2.0.1) is the largest publicly avail
 ## Tasks
 
 
+## Data Quality Notes
+
 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
 > **Status**: completed
-
-## Data Quality Notes
-
-

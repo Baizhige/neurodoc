@@ -8,18 +8,9 @@
 
 An experimental task investigating neural mechanisms of anticipation by comparing stimulus-driven attention and predictive expectation. Participants attended to auditory or visual stimuli with varying validity cues to disentangle attention (stimulus-driven) from expectation (predictive) effects on neural anticipatory activity.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004502
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -38,7 +29,8 @@ An experimental task investigating neural mechanisms of anticipation by comparin
 > - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
 > - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 > - `admin`: system/boundary marker, **not used for epoch**
-## STIM Label Summary
+
+### Info
 
 - **Route**: `stim`
 - **Role**: Trigger-channel or stimulus-marker based labeling.
@@ -68,12 +60,20 @@ An experimental task investigating neural mechanisms of anticipation by comparin
  |-------|---|------|
  | `S 17`...`S 24` | 0 | Attention condition trials (S1x range) |
  | `S 33`...`S 57` | 1 | Expectation condition trials (S3x-S5x range) |
+
 ## Data Quality Notes
 
 - 30 distinct trigger codes require semantic decoding from events.tsv metadata
 - All 30 codes appear in all 38 files with consistent counts
 - 63 channels at 1000 Hz (BrainVision system)
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `Anticipatory differences between Attention and Expectation`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation, stim
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004502

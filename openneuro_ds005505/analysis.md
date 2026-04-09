@@ -36,14 +36,12 @@ The Healthy Brain Network (HBN) EEG Release 1 is a large-scale, multi-task devel
 | `learningBlock_1` | 122 | event | raw | Sequence learning block 1 onset |
 | `9999` | 1136 | admin | raw | End-of-recording marker |
 
-
 ### MISC Label Summary
 
 - **Route**: `misc`
 - **Role**: Stores derived/continuous labels that are not native raw event IDs.
 - **Candidate Labels**: `externalizing_factor`, `p_factor`, `response_time`
 - **Kernel Note**: Keep derivation source, unit, and version metadata.
-
 
 ### Info
 
@@ -52,12 +50,6 @@ The Healthy Brain Network (HBN) EEG Release 1 is a large-scale, multi-task devel
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stim_ON`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -133,6 +125,7 @@ The Healthy Brain Network (HBN) EEG Release 1 is a large-scale, multi-task devel
 - **Regression Target**: `response_time`
 - **Kernel Notes**: Parse trial chains and write regression targets with unit/version metadata.
 
+
 ## Data Quality Notes
 
 - HBN is a heterogeneous multi-task battery; task availability differs across participants and files.
@@ -143,6 +136,7 @@ The Healthy Brain Network (HBN) EEG Release 1 is a large-scale, multi-task devel
 
 
 ## Kernel Responsibilities
+
 
 > **Super Meta Required**: Yes
 > **Status**: wait_manual_review

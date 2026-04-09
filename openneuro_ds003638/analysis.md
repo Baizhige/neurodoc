@@ -17,12 +17,18 @@ This study employs three cross-species behavioral paradigms (5-Choice Continuous
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|----------|---------------|------|------------|----------|
 | `1 5CCPT`-`80 5CCPT` | 57 each | event | raw | 5-Choice CPT numeric trigger codes |
 | `116 PRBP`, `117 PRBP` | 57 each | event | raw | Probabilistic reward/punishment task trigger codes |
 | `31 PST`, `32 PST`, `39 PST` | 56-57 each | event | raw | Pavlovian-to-Instrumental Transfer task trigger codes |
 | `STATUS` | 57 | admin | raw | System status marker |
 
+### MISC Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `STATUS`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -31,12 +37,6 @@ This study employs three cross-species behavioral paradigms (5-Choice Continuous
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

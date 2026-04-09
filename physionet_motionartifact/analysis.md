@@ -7,26 +7,26 @@
 
 Thirty-two recordings (23 EEG + 9 fNIRS) were collected from subjects performing various physical activities: cycling, running, walking, push-ups, pull-ups, stretching, and rest (Schultz & Kluge, 2018). The purpose is to provide a benchmark dataset for motion artifact detection and removal algorithms. EEG was recorded from 10 channels (gel electrodes) at 2048 Hz; fNIRS from 12 channels at 200 Hz. Each recording corresponds to one subject performing one activity. Activity labels are encoded in the filename (recording ID: `eeg_1` through `eeg_23`; `fnirs_1` through `fnirs_9`) and documented in a companion README.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `f5f23b6eaff653b5422dd754f5674fe93940d1734cb3bd7df0b240c6b5021314`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| (none) | - | - | raw | No event annotations present; activity label is implicit in recording ID |
+| `F` | 23 | event | raw |  |
+| `R` | 23 | event | raw |  |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Motion Artifact Binary Classification
@@ -58,7 +58,6 @@ Thirty-two recordings (23 EEG + 9 fNIRS) were collected from subjects performing
 - Mixed signal types: EEG (eeg_1-eeg_23, 10 channels, 2048 Hz) and fNIRS (fnirs_1-fnirs_9, 12 channels, 200 Hz) in the same locator; process these file types separately.
 - Age and sex information are not available.
 - Primary use case is motion artifact removal/detection benchmarking, not cognitive task decoding.
-
 
 ## Kernel Responsibilities
 

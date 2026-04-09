@@ -7,18 +7,9 @@
 
 An EEG dataset (ODE) recorded during a social-cognitive paradigm with hierarchically encoded stimulus conditions. Shares the identical event structure with the STRONG (ds004849) and InsurgentCivilian (ds004852) datasets, suggesting these are companion recordings from the same experimental series. The single aggregated file requires events.tsv decoding for full interpretation.
 
-## Kernel Responsibilities
+## File Scan Result
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004850
-
-## Event Structure
+### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
@@ -37,12 +28,18 @@ An EEG dataset (ODE) recorded during a social-cognitive paradigm with hierarchic
 | `51011` | 170 | short | raw | Trigger code |
 
 > **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-## STIM Label Summary
+
+### MISC Label Summary
 
 - **Route**: `stim`
 - **Role**: Trigger-channel or stimulus-marker based labeling.
 - **Candidate Trigger Labels**: Needs verification
 - **Kernel Note**: Keep trigger decoding table versioned and auditable.
+
+### Info
+
+- Single aggregated file; individual subject data not separable.
+- Identical event structure to ds004849 and ds004852 - likely companion recordings.
 
 ## Tasks
 
@@ -64,7 +61,7 @@ An EEG dataset (ODE) recorded during a social-cognitive paradigm with hierarchic
 - **Notes**: Identical event structure to ds004849 (STRONG) and ds004852 (InsurgentCivilian). Single aggregated file.
 
  | Event | y | Meaning |
- |-------|---|---------|
+ |-------|---|-|
  | `2200` | 0 | Primary condition code |
  | `72011` | 1 | Trigger code |
  | `52011` | 2 | Trigger code |
@@ -82,6 +79,13 @@ An EEG dataset (ODE) recorded during a social-cognitive paradigm with hierarchic
 - Single aggregated file; individual subject data not separable.
 - Identical event structure to ds004849 and ds004852 - likely companion recordings.
 
-## References
+## Kernel Responsibilities
 
-- **Reference**: `ODE`
+- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
+- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
+- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+
+> **Selected Mode**: Type 1 + Type 3
+> **Why**: Raw markers are sufficient for primary tasks.
+> **Primary Label Routes**: Annotation, stim
+> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004850

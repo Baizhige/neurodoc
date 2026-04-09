@@ -25,6 +25,12 @@ Participants viewed images across five visual categories (faces, animals, places
 | `Stimulus/S 68` | 4285 | event | raw | Visual category 4 |
 | `Stimulus/S 4`-`Stimulus/S 57` | ~1377 each | event | raw | Individual exemplar image onsets (60+ items) |
 
+### MISC Label Summary
+
+- **Route**: `stim`
+- **Role**: Trigger-channel or stimulus-marker based labeling.
+- **Candidate Trigger Labels**: `Stimulus/S 99`, `Stimulus/S 66`, `Stimulus/S 67`, `Stimulus/S 65`, `Stimulus/S 69`, `Stimulus/S 68`, `Stimulus/S 4`, `Stimulus/S 57`
+- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
 
@@ -33,12 +39,6 @@ Participants viewed images across five visual categories (faces, animals, places
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Stimulus/S 99`, `Stimulus/S 66`, `Stimulus/S 67`, `Stimulus/S 65`, `Stimulus/S 69`, `Stimulus/S 68`, `Stimulus/S 4`, `Stimulus/S 57`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 

@@ -37,12 +37,8 @@ This study examines whether conflict acts as an implicit cost in reinforcement l
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `Trn Stim`, `Test Stim`, `STATUS`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
+| `stim_route` | available | Route: `stim`; Role: Trigger-channel or stimulus-marker based labeling |
+| `candidate_trigger_labels` | available | `Trn Stim`, `Test Stim`, `STATUS` |
 
 ## Tasks
 
