@@ -6,8 +6,7 @@
 
 ## Paradigm
 
-Seven subjects performed two-class motor imagery without feedback in an asynchronous (self-paced) BCI paradigm (BCI Competition IV, 2008). The two movement classes differed per subject, selected from: left hand, right hand, or foot imagery. A calibration phase used visual arrow cues with 4-second imagery intervals. The evaluation phase used acoustic cues (spoken words) with variable-duration imagery (1.5-8 s) and rest periods (1.5-8 s), simulating a realistic asynchronous BCI scenario. Both calibration and evaluation `.mat` files are provided per subject; the kernel reads class names and event positions directly from the `.mat` structure.
-
+Seven subject datasets are provided for two-class motor imagery without feedback in an asynchronous (self-paced) BCI paradigm (BCI Competition IV, 2008). The two movement classes differed per subject, selected from left hand, right hand, or foot imagery. A calibration phase used visual arrow cues with 4-second imagery intervals. The evaluation phase used acoustic cues (spoken words) with variable-duration imagery (1.5-8 s) and rest periods (1.5-8 s), simulating a realistic asynchronous BCI scenario. Both calibration and evaluation `.mat` files are provided per subject; class names are available in the `.mat` structure, whereas event positions are provided in the calibration files (`mrk.pos`) but not in the evaluation files. Later competition materials noted that three datasets (`c`, `d`, and `e`) were artificially generated.
 
 ## File Scan Result
 
@@ -17,14 +16,13 @@ Seven subjects performed two-class motor imagery without feedback in an asynchro
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|---|---|---|---|---|
 | `left` | ~100/subject | event | raw | Cue onset for left-hand motor imagery |
 | `right` | ~100/subject | event | raw | Cue onset for right-hand motor imagery (subjects assigned right class) |
 | `foot` | ~100/subject | event | raw | Cue onset for foot motor imagery (subjects assigned foot class) |
 
->
-> Class labels vary per subject: some subjects have `left` + `right`, others have `left` + `foot`. Event names are loaded dynamically from `nfo.className` in the `.mat` file. Counts shown are approximate per calibration file.
 
+> Class labels vary per subject: some subjects have `left` + `right`, others have `left` + `foot`. Event names are loaded dynamically from `nfo.className` in the `.mat` file. Counts shown are approximate per calibration file.
 
 ### Info
 
@@ -32,13 +30,15 @@ Seven subjects performed two-class motor imagery without feedback in an asynchro
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
-| `device` | missing | N/A |
+| `device` | missing | BrainAmp MR plus amplifiers; Ag/AgCl electrode cap |
+
+
 ## Tasks
 
 ### Classical Task 1: Two-Class Motor Imagery Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s, target_events = [`left`, `right`, `foot`]
+- **Epoch Parameters**: tmin = 2 s, tmax = 5 s, target_events = [`left`, `right` or `foot`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -50,7 +50,7 @@ Seven subjects performed two-class motor imagery without feedback in an asynchro
   - DOI: 10.1109/tnsre.2020.3020975 — Uses BCI Competition IV Dataset 1 for two-class motor imagery classification with epochs from 2-6s time window relative to cue onset
   - DOI: 10.1109/icoras.2016.7872610 — Tests SVM, k-NN, MLP-ANN, LR classifiers on two-class motor imagery from calibration data
   - DOI: 10.1109/tnsre.2021.3071140 — Applies CTFSP algorithm to this dataset with sliding window approach [2-5]s, [2.5-5.5]s, [3-6]s
-- **Kernel Notes**: Class labels are subject-specific (some subjects have left+right, others have left+foot); kernel must read class assignments from the `.mat` file `nfo.className` field. Calibration files contain cue markers with 4s imagery intervals; evaluation files have variable-length uncued periods. High sampling rate (1000 Hz); consider downsampling to ≤250 Hz for efficiency. (replaces Potential Task 1 from original analysis.md)
+- **Kernel Notes**: 
 
 ## Data Quality Notes
 
@@ -59,8 +59,7 @@ Seven subjects performed two-class motor imagery without feedback in an asynchro
 - Evaluation phase has variable trial durations and idle periods; the idle state is unlabeled and should be identified by absence of annotations.
 - High sampling rate (1000 Hz); memory-intensive; downsampling recommended.
 
-
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: completed
