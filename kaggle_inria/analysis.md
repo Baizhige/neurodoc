@@ -8,31 +8,28 @@
 
 Twenty-six subjects (ages 20-37) performed a P300-based BCI feedback task using a 56-channel Ag/AgCl EEG cap at 200 Hz (plus 1 EOG channel and 1 FeedBackEvent channel, total 58). The task was a P300 matrix speller in which subjects attended to a target character while row/column flashes elicited P300 responses. Feedback was provided after each trial: subjects received either a correct ("good") or incorrect ("wrong") response to the P300 classifier output. Each session file (CSV format) contains one session for one subject; each subject has 5 sessions. Feedback event times are encoded in the dedicated `FeedBackEvent` channel; labels ("good" or "wrong") are sourced from a companion `TrainLabels.csv` file. Test sessions have unknown labels.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
 
+> **Kernel SHA256**: `b7b6d30d084aef11930444b66f20db1a72b9b071faa81dd4d08634281a8d276f`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `good feedback to P300` | varies (~1300) | event | raw | Feedback event: BCI output was correct |
-| `wrong feedback to P300` | varies (~650) | event | raw | Feedback event: BCI output was incorrect |
-| `unknown feedback to P300` | varies (~1560) | event | raw | Feedback event: label unknown (test sessions) |
-
->
-> Feedback events are 1 s in duration (as set in kernel annotations). Test sessions (Sess01-Sess04 for most subjects) have `unknown` labels; labeled sessions are typically Sess05. Approximately 60 feedback events per session.
+| `good feedback to P300` | 3850 | event | raw | Feedback event: BCI output was correct |
+| `unknown feedback to P300` | 3400 | event | raw | Feedback event: label unknown (test sessions) |
+| `wrong feedback to P300` | 1590 | event | raw | Feedback event: BCI output was incorrect |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
+| `subject_age` | partial (130/133) | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Feedback Error Detection (Good vs Wrong)
@@ -67,7 +64,6 @@ Twenty-six subjects (ages 20-37) performed a P300-based BCI feedback task using 
 - 58 channels include 56 EEG + 1 EOG + 1 FeedBackEvent auxiliary channel; remove FeedBackEvent and EOG before training.
 - Many sessions have only unknown labels (test set); only sessions with known labels in TrainLabels.csv can be used for supervised learning.
 - Age range 20-37 available from dataset metadata; no sex information.
-
 
 ## Kernel Responsibilities
 
