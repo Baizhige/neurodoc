@@ -9,6 +9,7 @@ import json
 import re
 from pathlib import Path
 from flask import Flask, jsonify, request, send_from_directory, abort
+import waitress
 
 try:
     import requests as _requests
@@ -68,7 +69,22 @@ def index():
 
 @app.route("/api/datasets")
 def api_datasets():
-    return jsonify(_list_datasets())
+    page = request.args.get("page")
+    page_size = request.args.get("page_size")
+    all_datasets = _list_datasets()
+
+    if page and page_size:
+        page = int(page)
+        page_size = int(page_size)
+        start = (page - 1) * page_size
+        end = start + page_size
+        paginated_datasets = all_datasets[start:end]
+        return jsonify({
+            "datasets": paginated_datasets,
+            "total": len(all_datasets)
+        })
+    else:
+        return jsonify(all_datasets)
 
 
 @app.route("/api/dataset/<name>", methods=["GET"])
@@ -167,4 +183,4 @@ def api_llm():
 
 if __name__ == "__main__":
     print("EEG Audit Tool running at http://127.0.0.1:5000")
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    waitress.serve(app, host="127.0.0.1", port=5000)
