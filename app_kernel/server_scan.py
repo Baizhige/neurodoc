@@ -262,8 +262,9 @@ def api_scan_start():
                     except Exception:
                         sampled_total_n = 0
 
+                misc_channel_names = []
                 if sampled:
-                    df = engine.run_full_scan(
+                    df, misc_channel_names = engine.run_full_scan(
                         ds_name, dataset_roots, kernel_path, eegunity_path,
                         progress_cb=_cb,
                         stdout_lines=job_stdout,
@@ -285,7 +286,7 @@ def api_scan_start():
                     _cb("Loaded metadata cache", 80)
                     cache_source = "metadata_cache"
                 else:
-                    df = engine.run_full_scan(
+                    df, misc_channel_names = engine.run_full_scan(
                         ds_name, dataset_roots, kernel_path, eegunity_path,
                         progress_cb=_cb,
                         stdout_lines=job_stdout,
@@ -317,6 +318,7 @@ def api_scan_start():
                     "cache_source": cache_source,
                     "event_counts": event_counts,
                     "subject_info": subject_info,
+                    "misc_channel_names": misc_channel_names,
                 }
 
                 # Compute diff

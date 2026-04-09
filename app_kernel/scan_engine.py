@@ -99,13 +99,24 @@ def load_llm_config() -> Dict[str, str]:
 # ---------------------------------------------------------------------------
 
 def find_dataset_path(dataset_name: str, dataset_roots: List[str]) -> Optional[str]:
-    """Search dataset_roots in order; return first directory that contains dataset_name."""
+    """Search dataset_roots in order; return first directory that contains dataset_name.
+
+    For openneuro datasets the on-disk directory may omit the 'openneuro_' prefix
+    (e.g. analysis folder 'openneuro_ds001785' → disk dir 'ds001785'), so both
+    variants are tried.
+    """
+    _OPENNEURO_PREFIX = "openneuro_"
+    names_to_try = [dataset_name]
+    if dataset_name.startswith(_OPENNEURO_PREFIX):
+        names_to_try.append(dataset_name[len(_OPENNEURO_PREFIX):])
+
     for root in dataset_roots:
         if not root:
             continue
-        candidate = Path(root) / dataset_name
-        if candidate.is_dir():
-            return str(candidate)
+        for name in names_to_try:
+            candidate = Path(root) / name
+            if candidate.is_dir():
+                return str(candidate)
     return None
 
 
@@ -159,7 +170,9 @@ def get_kernel_sha256(kernel_path: str) -> str:
         p = BIDS_ROOT / kernel_path
     if not p.exists():
         return "file_not_found"
-    data = p.read_bytes()
+    # Normalize to CRLF before hashing so the result is identical across
+    # Linux (LF) and Windows (CRLF) checkouts of the same git file.
+    data = p.read_bytes().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
     return hashlib.sha256(data).hexdigest()
 
 
@@ -195,6 +208,10 @@ def _metadata_cache_stem(dataset_name: str, kernel_sha256: str) -> str:
 
 def get_locator_cache_path(dataset_name: str) -> Path:
     return _get_cache_dir() / f"{dataset_name}.csv"
+
+
+def get_tmp_locator_path(dataset_name: str) -> Path:
+    return _get_cache_dir() / f"{dataset_name}_sampled_tmp.csv"
 
 
 def get_metadata_cache_csv_path(dataset_name: str, kernel_sha256: str) -> Path:
@@ -583,6 +600,28 @@ def _normalize_sampled_indices(sampled_indices: Optional[List[int]], n_files: in
     return cleaned or None
 
 
+def _extract_misc_channels(udataset, stdout_lines: List[str]) -> List[str]:
+    """Return sorted unique misc channel names by reading the first locator entry.
+
+    Misc channel names are typically uniform across a dataset (all files share the
+    same channel layout after the kernel runs), so sampling the first file is enough.
+    """
+    locator = udataset.get_shared_attr()["locator"]
+    if locator.empty:
+        return []
+    try:
+        raw = udataset.eeg_parser.get_data(0, preload=False)
+        misc_names = sorted(
+            n for n, t in zip(raw.ch_names, raw.get_channel_types()) if t == "misc"
+        )
+        if misc_names:
+            stdout_lines.append(f"  Misc channels detected: {misc_names}")
+        return misc_names
+    except Exception as exc:
+        stdout_lines.append(f"  [WARN] Could not extract misc channels: {exc}")
+        return []
+
+
 def run_full_scan(
     dataset_name: str,
     dataset_roots: List[str],
@@ -629,46 +668,75 @@ def run_full_scan(
     sys.stdout = tee
 
     try:
-        if progress_cb:
-            progress_cb("Scanning dataset directory...", 5)
+        sampled_requested = sampled_indices is not None
         stdout_lines.append(f"[Scan] Dataset: {dataset_name}, path: {dataset_path}")
         if abs_kernel:
             stdout_lines.append(f"[Scan] Kernel: {abs_kernel}")
         else:
             stdout_lines.append("[Scan] No kernel - using default EEGUnity parser")
 
-        ud_kwargs = dict(
-            dataset_path=dataset_path,
-            domain_tag=dataset_name,
-            verbose="WARNING",
-            num_workers=num_workers,
-        )
-        if abs_kernel:
-            ud_kwargs["kernel_spec"] = abs_kernel
+        if sampled_requested and locator_cache_exists(dataset_name):
+            # Fast path: load pre-built base locator, skip full directory scan.
+            if progress_cb:
+                progress_cb("Loading base locator cache...", 5)
+            base_df = load_locator_cache(dataset_name)
+            n_files = len(base_df)
+            sampled_indices = _normalize_sampled_indices(sampled_indices, n_files)
+            if sampled_indices is None:
+                raise ValueError("Sampled scan received no valid locator indices.")
 
-        ud = UnifiedDataset(**ud_kwargs)
-        base_locator = _ensure_base_locator_columns(ud.get_shared_attr()["locator"].copy())
-        n_files = len(base_locator)
-        stdout_lines.append(f"[Scan] Found {n_files} file(s) in locator")
+            working_locator = base_df.iloc[sampled_indices].reset_index(drop=True)
+            tmp_path = get_tmp_locator_path(dataset_name)
+            tmp_path.parent.mkdir(parents=True, exist_ok=True)
+            working_locator.to_csv(str(tmp_path), index=False)
 
-        if persist_base_cache:
-            save_locator_cache(dataset_name, base_locator)
-            stdout_lines.append(f"[Scan] Base locator cache saved: {get_locator_cache_path(dataset_name)}")
-
-        sampled_requested = sampled_indices is not None
-        sampled_indices = _normalize_sampled_indices(sampled_indices, n_files)
-        if sampled_requested and sampled_indices is None:
-            raise ValueError("Sampled scan received no valid locator indices.")
-        if sampled_indices is not None:
-            working_locator = ud.get_shared_attr()["locator"].iloc[sampled_indices].copy()
-            stdout_lines.append(f"[Scan] Quick-run: processing {len(sampled_indices)}/{n_files} files")
+            stdout_lines.append(
+                f"[Scan] Quick-run (tmp locator): {len(sampled_indices)}/{n_files} files"
+            )
+            ud_kwargs: dict = dict(
+                locator_path=str(tmp_path),
+                verbose="WARNING",
+                num_workers=num_workers,
+            )
+            if abs_kernel:
+                ud_kwargs["kernel_spec"] = abs_kernel
+            ud = UnifiedDataset(**ud_kwargs)
         else:
-            working_locator = ud.get_shared_attr()["locator"].copy()
+            # Standard path: full directory scan.
+            if progress_cb:
+                progress_cb("Scanning dataset directory...", 5)
+            ud_kwargs = dict(
+                dataset_path=dataset_path,
+                domain_tag=dataset_name,
+                verbose="WARNING",
+                num_workers=num_workers,
+            )
+            if abs_kernel:
+                ud_kwargs["kernel_spec"] = abs_kernel
+            ud = UnifiedDataset(**ud_kwargs)
 
-        ud.get_shared_attr()["locator"] = working_locator
+            base_locator = _ensure_base_locator_columns(ud.get_shared_attr()["locator"].copy())
+            n_files = len(base_locator)
+            stdout_lines.append(f"[Scan] Found {n_files} file(s) in locator")
+
+            if persist_base_cache:
+                save_locator_cache(dataset_name, base_locator)
+                stdout_lines.append(
+                    f"[Scan] Base locator cache saved: {get_locator_cache_path(dataset_name)}"
+                )
+
+            sampled_indices = _normalize_sampled_indices(sampled_indices, n_files)
+            if sampled_requested and sampled_indices is None:
+                raise ValueError("Sampled scan received no valid locator indices.")
+            if sampled_indices is not None:
+                working_locator = ud.get_shared_attr()["locator"].iloc[sampled_indices].copy()
+                stdout_lines.append(
+                    f"[Scan] Quick-run (full init): {len(sampled_indices)}/{n_files} files"
+                )
+                ud.get_shared_attr()["locator"] = working_locator
 
         if progress_cb:
-            progress_cb(f"Extracting events ({len(working_locator)} files)...", 20)
+            progress_cb(f"Extracting events ({len(ud.get_shared_attr()['locator'])} files)...", 20)
         if hasattr(ud.eeg_batch, "get_meta"):
             ud.eeg_batch.get_meta(miss_bad_data=True)
         else:
@@ -677,6 +745,8 @@ def run_full_scan(
         if progress_cb:
             progress_cb("Extracting subject metadata...", 75)
         _extract_description_batch(ud, stdout_lines)
+
+        misc_channel_names = _extract_misc_channels(ud, stdout_lines)
 
         result_df = _normalize_scan_result_frame(ud.get_shared_attr()["locator"].copy())
 
@@ -703,7 +773,7 @@ def run_full_scan(
     finally:
         sys.stdout = orig_stdout
 
-    return result_df
+    return result_df, misc_channel_names
 
 
 def _parse_event_id_num(s: Any) -> Dict[str, int]:
@@ -897,6 +967,7 @@ def merge_scan_results(
     eegunity_version = scan_result["eegunity_version"]
     event_counts = scan_result["event_counts"]
     subject_info = scan_result["subject_info"]
+    misc_channel_names: List[str] = scan_result.get("misc_channel_names", [])
     sampled = scan_result.get("sampled", False)
     sampled_n = scan_result.get("sampled_n", 0)
     total_n = scan_result.get("total_n", 0)
@@ -965,6 +1036,24 @@ def merge_scan_results(
         existing_info = _parse_info_table(info_m.group(2))
         new_info_tbl = _build_info_table_smart(subject_info, existing_info)
         new_content = new_content[:info_m.start(2)] + new_info_tbl + "\n" + new_content[info_m.end(2):]
+
+    # ── 4. Update MISC Label Summary Candidate Labels (only when misc channels present) ──
+    if misc_channel_names:
+        misc_m = re.search(
+            r"(### MISC Label Summary\s*\n)(.*?)(?=\n###|\n## |\Z)",
+            new_content, re.DOTALL,
+        )
+        if misc_m:
+            inner = misc_m.group(2)
+            labels_str = ", ".join(f"`{c}`" for c in misc_channel_names)
+            new_candidate_line = f"- **Candidate Labels**: {labels_str}"
+            # Match any existing "- **Candidate ...**: ..." line (handles label name variants)
+            candidate_re = re.compile(r"^- \*\*Candidate[^*]*\*\*:.*$", re.MULTILINE)
+            if candidate_re.search(inner):
+                inner = candidate_re.sub(new_candidate_line, inner)
+            else:
+                inner = inner.rstrip("\n") + "\n" + new_candidate_line + "\n"
+            new_content = new_content[:misc_m.start(2)] + inner + new_content[misc_m.end(2):]
 
     # 鈹€鈹€ Produce single diff for entire File Scan Result block 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
     fsr_m_new = _FILE_SCAN_RE.search(new_content)

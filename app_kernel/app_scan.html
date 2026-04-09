@@ -334,6 +334,7 @@ let _activeResultDataset = null;
 let _activeLocatorDataset = null;
 let _locatorData = null;
 let _scanBusy = false;
+let _preSkippedErrors = {};
 
 // ---------------------------------------------------------------------------
 // Init
@@ -743,52 +744,45 @@ async function startScan() {
   const useDefaultParser = document.getElementById('use-default-parser').checked;
 
   let datasets = [...selected];
-  const invalidTemplates = datasets.filter(name => {
+  _preSkippedErrors = {};
+
+  // Filter: invalid template → mark ERR, skip
+  for (const name of datasets) {
     const ds = allDatasets.find(item => item.name === name);
-    return !ds || !ds.template_ok;
-  });
-  if (invalidTemplates.length) {
-    alert(
-      'Some selected datasets have structural template errors and cannot be scanned:\n' +
-      invalidTemplates.join(', ')
-    );
-    return;
+    if (!ds || !ds.template_ok) _preSkippedErrors[name] = { error: 'Template invalid' };
   }
+  datasets = datasets.filter(name => !(name in _preSkippedErrors));
 
+  // Filter: no kernel (when default parser is off) → mark ERR, skip
   if (!useDefaultParser) {
-    datasets = datasets.filter(name => {
+    for (const name of datasets) {
       const ds = allDatasets.find(item => item.name === name);
-      return ds && (ds.has_kernel || kernelOverride);
-    });
-    if (datasets.length === 0) {
-      alert('No selected datasets have a kernel. Check "Use default parser for datasets without kernel" or provide a kernel override.');
-      return;
+      if (!(ds && (ds.has_kernel || kernelOverride))) _preSkippedErrors[name] = { error: 'No kernel' };
     }
+    datasets = datasets.filter(name => !(name in _preSkippedErrors));
   }
 
+  // Filter: sampled mode missing/empty plans → mark ERR, skip
   const sampledMap = {};
   if (mode === 'sampled') {
-    const missingPlans = datasets.filter(ds => !(ds in aiSamples));
-    if (missingPlans.length) {
-      alert(
-        'AI Quick Run requires a planned sample for every selected dataset. ' +
-        `Click "Get Sample" first or remove: ${missingPlans.join(', ')}`
-      );
-      return;
+    for (const name of datasets) {
+      if (!(name in aiSamples)) {
+        _preSkippedErrors[name] = { error: 'No sample plan (click Get Sample first)' };
+      } else if (!Array.isArray(aiSamples[name]?.indices) || aiSamples[name].indices.length === 0) {
+        _preSkippedErrors[name] = { error: 'Empty sample plan' };
+      }
     }
+    datasets = datasets.filter(name => !(name in _preSkippedErrors));
+    for (const ds of datasets) sampledMap[ds] = aiSamples[ds].indices;
+  }
 
-    const emptyPlans = datasets.filter(ds => !Array.isArray(aiSamples[ds]?.indices) || aiSamples[ds].indices.length === 0);
-    if (emptyPlans.length) {
-      alert(
-        'Some selected datasets do not currently have any sampled files. ' +
-        `Review the sample plan or remove: ${emptyPlans.join(', ')}`
-      );
-      return;
-    }
+  // Show pre-skip ERR badges immediately
+  Object.assign(scanResults, _preSkippedErrors);
+  renderDatasets();
 
-    for (const ds of datasets) {
-      sampledMap[ds] = aiSamples[ds].indices;
-    }
+  if (datasets.length === 0) {
+    log('All selected datasets were skipped due to errors. See ERR badges.', 'err');
+    return;
   }
 
   const kernelOverrides = {};
@@ -838,7 +832,7 @@ async function startScan() {
 }
 
 function onScanDone(results) {
-  scanResults = results || {};
+  scanResults = { ..._preSkippedErrors, ...(results || {}) };
   let hasCommits = false;
 
   for (const [ds, res] of Object.entries(scanResults)) {
