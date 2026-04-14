@@ -96,8 +96,9 @@ Participants performed a sensorimotor rhythm-based brain-computer interface task
 - 130-channel high-density EEG with extended epochs
 - 280 files; binary MI design
 - The dataset description document does not describe a left-hand task, though the actual data contains `left_hand_MI` events — use with caution.
+- This file description has many inconsistencies with the dataset description and the original data file. Needs further review，please use it with caution!!
 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_kernel_update
+> **Status**: hallucination
