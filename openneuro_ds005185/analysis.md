@@ -1,8 +1,8 @@
 # Ear-EEG Sleep Monitoring 2019 (EESM19)
 
-**Dataset**: `openneuro_ds005185` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005185
-**Category**: Biological State | **Subjects**: 20 | **Files (Completed)**: 516 | **Channels**: 25 | **Sampling Rate**: 500 Hz
-**Manual Review**: k857965791
+**Dataset**: `openneuro_ds005185` | **Year**: 2018-2020/2019/2024 | **URL**: https://openneuro.org/datasets/ds005185
+**Category**: Biological State | **Subjects**: 20 | **Files (Completed)**: 516 | **Channels**: 13/25 | **Sampling Rate**: 500 Hz
+**Manual Review**: Yikai Dong
 
 ## Paradigm
 
@@ -36,12 +36,6 @@ Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `trigger`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -81,9 +75,12 @@ Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG
 - PSG reference annotations required for sleep staging labels.
 - Using the original `.poly5` PSG file directly risks PSG signal leakage into EEG due to poor electrode shielding; use the pre-processed EEG files instead.
 - Actual data collection span: 2018-2020 (dataset first published 2019; OpenNeuro year reflects latest version).
+- The `Sleep stage W/N1/...' target form in the original table does not match the actual file; the actual scoring file is a `Scoring1`/`Scoring2` numeric column, and sidecar uses `s1/s2/s3/s4/s5/s7'. The `target' form in the original table does not match the actual file; the actual scoring file is the `Scoring1`/`Scoring2` numeric columns, and sidecar maps Wake/REM/N1/N2/N3/Artefact with `s1/s2/s3/s4/s5/s7`. The original text also mixes a number of protocol The original article also mixes several protocol markers as raw target candidates.
+- Originally age/sex was written as `missing`, but OpenNeuro v1.0.2 `participants.tsv` explicitly contains `age` and `sex` for 20 subjects, and `participants.json` states that age is 2019 age.
+  
 
 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: Yes
-> **Status**: wait_manual_review
+> **Status**: hallucination
