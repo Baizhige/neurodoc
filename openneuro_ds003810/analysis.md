@@ -2,7 +2,7 @@
 
 **Dataset**: `openneuro_ds003810` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003810
 **Category**: Action/Output | **Subjects**: 10 | **Files (Completed)**: 50
-**Channels**: 15 | **Sampling Rate**: 125 Hz
+**Channels**: 15 | **Sampling Rate**: 125 Hz | **Manual Review**: Yikai Dong
 
 ## Paradigm
 
@@ -42,12 +42,7 @@ Participants performed kinesthetic motor imagery of grasping movements with the 
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
 
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `OVTK_StimulationId_BaselineStart`, `OVTK_StimulationId_BaselineStop`, `OVTK_StimulationId_Beep`, `OVTK_StimulationId_Train`, `OVTK_StimulationId_ExperimentStart`, `OVTK_StimulationId_ExperimentStop`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -72,9 +67,12 @@ Participants performed kinesthetic motor imagery of grasping movements with the 
 - Low-cost EEG system; lower signal quality and spatial resolution than research-grade systems.
 - Low sampling rate (125 Hz); limits temporal resolution and applicable frequency range.
 - `OVTK_StimulationId_ExperimentStart/Stop` and `OVTK_GDF_End_Of_Session` are admin markers; exclude from epoching.
+- Event Structure : Original Count (total)=50 actual image file occurrences, not full EDF annotation occurrences; OVTK_GDF_Tongue was misspelled as tongue imagery; Correct/Incorrect should not be used as a target meaning.
+- Info : subject_age, subject_sex, device were mislabeled as missing; OpenNeuro participants.tsv/json and the paper provide this information.
+
 
 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: hallucination
