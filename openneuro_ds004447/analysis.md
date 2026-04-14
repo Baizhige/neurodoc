@@ -68,13 +68,14 @@ A brain-computer interface (BCI) task based on sensorimotor rhythms (SMR) record
 
 ## Data Quality Notes
 
-- Numerical event codes (1-4) require kernel-level decoding
-- Classes 3 and 4 (feet/tongue) only appear in 91 of 418 files
-- 130-channel high-density EEG with extended epochs
+- The current OpenNeuro `participants.tsv` has 30 participants; Dataset 3 in the paper describes it as 22 participants. As per rules 13-15, this document takes the current verifiable public data file and records that conflict.
+- The full scan shows `events.tsv` with a total of 418 files; 4180 entries each for `rest` and `task`, and 910 entries each for `ready` and `interval`. `ready`/`interval` appear in only 91 event files and cannot be interpreted as foot/tongue categories.
+- The full `channels.tsv` file is 129 lines for all 418 files, and the first and last channels are `E1` and `Cz`, so `Channels` uses 129. The `EEGChannelCount=128` in the top-level `task-smrbmi_eeg.json` is not consistent with the file-by-file `channels.tsv`. 
+- The explanation of the four categorizations of left hand, right hand, foot, and tongue in the existing old document is inconsistent with the current `events.tsv`.
 - The dataset description document does not match the actual data content — use with caution.
 
 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: hallucination
