@@ -1,6 +1,6 @@
 # Ear-EEG Sleep Monitoring 2023 (EESM23)
 
-**Dataset**: `openneuro_ds005178` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005178
+**Dataset**: `openneuro_ds005178` | **Year**: 2020-2022/2023/2024 | **URL**: https://openneuro.org/datasets/ds005178
 **Category**: Biological State | **Subjects**: 10 | **Files (Completed)**: 159 | **Channels**: 5 | **Sampling Rate**: 250 Hz
 
 ## Paradigm
@@ -27,12 +27,7 @@ Naturalistic nightly sleep monitoring using ear-EEG (in-ear electrodes) and poly
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-## STIM Label Summary
 
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `trigger`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
@@ -61,9 +56,13 @@ Naturalistic nightly sleep monitoring using ear-EEG (in-ear electrodes) and poly
 - Only 5 channels (ear-EEG) - very limited spatial resolution.
 - No sleep stage labels in events.tsv; PSG annotations needed for staging.
 - Home-recorded data - subject-specific motion and environmental artifacts expected.
+- The original table only has `trigger` and is labeled as `event`, which cannot support sleep staging tasks; target_events such as `sleep_stage_W` used by the original task do not exist in the official scoring TSV. The lightweight TSV count confirms that `Wake/N1/N2/N3/REM/Artefact` exists directly in the scoring file, the trigger file does not have a `trial_type` column, and the recording-failure file contains `error -10/error -100/oLED`.
+- The original `subject_age/subject_sex/device` are all `missing`, where the age/sex missing judgment is valid but lacks a reason, and the device has acquisition/placement side information but is not a uniform device field.
+- The original Classical Task used `sleep_stage_W/N1/N2/N3/REM`, these target_events are not in the Event Structure and do not match the `Wake/REM/N1/N2/N3` of the official scoring TSV. The original article states that the tags are stored in `sleep_stage_*` in the BIDS `events.tsv`, which does not match the actual scoring file listing.
+
 
 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: Yes
-> **Status**: wait_manual_review
+> **Status**: hallucination
