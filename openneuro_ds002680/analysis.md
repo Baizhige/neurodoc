@@ -6,8 +6,9 @@
 
 ## Paradigm
 
-Participants performed two alternating visual go/no-go tasks: an animal categorization task and a target-image recognition task. Images were flashed for 20 ms, each run contained about 100 images, and participants responded by releasing a button for target images while withholding response for non-target images. The first recording phase contains 13 runs and the second recording phase contains 12 runs for each subject, for a total of 25 runs per subject.
+Participants seated in a dimly lit room at 110 cm from a computer screen piloted from a PC computer. Two tasks alternated: a categorization task and a recognition task. In both tasks, target images and non-target images were equally likely presented. Participants were tested in two recording phases. The first day was composed of 13 series, the second day of 12 series, with 100 images per series (see details of the series below). To start a series, subjects had to press a touch-sensitive button. A small fixation point (smaller than 0.1 degree of visual angle) was drawn in the middle of a black screen. Then, an 8 bit color vertical photograph (256 pixels wide by 384 pixels high which roughly correspond to 4.5 degree of visual angle in width and 6.5 degree in height) was flashed for 20 ms (2 frames of a 100 Hz SVGA screen) using a programmable graphic board (VSG 2.1, Cambridge Research Systems). This short presentation time avoid that subjects use exploratory eye movement to respond. Participants gave their responses following a go/nogo paradigm. For each target, they had to lift their finger from the button as quickly and accurately as possible (releasing the button restored a focused light beam between an optic fiber led and its receiver; the response latency of this apparatus was under 1 ms). Participants were given 1000 ms to respond, after what any response was considered as a nogo response. The stimulus onset asynchrony (SOA) was 2000 ms plus or minus a random delay of 200 ms. For each distractor, participants had to keep pressing the button during at least 1000 ms (nogo response).
 
+More specifically, in the animal categorization task, participants had to respond whenever there was an animal in the picture. In the recognition task, the session started with a learning phase. A probe image was flashed 15 times during 20 ms intermixed with two presentations of 1000 ms after the fifth and the tenth flashes, allowing an ocular exploration of the image; with an inter-stimulus of 1000 ms. Participants were instructed to carefully examine and learn the probe image in order to recognize it in the following series. The test phase started immediately after the learning phase. The probe image constituted the unique target of the series. Both tasks were organized in series of 100 images; 50 targets images were mixed with 50 non-targets in the animal categorization task; 50 copies of an unique photographs were mixed at random with 50 non-targets in the recognition task.
 
 ## File Scan Result
 
@@ -17,7 +18,7 @@ Participants performed two alternating visual go/no-go tasks: an animal categori
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|---|---|---|---|---|
 | `animal_target` | 6298 | event | raw | Target stimulus in the animal categorization task |
 | `animal_distractor` | 6300 | event | raw | Non-target stimulus in the animal categorization task |
 | `easy_target` | 4200 | event | raw | Easy target stimulus in the recognition task |
@@ -30,6 +31,7 @@ Participants performed two alternating visual go/no-go tasks: an animal categori
 | `incorrect` | 745 | event | raw | Incorrect behavioral response event |
 | `response_time` | 17666 | event | raw | Native reaction-time value (ms), stored on stimulus rows with responses |
 
+
 > **Manual Review Note**: Event IDs and counts updated by human reviewer (Mr.PJ) from BIDS events.tsv — replaced placeholder `stimulus`/`response` entries with actual event names. Kernel should verify event names against events.tsv on next scan.
 
 ### MISC Label Summary
@@ -39,27 +41,21 @@ Participants performed two alternating visual go/no-go tasks: an animal categori
 - **Candidate Labels**: `reaction_time`, `response_time`
 - **Kernel Note**: Keep derivation source, unit, and version metadata.
 
-
 ### Info
 
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
-| `device` | missing | N/A |
-## STIM Label Summary
+| `subject_sex` | missing | need |
+| `device` | missing | need |
 
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stimulus`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ## Tasks
 
 ### Classical Task 1: Target-vs-Distractor ERP Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.3 s, tmax = 0.7 s, target_events = [`animal_target`, `animal_distractor`, `easy_target`, `easy_distractor`, `difficult_target`, `difficult_distractor`, `nonanimal_target`, `nonanimal_distractor`]
+- **Epoch Parameters**: , target_events = [`animal_target`, `easy_target`, `difficult_target`, `nonanimal_target`, `animal_distractor`, `easy_distractor`, `difficult_distractor`, `nonanimal_distractor`]
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
@@ -74,13 +70,13 @@ Participants performed two alternating visual go/no-go tasks: an animal categori
   | `difficult_distractor` | 0 | Distractor / no-go stimulus |
   | `nonanimal_distractor` | 0 | Distractor / no-go stimulus |
 - **Evidence**:
-  - DOI: 10.1038/s41598-023-27528-0 — Uses this dataset's animal go/no-go condition to compare correct targets and correct distractors with 1 s epochs from -0.3 to 0.7 s, explicitly framing the contrast as go responses on animals versus no-go responses on non-animal images.
-- **Kernel Notes**: Binary label collapses all *_target events to 1 and all *_distractor events to 0. Target identity is already encoded in the raw event value — no response-pairing inference needed.
+  - DOI: 10.1038/s41598 — 023-27528-0 — Uses this dataset's animal go/no-go condition to compare correct targets and correct distractors with 1 s epochs from -0.3 to 0.7 s, explicitly framing the contrast as go responses on animals versus no-go responses on non-animal images.
+- **Kernel Notes**: 
 
 ### Classical Task 2: Stimulus-Class ERP Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.3 s, tmax = 0.7 s, target_events = [`animal_target`, `animal_distractor`, `easy_target`, `easy_distractor`, `difficult_target`, `difficult_distractor`, `nonanimal_target`, `nonanimal_distractor`]
+- **Epoch Parameters**: , target_events = [`animal_target`, `animal_distractor`, `easy_target`, `easy_distractor`, `difficult_target`, `difficult_distractor`, `nonanimal_target`, `nonanimal_distractor`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -95,24 +91,10 @@ Participants performed two alternating visual go/no-go tasks: an animal categori
   | `nonanimal_target` | 6 | Non-animal recognition target |
   | `nonanimal_distractor` | 7 | Non-animal recognition distractor |
 - **Evidence**:
-  - DOI: 10.1038/s41598-023-27528-0 — Reports the full 8-stimulus-class structure used in the paradigm.
-- **Kernel Notes**: Preserves the full task structure. The 8-way classification is a downstream decoding formulation rather than the primary contrast in cited papers.
+  - DOI: 10.1038/s41598 — 023-27528-0 — Reports the full 8-stimulus-class structure used in the paradigm.
+- **Kernel Notes**: 
 
-### Classical Task 3: Stimulus-Locked Reaction Time Regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`animal_target`, `animal_distractor`, `easy_target`, `easy_distractor`, `difficult_target`, `difficult_distractor`, `nonanimal_target`, `nonanimal_distractor`]
-- **Label Route**: `misc`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `response_time` | continuous | Native reaction time (ms) from BIDS event table |
-- **Evidence**:
-  - DOI: 10.1038/s41598-023-27528-0 — Reaction time data is natively present in the BIDS event table for 17,666 stimulus rows.
-- **Kernel Notes**: Use the native `response_time` column on stimulus rows. RT is present for most target trials and some distractor false-alarm trials. Filter by correct/incorrect status before model construction.
-
-### Classical Task 4: Response Correctness Classification
+### Potential Task 1: Response Correctness Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.3 s, tmax = 0.7 s, target_events = [`correct`, `incorrect`]
@@ -124,8 +106,8 @@ Participants performed two alternating visual go/no-go tasks: an animal categori
   | `correct` | 1 | Correct response |
   | `incorrect` | 0 | Incorrect response |
 - **Evidence**:
-  - DOI: 10.1038/s41598-023-27528-0 — Response correctness events are explicit in the event table.
-- **Kernel Notes**: Response events are explicit and can be analyzed separately from stimulus-locked epochs for response-locked decoding.
+  - DOI: DOI: — Response events are explicit in the event table and can be analyzed separately from stimulus-locked epochs if response-locked decoding is desired.
+- **Kernel Notes**: 
 
 ## Data Quality Notes
 
@@ -134,8 +116,7 @@ Participants performed two alternating visual go/no-go tasks: an animal categori
 - 1000 Hz sampling rate; consider downsampling to 250 Hz for efficiency.
 - Verify channel count consistency across subjects before pooling.
 
-
 ## Kernel Responsibilities
 
 > **Super Meta Required**: Yes
-> **Status**: wait_manual_review
+> **Status**: wait_kernel_update
