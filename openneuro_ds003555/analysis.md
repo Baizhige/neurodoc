@@ -25,8 +25,8 @@ Continuous sleep EEG recordings from pediatric patients with epilepsy, focused o
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
 ## Tasks
 
@@ -48,4 +48,8 @@ Continuous sleep EEG recordings from pediatric patients with epilepsy, focused o
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: failed
+
+---
+
+> **auto_eeg FAILED**: The dataset is a well-documented pediatric epilepsy sleep EEG collection with 30 subjects and 52 channels at 2000 Hz, but the analysis explicitly states no event markers or labels are available ('no label; for unsupervised or HFO detection'). While one reference is 'partial' (arxiv catalog paper), the dataset lacks identifiable event/label structure required for a concrete supervised ML task. Hypnogram-based sleep staging labels are only mentioned hypothetically ('if available'), not confirmed.

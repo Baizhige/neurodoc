@@ -28,8 +28,8 @@ The NOD-EEG dataset contains 64-channel EEG recordings from a stimulus-response 
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -58,4 +58,8 @@ The NOD-EEG dataset contains 64-channel EEG recordings from a stimulus-response 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: failed
+
+---
+
+> **auto_eeg FAILED**: While the NOD-EEG dataset has a clear stimulus-response event structure (stim_on, resp, begin, end) and a described paradigm, all 28 reference extractions are classified as irrelevant or junk with no relevant/partial support for an ML task. Additionally, NOD-EEG does not qualify as a 'well-known public EEG dataset' (unlike classic paradigms such as MI-BCI, P300, or ERP CORE), and the analysis notes flag manual review is required ('wait_manual_review') to verify epoch parameters and task specifics.

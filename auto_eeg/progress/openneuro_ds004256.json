@@ -1,0 +1,145 @@
+{
+  "phase": "done",
+  "budget_used": 8,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 4,
+    "kernel_loop": 1,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 4,
+    "category": "Sensory/Response"
+  },
+  "timestamp": "2026-04-11T03:21:01.572172+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds004256.v1.0.5.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds004256.v1.0.5",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds004256.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1101_2023_05_03_539222.pdf",
+      "ref": "10.1101/2023.05.03.539222",
+      "title": "Evoked Responses to Localized Sounds Suggest Linear Representation of Elevation in Human Auditory Cortex",
+      "classification": "relevant",
+      "cot_reasoning": "The paper explicitly states that data is hosted on OpenNeuro and the authors (Bialas, Maess, Schönwiesner) directly collected this EEG dataset. The paper describes decoding sound elevation from EEG responses using an adaptation paradigm with 7 elevation conditions, matching the 7 Stimulus/S events in the dataset. The authors explicitly state 'differences in sound elevation can be decoded from the electroencephalogram of listeners.'",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 7,
+      "paradigm": "adaptation design with adapter/probe cross-faded sounds at different elevations, plus localization task",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "tmin=0s, tmax~0.6-1.0s around probe stimuli (7 elevation conditions)",
+      "target_events": [
+        "Stimulus/S 1",
+        "Stimulus/S 2",
+        "Stimulus/S 3",
+        "Stimulus/S 4",
+        "Stimulus/S 5",
+        "Stimulus/S 6",
+        "Stimulus/S 7"
+      ],
+      "label_mapping": "7 elevation angles: 37.5°, 12.5°, -12.5°, -37.5°, and 3 additional conditions (likely deviants/rare)",
+      "meta_level": "raw",
+      "super_meta_note": "Same research group as dataset collection; paper provides methodological details on EEG recording and decoding approaches",
+      "evidence_desc": "Authors explicitly state 'Data is hosted on OpenNeuro and can be obtained, together with the code via the paper's accompanying GitHub-repository.' Used 23 and 30 subjects in two experiments. Demonstrated that elevation differences can be decoded from EEG, particularly from good localizers, with peaks around 400ms latency."
+    },
+    {
+      "filename": "paper_10_1523_jneurosci_2530_17_2018.pdf",
+      "ref": "10.1523/JNEUROSCI.2530-17.2018",
+      "title": "The Encoding of Sound Source Elevation in the Human Auditory Cortex",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper uses fMRI (functional MRI) neuroimaging to study sound elevation encoding, not EEG. While it addresses the same scientific question (cortical encoding of sound elevation), the neuroimaging modality is entirely different. fMRI measures hemodynamic responses while this dataset contains EEG data. The paper also used only 15-16 participants, all from McGill University, collected under different experimental conditions.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "fMRI passive listening with binaural recordings at different elevations",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "Different neuroimaging modality (fMRI vs EEG) and different participant cohort; related scientific topic but does not use this EEG dataset",
+      "evidence_desc": "Study conducted at McGill University using fMRI with 15 participants who wore silicone earmolds. Used binaural recordings from modified ears across 3 sessions. No mention of EEG or this OpenNeuro dataset."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has a well-defined event structure with 7 stimulus conditions corresponding to different sound elevation angles, and paper_10_1101_2023_05_03_539222.pdf explicitly demonstrates EEG decoding of sound elevation from this exact dataset, achieving significant classification results with peaks around 400ms latency.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 53,
+    "total_n": 53,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "Stimulus/S  1": 219,
+      "Stimulus/S  2": 219,
+      "Stimulus/S  3": 273,
+      "Stimulus/S  4": 17602,
+      "Stimulus/S  5": 17602,
+      "Stimulus/S  6": 17602,
+      "Stimulus/S  7": 17610,
+      "Stimulus/S  8": 7350,
+      "Stimulus/S  9": 7350,
+      "Stimulus/S 10": 2203
+    },
+    "subject_info": {
+      "record_count": 53,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Sound Elevation Decoding\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = [`Stimulus/S  1`, `Stimulus/S  2`, `Stimulus/S  3`, `Stimulus/S  4`, `Stimulus/S  5`, `Stimulus/S  6`, `Stimulus/S  7`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|--------|\n  | `Stimulus/S  1` | 0 | Elevation 37.5° |\n  | `Stimulus/S  2` | 1 | Elevation 12.5° |\n  | `Stimulus/S  3` | 2 | Elevation -12.5° |\n  | `Stimulus/S  4` | 3 | Elevation -37.5° |\n  | `Stimulus/S  5` | 4 | Elevation condition 5 |\n  | `Stimulus/S  6` | 5 | Elevation condition 6 |\n  | `Stimulus/S  7` | 6 | Deviant/rare stimulus |\n- **Evidence**:\n  - DOI: 10.1101/2023.05.03.539222\n- **Kernel Notes**: Paper analyzes 100-300ms and 150-900ms post-probe windows; tmax=1.0s captures full analysis window. Multiclass 7-class decoding task demonstrates elevation differences can be decoded from EEG, particularly from good localizers, with peaks around 400ms latency. S5/S6 appear in only 23/53 subjects; may require subset filtering.\n\n### Classical Task 2: Publisher-defined BIDS task: DeviantDetection\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = [`Stimulus/S  7`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|--------|\n  | `Stimulus/S  7` | 0 | Deviant stimulus (rare) |\n- **Evidence**:\n  - DOI: 10.18112/openneuro.ds004256.v1.0.5\n- **Kernel Notes**: Verify deviant detection protocol timing from BIDS task events.json. tmax=1.0s covers MMN and later deviance detection components.\n\n### Classical Task 3: Publisher-defined BIDS task: Oneback\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = [`Stimulus/S  1`, `Stimulus/S  2`, `Stimulus/S  3`, `Stimulus/S  4`, `Stimulus/S  5`, `Stimulus/S  6`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|--------|\n  | `Stimulus/S  1` | 0 | Oneback condition 1 |\n  | `Stimulus/S  2` | 1 | Oneback condition 2 |\n  | `Stimulus/S  3` | 2 | Oneback condition 3 |\n  | `Stimulus/S  4` | 3 | Oneback condition 4 |\n  | `Stimulus/S  5` | 4 | Oneback condition 5 |\n  | `Stimulus/S  6` | 5 | Oneback condition 6 |\n- **Evidence**:\n  - DOI: 10.18112/openneuro.ds004256.v1.0.5\n- **Kernel Notes**: Verify oneback task timing from BIDS task events.json. S5 and S6 appear in only 23/53 subjects; may require subject subset filtering for balanced analysis. Uses 6 elevation conditions from the sound localization task.\n\n### Potential Task 1: Stimulus-Response Mapping Analysis\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = [`Stimulus/S  1`, `Stimulus/S  2`, `Stimulus/S  3`, `Stimulus/S  4`, `Stimulus/S  8`, `Stimulus/S  9`, `Stimulus/S 10`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|--------|\n  | `Stimulus/S  1` | 0 | Elevation condition 1 |\n  | `Stimulus/S  2` | 1 | Elevation condition 2 |\n  | `Stimulus/S  3` | 2 | Elevation condition 3 |\n  | `Stimulus/S  4` | 3 | Elevation condition 4 |\n  | `Stimulus/S  8` | 4 | Elevation condition 8 |\n  | `Stimulus/S  9` | 5 | Elevation condition 9 |\n  | `Stimulus/S 10` | 6 | Elevation condition 10 |\n- **Evidence**:\n  - None\n- **Kernel Notes**: Available event IDs reveal additional conditions (S8-S10) not documented in the original analysis.md. High event counts (7350, 7350, 2203) suggest these are valid experimental conditions possibly related to the adaptation paradigm. Plausible interpretation based on paradigm description of sounds at different elevations; further investigation of BIDS events.json required to determine meanings.\n",
+  "kernel_ok": true,
+  "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds004256/kernel_final.py",
+  "kernel_code_len": 12219,
+  "scan_result": {
+    "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds004256.py",
+    "kernel_sha256": "86821e47e567092f1235c4f759202e6b64bc7b147fd98df0dbb069f776c47544",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 53,
+    "total_n": 53,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "Stimulus/S  1": 219,
+      "Stimulus/S  2": 219,
+      "Stimulus/S  3": 273,
+      "Stimulus/S  4": 17602,
+      "Stimulus/S  5": 17602,
+      "Stimulus/S  6": 17602,
+      "Stimulus/S  7": 17610,
+      "Stimulus/S  8": 7350,
+      "Stimulus/S  9": 7350,
+      "Stimulus/S 10": 2203
+    },
+    "subject_info": {
+      "record_count": 53,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds004256.py",
+  "status": "done"
+}

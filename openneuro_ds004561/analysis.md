@@ -2,6 +2,7 @@
 
 **Dataset**: `openneuro_ds004561` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004561
 **Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 20 | **Channels**: 64 | **Sampling Rate**: 512 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
@@ -9,67 +10,72 @@ Participants experienced electrical muscle stimulation that actuated their hand 
 
 ## File Scan Result
 
+> **Kernel SHA256**: `60a5e98f949d2b8ff5248518d585d8eb27ef0b462d3274617dd5587a5695b562`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `stimulation` | ~20xN | short | raw | Electrical stimulation onset (involuntary movement) |
-| `pretest` | ~20xN | short | raw | Pre-stimulation voluntary movement |
-| `posttest` | ~20xN | short | raw | Post-stimulation voluntary movement |
 
-> **Event Type Description**:
-> - `short`: short stimulus onset marker (presentation duration <2 s), for `epoch_by_event_hdf5`
-> - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
-> - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **not used for epoch**
 
-### MISC Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `stimulation`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
-
-- **Primary Label Routes**: Annotation, stim
-- **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004561
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
+| `device` | missing | N/A |
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Agency RT
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004561 DOI: https://doi.org/10.18112/openneuro.ds004561.v1.0.0
-
-
-### Normal Task 1: Agency Condition Classification (multiclass)
+### Classical Task 1: Agency Classification (2-class)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset), target_events = see Target Definition
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset)
 - **Label Route**: `Annotation`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: 3-class classification of agency conditions. stimulation = externally actuated movement, pretest/posttest = voluntary movements before/after stimulation session.
+- **Meta Level**: super
+- **Target Definition**: Binary classification of agency attribution during EMS-induced vs. voluntary movements.
 
 | Event | y | Meaning |
 |-------|---|------|
+| `stimulation` | 0 | Non-agency (externally-driven movement) |
+| `pretest` | 1 | Agency (voluntary pre-stimulation movement) |
+| `posttest` | 1 | Agency (voluntary post-stimulation movement) |
+
+- **Evidence**: DOI: https://doi.org/10.1523/JNEUROSCI.1116-23.2023
+- **Kernel Notes**: Class 1 pools both voluntary movement conditions (pretest + posttest) as self-generated agency contrasts against externally-actuated stimulation. Verify that stimulation artifact does not bias classifier toward stimulation condition. Consider separate condition-wise analysis to check for pretest/posttest differences before pooling.
+
+### Normal Task 1: Condition Classification (3-class)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset)
+- **Label Route**: `Annotation`
+- **Meta Level**: raw
+- **Target Definition**: Multiclass classification distinguishing all three experimental conditions.
+
+| Event | y | Meaning |
+|-------|----|---------|
 | `stimulation` | 0 | Electrical stimulation (involuntary movement) |
 | `pretest` | 1 | Pre-stimulation voluntary movement |
 | `posttest` | 2 | Post-stimulation voluntary movement |
 
-## Data Quality Notes
+- **Evidence**: Dataset readme and paradigm description. Primary paper (DOI: https://doi.org/10.1523/JNEUROSCI.1116-23.2023) supports condition-specific neural dynamics, though classification=relevant ref focuses on 2-class agency contrast.
+- **Kernel Notes**: 3-class task captures condition-specific neural signatures. Use caution when interpreting stimulation condition due to EMS artifact. Pre-test and post-test voluntary movements serve as within-subject controls but may exhibit adaptation effects.
 
-- 20 subjects with balanced condition structure
-- 64 channels at 512 Hz provides good temporal resolution for movement-related potentials
+### Potential Task 1: Agency RT / Attribution Time-Course Analysis
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s (relative to event onset)
+- **Label Route**: `Annotation`
+- **Meta Level**: super
+- **Target Definition**: Sliding-window binary classification of agency vs. non-agency across the full movement epoch.
 
-## Kernel Responsibilities
+| Event | y | Meaning |
+|-------|----|---------|
+| `stimulation` | 0 | Non-agency (externally-driven) |
+| `pretest` | 1 | Agency (voluntary) |
+| `posttest` | 1 | Agency (voluntary) |
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
+- **Evidence**: No explicit classification=relevant reference; inferred from epoch alignment recommendations supporting extended post-event window for reaction-time and agency attribution analysis.
+- **Kernel Notes**: Extended window captures movement execution, sensory feedback integration, and agency-related processing. Pre-stimulus baseline window assesses motor preparation differences between voluntary and stimulation-induced movements. Require careful artifact handling for stimulation condition.

@@ -1,43 +1,66 @@
 # VerbalWorkingMemory
 
 **Dataset**: `openneuro_ds003655` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds003655
-**Category**: High-level Mental | **Subjects**: 26 | **Files (Completed)**: 156
-**Channels**: 21 | **Sampling Rate**: 500 Hz
+**Category**: High-level Mental | **Subjects**: 26 | **Files (Completed)**: 156 | **Channels**: 21 | **Sampling Rate**: 500 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
 A modified Sternberg working memory task requiring either simple retention or mental manipulation (alphabetization) of letter sequences at three load levels (5, 6, or 7 letters). Participants encoded a letter sequence, maintained it across a delay period, then responded to a probe letter. The mental manipulation condition (alphabetization) places additional executive demands on working memory compared to simple retention. EEG measures during encoding, delay, and probe phases capture load-dependent neural activity.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `21a0164b0b6cf912dea56980c6fce67abeb2914c32eb269057c411453ddebbf5`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `encoding` | 936 | event | raw | Letter sequence encoding phase onset |
-| `delay period` | 936 | event | raw | Working memory retention/manipulation delay period |
-| `probe` | 936 | event | raw | Probe letter presentation |
-| `start of the baseline period` | 936 | event | raw | Baseline period onset (pre-trial) |
-| `start of the trial` | 156 | event | raw | Trial start marker |
-| `presentation of the task instruction` | 156 | event | raw | Task instruction display onset |
-| `Response` | 1807 | event | raw | Participant button-press response |
-| `STATUS` | 156 | admin | raw | System status marker |
-
-
-### MISC Label Summary
-
-- **Route**: `misc`
-- **Role**: Stores derived labels (super meta) not directly present in raw event IDs.
-- **Candidate Labels**: Needs verification
-- **Kernel Note**: Document derivation logic, source fields, units, and version tags.
+| `10_y0` | 3120 | event | raw | Probe event marker (retention condition) |
+| `11_y1` | 3119 | event | raw | Probe event marker (manipulation condition) |
+| `12_y0` | 3120 | event | raw | Probe event marker (retention condition) |
+| `13_y1` | 3120 | event | raw | Probe event marker (manipulation condition) |
+| `14_y0` | 3066 | event | raw | Probe event marker (retention condition) |
+| `15_y1` | 2818 | event | raw | Probe event marker (manipulation condition) |
+| `16_y0` | 3120 | event | raw | Probe event marker (retention condition) |
+| `17_y1` | 3119 | event | raw | Probe event marker (manipulation condition) |
+| `18_y0` | 3120 | event | raw | Probe event marker (retention condition) |
+| `19_y1` | 3120 | event | raw | Probe event marker (manipulation condition) |
+| `1_y1` | 563 | event | raw | Response-locked event marker (manipulation condition) |
+| `20_y0` | 5020 | event | raw | Response event marker (retention condition) |
+| `21_y1` | 14956 | event | raw | Response event marker (manipulation condition) |
+| `22_y0` | 2927 | event | raw | Probe event marker (retention condition) |
+| `23_y1` | 2132 | event | raw | Probe event marker (manipulation condition) |
+| `24_y0` | 1467 | event | raw | Probe event marker (retention condition) |
+| `25_y1` | 1970 | event | raw | Probe event marker (manipulation condition) |
+| `26_y0` | 1419 | event | raw | Probe event marker (retention condition) |
+| `27_y1` | 2104 | event | raw | Probe event marker (manipulation condition) |
+| `28_y0` | 1582 | event | raw | Probe event marker (retention condition) |
+| `29_y1` | 1744 | event | raw | Probe event marker (manipulation condition) |
+| `2_y0` | 3120 | event | raw | Delay period event marker (retention condition) |
+| `30_y0` | 1419 | event | raw | Probe event marker (retention condition) |
+| `31_y1` | 2045 | event | raw | Probe event marker (manipulation condition) |
+| `32_y0` | 1840 | event | raw | Probe event marker (retention condition) |
+| `33_y1` | 4123 | event | raw | Response event marker (manipulation condition) |
+| `34_y0` | 7440 | event | raw | Encoding/response event marker (retention condition) |
+| `35_y1` | 11520 | event | raw | Encoding/response event marker (manipulation condition) |
+| `36_y0` | 4219 | event | raw | Encoding event marker (retention condition) |
+| `37_y1` | 3120 | event | raw | Encoding event marker (manipulation condition) |
+| `38_y0` | 3100 | event | raw | Encoding event marker (retention condition) |
+| `39_y1` | 2780 | event | raw | Encoding event marker (manipulation condition) |
+| `3_y1` | 3120 | event | raw | Delay period event marker (manipulation condition) |
+| `40_y0` | 1900 | event | raw | Encoding event marker (retention condition) |
+| `41_y1` | 220 | event | raw | Encoding event marker (manipulation condition) |
+| `4_y0` | 3119 | event | raw | Delay period event marker (retention condition) |
+| `5_y1` | 3120 | event | raw | Delay period event marker (manipulation condition) |
+| `6_y0` | 3120 | event | raw | Delay period event marker (retention condition) |
+| `7_y1` | 3104 | event | raw | Delay period event marker (manipulation condition) |
+| `8_y0` | 731 | event | raw | Baseline/task instruction period marker (retention) |
+| `9_y1` | 3120 | event | raw | Delay period event marker (manipulation condition) |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
@@ -49,70 +72,62 @@ A modified Sternberg working memory task requiring either simple retention or me
 ### Classical Task 1: Verbal Working Memory - Retention vs Manipulation Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -14.2 s, tmax = 2.2 s, target_events = [`probe`]
+- **Epoch Parameters**: tmin = -14.2 s, tmax = 2.2 s, target_events = [`11_y1`, `13_y1`, `15_y1`, `17_y1`, `19_y1`, `21_y1`, `23_y1`, `25_y1`, `27_y1`, `29_y1`, `31_y1`, `33_y1`, `35_y1`, `37_y1`, `39_y1`, `41_y1`]
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|-------|
-  | `probe` (condition: R) | 0 | Retention (simple maintenance) condition |
-  | `probe` (condition: M) | 1 | Manipulation (alphabetization) condition |
-- **Super Meta Notes**: Derived from raw event `probe` by extracting condition subtype from trial metadata (R=Retention, M=Manipulation). Kernel step: Parse trial condition from events.tsv trial_type column, extract 'R' or 'M' suffix to produce binary label.
+  |-------|---|--------|
+  | `11_y0`, `13_y0`, `15_y0`, `17_y0`, `19_y0`, `21_y0`, `23_y0`, `25_y0`, `27_y0`, `29_y0`, `31_y0`, `33_y0`, `35_y0`, `37_y0`, `39_y0` | 0 | Retention (simple maintenance) condition |
+  | `11_y1`, `13_y1`, `15_y1`, `17_y1`, `19_y1`, `21_y1`, `23_y1`, `25_y1`, `27_y1`, `29_y1`, `31_y1`, `33_y1`, `35_y1`, `37_y1`, `39_y1`, `41_y1` | 1 | Manipulation (alphabetization) condition |
+- **Super Meta Notes**: Event ID suffix `_y0` = Retention (R), `_y1` = Manipulation (M). Prefix number may encode load level (5/6/7) or event subtype. Cross-reference with events.tsv trial_type column for full condition metadata.
 - **Evidence**:
-  - DOI: 10.1111/ejn.15457 — Shows oscillatory theta/alpha/beta differences between retention and manipulation conditions during encoding and delay phases of verbal working memory with 5/6/7 letter load
-- **Kernel Notes**: Epochs extracted relative to probe onset (-14.2 to 2.2 s). Baseline period is -11.5 to -10.5 s. Load level (5/6/7) available as additional factor in trial_type column for ordinal regression if needed. (replaces Classical Task 1 from original analysis.md)
+  - DOI: 10.1111/ejn.15457 — Temporally distinct oscillatory codes of retention and manipulation of verbal working memory; theta/alpha/beta differences between conditions during encoding and delay phases
+  - DOI: 10.1038/s41598-020-72940-5 — Electrophysiological underpinnings of variation in verbal working memory capacity; executive vs storage components of WM
+- **Kernel Notes**: Extends across full trial structure (−14.2 to 2.2 s relative to probe alignment). Baseline: −11.5 to −10.5 s. Numeric event IDs replace conceptual names from analysis.md. Load level extractable from event prefix for ordinal covariates.
 
 ### Classical Task 2: Delay Period Working Memory State Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 6.0 s, overlap = 0.5, target_events = [`delay period`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 6.0 s, overlap = 0.5, target_events = [`10_y0`, `10_y1`, `12_y0`, `12_y1`, `14_y0`, `14_y1`, `16_y0`, `16_y1`, `18_y0`, `18_y1`, `20_y0`, `20_y1`, `22_y0`, `22_y1`, `24_y0`, `24_y1`, `26_y0`, `26_y1`, `28_y0`, `28_y1`, `30_y0`, `30_y1`, `32_y0`, `32_y1`, `34_y0`, `34_y1`, `36_y0`, `36_y1`, `38_y0`, `38_y1`, `40_y0`, `40_y1`]
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|-------|
-  | `delay period` (R condition) | 0 | Retention condition during delay |
-  | `delay period` (M condition) | 1 | Manipulation condition during delay |
-- **Super Meta Notes**: Derived from raw event `delay period` by extracting condition subtype. Kernel step: Parse trial_type column to identify 'R' (retention) vs 'M' (manipulation) suffix.
+  |-------|---|--------|
+  | `10_y0`, `12_y0`, `14_y0`, `16_y0`, `18_y0`, `20_y0`, `22_y0`, `24_y0`, `26_y0`, `28_y0`, `30_y0`, `32_y0`, `34_y0`, `36_y0`, `38_y0`, `40_y0` | 0 | Retention condition during delay phase |
+  | `10_y1`, `12_y1`, `14_y1`, `16_y1`, `18_y1`, `20_y1`, `22_y1`, `24_y1`, `26_y1`, `28_y1`, `30_y1`, `32_y1`, `34_y1`, `36_y1`, `38_y1`, `40_y1` | 1 | Manipulation condition during delay phase |
+- **Super Meta Notes**: Long-duration delay events (>6 s) with sliding window segmentation (0.5 s overlap). Suffix `_y0` = Retention, `_y1` = Manipulation. Prefix encodes load level or delay subtype.
 - **Evidence**:
-  - DOI: 10.1111/ejn.15457 — Examines oscillatory activity differences during delay period (Delay1: -6000 to -3000 ms; Delay2: -3000 to 0 ms) between retention and manipulation
-- **Kernel Notes**: Delay period typically >=6s at load levels 5/6/7. Use sliding window (0.5 overlap) to capture sustained activity. Load level can be extracted as additional covariate.
+  - DOI: 10.1111/ejn.15457 — Examines delay period subdividing into Delay1 (−6000 to −3000 ms) and Delay2 (−3000 to 0 ms) with oscillatory trajectory analysis
+  - DOI: 10.1038/s41598-020-72940-5 — WM capacity analysis using encoding and delay phase oscillations
+- **Kernel Notes**: Sliding windows capture sustained theta/alpha/beta dynamics across early and late delay subphases. Use 0.5 s overlap for temporal trajectory modeling.
 
-### Potential Task 1: Detect stimulus ERP (binary)
-- **Task Type**: classification
+### Normal Task 1: Verbal Working Memory Load Level Effects
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset), target_events = see Target Definition
-- **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Probe events are short (<1 s); suitable for ERP epoching. Match/non-match accuracy from Response events can be used as trial-level correctness labels.
-
-| Event | y | Meaning |
-|-------|---|-------|
-| `probe: 5R` / `6R` / `7R` | 0 | Keep condition detection |
-| `probe: 5M` / `6M` / `7M` | 1 | Operating condition detection |
-
-### Potential Task 2: Encoding Phase ERP Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.5 s, target_events = [`encoding`]
-- **Label Route**: `event`
+- **Epoch Parameters**: tmin = -14.2 s, tmax = 2.2 s, target_events = [`11_y0`, `11_y1`, `13_y0`, `13_y1`, `15_y0`, `15_y1`, `17_y0`, `17_y1`, `19_y0`, `19_y1`, `21_y0`, `21_y1`, `23_y0`, `23_y1`, `25_y0`, `25_y1`, `27_y0`, `27_y1`, `29_y0`, `29_y1`, `31_y0`, `31_y1`, `33_y0`, `33_y1`, `35_y0`, `35_y1`, `37_y0`, `37_y1`, `39_y0`, `39_y1`, `41_y0`, `41_y1`]
+- **Label Route**: `misc`
+- **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|-------|
-  | `encoding` (R condition) | 0 | Encoding phase for retention |
-  | `encoding` (M condition) | 1 | Encoding phase for manipulation |
-- **Notes**: Epochs around encoding onset capture initial letter sequence processing. Condition labels derived from trial_type metadata.
+  |-------|---|--------|
+  | All probe events | Load level (5, 6, or 7) | Number of letters in the presented sequence |
+- **Super Meta Notes**: Load level (5/6/7 letters) derived from event prefix number. Ordinal regression target. Extract from events.tsv trial_type column if prefix mapping is ambiguous.
 - **Evidence**:
-  - DOI: 10.1111/ejn.15457 — Examines oscillatory differences between conditions during encoding phase
+  - DOI: 10.1038/s41598-020-72940-5 — Analyzes WM capacity variation across three load levels (5/6/7 letters)
+  - DOI: 10.1111/ejn.15457 — Uses load levels as within-subject factor in oscillatory analysis
+- **Kernel Notes**: Load level available as ordinal covariate for regression or covariate for classification tasks. Cross-reference event prefixes with events.tsv to confirm load-to-prefix mapping.
 
-## Data Quality Notes
-
-- 21-channel EEG; limited spatial resolution but sufficient for frontal working memory analyses.
-- Event subtypes encoded in trial_type column (e.g., "delay period: 5M"); parse carefully.
-- Multiple sessions per subject (156 files / ~26 subjects ~ 6 files each).
-
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: Yes
-> **Status**: wait_manual_review
+### Potential Task 1: Stimulus Detection ERP Analysis
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`11_y0`, `11_y1`, `13_y0`, `13_y1`, `15_y0`, `15_y1`, `17_y0`, `17_y1`, `19_y0`, `19_y1`, `21_y0`, `21_y1`, `23_y0`, `23_y1`, `25_y0`, `25_y1`, `27_y0`, `27_y1`, `29_y0`, `29_y1`, `31_y0`, `31_y1`, `33_y0`, `33_y1`, `35_y0`, `35_y1`, `37_y0`, `37_y1`, `39_y0`, `39_y1`, `41_y0`, `41_y1`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|--------|
+  | All probe events | 1 | Stimulus onset (binary presence) |
+- **Evidence**: No direct DOI reference. Plausible from paradigm: probe events represent letter stimulus presentations suitable for P300/N200 ERP analysis. Response events available for trial-level accuracy labels (match vs non-match).
+- **Kernel Notes**: Tight window captures stimulus-locked ERP components. Baseline: −200 to 0 ms. Combine with Response events for accuracy-based trial rejection.

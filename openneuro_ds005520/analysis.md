@@ -33,8 +33,8 @@ Participants played a real MOBA (Multiplayer Online Battle Arena) game while 60-
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
 ## Tasks
 

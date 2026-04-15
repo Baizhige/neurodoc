@@ -1,0 +1,196 @@
+{
+  "phase": "done",
+  "budget_used": 9,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 4,
+    "kernel_loop": 2,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 6,
+    "category": "Sensory/Response"
+  },
+  "timestamp": "2026-04-13T00:53:09.755619+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_openneuro.org_datasets_ds005406.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1016_j_cortex_2024_10_015.pdf",
+      "ref": "10.1016/j.cortex.2024.10.015",
+      "title": "EEG frequency tagging reveals the integration of dissimilar observed actions",
+      "classification": "relevant",
+      "cot_reasoning": "This is the primary publication for the dataset. It describes the exact EEG frequency tagging experiment with 29 participants observing two hand movements at different tagging frequencies. The study uses a 2x2 factorial design varying action identity (same/different) and agent identity (1P/2P), resulting in 4 conditions. The paper explicitly defines 4-class labeling based on these conditions.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "SSVEP frequency tagging",
+      "epoch_method_hint": "epoch_by_event_hdf5",
+      "epoch_params": "tmin=-2.0s, tmax=48.6s, target_events=['Stimulus/S 11', 'Stimulus/S 21', 'Stimulus/S 31', 'Stimulus/S 41']",
+      "target_events": [
+        "Stimulus/S 11",
+        "Stimulus/S 21",
+        "Stimulus/S 31",
+        "Stimulus/S 41"
+      ],
+      "label_mapping": "0=Same movement 1P, 1=Different movement 1P, 2=Same movement 2P, 3=Different movement 2P",
+      "meta_level": "super",
+      "super_meta_note": "Labels derived from start markers (S11/S21/S31/S41) mapping to 2x2 factorial design conditions",
+      "evidence_desc": "Full paper explicitly describes the dataset, 4 conditions with precise timing, event markers, and analysis approach for SSVEP classification."
+    },
+    {
+      "filename": "paper_10_1101_2024_05_10_593473.pdf",
+      "ref": "10.1101/2024.05.10.593473",
+      "title": "EEG frequency tagging reveals the integration of dissimilar observed actions",
+      "classification": "relevant",
+      "cot_reasoning": "This is the bioRxiv preprint version of the same study as file 1. Author list (Formica, Chaiken, Wiersema, Cracco) and abstract match exactly. It describes the identical 2x2 factorial design with action identity (same/different) and agent identity (1P/2P) conditions. This is the pre-publication version of the same dataset.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "SSVEP frequency tagging",
+      "epoch_method_hint": "epoch_by_event_hdf5",
+      "epoch_params": "tmin=-2.0s, tmax=48.6s, target_events=['Stimulus/S 11', 'Stimulus/S 21', 'Stimulus/S 31', 'Stimulus/S 41']",
+      "target_events": [
+        "Stimulus/S 11",
+        "Stimulus/S 21",
+        "Stimulus/S 31",
+        "Stimulus/S 41"
+      ],
+      "label_mapping": "0=Same movement 1P, 1=Different movement 1P, 2=Same movement 2P, 3=Different movement 2P",
+      "meta_level": "super",
+      "super_meta_note": "Same 2x2 factorial labeling scheme as published version",
+      "evidence_desc": "Preprint describes identical experiment with same 4 conditions and labeling scheme as the final publication."
+    },
+    {
+      "filename": "paper_10_1111_psyp_70225.pdf",
+      "ref": "10.1111/psyp.70225",
+      "title": "Sensorimotor Frequency Tagging Is Enhanced by Auditory and Audiovisual but Not Visual, Inputs During a Body-Walking Task",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper investigates walking-related sensory inputs (footstep sounds, point-light walker videos) and EEG frequency tagging at 1, 2, and 3.6 Hz in 22 participants. While it uses EEG frequency tagging, the paradigm, stimuli, and research question are entirely different. It does not involve OpenNeuro ds005406 or action observation conditions.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "walking perception",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Different dataset (22 participants, walking stimuli, auditory/visual/audiovisual conditions). Not related to ds005406."
+    },
+    {
+      "filename": "paper_10_1162_imag_a_962.pdf",
+      "ref": "10.1162/IMAG.a.962",
+      "title": "Individual abilities to estimate levels of movement synchrony predict action observation network activation",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper uses fNIRS (not EEG) to study how embodiment affects synchrony estimation in 43 participants. It involves copying upper-body movement sequences and viewing dyads perform movements. The method, modality, and dataset are completely different from ds005406.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "fNIRS synchrony estimation",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Uses fNIRS modality, different experimental paradigm (synchrony estimation task), no relation to ds005406 dataset."
+    },
+    {
+      "filename": "paper_10_1162_nol_a_00171.pdf",
+      "ref": "10.1162/nol_a_00171",
+      "title": "Using Rapid Invisible Frequency Tagging (RIFT) to Probe the Neural Interaction Between Representations of Speech Planning and Comprehension",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper uses RIFT (rapid invisible frequency tagging) to study speech planning and comprehension interactions via picture-word interference paradigm. It tags stimuli at 54 Hz and 68 Hz. This is a different methodology and completely different research domain from the ds005406 SSVEP action observation dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "RIFT speech planning",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Different methodology (RIFT vs SSVEP), different research domain (speech processing vs action observation), not related to ds005406."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has a well-defined event structure with 4 action conditions clearly encoded in the stimulus markers (S11/S21/S31/S41), and two relevant references (paper_10_1016_j_cortex_2024_10_015.pdf, paper_10_1101_2024_05_10_593473.pdf) explicitly describe this SSVEP frequency-tagging paradigm for 4-class classification.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 29,
+    "total_n": 29,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "Stimulus/S 11": 230,
+      "Stimulus/S 12": 230,
+      "Stimulus/S 21": 231,
+      "Stimulus/S 22": 231,
+      "Stimulus/S 31": 230,
+      "Stimulus/S 32": 230,
+      "Stimulus/S 41": 231,
+      "Stimulus/S 42": 230,
+      "Stimulus/S255": 24
+    },
+    "subject_info": {
+      "record_count": 29,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": [
+      "65"
+    ]
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: SSVEP Action Condition Classification (4-class)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -2.0 s, tmax = 48.6 s, target_events = [`Stimulus/S 11`, `Stimulus/S 21`, `Stimulus/S 31`, `Stimulus/S 41`]\n- **Label Route**: `event`\n- **Meta Level**: super\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `Stimulus/S 11` | 0 | Same movement, 1 person (condition 1) |\n  | `Stimulus/S 21` | 1 | Different movement, 1 person (condition 2) |\n  | `Stimulus/S 31` | 2 | Same movement, 2 people (condition 3) |\n  | `Stimulus/S 41` | 3 | Different movement, 2 people (condition 4) |\n- **Evidence**:\n  - DOI: 10.1016/j.cortex.2024.10.015\n  - DOI: 10.1101/2024.05.10.593473\n- **Kernel Notes**: Extract epochs anchored at sequence start events (S11/S21/S31/S41). Compute SSVEP power spectral density in target frequency bands (2.5 Hz fundamental, 3.16 Hz fundamental, 5.66 Hz intermodulation product) for 4-class classification. Original paper cropped epochs post-hoc to 3s–48.6s window; using tmax=48.6s directly for efficiency. Labels derived via 2×2 factorial mapping: movement type (same/different) × agent number (1P/2P).\n\n### Potential Task 1: Action Sequence Start vs. End Analysis (8-class)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`Stimulus/S 11`, `Stimulus/S 12`, `Stimulus/S 21`, `Stimulus/S 22`, `Stimulus/S 31`, `Stimulus/S 32`, `Stimulus/S 41`, `Stimulus/S 42`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `Stimulus/S 11` | 0 | Action condition 1 start |\n  | `Stimulus/S 12` | 1 | Action condition 1 end |\n  | `Stimulus/S 21` | 2 | Action condition 2 start |\n  | `Stimulus/S 22` | 3 | Action condition 2 end |\n  | `Stimulus/S 31` | 4 | Action condition 3 start |\n  | `Stimulus/S 32` | 5 | Action condition 3 end |\n  | `Stimulus/S 41` | 6 | Action condition 4 start |\n  | `Stimulus/S 42` | 7 | Action condition 4 end |\n- **Evidence**: No direct reference; plausible from paradigm design (each action sequence has distinct start/end markers enabling temporal analysis of neural responses at onset vs. offset)\n- **Kernel Notes**: Epoch around both start (S11/S21/S31/S41) and end (S12/S22/S32/S42) markers using short window to capture transient neural responses. Supports analysis of sequence integration dynamics by comparing onset vs. offset ERP components across conditions.\n",
+  "kernel_ok": true,
+  "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds005406/kernel_final.py",
+  "kernel_code_len": 8246,
+  "scan_result": {
+    "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds005406.py",
+    "kernel_sha256": "31c1edbda1ea156c9a954d9e15b07057e742dd664f402adcf412b02e91845bca",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 29,
+    "total_n": 29,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "Stimulus/S 11": 230,
+      "Stimulus/S 12": 230,
+      "Stimulus/S 21": 231,
+      "Stimulus/S 22": 231,
+      "Stimulus/S 31": 230,
+      "Stimulus/S 32": 230,
+      "Stimulus/S 41": 231,
+      "Stimulus/S 42": 230
+    },
+    "subject_info": {
+      "record_count": 29,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": [
+      "65"
+    ]
+  },
+  "installed_kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds005406.py",
+  "status": "done"
+}

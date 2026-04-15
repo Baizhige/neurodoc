@@ -1,0 +1,94 @@
+{
+  "phase": "scan",
+  "budget_used": 5,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 2,
+    "kernel_loop": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 4,
+    "category": "High-level Mental"
+  },
+  "timestamp": "2026-04-13T09:41:26.622374+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds006142.v1.0.2.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds006142.v1.0.2",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds006142.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1038_s41597_025_06203_1.pdf",
+      "ref": "10.1038/s41597-025-06203-1",
+      "title": "An EEG dataset to study neural correlates of audiovisual long-term memory retrieval",
+      "classification": "partial",
+      "cot_reasoning": "This is the data descriptor paper for openneuro_ds006142. It explicitly describes the dataset collection methodology, event structure, and experimental design for the movie memory task. However, it is not an ML analysis paper—it describes potential uses of the dataset rather than applying concrete ML methods with defined epoch parameters and labels. It serves as the foundational reference for the dataset but does not present a specific classification or regression task.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "audiovisual movie memory recognition",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "Dataset descriptor paper; ML tasks would need to be derived separately",
+      "evidence_desc": "Describes EEG recording from 27 participants watching 10-second movie clips with recognition annotations. Details experimental protocol with first/second viewing phases and behavioral annotations."
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "ref": "10.1038/s41597-025-06203-1",
+      "title": "An EEG dataset to study neural correlates of audiovisual long-term memory retrieval",
+      "classification": "partial",
+      "cot_reasoning": "Identical content to the Nature Scientific Data descriptor paper (same DOI). This paper describes the Essex EEG Movie Memory dataset collection but does not present specific ML analysis results. It details the experimental paradigm and dataset structure but does not define concrete epoch parameters or classification labels for an ML task.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "audiovisual movie memory recognition",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "Duplicate of the Nature Scientific Data paper; dataset descriptor",
+      "evidence_desc": "Same dataset descriptor paper retrieved via Europe PMC. Contains identical methodology description for the 27-participant EEG study with movie clip viewing and recognition task."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has a well-defined three-class memory recognition task (not-recognised, recognised, remembered) with clear epoching parameters in analysis.md, and the dataset paper (paper_10_1038_s41597_025_06203_1.pdf) partially describes the experimental paradigm. The event structure includes 9 distinct event types enabling supervised classification.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 27,
+    "total_n": 27,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 27,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Three-class Movie Memory Recognition\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`startOfRememberedClipFirstWatch`, `startOfRecognisedClipFirstWatch`, `startOfNotRecognisedClip`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `startOfNotRecognisedClip` | 0 | Clip not recognized during second viewing |\n  | `startOfRecognisedClipFirstWatch` | 1 | Clip recognized during second viewing |\n  | `startOfRememberedClipFirstWatch` | 2 | Clip remembered with detail during second viewing |\n- **Evidence**:\n  - DOI: 10.1038/s41597-025-06203-1 — Three-class memory recognition analysis using ERP on first-watch clip onsets, examining neural correlates of not-recognised vs recognised vs remembered movie clips.\n- **Kernel Notes**: Downsample from 2048 Hz to 512 Hz. Apply bandpass filter 1-30 Hz. Total eligible epochs: ~4400 across three classes (1426+515+2212). Small dataset (27 subjects) limits statistical power; consider cross-validation.\n\n### Potential Task 1: Binary Remembered vs Not-Recognized Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`startOfRememberedClipFirstWatch`, `startOfNotRecognisedClip`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `startOfNotRecognisedClip` | 0 | Clip not recognized during second viewing |\n  | `startOfRememberedClipFirstWatch` | 1 | Clip remembered with detail during second viewing |\n- **Evidence**: Supported by paradigm: key contrast between high-detail memory (remembered) vs no memory (not-recognized) at first watch onset. DOI: 10.1038/s41597-025-06203-1 (same dataset paper).\n- **Kernel Notes**: Two-class contrast avoids class imbalance issues; 1426 remembered vs 2212 not-recognized epochs. Same preprocessing as Classical Task 1.\n\n### Potential Task 2: Recognition Response Latency Analysis\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.5 s, tmax = 0.5 s, target_events = [`recognitionClick`, `firstRecognitionClick`]\n- **Label Route**: `misc`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `recognitionClick` | time_ms | Continuous recognition response timestamp |\n  | `firstRecognitionClick` | time_ms | First recognition response per trial |\n- **Evidence**: Paradigm supports analyzing neural activity preceding and following recognition clicks. DOI: 10.1038/s41597-025-06203-1.\n- **Kernel Notes**: High temporal resolution (2048 Hz) captures fine-grained response dynamics. Labels derived from event timestamps (recognitionClick, firstRecognitionClick). Consider baseline correction using pre-click interval.",
+  "kernel_ok": false,
+  "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds006142/kernel_final.py",
+  "kernel_code_len": 0,
+  "status": "error",
+  "last_error": "module 'eegunity_external_kernel_4279090452662950036' has no attribute 'KERNEL'"
+}

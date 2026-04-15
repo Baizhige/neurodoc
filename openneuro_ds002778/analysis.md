@@ -2,85 +2,70 @@
 
 **Dataset**: `openneuro_ds002778` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002778
 **Category**: Biological State | **Subjects**: N/A | **Files (Completed)**: 46 | **Channels**: 41 | **Sampling Rate**: 512 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
 Spontaneous scalp EEG recorded from patients with Parkinson's disease (PD) and healthy controls during resting-state conditions. The study investigated abnormal beta-band synchrony and beta waveform shape features (phase amplitude coupling, non-sinusoidal characteristics) as biomarkers of PD. All events in the BioSemi recording are system status markers (65536 = CM_in_range baseline, 130817 = CM status); no task events exist.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `be10479841313314c0e24a0c18cfe514d131441a85541ecc65d0c4d02c84069d`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `1` | 44 (files) | admin | raw | BioSemi recording marker (onset of continuous record) - admin |
-| `65536` | 43 (files) | admin | raw | BioSemi CM_in_range baseline status code - exclude |
-| `2` | 1 (file) | admin | raw | BioSemi marker - sparse, likely admin |
-| `130817` | 1 (file) | admin | raw | BioSemi CM status code - exclude |
+| `event_1` | 43 | event | raw |  |
+| `event_131071` | 1 | event | raw |  |
+| `event_65536` | 1 | event | raw |  |
+| `event_98304` | 1 | event | raw |  |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Parkinson's Disease vs Healthy Control Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
-- **Label Route**: `event`
+- **Label Route**: `misc`
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |----|---|---|
   | `PD` | 1 | Parkinson's disease patient |
   | `HC` | 0 | Healthy control subject |
-- **Super Meta Notes**: Derived from participant metadata (participants.tsv). The dataset contains only BioSemi system status markers (65536, 130817) as raw events - no task-related event markers exist. Kernel must read disease status (PD vs HC) from participants.tsv and apply as segment-level labels.
+- **Super Meta Notes**: Labels derived from participant metadata (participants.tsv). This dataset contains only BioSemi system status markers (65536, 130817) as raw events—no task-related event markers exist. The kernel must read disease status (PD vs HC) from participants.tsv and apply segment-level labels uniformly to all segments from each subject.
 - **Evidence**:
-  - DOI: 10.1523/ENEURO.0151-19.2019 — Resting-state EEG classification of PD patients vs healthy controls using beta waveform shape features
-  - DOI: 10.1016/j.bspc.2022.104116 — PD vs HC classification using 2-second non-overlapping windows from 3-minute recordings with FAWT entropy features
-  - DOI: 10.1016/j.compbiomed.2023.107031 — PD vs HC classification using 1-s epochs with CSP features achieving 99.31% accuracy
-  - DOI: 10.1038/s41598-022-26644-7 — Binary PD vs HC classification using 10-second epochs with DWT-based entropy features
-  - DOI: 10.3389/fnins.2022.957181 — PD vs HC classification using 1-second segments from 3-minute recordings with PSD and PLV features
-  - DOI: 10.3390/diagnostics15060773 — Binary PD vs HC classification using 1-second epochs from first 180 seconds with PSD features
-- **Kernel Notes**: (replaces Potential Task 1 from original analysis.md)
+  - DOI: 10.1016/j.compbiomed.2023.107031 — PD vs HC classification using 1-s epochs with CSP features achieving 99.31% accuracy on SanDiego dataset
+  - DOI: 10.1038/s41598-022-26644-7 — Binary PD vs HC classification using 10-second epochs with DWT-based entropy features (99.89% accuracy)
+  - DOI: 10.3389/fnins.2022.957181 — PD vs HC classification using 1-second segments with PSD and PLV features
+  - DOI: 10.3390/diagnostics15060773 — Binary PD vs HC classification using 1-second epochs with PSD features
+- **Kernel Notes**: No epochable task events exist in this dataset. All segments from the same subject share identical labels. Segment_length=2.0s with overlap=0.5s is supported by multiple references using similar windowing strategies.
 
-### Classical Task 2: PD Medication State Classification (PD_OFF vs PD_ON vs HC)
+### Classical Task 2: PD Medication State Classification (HC vs PD_OFF vs PD_ON)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 3.0 s *, overlap = 0.0 *
-- **Label Route**: `event`
+- **Epoch Parameters**: segment_length = 3.0 s, overlap = 0.0
+- **Label Route**: `misc`
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |----|---|---|
   | `HC` | 0 | Healthy control subject |
   | `PD_OFF` | 1 | Parkinson's disease patient off medication |
   | `PD_ON` | 2 | Parkinson's disease patient on medication |
-- **Super Meta Notes**: Derived from participant metadata (participants.tsv). Kernel must read medication status (on/off) and disease status from participants.tsv to create three-class labels. The raw events are BioSemi system codes only.
+- **Super Meta Notes**: Labels derived from participant metadata (participants.tsv). Kernel must read both disease status and medication status (on/off) to construct three-class labels. All segments from a given subject receive the same three-class label.
 - **Evidence**:
-  - DOI: 10.1523/ENEURO.0151-19.2019 — Paired PD off vs on medication comparison and unpaired PD vs control comparison
-  - DOI: 10.1038/s41598-022-26644-7 — Three-class classification: off-PD vs on-PD vs HC using DWT-based entropy features
-  - DOI: 10.3389/fnins.2022.957181 — Three-class classification: HC=0, PD_OFF=1, PD_ON=2
-- **Kernel Notes**: Optional task. For binary PD vs HC, use Classical Task 1. For medication state analysis, extract subject-level medication status from participants.tsv and apply uniformly to all segments from that subject.
-
-## Data Quality Notes
-
-- Pure resting-state dataset; all events are BioSemi hardware status codes.
-- 65536 (CM_in_range) and 130817 are BioSemi system codes - do not epoch on these.
-- PD vs HC group labels available in participants.tsv for disease classification.
-- Verify channel count consistency across subjects before pooling.
-
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: Yes
-> **Status**: wait_manual_review
+  - DOI: 10.1523/ENEURO.0151-19.2019 — Three-group comparison: PD off medication, PD on medication, and healthy controls using beta waveform shape features
+  - DOI: 10.1038/s41598-022-26644-7 — Three-class classification off-PD vs on-PD vs HC using DWT-based entropy features
+  - DOI: 10.3389/fnins.2022.957181 — Three-class classification: HC=0, PD_OFF=1, PD_ON=2 with multi-scale CNN
+- **Kernel Notes**: Optional task; for binary PD vs HC use Classical Task 1. Requires medication_status field in participants.tsv. Segment_length=3.0s with no overlap matches literature parameters for DWT-based entropy classification.

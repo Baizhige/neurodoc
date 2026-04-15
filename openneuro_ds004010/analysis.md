@@ -62,3 +62,7 @@ _Placeholder for additional file scan information._
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004010
+
+---
+
+> **auto_eeg FAILED**: The dataset explicitly contains no discrete event markers (no_events), only continuous EEG recordings. Without trial-level event structure and no relevant or partial reference papers supporting the MAVIS paradigm, there is no identifiable label structure to support a concrete ML classification or regression task. While continuous segmentation is suggested, it requires external behavioral logs not currently available.

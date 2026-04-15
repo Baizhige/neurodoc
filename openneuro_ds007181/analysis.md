@@ -2,86 +2,78 @@
 
 **Dataset**: `openneuro_ds007181` | **Year**: 2026 | **URL**: https://openneuro.org/datasets/ds007181
 **Category**: Biological State | **Subjects**: 59 | **Files (Completed)**: 59 | **Channels**: 24 | **Sampling Rate**: 1024 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
-Resting-state EEG (part of a PSG recording) was collected from patients with zoster-associated neuralgia and healthy controls, alongside structural MRI and resting-state fMRI. Manual sleep staging is available from PSG annotations. The dataset enables investigation of brain activity and sleep architecture differences between healthy controls and patients with herpes zoster-associated chronic pain.
+Resting-state EEG (part of a full PSG recording) was collected from patients diagnosed with zoster-associated neuralgia and age/sex-matched healthy controls, alongside structural MRI and resting-state fMRI scans. Manual sleep staging was performed by experts using standard AASM criteria and is available as PSG annotations. The dataset enables investigation of brain activity and sleep architecture differences between healthy controls and patients with herpes zoster-associated chronic pain.
 
 ## File Scan Result
 
-> **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds007181.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
-> **SHA256**: `d631998adfdbb515c3c65966381cfaf5f55b58d5d5b4b9ea34e31c58d9105ffe`
-
+> **Kernel SHA256**: `c7a2badbf13ef768ecc7a1d58172c4ff9ffe004cfd6e934638a1c26aa11ba6dc`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
-
-<!-- AUTO-KERNEL-EVENT-STRUCTURE:START -->
-> **Kernel Fact Source**: current kernel scan from `<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-> **Meaning Policy**: `Meaning` is interpretive; `Event ID / Count / Type / Meta Level` are kernel-derived facts.
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Sleep stage N2` | 24882 | event | raw | Unresolved from current kernel facts |
-| `Sleep stage R (REM)` | 8026 | event | raw | Unresolved from current kernel facts |
-| `Sleep stage W` | 7224 | event | raw | Unresolved from current kernel facts |
-| `Sleep stage N3` | 6967 | event | raw | Unresolved from current kernel facts |
-| `Sleep stage N1` | 6647 | event | raw | Unresolved from current kernel facts |
-<!-- AUTO-KERNEL-EVENT-STRUCTURE:END -->
+| `Sleep stage N1` | 6647 | event | raw | Stage 1 sleep (light sleep, theta dominance) |
+| `Sleep stage N2` | 24882 | event | raw | Stage 2 sleep (sleep spindles and K-complexes) |
+| `Sleep stage N3` | 6967 | event | raw | Stage 3 sleep (slow wave sleep, delta dominance) |
+| `Sleep stage R (REM)` | 8026 | event | raw | Rapid eye movement sleep |
+| `Sleep stage W` | 7224 | event | raw | Wakefulness |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
-### Classical Task 1: Sleep stage classification
+### Classical Task 1: Sleep Stage Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 30 s *, overlap = 0.0, target_events = [`sleep_stage_annotation`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0
 - **Label Route**: `event`
-- **Meta Level**: raw
+- **Meta Level**: `raw`
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
-  | `W` | 0 | Wake stage |
-  | `N1` | 1 | Stage 1 sleep |
-  | `N2` | 2 | Stage 2 sleep |
-  | `N3` | 3 | Stage 3 sleep (slow wave) |
-  | `REM` | 4 | Rapid eye movement sleep |
+  |-------|---|--------|
+  | `Sleep stage W` | 0 | Wake |
+  | `Sleep stage N1` | 1 | Stage 1 sleep |
+  | `Sleep stage N2` | 2 | Stage 2 sleep |
+  | `Sleep stage N3` | 3 | Stage 3 sleep (slow wave) |
+  | `Sleep stage R (REM)` | 4 | Rapid eye movement sleep |
 - **Evidence**:
-  - DOI: 10.1016/j.artmed.2021.102038 — Multi-modal sleep stage scoring using CNN + Bi-LSTM on PSG data (30s epochs, 5-class W/N1/N2/N3/REM)
+  - DOI: 10.1016/j.artmed.2021.102038 — Multi-modal Spatial-Temporal CNN+Bi-LSTM for 30-second PSG epoch sleep scoring, 5-class AASM labels (W/N1/N2/N3/REM)
   - DOI: 10.1109/TNSRE.2021.3076234 — AttnSleep deep learning model for 30-second sleep epoch classification (W/N1/N2/N3/REM)
-- **Kernel Notes**: Verify sleep stage annotation label names from PSG/hypnogram files; align 30-second epoch windows to EEG data. (replaces Potential Task 1 from original analysis.md)
+- **Kernel Notes**: Sleep stage annotations mark sustained 30-second PSG epochs aligned to onset. Class imbalance expected: N2 (24882) heavily dominates vs rare N3 (6967) and N1 (6647). Verify exact annotation strings from raw hypnogram files — kernel shows `Sleep stage R (REM)` but standard AASM notation uses `Sleep stage R`. Consider weighted loss or stratified sampling to handle the 3.6:1 ratio between N2 and N3.
 
-### Classical Task 2: Resting-state segmentation
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4.0 s *, overlap = 0.5 *, target_events = N/A
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**: N/A — continuous resting-state EEG without discrete event labels; use subject group labels from participants.tsv (zoster-associated neuralgia vs healthy control)
-- **Evidence**:
-  - DOI: 10.18112/openneuro.ds007181.v1.0.1 — Dataset includes resting-state PSG/EEG recordings from zoster-associated neuralgia patients and healthy controls
-- **Kernel Notes**: Apply sliding window segmentation to continuous EEG; subject group labels must be obtained from participants.tsv and attached as metadata.
-
-### Potential Task 1: Subject group classification (Zoster neuralgia vs healthy control)
+### Potential Task 1: Resting-State Subject Group Classification (Zoster Neuralgia vs Healthy Control)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 30.0 s, overlap = 0.0
 - **Label Route**: `misc`
-- **Target Definition**: Group labels from participants.tsv: zoster-associated neuralgia (patient) vs healthy control
-- **Notes**: Continuous EEG segmentation with subject-level label propagation. No EEG event markers; labels derived from dataset metadata.
+- **Meta Level**: `raw`
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|--------|
+  | `healthy_control` | 0 | Healthy control subject |
+  | `zoster_neuralgia` | 1 | Zoster-associated neuralgia patient |
+- **Evidence**:
+  - URL: https://openneuro.org/datasets/ds007181 — Dataset includes both zoster-associated neuralgia patients and healthy controls with resting-state PSG/EEG recordings
+- **Kernel Notes**: Continuous EEG has no discrete event markers; group labels (zoster vs healthy) must be propagated from participants.tsv as epoch metadata. Use 30-second segment length matching the standard PSG epoch to enable consistent cross-subject training. Class balance depends on the subject-level group distribution in participants.tsv — verify before training. 24-channel PSG montage differs from standard research EEG, which may affect model generalizability.
 
-## Data Quality Notes
-
-- No event markers present; continuous-only processing.
-- PSG-derived sleep stage labels require alignment with EEG data if available.
-- 24-channel PSG EEG system; non-standard montage compared to research-grade EEG.
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: No
-> **Status**: wait_kernel_update
+### Normal Task 1: Resting-State EEG Segmentation
+- **Task Type**: segmentation (preprocessing)
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 4.0 s, overlap = 0.5
+- **Label Route**: `misc`
+- **Meta Level**: `raw`
+- **Target Definition**: N/A — continuous resting-state EEG without discrete labels; segmentation yields fixed-length windows for downstream analysis (e.g., spectral feature extraction or pre-trained model inference)
+- **Evidence**:
+  - URL: https://openneuro.org/datasets/ds007181 — Resting-state PSG/EEG recordings from zoster-associated neuralgia patients and healthy controls
+- **Kernel Notes**: Sliding window segmentation with 50% overlap provides data augmentation for continuous EEG. Subject group and sleep stage metadata from participants.tsv and PSG annotations must be attached per segment. The 4-second window balances frequency resolution (~0.25 Hz for EEG alpha/beta bands) with sufficient sample count for downstream classification models.

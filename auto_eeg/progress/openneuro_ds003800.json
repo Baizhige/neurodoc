@@ -1,0 +1,160 @@
+{
+  "phase": "done",
+  "budget_used": 8,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 4,
+    "kernel_loop": 1,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 6,
+    "category": "Sensory/Response"
+  },
+  "timestamp": "2026-04-10T23:52:06.052674+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds003800.v1.0.0.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds003800.v1.0.0",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds003800.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10.18178_ijpmbs.13.1.14-18.pdf",
+      "ref": "10.18178/ijpmbs.13.1.14-18",
+      "title": "Neural Mechanisms Underlying Brain Gamma Entrainment after Periodic Auditory Stimulation at Gamma Frequency",
+      "classification": "relevant",
+      "cot_reasoning": "The paper explicitly retrieves data from OpenNeuro accession number ds003800 ('Auditory Gamma Entrainment' dataset) and uses it to classify participants as entrained vs non-entrained based on 40Hz response amplitude criteria (≥3 SD above mean of adjacent frequencies 38-42Hz). This defines a concrete binary classification task with derived labels.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "auditory gamma entrainment",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "6 stimulus trials (40s each) interleaved with 5 rest trials (20s each); full session 340s total",
+      "target_events": [
+        "Stimulus",
+        "Rest"
+      ],
+      "label_mapping": "Entrained (E) = 1 if 40Hz amplitude ≥3 SD above mean of 38-42Hz; Non-Entrained (NE) = 0 otherwise",
+      "meta_level": "super",
+      "super_meta_note": "Labels derived from gamma band (38-42Hz) amplitude analysis during stimulus periods; entrained/non-entrained classification is a super-meta label computed from neural response",
+      "evidence_desc": "Participants classified as entrained if peak 40Hz response amplitude ≥3 SD above mean of adjacent frequencies (38-42Hz); 7 entrained vs 4 non-entrained from 13 total participants"
+    },
+    {
+      "filename": "paper_10_1016_j_dib_2022_107839.pdf",
+      "ref": "10.1016/j.dib.2022.107839",
+      "title": "Non-invasive auditory brain stimulation for gamma-band entrainment in dementia patients: An EEG dataset",
+      "classification": "partial",
+      "cot_reasoning": "This paper IS the data descriptor for the exact dataset (OpenNeuro ds003800). It describes the dataset structure, collection methods, and suggests potential analysis types (ERP, ERSP, connectivity) but does not define or execute a specific ML classification/regression task with concrete labels.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Paper describes dataset containing 13 participants with 6 stimulus trials (40s) and 5 rest trials (20s), plus 1-minute pre-task rest; events labeled as 1 (rest) and 2 (stimulus); suggests analyses but defines no specific labeled ML task"
+    },
+    {
+      "filename": "paper_10_1038_s41514_025_00305_1.pdf",
+      "ref": "10.1038/s41514-025-00305-1",
+      "title": "Efficacy of auditory gamma stimulation for cognitive decline: a systematic review of individual and group differences across cognitively impaired and healthy populations",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a systematic review of 62 studies on auditory gamma stimulation covering both healthy and cognitively impaired populations. It does not use or reference the specific OpenNeuro ds003800 dataset; it synthesizes literature on gamma entrainment broadly without analyzing this particular dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "",
+      "super_meta_note": "",
+      "evidence_desc": "Review covers 62 studies on auditory gamma stimulation; no specific dataset used; mentions OpenNeuro generally but not ds003800 specifically"
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "ref": "10.1016/j.dib.2022.107839",
+      "title": "Non-invasive auditory brain stimulation for gamma-band entrainment in dementia patients: An EEG dataset",
+      "classification": "partial",
+      "cot_reasoning": "This appears to be the same paper as file 2 (DOI 10.1016/j.dib.2022.107839) - the data descriptor for OpenNeuro ds003800. It describes the dataset structure and potential analyses but does not define a specific ML task with concrete labels; it merely introduces the dataset for others to use.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Data descriptor paper; 13 participants, 6 stimulus trials (40s) + 5 rest trials (20s), 19-channel EEG at 250Hz; events 1=rest, 2=stimulus; suggests potential analyses (ERP, ERSP, connectivity) but defines no concrete labeled task"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has a clear event structure (Stimulus and Rest events) and is supported by a relevant reference (10.18178/ijpmbs.13.1.14-18) that explicitly describes binary classification of entrained vs non-entrained participants based on gamma response. The analysis.md defines two concrete classification tasks: stimulus vs rest classification and entrained vs non-entrained classification.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 24,
+    "total_n": 24,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "1": 65,
+      "2": 78
+    },
+    "subject_info": {
+      "record_count": 24,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Stimulus vs Rest Classification (Gamma Entrainment)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_long_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s, tmax = 40 s, overlap = 0.0, target_events = [`1`, `2`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `2` | 1 | 40 Hz AM auditory stimulation period (Stimulus) |\n  | `1` | 0 | Resting/quiet period (Rest) |\n- **Evidence**:\n  - DOI: 10.18178/ijpmbs.13.1.14-18 — Binary classification of stimulus vs rest during 40 Hz auditory gamma entrainment. Stimulus trials: 40s duration; rest trials: 20s duration; total task: 340s (6x40s stimulus + 5x20s rest).\n  - DOI: 10.1016/j.dib.2022.107839 — Dataset descriptor with event codes 1 (rest) and 2 (stimulus); 6 stimulus + 5 rest trials per session.\n- **Kernel Notes**: Use long-event epoching to extract 40s windows for Stimulus and 20s windows for Rest periods. The dataset contains 6 stimulus and 5 rest periods per session. Both references support this as a valid classification target.\n\n### Classical Task 2: Entrained vs Non-Entrained Classification (Super Meta)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_long_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s, tmax = 40 s, overlap = 0.0, target_events = [`2`]\n- **Label Route**: `event`\n- **Meta Level**: super\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `2` | 1 | Participant showed 40Hz response amplitude >= 3 SD above mean of adjacent frequencies (38-42Hz) |\n  | `2` | 0 | Participant showed 40Hz response amplitude < 3 SD above mean of adjacent frequencies |\n- **Super Meta Notes**: Derived from raw events by computing peak 40Hz response amplitude in the gamma band (38-42Hz) during stimulus periods. Kernel step: Compute FFT/power spectral density for each stimulus epoch, extract gamma band power, classify as entrained if >= 3 standard deviations above mean of adjacent frequencies.\n- **Evidence**:\n  - DOI: 10.18178/ijpmbs.13.1.14-18 — Binary classification of entrained vs non-entrained patients based on gamma response. Participants classified as entrained if peak 40Hz response amplitude >= 3 standard deviations above mean of adjacent frequencies (38-42Hz).\n- **Kernel Notes**: Requires computing power spectral density for each 40s Stimulus epoch (event code 2) and applying threshold-based classification for entrainment status. Labels are computed super-meta derived from spectral features.\n\n### Potential Task 1: Gamma Band Power Analysis Across Channels\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_long_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s, tmax = 40 s, overlap = 0.0, target_events = [`2`]\n- **Label Route**: `misc`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `2` | mean_gamma_power (38-42 Hz) | Continuous gamma band power value during stimulus period |\n- **Evidence**:\n  - DOI: 10.1016/j.dib.2022.107839 — Dataset suggests power spectral density analysis in gamma band (38-42Hz) as a primary analysis approach.\n- **Kernel Notes**: Extract power spectral density for each 40s stimulus epoch, compute mean power in gamma band (38-42Hz) as regression target. Enables channel-wise or global gamma power quantification.\n\n### Potential Task 2: Cross-Frequency Phase-Amplitude Coupling\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_long_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s, tmax = 40 s, overlap = 0.0, target_events = [`2`]\n- **Label Route**: `stim`\n- **Meta Level**: super\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `2` | high_coupling | Phase-amplitude coupling strength between low-frequency phase and gamma amplitude exceeds threshold |\n  | `2` | low_coupling | Phase-amplitude coupling strength below threshold |\n- **Super Meta Notes**: Derive coupling strength by computing phase of low-frequency oscillations (4-8 Hz theta) and amplitude envelope of gamma band (38-42 Hz) during stimulus epochs.\n- **Evidence**:\n  - DOI: 10.18178/ijpmbs.13.1.14-18 — Gamma entrainment mechanisms involve cross-frequency coupling between auditory drive and neural oscillations.\n- **Kernel Notes**: Requires computing Hilbert transform or wavelet decomposition to extract phase (theta) and amplitude (gamma) followed by modulation index calculation.\n",
+  "kernel_ok": true,
+  "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds003800/kernel_final.py",
+  "kernel_code_len": 6145,
+  "scan_result": {
+    "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds003800.py",
+    "kernel_sha256": "1fe57835f4e2d993cbc53e8efad7c3e7a1a6bcf738ada78d2f3ffcddee0734ea",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 24,
+    "total_n": 24,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "Rest": 65,
+      "Stimulus": 78
+    },
+    "subject_info": {
+      "record_count": 24,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds003800.py",
+  "status": "done"
+}

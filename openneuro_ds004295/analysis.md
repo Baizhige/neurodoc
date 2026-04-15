@@ -1,47 +1,41 @@
-# Reward gain and punishment avoidance reversal learning
+# Reward Gain and Punishment Avoidance Reversal Learning
 
 **Dataset**: `openneuro_ds004295` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004295
 **Category**: High-level Mental | **Subjects**: 26 | **Files (Completed)**: 26
 **Channels**: 66 | **Sampling Rate**: 1024 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
 A reversal learning task comparing brain activity during reward gain (monetary) versus punishment avoidance (white noise) reinforcement. Participants learned stimulus-response associations that reversed mid-task, requiring cognitive flexibility. EEG was recorded to investigate feedback-related neural signatures under different reinforcement conditions.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `153428dbd4972f8d86815d3c7cb7b1fca49fbb91f5bdd3f1894d759b4c43f2ff`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `S 81` | 26x~164 | event | raw | Stimulus trigger - decode from events.tsv |
-| `S 61` | 26x~162 | event | raw | Stimulus trigger - decode from events.tsv |
-| `S 75` | 26x~153 | event | raw | Stimulus trigger - decode from events.tsv |
-| `S 71` | 26x~148 | event | raw | Stimulus trigger - decode from events.tsv |
-| `S 52` | 26x~141 | event | raw | Stimulus trigger - decode from events.tsv |
-| `S 51` | 26x~139 | event | raw | Stimulus trigger - decode from events.tsv |
-| `S 55` | 26x~137 | event | raw | Stimulus trigger - decode from events.tsv |
-| `S 72` | 26x~132 | event | raw | Stimulus trigger - decode from events.tsv |
-| `S 60` | 26x~118 | event | raw | Stimulus trigger - decode from events.tsv |
-| `S 80` | 26x~116 | event | raw | Stimulus trigger - decode from events.tsv |
-| `S100` | 26x~1 | event | raw | Sample stimulus (first in pair) |
-| `S200` | 26x~1 | event | raw | Probe stimulus (second in pair) |
-
-
-### MISC Label Summary
-
-- **Route**: `misc`
-- **Role**: Stores derived/continuous labels that are not native raw event IDs.
-- **Candidate Labels**: `response_time`
-- **Kernel Note**: Keep derivation source, unit, and version metadata.
+| `S 53` | 442 | event | raw | Stimulus trigger (low frequency) — condition-specific, decode from events.tsv |
+| `S 54` | 2029 | event | raw | Stimulus trigger (high frequency) — condition-specific, decode from events.tsv |
+| `S 56` | 1724 | event | raw | Stimulus trigger (high frequency) — condition-specific, decode from events.tsv |
+| `S 73` | 629 | event | raw | Stimulus trigger (moderate frequency) — condition variant, decode from events.tsv |
+| `S 74` | 2438 | event | raw | Stimulus trigger (highest frequency) — primary stimulus type, decode from events.tsv |
+| `S 76` | 1441 | event | raw | Stimulus trigger (moderate frequency) — condition variant, decode from events.tsv |
+| `S101` | 26 | event | raw | Sample stimulus trigger (one per subject) |
+| `S150` | 106 | event | raw | Block/phase trigger (~22 subjects) — secondary task component, decode from events.tsv |
+| `S151` | 105 | event | raw | Block/phase trigger (~22 subjects) — secondary task component, decode from events.tsv |
+| `S201` | 26 | event | raw | Probe stimulus trigger (one per subject) |
+| `feedback_negative` | 3730 | event | raw | Decoded negative feedback (reward loss / punishment failure) |
+| `feedback_positive` | 3560 | event | raw | Decoded positive feedback (reward gain / punishment avoidance success) |
+| `probe_stimulus` | 26 | event | raw | Decoded probe stimulus (second in pair) |
+| `sample_stimulus` | 26 | event | raw | Decoded sample stimulus (first in pair) |
+| `stimulus` | 27954 | event | raw | Generic stimulus trigger — decode to extract reinforcement condition (reward/punishment) and reversal phase (pre/post) |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
@@ -53,45 +47,61 @@ A reversal learning task comparing brain activity during reward gain (monetary) 
 ### Classical Task 1: Feedback Valence Classification (Reward Gain vs Punishment Avoidance)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -1.5 s, tmax = 3.0 s, target_events = [`S 52`, `S 51`]
+- **Epoch Parameters**: tmin = -1.5 s, tmax = 3.0 s, target_events = [`feedback_positive`, `feedback_negative`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|
-  | `S 52` | 0 | Positive feedback (reward gain / punishment avoidance success) |
-  | `S 51` | 1 | Negative feedback (reward loss / punishment failure) |
+  | `feedback_positive` | 0 | Positive feedback (reward gain / punishment avoidance success) |
+  | `feedback_negative` | 1 | Negative feedback (reward loss / punishment failure) |
 - **Super Meta Notes**: N/A
 - **Evidence**:
-  - DOI: 10.1111/psyp.14235 — Single-trial regression with feedback valence as predictor examining frontal midline theta (FMθ) responses to positive vs negative feedback in reward and punishment reversal learning tasks.
-- **Kernel Notes**: Verify event ID mapping from events.tsv. The paper uses feedback valence (positive vs negative) as the classification target. Based on dataset event structure patterns, S 52 is inferred as positive feedback and S 51 is negative feedback. Kernel should cross-validate against stimulus events (S 71, S 72, S 75, S 80, S 81) to confirm timing and correct mapping. (replaces Potential Task 1 from original analysis.md)
+  - DOI: 10.1111/psyp.14235 — Single-trial regression examining frontal midline theta (FMθ) responses to positive vs negative feedback in reward and punishment reversal learning tasks. 26 participants, EEG recorded during feedback processing, feedback valence as primary 2-class predictor.
+- **Kernel Notes**: Verify mapping between raw BrainVision codes (S 52 → feedback_positive, S 51 → feedback_negative) and decoded semantic labels by cross-referencing events.tsv. Raw S 52/S 51 counts (141/139 per subject) roughly align with decoded feedback_positive/feedback_negative counts (3560/3730 total across 26 subjects), confirming preprocessing completed partial decoding. Kernel should validate this mapping and preserve event-to-label correspondence for downstream analysis.
 
-### Potential Task 1: Reversal Learning Classification (multiclass)
+### Normal Task 1: Reversal Learning Stimulus Classification (multiclass)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset), target_events = see Target Definition
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`stimulus`]
 - **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Specific kernel required to decode BrainVision trigger codes (S 51-S 81 range) to semantic labels. Regression target: response_time from misc channels.
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `stimulus` (prereversal, reward) | 0 | Stimulus presented before reversal cue in reward condition |
+  | `stimulus` (prereversal, punishment) | 1 | Stimulus presented before reversal cue in punishment condition |
+  | `stimulus` (postreversal, reward) | 2 | Stimulus presented after reversal cue in reward condition |
+  | `stimulus` (postreversal, punishment) | 3 | Stimulus presented after reversal cue in punishment condition |
+- **Super Meta Notes**: N/A
+- **Evidence**: N/A
+- **Kernel Notes**: The `stimulus` event (27954 total) encodes multiple condition variants via raw BrainVision codes (S 53, S 54, S 56, S 73, S 74, S 76) requiring kernel-level semantic decoding to extract reinforcement condition (reward/punishment) and reversal phase (pre/post). Count patterns suggest condition-specific triggers: S 54 (2029) and S 56 (1724) may be frequent stimulus types, while S 73 (629) and S 76 (1441) are moderate frequency variants. The kernel must decode raw trigger codes to assign multi-class labels based on stimulus identity, reinforcement condition, and temporal relationship to reversal cue. Cross-validate with S150/S151 (appear in ~22 subjects, possibly separate task block) if available.
 
-| Event | y | Meaning |
-|-------|---|------|
-| `stimulus_A_prereversalReward` | 0 | Stimulus A before reversal (reward condition) |
-| `stimulus_B_prereversalPunishment` | 1 | Stimulus B before reversal (punishment condition) |
-| `correct_response` | 2 | Correct response |
-| `incorrect_response` | 3 | Incorrect response |
-| `reversal_cue` | 4 | Reversal signal |
-| `stimulus_A_postreversalPunishment` | 5 | Stimulus A after reversal (punishment condition) |
-| `feedback_positive` | 6 | Positive feedback |
-| `feedback_negative` | 7 | Negative feedback |
+### Potential Task 1: Sample-Probe Paradigm Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, target_events = [`sample_stimulus`, `probe_stimulus`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `sample_stimulus` | 0 | Sample stimulus (first in pair, S100) |
+  | `probe_stimulus` | 1 | Probe stimulus (second in pair, S200) |
+- **Super Meta Notes**: N/A
+- **Evidence**: N/A
+- **Kernel Notes**: Events `sample_stimulus` (26 total) and `probe_stimulus` (26 total) appear once per subject, corresponding to raw S100 and S200 triggers. These encode a pair-learning component of the paradigm requiring epoch-level comparison between sample and probe phases. The kernel should verify mapping to raw codes and preserve temporal relationship between sample-probe pairs for subsequent analysis.
 
-## Data Quality Notes
-
-- BrainVision trigger codes (S 51-S 81 range) require kernel-level decoding to semantic labels
-- S150/S151 appear in only 22 subjects, possibly a separate task block
-
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: No
-> **Status**: wait_manual_review
+### Potential Task 2: Response Time Regression
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 0.5 s, segmentation_events = derived from stimulus or response events
+- **Label Route**: `misc`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `response_time` | continuous | Trial-by-trial response latency (ms) |
+- **Super Meta Notes**: N/A
+- **Evidence**: N/A
+- **Kernel Notes**: `response_time` stored in misc channel (route: misc) serves as continuous regression target for trial-by-trial analysis. Kernel must preserve derivation metadata including source, unit (ms), and version. Segmentation should align epochs around response events extracted from stimulus events or derived from raw events.tsv timing analysis. Narrow window (±0.5s) focuses on motor response and immediate post-response processing.

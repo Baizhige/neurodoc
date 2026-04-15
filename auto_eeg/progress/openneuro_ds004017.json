@@ -1,0 +1,192 @@
+{
+  "phase": "done",
+  "budget_used": 8,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 4,
+    "kernel_loop": 1,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 6,
+    "category": "High-level Mental"
+  },
+  "timestamp": "2026-04-11T01:57:30.970039+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds004017.v1.0.3.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds004017.v1.0.3",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds004017.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_github.com_MovementAndNeuroscience_B-D_EEG_Child.html",
+      "ref": "https://github.com/MovementAndNeuroscience/B-D_EEG_Child",
+      "title": "B-D_EEG_Child Repository - The Cognitive Benefits of Embodied Learning for Early Literacy Education",
+      "classification": "relevant",
+      "cot_reasoning": "This is the official GitHub analysis repository for the embodied learning study. It explicitly references the raw BIDS data source as 'https://openneuro.org/datasets/ds004017' and contains MATLAB/R scripts used to preprocess and analyze the EEG data. The repo describes analysis of baseline and experiment sessions using target events 100.0 and 200.0 for letter type b/d discrimination.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "embodied learning letter discrimination",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "tmin = -1.0 s, tmax = 2.0 s, target_events = [100.0, 200.0]",
+      "target_events": [
+        "100.0",
+        "200.0"
+      ],
+      "label_mapping": "100.0 = letter type b, 200.0 = letter type d",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "MATLAB scripts s01-s06 for preprocessing, averaging, and statistical analysis of experiment and baseline EEG data from 21 children performing b vs d letter discrimination tasks."
+    },
+    {
+      "filename": "paper_10.20360_langandlit29435.pdf",
+      "ref": "10.20360/langandlit29435",
+      "title": "Embodied Cognition: Laying the Foundation for Early Language and Literacy Learning",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a theoretical/conceptual review article about embodied cognition in early literacy education. Published in 2018 in Language and Literacy journal, it discusses play-based pedagogy and neuromotor development but does not involve any EEG data or specific experimental dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "",
+      "super_meta_note": "",
+      "evidence_desc": "Authors: Roessingh & Bence (University of Calgary). Review article, no EEG recording, no reference to openneuro_ds004017, no ML task defined."
+    },
+    {
+      "filename": "paper_10_1111_jcal_70090.pdf",
+      "ref": "10.1111/jcal.70090",
+      "title": "Embodied Learning Using Virtual Reality and Mirrors Can Enhance Letter-Sound Knowledge in 6–7-Year-Old Children",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a separate RCT study (n=108 children) investigating VR and mirror-based embodied learning for letter-sound knowledge. It does not use EEG data and does not reference openneuro_ds004017. Different experimental paradigm (letter-sound knowledge with VR/mirror conditions) conducted by overlapping authors.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "",
+      "super_meta_note": "",
+      "evidence_desc": "Authors: Henriksen et al. (2025). Randomized controlled trial, no EEG recordings, different sample (n=108), no openneuro dataset reference."
+    },
+    {
+      "filename": "paper_10_31234_osf_io_zmctf.pdf",
+      "ref": "10.31234/osf.io.zmctf",
+      "title": "The Cognitive Benefits of Embodied Learning in the Context of Early School Literacy",
+      "classification": "relevant",
+      "cot_reasoning": "This is the primary publication for the embodied learning EEG study. The abstract explicitly states 'electroencephalographic experiment revealed that embodied activity stimulates attentional and perceptual processing compared to control' using the lab experiment (n=18). It analyzes EEG data from Study 1 using the b/d letter discrimination paradigm, extracting stimulus-locked ERP components (P300a, N200, P3b) time-locked to target letter onset.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "embodied learning letter discrimination",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "tmin = -1.0 s, tmax = 2.0 s, target_events = [100.0, 200.0]",
+      "target_events": [
+        "100.0",
+        "200.0"
+      ],
+      "label_mapping": "100.0 = letter type b (MOVE/CON condition), 200.0 = letter type d",
+      "meta_level": "raw",
+      "super_meta_note": "EEG data recorded at 2048 Hz, downsampled to 512 Hz; preprocessing: high-pass 0.1 Hz, low-pass 40 Hz, baseline correction -100ms to 0ms; MOVE = embodied movement condition, CON = gaze fixation control condition",
+      "evidence_desc": "Authors: Damsgaard, Topor et al. EEG lab experiment (n=18 children 6-8 years) discriminating letters b and d under embodied movement vs control conditions; ERP analysis of P300a, N200, P300b components."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has a well-defined event structure (events 100.0/200.0 encoding letter types b/d) supporting a 2-class classification task, and two relevant references (the OSF preprint analyzing embodied learning ERP components and the GitHub repository with preprocessing scripts) confirm this paradigm is analyzable for letter discrimination.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 126,
+    "total_n": 126,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_10": 800,
+      "event_100": 3700,
+      "event_20": 864,
+      "event_200": 3779,
+      "event_65546": 3,
+      "event_65736": 1,
+      "event_65536": 2,
+      "CM_in_range/": 215,
+      "Epoch/": 62,
+      "STATUS/10": 803,
+      "STATUS/100": 3700,
+      "STATUS/20": 864,
+      "STATUS/200": 3780,
+      "CM_out_of_range/": 152
+    },
+    "subject_info": {
+      "record_count": 126,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Letter discrimination (b vs d) under embodied literacy intervention\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -1.0 s, tmax = 2.0 s, target_events = [`100.0`, `200.0`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `100.0` | 0 | Letter type b (condition 100) |\n  | `200.0` | 1 | Letter type d (condition 200) |\n- **Evidence**:\n  - DOI: `10.31234/osf.io.zmctf` — Authors: Damsgaard, Topor et al. EEG lab experiment (n=18 children 6-8 years) discriminating letters 'b' and 'd' under embodied movement (MOVE) vs control (CON) conditions; ERP analysis of P300a, N200, P300b components time-locked to stimulus onset with tmin=-1.0s, tmax=2.0s.\n  - URL: `https://github.com/MovementAndNeuroscience/B-D_EEG_Child` — MATLAB preprocessing scripts (s01-s06) for experiment and baseline EEG data from 21 children performing b vs d letter discrimination tasks.\n- **Kernel Notes**: Preprocessing: high-pass 0.1 Hz, low-pass 40 Hz, baseline correction -100ms to 0ms, downsample to 512 Hz. Raw events: `STATUS/100` (n=3700) and `STATUS/200` (n=3780). Events `10.0`/`20.0` appear in ~61 files vs 63 for `100.0`/`200.0`, suggesting incomplete trigger capture or session-specific conditions.\n\n### Potential Task 1: Response outcome or sub-condition analysis\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.5 s, target_events = [`10.0`, `20.0`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `10.0` | * | Response/sub-condition 10 (verify mapping against dataset documentation) |\n  | `20.0` | * | Response/sub-condition 20 (verify mapping against dataset documentation) |\n- **Evidence**: Paradigm indicates 10/20 codes likely encode response outcomes or correct/incorrect feedback based on two-alternative forced choice task structure; events appear in ~61 files at lower frequency (~13 per file).\n- **Kernel Notes**: Events `event_10` (n=800) and `event_20` (n=864) suggest response-locked analysis is feasible; verify semantic mapping (correct vs incorrect, or condition markers) from dataset documentation before assigning class labels.",
+  "kernel_ok": true,
+  "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds004017/kernel_final.py",
+  "kernel_code_len": 8133,
+  "scan_result": {
+    "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds004017.py",
+    "kernel_sha256": "555c78dd8273b63d837453c068473624d2c3fb9881faa43d83610e44ae5221c7",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 126,
+    "total_n": 126,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_0.0": 9205,
+      "response_10": 800,
+      "response_20": 864,
+      "stimulus_b": 3700,
+      "stimulus_d": 3779,
+      "event_65536.0": 6,
+      "event_65546.0": 3,
+      "event_65736.0": 1,
+      "event_-6.815544": 3770,
+      "event_-6.815644": 3693,
+      "event_-6.8157239999999994": 864,
+      "event_-6.815734": 800,
+      "event_-6.815744": 9340,
+      "event_-6.750197999999999": 3,
+      "event_-6.750208": 6,
+      "event_-7.864319999999999": 168,
+      "event_-6.750007999999999": 1,
+      "event_-7.86412": 9,
+      "event_-7.8642199999999995": 7
+    },
+    "subject_info": {
+      "record_count": 126,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds004017.py",
+  "status": "done"
+}

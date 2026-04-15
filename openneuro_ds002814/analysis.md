@@ -9,33 +9,24 @@ A multimodal neuroimaging study (EEG + MEG/MRI) investigating the spatiotemporal
 
 ## File Scan Result
 
-> **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds002814.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
-> **SHA256**: `e436e48f239db115957dccf5bc2307cb3ac75fbce463245b3e85cf82d5fd5c9e`
 
+> **Kernel SHA256**: `76d6a1e02e2103b4a6de56938e3866a6618f85f4a1093e5ec755c47725bb3fbb`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
-
-<!-- AUTO-KERNEL-EVENT-STRUCTURE:START -->
-> **Kernel Fact Source**: current kernel scan from `<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-> **Meaning Policy**: `Meaning` is interpretive; `Event ID / Count / Type / Meta Level` are kernel-derived facts.
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `no_events` | N/A | admin | raw | No task-relevant event labels currently materialized by kernel |
-<!-- AUTO-KERNEL-EVENT-STRUCTURE:END -->
+
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
-| `record_count` | complete | 168 records |
-| `age_completeness` | complete | 168/168 (100.0%) |
-| `sex_completeness` | complete | 168/168 (100.0%) |
-| `observed_age_examples` | N/A | `23`, `30`, `24`, `22`, `19`, `25`, `32`, `31` |
-| `observed_sex_examples` | N/A | `Male`, `Female` |
+
 ## Tasks
 
 ### Classical Task 1: Visual Category Classification (5-class)
@@ -74,4 +65,8 @@ A multimodal neuroimaging study (EEG + MEG/MRI) investigating the spatiotemporal
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_kernel_update
+> **Status**: failed
+
+---
+
+> **auto_eeg FAILED**: While two relevant references (10.1101/2022.05.12.491595 and 10.3389/fnins.2022.983602) support a 5-class visual category classification task with clear event definitions, the analysis.md explicitly states 'No event markers detected in any of the 168 EEG files.' Without detectable events in the BIDS EEG files, the primary classification task cannot be executed despite paradigm documentation.

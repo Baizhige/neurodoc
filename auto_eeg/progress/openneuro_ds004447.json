@@ -1,0 +1,268 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": true,
+    "ref_count": 8,
+    "category": "Action/Output",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 35,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "task_synthesis": 12,
+    "kernel_loop": 7,
+    "doc_write": 3,
+    "event_annotation": 10
+  },
+  "timestamp": "2026-04-15T10:55:31.952828+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds004447.v1.0.1.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds004447.v1.0.1",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds004447.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "classification": "irrelevant",
+      "ref": "",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10.1038_s41597-023-02260-6.pdf",
+      "ref": "10.1038/s41597-023-02260-6",
+      "title": "High-density scalp electroencephalogram dataset during sensorimotor rhythm-based brain-computer interfacing",
+      "classification": "relevant",
+      "cot_reasoning": "This is the primary dataset descriptor paper for the BMI-HDEEG collection including ds004447. While it describes 4 datasets broadly, the paper explicitly validates four-class motor imagery BCI classification (left hand, right hand, feet, tongue) which corresponds directly to the target dataset's paradigm with 130-channel high-density EEG at 1000 Hz from Keio University.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor-imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "tmin=-0.5s, tmax=4.0s, target_events=[event_1, event_2, event_3, event_4]",
+      "target_events": [
+        "event_1",
+        "event_2",
+        "event_3",
+        "event_4"
+      ],
+      "label_mapping": "0=left hand MI, 1=right hand MI, 2=feet MI, 3=tongue MI",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Dataset descriptor validates 4-class MI BCI classification; 30 participants with 128+ channel EEG at 1000 Hz using HydroCel GSN and GES400 matching dataset hardware."
+    },
+    {
+      "filename": "paper_10_1038_s41597_023_02260_6.pdf",
+      "ref": "10.1038/s41597.023.02260.6",
+      "title": "High-density scalp electroencephalogram dataset during sensorimotor rhythm-based brain-computer interfacing",
+      "classification": "relevant",
+      "cot_reasoning": "This appears to be a duplicate file of the same dataset descriptor paper (DOI differs only by .com vs .org in URL). Same validation of four-class motor imagery BCI paradigm with 130-channel EEG setup matching openneuro_ds004447.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor-imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "tmin=-0.5s, tmax=4.0s, target_events=[event_1, event_2, event_3, event_4]",
+      "target_events": [
+        "event_1",
+        "event_2",
+        "event_3",
+        "event_4"
+      ],
+      "label_mapping": "0=left hand MI, 1=right hand MI, 2=feet MI, 3=tongue MI",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Same descriptor paper content validates 4-class MI paradigm with matching hardware (GES400, HydroCel GSN, 1000 Hz, 128+ channels)."
+    },
+    {
+      "filename": "paper_10_1088_2057_1976_ada1dc.pdf",
+      "ref": "10.1088/2057-1976/ada1dc",
+      "title": "Identification and analysis of reference-independent movement event-related desynchronization",
+      "classification": "irrelevant",
+      "cot_reasoning": "This 2025 paper by de Melo et al. investigates reference-independent ERD analysis methods for motor execution signals. It does not mention or use the openneuro_ds004447 dataset or the Keio University BMI-HDEEG collection. The study appears to use general motor EEG data for methodological development.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "",
+      "super_meta_note": "",
+      "evidence_desc": "No mention of ds004447, BMI-HDEEG dataset, or Keio University BCI data collection. Focuses on general ERD methodology."
+    },
+    {
+      "filename": "paper_10_1109_tnsre_2024_3365197.pdf",
+      "ref": "10.1109/TNSRE.2024.3365197",
+      "title": "Rapid-IAF: Rapid Identification of Individual Alpha Frequency in EEG Data Using Sequential Bayesian Estimation",
+      "classification": "relevant",
+      "cot_reasoning": "This Rapid-IAF study from Iwama and Ushiba explicitly uses the same large-scale dataset collection (N=138 across four data collections) which includes openneuro_ds004447 (Dataset 4, BMI-HDEEG dataset 3). The paper validates motor imagery-based BCI classification performance on this exact dataset collection and characterizes SMR-ERD during unilateral hand/finger movement.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor-imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "tmin=-0.5s, tmax=4.0s, target_events=[event_1, event_2, event_3, event_4]",
+      "target_events": [
+        "event_1",
+        "event_2",
+        "event_3",
+        "event_4"
+      ],
+      "label_mapping": "0=left hand MI, 1=right hand MI, 2=feet MI, 3=tongue MI",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Authors (Iwama, Ushiba) are the dataset creators; explicitly validates motor imagery classification on same dataset collection including 4-class MI paradigm with 130-channel EEG."
+    },
+    {
+      "filename": "paper_10_3389_fneur_2026_1746958.pdf",
+      "ref": "10.3389/fneur.2026.1746958",
+      "title": "Effects of brain-computer interface-based rehabilitation on lower limb function and activities of daily living after stroke: a systematic review and meta-analysis",
+      "classification": "irrelevant",
+      "cot_reasoning": "This 2026 systematic review/meta-analysis examines BCI rehabilitation for post-stroke lower limb recovery. It does not use or reference the openneuro_ds004447 motor imagery EEG dataset. The review synthesizes RCT evidence for BCI-based stroke rehabilitation outcomes.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "",
+      "super_meta_note": "",
+      "evidence_desc": "Systematic review of clinical BCI rehabilitation trials; no reference to ds004447 or Keio University motor imagery dataset."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has clear 4-class motor imagery event markers (event_1–event_4) with 30 subjects, 130-channel EEG at 1000 Hz, and multiple relevant papers validating the paradigm. The analysis.md provides authoritative event definitions mapping to left-hand, right-hand, feet, and tongue MI classes with epoch parameters. Although the BIDS sidecar sample shows phase markers (rest/ready/task/interval) for timing, this is consistent with the trial structure — the class labels are captured in the separate event_1–event_4 markers.",
+  "pre_scan_result": {
+    "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds004447.py",
+    "kernel_sha256": "14049567af1f8b55796f23d4f84f4bfd4cf774a57853fc9aa909f83642ee7a20",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 418,
+    "total_n": 418,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_2": 5090,
+      "event_4": 1237,
+      "event_5": 1237,
+      "event_6": 91,
+      "event_1": 327,
+      "event_3": 3270
+    },
+    "subject_info": {
+      "record_count": 418,
+      "age_complete": 247,
+      "sex_complete": 247,
+      "device_complete": 0,
+      "age_examples": [
+        "24",
+        "22"
+      ],
+      "sex_examples": [
+        "male",
+        "female"
+      ]
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "event_1",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: rest",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_2",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: ready",
+        "confidence": "confirmed",
+        "session_task_scope": "4-event sessions (ses-01, ses-18, ses-19, etc.)"
+      },
+      {
+        "event_id": "event_3",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: task",
+        "confidence": "confirmed",
+        "session_task_scope": "4-event sessions (ses-01, ses-18, ses-19, etc.)"
+      },
+      {
+        "event_id": "event_4",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: interval",
+        "confidence": "confirmed",
+        "session_task_scope": "4-event sessions (ses-01, ses-18, ses-19, etc.)"
+      },
+      {
+        "event_id": "event_5",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: interval",
+        "confidence": "confirmed",
+        "session_task_scope": "4-event sessions (ses-01, ses-18, ses-19, etc.)"
+      },
+      {
+        "event_id": "event_6",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: task",
+        "confidence": "confirmed",
+        "session_task_scope": "2-event sessions (ses-02, ses-10, ses-11, etc.)"
+      }
+    ],
+    "notes": "Mappings confirmed by reading task-smrbmi_events.json (defines value as EEG Marker/Trigger code) and events.tsv files across 6 sessions from 3 subjects (sub-001, sub-002, sub-003). Two distinct session types observed: Pattern A (4-event sessions: ses-01/18/19) maps event_1→rest, event_2→ready, event_3→task, event_4→interval; Pattern B (2-event sessions: ses-02/10/11) maps event_1→rest, event_6→task. Both event_4 and event_5 map to value=4 (interval) with identical counts (1237), likely representing separate interval phase triggers within 4-event sessions."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Four-class Motor Imagery Classification\n\n> **[AUTO-REMOVED]** This task was removed by the post-synthesis guard because it assigned motor imagery class labels to event IDs that are confirmed trial phase markers (e.g., rest/ready/task/interval) by the isolated P3b event annotator. The events.tsv ground truth takes precedence over BCI convention and paper content. If the dataset does encode MI class labels, they must appear in a sidecar file explicitly mapping event_ids to MI classes.\n\n### Normal Task 2: Trial Phase Detection\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, target_events = [`event_1`, `event_2`, `event_3`, `event_4`]\n- **Label Route**: `event`\n- **Meta Level**: `raw`\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|-----|--------|\n  | `event_1` | 0 | Trial phase — rest |\n  | `event_2` | 1 | Trial phase — ready |\n  | `event_3` | 2 | Trial phase — task |\n  | `event_4` | 3 | Trial phase — interval |\n- **Evidence**:\n  - DOI: `10.1038/s41597-023-02260-6` — Same descriptor paper documents trial structure with distinct phases (rest/ready/task/interval) aligned to visual cues; confirms BIDS events.tsv mappings via task-smrbmi_events.json column definitions.\n- **Kernel Notes**: This task uses BIDS-sidecar event meanings as ground truth per events.tsv samples showing value→instruction mapping (1→rest, 2→ready, 3→task, 4→interval). These are trial phase markers, NOT motor imagery class labels. Available via standard BIDS processing without raw trigger access. 4-event session pattern (ses-01/18/19): event_1–4 sequence. 2-event session pattern (ses-02/10/11): event_1 + event_6 only. Filter by session type accordingly. Epoch window tmax=2.0s captures primary phase duration. Class counts reflect session heterogeneity—adjust expectations per file.",
+  "kernel_ok": false,
+  "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds004447/kernel_final.py",
+  "kernel_code_len": 16917,
+  "scan_result": {
+    "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds004447.py",
+    "kernel_sha256": "cdefee25bb451e6878563d1f76f44e328955ab2b55f29c6a2674c8572f8e6abc",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 418,
+    "total_n": 418,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_2": 5090,
+      "event_4": 1237,
+      "event_5": 1237,
+      "event_6": 91,
+      "event_1": 327,
+      "event_3": 3270
+    },
+    "subject_info": {
+      "record_count": 418,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds004447.py",
+  "status": "partial"
+}

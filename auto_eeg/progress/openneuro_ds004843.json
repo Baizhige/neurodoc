@@ -1,0 +1,121 @@
+{
+  "phase": "done",
+  "budget_used": 2,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 7,
+    "category": "Others"
+  },
+  "timestamp": "2026-04-12T09:49:48.198051+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds004843.v1.0.0.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds004843.v1.0.0",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds004843.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2026_121762.pdf",
+      "ref": "https://doi.org/10.1016/j.neuroimage.2026.121762",
+      "title": "New evidence and challenges in ERP and MEG correlates of consciousness in vision: A systematized review",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a systematic review of ERP/MEG correlates of visual consciousness covering 53 studies published since 2020. While it discusses EEG research on visual awareness negativity (VAN) and late positivity (LP), it does not cite or use the openneuro_ds004843 dataset. The review synthesizes general literature on consciousness without applying any specific dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_1038_s41598_025_34117_w.pdf",
+      "ref": "https://doi.org/10.1038/s41598-025-34117-w",
+      "title": "The impact of awareness on affective emoji priming in visual word recognition",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper describes two lexical decision experiments investigating emoji priming effects using EEG. While it uses EEG methodology, the paradigm involves emoji primes and word targets with continuous flash suppression, not the Visual Situational Awareness task. The dataset openneuro_ds004843 is not mentioned or utilized.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_1038_s41598_026_35622_2.pdf",
+      "ref": "https://doi.org/10.1038/s41598-026-35622.2",
+      "title": "The element of surprise distinguishes beauty from pleasure and interest in visuo-tactile perception of art",
+      "classification": "irrelevant",
+      "cot_reasoning": "This study examines visuo-tactile perception of art using mismatch negativity (MMN) as a neural marker of prediction error. The experimental paradigm involves tactile exploration of artwork pairs and aesthetic ratings, which is unrelated to the Visual Situational Awareness task in openneuro_ds004843.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_1088_1741_2552_ae3eb8.pdf",
+      "ref": "https://doi.org/10.1088/1741-2552/ae3eb8",
+      "title": "Cognitive reinforcement: capturing tacit knowledge and enhancing expertise with a biofeedback interface for visual attention",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper describes a biofeedback study using combined EEG and eye-tracking to capture tacit knowledge during image classification. While it uses EEG, the paradigm involves implicit learning of image asymmetries and gaze-informed feedback, not the Visual Situational Awareness task. The openneuro_ds004843 dataset is not referenced.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "ref": "",
+      "title": "ACNP 60th Annual Meeting: Panels, Mini-Panels and Study Groups",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is an abstract collection from the ACNP Annual Meeting covering compulsivity, pharmacological treatments, and attentional capture by reward cues. No specific EEG dataset is utilized. The research discussed relates to psychiatric disorders and cognitive tasks unrelated to the Visual Situational Awareness paradigm of openneuro_ds004843.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    }
+  ],
+  "feasible": false,
+  "feasibility_reason": "While the dataset has a well-documented event/label structure and clear multiclass classification paradigm described in analysis.md, none of the reference extractions qualify as 'relevant' or 'partial'. The official DOI and OpenNeuro pages are classified as 'uncertain', and all other references are 'irrelevant'. Since the instructions require at least one relevant/partial reference, this dataset does not meet the feasibility threshold.",
+  "status": "failed"
+}

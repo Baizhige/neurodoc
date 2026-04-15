@@ -18,6 +18,9 @@ A single subject performed directional motor imagery (BCI Competition III, 2005)
 
 ## File Scan Result
 
+> **Kernel SHA256**: `b0fb53a13b65ddd627a459885811c0110078172e3fe0af22802920a04880cb10`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -27,8 +30,8 @@ A single subject performed directional motor imagery (BCI Competition III, 2005)
 | `772` | 139 | short | raw | Cue onset - class 2 (right hand or foot, motor imagery direction 2) |
 | `783` | 100 | admin | raw | Cue unknown (evaluation-set placeholder) |
 
-### Info
 
+### Info
 - **Status**: Complete
 - **Files Scanned**: 1
 - **File Name**: `BCI2005_I.gdf`
@@ -44,7 +47,6 @@ A single subject performed directional motor imagery (BCI Competition III, 2005)
 - **Label Route**: `Annotation`
 - **Target Definition**: Imagery class labels (e.g., left/right hand, feet, tongue; dataset-specific)
 - **Evidence**: The official BCI Competition III dataset description identifies directional motor-imagery decoding as the benchmark objective for this dataset. Source: https://www.bbci.de/competition/iii/ Official description file: `references/website_des.txt`
-
 
 ### Normal Task 1: Binary Motor Imagery Classification (epoch_by_event)
 - **Task Type**: classification
@@ -72,7 +74,6 @@ A single subject performed directional motor imagery (BCI Competition III, 2005)
 - **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
 - **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
 - **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
 
 > **Selected Mode**: Type 1 + Type 3
 > **Why**: Raw markers are sufficient for primary tasks.

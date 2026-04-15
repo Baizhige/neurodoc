@@ -2,49 +2,49 @@
 
 **Dataset**: `openneuro_ds005262` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005262
 **Category**: High-level Mental | **Subjects**: 12 | **Files (Completed)**: 186 | **Channels**: 8 | **Sampling Rate**: 250 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
 EEG recordings of 12 subjects performing imagined (inner) speech tasks based on visual cues presented in Modern Standard Arabic. Subjects silently imagined saying directional words (Up, Down, Left, Right), a Select command, or remained at Rest. The study aims to develop Arabic-language BCI systems using inner speech decoding without overt vocalization.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `bbbb68a2f8bc904707e779b7f404fda50f268d5c255fddcaa4d755d6859ddda8`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
+| `Comment/Down` | 916 | event | raw | Inner speech of "Down" command |
+| `Comment/Left` | 917 | event | raw | Inner speech of "Left" command |
+| `Comment/Rest` | 4590 | event | raw | Rest condition (baseline) |
+| `Comment/Right` | 918 | event | raw | Inner speech of "Right" command |
+| `Comment/Select` | 918 | event | raw | Inner speech of "Select" command |
+| `Comment/Up` | 918 | event | raw | Inner speech of "Up" command |
 | `Comment/Wait` | 8949 | event | raw | Wait period (inter-trial interval) |
-| `Comment/Rest` | 4590 | event | raw | Rest condition |
-| `Comment/Up` | 918 | event | raw | Inner speech - "Up" command |
-| `Comment/Select` | 918 | event | raw | Inner speech - "Select" command |
-| `Comment/Right` | 918 | event | raw | Inner speech - "Right" command |
-| `Comment/Left` | 917 | event | raw | Inner speech - "Left" command |
-| `Comment/Down` | 916 | event | raw | Inner speech - "Down" command |
 | `Comment/WarmUp` | 174 | admin | raw | Warm-up period (exclude) |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
-### Classical Task 1: Arabic inner speech command classification
+### Classical Task 1: Arabic Inner Speech Command Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`Comment/Up`, `Comment/Down`, `Comment/Left`, `Comment/Right`, `Comment/Select`, `Comment/Rest`]
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`Comment/Up`, `Comment/Down`, `Comment/Left`, `Comment/Right`, `Comment/Select`, `Comment/Rest`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|---|
   | `Comment/Rest` | 0 | Rest condition (baseline) |
   | `Comment/Up` | 1 | Inner speech of "Up" command |
   | `Comment/Down` | 2 | Inner speech of "Down" command |
@@ -52,34 +52,5 @@ EEG recordings of 12 subjects performing imagined (inner) speech tasks based on 
   | `Comment/Right` | 4 | Inner speech of "Right" command |
   | `Comment/Select` | 5 | Inner speech of "Select" command |
 - **Evidence**:
-  - DOI: 10.18112/openneuro.ds005262.v1.0.1 — Dataset description confirms six-class inner speech task (Up, Down, Left, Right, Select, Rest) with Arabic visual cues
-- **Kernel Notes**: Epochs extracted around each cue event. Exclude `Comment/Wait` (inter-trial interval) and `Comment/WarmUp` (admin). Bandpass filter 1-50 Hz recommended. Use CSP or shallow classifiers (LDA, SVM) given only 8 channels.
-
-### Potential Task 1: Inner Speech Command Classification (multiclass)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = see Target Definition
-- **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Comment/Wait is a high-frequency inter-trial marker - exclude from classification. Comment/WarmUp is admin - exclude. Only 8 EEG channels.
-
- | Event | y | Meaning |
- |-------|---|---------|
- | `Comment/Rest` | 0 | Rest condition |
- | `Comment/Up` | 1 | Inner speech "Up" |
- | `Comment/Down` | 2 | Inner speech "Down" |
- | `Comment/Left` | 3 | Inner speech "Left" |
- | `Comment/Right` | 4 | Inner speech "Right" |
- | `Comment/Select` | 5 | Inner speech "Select" |
-
-## Data Quality Notes
-
-- Only 8 EEG channels - limited spatial resolution.
-- Comment/Wait (8,949 total) is inter-trial interval - exclude from classification.
-- Comment/WarmUp is admin - exclude.
-
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: No
-> **Status**: wait_manual_review
+  - DOI: 10.1038/s41597-025-05387-w — "ArEEG: an Open-Access Arabic Inner Speech EEG Dataset" (Scientific Data, 2025) — describes the exact openneuro_ds005262 dataset with 12 subjects, 8-channel EEG, 250 Hz sampling rate, and explicitly defines the 6-class inner speech classification task with Rest=0, Up=1, Down=2, Left=3, Right=4, Select=5 label mapping
+- **Kernel Notes**: Extract epochs from -0.2s to 1.0s around each cue event marking visual cue onset. Exclude `Comment/Wait` (inter-trial interval marker, 8949 events) and `Comment/WarmUp` (admin, 174 events). Rest class has ~5x more trials (4590) than command classes (~918 each) — class balancing recommended. Apply 1–50 Hz bandpass filter. Use CSP or shallow classifiers (LDA, SVM) given only 8 channels and limited spatial resolution.

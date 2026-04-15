@@ -11,22 +11,22 @@ Nine subjects (A01-A09) performed four-class cued motor imagery (BCI Competition
 ## File Scan Result
 
 > **Kernel SHA256**: `489182843c6974d9f77d2a7ccd1f1bad91a5f3eb1d01dfc7e15b3321e4eb8803`
-> **EEGUnity Version**: `0.8.0`
+> **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Start of a trial` | 4896 | admin | raw | Trial-onset fixation cross (pre-cue marker) |
-| `Cue onset tongue (class 4)` | 1656 | event | raw | Tongue motor imagery cue |
 | `Cue onset foot (class 3)` | 1375 | event | raw | Feet motor imagery cue |
 | `Cue onset left (class 1)` | 1224 | event | raw | Left-hand motor imagery cue |
 | `Cue onset right (class 2)` | 1224 | event | raw | Right-hand motor imagery cue |
-| `Rejected trial` | 488 | admin | raw | Trial rejected by experimenter |
-| `Start of a new run` | 153 | admin | raw | Run boundary marker |
+| `Cue onset tongue (class 4)` | 1656 | event | raw | Tongue motor imagery cue |
 | `Eye movements` | 18 | admin | raw | Artifactual eye movement event |
 | `Idling EEG (eyes closed)` | 17 | admin | raw | Resting state with eyes closed |
 | `Idling EEG (eyes open)` | 17 | admin | raw | Resting state with eyes open |
+| `Rejected trial` | 488 | admin | raw | Trial rejected by experimenter |
+| `Start of a new run` | 153 | admin | raw | Run boundary marker |
+| `Start of a trial` | 4896 | admin | raw | Trial-onset fixation cross (pre-cue marker) |
 
 
 ### Info

@@ -1,0 +1,223 @@
+{
+  "phase": "done",
+  "budget_used": 8,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 4,
+    "kernel_loop": 1,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 8,
+    "category": "Biological State"
+  },
+  "timestamp": "2026-04-12T03:28:44.018014+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_openneuro.org_datasets_ds004635.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_doi.org_10.1038_35081509.html",
+      "ref": "10.1038/35081509",
+      "title": "Functional brain development in humans",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a general review article about human brain development discussing theories like maturational perspective, interactive specialization, and skill-learning hypothesis. It references general infant cognitive development literature but does not mention or use the openneuro_ds004635 dataset, nor any specific EEG microstate analysis.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "official_github.com_gaffreylab_EEG-Microstate-Analysis-Tutorial_tree_main.html",
+      "ref": "",
+      "title": "EEG-Microstate-Analysis-Tutorial",
+      "classification": "partial",
+      "cot_reasoning": "This GitHub repository from gaffreylab provides a tutorial for performing microstate analysis using Cartool software. The repository has a branch named 'Tutorial-Reliability-Paper-Data' suggesting it uses data from the reliability study. However, this is a tutorial/resource repository rather than a paper explicitly describing dataset usage and ML task definitions.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "resting-state video-watching",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "1-second segments at GFP peaks with modified k-means clustering",
+      "target_events": [
+        "microstate 1",
+        "microstate 2",
+        "microstate 3",
+        "microstate 4",
+        "microstate 5"
+      ],
+      "label_mapping": "0-4: microstate class assignments from clustering",
+      "meta_level": "super",
+      "super_meta_note": "Tutorial uses infant EEG microstate data from the Gaffrey Lab reliability study; likely same population as openneuro_ds004635",
+      "evidence_desc": "Branch 'Tutorial-Reliability-Paper-Data' suggests data connection to the reliability paper; tutorial covers microstate analysis workflow applicable to the dataset"
+    },
+    {
+      "filename": "paper_10_1007_s10548_024_01043_5.pdf",
+      "ref": "10.1007/s10548-024-01043-5",
+      "title": "Microstate Analysis of Continuous Infant EEG: Tutorial and Reliability",
+      "classification": "relevant",
+      "cot_reasoning": "This is the published version of the Bagdasarov et al. study that explicitly uses open-access infant EEG data from 48 infants during video-watching for microstate reliability analysis. The authors (Bagdasarov, Brunet, Michel, Gaffrey) match the dataset's Gaffrey Lab. The paper defines microstate segmentation as a classification task with 5 microstate classes derived from k-means clustering, matching the dataset's event structure.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "resting-state video-watching",
+      "epoch_method_hint": "segmentation",
+      "epoch_params": "1-second epochs; modified k-means clustering at GFP peaks for microstate class assignment",
+      "target_events": [
+        "microstate 1",
+        "microstate 2",
+        "microstate 3",
+        "microstate 4",
+        "microstate 5"
+      ],
+      "label_mapping": "0-4: canonical microstate topographies from k-means clustering",
+      "meta_level": "super",
+      "super_meta_note": "Published version of the preprint with same dataset; authors include Gaffrey Lab; provides step-by-step tutorial with Cartool software",
+      "evidence_desc": "Abstract states: 'we provide a step-by-step tutorial, accompanying website, and open-access data'; mentions 48 infants during video-watching resting-state; identifies 5 microstate classes with temporal properties (GEV, duration, coverage, occurrence, transition probabilities)"
+    },
+    {
+      "filename": "paper_10_1016_j_dcn_2010_07_003.pdf",
+      "ref": "10.1016/j.dcn.2010.07.003",
+      "title": "Interactive Specialization: A domain-general framework for human functional brain development?",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a theoretical review article by Mark H. Johnson proposing the Interactive Specialization framework for understanding functional brain development. It discusses domains like face perception, social cognition, word learning, and executive control but does not use any specific EEG dataset, including openneuro_ds004635, nor does it perform any microstate analysis.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_21203_rs_3_rs_3164735_v1.pdf",
+      "ref": "10.21203/rs.3.rs-3164735.v1",
+      "title": "Microstate Analysis of Infant EEG: Tutorial and Reliability",
+      "classification": "relevant",
+      "cot_reasoning": "This is the preprint version of the Bagdasarov et al. study that explicitly uses open-access infant EEG data. The paper studies microstate reliability in infants during video-watching, identifies 5 microstate classes via clustering, and defines this as a classification task. The authors (Bagdasarov, Brunet, Michel, Gaffrey) match the Gaffrey Lab origin of dataset ds004635.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "resting-state video-watching",
+      "epoch_method_hint": "segmentation",
+      "epoch_params": "1-second epochs; modified k-means clustering at GFP peaks for microstate class assignment",
+      "target_events": [
+        "microstate 1",
+        "microstate 2",
+        "microstate 3",
+        "microstate 4",
+        "microstate 5"
+      ],
+      "label_mapping": "0-4: canonical microstate topographies from k-means clustering",
+      "meta_level": "super",
+      "super_meta_note": "Preprint version; later published as 10.1007/s10548-024-01043-5; same dataset and methodology",
+      "evidence_desc": "Posted July 17th, 2023; mentions 'open-access data' and 48 infants during video-watching; identifies 5 microstate classes with temporal properties (GEV, duration, coverage, occurrence, transition probabilities); DOI links to same study published in Brain Topography 2024"
+    },
+    {
+      "filename": "paper_10_7551_mitpress_14060_001_0001.pdf",
+      "ref": "10.7551/mitpress.14060.001.0001",
+      "title": "Making Meaning with Machines: Somatic Strategies, Choreographic Technologies, and Notational Abstractions through a Laban/Bartenieff Lens",
+      "classification": "junk",
+      "cot_reasoning": "This is a book about movement analysis, choreography, robotics, and Laban/Bartenieff notation systems. It has absolutely no connection to EEG, infant neuroscience, or microstate analysis. This is clearly wrong domain content unrelated to the dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "ref": "10.1073/pnas.2414636122",
+      "title": "Infant EEG microstate dynamics relate to fine-grained patterns of infant attention during naturalistic play with caregivers",
+      "classification": "irrelevant",
+      "cot_reasoning": "While this PNAS paper by Bagdasarov et al. (2025) uses infant EEG microstate analysis and includes Gaffrey as an author, it uses data from 43 infant-caregiver dyads collected in a separate study using dyadic head-mounted eye tracking. This is a different dataset from openneuro_ds004635 (48 infants, video-watching paradigm).",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Paper states data from '43 infant-caregiver dyads' using 'dyadic, head-mounted eye tracking during infant-caregiver play' - different from openneuro_ds004635's 48 infants during video-watching"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has clear paradigm definition (infants watching videos for resting-state EEG) and identifiable event/label structure for EEG microstate segmentation into 5 classes. Two relevant references (paper_10_21203_rs_3_rs_3164735_v1.pdf and paper_10_1007_s10548_024_01043_5.pdf) directly support this classification task, and the analysis.md provides detailed kernel parameters including epoch method, segment length, and microstate class definitions.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 1,
+    "total_n": 1,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "TRSP": 10,
+      "bgin": 10
+    },
+    "subject_info": {
+      "record_count": 1,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: EEG Microstate Segmentation\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 1 s, overlap = 0.0\n- **Label Route**: `misc`\n- **Meta Level**: super\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `microstate 1` | 0 | First canonical topographic pattern identified by modified k-means clustering |\n  | `microstate 2` | 1 | Second canonical topographic pattern identified by modified k-means clustering |\n  | `microstate 3` | 2 | Third canonical topographic pattern identified by modified k-means clustering |\n  | `microstate 4` | 3 | Fourth canonical topographic pattern identified by modified k-means clustering |\n  | `microstate 5` | 4 | Fifth canonical topographic pattern identified by modified k-means clustering |\n- **Kernel Notes**: Segment continuous EEG into 1-second non-overlapping windows, compute Global Field Power (GFP) for each window, identify GFP peaks, apply modified k-means clustering to identify 5 canonical microstate classes, assign each segment to microstate labels 0–4. Compute temporal properties (GEV, duration, coverage, occurrence, transition probabilities) for reliability analysis. Raw boundary markers (`bgin`, `TRSP`) define recording segment boundaries but are not used as classification targets. Note: class imbalance may affect microstate reliability metrics across different data durations.\n- **Evidence**:\n  - DOI: 10.1007/s10548-024-01043-5 — Published tutorial on infant EEG microstate analysis using Cartool; step-by-step methodology with 48 infants during video-watching resting-state; identifies 5 microstate classes and computes temporal properties (GEV, duration, coverage, occurrence, transition probabilities).\n  - DOI: 10.21203/rs.3.rs-3164735.v1 — Preprint version of the above; same dataset (open-access data) and methodology; assesses psychometric reliability via split-half analysis.\n\n### Potential Task 1: Recording Segment Boundary Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_long_event_hdf5`\n- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5, target_events = [`bgin`, `TRSP`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|----|---------|\n  | `bgin` | 0 | Recording segment start marker |\n  | `TRSP` | 1 | Transition segment boundary marker |\n- **Kernel Notes**: Limited utility for supervised classification—only 10 events of each type across all 48 infants. Raw boundary markers indicate recording segment boundaries but have minimal samples for robust training. Primary scientific contribution lies in microstate analysis (Classical Task 1).\n- **Evidence**: No dedicated publication supports this classification task; boundary events are used only for segmenting recordings in microstate preprocessing.",
+  "kernel_ok": true,
+  "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds004635/kernel_final.py",
+  "kernel_code_len": 9430,
+  "scan_result": {
+    "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds004635.py",
+    "kernel_sha256": "da76bf1dea148211b5bb5f4f4351365f9d418b0d2b8fe7eec9da9ffdeed80e30",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 1,
+    "total_n": 1,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "TRSP": 10,
+      "bgin": 10
+    },
+    "subject_info": {
+      "record_count": 1,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds004635.py",
+  "status": "done"
+}

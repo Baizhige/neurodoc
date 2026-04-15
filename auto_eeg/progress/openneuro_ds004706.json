@@ -1,0 +1,126 @@
+{
+  "phase": "done",
+  "budget_used": 8,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 4,
+    "kernel_loop": 1,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 4,
+    "category": "High-level Mental"
+  },
+  "timestamp": "2026-04-12T22:23:05.993720+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds004706.v1.0.0.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds004706.v1.0.0",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds004706.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1037_xlm0001341.pdf",
+      "ref": "10.1037/xlm0001341",
+      "title": "Neural Correlates of Memory in a Naturalistic Spatiotemporal Context",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly describes the 'Courier task' paradigm matching openneuro_ds004706: subjects navigate a virtual town on a bicycle delivering items to landmarks, with EEG recorded during encoding (WORD events) and retrieval (free/cued recall). The authors trained logistic regression classifiers on spectral features (theta T+, alpha/beta A−, gamma G+) to predict memory success, exactly as specified for the Classical Memory Encoding Success Classification task. The dataset authors (including Michael J. Kahana) are co-authors, confirming direct use of this specific dataset.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "Courier spatial memory task with virtual navigation, free recall, and cued recall",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "tmin/tmax derived from WORD events for encoding success prediction; spectral features from 128+ channels across theta/alpha/beta/gamma frequency bands",
+      "target_events": [
+        "WORD",
+        "REC_WORD"
+      ],
+      "label_mapping": "WORD followed by matching REC_WORD = 1 (remembered); WORD not followed by matching REC_WORD = 0 (forgotten)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Paper describes EEG spectral correlates (T+A−G+) of successful encoding during virtual town navigation task with closed-loop aspects. Logistic regression classifiers reliably predicted mnemonic success using spectral features from held-out sessions. Free recall and cued recall phases match dataset event structure."
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "ref": "10.3389/fnins.2025.1682450",
+      "title": "Acoustic stimulation and other emerging approaches to enhance sleep: design notes for the next generation of closed-loop neurostimulation technology",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a review article about closed-loop neurostimulation during sleep to enhance sleep quality and memory consolidation. While it discusses relevant oscillatory targets (slow waves, spindles, ripples, theta), it does not use the openneuro_ds004706 dataset or any data from the Courier spatial memory paradigm. The paper focuses entirely on sleep enhancement interventions, not encoding/retrieval during wakeful spatial navigation tasks.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Review article about sleep neurostimulation; no dataset usage. Discusses general sleep-memory literature but does not reference or use openneuro_ds004706 or the Courier spatial memory paradigm."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has a clear event structure with identifiable WORD encoding events and corresponding recall markers (REC_WORD) enabling binary classification of memory encoding success (remembered vs forgotten). Reference paper_10_1037_xlm0001341.pdf explicitly supports this classification task using spectral features from the same Courier spatial memory paradigm with free/cued recall phases, providing strong evidence for task feasibility.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 298,
+    "total_n": 298,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_8": 1690758,
+      "event_65544": 27,
+      "event_65536": 1
+    },
+    "subject_info": {
+      "record_count": 298,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Memory Encoding Success Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0.3 s, tmax = 1.3 s, target_events = [`WORD`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `WORD` | 1 | Word subsequently remembered (encoding success) |\n  | `WORD` | 0 | Word subsequently forgotten (encoding failure) |\n- **Kernel Notes**: Extract epochs centered on WORD events (0.3–1.3s post-onset). Derive labels by matching WORD events to subsequent REC_WORD events. If a WORD is followed by a REC_WORD with matching content/trial, label as 1 (remembered); otherwise label as 0 (forgotten). Use spectral features (theta/alpha/beta/gamma bands) for L2-penalized logistic regression classification. High sampling rate (2048 Hz) supports fine temporal resolution for theta-band analysis. Exclude epochs with adjacent CLASSIFIER/CLASSIFIER_WAIT events to avoid stimulation artifacts.\n- **Evidence**:\n  - DOI: 10.1037/xlm0001341 — Binary classification of memory encoding success using L2-penalized logistic regression on spectral features (T+A−G+ pattern) to decode remembered vs forgotten words during virtual town navigation with free/cued recall\n\n### Potential Task 1: Encoding vs Recall Phase Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset), target_events = [`WORD`, `REC_WORD`, `CUED_REC_CUE`, `CUED_REC_WORD`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `WORD` | 0 | Word encoding phase |\n  | `REC_WORD` | 1 | Free recall response |\n  | `CUED_REC_CUE` | 2 | Cued recall cue |\n  | `CUED_REC_WORD` | 3 | Cued recall response |\n- **Kernel Notes**: Multiclass (4-class) paradigm distinguishing encoding vs retrieval phases. Pre-stimulus baseline window (-0.2 to 0s) captures preparatory activity; post-event window (0 to 1.0s) captures encoding/retrieval responses. May also use video-verified cued recall events (CUED_REC_WORD_VV) for higher-accuracy labels at reduced sample count. Downsample to 500–1000 Hz for efficient processing. Filter CLASSIFIER events to avoid contamination.",
+  "kernel_ok": true,
+  "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds004706/kernel_final.py",
+  "kernel_code_len": 9780,
+  "scan_result": {
+    "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds004706.py",
+    "kernel_sha256": "2dbab021919d54b2e66e38e1fe87013d5d6a8568e8740b69522728dd4b08a4b3",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 298,
+    "total_n": 298,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_8": 1690758,
+      "event_65544": 27,
+      "event_65536": 1
+    },
+    "subject_info": {
+      "record_count": 298,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds004706.py",
+  "status": "done"
+}

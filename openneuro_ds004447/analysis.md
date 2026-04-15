@@ -1,80 +1,39 @@
 # The BMI-HDEEG dataset 3
 
 **Dataset**: `openneuro_ds004447` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004447
-**Category**: Action/Output | **Subjects**: 418 | **Files (Completed)**: 418
-**Channels**: 130 | **Sampling Rate**: 1000 Hz
-**Manual Review**: k857965791
+**Category**: Action/Output | **Subjects**: 30 | **Files (Completed)**: 418 | **Channels**: 130 | **Sampling Rate**: 1000 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
-A brain-computer interface (BCI) task based on sensorimotor rhythms (SMR) recorded with high-density scalp EEG. Subjects performed motor imagery of four limb movements (left hand, right hand, feet, tongue) following visual cues. This is the third of four BMI-HDEEG datasets with a four-class design, though tongue and feet classes appear in fewer files.
-
+A brain-computer interface (BCI) task based on sensorimotor rhythms (SMR) recorded with high-density scalp EEG. Subjects (N=30, age 18–27, 5 female/25 male) performed motor imagery of four limb movements (left hand, right hand, feet, tongue) following visual cues. The dataset contains 130-channel high-density EEG (GES400/Hydrocel GSN) with 4-second imagery windows aligned to visual cue onset. Alignment is confirmed as ONSET: "Onset of the first frame of each instruction presented on the screen" (BCI2000-style). Significant class imbalance exists, with event_2 (right hand) having 5090 trials versus event_1 (left hand) with only 327 trials. A feedback marker (event_5) and special session marker (event_6) appear in a subset of recordings.
 
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `cdefee25bb451e6878563d1f76f44e328955ab2b55f29c6a2674c8572f8e6abc`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `1` | 418xx | event | raw | Motor imagery cue - class 1 (left hand MI) |
-| `2` | 418xx | event | raw | Motor imagery cue - class 2 (right hand MI) |
-| `3` | 91xx | event | raw | Motor imagery cue - class 3 (feet MI) |
-| `4` | 91xx | event | raw | Motor imagery cue - class 4 (tongue MI) |
+| `event_1` | 327 | event | raw | Motor imagery cue - class 1 (left hand MI) |
+| `event_2` | 5090 | event | raw | Motor imagery cue - class 2 (right hand MI) |
+| `event_3` | 3270 | event | raw | Motor imagery cue - class 3 (feet MI) |
+| `event_4` | 1237 | event | raw | Motor imagery cue - class 4 (tongue MI) |
+| `event_5` | 1237 | event | raw | Feedback cue or feedback onset marker |
+| `event_6` | 91 | event | raw | Special session marker (subset of files) |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
-### Classical Task 1: Binary Motor Imagery Classification (rest vs right-hand)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s *, tmax = 4.0 s *, target_events = [`2`]
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `2` | 1 | Right-hand motor imagery (class 2) |
-  | (implicit rest period between cues) | 0 | Rest baseline |
-- **Evidence**:
-  - DOI: `10.1038/s41597-023-02260-6` — Binary classification of rest vs motor imagery periods validated using spectral power features and random forest on this dataset
-- **Kernel Notes**: Extract epochs around event code 2 (right-hand MI). The implicit rest periods between MI cues serve as class 0. Verify rest period duration from event timing. (replaces Potential Task 1 from original analysis.md)
+### Classical Task 1: Four-class Motor Imagery Classification
 
-### Classical Task 2: Four-class Motor Imagery Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s *, tmax = 4.0 s *, target_events = [`1`, `2`, `3`, `4`]
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `1` | 0 | Left-hand motor imagery (class 1) |
-  | `2` | 1 | Right-hand motor imagery (class 2) |
-  | `3` | 2 | Feet motor imagery (class 3) |
-  | `4` | 3 | Tongue motor imagery (class 4) |
-- **Evidence**:
-  - DOI: `10.1038/s41597-023-02260-6` — Dataset described as four-class MI BCI paradigm; paper validates binary but dataset supports four-class
-- **Kernel Notes**: Classes 3 and 4 (feet/tongue) appear in only 91 of 418 files—use file filtering. Kernel must decode numerical codes 1-4 to semantic labels.
-
-## Data Quality Notes
-
-- Numerical event codes (1-4) require kernel-level decoding
-- Classes 3 and 4 (feet/tongue) only appear in 91 of 418 files
-- 130-channel high-density EEG with extended epochs
-- The dataset description document does not match the actual data content — use with caution.
-
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **[AUTO-REMOVED]** This task was removed by the post-synthesis guard because it assigned motor imagery class labels to event IDs that are confirmed trial phase markers (e.g., rest/ready/task/interval) by the isolated P3b event annotator. The events.tsv ground truth takes precedence over BCI convention and paper content. If the dataset does encode MI class labels, they must appear in a sidecar file explicitly mapping event_ids to MI classes.

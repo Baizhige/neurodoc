@@ -11,24 +11,24 @@ Nine subjects (B01-B09) performed two-class cued motor imagery of the left and r
 ## File Scan Result
 
 > **Kernel SHA256**: `f8318b338ce28894e9eb4e28cfcd174ed8fe180a3c6730d7756c660f2518fadc`
-> **EEGUnity Version**: `0.8.0`
+> **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Start of a trial` | 6240 | admin | raw | Trial-onset fixation cross (pre-cue) |
+| `BCI feedback (continuous)` | 1440 | admin | raw | BCI feedback period (sessions 3-5 only) |
 | `Cue onset left (class 1)` | 4460 | event | raw | Left-hand motor imagery cue |
 | `Cue onset right (class 2)` | 4460 | event | raw | Right-hand motor imagery cue |
-| `BCI feedback (continuous)` | 1440 | admin | raw | BCI feedback period (sessions 3-5 only) |
-| `Rejected trial` | 1253 | admin | raw | Experimenter-rejected trial |
-| `Vertical eye movement` | 323 | admin | raw | Eye artifact marker |
 | `Eye blinks` | 263 | admin | raw | Eye artifact marker |
 | `Eye rotation` | 263 | admin | raw | Eye artifact marker |
-| `Start of a new run` | 252 | admin | raw | Run boundary marker |
 | `Horizontal eye movement` | 53 | admin | raw | Eye artifact marker |
 | `Idling EEG (eyes closed)` | 43 | admin | raw | Resting state with eyes closed |
 | `Idling EEG (eyes open)` | 43 | admin | raw | Resting state with eyes open |
+| `Rejected trial` | 1253 | admin | raw | Experimenter-rejected trial |
+| `Start of a new run` | 252 | admin | raw | Run boundary marker |
+| `Start of a trial` | 6240 | admin | raw | Trial-onset fixation cross (pre-cue) |
+| `Vertical eye movement` | 323 | admin | raw | Eye artifact marker |
 
 
 ### Info

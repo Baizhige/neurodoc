@@ -1,75 +1,77 @@
 # eeg-neuroforecasting
 
 **Dataset**: `openneuro_ds004284` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004284
-**Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 18
-**Channels**: 129 | **Sampling Rate**: 1000 Hz
+**Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 18 | **Channels**: 129 | **Sampling Rate**: 1000 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
-A neuroforecasting task that utilizes EEG activity during decision-making or valuation to predict aggregate, population-level outcomes.
+A neuroforecasting task that utilizes EEG activity during decision-making or valuation to predict aggregate, population-level outcomes. Participants viewed Kickstarter project presentations and made individual funding decisions while EEG was recorded. The paradigm investigates whether single-trial neural responses can predict both individual choices and aggregate market outcomes (whether projects reached their funding thresholds).
 
 ## File Scan Result
 
+> **Kernel SHA256**: `eac9d6792e51fc9ffa699dee052ecfcdd5ed454901455e689faffb72fde7ee69`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `no_events` | N/A | admin | raw | No discrete event markers detected; use continuous segmentation or external metadata labels. |
-### MISC Label Summary
+| `segment` | 17009 | event | raw | Participant's funding decision during Kickstarter project presentation |
 
-- **Route**: `misc`
-- **Role**: Stores derived labels (super meta) not directly present in raw event IDs.
-- **Candidate Labels**: Needs verification
-- **Kernel Note**: Document derivation logic, source fields, units, and version tags.
 
 ### Info
-
-- **File Scan Status**: Completed
-- **Additional Notes**: See dataset documentation for complete event and channel metadata.
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | missing | N/A |
+| `subject_sex` | complete | N/A |
+| `device` | missing | N/A |
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Kickstarter
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004284 DOI: https://doi.org/10.18112/openneuro.ds004284.v1.0.0
-
-
-### Normal Task 1: Raw-meta task
+### Classical Task 1: Kickstarter Funding Decision Classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5` or `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: Needs verification, target_events = see Target Definition
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0, tmax = 4.0, target_events = ["segment"]
 - **Label Route**: `Annotation`
-- **Target Definition**: Needs verification
+- **Meta Level**: raw
+- **Target Definition**:
 
-- **Kernel Notes**: Exclude admin markers from target labels.
+| Event | y | Meaning |
+|-------|---|--------|
+| segment | fund | Participant chose to fund the Kickstarter project |
+| segment | not_funded | Participant did not fund the project |
 
+- **Evidence**: eeg-neuroforecasting repository (preprocessing.py, analysis notebooks) DOI: N/A; Paper: https://doi.org/10.1038/s41598-023-41613-4
+- **Kernel Notes**: Segment events (n=17009) serve as epoch anchors. Individual choice labels must be derived from external Kickstarter outcome metadata or annotation channels. Apply bandpass filter (0.5-40 Hz) before epoching per data quality notes. Verify 129-channel consistency across 18 subjects.
 
-### Normal Task 2: Super-meta task
+### Classical Task 2: Aggregate Funding Outcome Prediction (Neuroforecasting)
 - **Task Type**: regression/classification
-- **Epoch Method**: `epoch_by_event_hdf5` or `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: Needs verification, target_events = see Target Definition
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0, tmax = 4.0, target_events = ["segment"]
 - **Label Route**: `misc`
-- **Target Definition**: Continuous target value as defined by kernel and label route.
+- **Meta Level**: super
+- **Target Definition**:
 
-- **Regression Target / Label**: Needs verification
-- **Kernel Notes**: Derive and version super-meta in kernel.
-## Data Quality Notes
+| Event | y | Meaning |
+|-------|---|--------|
+| segment | deal_success (continuous) | Aggregate Kickstarter funding outcome (0-1 normalized or binary threshold at funding goal) |
 
-- Verify channel count consistency across subjects before pooling.
-- Apply bandpass filter (0.5-40 Hz) and artifact rejection prior to epoching.
+- **Evidence**: https://doi.org/10.1038/s41598-023-41613-4 (Single-trial VEPs predict both individual choice and market outcomes; "EEG predicts whether products reached funding threshold")
+- **Kernel Notes**: Super-meta labels require derivation from external dataset documentation or aggregated Kickstarter platform data. Derive and version super-meta in kernel with reproducible schema. This task operationalizes the core neuroforecasting paradigm: using EEG activity during decision-making to predict population-level outcomes.
 
-## Kernel Responsibilities
+### Potential Task 1: Entrepreneur Fundraising Success Prediction
+- **Task Type**: classification/regression
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0, tmax = 4.0, target_events = ["segment"]
+- **Label Route**: `misc`
+- **Meta Level**: super
+- **Target Definition**:
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+| Event | y | Meaning |
+|-------|---|--------|
+| segment | deal_success | Whether the entrepreneurial pitch reached its investment/funding threshold |
+| segment | investment_amount | Continuous investment amount raised |
 
-> **Selected Mode**: Type 2 + Type 3
-> **Why**: Derived targets are needed beyond raw markers.
-> **Primary Label Routes**: Annotation, misc
-> **Evidence Keywords**: regression target
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004284
+- **Evidence**: https://doi.org/10.1371/journal.pone.0340606 (Partial support; "EEG predicts population-level investment interest and deal outcomes"; dataset from OSF, not OpenNeuro)
+- **Kernel Notes**: Partial reference support only; task is plausible from paradigm alignment (neuroforecasting/fundraising domain). Requires verification of outcome labels from dataset documentation.

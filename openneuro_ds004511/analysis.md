@@ -27,8 +27,8 @@ _No task event markers detected (`no_events`). Only hardware sync marker `Sync(1
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
 ## Tasks
 
@@ -49,4 +49,8 @@ _No task event markers detected (`no_events`). Only hardware sync marker `Sync(1
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: failed
+
+---
+
+> **auto_eeg FAILED**: No trial-level event markers exist in this dataset—only hardware sync markers are present, making supervised ML tasks impossible. The references either discuss deception detection but use different datasets (LieWaves vs. this 64-channel dataset) or are methodologically irrelevant. Without identifiable labels or trial structure, epoch-based analysis is not viable.

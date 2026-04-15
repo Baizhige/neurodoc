@@ -2,6 +2,7 @@
 
 **Dataset**: `openneuro_ds002893` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds002893
 **Category**: Sensory/Response | **Subjects**: 49 | **Files (Completed)**: 52 | **Channels**: 36 | **Sampling Rate**: 250 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
@@ -9,65 +10,71 @@ An interleaved dual-oddball task in which subjects selectively attended to eithe
 
 ## File Scan Result
 
+> **Kernel SHA256**: `06279b5cae711747c4c1192ce8883b36815035e082cf18804a5f0320512f6b35`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `attend_auditory` | 51 (files) | long | raw | Sustained auditory attention block |
-| `attend_visual` | 51 (files) | long | raw | Sustained visual attention block |
-| `shift_attention` | 49 (files) | admin | raw | Attention shift cue - transition marker between blocks |
 
-> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-> - `long`: sustained-state marker (>=2 s), for `epoch_by_long_event_hdf5`
-> - `rest`: resting-state segment marker, for `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **exclude** from epoch target_events
+
 
 ### MISC Label Summary
-
 No MISC labels identified in current scan.
-
 ### Info
-
-No additional file scan info at this time.
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | partial (48/52) | N/A |
+| `subject_sex` | complete | N/A |
+| `device` | missing | N/A |
 
 ## Tasks
 
-### Primary Task 1: ERP target detection (P300/Oddball)
+### Potential Task 1: ERP Target Detection (P300/Oddball)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [Needs verification]
 - **Label Route**: `Annotation`
-- **Target Definition**: Target vs non-target stimulus events
-- **Evidence**: P300/oddball paradigm appears as core study objective. Source: https://openneuro.org/datasets/ds002893 DOI: https://doi.org/10.18112/openneuro.ds002893.v2.0.0
+- **Meta Level**: raw
+- **Target Definition**: Target vs non-target stimulus events (standard/deviant classification)
 
+| Event | y | Meaning |
+|---|---|---|
+| `target` | 1 | Target stimulus (oddball) |
+| `standard` | 0 | Standard/background stimulus |
+| `deviant` | 1 | Deviant stimulus (if distinct from target) |
 
-### Normal Task 1: Attention Modality Classification (binary)
+- **Evidence**: DOI: https://doi.org/10.18112/openneuro.ds002893.v2.0.0 | Dual-oddball paradigm core study objective; standard P300/Oddball target detection supported by paradigm description alone.
+- **Kernel Notes**: No events detected in kernel scan. Paradigm logic supports P300 target classification. Verify event IDs in accompanying *_events.tsv files. Standard oddball/P300 epoch window captures classic ERP response. Alignment to target stimulus onset.
+
+### Potential Task 2: Attention Modality Classification (binary)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5, target_events = see Target Definition
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5, target_events = [attend_auditory, attend_visual]
 - **Label Route**: `Annotation`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: `shift_attention` is a transition cue - it marks the moment of modality switching, not a sustained state; treat as admin. The `attend_*` events mark the onset of sustained attention blocks of multiple seconds.
+- **Meta Level**: super
+- **Target Definition**: Sustained attention modality blocks
 
- | Event | y | Meaning |
- |-------|---|---------|
- | `attend_auditory` | 0 | Sustained auditory attention block |
- | `attend_visual` | 1 | Sustained visual attention block |
+| Event | y | Meaning |
+|---|---|---|
+| `attend_auditory` | 0 | Sustained auditory attention block |
+| `attend_visual` | 1 | Sustained visual attention block |
 
-## Data Quality Notes
+- **Evidence**: DOI: https://doi.org/10.18112/openneuro.ds002893.v2.0.0 | Interleaved dual-oddball with selective attention to auditory or visual modalities supported by paradigm description.
+- **Kernel Notes**: Sustained `attend_*` states require overlapping sliding windows to capture extended neural states. The 0.5 overlap enables continuous modality classification. `shift_attention` is admin/transition-only; exclude from classification target. Derivation of high-level attention labels may require Type 2 super meta integration.
 
-- `shift_attention` marks attention shift cues - not a sustained state; exclude from classification target.
-- Count column reflects files-with-event (51 subjects out of 52 files), not per-session trial count.
-- Older adult participants (aging study); verify age distribution from participants.tsv.
-- Verify channel count consistency across subjects before pooling.
+### Potential Task 3: Attention Shift Detection
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [shift_attention]
+- **Label Route**: `Annotation`
+- **Meta Level**: raw
+- **Target Definition**: Attention modality switch events
 
-## Kernel Responsibilities
+| Event | y | Meaning |
+|---|---|---|
+| `shift_attention` | 1 | Attention modality transition cue |
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002893
+- **Evidence**: DOI: https://doi.org/10.18112/openneuro.ds002893.v2.0.0 | Spoken and printed attention cue instructions for modality switching supported by paradigm description.
+- **Kernel Notes**: `shift_attention` is a transition cue marking the moment of modality switching. Epoching around it can reveal cue-locked ERP components (CNV, frontal midlines) associated with attention reorientation. Treat as admin event; do not include in sustained attention classification targets.

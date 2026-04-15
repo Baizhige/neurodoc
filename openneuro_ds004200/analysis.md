@@ -2,105 +2,155 @@
 
 **Dataset**: `openneuro_ds004200` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004200
 **Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 20 | **Channels**: 37 | **Sampling Rate**: 1000 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
-Participants learned to produce and judge short, medium, and long temporal intervals through interleaved production and perception tasks with visual feedback. Trigger codes encode condition combinations: tens digit indicates task type and interval length (1x=production, 2x-6x=other conditions), units digit indicates subcondition or phase. The study investigates how humans scale temporal interval representations.
+Participants learned to produce and judge short, medium, and long temporal intervals through interleaved production and perception tasks with visual feedback. Trigger codes encode condition combinations: tens digit indicates task type (1x=production, 2x=perception, 3x=judgment, 4x-6x=additional conditions), and units digit indicates subcondition or phase. The study investigates how humans scale temporal interval representations. DOI: 10.1073/pnas.2214638119
 
 ## File Scan Result
 
+> **Kernel SHA256**: `ada696a32bc7d9b051ca9f489674553d553e60ea1d229421516cac83235bf9c6`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `11` | ~20 | short | raw | Production short interval phase 1 |
-| `12` | ~20 | short | raw | Production short interval phase 2 |
-| `13` | ~20 | short | raw | Production short interval phase 3 |
-| `21` | ~20 | short | raw | Condition 2, phase 1 |
-| `22` | ~20 | short | raw | Condition 2, phase 2 |
-| `23` | ~20 | short | raw | Condition 2, phase 3 |
-| `31` | ~20 | short | raw | Condition 3, phase 1 |
-| `32` | ~20 | short | raw | Condition 3, phase 2 |
-| `33` | ~20 | short | raw | Condition 3, phase 3 |
-| `41` | ~20 | short | raw | Condition 4, phase 1 |
-| `42` | ~20 | short | raw | Condition 4, phase 2 |
-| `43` | ~20 | short | raw | Condition 4, phase 3 |
-| `51` | ~20 | short | raw | Condition 5, phase 1 |
-| `52` | ~20 | short | raw | Condition 5, phase 2 |
-| `53` | ~20 | short | raw | Condition 5, phase 3 |
-| `61` | ~20 | short | raw | Condition 6, phase 1 |
-| `62` | ~20 | short | raw | Condition 6, phase 2 |
-| `63` | ~20 | short | raw | Condition 6, phase 3 |
-| `17` | ~20 | short | raw | Feedback/response code |
-| `27` | ~20 | short | raw | Feedback/response code |
-| `47` | ~20 | short | raw | Feedback/response code |
-| `57` | ~20 | short | raw | Feedback/response code |
-| `67` | ~20 | short | raw | Feedback/response code |
-| `2` | ~20 | admin | raw | Block/session boundary marker |
+| `11` | 1180 | event | raw | Production task, phase 1 |
+| `13` | 1180 | event | raw | Production task, phase 3 |
+| `16` | 18 | event | raw | Production task, phase 6 (rare/practice) |
+| `17` | 623 | event | raw | Production task, feedback/response |
+| `18` | 310 | event | raw | Production task, supplementary |
+| `19` | 229 | event | raw | Production task, supplementary |
+| `2` | 3542 | admin | raw | Block/session boundary marker |
+| `21` | 1180 | event | raw | Perception task, phase 1 |
+| `22` | 1180 | event | raw | Perception task, phase 2 |
+| `23` | 1180 | event | raw | Perception task, phase 3 |
+| `26` | 19 | event | raw | Perception task, phase 6 (rare) |
+| `31` | 1140 | event | raw | Judgment task, phase 1 |
+| `32` | 1140 | event | raw | Judgment task, phase 2 |
+| `33` | 1180 | event | raw | Judgment task, phase 3 |
+| `36` | 28 | event | raw | Judgment task, phase 6 |
+| `37` | 57 | event | raw | Judgment task, phase 7 |
+| `38` | 534 | event | raw | Judgment task, phase 8 |
+| `39` | 135 | event | raw | Judgment task, phase 9 |
+| `41` | 1020 | event | raw | Condition 4, phase 1 |
+| `42` | 160 | event | raw | Condition 4, phase 2 |
+| `43` | 100 | event | raw | Condition 4, phase 3 |
+| `44` | 160 | event | raw | Condition 4, phase 4 |
+| `45` | 1020 | event | raw | Condition 4, phase 5 |
+| `46` | 247 | event | raw | Condition 4, phase 6 |
+| `47` | 833 | event | raw | Condition 4, feedback/response |
+| `51` | 280 | event | raw | Condition 5, phase 1 |
+| `52` | 1060 | event | raw | Condition 5, phase 2 |
+| `53` | 1120 | event | raw | Condition 5, phase 3 |
+| `54` | 1020 | event | raw | Condition 5, phase 4 |
+| `55` | 160 | event | raw | Condition 5, phase 5 |
+| `56` | 28 | event | raw | Condition 5, phase 6 |
+| `57` | 114 | event | raw | Condition 5, feedback/response |
+| `61` | 1020 | event | raw | Condition 6, phase 1 |
+| `62` | 1080 | event | raw | Condition 6, phase 2 |
+| `63` | 1080 | event | raw | Condition 6, phase 3 |
+| `64` | 280 | event | raw | Condition 6, phase 4 |
+| `65` | 1060 | event | raw | Condition 6, phase 5 |
+| `66` | 270 | event | raw | Condition 6, phase 6 |
+| `67` | 783 | event | raw | Condition 6, feedback/response |
+| `Cond1_Feedback` | 462 | event | raw | Production task feedback (annotation) |
+| `Cond1_Phase1` | 550 | event | raw | Production task phase 1 (annotation) |
+| `Cond1_Phase2` | 398 | event | raw | Production task phase 2 (annotation) |
+| `Cond1_Phase3` | 293 | event | raw | Production task phase 3 (annotation) |
+| `Cond2_Feedback` | 1120 | event | raw | Perception task feedback (annotation) |
+| `Cond2_Phase1` | 1127 | event | raw | Perception task phase 1 (annotation) |
+| `Cond2_Phase2` | 1148 | event | raw | Perception task phase 2 (annotation) |
+| `Cond2_Phase3` | 1172 | event | raw | Perception task phase 3 (annotation) |
+| `Cond3_Feedback` | 1165 | event | raw | Judgment task feedback (annotation) |
+| `Cond3_Phase1` | 1100 | event | raw | Judgment task phase 1 (annotation) |
+| `Cond3_Phase2` | 442 | event | raw | Judgment task phase 2 (annotation) |
+| `Cond3_Phase3` | 936 | event | raw | Judgment task phase 3 (annotation) |
+| `Cond4_Phase1` | 61 | event | raw | Condition 4 phase 1 (annotation) |
+| `Cond4_Phase2` | 41 | event | raw | Condition 4 phase 2 (annotation) |
+| `admin: marker-2` | 1180 | admin | super | Block boundary (pre-processed annotation) |
 
-> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
 
 ### Info
-
-[Placeholder content]
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
+| `device` | missing | N/A |
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Temporalscaling
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004200 DOI: https://doi.org/10.18112/openneuro.ds004200.v1.0.1
-
-
-### Normal Task 1: Temporal Condition Multiclass (multiclass)
+### Classical Task 1: Temporal Interval Classification (Multiclass)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = see Target Definition
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [Cond1_Phase1, Cond1_Phase2, Cond1_Phase3, Cond2_Phase1, Cond2_Phase2, Cond2_Phase3, Cond3_Phase1, Cond3_Phase2, Cond3_Phase3]
 - **Label Route**: `Annotation`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Trigger code `2` is a block marker, excluded. Decode exact condition meanings from paper or events.tsv.
+- **Target Definition**:
 
  | Event | y | Meaning |
  |-------|---|---------|
- | `11` | 0 | Cond 1 phase 1 |
- | `12` | 1 | Cond 1 phase 2 |
- | `13` | 2 | Cond 1 phase 3 |
- | `21` | 3 | Cond 2 phase 1 |
- | `22` | 4 | Cond 2 phase 2 |
- | `23` | 5 | Cond 2 phase 3 |
- | `31` | 6 | Cond 3 phase 1 |
- | `32` | 7 | Cond 3 phase 2 |
- | `33` | 8 | Cond 3 phase 3 |
- | `41` | 9 | Cond 4 phase 1 |
- | `42` | 10 | Cond 4 phase 2 |
- | `43` | 11 | Cond 4 phase 3 |
- | `51` | 12 | Cond 5 phase 1 |
- | `52` | 13 | Cond 5 phase 2 |
- | `53` | 14 | Cond 5 phase 3 |
- | `61` | 15 | Cond 6 phase 1 |
- | `62` | 16 | Cond 6 phase 2 |
- | `63` | 17 | Cond 6 phase 3 |
- | `17` | 18 | Feedback 1 |
- | `27` | 19 | Feedback 2 |
- | `47` | 20 | Feedback 4 |
- | `57` | 21 | Feedback 5 |
- | `67` | 22 | Feedback 6 |
+ | Cond1_Phase1 | 0 | Cond 1 phase 1 (short interval production) |
+ | Cond1_Phase2 | 1 | Cond 1 phase 2 (medium interval production) |
+ | Cond1_Phase3 | 2 | Cond 1 phase 3 (long interval production) |
+ | Cond2_Phase1 | 3 | Cond 2 phase 1 (short interval perception) |
+ | Cond2_Phase2 | 4 | Cond 2 phase 2 (medium interval perception) |
+ | Cond2_Phase3 | 5 | Cond 2 phase 3 (long interval perception) |
+ | Cond3_Phase1 | 6 | Cond 3 phase 1 (short interval judgment) |
+ | Cond3_Phase2 | 7 | Cond 3 phase 2 (medium interval judgment) |
+ | Cond3_Phase3 | 8 | Cond 3 phase 3 (long interval judgment) |
 
-## Data Quality Notes
+- **Evidence**: 10.1073/pnas.2214638119 | DOI: https://doi.org/10.1073/pnas.2214638119
+- **Kernel Notes**: Use pre-processed Cond*_Phase annotation events as primary label source. Exclude `admin:marker-2` (3542 counts = block boundaries) and raw numeric codes (11, 12, 13, 21, 22, 23, 31, 32, 33, etc.) due to count inconsistencies with per-subject design. Nine-class paradigm directly maps to temporal scaling phenomenon (short/medium/long intervals × production/perception/judgment tasks). Alignment: onset with baseline correction.
 
-- Numerical trigger codes require decode from paper
-- Small dataset (N=20)
+### Normal Task 1: Production vs Perception Task Differentiation (Binary)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [Cond1_Phase1, Cond1_Phase2, Cond1_Phase3, Cond2_Phase1, Cond2_Phase2, Cond2_Phase3]
+- **Label Route**: `Annotation`
+- **Target Definition**:
 
-## Kernel Responsibilities
+ | Event | y | Meaning |
+ |-------|---|---------|
+ | Cond1_Phase1 | 0 | Production task |
+ | Cond1_Phase2 | 0 | Production task |
+ | Cond1_Phase3 | 0 | Production task |
+ | Cond2_Phase1 | 1 | Perception task |
+ | Cond2_Phase2 | 1 | Perception task |
+ | Cond2_Phase3 | 1 | Perception task |
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+- **Evidence**: 10.1073/pnas.2214638119 (paradigm support); OpenNeuro dataset readme
+- **Kernel Notes**: Collapses across interval lengths to test task-type differentiation. Paradigm explicitly describes interleaved production and perception tasks. The tens digit encoding (1x=production, 2x=perception) supports this binary distinction.
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004200
+### Potential Task 1: Feedback-Related Potential Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, overlap = null, target_events = [Cond1_Feedback, Cond2_Feedback, Cond3_Feedback]
+- **Label Route**: `Annotation`
+- **Target Definition**:
+
+ | Event | y | Meaning |
+ |-------|---|---------|
+ | Cond1_Feedback | 0 | Feedback following production |
+ | Cond2_Feedback | 1 | Feedback following perception |
+ | Cond3_Feedback | 2 | Feedback following judgment |
+
+- **Evidence**: Paradigm description (visual feedback component); partial support from 10.1073/pnas.2214638119
+- **Kernel Notes**: Shorter epoch window (0.8s) appropriate for feedback processing neural correlates. Feedback events exist in pre-processed annotations but may require validation against paradigm description. May capture feedback-locked ERPs differentiated by underlying task type.
+
+### Potential Task 2: Temporal Interval Length Classification (Short/Medium/Long)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [Cond1_Phase1, Cond1_Phase2, Cond1_Phase3]
+- **Label Route**: `Annotation`
+- **Target Definition**:
+
+ | Event | y | Meaning |
+ |-------|---|---------|
+ | Cond1_Phase1 | 0 | Short interval (production) |
+ | Cond1_Phase2 | 1 | Medium interval (production) |
+ | Cond1_Phase3 | 2 | Long interval (production) |
+
+- **Evidence**: 10.1073/pnas.2214638119 (paradigm support)
+- **Kernel Notes**: Core temporal scaling task within production paradigm. Three-class classification of interval duration scaling. Can be extended to Cond2 and Cond3 phases separately. Paradigm explicitly states participants learned to produce/judge short, medium, and long intervals.

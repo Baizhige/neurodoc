@@ -3,36 +3,43 @@
 **Dataset**: `openneuro_ds003506` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003506
 **Category**: High-level Mental | **Subjects**: 56 | **Files (Completed)**: 84
 **Channels**: 67 | **Sampling Rate**: 500 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
-This study investigates the Reward Positivity (RewP) EEG component in Parkinson's disease (PD) patients compared to matched healthy controls. Participants completed a reinforcement learning task with both volitional and instructed choices, earning rewards or receiving no-reward feedback based on their selections. The RewP, a frontocentral ERP component, scales with reward prediction error and mirrors dopamine-driven learning. The study examines whether PD diminishes this signal, given dopaminergic dysfunction in PD.
-
-
+This study investigates the Reward Positivity (RewP) EEG component in Parkinson's disease (PD) patients compared to matched healthy controls. Participants completed a reinforcement learning task with both volitional (self-initiated) and instructed (cue-driven) choices, earning rewards or receiving no-reward feedback based on their selections. The RewP, a frontocentral ERP component, scales with reward prediction error and mirrors dopamine-driven learning. The study examines whether PD diminishes this signal, given dopaminergic dysfunction in PD.
 
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `a33ab40e6191a81b59353650e798b68594c25496871c674465db6705d09b2ab8`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Imperative Stimulus` | 84 | event | raw | Cue stimulus requiring a response |
-| `Left Button Choice` | 84 | event | raw | Left-hand button press response |
-| `Right Button Choice` | 84 | event | raw | Right-hand button press response |
-| `Instr` | 168 | event | raw | Instruction marker (Match/Choose) |
-| `FB` | 252 | event | raw | Feedback stimulus (reward +1, no-reward 0) |
-| `STATUS` | 84 | admin | raw | System status marker |
+| `S  1` | 5631 | event | raw | Instructed choice condition marker |
+| `S  2` | 5727 | event | raw | Volitional choice condition marker |
+| `S  3` | 21837 | event | raw | Feedback stimulus (reward +1, no-reward 0) |
+| `S  4` | 10918 | event | raw | Imperative stimulus requiring response |
+| `S  5` | 10728 | event | raw | Instruction presentation (Match/Choose) |
+| `S  6` | 164 | event | raw | Cue or probe stimulus |
+| `S  7` | 53 | event | raw | Left-hand button press response |
+| `S 10` | 3393 | event | raw | Right-hand button press response |
+| `S 11` | 7749 | event | raw |  |
+| `boundary` | 84 | admin | raw | HDF5 boundary marker for epoch concatenation |
 
 
+### MISC Label Summary
+- **Route**: `misc`
+- **Role**: Positional tracking channels storing continuous or derived coordinate data
+- **Candidate Labels**: `X`, `Y`, `Z`
+- **Kernel Note**: Verify channel roles and units. These non-EEG channels should be excluded before ERP analysis.
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -40,46 +47,62 @@ This study investigates the Reward Positivity (RewP) EEG component in Parkinson'
 ### Classical Task 1: Reward vs. No-Reward Feedback Classification (RewP ERP)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -6.0 s, tmax = 2.0 s, target_events = [`FB: +1`, `FB: 0`]
+- **Epoch Parameters**: tmin = -6.0 s, tmax = 2.0 s, target_events = [`S  3`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
-  | `FB: +1` | 1 | Reward feedback (positive outcome) |
-  | `FB: 0` | 0 | No-reward feedback (negative outcome) |
+  |-------|---|---|
+  | `S  3` (reward) | 1 | Reward feedback (positive outcome, +1) |
+  | `S  3` (no-reward) | 0 | No-reward feedback (negative outcome, 0) |
 - **Evidence**:
-  - DOI: `10.1016/j.brainres.2019.146541` — This paper analyzes EEG data from 28 PD patients and 28 matched healthy controls completing a reinforcement learning task, epoching data around feedback onset (-6000 to 2000 ms) and comparing Reward Positivity (RewP) amplitude between groups for reward (+1) versus no-reward (0) feedback conditions.
-- **Kernel Notes**: Epoch data from -6.0s to +2.0s relative to feedback onset. Apply baseline correction using -0.2s to 0s pre-stimulus interval. Extract epochs for `FB: +1` (reward) and `FB: 0` (no-reward) conditions. Exclude trials marked as 'Too Slow' or 'No Match'. This replaces Potential Task 1 from original analysis.md.
+  - DOI: `10.1016/j.brainres.2019.146541` — Supports Reward Positivity (RewP) analysis comparing EEG responses to reward (+1) versus no-reward (0) feedback in Parkinson's disease patients and healthy controls during a reinforcement learning paradigm.
+- **Kernel Notes**: Event code mapping required: `S  3` (21,837 events) corresponds to feedback stimulus events. Apply baseline correction using -0.2 s to 0 s pre-stimulus interval. Verify reward/no-reward split from accompanying events.tsv. Exclude boundary markers. Non-EEG channels (X, Y, Z positional, VEOG) should be excluded before analysis.
 
-### Potential Task 1: Volitional vs. Instructed Choice Classification
+### Classical Task 2: Response Side Classification (Motor Execution)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s *, tmax = 2.0 s *, target_events = [`Instr`, `Imperative Stimulus`]
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S  7`, `S 10`]
 - **Label Route**: `event`
-- **Target Definition**: Classify epochs based on instruction type indicating whether the trial was a volitional choice or an instructed response.
-- **Notes**: `Instr` events denote instruction presentation (Choose vs Match). Verify mapping to specific instruction types from events.tsv.
-
-### Potential Task 2: Response Side Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`Left Button Choice`, `Right Button Choice`]
-- **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
-  | `Left Button Choice` | 0 | Left-hand button press response |
-  | `Right Button Choice` | 1 | Right-hand button press response |
-- **Notes**: Epoch around button press responses to analyze motor execution related activity.
+  |-------|---|---|
+  | `S  7` | 0 | Left-hand button press response |
+  | `S 10` | 1 | Right-hand button press response |
+- **Evidence**:
+  - DOI: `10.1016/j.brainres.2019.146541` — The reinforcement learning task involves left/right button press responses to imperative stimuli, enabling motor lateralization analysis.
+- **Kernel Notes**: Event code mapping required: `S  7` (53 events) and `S 10` (3,393 events) correspond to button choice responses. The large count discrepancy suggests different trial types or response conditions; verify mapping in events.tsv. Epoch window captures movement-related potentials and lateralized readiness.
 
-## Data Quality Notes
+### Normal Task 1: Volitional vs. Instructed Choice Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, target_events = [`S  1`, `S  2`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---|
+  | `S  1` | 0 | Instructed choice condition |
+  | `S  2` | 1 | Volitional choice condition |
+- **Evidence**:
+  - DOI: `10.1016/j.brainres.2019.146541` — The paradigm explicitly includes both volitional (self-initiated) and instructed (cue-driven) choice trials.
+- **Kernel Notes**: Event code mapping required: `S  1` (5,631 events) and `S  2` (5,727 events) likely represent instruction/event codes for the two choice conditions. Verify volitional/instructed mapping from events.tsv. The analysis.md references 'Instr' markers (168 total) but these may map differently in the actual event structure.
 
-- 67 channels including VEOG and positional channels (X, Y, Z); exclude non-EEG channels before analysis.
-- Two sessions per subject for some participants; verify session-level consistency.
-- STATUS is a single system marker per file; exclude from epoching.
+### Potential Task 1: Instruction Type Classification (Match vs. Choose)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.3 s, tmax = 1.5 s, target_events = [`S  5`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**: Classify epochs based on instruction type indicating whether participants should make a free choice ('Choose') or match a target ('Match').
+- **Notes**: Event code mapping required: `S  5` (10,728 events) may represent instruction presentation events. The analysis.md mentions 'Instr' markers (168 total) for Match/Choose instructions. Verify mapping from events.tsv before analysis. Exclude boundary markers (84 occurrences) from epoching.
 
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: No
-> **Status**: wait_manual_review
+### Potential Task 2: Imperative Stimulus-Response Alignment
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.5 s, target_events = [`S  4`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**: Epochs aligned to imperative stimulus onset to capture stimulus-locked ERPs and response preparation.
+- **Notes**: Event code mapping required: `S  4` (10,918 events) likely corresponds to imperative stimulus requiring response. The analysis.md references 'Imperative Stimulus' (84 events per file) but actual event counts suggest multiple stimulus types. Verify mapping in events.tsv.

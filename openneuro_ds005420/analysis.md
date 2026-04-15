@@ -3,34 +3,31 @@
 **Dataset**: `openneuro_ds005420` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005420
 **Category**: Biological State | **Subjects**: 72 | **Files (Completed)**: 72
 **Channels**: 20 | **Sampling Rate**: 500 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
 Spontaneous resting-state EEG was recorded in a cohort of females aged 60-80 years during alternating eyes-open and eyes-closed conditions. The dataset investigates age-related changes in spontaneous brain activity in older women. No event markers were included in events.tsv; the EEG is stored as continuous recordings. Eyes-open vs. eyes-closed condition can be inferred from the file naming or participants.tsv.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `d3b7b79c84680f3d40ce6c47df5ccebe2db47adda3250d9511022b86589da3bb`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
-
-_No event markers detected (`no_events`). This dataset contains continuous resting-state EEG recordings without trial-level annotations._
-
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `no_events` | N/A | admin | raw | No discrete event markers detected; use continuous segmentation or external metadata labels. |
+
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Eyes-Open vs Eyes-Closed Classification
@@ -44,28 +41,21 @@ _No event markers detected (`no_events`). This dataset contains continuous resti
   |-------|---|---------|
   | `eyes-open (EO)` | 0 | Eyes open resting state |
   | `eyes-closed (EC)` | 1 | Eyes closed resting state |
-- **Super Meta Notes**: Derived from file naming or participants.tsv metadata; the dataset contains no event markers - continuous recordings with eyes-open/eyes-closed conditions inferred from BIDS task labels (Oa/OC). Kernel step: Read participants.tsv or file names to identify EO/EC condition for each recording, then apply segmentation to extract 10-s epochs with 1.0-s overlap. (replaces Potential Task 1 from original analysis.md)
+- **Kernel Notes**: No discrete event markers exist in events.tsv. Condition labels (EO/EC) must be inferred from BIDS task identifiers in filenames (e.g., 'task-Oa' = eyes-open, 'task-Oc' = eyes-closed) or participants.tsv metadata. Apply bandpass filter (0.5–40 Hz) and artifact rejection (amplitude threshold ±100 μV) prior to segmentation. Assign binary labels per segment based on source recording's condition metadata. Use subject-wise train/test splits to avoid data leakage. The dataset contains only females aged 60–80 years; confirm that model generalizability to other demographics is beyond scope.
 - **Evidence**:
-  - DOI: 10.1109/ubmk67458.2025.11207051 — Used OpenNeuro ds005420 for cross-dataset validation, segmenting each raw file into 10-s epochs with 1.0-s overlap to generate sufficient samples for binary eyes-open vs eyes-closed classification using VGG-19 and custom CNN models.
-- **Kernel Notes**: Verify BIDS task labels (Oa, Oc) map to eyes-open/eyes-closed from dataset README. Apply bandpass filter (0.5-40 Hz) and artifact rejection prior to segmentation. Use VGG-19 or CNN architecture for binary classification.
+  - DOI: 10.1109/UBMK67458.2025.11207051 — Validated on OpenNeuro ds005420 for cross-dataset validation using VGG-19 and custom 6-layer CNN. Converted EEG to composite CWT images for binary classification. Segmented raw files into 10-s epochs with 1.0-s overlap to generate sufficient samples. Dataset-specific parameters confirmed: 20-channel EEG, 500 Hz sampling rate, 72 subjects (females, age 60–80).
 
-### Potential Task 1: Resting-State Segmentation (segmentation)
+### Normal Task 1: Resting-State Segmentation for Frequency-Domain Analysis
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4.0 s, overlap = 0.5 s
+- **Epoch Parameters**: segment_length = 4 s, overlap = 0.5 s
 - **Label Route**: `event`
-- **Target Definition**: N/A (null(no events; use file-level condition label for eyes-open/closed from filename or participants.tsv))
-- **Notes**: No event markers. Only 20 EEG channels. Female-only sample aged 60-80. Eyes-open/closed condition may be in filename.
-
-## Data Quality Notes
-
-- No event markers - purely continuous resting-state recordings.
-- 20-channel montage; limited spatial coverage.
-- Female-only cohort aged 60-80; demographic info in participants.tsv.
-- Apply bandpass filter (0.5-40 Hz) and artifact rejection prior to segmentation.
-
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: Yes
-> **Status**: wait_manual_review
+- **Meta Level**: super
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `eyes-open (EO)` | 0 | Eyes open resting state |
+  | `eyes-closed (EC)` | 1 | Eyes closed resting state |
+- **Kernel Notes**: Shorter 4-s segments with 0.5-s overlap suitable for alpha/beta power comparisons between eyes-open and eyes-closed states. Condition labels derived from BIDS task identifiers (Oa/Oc) as described for Classical Task 1. Apply bandpass filter (0.5–40 Hz), notch filter (50/60 Hz), and artifact rejection before segmentation. This alternative segmentation scheme is plausible for frequency-domain analyses but lacks direct validation on this dataset.
+- **Evidence**:
+  - DOI: 10.1109/UBMK67458.2025.11207051 — Reference confirms 10-s segmentation approach; 4-s alternative is plausible for frequency-domain analyses but not directly validated.

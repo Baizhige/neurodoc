@@ -81,3 +81,7 @@ Placeholder for additional file scan metadata.
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004843
+
+---
+
+> **auto_eeg FAILED**: While the dataset has a well-documented event/label structure and clear multiclass classification paradigm described in analysis.md, none of the reference extractions qualify as 'relevant' or 'partial'. The official DOI and OpenNeuro pages are classified as 'uncertain', and all other references are 'irrelevant'. Since the instructions require at least one relevant/partial reference, this dataset does not meet the feasibility threshold.

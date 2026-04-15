@@ -32,8 +32,8 @@ Memory recognition task where participants watched 10-second movie clips and ide
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
 ## Tasks
 

@@ -1,0 +1,176 @@
+{
+  "phase": "done",
+  "budget_used": 8,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 4,
+    "kernel_loop": 1,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": true,
+    "ref_count": 4,
+    "category": "Complex Applied"
+  },
+  "timestamp": "2026-04-11T10:37:07.235134+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds001971.v1.1.1.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds001971.v1.1.1",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds001971.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1038_s41597_019_0223_2.pdf",
+      "ref": "10.1038/s41597-019-0223-2",
+      "title": "High-density EEG mobile brain/body imaging data recorded during a challenging auditory gait pacing task",
+      "classification": "relevant",
+      "cot_reasoning": "This is the primary data descriptor paper for openneuro_ds001971, authored by the same research team. It explicitly describes the dataset as containing EEG recordings from 18 participants during treadmill walking with auditory tempo shifts. The paper defines the experimental paradigm and mentions using the data to validate gait adaptation analyses, directly supporting ML task definitions.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "auditory cueing, gait adaptation, tempo shifts",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "tmin=-1.0s, tmax=3.0s around heel strikes",
+      "target_events": [
+        "AdvanceTempo",
+        "DelayTempo"
+      ],
+      "label_mapping": "AdvanceTempo=0 (step shortening), DelayTempo=1 (step lengthening)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Dataset descriptor explicitly matches openneuro_ds001971; describes tempo shift paradigm with step-advance and step-delay conditions; mentions epoching from -1s to 3s around heel strikes for gait adaptation analysis"
+    },
+    {
+      "filename": "paper_10_1523_jneurosci_3543_15_2016.pdf",
+      "ref": "10.1523/jneurosci.3543.15.2016",
+      "title": "Distinct Beta Band Oscillatory Networks Subserving Motor and Cognitive Control during Gait Adaptation",
+      "classification": "relevant",
+      "cot_reasoning": "This analysis paper used the same dataset (18 participants, same paradigm) to study beta band oscillations during gait adaptation. It explicitly compares step shortening vs step lengthening following tempo shifts, directly implementing the binary classification task. Uses independent component analysis and event-related spectral perturbations time-locked to tempo shift events.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "auditory cueing, gait adaptation, tempo shifts",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "tmin=-1.0s, tmax=3.0s around cue tempo shifts",
+      "target_events": [
+        "AdvanceTempo",
+        "DelayTempo"
+      ],
+      "label_mapping": "AdvanceTempo/step shortening=0, DelayTempo/step lengthening=1",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Analysis paper explicitly uses 18-subject dataset from same study; classifies gait adaptation into step-shortening vs step-lengthening conditions; ICA decomposition of EEG during tempo shifts; beta band power analysis comparing advance vs delay conditions"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has a well-documented event structure with clear tempo-shift events (AdvanceTempo, DelayTempo) and two relevant references (10.1038/s41597-019-0223-2 and 10.1523/jneurosci.3543.15.2016) that explicitly support a binary classification task for gait adaptation between step-advance and step-delay conditions.",
+  "pre_scan_result": {
+    "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_specific/openneuro_ds001971.py",
+    "kernel_sha256": "743c5f74e58e22a4fe09e9122e950c8bc3218cf54a06880c32ba11d7824f96e3",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 273,
+    "total_n": 273,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "100": 32100,
+      "101": 26354,
+      "103": 20237,
+      "109": 20692,
+      "113": 1154,
+      "114": 2368,
+      "119": 1154,
+      "151": 26402,
+      "153": 20441,
+      "159": 20635,
+      "200": 34011,
+      "201": 28708,
+      "203": 20365,
+      "209": 21070,
+      "251": 28730,
+      "253": 20482,
+      "259": 20683,
+      "333": 1154,
+      "444": 2368,
+      "999": 1153,
+      "171": 5715,
+      "271": 5678
+    },
+    "subject_info": {
+      "record_count": 273,
+      "age_complete": 273,
+      "sex_complete": 273,
+      "device_complete": 0,
+      "age_examples": [
+        "38",
+        "18-38",
+        "28",
+        "32",
+        "23"
+      ],
+      "sex_examples": [
+        "Male",
+        "Female"
+      ]
+    },
+    "misc_channel_names": []
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Tempo-shift gait adaptation (step-advance vs step-delay)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -1.0 s, tmax = 3.0 s, target_events = [`113`, `333`, `114`, `444`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `113` | 0 | AdvanceTempo: Step shortening response to faster tempo cue |\n  | `333` | 0 | AdvanceTempo: Step shortening response to faster tempo cue (alt stream) |\n  | `114` | 1 | DelayTempo: Step lengthening response to slower tempo cue |\n  | `444` | 1 | DelayTempo: Step lengthening response to slower tempo cue (alt stream) |\n- **Evidence**:\n  - DOI: 10.1038/s41597-019-0223-2 — Data descriptor confirming step-locked epoching from -1s to 3s around heel strikes for tempo shift analysis; maps to openneuro_ds001971\n  - DOI: 10.1523/jneurosci.3543.15.2016 — EEG analysis of tempo shifts comparing beta band oscillatory networks between step-advance and step-delay adaptation; uses same 18-subject dataset with ICA decomposition\n- **Kernel Notes**: Combine events 113+333 and 114+444 as same condition across recording streams. Exclude STATUS admin markers. ICA-based artifact removal recommended due to gait-related motion artifacts from treadmill walking. Map semantic labels (AdvanceTempo/DelayTempo) to raw event IDs 113/333 and 114/444 respectively.\n\n### Normal Task 1: Gait condition classification (multiclass)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -1.0 s, tmax = 3.0 s, target_events = [`100`, `200`, `119`, `113`, `333`, `114`, `444`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `100` | 0 | PreferredCadence: Walking at preferred self-selected cadence |\n  | `200` | 0 | PreferredCadence: Walking at preferred self-selected cadence (alt stream) |\n  | `119` | 1 | UncuedWalking: Walking without auditory cue |\n  | `113` | 2 | AdvanceTempo: Walking to faster tempo cue |\n  | `333` | 2 | AdvanceTempo: Walking to faster tempo cue (alt stream) |\n  | `114` | 3 | DelayTempo: Walking to slower tempo cue |\n  | `444` | 3 | DelayTempo: Walking to slower tempo cue (alt stream) |\n- **Evidence**:\n  - DOI: 10.1038/s41597-019-0223-2 — Dataset descriptor describes all four gait conditions (preferred cadence, uncued, delay tempo, advance tempo); same epoching parameters applicable for multiclass classification\n- **Kernel Notes**: Seven-class multiclass classification using step-locked epochs. Combine paired stream events (100+200, 113+333, 114+444). PreferredCadence and UncuedWalking provide within-condition comparison; DelayTempo and AdvanceTempo provide adaptation conditions. Exclude STATUS admin markers. ICA strongly recommended for motion artifact removal. High channel count (115) includes motion capture channels — verify EEG-only channel selection before analysis pooling.\n\n### Potential Task 2: Continuous gait rhythm entrainment analysis\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_long_event_hdf5`\n- **Epoch Parameters**: segment_length = 4.0 s, overlap = 2.0 s, target_events = [`100`, `200`, `119`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `100` | continuous | PreferredCadence: Continuous walking epoch for rhythm analysis |\n  | `200` | continuous | PreferredCadence: Continuous walking epoch (alt stream) |\n  | `119` | continuous | UncuedWalking: Continuous uncued walking epoch |\n- **Evidence**:\n  - DOI: 10.1038/s41597-019-0223-2 — Study investigates neural dynamics of rhythm entrainment during sustained walking; continuous segments enable time-frequency analysis of beta band oscillations\n- **Kernel Notes**: Sustained walking segments for time-frequency decomposition. Overlap enables smooth tracking of rhythmic oscillations during gait. Combine events 100+200 as same condition. Response time (misc label) available for trial-level analyses if needed.",
+  "kernel_ok": true,
+  "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds001971/kernel_final.py",
+  "kernel_code_len": 11546,
+  "scan_result": {
+    "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds001971.py",
+    "kernel_sha256": "81bfb772f153e718e8aeaef593be73e7a95425f13a58ce43a6a1411dd56d50c4",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 273,
+    "total_n": 273,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "AdvanceTempo": 1154,
+      "AdvanceTempo_stream2": 1154,
+      "DelayTempo": 2368,
+      "DelayTempo_stream2": 2368,
+      "PreferredCadence": 32100,
+      "PreferredCadence_stream2": 26354,
+      "PreferredCadence_stream3": 20237,
+      "PreferredCadence_stream4": 20692,
+      "PreferredCadence_stream5": 34011,
+      "PreferredCadence_stream6": 28708,
+      "PreferredCadence_stream7": 20365,
+      "PreferredCadence_stream8": 21070,
+      "UncuedWalking": 1154,
+      "UncuedWalking_stream2": 26402,
+      "UncuedWalking_stream3": 20441,
+      "UncuedWalking_stream4": 20635,
+      "UncuedWalking_stream5": 28730,
+      "UncuedWalking_stream6": 20482,
+      "UncuedWalking_stream7": 20683,
+      "admin: marker-999": 1153,
+      "Walking_event_171": 5715,
+      "Walking_event_271": 5678
+    },
+    "subject_info": {
+      "record_count": 273,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds001971.py",
+  "status": "done"
+}

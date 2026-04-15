@@ -65,3 +65,7 @@ No stimulus/response trial events captured in events.tsv. All markers are admini
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004587
+
+---
+
+> **auto_eeg FAILED**: Although this is a legitimate OpenNeuro dataset with a described paradigm (visual illusion perceptual judgments), it fails feasibility criteria because (1) no reference is rated 'relevant' or 'partial' to support the task, and (2) critically, the events.tsv contains no stimulus/response trial events—only administrative/artifact markers—making it impossible to construct stimulus-locked epochs from the EEG data alone without uncertain behavioral log recovery.

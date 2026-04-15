@@ -2,6 +2,7 @@
 
 **Dataset**: `openneuro_ds002833` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002833
 **Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 80 | **Channels**: 257 | **Sampling Rate**: 1000 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
@@ -9,66 +10,53 @@ High-density 257-channel EEG recorded during a visual object naming or picture v
 
 ## File Scan Result
 
+> **Kernel SHA256**: `2195a8f01eccf34bca4e9140cfb399bfea7ab97e819d918a690c17a6da4b5b1c`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `DIN1` | 60 (files) | short | raw | EGI digital input trigger - stimulus onset marker |
-| `unknown` | 20 (files) | admin | raw | Undecodable trigger code - treat as admin/uncertain |
 
-> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-> - `long`: sustained-state marker (>=2 s), for `epoch_by_long_event_hdf5`
-> - `rest`: resting-state segment marker, for `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **exclude** from epoch target_events
 
-### MISC Label Summary
-
-- **Route**: `misc`
-- **Role**: Stores derived/continuous labels that are not native raw event IDs.
-- **Candidate Labels**: `response_time`
-- **Kernel Note**: Keep derivation source, unit, and version metadata.
 
 ### Info
-
-- **File scan status**: Completed (80 files)
-- **Trigger verification**: DIN1 marker confirmed; unknown events require events.tsv cross-reference
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
+| `device` | missing | N/A |
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Pictures Naming
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds002833 DOI: https://doi.org/10.18112/openneuro.ds002833.v1.0.0
-
-
-### Normal Task 1: Stimulus-Locked ERP / Regression (regression)
+### Normal Task 1: Stimulus-Locked Visual ERP Analysis
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to DIN1 onset), target_events = see Target Definition
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [DIN1]
 - **Label Route**: `misc`
-- **Target Definition**: N/A (null (regression only; DIN1 serves as epoch anchor; `unknown` excluded))
-- **Notes**: DIN1 is the EGI stimulus trigger; use as epoch anchor. `unknown` events are undecodable - exclude from target events. For classification, trial type information would need to come from events.tsv `trial_type` or `value` columns.
+- **Meta Level**: super
+- **Target Definition**:
 
-- **Regression target**: `response_time` from misc channel
+| Event | y | Meaning |
+|-------|---|--------|
+| DIN1 | response_time | Visual stimulus onset with associated response latency |
 
-## Data Quality Notes
+- **Evidence**: Paradigm description indicates visual object naming with EGI stimulus triggers; partial reference (10.1038/s41597-021-00821-1) confirms HD-EEG visual naming methodology; alignment recommendations support onset-locked analysis window.
+  - DOI: 10.1038/s41597-021-00821-1
+- **Kernel Notes**: DIN1 serves as epoch anchor for stimulus-locked ERP analysis. The -0.2s to 1.0s window captures N1/P1 visual components and early N400 semantic processing. Exclude `unknown` admin events (undecodable trigger codes in 20/80 files). Response time regression target stored in misc channel requires Type 2 derivation. Verify channel consistency across 257-channel EGI HydroCell array before pooling.
 
-- 257-channel EGI HydroCell array provides very high spatial density.
-- `unknown` events in 20 files may indicate corrupted trigger codes - verify from events.tsv.
-- DIN1 triggers mark stimulus onsets; actual stimulus identity requires events.tsv lookup.
-- Verify channel count consistency across subjects before pooling.
+### Potential Task 1: Visual Object Category Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = [DIN1]
+- **Label Route**: `Annotation`
+- **Meta Level**: super
+- **Target Definition**:
 
-## Kernel Responsibilities
+| Event | y | Meaning |
+|-------|---|--------|
+| DIN1 | trial_type (from events.tsv) | Object category label (30 categories per paradigm) |
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 2 + Type 3
-> **Why**: Derived targets are needed beyond raw markers.
-> **Primary Label Routes**: Annotation, stim, misc
-> **Evidence Keywords**: response_time, regression target
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002833
+- **Evidence**: Paradigm description specifies visual object naming with 30 object categories; OpenNeuro dataset metadata confirms Pictures Naming BIDS task; alignment recommendations specify post-stimulus classification window. No direct classification-relevant reference.
+  - DOI: https://doi.org/10.18112/openneuro.ds002833.v1.0.0
+- **Kernel Notes**: Stimulus identity (object category) must be derived from events.tsv trial_type/value columns since DIN1 only marks onset without condition encoding. Use post-stimulus window (tmin=0.0) to capture discriminative visual object-related activity. Exclude `unknown` events from target set. High-density 257-channel layout may require spatial downsampling for computational efficiency. Type 2 label integration required for BIDS task annotation route.

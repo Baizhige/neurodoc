@@ -1,75 +1,104 @@
 # Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts
 
 **Dataset**: `openneuro_ds003825` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003825
-**Category**: Sensory/Response | **Subjects**: 50 | **Files (Completed)**: 100
-**Channels**: 64 | **Sampling Rate**: 250 Hz
+**Category**: Sensory/Response | **Subjects**: 50 | **Files (Completed)**: 100 | **Channels**: 64 | **Sampling Rate**: 250 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
 Participants viewed a large-scale set of 22,248 images spanning 1,854 object concepts presented in rapid serial visual presentation (RSVP) streams at 10 Hz while performing a fixation color change detection task. The study aimed to record high-resolution neural representations of everyday objects across a large stimulus set. Each image was presented for 100 ms in continuous streams, and participants responded to a concurrent fixation task to maintain attention.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `0b193703292dadd80c05026f52914244f4031b303db0da8eba87cda632245a6e`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `E 1` | ~1,237,200 | event | raw | Image onset (RSVP stimulus) |
-| `E 2` | ~1,237,200 | event | raw | Second trial-type marker (redundant or condition flag) |
-| `E 3` | ~4,200 | event | raw | Block/sequence boundary or target event |
+| `E  1` | 1217712 | event | raw | RSVP image onset (primary stimulus stream) |
+| `E  2` | 1217712 | event | raw | Secondary condition marker (redundant with E1) |
+| `E  3` | 4144 | event | raw | Block/sequence boundary or target event |
+| `Event/E  1` | 1217712 | event | raw | RSVP image onset (primary stimulus stream) |
+| `Event/E  2` | 1217712 | event | raw | Secondary condition marker (redundant with E1) |
+| `Event/E  3` | 4144 | event | raw | Block/sequence boundary or target event |
+| `New Segment/` | 2 | event | raw | Recording start/end marker |
+| `boundary` | 52 | event | raw | Data boundary artifact |
 
 
+### MISC Label Summary
+(none)
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
-### Classical Task 1: RSVP Image Onset Classification
+### Classical Task 1: RSVP Object Concept Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s, target_events = [`E 1`, `E 2`, `E 3`]
+- **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s, target_events = [`E 1`]
+- **Label Route**: `stim`
+- **Meta Level**: super
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|-|
+  | `E 1` | 0–1853 | One of 1,854 object concepts from THINGS stimulus set |
+- **Super Meta Notes**: Labels for 1,854 object concepts must be derived from THINGS stimulus design files (external to raw events). Raw E 1 markers provide only timing; concept identity requires super meta lookup by trial index.
+- **Evidence**:
+  - DOI: 10.1038/s41597-021-01102-7 — "linear discriminant classifiers to decode between 1,854 object concepts and 200 validation images presented in RSVP streams at 10 Hz"; epochs from -100 to 1000 ms relative to stimulus onset (E1 triggers)
+  - DOI: 10.1038/s41597-021-01102-7 — "22,248 images spanning 1,854 object concepts" across 50 subjects
+- **Kernel Notes**: Use only E 1 for epoch extraction (E 2 is redundant with identical count ~22,248 per subject). The 1,854 concept labels require super meta derivation from THINGS stimulus design files linked by trial order. Consider stratified subsampling across concepts due to high epoch count (~1.2M E 1 events per subject). Sub-06 has partial data (~12,360 events).
+
+### Potential Task 1: RSVP Block Boundary Detection
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, target_events = [`E 3`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|-|
-  | `E 1` | 0 | RSVP image onset (primary stimulus stream) |
-  | `E 2` | 1 | Secondary condition marker (stimulus offset or condition flag) |
-  | `E 3` | 2 | Sequence/block boundary or target event |
-- **Super Meta Notes**: (ONLY if Meta Level = super) — N/A
+  | `E 3` | 1 | Block/sequence boundary marker |
+- **Super Meta Notes**: N/A
 - **Evidence**:
-  - DOI: 10.1038/s41597-021-01102-7 — "epochs from -100 to 1000 ms relative to stimulus onset (E1 triggers) and using linear discriminant classifiers to decode between 1,854 object concepts and 200 validation images presented in RSVP streams at 10 Hz"
-- **Kernel Notes**: Extract epochs from -100ms to 1000ms relative to each E 1, E 2, E 3 event. The dataset contains ~22,248 stimuli per subject (E 1 and E 2 each ~22,248, E 3 ~84). Note: Actual image/concept labels (1,854 concepts or 200 validation images) require stimulus design files — not represented in raw event markers. For concept-level classification, use super meta derivation.
+  - DOI: 10.1038/s41597-021-01102-7 — describes RSVP streams with block structure; E 3 count (~84 per subject) suggests block-level organization
+  - Partial Evidence: Epoch alignment recommendations specify E 3 marks block/sequence boundaries with longer epoch window (-500ms to 2000ms)
+- **Kernel Notes**: E 3 occurs ~84 times per subject—sparse but useful for modeling sustained attention or block-level effects. Longer epoch window (tmin=-0.5, tmax=2.0) captures pre/post block transition dynamics. For binary classification (block vs. non-block), use E 3 as positive class and subsampled E 1 as negative class.
 
-### Potential Task 1: RSVP Image Viewing (multiclass)
+### Potential Task 2: Event Marker Reliability Check
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset), target_events = see Target Definition
+- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.3 s, target_events = [`E 1`, `E 2`]
 - **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Extremely large dataset (~1.2M epochs per event type across 50 subjects). E 1 and E 2 occur in equal counts per subject (~22,248 each); E 3 is rare (~84 per subject) and may indicate special events or fixation targets. Consider subsampling for practical use.
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|-|
+  | `E 1` | 0 | Primary stimulus onset (RSVP image) |
+  | `E 2` | 1 | Secondary condition marker |
+- **Super Meta Notes**: N/A
+- **Evidence**:
+  - Plausible from paradigm: E 1 and E 2 have identical counts (~22,248 each per subject), suggesting E 2 may be redundant or encode condition flags not documented in raw events
+- **Kernel Notes**: E 1 and E 2 are redundant markers for the same stimulus stream (10 Hz RSVP). This task serves as a data quality check—near-perfect classification would confirm redundancy, while poor classification may reveal timing offsets. Useful for validating preprocessing pipeline.
 
-| Event | y | Meaning |
- |-------|---|------|
- | `E 1` | 0 | RSVP image onset (primary stimulus stream) |
- | `E 2` | 1 | Secondary condition marker |
-
-## Data Quality Notes
-
-- Data from derivatives/eeglab directory; preprocessed with EEGLAB
-- Very high epoch count (~24,648 E 1 events per subject); memory management required during HDF5 generation
-- Sub-06 has fewer events (~12,360), suggesting a partial recording
-
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: No
-> **Status**: wait_manual_review
+### Normal Task 1: Stimulus Onset Detection
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, target_events = [`E 1`, `boundary`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|-|
+  | `E 1` | 1 | Valid RSVP stimulus onset |
+  | `boundary` | 0 | Data boundary artifact |
+- **Super Meta Notes**: N/A
+- **Evidence**:
+  - DOI: 10.1038/s41597-021-01102-7 — documents continuous RSVP streams with artifact segments flagged by boundary markers
+  - Partial Evidence: 52 boundary events suggest segment breaks requiring detection for epoch quality control
+- **Kernel Notes**: Distinguishing valid stimulus epochs from boundary artifacts supports data cleaning pipeline. Boundary events (n=52) are rare but critical for artifact detection. Use short epoch window to capture transient boundary effects.

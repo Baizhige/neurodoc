@@ -1,128 +1,145 @@
 # Imagined Emotion Study
 
 **Dataset**: `openneuro_ds003004` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003004
-**Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 34 | **Channels**: 219 | **Sampling Rate**: 256 Hz
+**Category**: High-level Mental | **Subjects**: 31 | **Files (Completed)**: 34 | **Channels**: 219 | **Sampling Rate**: 256 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
-Participants used voice-guided imagery to induce and sustain 15 distinct emotional states, using button presses to indicate the onset and offset of each imagined emotion. Despite the paradigm involving discrete emotional state onsets (button presses), no event markers were detected in the BIDS EEG files by the locator pipeline. The button-press events may be stored in separate behavioral logs or were not encoded in the EEG trigger channel.
+Participants used voice-guided imagery to induce and sustain 15 distinct emotional states (awe, anger, compassion, content, disgust, excitement, fear, frustration, grief, happiness, jealousy, joy, love, relief, relaxation, sadness), using button presses to indicate the onset and offset of each imagined emotion. The paradigm includes pre-baseline and post-baseline recording periods, with initial instructions and imagination suggestions provided throughout the session. High-density EEG recordings were collected using a 256-channel system.
 
 ## File Scan Result
 
-> **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds003004.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
-> **SHA256**: `a4c55d18dc5360ecd9facfff5489c50a477ae8ddf504b1b5bdf4ad55a3b9041c`
-
+> **Kernel SHA256**: `ccceb38156c8ce81c8bdba2548fa2c15b964a79fb5314b0b5c6d739bd09667a8`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
-<!-- AUTO-KERNEL-EVENT-STRUCTURE:START -->
-> **Kernel Fact Source**: current kernel scan from `<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-> **Meaning Policy**: `Meaning` is interpretive; `Event ID / Count / Type / Meta Level` are kernel-derived facts.
-
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|----------|
-| `press` | 703 | event | raw | Unresolved from current kernel facts |
-| `exit` | 558 | event | raw | Exit |
-| `enter` | 508 | event | raw | Enter |
-| `press1` | 492 | event | raw | Unresolved from current kernel facts |
-| `awe` | 35 | event | raw | Awe |
-| `ExitThankYou` | 34 | event | raw | Exit thank you |
+|----------|---------------|------|------------|---------|
+| `ExitThankYou` | 34 | event | raw | Exit thank you screen |
+| `FeelingItInstructionsButton` | 18 | event | raw | Instructions for feeling with button |
+| `FeelingItInstructionsNoButton` | 19 | event | raw | Instructions for feeling without button |
 | `ImaginationSuggestions` | 34 | event | raw | Imagination suggestions |
-| `InstructionsForEnding` | 34 | event | raw | Instructions for ending |
-| `anger` | 34 | event | raw | Anger |
-| `compassion` | 34 | event | raw | Compassion |
-| `content` | 34 | event | raw | Content |
-| `disgust` | 34 | event | raw | Disgust |
-| `excite` | 34 | event | raw | Excite |
-| `fear` | 34 | event | raw | Fear |
-| `frustration` | 34 | event | raw | Frustration |
-| `grief` | 34 | event | raw | Grief |
-| `happy` | 34 | event | raw | Happy |
-| `jealousy` | 34 | event | raw | Jealousy |
-| `joy` | 34 | event | raw | Joy |
-| `love` | 34 | event | raw | Love |
-| `postbase` | 34 | event | raw | Unresolved from current kernel facts |
-| `postbase_instruct` | 34 | event | raw | Unresolved from current kernel facts |
-| `prebase` | 34 | event | raw | Unresolved from current kernel facts |
-| `relax` | 34 | event | raw | Relax |
-| `relief` | 34 | event | raw | Relief |
-| `sad` | 34 | event | raw | Sad |
-| `prebase_instruct` | 33 | event | raw | Unresolved from current kernel facts |
 | `InitialInstructions` | 31 | event | raw | Initial instructions |
-| `FeelingItInstructionsNoButton` | 19 | event | raw | Feeling it instructions no button |
-| `FeelingItInstructionsButton` | 18 | event | raw | Feeling it instructions button |
-<!-- AUTO-KERNEL-EVENT-STRUCTURE:END -->
+| `InstructionsForEnding` | 34 | event | raw | Instructions for ending |
+| `anger` | 34 | event | raw | Anger emotion period |
+| `awe` | 35 | event | raw | Awe emotion period |
+| `compassion` | 34 | event | raw | Compassion emotion period |
+| `content` | 34 | event | raw | Content emotion period |
+| `disgust` | 34 | event | raw | Disgust emotion period |
+| `enter` | 508 | event | raw | Enter |
+| `excite` | 34 | event | raw | Excitement emotion period |
+| `exit` | 558 | event | raw | Exit |
+| `fear` | 34 | event | raw | Fear emotion period |
+| `frustration` | 34 | event | raw | Frustration emotion period |
+| `grief` | 34 | event | raw | Grief emotion period |
+| `happy` | 34 | event | raw | Happiness emotion period |
+| `jealousy` | 34 | event | raw | Jealousy emotion period |
+| `joy` | 34 | event | raw | Joy emotion period |
+| `love` | 34 | event | raw | Love emotion period |
+| `postbase` | 34 | event | raw | Post-baseline period |
+| `postbase_instruct` | 34 | event | raw | Post-baseline instruction |
+| `prebase` | 34 | event | raw | Pre-baseline period |
+| `prebase_instruct` | 33 | event | raw | Pre-baseline instruction |
+| `press` | 703 | event | raw | Button press (onset/offset marker) |
+| `press1` | 492 | event | raw | Secondary button press marker |
+| `relax` | 34 | event | raw | Relax emotion period |
+| `relief` | 34 | event | raw | Relief emotion period |
+| `sad` | 34 | event | raw | Sadness emotion period |
+
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
-| `device` | missing | N/A |
+| `subject_age` | missing | Subject metadata not available in BIDS files |
+| `subject_sex` | missing | Subject metadata not available in BIDS files |
+| `device` | missing | Recording device metadata not available in BIDS files |
 
 ## Tasks
 
-### Classical Task 1: 15-class Imagined Emotion Classification
+### Classical Task 1: 2-class Binary Valence Classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 218 s *, overlap = 0.75 *, target_events = [`button_press_onset`]
-- **Label Route**: `event`
+- **Epoch Method**: epoch_by_segmentation_hdf5
+- **Epoch Parameters**: tmin = 0.0 s, tmax = null, overlap = 0.75, segment_length = 2.0 s
+- **Label Route**: event
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|----------|
-  | `button_press_onset` | 0 | love |
-  | `button_press_onset` | 1 | joy |
-  | `button_press_onset` | 2 | happiness |
-  | `button_press_onset` | 3 | relief |
-  | `button_press_onset` | 4 | compassion |
-  | `button_press_onset` | 5 | contentedness |
-  | `button_press_onset` | 6 | excitement |
-  | `button_press_onset` | 7 | awe |
-  | `button_press_onset` | 8 | anger |
-  | `button_press_onset` | 9 | jealousy |
-  | `button_press_onset` | 10 | disgust |
-  | `button_press_onset` | 11 | frustration |
-  | `button_press_onset` | 12 | fear |
-  | `button_press_onset` | 13 | sadness |
-  | `button_press_onset` | 14 | grief |
-- **Kernel Notes**: Button-press onsets defined emotion start times; emotion periods lasted 43s-12min (mean 218±94s). Use 75%-overlapping 2-s Hanning windows for spectral decomposition as per original analysis. Verify event ID mapping from events.tsv - original trigger channel did not capture button presses; they were logged in separate behavioral files. (replaces Classical Task 1 from original analysis.md)
+  |-------|---|---------|
+  | `love` | 0 | positive valence |
+  | `joy` | 0 | positive valence |
+  | `happy` | 0 | positive valence |
+  | `relief` | 0 | positive valence |
+  | `compassion` | 0 | positive valence |
+  | `content` | 0 | positive valence |
+  | `excite` | 0 | positive valence |
+  | `awe` | 0 | positive valence |
+  | `anger` | 1 | negative valence |
+  | `jealousy` | 1 | negative valence |
+  | `disgust` | 1 | negative valence |
+  | `frustration` | 1 | negative valence |
+  | `fear` | 1 | negative valence |
+  | `sad` | 1 | negative valence |
+  | `grief` | 1 | negative valence |
+- **Kernel Notes**: Group the 15 emotion label events into binary valence categories. Use 2-s overlapping Hanning windows for spectral decomposition within each emotion period (43s-12min), following FBCSP approach from ACII 2013. The `press`/`press1` events (703/492 counts) likely mark button-press onsets but their mapping to emotion labels requires verification from behavioral logs.
 - **Evidence**:
-  - DOI: 10.3389/neuro.09.061.2009 — UCSD study examining high-frequency broadband EEG modulations during 15-class imagined emotion task using ICA-based spectral decomposition, with 32 subjects performing guided imagery of emotions.
-  - DOI: 10.1016/j.neuroimage.2022.118873 — Applied 20-model AMICA decomposition to high-density EEG data from 31 participants during self-paced emotion imagination with 15 distinct emotional states, using button-press markers to define emotion onsets/offsets.
+  - DOI: 10.1109/ACII.2013.160 — Emotion recognition from EEG during self-paced emotional imagery using Filter-Bank Common Spatial Pattern (FBCSP) with binary valence classification (positive vs negative), achieving 71.3% accuracy on 12 subjects.
 
-### Classical Task 2: Binary Valence Classification (Positive vs Negative)
+### Potential Task 1: 15-class Imagined Emotion Classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 6 s, overlap = 0.5
-- **Label Route**: `event`
+- **Epoch Method**: epoch_by_long_event_hdf5
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 218.0 s, overlap = 0.75, target_events = [`press`, `press1`]
+- **Label Route**: event
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `press` | 0 | awe |
+  | `press` | 1 | anger |
+  | `press` | 2 | compassion |
+  | `press` | 3 | content |
+  | `press` | 4 | disgust |
+  | `press` | 5 | excite |
+  | `press` | 6 | fear |
+  | `press` | 7 | frustration |
+  | `press` | 8 | grief |
+  | `press` | 9 | happy |
+  | `press` | 10 | jealousy |
+  | `press` | 11 | joy |
+  | `press` | 12 | love |
+  | `press` | 13 | relax |
+  | `press` | 14 | relief |
+  | `press` | 15 | sad |
+- **Kernel Notes**: CRITICAL MAPPING ISSUE: The `press`/`press1` events (1195 total) are detected in events.tsv but their mapping to the 15 emotion labels is unresolved. Original paradigm had participants press buttons to indicate emotion onset/offset, but EEG trigger channel did not capture these presses. Verify mapping from behavioral log files or sequence alignment before epoching. If mapping cannot be verified, fall back to segment-based epoching around emotion label events (see Alternative below). Use 2-s Hanning windows with 75% overlap for spectral decomposition as per original analysis paradigm.
+- **Evidence**:
+  - DOI: 10.1016/j.neuroimage.2022.118873 — Unsupervised AMICA decomposition of high-density EEG during 15 emotion imagination periods; provides paradigm validation (same dataset: 31 subjects, 15 emotion categories, 128-250 channels).
+
+### Potential Task 2: Brain State Dynamics During Emotion Imagination
+- **Task Type**: segmentation
+- **Epoch Method**: epoch_by_long_event_hdf5
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 218.0 s, overlap = null, target_events = [`awe`, `anger`, `compassion`, `content`, `disgust`, `excite`, `fear`, `frustration`, `grief`, `happy`, `jealousy`, `joy`, `love`, `relax`, `relief`, `sad`]
+- **Label Route**: misc
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|----------|
-  | `positive_valence` | 0 | positive valence (love, joy, happiness, relief, contentment, excitement, awe, compassion) |
-  | `negative_valence` | 1 | negative valence (anger, jealousy, disgust, frustration, fear, sadness, grief) |
-- **Super Meta Notes**: Derived from raw event(s) [`button_press_onset`] by grouping 15 emotion conditions into binary valence categories. Excluded first 60s and last 10s of each emotion block per original FBCSP analysis. Kernel step: For each 6s segment, assign valence label based on which emotion block the segment falls within (positive=8 emotions, negative=7 emotions).
-- **Kernel Notes**: Exclude first 2 emotion blocks per subject as per original analysis; use 40 equally spaced segments per block. Verify event timing in events.tsv for accurate block boundaries. (replaces Potential Task 1 from original analysis.md)
+  |-------|---|---------|
+  | `awe` | null | Awe emotion period |
+  | `anger` | null | Anger emotion period |
+  | `compassion` | null | Compassion emotion period |
+  | `content` | null | Content emotion period |
+  | `disgust` | null | Disgust emotion period |
+  | `excite` | null | Excitement emotion period |
+  | `fear` | null | Fear emotion period |
+  | `frustration` | null | Frustration emotion period |
+  | `grief` | null | Grief emotion period |
+  | `happy` | null | Happiness emotion period |
+  | `jealousy` | null | Jealousy emotion period |
+  | `joy` | null | Joy emotion period |
+  | `love` | null | Love emotion period |
+  | `relax` | null | Relax emotion period |
+  | `relief` | null | Relief emotion period |
+  | `sad` | null | Sadness emotion period |
+- **Kernel Notes**: Use unsupervised decomposition (AMICA/ICA) to learn brain state dynamics within each emotion period. Target events define epoch anchors; labels are null as this is segmentation/dynamics discovery rather than classification. Explore whether EEG dynamics cluster by emotion category or valence. Matches original AMICA analysis from DOI: 10.1016/j.neuroimage.2022.118873.
 - **Evidence**:
-  - DOI: 10.1109/acii.2013.160 — Analyzes 12-subject guided emotion imagery EEG dataset, classifying positive vs negative valence from 6-second EEG segments using Filter-Bank Common Spatial Pattern (FBCSP) with block-wise cross-validation.
-
-### Potential Task 1: Resting / Continuous Segmentation
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
-- **Label Route**: `event`
-- **Target Definition**: N/A (null - no trial-level event markers in locator; rest periods were 2min eyes-closed at start/end of session)
-- **Notes**: High-density 219-channel EEG. Rest periods (2min eyes-closed at start/end) could be used for baseline/control analysis.
-
-## Data Quality Notes
-
-- No event markers detected in EEG files by locator pipeline - verify events.tsv directly.
-- High-density 219-channel array; verify electrode positions and system (likely EGI/Geodesic).
-- 15 distinct emotional states if properly annotated - valuable for affective BCI research.
-- Verify channel count consistency across subjects before pooling.
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: Yes
-> **Status**: wait_kernel_update
+  - DOI: 10.1016/j.neuroimage.2022.118873 — Applied 20-model AMICA decomposition to high-density EEG to learn brain state dynamics during 15-class emotion imagination; explores whether EEG spectral patterns cluster by emotion category or valence (super-level analysis).

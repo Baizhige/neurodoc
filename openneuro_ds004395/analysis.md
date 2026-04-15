@@ -3,119 +3,77 @@
 **Dataset**: `openneuro_ds004395` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004395
 **Category**: High-level Mental | **Subjects**: 300 | **Files (Completed)**: 6480
 **Channels**: 129 | **Sampling Rate**: 500 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
 A large-scale study investigating the electrophysiological correlates of memory encoding and retrieval using various free recall tasks. Participants encoded word lists and subsequently recalled them (free recall), also performing recognition memory tasks. The study provides a rich dataset for ERP analysis of encoding success, retrieval effort, and memory-related oscillations.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `9d157f1bc9002373cf993976877bffb0f85323ccced6baad5b1ae2e0ee065340`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `WORD` | 6480x~256 | event | raw | Word presentation onset (encoding) |
-| `REC_WORD` | 6480x~100 | event | raw | Recalled word onset (retrieval) |
-| `RECOG_TARGET` | 3581x~160 | event | raw | Recognition target word onset |
-| `RECOG_LURE` | 3581x~80 | event | raw | Recognition lure word onset |
-| `RECOG_RESP` | 3581x~320 | event | raw | Recognition response |
-| `RECOG_CONF` | 3563x~320 | event | raw | Confidence rating |
-| `DISTRACTOR` | 2439xx | event | raw | Distractor task stimulus |
-| `REC_WORD_VV` | 5001xx | event | raw | Recalled word (voice-verified) |
-| `REST_REWET` | 5955x1 | event | raw | Rest/reward-with-eye-tracking marker |
-| `SESS_START` | 6478 | admin | raw | Session start marker |
-| `SESS_END` | 6474 | admin | raw | Session end marker |
-| `REC_START` | 6480 | admin | raw | Recall period start |
-| `START` | 3668 | admin | raw | Start marker |
-| `STOP` | 3668 | admin | raw | Stop marker |
-| `BREAK_START` | 459 | admin | raw | Break start marker |
-| `BREAK_STOP` | 459 | admin | raw | Break stop marker |
-
-
-### MISC Label Summary
-
-- **Route**: `misc`
-- **Role**: Stores derived/continuous labels that are not native raw event IDs.
-- **Candidate Labels**: `confidence`
-- **Kernel Note**: Keep derivation source, unit, and version metadata.
+| `event_15` | 811374 | event | raw | Recognition/recall-related stimulus events |
+| `event_65536` | 21 | event | raw | Session or block-level special marker |
+| `event_65544` | 588 | event | raw | Distractor or rest-period marker |
+| `event_65551` | 113 | event | raw | Break or reward-state marker |
+| `event_8` | 5804724 | event | raw | Word presentation during encoding phase |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
-### Classical Task 1: Recognition Memory Old/New Classification
+### Classical Task 1: Memory Encoding Success Classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -1.0 s, tmax = 2.2 s, target_events = [`RECOG_TARGET`, `RECOG_LURE`]
-- **Label Route**: `event`
+- **Epoch Method**: epoch_by_event_hdf5
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`WORD`]
+- **Label Route**: event
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
-  | `RECOG_TARGET` | 0 | Target (old item - previously seen) |
-  | `RECOG_LURE` | 1 | Lure (new item - not previously seen) |
+  |-------|---|--------|
+  | `WORD` | 0 | Not subsequently recalled |
+  | `WORD` | 1 | Successfully recalled |
+- **Evidence**: DOI: 10.1038/s41467-024-46926-0 — "EEG decoders track memory dynamics" (Nature Communications, 2024). 98 participants, 24 sessions, logistic regression classifiers on spectral features (theta, alpha, beta, HFA) from scalp EEG. Predicts encoding success by linking WORD events to REC_WORD_VV (voice-verified recall) labels.
+- **Kernel Notes**: Epoch window (-0.2s to 1.0s) captures N170/P300 ERP complex during word encoding. Classification: recalled vs. not-recalled items. Cross-reference REC_WORD_VV for ground truth successful encoding labels.
+
+### Classical Task 2: Recognition Memory Old/New Classification
+- **Task Type**: classification
+- **Epoch Method**: epoch_by_event_hdf5
+- **Epoch Parameters**: tmin = -1.0 s, tmax = 2.2 s, target_events = [`RECOG_TARGET`, `RECOG_LURE`]
+- **Label Route**: event
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|--------|
+  | `RECOG_TARGET` | 0 | Old item (previously seen) |
+  | `RECOG_LURE` | 1 | New item (lure/foil) |
 - **Evidence**:
-  - DOI: 10.31234/osf.io/64j58 — This study used EEG data from the PEERS dataset (openneuro_ds004395) to generate single-trial regressors via logistic regression classifiers on 100ms time windows (500-800ms) to predict drift rate in Diffusion Decision Models for recognition memory old/new decisions.
-- **Kernel Notes**: Epoch window covers stimulus-locked response period (-1.0s pre-stimulus to 2.2s post-stimulus). Task predicts DDM drift rate: old items (RECOG_TARGET) yield higher drift rates, new items (RECOG_LURE) yield lower drift rates. (replaces Potential Task 1 from original analysis.md)
+  - DOI: 10.1038/s41467-024-46926-0 — Demonstrates EEG decoders on PEERS recognition memory data.
+  - DOI: 10.31234/osf.io/64j58 — Single-trial logistic regression classifiers on 100ms time windows (500-800ms) to predict DDM drift rate for recognition memory decisions.
+- **Kernel Notes**: Stimulus-locked epochs aligned to RECOG_TARGET (old) and RECOG_LURE (new) onset. Window covers pre-stimulus baseline, stimulus processing, and response period. Can extend to confidence-based classification using RECOG_CONF labels.
 
-### Potential Task 1: Memory Encoding Classification (binary)
+### Normal Task 1: Free Recall Retrieval Classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset), target_events = see Target Definition
-- **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: SESS_START/END, REC_START, START/STOP, BREAK_START/STOP are admin markers - exclude. REST_REWET is a rest marker. Very large dataset (300 subjects, 6480 files); suitable for large-scale ERP studies.
-
-| Event | y | Meaning |
-|-------|---|------|
-| `RECOG_TARGET` | 0 | Recognition target (previously seen) |
-| `RECOG_LURE` | 1 | Recognition lure (not previously seen) |
-
-### Classical Task 2: Publisher-defined BIDS task: Ltp FR
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification *, tmax = Needs verification *, target_events = [Needs verification *]
-- **Label Route**: `event`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004395 DOI: 10.18112/openneuro.ds004395.v2.0.0
-- **Kernel Notes**: Verify epoch parameters and target_events mapping from events.tsv. BIDS task 'Ltp FR' corresponds to word encoding/free recall paradigm. Likely uses `WORD` (encoding) and `REC_WORD` (retrieval) events.
-
-### Classical Task 3: Publisher-defined BIDS task: Ltp FR2
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification *, tmax = Needs verification *, target_events = [Needs verification *]
-- **Label Route**: `event`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004395 DOI: 10.18112/openneuro.ds004395.v2.0.0
-- **Kernel Notes**: Verify epoch parameters and target_events mapping from events.tsv. BIDS task 'Ltp FR2' likely uses similar events to Ltp FR but with different word lists/trials.
-
-### Classical Task 4: Publisher-defined BIDS task: VFFR
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification *, tmax = Needs verification *, target_events = [Needs verification *]
-- **Label Route**: `event`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004395 DOI: 10.18112/openneuro.ds004395.v2.0.0
-- **Kernel Notes**: Verify epoch parameters and target_events mapping from events.tsv. VFFR likely uses voice-verified recall events (`REC_WORD_VV`).
-
-## Data Quality Notes
-
-- Very large dataset (300 subjects, 6480 files); processing time is substantial
-- Session-level admin markers (SESS_START/END) must be excluded from epoching
-- Multiple sub-tasks with different event structures; separate HDF5 per sub-task recommended
-
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: No
-> **Status**: wait_manual_review
+- **Epoch Method**: epoch_by_event_hdf5
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, target_events = [`REC_WORD`]
+- **Label Route**: event
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|--------|
+  | `REC_WORD` | 0 | Intrusion/incorrect recall |
+  | `REC_WORD` | 1 | Correct recall |
+- **Evidence**: DOI: 10.1038/s41467-024-46926-0 — "EEG decoders track memory dynamics" uses REC_WORD and REC_WORD_VV events for retrieval success classification. Validates that EEG spectral features in pre-retrieval window (500ms preceding recall) predict correct vs. intrusion recall.
+- **Kernel Notes**: Epoch window captures recall initiation and vocalization period. Cross-reference REC_WORD_VV (voice-verified) for ground truth successful retrieval. REC_START marks recall period onset; use for period segmentation if needed.

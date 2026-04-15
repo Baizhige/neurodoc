@@ -2,281 +2,300 @@
 
 **Dataset**: `openneuro_ds005106` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005106
 **Category**: Sensory/Response | **Subjects**: 42 | **Files (Completed)**: 42 | **Channels**: 32 | **Sampling Rate**: 500 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
-Infants viewed 200 distinct object images presented in rapid visual streams (RSVP) while EEG was recorded to study the development of visual object representations. Each numeric trigger code corresponds to one of 200 object IDs; code -1 is a baseline/inter-stimulus marker. The dataset enables decoding of object-specific neural representations in the infant brain.
+Human infant EEG dataset recorded while infants viewed 200 distinct object images presented in rapid visual streams (RSVP) at 5Hz (100ms on/100ms off). Each object was presented approximately 5 times per subject across 42 infant participants. Numeric trigger codes (1–200) correspond to unique object IDs, while code -1 indicates inter-stimulus baseline periods. The dataset enables decoding of object-specific and category-level neural representations in the developing infant brain.
 
 ## File Scan Result
 
-> **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds005106.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
-> **SHA256**: `7a070afddb30d893f12a72a6da26eb160a8e97487c28ca8d2c61f4002cb20e6a`
-
+> **Kernel SHA256**: `3c079cb5e9aafd2fd2562b71d3eb2aa2e06908c03425ba325d1b3c70042a0b3d`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
-
-<!-- AUTO-KERNEL-EVENT-STRUCTURE:START -->
-> **Kernel Fact Source**: current kernel scan from `<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-> **Meaning Policy**: `Meaning` is interpretive; `Event ID / Count / Type / Meta Level` are kernel-derived facts.
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `-1` | 43105 | event | raw | Unresolved from current kernel facts |
-| `123` | 220 | event | raw | Unresolved from current kernel facts |
-| `155` | 220 | event | raw | Unresolved from current kernel facts |
-| `147` | 219 | event | raw | Unresolved from current kernel facts |
-| `153` | 219 | event | raw | Unresolved from current kernel facts |
-| `178` | 219 | event | raw | Unresolved from current kernel facts |
-| `187` | 219 | event | raw | Unresolved from current kernel facts |
-| `198` | 219 | event | raw | Unresolved from current kernel facts |
-| `48` | 219 | event | raw | Unresolved from current kernel facts |
-| `49` | 219 | event | raw | Unresolved from current kernel facts |
-| `51` | 219 | event | raw | Unresolved from current kernel facts |
-| `72` | 219 | event | raw | Unresolved from current kernel facts |
-| `112` | 218 | event | raw | Unresolved from current kernel facts |
-| `132` | 218 | event | raw | Unresolved from current kernel facts |
-| `136` | 218 | event | raw | Unresolved from current kernel facts |
-| `143` | 218 | event | raw | Unresolved from current kernel facts |
-| `180` | 218 | event | raw | Unresolved from current kernel facts |
-| `186` | 218 | event | raw | Unresolved from current kernel facts |
-| `19` | 218 | event | raw | Unresolved from current kernel facts |
-| `196` | 218 | event | raw | Unresolved from current kernel facts |
-| `23` | 218 | event | raw | Unresolved from current kernel facts |
-| `24` | 218 | event | raw | Unresolved from current kernel facts |
-| `4` | 218 | event | raw | Unresolved from current kernel facts |
-| `43` | 218 | event | raw | Unresolved from current kernel facts |
-| `47` | 218 | event | raw | Unresolved from current kernel facts |
-| `59` | 218 | event | raw | Unresolved from current kernel facts |
-| `60` | 218 | event | raw | Unresolved from current kernel facts |
-| `70` | 218 | event | raw | Unresolved from current kernel facts |
-| `86` | 218 | event | raw | Unresolved from current kernel facts |
-| `1` | 217 | event | raw | Unresolved from current kernel facts |
-| `107` | 217 | event | raw | Unresolved from current kernel facts |
-| `12` | 217 | event | raw | Unresolved from current kernel facts |
-| `124` | 217 | event | raw | Unresolved from current kernel facts |
-| `127` | 217 | event | raw | Unresolved from current kernel facts |
-| `133` | 217 | event | raw | Unresolved from current kernel facts |
-| `137` | 217 | event | raw | Unresolved from current kernel facts |
-| `14` | 217 | event | raw | Unresolved from current kernel facts |
-| `156` | 217 | event | raw | Unresolved from current kernel facts |
-| `161` | 217 | event | raw | Unresolved from current kernel facts |
-| `166` | 217 | event | raw | Unresolved from current kernel facts |
-| `171` | 217 | event | raw | Unresolved from current kernel facts |
-| `172` | 217 | event | raw | Unresolved from current kernel facts |
-| `174` | 217 | event | raw | Unresolved from current kernel facts |
-| `181` | 217 | event | raw | Unresolved from current kernel facts |
-| `190` | 217 | event | raw | Unresolved from current kernel facts |
-| `195` | 217 | event | raw | Unresolved from current kernel facts |
-| `22` | 217 | event | raw | Unresolved from current kernel facts |
-| `27` | 217 | event | raw | Unresolved from current kernel facts |
-| `30` | 217 | event | raw | Unresolved from current kernel facts |
-| `37` | 217 | event | raw | Unresolved from current kernel facts |
-| `38` | 217 | event | raw | Unresolved from current kernel facts |
-| `39` | 217 | event | raw | Unresolved from current kernel facts |
-| `44` | 217 | event | raw | Unresolved from current kernel facts |
-| `45` | 217 | event | raw | Unresolved from current kernel facts |
-| `46` | 217 | event | raw | Unresolved from current kernel facts |
-| `5` | 217 | event | raw | Unresolved from current kernel facts |
-| `56` | 217 | event | raw | Unresolved from current kernel facts |
-| `62` | 217 | event | raw | Unresolved from current kernel facts |
-| `63` | 217 | event | raw | Unresolved from current kernel facts |
-| `64` | 217 | event | raw | Unresolved from current kernel facts |
-| `83` | 217 | event | raw | Unresolved from current kernel facts |
-| `84` | 217 | event | raw | Unresolved from current kernel facts |
-| `87` | 217 | event | raw | Unresolved from current kernel facts |
-| `90` | 217 | event | raw | Unresolved from current kernel facts |
-| `99` | 217 | event | raw | Unresolved from current kernel facts |
-| `105` | 216 | event | raw | Unresolved from current kernel facts |
-| `120` | 216 | event | raw | Unresolved from current kernel facts |
-| `121` | 216 | event | raw | Unresolved from current kernel facts |
-| `125` | 216 | event | raw | Unresolved from current kernel facts |
-| `130` | 216 | event | raw | Unresolved from current kernel facts |
-| `141` | 216 | event | raw | Unresolved from current kernel facts |
-| `145` | 216 | event | raw | Unresolved from current kernel facts |
-| `148` | 216 | event | raw | Unresolved from current kernel facts |
-| `152` | 216 | event | raw | Unresolved from current kernel facts |
-| `157` | 216 | event | raw | Unresolved from current kernel facts |
-| `159` | 216 | event | raw | Unresolved from current kernel facts |
-| `160` | 216 | event | raw | Unresolved from current kernel facts |
-| `164` | 216 | event | raw | Unresolved from current kernel facts |
-| `168` | 216 | event | raw | Unresolved from current kernel facts |
-| `173` | 216 | event | raw | Unresolved from current kernel facts |
-| `177` | 216 | event | raw | Unresolved from current kernel facts |
-| `179` | 216 | event | raw | Unresolved from current kernel facts |
-| `18` | 216 | event | raw | Unresolved from current kernel facts |
-| `182` | 216 | event | raw | Unresolved from current kernel facts |
-| `192` | 216 | event | raw | Unresolved from current kernel facts |
-| `194` | 216 | event | raw | Unresolved from current kernel facts |
-| `199` | 216 | event | raw | Unresolved from current kernel facts |
-| `20` | 216 | event | raw | Unresolved from current kernel facts |
-| `25` | 216 | event | raw | Unresolved from current kernel facts |
-| `26` | 216 | event | raw | Unresolved from current kernel facts |
-| `33` | 216 | event | raw | Unresolved from current kernel facts |
-| `41` | 216 | event | raw | Unresolved from current kernel facts |
-| `42` | 216 | event | raw | Unresolved from current kernel facts |
-| `52` | 216 | event | raw | Unresolved from current kernel facts |
-| `53` | 216 | event | raw | Unresolved from current kernel facts |
-| `57` | 216 | event | raw | Unresolved from current kernel facts |
-| `66` | 216 | event | raw | Unresolved from current kernel facts |
-| `75` | 216 | event | raw | Unresolved from current kernel facts |
-| `76` | 216 | event | raw | Unresolved from current kernel facts |
-| `79` | 216 | event | raw | Unresolved from current kernel facts |
-| `85` | 216 | event | raw | Unresolved from current kernel facts |
-| `96` | 216 | event | raw | Unresolved from current kernel facts |
-| `97` | 216 | event | raw | Unresolved from current kernel facts |
-| `100` | 215 | event | raw | Unresolved from current kernel facts |
-| `104` | 215 | event | raw | Unresolved from current kernel facts |
-| `110` | 215 | event | raw | Unresolved from current kernel facts |
-| `114` | 215 | event | raw | Unresolved from current kernel facts |
-| `115` | 215 | event | raw | Unresolved from current kernel facts |
-| `119` | 215 | event | raw | Unresolved from current kernel facts |
-| `129` | 215 | event | raw | Unresolved from current kernel facts |
-| `13` | 215 | event | raw | Unresolved from current kernel facts |
-| `15` | 215 | event | raw | Unresolved from current kernel facts |
-| `150` | 215 | event | raw | Unresolved from current kernel facts |
-| `162` | 215 | event | raw | Unresolved from current kernel facts |
-| `17` | 215 | event | raw | Unresolved from current kernel facts |
-| `183` | 215 | event | raw | Unresolved from current kernel facts |
-| `184` | 215 | event | raw | Unresolved from current kernel facts |
-| `188` | 215 | event | raw | Unresolved from current kernel facts |
-| `21` | 215 | event | raw | Unresolved from current kernel facts |
-| `28` | 215 | event | raw | Unresolved from current kernel facts |
-| `29` | 215 | event | raw | Unresolved from current kernel facts |
-| `3` | 215 | event | raw | Unresolved from current kernel facts |
-| `35` | 215 | event | raw | Unresolved from current kernel facts |
-| `36` | 215 | event | raw | Unresolved from current kernel facts |
-| `54` | 215 | event | raw | Unresolved from current kernel facts |
-| `65` | 215 | event | raw | Unresolved from current kernel facts |
-| `7` | 215 | event | raw | Unresolved from current kernel facts |
-| `71` | 215 | event | raw | Unresolved from current kernel facts |
-| `74` | 215 | event | raw | Unresolved from current kernel facts |
-| `8` | 215 | event | raw | Unresolved from current kernel facts |
-| `81` | 215 | event | raw | Unresolved from current kernel facts |
-| `88` | 215 | event | raw | Unresolved from current kernel facts |
-| `91` | 215 | event | raw | Unresolved from current kernel facts |
-| `92` | 215 | event | raw | Unresolved from current kernel facts |
-| `94` | 215 | event | raw | Unresolved from current kernel facts |
-| `101` | 214 | event | raw | Unresolved from current kernel facts |
-| `103` | 214 | event | raw | Unresolved from current kernel facts |
-| `106` | 214 | event | raw | Unresolved from current kernel facts |
-| `109` | 214 | event | raw | Unresolved from current kernel facts |
-| `11` | 214 | event | raw | Unresolved from current kernel facts |
-| `113` | 214 | event | raw | Unresolved from current kernel facts |
-| `117` | 214 | event | raw | Unresolved from current kernel facts |
-| `122` | 214 | event | raw | Unresolved from current kernel facts |
-| `126` | 214 | event | raw | Unresolved from current kernel facts |
-| `128` | 214 | event | raw | Unresolved from current kernel facts |
-| `131` | 214 | event | raw | Unresolved from current kernel facts |
-| `135` | 214 | event | raw | Unresolved from current kernel facts |
-| `142` | 214 | event | raw | Unresolved from current kernel facts |
-| `144` | 214 | event | raw | Unresolved from current kernel facts |
-| `165` | 214 | event | raw | Unresolved from current kernel facts |
-| `175` | 214 | event | raw | Unresolved from current kernel facts |
-| `189` | 214 | event | raw | Unresolved from current kernel facts |
-| `191` | 214 | event | raw | Unresolved from current kernel facts |
-| `2` | 214 | event | raw | Unresolved from current kernel facts |
-| `31` | 214 | event | raw | Unresolved from current kernel facts |
-| `34` | 214 | event | raw | Unresolved from current kernel facts |
-| `50` | 214 | event | raw | Unresolved from current kernel facts |
-| `58` | 214 | event | raw | Unresolved from current kernel facts |
-| `6` | 214 | event | raw | Unresolved from current kernel facts |
-| `61` | 214 | event | raw | Unresolved from current kernel facts |
-| `67` | 214 | event | raw | Unresolved from current kernel facts |
-| `68` | 214 | event | raw | Unresolved from current kernel facts |
-| `77` | 214 | event | raw | Unresolved from current kernel facts |
-| `78` | 214 | event | raw | Unresolved from current kernel facts |
-| `89` | 214 | event | raw | Unresolved from current kernel facts |
-| `93` | 214 | event | raw | Unresolved from current kernel facts |
-| `98` | 214 | event | raw | Unresolved from current kernel facts |
-| `10` | 213 | event | raw | Unresolved from current kernel facts |
-| `116` | 213 | event | raw | Unresolved from current kernel facts |
-| `118` | 213 | event | raw | Unresolved from current kernel facts |
-| `134` | 213 | event | raw | Unresolved from current kernel facts |
-| `138` | 213 | event | raw | Unresolved from current kernel facts |
-| `139` | 213 | event | raw | Unresolved from current kernel facts |
-| `140` | 213 | event | raw | Unresolved from current kernel facts |
-| `146` | 213 | event | raw | Unresolved from current kernel facts |
-| `149` | 213 | event | raw | Unresolved from current kernel facts |
-| `154` | 213 | event | raw | Unresolved from current kernel facts |
-| `158` | 213 | event | raw | Unresolved from current kernel facts |
-| `16` | 213 | event | raw | Unresolved from current kernel facts |
-| `163` | 213 | event | raw | Unresolved from current kernel facts |
-| `167` | 213 | event | raw | Unresolved from current kernel facts |
-| `169` | 213 | event | raw | Unresolved from current kernel facts |
-| `176` | 213 | event | raw | Unresolved from current kernel facts |
-| `193` | 213 | event | raw | Unresolved from current kernel facts |
-| `32` | 213 | event | raw | Unresolved from current kernel facts |
-| `40` | 213 | event | raw | Unresolved from current kernel facts |
-| `55` | 213 | event | raw | Unresolved from current kernel facts |
-| `69` | 213 | event | raw | Unresolved from current kernel facts |
-| `73` | 213 | event | raw | Unresolved from current kernel facts |
-| `82` | 213 | event | raw | Unresolved from current kernel facts |
-| `9` | 213 | event | raw | Unresolved from current kernel facts |
-| `95` | 213 | event | raw | Unresolved from current kernel facts |
-| `102` | 212 | event | raw | Unresolved from current kernel facts |
-| `108` | 212 | event | raw | Unresolved from current kernel facts |
-| `151` | 212 | event | raw | Unresolved from current kernel facts |
-| `185` | 212 | event | raw | Unresolved from current kernel facts |
-| `200` | 212 | event | raw | Unresolved from current kernel facts |
-| `80` | 212 | event | raw | Unresolved from current kernel facts |
-| `197` | 210 | event | raw | Unresolved from current kernel facts |
-| `170` | 209 | event | raw | Unresolved from current kernel facts |
-| `-2` | 207 | event | raw | Unresolved from current kernel facts |
-| `111` | 207 | event | raw | Unresolved from current kernel facts |
-<!-- AUTO-KERNEL-EVENT-STRUCTURE:END -->
-
-
-### MISC Label Summary
-
-<!-- AUTO-KERNEL-MISC:START -->
-> **Kernel Fact Source**: current kernel scan from `<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-> **Meaning Policy**: `Meaning` is interpretive; `Label / Source / Meta Level` are kernel-derived facts.
-
-| Label / Field | Source | Meta Level | Meaning |
-|---------------|--------|------------|---------|
-| `blocknr` | events.tsv:blocknr (42/42 files) | raw | block number |
-| `presentationnumber` | events.tsv:presentationnumber (42/42 files) | raw | presentation number |
-| `stimnum` | events.tsv:stimnum (42/42 files) | raw | stimulus number |
-| `trialnr` | events.tsv:trialnr (42/42 files) | raw | trial number |
-<!-- AUTO-KERNEL-MISC:END -->
-
-- **Route**: `misc`
-- **Role**: Kernel-derived label summary for the current route only.
+| `baseline` | 43105 | event | raw | Inter-stimulus/baseline marker |
+| `object_1` | 217 | event | raw | Object image ID 1 |
+| `object_10` | 213 | event | raw | Object image ID 10 |
+| `object_100` | 215 | event | raw | Object image ID 100 |
+| `object_101` | 214 | event | raw | Object image ID 101 |
+| `object_102` | 212 | event | raw | Object image ID 102 |
+| `object_103` | 214 | event | raw | Object image ID 103 |
+| `object_104` | 215 | event | raw | Object image ID 104 |
+| `object_105` | 216 | event | raw | Object image ID 105 |
+| `object_106` | 214 | event | raw | Object image ID 106 |
+| `object_107` | 217 | event | raw | Object image ID 107 |
+| `object_108` | 212 | event | raw | Object image ID 108 |
+| `object_109` | 214 | event | raw | Object image ID 109 |
+| `object_11` | 214 | event | raw | Object image ID 11 |
+| `object_110` | 215 | event | raw | Object image ID 110 |
+| `object_111` | 207 | event | raw | Object image ID 111 |
+| `object_112` | 218 | event | raw | Object image ID 112 |
+| `object_113` | 214 | event | raw | Object image ID 113 |
+| `object_114` | 215 | event | raw | Object image ID 114 |
+| `object_115` | 215 | event | raw | Object image ID 115 |
+| `object_116` | 213 | event | raw | Object image ID 116 |
+| `object_117` | 214 | event | raw | Object image ID 117 |
+| `object_118` | 213 | event | raw | Object image ID 118 |
+| `object_119` | 215 | event | raw | Object image ID 119 |
+| `object_12` | 217 | event | raw | Object image ID 12 |
+| `object_120` | 216 | event | raw | Object image ID 120 |
+| `object_121` | 216 | event | raw | Object image ID 121 |
+| `object_122` | 214 | event | raw | Object image ID 122 |
+| `object_123` | 220 | event | raw | Object image ID 123 |
+| `object_124` | 217 | event | raw | Object image ID 124 |
+| `object_125` | 216 | event | raw | Object image ID 125 |
+| `object_126` | 214 | event | raw | Object image ID 126 |
+| `object_127` | 217 | event | raw | Object image ID 127 |
+| `object_128` | 214 | event | raw | Object image ID 128 |
+| `object_129` | 215 | event | raw | Object image ID 129 |
+| `object_13` | 215 | event | raw | Object image ID 13 |
+| `object_130` | 216 | event | raw | Object image ID 130 |
+| `object_131` | 214 | event | raw | Object image ID 131 |
+| `object_132` | 218 | event | raw | Object image ID 132 |
+| `object_133` | 217 | event | raw | Object image ID 133 |
+| `object_134` | 213 | event | raw | Object image ID 134 |
+| `object_135` | 214 | event | raw | Object image ID 135 |
+| `object_136` | 218 | event | raw | Object image ID 136 |
+| `object_137` | 217 | event | raw | Object image ID 137 |
+| `object_138` | 213 | event | raw | Object image ID 138 |
+| `object_139` | 213 | event | raw | Object image ID 139 |
+| `object_14` | 217 | event | raw | Object image ID 14 |
+| `object_140` | 213 | event | raw | Object image ID 140 |
+| `object_141` | 216 | event | raw | Object image ID 141 |
+| `object_142` | 214 | event | raw | Object image ID 142 |
+| `object_143` | 218 | event | raw | Object image ID 143 |
+| `object_144` | 214 | event | raw | Object image ID 144 |
+| `object_145` | 216 | event | raw | Object image ID 145 |
+| `object_146` | 213 | event | raw | Object image ID 146 |
+| `object_147` | 219 | event | raw | Object image ID 147 |
+| `object_148` | 216 | event | raw | Object image ID 148 |
+| `object_149` | 213 | event | raw | Object image ID 149 |
+| `object_15` | 215 | event | raw | Object image ID 15 |
+| `object_150` | 215 | event | raw | Object image ID 150 |
+| `object_151` | 212 | event | raw | Object image ID 151 |
+| `object_152` | 216 | event | raw | Object image ID 152 |
+| `object_153` | 219 | event | raw | Object image ID 153 |
+| `object_154` | 213 | event | raw | Object image ID 154 |
+| `object_155` | 220 | event | raw | Object image ID 155 |
+| `object_156` | 217 | event | raw | Object image ID 156 |
+| `object_157` | 216 | event | raw | Object image ID 157 |
+| `object_158` | 213 | event | raw | Object image ID 158 |
+| `object_159` | 216 | event | raw | Object image ID 159 |
+| `object_16` | 213 | event | raw | Object image ID 16 |
+| `object_160` | 216 | event | raw | Object image ID 160 |
+| `object_161` | 217 | event | raw | Object image ID 161 |
+| `object_162` | 215 | event | raw | Object image ID 162 |
+| `object_163` | 213 | event | raw | Object image ID 163 |
+| `object_164` | 216 | event | raw | Object image ID 164 |
+| `object_165` | 214 | event | raw | Object image ID 165 |
+| `object_166` | 217 | event | raw | Object image ID 166 |
+| `object_167` | 213 | event | raw | Object image ID 167 |
+| `object_168` | 216 | event | raw | Object image ID 168 |
+| `object_169` | 213 | event | raw | Object image ID 169 |
+| `object_17` | 215 | event | raw | Object image ID 17 |
+| `object_170` | 209 | event | raw | Object image ID 170 |
+| `object_171` | 217 | event | raw | Object image ID 171 |
+| `object_172` | 217 | event | raw | Object image ID 172 |
+| `object_173` | 216 | event | raw | Object image ID 173 |
+| `object_174` | 217 | event | raw | Object image ID 174 |
+| `object_175` | 214 | event | raw | Object image ID 175 |
+| `object_176` | 213 | event | raw | Object image ID 176 |
+| `object_177` | 216 | event | raw | Object image ID 177 |
+| `object_178` | 219 | event | raw | Object image ID 178 |
+| `object_179` | 216 | event | raw | Object image ID 179 |
+| `object_18` | 216 | event | raw | Object image ID 18 |
+| `object_180` | 218 | event | raw | Object image ID 180 |
+| `object_181` | 217 | event | raw | Object image ID 181 |
+| `object_182` | 216 | event | raw | Object image ID 182 |
+| `object_183` | 215 | event | raw | Object image ID 183 |
+| `object_184` | 215 | event | raw | Object image ID 184 |
+| `object_185` | 212 | event | raw | Object image ID 185 |
+| `object_186` | 218 | event | raw | Object image ID 186 |
+| `object_187` | 219 | event | raw | Object image ID 187 |
+| `object_188` | 215 | event | raw | Object image ID 188 |
+| `object_189` | 214 | event | raw | Object image ID 189 |
+| `object_19` | 218 | event | raw | Object image ID 19 |
+| `object_190` | 217 | event | raw | Object image ID 190 |
+| `object_191` | 214 | event | raw | Object image ID 191 |
+| `object_192` | 216 | event | raw | Object image ID 192 |
+| `object_193` | 213 | event | raw | Object image ID 193 |
+| `object_194` | 216 | event | raw | Object image ID 194 |
+| `object_195` | 217 | event | raw | Object image ID 195 |
+| `object_196` | 218 | event | raw | Object image ID 196 |
+| `object_197` | 210 | event | raw | Object image ID 197 |
+| `object_198` | 219 | event | raw | Object image ID 198 |
+| `object_199` | 216 | event | raw | Object image ID 199 |
+| `object_2` | 214 | event | raw | Object image ID 2 |
+| `object_20` | 216 | event | raw | Object image ID 20 |
+| `object_200` | 212 | event | raw | Object image ID 200 |
+| `object_21` | 215 | event | raw | Object image ID 21 |
+| `object_22` | 217 | event | raw | Object image ID 22 |
+| `object_23` | 218 | event | raw | Object image ID 23 |
+| `object_24` | 218 | event | raw | Object image ID 24 |
+| `object_25` | 216 | event | raw | Object image ID 25 |
+| `object_26` | 216 | event | raw | Object image ID 26 |
+| `object_27` | 217 | event | raw | Object image ID 27 |
+| `object_28` | 215 | event | raw | Object image ID 28 |
+| `object_29` | 215 | event | raw | Object image ID 29 |
+| `object_3` | 215 | event | raw | Object image ID 3 |
+| `object_30` | 217 | event | raw | Object image ID 30 |
+| `object_31` | 214 | event | raw | Object image ID 31 |
+| `object_32` | 213 | event | raw | Object image ID 32 |
+| `object_33` | 216 | event | raw | Object image ID 33 |
+| `object_34` | 214 | event | raw | Object image ID 34 |
+| `object_35` | 215 | event | raw | Object image ID 35 |
+| `object_36` | 215 | event | raw | Object image ID 36 |
+| `object_37` | 217 | event | raw | Object image ID 37 |
+| `object_38` | 217 | event | raw | Object image ID 38 |
+| `object_39` | 217 | event | raw | Object image ID 39 |
+| `object_4` | 218 | event | raw | Object image ID 4 |
+| `object_40` | 213 | event | raw | Object image ID 40 |
+| `object_41` | 216 | event | raw | Object image ID 41 |
+| `object_42` | 216 | event | raw | Object image ID 42 |
+| `object_43` | 218 | event | raw | Object image ID 43 |
+| `object_44` | 217 | event | raw | Object image ID 44 |
+| `object_45` | 217 | event | raw | Object image ID 45 |
+| `object_46` | 217 | event | raw | Object image ID 46 |
+| `object_47` | 218 | event | raw | Object image ID 47 |
+| `object_48` | 219 | event | raw | Object image ID 48 |
+| `object_49` | 219 | event | raw | Object image ID 49 |
+| `object_5` | 217 | event | raw | Object image ID 5 |
+| `object_50` | 214 | event | raw | Object image ID 50 |
+| `object_51` | 219 | event | raw | Object image ID 51 |
+| `object_52` | 216 | event | raw | Object image ID 52 |
+| `object_53` | 216 | event | raw | Object image ID 53 |
+| `object_54` | 215 | event | raw | Object image ID 54 |
+| `object_55` | 213 | event | raw | Object image ID 55 |
+| `object_56` | 217 | event | raw | Object image ID 56 |
+| `object_57` | 216 | event | raw | Object image ID 57 |
+| `object_58` | 214 | event | raw | Object image ID 58 |
+| `object_59` | 218 | event | raw | Object image ID 59 |
+| `object_6` | 214 | event | raw | Object image ID 6 |
+| `object_60` | 218 | event | raw | Object image ID 60 |
+| `object_61` | 214 | event | raw | Object image ID 61 |
+| `object_62` | 217 | event | raw | Object image ID 62 |
+| `object_63` | 217 | event | raw | Object image ID 63 |
+| `object_64` | 217 | event | raw | Object image ID 64 |
+| `object_65` | 215 | event | raw | Object image ID 65 |
+| `object_66` | 216 | event | raw | Object image ID 66 |
+| `object_67` | 214 | event | raw | Object image ID 67 |
+| `object_68` | 214 | event | raw | Object image ID 68 |
+| `object_69` | 213 | event | raw | Object image ID 69 |
+| `object_7` | 215 | event | raw | Object image ID 7 |
+| `object_70` | 218 | event | raw | Object image ID 70 |
+| `object_71` | 215 | event | raw | Object image ID 71 |
+| `object_72` | 219 | event | raw | Object image ID 72 |
+| `object_73` | 213 | event | raw | Object image ID 73 |
+| `object_74` | 215 | event | raw | Object image ID 74 |
+| `object_75` | 216 | event | raw | Object image ID 75 |
+| `object_76` | 216 | event | raw | Object image ID 76 |
+| `object_77` | 214 | event | raw | Object image ID 77 |
+| `object_78` | 214 | event | raw | Object image ID 78 |
+| `object_79` | 216 | event | raw | Object image ID 79 |
+| `object_8` | 215 | event | raw | Object image ID 8 |
+| `object_80` | 212 | event | raw | Object image ID 80 |
+| `object_81` | 215 | event | raw | Object image ID 81 |
+| `object_82` | 213 | event | raw | Object image ID 82 |
+| `object_83` | 217 | event | raw | Object image ID 83 |
+| `object_84` | 217 | event | raw | Object image ID 84 |
+| `object_85` | 216 | event | raw | Object image ID 85 |
+| `object_86` | 218 | event | raw | Object image ID 86 |
+| `object_87` | 217 | event | raw | Object image ID 87 |
+| `object_88` | 215 | event | raw | Object image ID 88 |
+| `object_89` | 214 | event | raw | Object image ID 89 |
+| `object_9` | 213 | event | raw | Object image ID 9 |
+| `object_90` | 217 | event | raw | Object image ID 90 |
+| `object_91` | 215 | event | raw | Object image ID 91 |
+| `object_92` | 215 | event | raw | Object image ID 92 |
+| `object_93` | 214 | event | raw | Object image ID 93 |
+| `object_94` | 215 | event | raw | Object image ID 94 |
+| `object_95` | 213 | event | raw | Object image ID 95 |
+| `object_96` | 216 | event | raw | Object image ID 96 |
+| `object_97` | 216 | event | raw | Object image ID 97 |
+| `object_98` | 214 | event | raw | Object image ID 98 |
+| `object_99` | 217 | event | raw | Object image ID 99 |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
+| `subject_age` | missing | N/A |
 | `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
-### Classical Task 1: 200-Way Object Image Classification from Infant EEG
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [numeric codes 1-200]
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `1` | 0 | Object image 1 |
-  | `2` | 1 | Object image 2 |
-  | ... | ... | ... |
-  | `200` | 199 | Object image 200 |
-- **Evidence**:
-  - DOI: 10.1038/s41597-025-04744-z — Multivariate pattern analysis decoding object identity from epochs -100 to 800ms relative to stimulus onset
-  - DOI: 10.31234/osf.io.dzrkq — Time-resolved MVPA decoding object identity from infant EEG during RSVP
-- **Kernel Notes**: Exclude event ID -1 (baseline/ITI marker). Object trigger codes 1-200 correspond to 200 distinct object images presented at 5Hz RSVP. (replaces Potential Task 1 from original analysis.md)
+### Classical Task 1: Superordinate Classification (Animate vs. Inanimate)
 
-## Data Quality Notes
+**Task Type**: Binary classification
+**Epoch Method**: epoch_by_event_hdf5
+**Epoch Parameters**: tmin=-0.2, tmax=0.8, alignment=onset, filter_width=None
+**Label Route**: stim
+**Meta Level**: super
 
-- ~200 unique object trigger codes - each code represents one object image.
-- Code -1 is a baseline/ITI marker and should be excluded.
-- Infant EEG - expect high noise and movement artifacts.
+| Event | y | Meaning |
+|---|---|---|
+| object_* (200 IDs) | 1 | Animate object (animals/mammals) |
+| object_* (200 IDs) | 0 | Inanimate object (tools/furniture/etc.) |
 
-## Kernel Responsibilities
+**Target Definition**: The 200 object IDs (object_1 to object_200) are mapped to superordinate labels (animate=1, inanimate=0) based on the category hierarchy described in Grootswagers et al. (2025). Baseline events (event ID -1) are used for baseline correction but not epoching.
 
-> **Super Meta Required**: No
-> **Status**: wait_kernel_update
+**Evidence**:
+- DOI: https://doi.org/10.1038/s41597-025-04744-z
+- DOI: https://doi.org/10.1038/s41597-025-04744-z (s41597-025-04744-z.pdf)
+- OSF: https://www.31234/osf.io/dzrkq
+
+**Kernel Notes**: Raw event IDs (123, 155, 147, etc.) map to object_X names. Each object appears ~217-220 times across 42 subjects (~5 trials per object per subject). Superordinate is the primary developmental label per the paper. RSVP presentation at 5Hz (100ms on/100ms off) requires onset-aligned epoching to capture N1-P1-N400 components relevant for object categorization in infants.
+
+---
+
+### Classical Task 2: Category-Level Classification (10 Mid-Level Categories)
+
+**Task Type**: Multi-class classification (10 classes)
+**Epoch Method**: epoch_by_event_hdf5
+**Epoch Parameters**: tmin=-0.2, tmax=0.8, alignment=onset, filter_width=None
+**Label Route**: stim
+**Meta Level**: raw
+
+| Event | y | Meaning |
+|---|---|---|
+| object_* | 0-9 | One of 10 mid-level categories (mammal, fruit, tool, vehicle, furniture, etc.) |
+
+**Target Definition**: The 200 object IDs are mapped to 10 mid-level categories (e.g., mammals, fruits, tools, vehicles, clothing, furniture, etc.) per the category labels provided in the dataset documentation. Each category contains approximately 20 object exemplars.
+
+**Evidence**:
+- DOI: https://doi.org/10.1038/s41597-025-04744-z
+- DOI: https://doi.org/10.1038/s41597-025-04744-z (s41597-025-04744-z.pdf)
+- OSF: https://www.31234/osf.io/dzrkq
+
+**Kernel Notes**: The paper's Technical Validation section explicitly demonstrates successful category-level decoding using Representational Similarity Analysis (RSA) and MVPA. Categories can be decoded from infant EEG responses >6 months of age. Use the full 0.8s post-stimulus window to capture category-selective responses in the N300-N400 time range.
+
+---
+
+### Normal Task 1: Object-Specific Identification (200 Classes)
+
+**Task Type**: Multi-class classification (200 classes)
+**Epoch Method**: epoch_by_event_hdf5
+**Epoch Parameters**: tmin=-0.2, tmax=0.8, alignment=onset, filter_width=None
+**Label Route**: stim
+**Meta Level**: raw
+
+| Event | y | Meaning |
+|---|---|---|
+| object_1 | 1 | Object ID 1 |
+| object_2 | 2 | Object ID 2 |
+| ... | ... | ... |
+| object_200 | 200 | Object ID 200 |
+
+**Target Definition**: Each of the 200 object IDs (object_1 through object_200) defines a separate class. Baseline events (event ID -1, 43,105 occurrences) are excluded from epoching but used for baseline correction.
+
+**Evidence**:
+- DOI: https://doi.org/10.1038/s41597-025-04744-z
+- DOI: https://doi.org/10.1038/s41597-025-04744-z (s41597-025-04744-z.pdf)
+- OSF: https://www.31234/osf.io/dzrkq
+
+**Kernel Notes**: With ~217-220 trials per object across 42 subjects (~5 trials/object/subject), this task requires averaging within subjects or using cross-session validation. High-dimensional classification (200 classes) may suffer from low sample-to-class ratio; hierarchical classification (superordinate → category → object) is recommended. Infant EEG SNR limitations may require data augmentation or regularization.

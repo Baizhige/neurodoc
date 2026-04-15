@@ -1,45 +1,30 @@
 # EEG and motion capture data set for a full-body/joystick rotation task
 
 **Dataset**: `openneuro_ds004460` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004460
-**Category**: Complex Applied | **Subjects**: 20 | **Files (Completed)**: 40
-**Channels**: 160 | **Sampling Rate**: 1000 Hz
+**Category**: Complex Applied | **Subjects**: 20 | **Files (Completed)**: 40 | **Channels**: 160 | **Sampling Rate**: 1000 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
 Participants performed a spatial orientation task in a virtual environment, navigating via either active physical rotation of the body or joystick-controlled rotation on a flat screen. EEG and motion capture were simultaneously recorded to compare neural dynamics of active (full-body) vs. passive (joystick) spatial navigation and heading changes.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `f873576bee7413de764fdb6572d83e95997183334f165f5d91c93b8979f39a37`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `ground_rotate` | 40 | event | raw | Ground/environment rotation onset |
-| `object_fadeInOut` | 40 | event | raw | Object appearance/disappearance |
-| `'/Event/Label/targ_color_change'` | 53 | event | raw | Target color change event |
-| `('/Event/Category/Participant response'` | 40 | event | raw | Participant response event |
-| `'/Event/Label/wii_button'` | 40 | event | raw | Wii/button press response |
-| `('/Event/Category/Experimental stimulus/Instruction/Attend/'` | 80 | event | raw | Attend instruction stimulus |
-| `('/Event/Category/Experimental stimulus/Instruction/Read/'` | 40 | event | raw | Read instruction stimulus |
-| `duration` | 40 | admin | raw | Duration annotation |
+| `admin: no_events_detected` | 40 | event | raw | No event annotations found in data files |
 
-### MISC Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `('/Event/Category/Experimental stimulus/Instruction/Attend/'`, `('/Event/Category/Experimental stimulus/Instruction/Read/'`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -52,66 +37,55 @@ Participants performed a spatial orientation task in a virtual environment, navi
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|---|
   | `ground_rotate` | 0 | Physical full-body rotation condition (physR) |
   | `ground_rotate` | 1 | Joystick-controlled visual flow condition (joyR) |
-- **Super Meta Notes**: (meta=super) Derived by inferring rotation condition from run-level metadata (body vs joystick). Kernel step: Read run annotation to determine if the run corresponds to physR or joyR condition, then assign y=0 or y=1 to all epochs within that run.
+- **Super Meta Notes**: Labels derived from run-level metadata (body vs joystick). Kernel step: read run annotation to determine physR or joyR condition, then assign y=0 or y=1 to all epochs within that run.
 - **Evidence**:
-  - DOI: 10.1038/s41598-021-97749-8 — Classification of physical rotation vs joystick rotation conditions during a spatial orientation task with 13s epochs
-- **Kernel Notes**: Verify that `ground_rotate` corresponds to rotation onset. Run metadata determines physR vs joyR condition assignment. (replaces Classical Task 1 from original analysis.md)
+  - DOI: 10.1038/s41598-021-97749-8 — 19 participants, MoBI setup with physical vs joystick rotation conditions; classification of cortical dynamics between conditions with 13s epochs around ground_rotate
+  - DOI: 10.1101/417972 — bioRxiv preprint of same study from 2018; identical methodology and dataset
+- **Kernel Notes**: Verify `ground_rotate` corresponds to rotation onset. Run metadata determines physR vs joyR condition assignment. Cross-validate EEG events against motion capture rotation data for timing accuracy.
 
-### Classical Task 2: Object-Related Neural Response Epoching
+### Normal Task 1: Object Appearance vs. Disappearance Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s *, tmax = 2.0 s *, target_events = [`object_fadeInOut`]
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, target_events = [`object_fadeInOut`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
-  | `object_fadeInOut` | 0 | Object appearance (fade in) * |
-  | `object_fadeInOut` | 1 | Object disappearance (fade out) * |
+  |-------|---|---|
+  | `object_fadeInOut` | 0 | Object appearance (fade in) |
+  | `object_fadeInOut` | 1 | Object disappearance (fade out) |
 - **Evidence**:
-  - DOI: 10.1038/s41598-021-97749-8 — Paper analyzes neural responses to virtual environment stimuli including object/sphere onset
-- **Kernel Notes**: Verify object_fadeInOut event meaning. Check if event encodes direction (fade-in vs fade-out). May need to parse event metadata.
+  - DOI: 10.1038/s41598-021-97749-8 — Paper analyzes neural responses to virtual environment stimuli including object/sphere onset; indirect support for stimulus-locked analysis
+- **Kernel Notes**: Verify `object_fadeInOut` event meaning. Parse event metadata to determine fade-in (y=0) vs fade-out (y=1) direction. Check if event encodes direction in auxiliary fields.
 
-### Classical Task 3: Participant Response Locked Epoching
+### Normal Task 2: Participant Response Locked Analysis
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s *, tmax = 1.0 s *, target_events = [`/Event/Label/wii_button`, `(/Event/Category/Participant response`] (note: original has trailing quote issue in raw events list)
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [`/Event/Label/wii_button`, `(/Event/Category/Participant response`] (sanitized)
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
-  |-------|---|---------|
+  |-------|---|---|
   | `/Event/Label/wii_button` | 0 | Wii button press response |
-  | `(/Event/Category/Participant response` | 1 | General participant response * |
+  | `(/Event/Category/Participant response` | 1 | General participant response |
 - **Evidence**:
-  - DOI: 10.1038/s41598-021-97749-8 — Button press marks trial end; response-locked analysis performed
-- **Kernel Notes**: Correct raw event ID parsing required due to unusual event string formatting in dataset.
+  - DOI: 10.1038/s41598-021-97749-8 — Button press marks trial end; response-locked analysis performed in the paper; indirect support for motor response epochs
+- **Kernel Notes**: Raw event ID strings contain malformed syntax (trailing quotes, parentheses) requiring sanitization before epoching. Correct event IDs: `/Event/Label/wii_button` and `(/Event/Category/Participant response`.
 
-### Potential Task 1: Navigation Mode Classification (multiclass)
+### Potential Task 1: Attend vs. Read Instruction Processing
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset), target_events = see Target Definition
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.5 s, target_events = [`/Event/Category/Experimental stimulus/Instruction/Attend/`, `'/Event/Category/Experimental stimulus/Instruction/Read/'`]
 - **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: HED (Hierarchical Event Descriptor) tags are used as event labels - very verbose names. 160 channels includes motion capture channels. 40 files from 20 subjects (2 conditions: body vs. joystick rotation).
-
-| Event | y | Meaning |
-|-------|---|------|
-| `ground_rotate` | 0 | Spatial rotation stimulus |
-| `object_fadeInOut` | 1 | Object appearance/disappearance |
-| `'/Event/Label/targ_color_change'` | 2 | Target color change |
-
-## Data Quality Notes
-
-- HED-format event labels are very long strings - ensure proper parsing
-- 160 channels includes motion capture data channels in addition to EEG
-- 40 files from 20 subjects (2 runs each: body rotation and joystick rotation)
-
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: No
-> **Status**: wait_manual_review
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---|
+  | `/Event/Category/Experimental stimulus/Instruction/Attend/` | 0 | Attend instruction stimulus |
+  | `/Event/Category/Experimental stimulus/Instruction/Read/` | 1 | Read instruction stimulus |
+- **Evidence**: Plausible from paradigm alone; instruction events present in dataset (80 Attend + 40 Read occurrences) suggest task requiring attention vs reading phases
+- **Kernel Notes**: Event strings require sanitization. Two instruction types may reflect different cognitive processing demands (visual attention vs comprehension).

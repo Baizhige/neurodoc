@@ -1,0 +1,209 @@
+{
+  "phase": "done",
+  "budget_used": 8,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 4,
+    "kernel_loop": 1,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 8,
+    "category": "Biological State"
+  },
+  "timestamp": "2026-04-12T12:32:59.602539+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds004902.v1.0.8.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds004902.v1.0.8",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds004902.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10.1038_s41597-024-03268-2.pdf",
+      "ref": "10.1038/s41597-024-03268-2",
+      "title": "A resting-state EEG dataset for sleep deprivation",
+      "classification": "relevant",
+      "cot_reasoning": "This is the official data descriptor paper that describes and releases this exact dataset (OpenNeuro ds004902). It explicitly describes the 71-participant NS vs SD paradigm with eyes-open resting-state EEG, matching the dataset perfectly. The DOI matches exactly.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "resting-state",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "5-minute continuous blocks; 4-second epochs used in validation studies",
+      "target_events": [
+        "S 33"
+      ],
+      "label_mapping": "NS (y=0): Normal Sleep session; SD (y=1): Sleep Deprivation session",
+      "meta_level": "super",
+      "super_meta_note": "Labels derived from session folders (ses-normal vs ses-sleepdeprived) per the within-subject design",
+      "evidence_desc": "Paper describes data from 71 participants across two counterbalanced sessions (NS and SD), 5-minute eyes-open EEG recordings, event markers, and mentions 4-second epoch usage in validation experiments"
+    },
+    {
+      "filename": "paper_10_1016_j_bspc_2024_107080.pdf",
+      "ref": "10.1016/j.bspc.2024.107080",
+      "title": "PsyneuroNet architecture for multi-class prediction of neurological disorders",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper focuses on multi-class psychiatric disorder prediction (depression, schizophrenia, sleep disorder, Alzheimer's) in epilepsy patients using CHB-MIT as primary dataset. OpenNeuro is mentioned as one of three test datasets for cross-dataset generalization, but no specific dataset ID (ds004902) is identified and sleep deprivation is not the focus. The primary task is disorder classification in epilepsy patients, not NS vs SD classification from this specific dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "General mention of 'OpenNeuro dataset' as validation set without dataset-specific identification; primary focus is CHB-MIT epilepsy dataset"
+    },
+    {
+      "filename": "paper_10_1038_s41597_024_03268_2.pdf",
+      "ref": "10.1038/s41597.024.03268.2",
+      "title": "A resting-state EEG dataset for sleep deprivation",
+      "classification": "relevant",
+      "cot_reasoning": "Duplicate of the first file (Scientific Data 2024). This is another version of the same data descriptor paper that formally introduces and describes this dataset. The DOI variant (using dots instead of slashes) points to the same article describing OpenNeuro ds004902.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "resting-state",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "5-minute continuous blocks; 4-second epochs referenced",
+      "target_events": [
+        "S 33"
+      ],
+      "label_mapping": "NS (y=0): Normal Sleep; SD (y=1): Sleep Deprivation",
+      "meta_level": "super",
+      "super_meta_note": "Labels from session metadata (ses-normal/ses-sleepdeprived)",
+      "evidence_desc": "Same content as file 1 - describes 71 participants, within-subject NS vs SD design, counterbalanced sessions"
+    },
+    {
+      "filename": "paper_10_1088_1741_2552_ae4455.pdf",
+      "ref": "10.1088/1741-2552/ae4455",
+      "title": "EEG foundation models: a critical review of current progress and future directions",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a topical review surveying ten early EEG foundation models and their methodologies. It does not use any specific EEG dataset for experiments, nor does it mention ds004902 or sleep deprivation classification. The paper is about foundation model design and evaluation strategies, not applied classification on this dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Review paper about EEG foundation model architectures and self-supervised learning; no dataset-specific experiments conducted"
+    },
+    {
+      "filename": "paper_10_1109_tnsre_2025_3547616.pdf",
+      "ref": "10.1109/tnsre.2025.3547616",
+      "title": "The More, the Better? Evaluating the Role of EEG Preprocessing for Deep Learning Applications",
+      "classification": "partial",
+      "cot_reasoning": "This paper evaluates preprocessing effects on deep learning applications across six classification tasks including 'sleep deprivation.' However, it does not explicitly identify or reference OpenNeuro ds004902 by ID. The paper tests various preprocessing pipelines but does not use this specific dataset as the primary experimental subject. The task type (binary NS vs SD classification) matches but the dataset connection is not confirmed.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "resting-state",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "Not specified; various preprocessing pipelines tested",
+      "target_events": [],
+      "label_mapping": "sleep deprivation task mentioned but dataset ID not confirmed",
+      "meta_level": "unclear",
+      "super_meta_note": "Paper mentions 'sleep deprivation' as one of six tasks but dataset source for this task not explicitly identified as ds004902",
+      "evidence_desc": "Sleep deprivation listed as one of six classification tasks in the study; however, specific dataset identification for this task is not provided"
+    },
+    {
+      "filename": "paper_10_3389_fnetp_2024_1478280.pdf",
+      "ref": "10.3389/fnetp.2024.1478280",
+      "title": "Physiological signal analysis and open science using the Julia language and associated software",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a mini-review about Julia programming language capabilities for physiological signal processing. It discusses software tools (NeuroAnalyzer.jl, EDF.jl, BIDSTools.jl) but does not apply any specific EEG dataset. OpenNeuro is mentioned only as an example of where data formats like BIDS are used, with no reference to ds004902 or sleep deprivation. The paper is purely about software infrastructure, not applied EEG analysis.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Generic reference to BIDS/OpenNeuro as example; no dataset-specific application or analysis"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset supports a concrete binary classification task (normal sleep vs sleep deprivation) with clear within-subject design (71 subjects, counterbalanced NS/SD sessions). A relevant reference (10.1038/s41597-024-03268-2) explicitly validates 4-second epoch usage on this dataset, and session labels can be derived from folder structure/participants.tsv as documented in the analysis.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 218,
+    "total_n": 218,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "boundary": 14,
+      "S 33": 60,
+      "S 44": 7,
+      "S 45": 7,
+      "S 55": 7,
+      "S 66": 7,
+      "S119": 7
+    },
+    "subject_info": {
+      "record_count": 218,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Sleep Deprivation Classification (Normal vs Sleep Deprived)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 4.0 s, overlap = 0.0\n- **Label Route**: `event`\n- **Meta Level**: `super`\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `normal` | 0 | Normal sleep session (NS) |\n  | `sleep_deprived` | 1 | Sleep deprivation session (SD) |\n- **Super Meta Notes**: Labels derived from session metadata (ses-normal vs ses-sleepdeprived folders and participants.tsv). Within-subject design with counterbalanced sessions. Each 5-minute continuous recording is segmented into 75 non-overlapping 4-second epochs; all epochs from the same file share the same condition label. Eyes condition (eyesopen/eyesclosed) stored as secondary attribute.\n- **Evidence**:\n  - DOI: 10.1038/s41597-024-03268-2 — Resting-state EEG dataset for sleep deprivation; 71 participants, counterbalanced NS/SD sessions, 5-minute blocks, 4-second epochs used in validation\n  - DOI: 10.1109/tnsre.2025.3547616 — Binary classification between normal and sleep deprived states using 4-second non-overlapping windows\n- **Kernel Notes**: Segment each 5-minute recording file into 75 non-overlapping 4-second epochs (300s / 4s = 75 epochs per file). Assign y=0 for NS sessions and y=1 for SD sessions based on parent session folder. S 33 appears in subset of files (60/218) as a resting-state session marker but does NOT encode condition—condition is file-level metadata. Exclude S 44/45/55/66/119 admin markers and boundary events from segmentation. Store eyes condition (eyesopen/eyesclosed) as separate attribute for optional secondary analysis. Do NOT use epoch_by_event_hdf5; no meaningful task-relevant discrete events exist in majority of files.\n\n### Potential Task 1: Eyes-Open vs Eyes-Closed Condition Analysis\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5\n- **Label Route**: `event`\n- **Meta Level**: `super`\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|----|-----------|\n  | `eyes_open` | 0 | Eyes-open resting state |\n  | `eyes_closed` | 1 | Eyes-closed resting state |\n- **Super Meta Notes**: Condition labels derived from filename structure (eyesopen/eyesclosed folders) and session metadata. Within-session comparison of alpha rhythm differences between conditions.\n- **Evidence**:\n  - DOI: 10.1038/s41597-024-03268-2 — Describes eyes-open and eyes-closed conditions across sessions; alpha modulation expected\n- **Kernel Notes**: For secondary analysis within subjects comparing neural activity across eyes conditions. Use 2s windows with 50% overlap to capture state-specific spectral features (particularly alpha band differences). Condition derived from folder/filename structure, not raw event markers. Exclude admin system markers (S 44/45/55/66/119) from segmentation. Not a primary classification target—used for within-session state analysis.",
+  "kernel_ok": true,
+  "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds004902/kernel_final.py",
+  "kernel_code_len": 16602,
+  "scan_result": {
+    "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds004902.py",
+    "kernel_sha256": "49602d8f0eeb923fef42e76e71d7e0044b0b1af6917d41ef513240bbc140c609",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 218,
+    "total_n": 218,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "super: {\"sleep_condition\": \"unknown\", \"eyes_condition\": \"eyes_closed\"}": 76,
+      "super: {\"sleep_condition\": \"unknown\", \"eyes_condition\": \"eyes_open\"}": 142,
+      "boundary": 14,
+      "S 33": 60,
+      "S 44": 7,
+      "S 45": 7,
+      "S 55": 7,
+      "S 66": 7,
+      "S119": 7
+    },
+    "subject_info": {
+      "record_count": 218,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds004902.py",
+  "status": "done"
+}

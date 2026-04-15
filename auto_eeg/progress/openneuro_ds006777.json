@@ -1,0 +1,119 @@
+{
+  "phase": "done",
+  "budget_used": 12,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 4,
+    "kernel_loop": 5,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 3,
+    "category": "Sensory/Response"
+  },
+  "timestamp": "2026-04-13T13:38:22.113064+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds006777.v1.0.0.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds006777.v1.0.0",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds006777.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2025_121397.pdf",
+      "ref": "10.1016/j.neuroimage.2025.121397",
+      "title": "Impaired neural encoding of naturalistic audiovisual speech in autism",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper uses its own EEG dataset (N=23 ASD, N=19 TD) from a continuous naturalistic audiovisual speech paradigm with linear encoding/decoding models, not the SFARI AVSRT simple reaction-time dataset (openneuro_ds006777). While it shares thematic overlap (autism, audiovisual EEG, Foxe/Molholm lab), the paradigm and dataset are entirely different—discrete button-press RT stimuli vs. continuous speech tracking. No mention of the AVSRT dataset or its event structure is found.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset is a well-documented OpenNeuro public dataset with a clearly defined AVSRT paradigm, identifiable event structure (stimulus modalities and responses), and concrete task definitions (stimulus modality classification and reaction-time regression). Although references are classified as uncertain/irrelevant, the detailed analysis.md provides sufficient paradigm and task specification.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 132,
+    "total_n": 132,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_1": 46308,
+      "event_3": 16129,
+      "event_4": 15995,
+      "event_5": 16250,
+      "event_65536": 355,
+      "event_65537": 45,
+      "event_65737": 483,
+      "event_50": 3,
+      "event_201": 4,
+      "event_65539": 1
+    },
+    "subject_info": {
+      "record_count": 132,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Stimulus Modality Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [event_3, event_4, event_5]\n- **Label Route**: `Annotation`\n- **Meta Level**: raw\n- **Target Definition**:\n\n| Event | y | Meaning |\n|-------|---|---------|\n| event_3 | 1 | Simultaneous audiovisual stimulus |\n| event_4 | 2 | Auditory-only stimulus |\n| event_5 | 3 | Visual-only stimulus |\n\n- **Evidence**: No direct DOI reference. Task classification based on balanced paradigm design (three stimulus modalities ~16000 trials each) enabling robust multiclass decoding. AVSRT paradigm inherently designed to distinguish modality-specific processing.\n- **Kernel Notes**: Exclude event_1 (Response_button) from stimulus classification epochs. Label routing via Annotation channel with modality labels (y: 1=Audiovisual, 2=Auditory, 3=Visual). Apply bandpass 0.5-40Hz and artifact rejection before epoching. Pre-stimulus baseline (tmin=-0.2s) captures pre-motor preparation; post-stimulus window captures stimulus processing through typical RT (~200-400ms).\n\n### Potential Task 1: Reaction Time Modeling\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, target_events = [event_3, event_4, event_5]\n- **Label Route**: `misc`\n- **Meta Level**: super\n- **Target Definition**:\n\n| Event | y | Meaning |\n|-------|----|---------|\n| event_3 | RT (ms) | Reaction time for audiovisual trials (stimulus-to-response pairing) |\n| event_4 | RT (ms) | Reaction time for auditory trials (stimulus-to-response pairing) |\n| event_5 | RT (ms) | Reaction time for visual trials (stimulus-to-response pairing) |\n\n- **Evidence**: No direct DOI reference. AVSRT paradigm inherently measures reaction time; RT target derived by pairing each stimulus event with subsequent event_1 (Response_button). Extended epoch window (tmax=2.0s) accommodates variable RTs including slower responses.\n- **Kernel Notes**: Reaction-time target derivation requires stimulus-response pairing logic (match each stimulus event with the next button press). Store derivation metadata (unit=ms, version=1.0, source=event_pairing). Extended pre-stimulus window (tmin=-0.5s) allows analysis of anticipatory activity. ASD cohort may have increased artifact rates—consider ICA for ocular/muscular components.\n\n### Potential Task 2: Response-Locked Motor Analysis\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.5 s, tmax = 0.5 s, target_events = [event_1]\n- **Label Route**: `Annotation`\n- **Meta Level**: raw\n- **Target Definition**:\n\n| Event | y | Meaning |\n|-------|---|---------|\n| event_1 | 0 | Button-press response (response-locked epoch center) |\n\n- **Evidence**: No direct DOI reference. Response-locked epoching enables analysis of motor execution and planning. Centers epochs on Response_button events to examine pre-response preparation (tmin=-0.5s) and post-response feedback processing (tmax=0.5s).\n- **Kernel Notes**: This task epochs on response events only; stimulus modality labels should be routed separately via Annotation channel using event_3/4/5 pairing logic. Excludes stimulus events—y-labels should use annotation routing for stimulus modality context. Motor preparation analysis benefits from baseline normalization.",
+  "kernel_ok": false,
+  "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds006777/kernel_final.py",
+  "kernel_code_len": 14094,
+  "scan_result": {
+    "kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds006777.py",
+    "kernel_sha256": "f237482396a85eec6555c494a62d58c7b723ae9791bdfdc5e6816c78f50e4ec9",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 132,
+    "total_n": 132,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_1": 46308,
+      "event_3": 16129,
+      "event_4": 15995,
+      "event_5": 16250,
+      "event_65536": 355,
+      "event_65537": 45,
+      "event_65737": 483,
+      "event_50": 3,
+      "event_201": 4,
+      "event_65539": 1
+    },
+    "subject_info": {
+      "record_count": 132,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "<LOCAL_HOME>/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds006777.py",
+  "status": "partial"
+}

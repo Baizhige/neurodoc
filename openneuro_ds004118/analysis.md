@@ -3,71 +3,81 @@
 **Dataset**: `openneuro_ds004118` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004118
 **Category**: Complex Applied | **Subjects**: 247 | **Files (Completed)**: 247
 **Channels**: 266 | **Sampling Rate**: 1024 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
 Subjects performed a 15-minute simulated driving calibration task on a straight road, maintaining lane position while correcting for periodic lateral perturbations. This calibration recording is designed to collect a baseline driving EEG profile for each subject to normalize fatigue prediction algorithms used in the broader BCIT driving fatigue study series. It is the largest file count in the BCIT series.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `6cda310e62c32e5f7cc7c222543faee149659d4d1ce9f442ba634840f79e1914`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `3200` | 247 files | event | raw | Speed/driving state marker |
-| `3111` | 247 files | event | raw | Perturbation onset |
-| `3112` | 247 files | event | raw | Perturbation offset/response |
-| `3310` | 247 files | event | raw | Performance metric event |
-| `1211` | 247 files | event | raw | Lane correction event |
-| `1212` | 247 files | event | raw | Lane correction event |
-| `4311` | 246 files | event | raw | Lateral perturbation type 1 |
-| `4312` | 246 files | event | raw | Lateral perturbation type 2 |
-| `4230` | 246 files | event | raw | Perturbation/direction event |
-| `4210` | 239 files | event | raw | Perturbation onset event |
-| `4220` | 206 files | event | raw | Perturbation event |
-| `1121` | 246 files | event | raw | Driver response event |
-| `1122` | 246 files | event | raw | Driver response event |
-| `1111` | 246 files | event | raw | Driver response event |
-| `1112` | 246 files | event | raw | Driver response event |
-| `2621` | 97 files | event | raw | Auditory cue onset |
-| `2622` | 97 files | event | raw | Auditory cue offset |
-| `4200`-`4612` | 2 files | event | raw | Rare condition events |
+
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
-### Potential Task 1: Lateral Perturbation Direction (binary)
+### Classical Task 1: Lateral Perturbation Direction (binary)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset), target_events = see Target Definition
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset), target_events = ["4311", "4312"]
 - **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Largest file count in the BCIT series (247 subjects). 266-channel BioSemi cap - very high memory requirements. Calibration session is shorter (15 min) than fatigue driving sessions.
+- **Meta Level**: `raw`
+- **Target Definition**:
 
 | Event | y | Meaning |
-|-------|---|---------|
+|-------|---|---|
 | `4311` | 0 | Lateral perturbation - direction/type 1 |
 | `4312` | 1 | Lateral perturbation - direction/type 2 |
 
-## Data Quality Notes
+- **Evidence**:
+  - 10.1109/TNSRE.2021.3079505 [partial]: Cross-subject driver's drowsiness detection; validates EEG-based driving state classification methodology across subjects
+- **Kernel Notes**: Largest file count in BCIT series (247 subjects). 266-channel BioSemi cap requires memory-efficient batch processing. The 15-minute calibration session provides sufficient trials for cross-subject decoding. Events 4311/4312 appear in 246/247 files - verify per-subject availability. Full event code decoding requires BCIT proprietary codebook for complete interpretation.
 
-- 266 channels - very high-density EEG; significant memory requirements for batch processing
-- 247 files (subjects) - large cohort; suitable for cross-subject decoding
-- Full event code decoding requires BCIT codebook
+### Normal Task 2: Driver Response Performance
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.5 s (relative to driver response event onset), target_events = ["1111", "1112", "1121", "1122"]
+- **Label Route**: `event`
+- **Meta Level**: `raw`
+- **Target Definition**:
 
+| Event | y | Meaning |
+|-------|---|---|
+| `1111` | 0 | Driver response event - type 1 |
+| `1112` | 1 | Driver response event - type 2 |
+| `1121` | 0 | Driver response event - type 3 |
+| `1122` | 1 | Driver response event - type 4 |
 
-## Kernel Responsibilities
+- **Evidence**:
+  - 10.1109/TNSRE.2021.3079505 [partial]: Supports paradigm validity of EEG-based driving state assessment
+- **Kernel Notes**: Longer epoch window (-0.5 to 1.5 s) captures reaction time and post-correction recovery phases. Driver response events (1111, 1112, 1121, 1122) paired with lane corrections (1211, 1212) enable response latency and amplitude analysis. All four response events present in 246/247 files.
 
-> **Super Meta Required**: No
-> **Status**: wait_manual_review
+### Potential Task 3: Perturbation Response Dynamics
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = -0.3 s, tmax = 3.0 s (relative to perturbation onset event 3111), target_events = ["3111", "3112"]
+- **Label Route**: `event`
+- **Meta Level**: `raw`
+- **Target Definition**:
+
+| Event | y | Meaning |
+|-------|---|---|
+| `3111` | 0 | Perturbation onset |
+| `3112` | 1 | Perturbation offset/response |
+
+- **Evidence**: None (plausible from paradigm: event pair 3111/3112 captures full perturbation-response cycle for sustained corrective activity analysis)
+- **Kernel Notes**: Long epoch window (3.3 s total) needed to analyze sustained cortical involvement during lane maintenance and recovery. Events present in all 247 files. High-density 266-channel data requires careful memory management for extended epoch analysis.

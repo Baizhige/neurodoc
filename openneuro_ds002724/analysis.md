@@ -2,6 +2,7 @@
 
 **Dataset**: `openneuro_ds002724` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002724
 **Category**: High-level Mental | **Subjects**: 17 | **Files (Completed)**: 96 | **Channels**: 37 | **Sampling Rate**: 1000 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
@@ -9,72 +10,77 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 
 ## File Scan Result
 
+> **Kernel SHA256**: `6c59f4ea085164cb445b3775d8178b74879582b124f5d7e5939e0878184bc350`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `6` | 96 (files) | long | raw | Music condition 6 onset |
-| `4` | 96 (files) | long | raw | Music condition 4 onset |
-| `5` | 96 (files) | long | raw | Music condition 5 onset |
-| `2` | 96 (files) | long | raw | Music condition 2 onset |
-| `1` | 95 (files) | long | raw | Music condition 1 onset |
-| `8` | 95 (files) | long | raw | Music condition 8 onset |
-| `7` | 95 (files) | long | raw | Music condition 7 onset |
-| `9` | 94 (files) | long | raw | Music condition 9 onset |
-| `3` | 94 (files) | long | raw | Music condition 3 onset |
 
-> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-> - `long`: sustained-state marker (>=2 s), for `epoch_by_long_event_hdf5`
-> - `rest`: resting-state segment marker, for `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **exclude** from epoch target_events
+
 
 ### Info
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
+| `device` | missing | N/A |
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Run
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds002724 DOI: https://doi.org/10.1145/3059005
-
-
-### Normal Task 1: Affective Music Condition Classification (multiclass)
+### Classical Task 1: Affective Music Condition Classification (Short-epoch)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to music condition onset), target_events = see Target Definition
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to music condition onset), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 - **Label Route**: `Annotation`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: 9 affective music conditions; decode valence/arousal mapping from Daly et al. 2018. Well-balanced: all conditions present in ~95-96 files. 40-second sustained stimuli; epoch at onset. 37-channel array includes physiological channels.
+- **Meta Level**: raw
+- **Target Definition**:
 
- | Event | y | Meaning |
- |-------|---|---------|
- | `1` | 0 | Music condition 1 |
- | `2` | 1 | Music condition 2 |
- | `3` | 2 | Music condition 3 |
- | `4` | 3 | Music condition 4 |
- | `5` | 4 | Music condition 5 |
- | `6` | 5 | Music condition 6 |
- | `7` | 6 | Music condition 7 |
- | `8` | 7 | Music condition 8 |
- | `9` | 8 | Music condition 9 |
+| Event | y | Meaning |
+|---|---|---|
+| `1` | 0 | Music condition 1 (affective state A1) |
+| `2` | 1 | Music condition 2 (affective state A2) |
+| `3` | 2 | Music condition 3 (affective state A3) |
+| `4` | 3 | Music condition 4 (affective state A4) |
+| `5` | 4 | Music condition 5 (affective state A5) |
+| `6` | 5 | Music condition 6 (affective state A6) |
+| `7` | 6 | Music condition 7 (affective state A7) |
+| `8` | 7 | Music condition 8 (affective state A8) |
+| `9` | 8 | Music condition 9 (affective state A9) |
 
-## Data Quality Notes
+- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
+- **Kernel Notes**: Short epochs (-0.2 to 1.0s) capture initial neural response to affective state induction. Verify event channel naming in raw data (may differ from standard). 9-class balanced design across ~95-96 files per condition. Decode valence/arousal mapping from Daly et al. 2018.
 
-- Well-balanced event counts across all 9 conditions (94-96 files each).
-- 37-channel array includes EEG plus physiological channels (ECG, GSR, etc.).
-- Decode code-to-affective-state mapping from Daly et al. 2018 (Scientific Data).
-- Verify channel count consistency across subjects before pooling.
+### Classical Task 2: Affective Music Condition Classification (Sustained-segment)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 40.0 s (full stimulus duration), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+- **Label Route**: `Annotation`
+- **Meta Level**: raw
+- **Target Definition**:
 
-## Kernel Responsibilities
+| Event | y | Meaning |
+|---|---|---|
+| `1` | 0 | Music condition 1 (sustained affective state) |
+| `2` | 1 | Music condition 2 (sustained affective state) |
+| `3` | 2 | Music condition 3 (sustained affective state) |
+| `4` | 3 | Music condition 4 (sustained affective state) |
+| `5` | 4 | Music condition 5 (sustained affective state) |
+| `6` | 5 | Music condition 6 (sustained affective state) |
+| `7` | 6 | Music condition 7 (sustained affective state) |
+| `8` | 7 | Music condition 8 (sustained affective state) |
+| `9` | 8 | Music condition 9 (sustained affective state) |
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
+- **Kernel Notes**: 40-second continuous music clips induce sustained affective states. Long event epoching captures entire stimulus period for decoding valence/arousal patterns. Cue duration (40s) is critical parameter. Physiological channels (ECG, GSR) present alongside EEG.
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds002724
+### Potential Task 1: Publisher-defined BIDS Task (Run)
+- **Task Type**: classification/segmentation
+- **Epoch Method**: `epoch_by_segmentation_hdf5` or `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: segment_length = Needs verification, overlap = Needs verification, target_events = [Needs verification]
+- **Label Route**: `Annotation`
+- **Meta Level**: super
+- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
+- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds002724
+- **Kernel Notes**: Verify raw event extraction pipeline—triggers may use non-standard channel naming. Event detection reported 'no events detected' despite metadata confirming well-balanced distribution. Verify event channel name in raw data.

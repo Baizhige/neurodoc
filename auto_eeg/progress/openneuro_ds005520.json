@@ -1,0 +1,120 @@
+{
+  "phase": "task_synthesis",
+  "budget_used": 3,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 4,
+    "category": "Complex Applied"
+  },
+  "timestamp": "2026-04-13T07:16:33.017300+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds005520.v1.0.1.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds005520.v1.0.1",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds005520.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1038_s41597_025_05435_5.pdf",
+      "ref": "10.1038/s41597-025-05435-5",
+      "title": "EEG dataset from playing Multiplayer Online Battle Arena games in natural settings",
+      "classification": "relevant",
+      "cot_reasoning": "This paper is the primary data descriptor for the openneuro_ds005520 dataset, explicitly describing EEG recordings from 23 participants playing Honor of Kings. The paper details the experimental protocol for marking kill (13) and death (14) event timestamps at millisecond-level precision within EEG data, which directly supports the kill vs death classification task defined in the dataset analysis.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "MOBA game event",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "tmin=-1.0s, tmax=+2.0s with baseline correction [-0.2s, 0s]; minimum 1000ms interval between consecutive events",
+      "target_events": [
+        "13",
+        "14"
+      ],
+      "label_mapping": "Event 13=kill (label 0), Event 14=death (label 1)",
+      "meta_level": "raw",
+      "super_meta_note": "Dataset includes resting-state EEG, psychological scales (IGD-20, BIS-11, DERS), and gameplay video recordings",
+      "evidence_desc": "Paper explicitly describes dataset collection methodology, event marker protocol for kills/deaths, and the experimental setup with synchronized EEG-video recording during 6 MOBA matches per participant"
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "ref": "",
+      "title": "",
+      "classification": "junk",
+      "cot_reasoning": "This PDF file contains severely corrupted/garbled text (backend rendering failure showing only special characters and byte sequences). The file is not readable as a valid research paper and appears to be a failed backend PDF generation artifact.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "File is corrupted - backend PDF rendering failure",
+      "evidence_desc": "PDF contains only garbled byte sequences and encoding artifacts; no readable content"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has a well-defined event structure with clear event codes (13=kills, 14=deaths, 66=game start, 666=victory, 444=defeat) and a relevant reference paper (10.1038/s41597-025-05435-5) that confirms the experimental setup and event marker protocol for binary and multi-class classification tasks.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 92,
+    "total_n": 92,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "13": 834,
+      "14": 520,
+      "444": 45,
+      "66": 137,
+      "666": 89,
+      "boundary": 522,
+      "-255": 9,
+      "100008": 9,
+      "4": 9,
+      "164": 3,
+      "244": 1,
+      "trigger/13": 836,
+      "trigger/14": 523,
+      "trigger/444": 47,
+      "trigger/66": 137,
+      "trigger/666": 91,
+      "trigger/boundary": 88,
+      "trigger/51": 1,
+      "trigger/-255": 10,
+      "trigger/100008": 9,
+      "trigger/4": 9,
+      "trigger/164": 3,
+      "trigger/800000": 1,
+      "trigger/800001": 1,
+      "trigger/700010": 1,
+      "trigger/244": 1,
+      "trigger/1314": 1
+    },
+    "subject_info": {
+      "record_count": 92,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "status": "error",
+  "last_error": "529 Server Error: Unknown Status Code for url: https://api.minimax.io/v1/chat/completions"
+}

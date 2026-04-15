@@ -68,4 +68,8 @@ A simulated driving task assessing driver fatigue and performance through a spee
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: failed
+
+---
+
+> **auto_eeg FAILED**: No reference is classified as 'relevant' or 'partial'. All 34 references are either irrelevant (different datasets/years/groups), junk (wrong domain), or uncertain (only administrative metadata). The dataset's clear event structure and paradigm description in analysis.md cannot compensate for the absence of supporting literature references as required by the feasibility criteria.

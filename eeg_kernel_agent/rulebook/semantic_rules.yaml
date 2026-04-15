@@ -1,0 +1,79 @@
+# eeg_kernel_agent — Semantic Rulebook
+# Used by detect.py for batch checking of analysis.md and kernel files.
+# Each rule has: id, desc, target (analysis_md | kernel | both), check (python_regex | field),
+# severity (error | warning | info).
+#
+# Add new rules here as problems are discovered in the field.
+
+rules:
+  # ── analysis.md: Task integrity ─────────────────────────────────────────────
+
+  - id: "no_mi_label_on_phase_marker"
+    desc: "Target Definition must not assign MI class labels (left hand / right hand / feet / tongue) to events that appear in the Event Structure as trial phase markers (rest/ready/task/interval)."
+    target: "analysis_md"
+    check: "pattern"
+    pattern: "(left hand|right hand|feet MI|tongue MI|Motor imagery cue.*class)"
+    context_require_absent: "AUTO-REMOVED"
+    severity: "error"
+
+  - id: "tasks_section_exists"
+    desc: "analysis.md must contain a ## Tasks section."
+    target: "analysis_md"
+    check: "section_exists"
+    section: "## Tasks"
+    severity: "error"
+
+  - id: "event_structure_section_exists"
+    desc: "analysis.md must contain a ### Event Structure table."
+    target: "analysis_md"
+    check: "section_exists"
+    section: "### Event Structure"
+    severity: "error"
+
+  - id: "no_placeholder_doi"
+    desc: "Evidence DOIs must not be placeholder strings like 'TODO' or 'N/A'."
+    target: "analysis_md"
+    check: "pattern"
+    pattern: "DOI.*`(TODO|N/A|none|unknown|placeholder)`"
+    severity: "warning"
+
+  # epoch_method_valid and label_route_valid require custom check logic — add to detect.py when needed
+
+  - id: "no_hallucinated_bcic_classes"
+    desc: "Must not assign BCIC IV 2a class codes (769/770/771/772) as event labels without explicit sidecar evidence."
+    target: "analysis_md"
+    check: "pattern"
+    pattern: "\\b(769|770|771|772)\\b.*class"
+    severity: "warning"
+
+  # ── Kernel: code integrity ───────────────────────────────────────────────────
+
+  - id: "kernel_has_kernel_id"
+    desc: "Every kernel file must define KERNEL_ID."
+    target: "kernel"
+    check: "pattern"
+    pattern: "KERNEL_ID\\s*="
+    require_match: true
+    severity: "error"
+
+  - id: "kernel_has_apply"
+    desc: "Every kernel file must implement apply()."
+    target: "kernel"
+    check: "pattern"
+    pattern: "def apply"
+    require_match: true
+    severity: "error"
+
+  - id: "kernel_no_shell_commands"
+    desc: "Kernel must not use os.system, subprocess, or shell=True."
+    target: "kernel"
+    check: "pattern"
+    pattern: "(os\\.system|subprocess\\.call|shell\\s*=\\s*True)"
+    severity: "error"
+
+  - id: "kernel_no_file_writes"
+    desc: "Kernel must not write or delete files."
+    target: "kernel"
+    check: "pattern"
+    pattern: "(open\\(.*['\"]w['\"]|os\\.remove|shutil\\.rmtree|Path.*\\.write_text)"
+    severity: "error"

@@ -2,6 +2,7 @@
 
 **Dataset**: `openneuro_ds006777` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006777
 **Category**: Sensory/Response | **Subjects**: 132 | **Files (Completed)**: 132 | **Channels**: 73 | **Sampling Rate**: 512 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
@@ -9,69 +10,92 @@ An audiovisual simple reaction-time task (AVSRT) in which participants press a b
 
 ## File Scan Result
 
+> **Kernel SHA256**: `f237482396a85eec6555c494a62d58c7b723ae9791bdfdc5e6816c78f50e4ec9`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Response_button` | 46353 | short | raw | Participant button-press response |
-| `Visual_stim` | 16250 | short | raw | Visual stimulus onset |
-| `Audiovisual_stim` | 16130 | short | raw | Simultaneous audiovisual stimulus onset |
-| `Auditory_stim` | 15995 | short | raw | Auditory stimulus onset |
+| `event_1` | 46308 | event | raw | Participant button-press response |
+| `event_201` | 4 | admin | raw | System artifact (exclude) |
+| `event_3` | 16129 | event | raw | Simultaneous audiovisual stimulus onset |
+| `event_4` | 15995 | event | raw | Auditory-only stimulus onset |
+| `event_5` | 16250 | event | raw | Visual-only stimulus onset |
+| `event_50` | 3 | admin | raw | System artifact (exclude) |
+| `event_65536` | 355 | admin | raw | System artifact (exclude) |
+| `event_65537` | 45 | admin | raw | System artifact (exclude) |
+| `event_65539` | 1 | admin | raw | System artifact (exclude) |
+| `event_65737` | 483 | admin | raw | System artifact (exclude) |
 
-> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-
-### MISC Label Summary
-
-- **Route**: `misc`
-- **Role**: Stores derived/continuous labels that are not native raw event IDs.
-- **Candidate Labels**: `reaction_time`
-- **Kernel Note**: Keep derivation source, unit, and version metadata.
 
 ### Info
-
-- **Stim Trigger Labels**: `Visual_stim`, `Audiovisual_stim`, `Auditory_stim`
-- **Response Label**: `Response_button`
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
+| `device` | missing | N/A |
 
 ## Tasks
 
-### Primary Task 1: Audiovisual reaction-time decoding and RT modeling
-- **Task Type**: classification/regression
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, target_events = [Needs Verification]
-- **Label Route**: `Annotation` and `misc`
-- **Target Definition**: Stimulus modality labels (auditory/visual/audiovisual) and reaction-time target derived from stimulus-response pairing.
-- **Evidence**: AVSRT paradigm is designed to compare modality effects and reaction time in simple response trials. Source: https://openneuro.org/datasets/ds006777 DOI: https://doi.org/10.18112/openneuro.ds006777.v1.0.0
-
-
-### Normal Task 1: Stimulus Modality Classification (epoch_by_event)
+### Normal Task 1: Stimulus Modality Classification (Auditory / Visual / Audiovisual)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = see Target Definition
-- **Label Route**: `Annotation`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Three balanced modality conditions (Auditory/Visual/Audiovisual ~16000 each) well-suited for multiclass decoding. `Response_button` is a motor response event; exclude from stimulus classification if needed.
+- **Epoch Method**: epoch_by_event_hdf5
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s
+- **Label Route**: Annotation
+- **Meta Level**: raw
+- **Target Definition**:
 
- | Event | y | Meaning |
- |-------|---|---------|
- | `Response_button` | 0 | Button-press response |
- | `Audiovisual_stim` | 1 | Simultaneous audiovisual stimulus |
- | `Auditory_stim` | 2 | Auditory-only stimulus |
- | `Visual_stim` | 3 | Visual-only stimulus |
+| Event | y | Meaning |
+|---|---|---|
+| `event_3` | 1 | Simultaneous audiovisual stimulus |
+| `event_4` | 2 | Auditory-only stimulus |
+| `event_5` | 3 | Visual-only stimulus |
 
-## Data Quality Notes
+- **Evidence** (DOI): https://doi.org/10.18112/openneuro.ds006777.v1.0.0
+- **Kernel Notes**: Three conditions are well-balanced (~16 000 trials each). Exclude system artifacts (event_201, event_50, event_65536–event_65737) from epoching. Apply 0.5–40 Hz bandpass and baseline correction (−0.2 to 0 s) before decoding. event_1 (Response_button) is a motor response marker; exclude from stimulus classification.
 
-- SFARI autism cohort; likely includes participants with ASD and neurotypical controls.
-- `Response_button` is a motor event marker, not a stimulus; consider excluding from stimulus decoding.
-- Apply bandpass filter (0.5-40 Hz) and artifact rejection prior to epoching.
+### Normal Task 2: Reaction-Time Regression
+- **Task Type**: regression
+- **Epoch Method**: epoch_by_event_hdf5
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s
+- **Label Route**: misc
+- **Meta Level**: super
+- **Target Definition**:
 
-## Kernel Responsibilities
+| Event | y | Meaning |
+|---|---|---|
+| `event_1` | RT (seconds) | Reaction time = Response_button (event_1) onset − stimulus onset; derived via stim–response pairing |
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+- **Evidence** (DOI): https://doi.org/10.18112/openneuro.ds006777.v1.0.0
+- **Kernel Notes**: RT target is stored in misc/reaction_time channel (derived, not native raw event). Stimulus modality (event_3/4/5) can be included as a covariate. Guard against missed responses (no following Response_button) and catch trials with multiple responses per stimulus. Store derivation source, unit (seconds), and version metadata per Type 2 kernel mode.
 
-> **Selected Mode**: Type 2 + Type 3
-> **Why**: Derived targets are needed beyond raw markers.
-> **Primary Label Routes**: Annotation, stim, misc
-> **Evidence Keywords**: reaction time
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006777
+### Normal Task 3: Response-Locked Motor Epoch (Lateralized Readiness Potential / Motor ERP)
+- **Task Type**: classification
+- **Epoch Method**: epoch_by_event_hdf5
+- **Epoch Parameters**: tmin = -0.6 s, tmax = 0.4 s
+- **Label Route**: Annotation
+- **Meta Level**: raw
+- **Target Definition**:
+
+| Event | y | Meaning |
+|---|---|---|
+| `event_1` | 1 | Button-press response |
+
+- **Evidence** (DOI): https://doi.org/10.18112/openneuro.ds006777.v1.0.0
+- **Kernel Notes**: Epochs locked to event_1 (Response_button) isolate motor preparation (LRP) and execution components. A 600 ms pre-response window captures motor preparation; 400 ms post-response covers post-movement rebound. Baseline correction: −0.6 to −0.4 s relative to response. Analyze separately from stimulus-locked epochs to avoid conflation of sensory and motor activity.
+
+### Potential Task 1: Group Membership Prediction (ASD vs. Neurotypical)
+- **Task Type**: classification
+- **Epoch Method**: epoch_by_segmentation_hdf5
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s
+- **Label Route**: misc
+- **Meta Level**: super
+- **Target Definition**:
+
+| Event | y | Meaning |
+|---|---|---|
+| Subject-level covariate | group_label | ASD vs. NT group membership from participant metadata |
+
+- **Evidence** (DOI): https://doi.org/10.18112/openneuro.ds006777.v1.0.0
+- **Kernel Notes**: SFARI cohort includes ASD and neurotypical participants. Group membership is a subject-level covariate, not an event label; route via misc with source (participant metadata) and version metadata. May be combined with stimulus-locked epochs for group-difference decoding.

@@ -3,6 +3,7 @@
 **Dataset**: `openneuro_ds003421` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds003421
 **Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 80
 **Channels**: 257 | **Sampling Rate**: 1000 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
@@ -10,69 +11,117 @@ Participants completed a multi-condition experiment including resting state, vis
 
 ## File Scan Result
 
+> **Kernel SHA256**: `80f72fbeeaad8d1b86fa438eb424325cb767158946812bbb41972163629f7fe7`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `1` | 60 (files) | long | raw | Sustained task or stimulus condition 1 onset |
-| `0` | 57 (files) | long | raw | Sustained task or stimulus condition 0 onset |
+| `trigger/DIN1` | 5512 | event | raw | Stimulus onset trigger from EGI system |
 
-> **Event Type Description**:
-> - `short`: short stimulus onset marker (presentation duration <2 s), for `epoch_by_event_hdf5`
-> - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
-> - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **not used for epoch**
-
-### MISC Label Summary
-
-- **Route**: `misc`
-- **Role**: Stores derived/continuous labels that are not native raw event IDs.
-- **Candidate Labels**: `response_time`
-- **Kernel Note**: Keep derivation source, unit, and version metadata.
 
 ### Info
-
-- **File Scan Result Status**: Completed
-- **Channels Verified**: 257
-- **Sampling Rate**: 1000 Hz
-- **Trigger Codes**: 0, 1 (require semantic decoding from events.tsv or project documentation)
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | complete | N/A |
+| `subject_sex` | missing | N/A |
+| `device` | missing | N/A |
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Pictures Naming
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
+### Classical Task 1: Visual Object Naming Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 3.5 s, overlap = 0.5, target_events = ["1", "0"] (conditions mapped to stimulus categories)
 - **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds003421 DOI: https://doi.org/10.18112/openneuro.ds003421.v1.0.2
+- **Meta Level**: raw
+- **Target Definition**:
 
+| Event | y | Meaning |
+|-------|---|---|
+| "1" | 0 | Visual stimulus category: animals |
+| "0" | 1 | Visual stimulus category: tools |
 
-### Normal Task 1: Task State Classification / Regression (regression + long_event)
+- **Evidence**: DOI: 10.1109/tpami.2017.2750160 (binary classification of stimulus categories animals vs. tools during visual picture naming task; 256-channel dense EEG at 1 KHz; network similarity analysis between categories)
+- **Kernel Notes**: Trigger codes 0/1 require semantic decoding from events.tsv to map to specific stimulus categories (animals vs. tools). High-density 257-channel array increases computational overhead. Long event epoching captures sustained processing periods during naming. Verify condition assignments against conneXion project documentation.
+
+### Classical Task 2: Naming Latency Regression
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5, target_events = see Target Definition
+- **Epoch Parameters**: tmin = -1.0 s, tmax = 3.0 s, overlap = 0.5, target_events = ["1", "0"]
 - **Label Route**: `misc`
-- **Target Definition**: N/A (null(regression primary; codes require decoding))
-- **Notes**: Codes 0/1 mark multi-second sustained task states (resting, naming, memory) - long_event epoching appropriate. Specific kernel decodes numeric codes and extracts speech onset as `response_time`. Not all 80 files contain both events (60 vs 57).
+- **Meta Level**: super
+- **Target Definition**:
 
-- **Regression target**:`response_time`(speech onset / naming latency from misc channel)
+| Event | y | Meaning |
+|-------|---|---|
+| "1" | response_time | Speech onset timing (seconds) from misc channel for condition 1 |
+| "0" | response_time | Speech onset timing (seconds) from misc channel for condition 0 |
 
-## Data Quality Notes
+- **Evidence**: DOI: 10.1088/1741.2552/aad7b1 (naming latency (voice onset time) as continuous regression target; analysis window from stimulus onset to naming latency; regression of network modularity against reaction time; 256-channel EEG, 20 subjects)
+- **Kernel Notes**: response_time extracted from misc channel (derivation source: response_time, unit: seconds, version: kernel-derived). Align trigger/DIN1 onset with response_time timestamps for accurate speech onset extraction. Long_event epoching appropriate for capturing sustained task states. Verify alignment between trigger onset and response_time extraction logic.
 
-- Trigger codes 0/1 require semantic decoding from events.tsv or conneXion project documentation.
-- High-density 257-channel EGI array; significant computational overhead.
-- Multi-condition design includes resting state, naming, and working memory - verify condition assignments.
-- Verify channel count consistency across subjects before pooling.
+### Normal Task 1: Task State Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5, target_events = ["1", "0"]
+- **Label Route**: `stim`
+- **Meta Level**: raw
+- **Target Definition**:
 
-## Kernel Responsibilities
+| Event | y | Meaning |
+|-------|---|---|
+| "1" | 1 | Sustained task condition 1 (stimulus or active task state) |
+| "0" | 0 | Sustained task condition 0 (baseline or alternative task state) |
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+- **Evidence**: DOI: 10.1038/s41597-021-00821-1 (dataset explicitly includes multi-condition paradigm: resting state, visual naming, auditory naming, working memory; 257-channel HD-EEG, N=20)
+- **Kernel Notes**: Trigger codes 0/1 mark multi-second sustained task states. Semantic mapping (resting vs. naming vs. memory) requires events.tsv validation. Event distribution indicates not all 80 files contain both events (60 vs. 57 files). Multi-condition design requires verification of condition assignments.
 
-> **Selected Mode**: Type 2 + Type 3
-> **Why**: Derived targets are needed beyond raw markers.
-> **Primary Label Routes**: Annotation, stim, misc
-> **Evidence Keywords**: response_time, regression target
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003421
+### Normal Task 2: Functional Connectivity Microstate Segmentation
+- **Task Type**: segmentation
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 3.5 s, overlap = 0.5, target_events = ["1", "0"]
+- **Label Route**: `Annotation`
+- **Meta Level**: super
+- **Target Definition**:
+
+| Event | y | Meaning |
+|-------|---|---|
+| "1" | microstate_label | Functional connectivity microstate label (K-means clustered PLV graphs) for condition 1 |
+| "0" | microstate_label | Functional connectivity microstate label (K-means clustered PLV graphs) for condition 0 |
+
+- **Evidence**: DOI: 10.1007/978-3-319-11128-5_232 (microstates segmented via K-means clustering of PLV connectivity graphs; picture naming task with artifact inspection for epoch rejection; 180 electrodes retained after quality control)
+- **Kernel Notes**: Labels are derived functional connectivity microstates rather than experimental condition labels. Segmentation applied to naming epoch windows. High-density array supports connectivity analysis. Preserve K-means clustering metadata (number of clusters, algorithm parameters).
+
+### Potential Task 1: Working Memory Recognition Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, segment_length = 2.0 s, overlap = null, target_events = ["1", "0"]
+- **Label Route**: `Annotation`
+- **Meta Level**: raw
+- **Target Definition**:
+
+| Event | y | Meaning |
+|-------|---|---|
+| "1" | recognition_target | Recognition-based working memory trial condition 1 |
+| "0" | recognition_target | Recognition-based working memory trial condition 0 |
+
+- **Evidence**: DOI: 10.1038/s41597-021-00821-1 (paradigm description includes recognition-based working memory task; dataset documentation confirms multi-condition design)
+- **Kernel Notes**: Segmentation approach recommended for recognition WM task requiring condition-specific epochs. Segment length of 2.0s aligns with typical trial structure. Verify trigger mapping against events.tsv for accurate condition labeling.
+
+### Potential Task 2: Auditory vs. Visual Modality Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 3.5 s, overlap = 0.5, target_events = ["1", "0"]
+- **Label Route**: `stim`
+- **Meta Level**: raw
+- **Target Definition**:
+
+| Event | y | Meaning |
+|-------|---|---|
+| "1" | modality | Stimulus modality: visual |
+| "0" | modality | Stimulus modality: auditory |
+
+- **Evidence**: DOI: 10.1038/s41597-021-00821-1 (dataset includes both visual and auditory object naming tasks; paradigm documentation confirms modality variation)
+- **Kernel Notes**: Plausible task from paradigm alone (no direct classification reference). Trigger codes 0/1 may encode modality differences. Requires events.tsv validation for semantic mapping. Long event epoching captures sustained processing for modality discrimination.

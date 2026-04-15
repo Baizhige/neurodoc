@@ -1,8 +1,8 @@
 # PES - Pandemic Emergency Scenario
 
 **Dataset**: `openneuro_ds004477` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004477
-**Category**: Complex Applied | **Subjects**: 9 | **Files (Completed)**: 9
-**Channels**: 80 | **Sampling Rate**: 2048 Hz
+**Category**: Complex Applied | **Subjects**: 9 | **Files (Completed)**: 9 | **Channels**: 80 | **Sampling Rate**: 2048 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
@@ -10,73 +10,78 @@ A strategic pandemic simulation task where participants allocate limited resourc
 
 ## File Scan Result
 
+> **Kernel SHA256**: `d9f3a211a413be47366ad5c9cf4135b72f0a93415991e566fc4a8fbb0ba7ab89`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `stimulus` | 9xx | short | raw | Decision stimulus onset |
-| `resp_hold` | 9xx | short | raw | Response hold (button press start) |
-| `resp_release` | 9xx | short | raw | Response release (button press end) |
-| `confidence` | 9xx | short | raw | Confidence rating onset |
 
-> **Event Type Description**:
-> - `short`: short stimulus onset marker (presentation duration <2 s), for `epoch_by_event_hdf5`
-> - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
-> - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **not used for epoch**
 
-### MISC Label Summary
-
-- **Route**: `misc`
-- **Role**: Stores derived/continuous labels that are not native raw event IDs.
-- **Candidate Labels**: `confidence`
-- **Kernel Note**: Keep derivation source, unit, and version metadata.
 
 ### Info
-
-Placeholder for additional file scan metadata.
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
+| `device` | missing | N/A |
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: PES
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, overlap = Needs Verification, target_events = [Needs Verification] | segment_length = Needs Verification, overlap = Needs Verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004477 DOI: https://doi.org/10.3389/fnhum.2019.00013
+### Classical Task 1: None
 
+No tasks meet the Classical Task criteria (≥1 reference with classification=relevant and real DOI/URL ref supporting the specific dataset task).
 
-### Normal Task 1: Decision Making (multiclass)
+### Normal Task 1: Decision Making (Multiclass Classification)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset), target_events = see Target Definition
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset)
 - **Label Route**: `Annotation`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Only 9 subjects; limited generalization. Small dataset suitable for within-subject analysis. Confidence ratings may be used as regression target.
-
+- **Meta Level**: raw
+- **Target Definition**:
 
 | Event | y | Meaning |
-|-------|---|------|
-| `resp_hold` | 0 | Response initiation |
-| `resp_release` | 1 | Response release |
-| `stimulus` | 2 | Decision stimulus |
-| `confidence` | 3 | Confidence rating |
+|---|---|---|
+| `stimulus` | 0 | Decision stimulus onset |
+| `resp_hold` | 1 | Response initiation (button press start) |
+| `resp_release` | 2 | Response release (button press end) |
+| `confidence` | 3 | Confidence rating onset |
 
-## Data Quality Notes
+- **Evidence**: OpenNeuro dataset ds004477 metadata; paradigm description (strategic pandemic simulation with resource allocation decisions, multi-agent interaction, confidence reporting). Source: https://openneuro.org/datasets/ds004477
+- **Kernel Notes**: High temporal resolution (2048 Hz) preserves fine-grained decision dynamics. Only 9 subjects — recommend within-subject analysis only. Behavioral data (resource allocation choices) essential for augmenting label richness. Consider confounds from multi-agent interaction timing. **CRITICAL**: File scan reports "no events detected" despite analysis.md describing clear event structure — kernel must verify raw file access and HDF5 trigger extraction before proceeding.
 
-- Only 9 subjects; very small dataset
-- 80 channels at 2048 Hz (high temporal resolution)
-- Complex task with strategic decisions; behavioral data critical for labeling
+### Potential Task 1: Confidence Rating Analysis
+- **Task Type**: classification/regression
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s (relative to confidence event onset)
+- **Label Route**: `misc`
+- **Meta Level**: raw
+- **Target Definition**:
 
-## Kernel Responsibilities
+| Event | y | Meaning |
+|---|---|---|
+| `confidence` | confidence_rating | Confidence rating onset |
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+- **Evidence**: Paradigm description explicitly includes "report their decision confidence" as core task component. Confidence values stored in misc labels.
+- **Kernel Notes**: Shorter window (0.8 s) sufficient for confidence processing neural correlates. Confidence may be used as regression target (continuous) rather than discrete classification. Kernel must preserve derivation source, unit, and version metadata for confidence values.
 
-> **Selected Mode**: Type 2 + Type 3
-> **Why**: Derived targets are needed beyond raw markers.
-> **Primary Label Routes**: Annotation, stim, misc
-> **Evidence Keywords**: confidence, regression target
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004477
+### Potential Task 2: PES BIDS Task (Publisher-Defined)
+- **Task Type**: classification/segmentation
+- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, overlap = Needs Verification | segment_length = Needs Verification
+- **Label Route**: `Annotation`
+- **Meta Level**: raw
+- **Target Definition**: Event/condition labels for BIDS task PES (dataset-specific mapping — requires verification from dataset readme or phenotype files)
+- **Evidence**: OpenNeuro metadata.tasksCompleted confirms PES as completed BIDS task. DOI cited in analysis.md (10.3389/fnhum.2019.00013) not confirmed in reference extraction as supporting this specific dataset.
+- **Kernel Notes**: Verify event markers and metadata for correct tmin/tmax parameters. Publisher-defined BIDS task for PES requires long event epoching for sustained strategy periods. If events confirmed missing (per "no events detected" file scan complication), fall back to segmentation-based epoching.
+
+### Potential Task 3: Strategy Formation (Sustained State)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, overlap = 0.0–0.5 s
+- **Label Route**: `Annotation`
+- **Meta Level**: raw
+- **Target Definition**: Labels derived from sustained decision phases (resource allocation strategy periods) — requires verification from behavioral logs or paradigm documentation.
+- **Evidence**: Paradigm description mentions "strategy formation in a realistic multi-agent scenario."
+- **Kernel Notes**: Strategy periods likely span multiple trials; long event epoching appropriate. Kernel should verify boundary markers or derive from behavioral state transitions.
