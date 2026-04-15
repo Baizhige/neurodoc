@@ -1,8 +1,8 @@
 # Meta-rdk: Raw EEG data
 
 **Dataset**: `openneuro_ds004367` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004367
-**Category**: High-level Mental | **Subjects**: 42 | **Files (Completed)**: 40
-**Channels**: 68 | **Sampling Rate**: 1200 Hz
+**Category**: High-level Mental | **Subjects**: 42 | **Files (Completed)**: 40 | **Channels**: 68 | **Sampling Rate**: 1200 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
@@ -10,78 +10,104 @@ A visual motion discrimination task involving left/right direction decisions on 
 
 ## File Scan Result
 
+> **Kernel SHA256**: `fd3a406f83993e897bdf96fc13992ab48abb39a55c04c33855d983f9b9234a21`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `3072` | 40x300 | short | raw | Motion stimulus onset (specific direction/coherence) |
-| `3456` | 40x300 | short | raw | Motion stimulus onset (specific direction/coherence) |
-| `3584` | 40x300 | short | raw | Motion stimulus onset (specific direction/coherence) |
-| `3968` | 40x300 | short | raw | Motion stimulus onset (specific direction/coherence) |
-| `4096` | 40x300 | short | raw | Motion stimulus onset (specific direction/coherence) |
-| `4480` | 40x300 | short | raw | Motion stimulus onset (specific direction/coherence) |
-| `31744`...`25984` | 40x10 each | short | raw | Response/confidence marker (numerical code) |
 
-> **Event Type Description**:
-> - `short`: short stimulus onset marker (presentation duration <2 s), for `epoch_by_event_hdf5`
-> - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
-> - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **not used for epoch**
 
-### MISC Label Summary
-
-- **Route**: `misc`
-- **Role**: Stores derived/continuous labels that are not native raw event IDs.
-- **Candidate Labels**: `confidence`, `response_time`
-- **Kernel Note**: Keep derivation source, unit, and version metadata.
 
 ### Info
-
-- **STIM Label Summary**: Route `stim`, role trigger-channel or stimulus-marker based labeling. Candidate Trigger Labels: Needs verification. Kernel Note: Keep trigger decoding table versioned and auditable.
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | missing | N/A |
+| `subject_sex` | missing | N/A |
+| `device` | missing | N/A |
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Rdk
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004367 DOI: https://doi.org/10.1101/2022.10.19.22281249
-
-
-### Normal Task 1: Motion Direction Classification (multiclass)
+### Classical Task 1: Motion Direction Classification (RDK)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset), target_events = see Target Definition
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [3072, 3456, 3584, 3968, 4096, 4480]
 - **Label Route**: `Annotation`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Numerical trigger codes require specific kernel decoding. Regression target: response_time and confidence from misc channels.
+- **Meta Level**: raw
+- **Target Definition**:
 
 | Event | y | Meaning |
-|-------|---|-------|
-| `motion_stimulus_onset` | 0 | Motion stimulus onset |
-| `left_response` | 1 | Left direction response |
-| `right_response` | 2 | Right direction response |
-| `confidence_low` | 3 | Low confidence rating |
-| `confidence_medium` | 4 | Medium confidence rating |
-| `confidence_high` | 5 | High confidence rating |
-| `feedback_onset` | 6 | Feedback onset |
+|---|---|---|
+| `3072` | 0 | Motion stimulus onset (direction/coherence Level 1) |
+| `3456` | 1 | Motion stimulus onset (direction/coherence Level 2) |
+| `3584` | 2 | Motion stimulus onset (direction/coherence Level 3) |
+| `3968` | 3 | Motion stimulus onset (direction/coherence Level 4) |
+| `4096` | 4 | Motion stimulus onset (direction/coherence Level 5) |
+| `4480` | 5 | Motion stimulus onset (direction/coherence Level 6) |
 
-## Data Quality Notes
+- **Evidence**: DOI: https://doi.org/10.1101/2022.10.19.22281249; Paradigm: visual motion discrimination task with RDK stimuli requiring left/right direction decisions
+- **Kernel Notes**: Numerical trigger codes require kernel-level decoding to map raw IDs to direction/coherence labels. Keep versioned trigger decoding table for reproducibility. High-density 68-channel EEG (including EOG/ECG) may require ICA for artifact removal before classification.
 
-- All event IDs are numerical codes requiring kernel-level decoding
-- 68 channels includes EOG/ECG channels
-- 42 subjects but only 40 files completed
+### Classical Task 2: Metacognitive Confidence Regression
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.5 s, target_events = [confi]
+- **Label Route**: `Annotation`
+- **Meta Level**: super
+- **Target Definition**:
 
-## Kernel Responsibilities
+| Event | y | Meaning |
+|---|---|---|
+| `confi` | continuous | Confidence rating (0.0–1.0 visual analog scale) |
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+- **Evidence**: DOI: https://doi.org/10.1101/2022.10.19.22281249; Paradigm: metacognitive confidence assessment using visual analog scale following RDK decisions
+- **Kernel Notes**: Confidence values are derived labels from the misc channel. Preserve derivation schema (source=misc, unit=proportion, version=1.0). Requires Type 2 kernel processing to extract and merge high-level metacognitive labels not directly in raw events.
 
-> **Selected Mode**: Type 2 + Type 3
-> **Why**: Derived targets are needed beyond raw markers.
-> **Primary Label Routes**: Annotation, stim, misc
-> **Evidence Keywords**: response_time, confidence, regression target
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004367
+### Normal Task 1: Response-Locked Motor Potential Analysis
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.3 s, tmax = 0.8 s, target_events = [left_, right]
+- **Label Route**: `Annotation`
+- **Meta Level**: super
+- **Target Definition**:
+
+| Event | y | Meaning |
+|---|---|---|
+| `left_` | 0 | Left direction response (N=11,884 trials) |
+| `right` | 1 | Right direction response (N=81 trials) |
+
+- **Evidence**: Paradigm: response markers extracted from trigger stream for motor planning assessment; Epoch alignment recommendation confirms response-locked analysis
+- **Kernel Notes**: Asymmetric trial distribution (left=11,884 vs right=81) suggests unequal condition sampling per subject. Use caution with class imbalance handling. Response markers derived from raw numerical codes require decoding.
+
+### Potential Task 1: Response Time Regression
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, target_events = [left_, right, confi]
+- **Label Route**: `misc`
+- **Meta Level**: super
+- **Target Definition**:
+
+| Event | y | Meaning |
+|---|---|---|
+| `left_` | continuous | Response time aligned to left response |
+| `right` | continuous | Response time aligned to right response |
+| `confi` | continuous | Confidence rating as secondary predictor |
+
+- **Evidence**: Paradigm: response_time listed as candidate MISC label; Dataset metadata supports response time extraction for RT analysis
+- **Kernel Notes**: Response time values stored in misc channel require derivation source preservation. Keep mapping schema versioned (source=stim/misc, unit=ms).
+
+### Potential Task 2: Feedback Processing Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [feedb]
+- **Label Route**: `Annotation`
+- **Meta Level**: super
+- **Target Definition**:
+
+| Event | y | Meaning |
+|---|---|---|
+| `feedb` | binary | Feedback onset marker (correct/incorrect) |
+
+- **Evidence**: Paradigm: feedback presentation follows confidence assessment; Event counts (feedb=11,881) align with trial structure
+- **Kernel Notes**: Feedback labels require decoding of numerical trigger codes to determine correct/incorrect status. May need supplementary annotation for feedback valence.

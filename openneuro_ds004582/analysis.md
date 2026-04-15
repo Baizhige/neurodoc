@@ -65,3 +65,7 @@ No additional scan information available.
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004582
+
+---
+
+> **auto_eeg FAILED**: The dataset lacks trial-level event markers needed to epoch data by emotional condition—only hardware markers (New Segment/) are present. All reference extractions are irrelevant or uncertain, providing no alternative labeling approach. Without identifiable event/label structure, no concrete supervised ML task can be defined.

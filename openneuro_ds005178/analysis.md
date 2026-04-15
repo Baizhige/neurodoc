@@ -2,6 +2,7 @@
 
 **Dataset**: `openneuro_ds005178` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005178
 **Category**: Biological State | **Subjects**: 10 | **Files (Completed)**: 159 | **Channels**: 5 | **Sampling Rate**: 250 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
@@ -9,24 +10,20 @@ Naturalistic nightly sleep monitoring using ear-EEG (in-ear electrodes) and poly
 
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `3f0177fd208e86ce5f2a0d5f70494b1417bceed402f3b9c884f60b047acceeef`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
+| `event_2` | 72 | event | raw | Experimental or sleep-related marker events (origin requires BIDS sidecar investigation) |
 | `trigger` | 175 | event | raw | Synchronization trigger between ear-EEG and PSG |
 
+
 ### MISC Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: `trigger`
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
-
+_Not applicable — no MISC channels detected in this dataset._
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
@@ -49,19 +46,7 @@ Naturalistic nightly sleep monitoring using ear-EEG (in-ear electrodes) and poly
   | `sleep_stage_N2` | 2 | Light sleep stage 2 |
   | `sleep_stage_N3` | 3 | Deep sleep (slow wave) |
   | `sleep_stage_REM` | 4 | Rapid eye movement sleep |
-- **Super Meta Notes**: Derived from manual PSG sleep scoring by trained sleep technicians following AASM standard. Labels stored as .tsv event files in BIDS format (e.g., sleep_stage_W, sleep_stage_N1, etc.). Epochs marked as 'unscored' by the manual scorer were disregarded in the analysis (3% unscored in EESM23). Kernel step: Read sleep stage annotations from BIDS *events.tsv files and map to 30-second epoch windows aligned with PSG scoring.
 - **Evidence**:
   - DOI: 10.3389/fnins.2023.987578 — Presents EESM23 dataset with 10 subjects performing at-home sleep monitoring using ear-EEG, training a random forest classifier on 30-second epochs to classify sleep stages (N1, N2, N3, REM, wake) validated against manually scored PSG recordings
-  - DOI: 10.1038/s41597-025-04579-8 — Data descriptor describing EESM23 dataset containing ear-EEG sleep recordings with manual PSG sleep stage annotations (W/N1/N2/N3/REM) scored by trained technicians, demonstrating automatic sleep scoring using SeqSleepNet
-- **Kernel Notes**: Extract 30-second epochs aligned with sleep stage annotation onsets. Merge sleep stage labels from events.tsv as target y. Exclude unscored epochs. Verify annotation timing matches EEG start time using BIDS sidecar information. (replaces Potential Task 1 from original analysis.md)
-
-## Data Quality Notes
-
-- Only 5 channels (ear-EEG) - very limited spatial resolution.
-- No sleep stage labels in events.tsv; PSG annotations needed for staging.
-- Home-recorded data - subject-specific motion and environmental artifacts expected.
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: Yes
-> **Status**: wait_manual_review
+  - DOI: 10.1038/fnins.2023.987578 — Official data descriptor for EESM23 describing ear-EEG sleep recordings with manual PSG sleep stage annotations (W/N1/N2/N3/REM) scored by trained technicians following AASM standard, demonstrating automatic sleep scoring using SeqSleepNet
+- **Kernel Notes**: CRITICAL: Sleep stage labels (sleep_stage_W, sleep_stage_N1, etc.) are NOT present in raw event HDF5 files. They are stored as PSG annotations in BIDS *events.tsv sidecar files. Kernel must: (1) Read sleep stage annotations from BIDS events.tsv files rather than raw trigger events, (2) Map sleep_stage_X events to 30-second epoch windows aligned to annotation onsets using tmin=0, tmax=30, (3) Exclude unscored epochs (~3% of data per dataset descriptor), (4) Verify annotation timing matches EEG start time using BIDS sidecar information. The 175 `trigger` events mark system synchronization between ear-EEG and PSG, not sleep stage boundaries. Class imbalance expected: N3 and REM are underrepresented relative to N2 and W. The 5-channel ear-EEG provides limited spatial resolution compared to full PSG.

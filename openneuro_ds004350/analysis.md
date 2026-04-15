@@ -1,109 +1,173 @@
 # Executive Functioning Study for Assessing the Effect of Neurofeedback
 
 **Dataset**: `openneuro_ds004350` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds004350
-**Category**: High-level Mental | **Subjects**: 24 | **Files (Completed)**: 480
-**Channels**: 64 | **Sampling Rate**: 256 Hz
+**Category**: High-level Mental | **Subjects**: 24 | **Files (Completed)**: 479 | **Channels**: 64 | **Sampling Rate**: 256 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
-Participants performed a battery of executive function tasks including a visual N-back working memory task (stimuli A/B/C/D), a Sustained Attention to Response Task (SART, target/nontarget), and a Local-Global hierarchical stimulus task (largeH/largeT x smallH/smallT). The study assessed the effect of neurofeedback training on executive function performance.
+Participants performed a battery of executive function tasks including visual N-back working memory tasks (NB1/NB2/NB3 with stimuli A/B/C/D), a Sustained Attention to Response Task (SART with target/nontarget conditions), and a Local-Global hierarchical stimulus task (largeH/largeT x smallH/smallT). The study assessed the effect of neurofeedback training on executive function performance using 64-channel EEG recordings at 256 Hz.
 
 ## File Scan Result
 
+> **Kernel SHA256**: `0df420088002e03fdfd16bf48035a1226360a66dd49ad5ea596f4e6c22d7f6d1`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `target` | 44xx | short | raw | Target stimulus (requires response) |
-| `nontarget` | 44xx | short | raw | Non-target stimulus (no-go) |
-| `A` | 144xx | short | raw | N-back stimulus A |
-| `B` | 144xx | short | raw | N-back stimulus B |
-| `C` | 144xx | short | raw | N-back stimulus C |
-| `D` | 144xx | short | raw | N-back stimulus D |
-| `largeHSmallH` | 48xx | short | raw | Large H / Small H (local-global congruent) |
-| `largeHSmallT` | 48xx | short | raw | Large H / Small T (local-global incongruent) |
-| `largeTSmallH` | 48xx | short | raw | Large T / Small H (local-global incongruent) |
-| `largeTSmallT` | 48xx | short | raw | Large T / Small T (local-global congruent) |
-| `responseLargeH` | 48xx | short | raw | Response: Large H selected |
-| `responseLargeT` | 48xx | short | raw | Response: Large T selected |
-| `responseSmallH` | 48xx | short | raw | Response: Small H selected |
-| `responseSmallT` | 48xx | short | raw | Response: Small T selected |
-| `rt` | 188xx | short | raw | Reaction time marker |
-| `255` | 2 | admin | raw | System trigger code 255 |
+| `LG: largeHSmallH` | 9123 | event | raw | Congruent: Large H / Small H |
+| `LG: largeHSmallT` | 9120 | event | raw | Incongruent: Large H / Small T |
+| `LG: largeTSmallH` | 9130 | event | raw | Incongruent: Large T / Small H |
+| `LG: largeTSmallT` | 9134 | event | raw | Congruent: Large T / Small T |
+| `LG: responseLargeH` | 9035 | event | raw | Response: Large H selected |
+| `LG: responseLargeT` | 9272 | event | raw | Response: Large T selected |
+| `LG: responseSmallH` | 9230 | event | raw | Response: Small H selected |
+| `LG: responseSmallT` | 8957 | event | raw | Response: Small T selected |
+| `NB1: 12` | 1 | event | raw | System marker (isolated) |
+| `NB1: 5` | 1 | event | raw | System marker (isolated) |
+| `NB1: 6` | 1 | event | raw | System marker (isolated) |
+| `NB1: 9` | 1 | event | raw | System marker (isolated) |
+| `NB1: A` | 3341 | event | raw | N-back stimulus A (1-back) |
+| `NB1: B` | 3348 | event | raw | N-back stimulus B (1-back) |
+| `NB1: C` | 3408 | event | raw | N-back stimulus C (1-back) |
+| `NB1: D` | 3251 | event | raw | N-back stimulus D (1-back) |
+| `NB1: rt` | 3323 | event | raw | Reaction time marker (1-back) |
+| `NB2: 10` | 1 | event | raw | System marker (isolated) |
+| `NB2: 11` | 1 | event | raw | System marker (isolated) |
+| `NB2: 255` | 1 | event | raw | System marker (isolated) |
+| `NB2: 5` | 1 | event | raw | System marker (isolated) |
+| `NB2: 6` | 1 | event | raw | System marker (isolated) |
+| `NB2: 9` | 1 | event | raw | System marker (isolated) |
+| `NB2: A` | 3334 | event | raw | N-back stimulus A (2-back) |
+| `NB2: B` | 3363 | event | raw | N-back stimulus B (2-back) |
+| `NB2: C` | 3316 | event | raw | N-back stimulus C (2-back) |
+| `NB2: D` | 3325 | event | raw | N-back stimulus D (2-back) |
+| `NB2: rt` | 2827 | event | raw | Reaction time marker (2-back) |
+| `NB3: A` | 3289 | event | raw | N-back stimulus A (3-back) |
+| `NB3: B` | 3363 | event | raw | N-back stimulus B (3-back) |
+| `NB3: C` | 3257 | event | raw | N-back stimulus C (3-back) |
+| `NB3: D` | 3410 | event | raw | N-back stimulus D (3-back) |
+| `NB3: rt` | 2405 | event | raw | Reaction time marker (3-back) |
+| `SART: nontarget` | 11833 | event | raw | Non-target stimulus (go response) |
+| `SART: rt` | 12092 | event | raw | Reaction time marker |
+| `SART: target` | 1499 | event | raw | Target stimulus (requires inhibition) |
+| `event_1` | 22536 | event | raw | Raw trigger code 1 (BIDS boundary/task marker) |
+| `event_10` | 3 | event | raw | Raw trigger code 10 |
+| `event_11` | 1 | event | raw | Raw trigger code 11 |
+| `event_12` | 3 | event | raw | Raw trigger code 12 |
+| `event_128` | 9622 | event | raw | Raw trigger code 128 |
+| `event_129` | 9482 | event | raw | Raw trigger code 129 |
+| `event_131` | 1 | event | raw | Raw trigger code 131 |
+| `event_132` | 3 | event | raw | Raw trigger code 132 |
+| `event_133` | 1 | event | raw | Raw trigger code 133 |
+| `event_136` | 3 | event | raw | Raw trigger code 136 |
+| `event_145` | 5 | event | raw | Raw trigger code 145 |
+| `event_16` | 9598 | event | raw | Raw trigger code 16 |
+| `event_161` | 2 | event | raw | Raw trigger code 161 |
+| `event_18` | 4 | event | raw | Raw trigger code 18 |
+| `event_193` | 4 | event | raw | Raw trigger code 193 |
+| `event_2` | 21099 | event | raw | Raw trigger code 2 (task block marker) |
+| `event_20` | 9 | event | raw | Raw trigger code 20 |
+| `event_24` | 3 | event | raw | Raw trigger code 24 |
+| `event_255` | 1 | event | raw | Raw trigger code 255 |
+| `event_3` | 9924 | event | raw | Raw trigger code 3 |
+| `event_32` | 9309 | event | raw | Raw trigger code 32 |
+| `event_34` | 9 | event | raw | Raw trigger code 34 |
+| `event_36` | 1 | event | raw | Raw trigger code 36 |
+| `event_4` | 19408 | event | raw | Raw trigger code 4 |
+| `event_40` | 4 | event | raw | Raw trigger code 40 |
+| `event_5` | 2 | event | raw | Raw trigger code 5 |
+| `event_6` | 3 | event | raw | Raw trigger code 6 |
+| `event_64` | 9403 | event | raw | Raw trigger code 64 |
+| `event_65536` | 9 | event | raw | Raw trigger code 65536 |
+| `event_65537` | 1 | event | raw | Raw trigger code 65537 |
+| `event_65539` | 1 | event | raw | Raw trigger code 65539 |
+| `event_65600` | 2 | event | raw | Raw trigger code 65600 |
+| `event_65665` | 2 | event | raw | Raw trigger code 65665 |
+| `event_66` | 4 | event | raw | Raw trigger code 66 |
+| `event_68` | 1 | event | raw | Raw trigger code 68 |
+| `event_72` | 2 | event | raw | Raw trigger code 72 |
+| `event_8` | 30903 | event | raw | Raw trigger code 8 |
+| `event_9` | 8 | event | raw | Raw trigger code 9 |
 
-> **Event Type Description**:
-> - `short`: short stimulus onset marker (presentation duration <2 s), for `epoch_by_event_hdf5`
-> - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
-> - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **not used for epoch**
-
-### MISC Label Summary
-
-- **Route**: `misc`
-- **Role**: Stores derived/continuous labels that are not native raw event IDs.
-- **Candidate Labels**: `reaction_time`
-- **Kernel Note**: Keep derivation source, unit, and version metadata.
 
 ### Info
-
-- **stim Label Summary**: Trigger-channel or stimulus-marker based labeling. Candidate trigger labels require verification. Keep trigger decoding table versioned and auditable.
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | missing | N/A |
+| `subject_sex` | missing | N/A |
+| `device` | missing | N/A |
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: NB1
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004350 DOI: https://doi.org/10.1038/nn1233
-
-
-### Primary Task 2: Publisher-defined BIDS task: NB3
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004350 DOI: https://doi.org/10.1038/nn1233
-
-
-### Primary Task 3: Publisher-defined BIDS task: LG
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004350 DOI: https://doi.org/10.1038/nn1233
-
-
-### Normal Task 1: SART Target Detection (binary)
+### Classical Task 1: N-back NB1 Working Memory Load
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset), target_events = see Target Definition
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.5 s, target_events = ["NB1: A", "NB1: B", "NB1: C", "NB1: D"]
 - **Label Route**: `Annotation`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Numerical codes (1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 128, 255) are likely system/artifact markers - exclude from target_events. Multiple tasks in one dataset; files are per-task. Separate HDF5 files per task recommended.
+- **Meta Level**: raw
+- **Target Definition**:
 
 | Event | y | Meaning |
 |-------|---|--------|
-| `nontarget` | 0 | Non-target (go) stimulus |
-| `target` | 1 | Target (no-go) stimulus |
+| `NB1: A` | 0 | N-back stimulus A |
+| `NB1: B` | 1 | N-back stimulus B |
+| `NB1: C` | 2 | N-back stimulus C |
+| `NB1: D` | 3 | N-back stimulus D |
 
-## Data Quality Notes
+- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset README confirms NB1 as a BIDS-defined N-back task variant. Stimulus events (A/B/C/D) provide 4-class classification. Excludes system markers (NB1: 5/6/9/12 with count=1) and reaction time markers (NB1: rt) due to variable timing. Source: https://openneuro.org/datasets/ds004350
+- **Kernel Notes**: Standard N-back uses variable ISI (~2000ms) with 500ms stimulus duration; epoch window accommodates full trial. Files are task-separated; use NB1-prefixed events only. The 1-back level targets working memory maintenance and updating processes.
 
-- Multiple distinct tasks (SART, N-back, Local-Global) in same dataset; files are per-task
-- Numerical trigger codes (1-255) are system markers, not task events
-- 480 files across 24 subjects (multiple sessions/tasks per subject)
+### Classical Task 2: N-back NB3 Working Memory Load
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.5 s, target_events = ["NB3: A", "NB3: B", "NB3: C", "NB3: D"]
+- **Label Route**: `Annotation`
+- **Meta Level**: raw
+- **Target Definition**:
 
-## Kernel Responsibilities
+| Event | y | Meaning |
+|-------|---|--------|
+| `NB3: A` | 0 | N-back stimulus A |
+| `NB3: B` | 1 | N-back stimulus B |
+| `NB3: C` | 2 | N-back stimulus C |
+| `NB3: D` | 3 | N-back stimulus D |
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset README confirms NB3 as a BIDS-defined N-back task variant. Stimulus events (A/B/C/D) provide 4-class classification matching NB1 for cross-load comparison. Source: https://openneuro.org/datasets/ds004350
+- **Kernel Notes**: Same parameters as NB1 for consistency across N-back levels. The 3-back level increases working memory load, allowing comparison of load-dependent neural signatures. Excludes reaction time markers (NB3: rt) due to variable timing.
 
-> **Selected Mode**: Type 2 + Type 3
-> **Why**: Derived targets are needed beyond raw markers.
-> **Primary Label Routes**: Annotation, stim, misc
-> **Evidence Keywords**: reaction time
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004350
+### Classical Task 3: Local-Global Hierarchical Stimulus Processing
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, target_events = ["LG: largeHSmallH", "LG: largeHSmallT", "LG: largeTSmallH", "LG: largeTSmallT"]
+- **Label Route**: `Annotation`
+- **Meta Level**: raw
+- **Target Definition**:
+
+| Event | y | Meaning |
+|-------|---|--------|
+| `LG: largeHSmallH` | 0 | Congruent: Large H and Small H |
+| `LG: largeHSmallT` | 1 | Incongruent: Large H and Small T |
+| `LG: largeTSmallH` | 2 | Incongruent: Large T and Small H |
+| `LG: largeTSmallT` | 3 | Congruent: Large T and Small T |
+
+- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset README confirms LG as a BIDS-defined Local-Global hierarchical stimulus task. Four conditions support congruency classification (congruent vs incongruent) or 4-class stimulus classification. Source: https://openneuro.org/datasets/ds004350
+- **Kernel Notes**: Epoch on stimulus onset captures early congruency processing (N400 component expected ~300-600ms). Excludes response events (LG: responseLargeH/T, responseSmallH/T) due to variable RT and participant-dependent timing. Extended tmax=2.0s accommodates hierarchical processing window.
+
+### Normal Task 1: SART Target Detection (Binary)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = ["SART: target", "SART: nontarget"]
+- **Label Route**: `Annotation`
+- **Meta Level**: raw
+- **Target Definition**:
+
+| Event | y | Meaning |
+|-------|---|--------|
+| `SART: target` | 1 | Target stimulus (requires inhibition) |
+| `SART: nontarget` | 0 | Non-target stimulus (go response) |
+
+- **Evidence**: Paradigm described in dataset documentation as Sustained Attention to Response Task. Target/nontarget markers present in event structure with clear class imbalance (~1500 target vs ~12000 nontarget). Source: https://openneuro.org/datasets/ds004350
+- **Kernel Notes**: Expected class imbalance reflects SART design (rare targets, frequent nontargets). Excludes SART:rt markers due to variable timing. Task-specific event prefixes required; generic event_# codes should not be used.

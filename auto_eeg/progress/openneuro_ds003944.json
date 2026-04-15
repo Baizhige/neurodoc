@@ -1,0 +1,175 @@
+{
+  "phase": "done",
+  "budget_used": 6,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 2,
+    "kernel_loop": 1,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 7,
+    "category": "Biological State"
+  },
+  "timestamp": "2026-04-11T01:09:08.880471+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds003944.v1.0.1.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds003944.v1.0.1",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds003944.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1016_j_bpsc_2019_06_010.pdf",
+      "ref": "10.1016/j.bpsc.2019.06.010",
+      "title": "Non-negative Matrix Factorization Reveals Resting-State Cortical Alpha Network Abnormalities in the First-Episode Schizophrenia Spectrum",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper uses MEG (magnetoencephalography) resting-state data from 31 FESz and 22 HC subjects, not EEG data. While it studies the same research group (Salisbury) and similar population (first-episode psychosis), it is a different dataset using a different modality (MEG vs EEG). The specific openneuro_ds003944 dataset is EEG-based with 82 subjects.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "MEG/resting-state",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Uses MEG data from a different study; no EEG data from openneuro_ds003944 mentioned."
+    },
+    {
+      "filename": "paper_10_1038_s41598_024_66110_0.pdf",
+      "ref": "10.1038/s41598-024-66110-0",
+      "title": "Power spectral density‑based resting‑state EEG classification of first‑episode psychosis",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses the openneuro_ds003944 EEG dataset, specifically the 'Resting Task 1' data with 72 subjects (44 patients, 28 controls). It defines a clear binary classification task (FEP vs healthy controls) using PSD features from multiple frequency bands, achieving 95.51% accuracy with GPC. The dataset is directly cited as being published by Salisbury et al. in 2022.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "resting-state",
+      "epoch_method_hint": "segmentation",
+      "epoch_params": "segment_length unspecified in paper; analysis focuses on PSD features across delta/theta/alpha/low-beta bands from 5-min resting recordings",
+      "target_events": [
+        "FEP",
+        "Control"
+      ],
+      "label_mapping": "Control=0, FEP=1",
+      "meta_level": "super",
+      "super_meta_note": "Labels from participants.tsv clinical group membership applied at subject level; dataset cited as Salisbury et al. 2022 publication associated with openneuro_ds003944",
+      "evidence_desc": "Directly uses Resting Task 1 EEG dataset from openneuro_ds003944; uses PSD of delta (0.5-4Hz), theta (4-8Hz), alpha (8-12Hz), low-beta (12-16Hz) bands; balanced with borderline-SMOTE"
+    },
+    {
+      "filename": "paper_10_1109_access_2024_3376254.pdf",
+      "ref": "10.1109/ACCESS.2024.3376254",
+      "title": "EEG datasets for healthcare: a scoping review",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a scoping review cataloging EEG healthcare datasets (62 total) without performing any ML analysis on openneuro_ds003944. It discusses dataset categories and FAIR principles but does not use or analyze the specific First Episode Psychosis dataset in question.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "review",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Literature review paper; no specific ML task defined for openneuro_ds003944"
+    },
+    {
+      "filename": "paper_10_3390_biomedicines11123223.pdf",
+      "ref": "10.3390/biomedicines11123223",
+      "title": "Classification of First-Episode Psychosis with EEG Signals: ciSSA and Machine Learning Approach",
+      "classification": "relevant",
+      "cot_reasoning": "This paper directly uses the openneuro_ds003944 dataset for FEP vs Control binary classification using EEG signals. It employs ciSSA decomposition with entropy, frequency, and statistical features, achieving 96.23% accuracy with SVM. The paper explicitly references and uses the resting-state EEG dataset for classification, defining clear labels and a concrete ML task.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "resting-state",
+      "epoch_method_hint": "segmentation",
+      "epoch_params": "ciSSA sub-band decomposition with 2-second window length; features extracted from entropy (permutation, spectral), frequency domain, and statistical characteristics",
+      "target_events": [
+        "FEP",
+        "Control"
+      ],
+      "label_mapping": "Healthy Control=0, FEP=1",
+      "meta_level": "super",
+      "super_meta_note": "Uses the same Salisbury et al. 2022 EEG dataset from openneuro_ds003944; subject-level diagnosis labels from clinical group membership applied to EEG segments",
+      "evidence_desc": "Uses openneuro_ds003944 resting-state EEG data; ciSSA decomposition with LASSO feature selection; hybrid features combined with SVM achieving AUC=0.9893, accuracy=96.23%"
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "ref": "10.3389/fpsyt.2025.1731645",
+      "title": "Resting-state gamma power in schizophrenia: a systematic review and meta-analysis",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a systematic review and meta-analysis of 20 existing studies on resting-state gamma power in schizophrenia. It synthesizes previously published research and does not use or analyze the openneuro_ds003944 EEG dataset directly. No specific ML task or classification is performed on any dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "systematic-review",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Meta-analysis of prior published studies; no use of openneuro_ds003944 or any specific EEG dataset for analysis"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset supports a well-defined binary classification task (FEP vs. Control) from resting-state EEG segments, with two relevant references directly using openneuro_ds003944 to achieve high accuracy (95-96%) using PSD and ciSSA features. Labels are available from participants.tsv (group column), and the analysis.md specifies a concrete segmentation approach (30s segments with 0.5 overlap).",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 82,
+    "total_n": 82,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 82,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: First Episode Psychosis vs. Control Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 30.0 s, overlap = 0.5\n- **Label Route**: `misc`\n- **Meta Level**: super\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `Control` | 0 | Healthy control subject |\n  | `FEP` | 1 | First Episode Psychosis patient |\n- **Evidence**:\n  - DOI: 10.1038/s41598-024-66110-0 — Classifies FEP vs. healthy controls using PSD features (delta/theta/alpha/low-beta bands) from 30-second segments of 5-minute resting-state EEG. Achieves 95.51% accuracy with Gaussian Process Classifier using balanced borderline-SMOTE resampling. Directly uses the openneuro_ds003944 dataset.\n  - DOI: 10.3390/biomedicines11123223 — Uses ciSSA (complex interval singular spectrum analysis) decomposition with entropy (permutation, spectral), frequency domain, and statistical features extracted from 2-second windows. Achieves AUC=0.9893, accuracy=96.23% with SVM/ANN/ensemble classifiers on the same dataset. Confirms both 30-second and shorter segment approaches are viable.\n- **Kernel Notes**: Resting-state EEG contains no discrete task events; use segmentation-based epoching only. Load `participants.tsv` and extract the group/diagnosis column for each subject. Apply subject-level binary label (FEP=1, Control=0) uniformly to all segments from that subject. For a 5-minute recording at 1000 Hz with 30-second segments and 50% overlap: ~9-10 segments per subject. Extract PSD features per segment (delta 0.5-4 Hz, theta 4-8 Hz, alpha 8-12 Hz, low-beta 12-16 Hz) and train binary classifier. Class imbalance between groups should be checked in participants.tsv before model training. Exclude `unknown` admin events entirely—they contain no usable markers.\n",
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds003944/kernel_final.py",
+  "kernel_code_len": 10418,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds003944.py",
+    "kernel_sha256": "5eecba9d39f0f731fe85fa7b3831e1dd4d05902987b87e3c939b5c0368eceaa6",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 82,
+    "total_n": 82,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 82,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds003944.py",
+  "status": "done"
+}

@@ -57,3 +57,7 @@ No additional scan result info available.
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006159
+
+---
+
+> **auto_eeg FAILED**: No relevant or partial references exist in the extraction set (all relevant neuroscience papers are classified as irrelevant), and critically, the dataset contains no trial-level event markers or discrete annotations—it is purely continuous EEG. While the analysis.md describes an implicit learning paradigm, without any identifiable label structure or verified event parameters, no concrete supervised ML task can be defined.

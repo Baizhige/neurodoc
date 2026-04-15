@@ -1,8 +1,8 @@
 # Auditory and Visual Rhythm Omission EEG
 
 **Dataset**: `openneuro_ds002218` | **Year**: 2019 | **URL**: https://openneuro.org/datasets/ds002218
-**Category**: Sensory/Response | **Subjects**: 18 | **Files (Completed)**: 18
-**Channels**: 32 | **Sampling Rate**: 256 Hz
+**Category**: Sensory/Response | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 32 | **Sampling Rate**: 256 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
@@ -10,71 +10,55 @@ Participants passively perceived rhythmic auditory tone sequences and visual fla
 
 ## File Scan Result
 
-> **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds002218.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
-> **SHA256**: `d54b70d1ef6dde18c0f2ee358ed5003ce0320b944a1e4438a1173e7a0f9890a6`
-
+> **Kernel SHA256**: `1f3db97faf0139dea06ab8bce57920ee354ba6c246ad18600c001f2892c226e3`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
-
-<!-- AUTO-KERNEL-EVENT-STRUCTURE:START -->
-> **Kernel Fact Source**: current kernel scan from `/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-> **Meaning Policy**: `Meaning` is interpretive; `Event ID / Count / Type / Meta Level` are kernel-derived facts.
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `1` | 33483 | event | raw | Unresolved from current kernel facts |
-| `3` | 33480 | event | raw | Unresolved from current kernel facts |
-| `2` | 2520 | event | raw | Unresolved from current kernel facts |
-| `4` | 2520 | event | raw | Unresolved from current kernel facts |
-| `5` | 2520 | event | raw | Unresolved from current kernel facts |
-| `6` | 2520 | event | raw | Unresolved from current kernel facts |
 | `0, Impedance` | 16 | event | raw | Impedance |
+| `1` | 33483 | event | raw | BioSemi STATUS hardware marker (interleaved) |
+| `2` | 2520 | event | raw | Auditory rhythm non-omission trial (regular tone) |
+| `3` | 33480 | event | raw | BioSemi STATUS hardware marker (interleaved) |
+| `4` | 2520 | event | raw | Auditory rhythm omission trial (expected tone missing) |
+| `5` | 2520 | event | raw | Visual rhythm non-omission trial (regular flash) |
+| `6` | 2520 | event | raw | Visual rhythm omission trial (expected flash missing) |
 | `__` | 2 | event | raw | Unresolved from current kernel facts |
-<!-- AUTO-KERNEL-EVENT-STRUCTURE:END -->
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `subject_age` | missing | N/A |
+| `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
-### Classical Task 1: Auditory/Visual Rhythm Omission Classification (Beta Band Entrainment)
+### Classical Task 1: Auditory/Visual Rhythm Omission Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -1.67 s, tmax = +1.67 s, target_events = [`tone_non-omission`, `tone_omission`, `flash_non-omission`, `flash_omission`]
+- **Epoch Parameters**: tmin = -1.67 s, tmax = +1.67 s, target_events = [`2`, `4`, `5`, `6`]
 - **Label Route**: `event`
-- **Meta Level**: raw
+- **Meta Level**: `raw`
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|
-  | `tone_non-omission` | 0 | Auditory rhythm non-omission trial (regular tone) |
-  | `tone_omission` | 1 | Auditory rhythm omission trial (expected tone missing) |
-  | `flash_non-omission` | 2 | Visual rhythm non-omission trial (regular flash) |
-  | `flash_omission` | 3 | Visual rhythm omission trial (expected flash missing) |
+  | `2` | 0 | Auditory rhythm non-omission trial (regular tone) |
+  | `4` | 1 | Auditory rhythm omission trial (expected tone missing) |
+  | `5` | 2 | Visual rhythm non-omission trial (regular flash) |
+  | `6` | 3 | Visual rhythm omission trial (expected flash missing) |
 - **Evidence**:
   - DOI: 10.1111/ejn.15314 — EEG analysis of induced and evoked beta band activity (14-30 Hz) during an auditory/visual rhythm omission paradigm, epoching from -1.67s to +1.67s around each tone or flash onset
   - DOI: 10.1101/2020.11.29.402701 — Same dataset analysis investigating induced and evoked beta band activity with four-class omission paradigm
-- **Kernel Notes**: Verify event ID mapping from events.tsv. The raw events list shows only `STATUS` admin markers; actual stimulus events may need extraction from events.tsv files. Each stimulus train had 100 events with 7 randomly placed omissions. (replaces Classical Task 1 from original analysis.md)
+- **Kernel Notes**: Event ID mapping is inferred from count patterns: IDs 2/4 correspond to auditory (non-omission/omission) and 5/6 to visual (non-omission/omission), each with 2520 events (100 trials × 18 subjects × ~1.4 runs with 7 omissions each). Verify against events.tsv directly to confirm stimulus type and omission condition assignment. High-count events (1: 33483, 3: 33480) likely represent interleaved BioSemi STATUS hardware markers; no trial markers decoded from locator pipeline. (replaces Classical Task 1 from original analysis.md)
 
-### Potential Task 1: Resting / Continuous Segmentation (resting)
+### Potential Task 1: Resting/Continuous Segmentation
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
 - **Label Route**: `event`
-- **Target Definition**: N/A (null(only STATUS admin events; no trial markers decoded))
-- **Notes**: STATUS is a BioSemi CM_in_range hardware marker. If events.tsv contains decoded rhythm onset/omission events (separate from the locator metadata), they could be used for ERP analysis - verify directly from raw events.tsv.
-
-## Data Quality Notes
-
-- Only `STATUS` events found in locator metadata - BioSemi admin markers only.
-- The actual auditory/visual rhythm and omission events may be encoded in the `events.tsv` files but were not decoded by the locator pipeline; check events.tsv directly.
-- Verify channel count consistency across subjects before pooling.
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: No
-> **Status**: wait_kernel_update
+- **Target Definition**: N/A (only BioSemi STATUS admin markers detected; no trial markers decoded from locator pipeline)
+- **Evidence**: N/A (plausible fallback approach from paradigm alone; no supporting reference available)
+- **Kernel Notes**: STATUS events are BioSemi CM_in_range hardware markers only. As a fallback since no trial events were decoded by the locator pipeline, continuous segmentation with 2s windows and 50% overlap provides a safe approach for analyzing continuous spectral features. If events.tsv files contain decoded rhythm onset/omission events, verify directly for potential ERP analysis.

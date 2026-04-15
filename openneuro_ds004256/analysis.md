@@ -3,106 +3,40 @@
 **Dataset**: `openneuro_ds004256` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004256
 **Category**: Sensory/Response | **Subjects**: 53 | **Files (Completed)**: 53
 **Channels**: 64 | **Sampling Rate**: 500 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
-Participants performed an auditory deviant detection task and a one-back sound localization task to investigate the cortical encoding of sound source elevation. Stimuli consisted of sounds presented from different vertical elevations, with subjects indicating perceived location. The study uses a multiclass design with conditions likely corresponding to different elevation angles.
-
+Participants performed an auditory deviant detection task and a one-back sound localization task to investigate the cortical encoding of sound source elevation. Stimuli consisted of sounds presented from different vertical elevations, with subjects indicating perceived location. The study uses a multiclass design with conditions corresponding to different elevation angles and deviant/standard stimulus types.
 
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `86821e47e567092f1235c4f759202e6b64bc7b147fd98df0dbb069f776c47544`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Stimulus/S 1` | 53x320 | event | raw | Auditory stimulus condition 1 (elevation angle) |
-| `Stimulus/S 2` | 53x320 | event | raw | Auditory stimulus condition 2 (elevation angle) |
-| `Stimulus/S 3` | 53x320 | event | raw | Auditory stimulus condition 3 (elevation angle) |
-| `Stimulus/S 4` | 53x320 | event | raw | Auditory stimulus condition 4 (elevation angle) |
-| `Stimulus/S 5` | 23x320 | event | raw | Auditory stimulus condition 5 (elevation angle) |
-| `Stimulus/S 6` | 23x320 | event | raw | Auditory stimulus condition 6 (elevation angle) |
-| `Stimulus/S 7` | 23x96 | event | raw | Auditory stimulus condition 7 (deviant/rare) |
-| `New Segment/` | 53 | admin | raw | Recording segment boundary |
-| `BAD boundary` | 53 | admin | raw | Bad epoch boundary marker |
-| `EDGE boundary` | 53 | admin | raw | Edge boundary artifact marker |
+| `Stimulus/S  1` | 219 | event | raw | Auditory stimulus condition 1 (elevation) |
+| `Stimulus/S  2` | 219 | event | raw | Auditory stimulus condition 2 (elevation) |
+| `Stimulus/S  3` | 273 | event | raw | Auditory stimulus condition 3 (elevation) |
+| `Stimulus/S  4` | 17602 | event | raw | Auditory stimulus condition 4 (standard/elevation) |
+| `Stimulus/S  5` | 17602 | event | raw | Auditory stimulus condition 5 (elevation) |
+| `Stimulus/S  6` | 17602 | event | raw | Auditory stimulus condition 6 (elevation) |
+| `Stimulus/S  7` | 17610 | event | raw | Auditory stimulus condition 7 (deviant/rare) |
+| `Stimulus/S  8` | 7350 | event | raw | Auditory stimulus condition 8 (adapter) |
+| `Stimulus/S  9` | 7350 | event | raw | Auditory stimulus condition 9 (adapter) |
+| `Stimulus/S 10` | 2203 | event | raw | Auditory stimulus condition 10 (probe) |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
-| `stim_label_route` | present | Route: `stim` |
-| `stim_label_role` | present | Trigger-channel or stimulus-marker based labeling |
-| `candidate_trigger_labels` | present | `Stimulus/S 1`, `Stimulus/S 2`, `Stimulus/S 3`, `Stimulus/S 4`, `Stimulus/S 5`, `Stimulus/S 6`, `Stimulus/S 7` |
-| `kernel_note` | present | Keep trigger decoding table versioned and auditable |
 
 ## Tasks
 
-### Classical Task 1: Sound Elevation Decoding
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 1.0 s *, target_events = [`Stimulus/S 1`, `Stimulus/S 2`, `Stimulus/S 3`, `Stimulus/S 4`, `Stimulus/S 5`, `Stimulus/S 6`, `Stimulus/S 7`]
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|--|--------|
-  | `Stimulus/S 1` | 0 | Elevation 37.5° |
-  | `Stimulus/S 2` | 1 | Elevation 12.5° |
-  | `Stimulus/S 3` | 2 | Elevation -12.5° |
-  | `Stimulus/S 4` | 3 | Elevation -37.5° |
-  | `Stimulus/S 5` | 4 | Auditory stimulus condition 5 * |
-  | `Stimulus/S 6` | 5 | Auditory stimulus condition 6 * |
-  | `Stimulus/S 7` | 6 | Deviant/rare stimulus |
-- **Evidence**:
-  - DOI: 10.1101/2023.05.03.539222 — Uses OpenNeuro dataset ds004256 to decode sound elevation from EEG responses analyzing ERP differences between adapter-probe pairs at different vertical elevations
-- **Kernel Notes**: Paper analyzes 100-300ms and 150-900ms post-probe windows. Use tmax=1.0s to capture full analysis window. S5/S6 appear in 23/53 subjects only; may require subset filtering. (replaces Potential Task 1 from original analysis.md)
-
-### Classical Task 2: Publisher-defined BIDS task: Deviantdetection
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s *, tmax = 1.0 s *, target_events = [`Stimulus/S 7`]
-- **Label Route**: `event`
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|--|--------|
-  | `Stimulus/S 7` | 0 | Deviant stimulus (rare) |
-- **Evidence**:
-  - DOI: 10.18112/openneuro.ds004256.v1.0.5
-- **Kernel Notes**: Verify deviant detection protocol timing from BIDS task events.json. (replaces Classical Task 1 from original analysis.md)
-
-### Classical Task 3: Publisher-defined BIDS task: Oneback
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s *, tmax = 1.0 s *, target_events = [`Stimulus/S 1`, `Stimulus/S 2`, `Stimulus/S 3`, `Stimulus/S 4`, `Stimulus/S 5`, `Stimulus/S 6`]
-- **Label Route**: `event`
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|--|--------|
-  | `Stimulus/S 1` | 0 | Oneback condition 1 |
-  | `Stimulus/S 2` | 1 | Oneback condition 2 |
-  | `Stimulus/S 3` | 2 | Oneback condition 3 |
-  | `Stimulus/S 4` | 3 | Oneback condition 4 |
-  | `Stimulus/S 5` | 4 | Oneback condition 5 * |
-  | `Stimulus/S 6` | 5 | Oneback condition 6 * |
-- **Evidence**:
-  - DOI: 10.18112/openneuro.ds004256.v1.0.5
-- **Kernel Notes**: Verify oneback task timing from BIDS task events.json. (replaces Classical Task 2 from original analysis.md)
-
-## Data Quality Notes
-
-- S 5, S 6, S 7 appear in only 23 subjects (possibly a different task condition block)
-- BAD boundary and EDGE boundary markers must not be used as target events
-- Balance classes by undersampling; verify event counts per subject before pooling
-
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: No
-> **Status**: wait_manual_review
+(No tasks could be synthesized.)

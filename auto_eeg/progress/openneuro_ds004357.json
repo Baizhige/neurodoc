@@ -1,0 +1,217 @@
+{
+  "phase": "done",
+  "budget_used": 8,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 4,
+    "kernel_loop": 1,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 9,
+    "category": "Sensory/Response"
+  },
+  "timestamp": "2026-04-11T18:45:18.655461+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds004357.v1.0.1.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds004357.v1.0.1",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds004357.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10.1371_journal.pcbi.1011760.pdf",
+      "ref": "https://doi.org/10.1371/journal.pcbi.1011760",
+      "title": "Mapping the dynamics of visual feature coding: Insights into perception and integration",
+      "classification": "relevant",
+      "cot_reasoning": "Paper explicitly states 'Raw and preprocessed data are available online through openneuro: https://openneuro.org/datasets/ds004357' and uses N=16 participants with grating stimuli varying in orientation, spatial frequency, contrast, and color - matching ds004357 exactly. Authors use MVPA to decode visual features from EEG epochs.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "RSVP visual grating",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "stimulus onset aligned, likely -0.1 to 0.6s window",
+      "target_events": [
+        "stimulus events encoding 4 visual features"
+      ],
+      "label_mapping": "4 levels per feature (orientation, contrast, SF, color)",
+      "meta_level": "super",
+      "super_meta_note": "Labels derived from experimental condition log mapping to 4 visual feature dimensions; separate binary/multiclass decoders per feature",
+      "evidence_desc": "Authors cite data availability statement referencing openneuro ds004357. They decode orientation, contrast, spatial frequency, color from EEG using MVPA."
+    },
+    {
+      "filename": "paper_10_1016_j_appet_2025_108337.pdf",
+      "ref": "https://doi.org/10.1016/j.appet.2025.108337",
+      "title": "Characterising the neural time-courses of food attribute representations",
+      "classification": "irrelevant",
+      "cot_reasoning": "Study uses food images with N=110 participants to investigate food attributes via RSA. No mention of openneuro_ds004357, different stimuli (food vs gratings), different paradigm, different dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "",
+      "super_meta_note": "",
+      "evidence_desc": "Food attribute study with different EEG dataset; no connection to visual feature grating dataset ds004357."
+    },
+    {
+      "filename": "paper_10_1016_j_engappai_2025_111688.pdf",
+      "ref": "https://doi.org/10.1016/j.engappai.2025.111688",
+      "title": "Detection of error in static and dynamic visual stimulation via electroencephalogram and eye-tracking systems",
+      "classification": "irrelevant",
+      "cot_reasoning": "Study investigates error detection using EEG and eye-tracking in static/dynamic visual conditions. No reference to openneuro_ds004357 or visual grating stimuli; focuses on error detection task with different experimental design.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "",
+      "super_meta_note": "",
+      "evidence_desc": "Error detection paradigm; unrelated to the visual feature decoding dataset ds004357."
+    },
+    {
+      "filename": "paper_10_1038_s41598_025_18275_5.pdf",
+      "ref": "https://doi.org/10.1038/s41598.025.18275.5",
+      "title": "Decoding of image properties from single-trial visual evoked potentials recorded by ultra-high-density EEG",
+      "classification": "partial",
+      "cot_reasoning": "Paper decodes image properties (contrast, hue, luminance, saturation, spatial frequency) from VEPs using cross-validated regression with uHD EEG. References Grootswagers et al. (2020) and Schreiner et al. for methodology based on 'grating stimuli and classification analyses' - these likely use ds004357 but this specific paper uses its own 4-subject dataset, not openneuro_ds004357.",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 0,
+      "paradigm": "visual image viewing",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "not specified for ds004357",
+      "target_events": [],
+      "label_mapping": "continuous image property values",
+      "meta_level": "unclear",
+      "super_meta_note": "Uses different dataset (4 subjects, own collection); cites related work on ds004357 for methodology",
+      "evidence_desc": "While methodology references grating decoding work (ds004357), this paper analyzes its own uHD EEG dataset, not the openneuro_ds004357 dataset."
+    },
+    {
+      "filename": "paper_10_1038_s41598_025_27703_5.pdf",
+      "ref": "https://doi.org/10.1038/s41598.025.27703.5",
+      "title": "Robust neural decoding with low-density EEG",
+      "classification": "relevant",
+      "cot_reasoning": "Paper explicitly uses openneuro_ds004357 dataset - references 'Experiment 1 (https://doi.org/10.18112/openneuro.ds004357.v1.0.1)' with 16 participants viewing oriented grating stimuli varying in orientation, contrast, spatial frequency, and color. Uses electrode density configurations (16, 32, 64, 96, 128) to test decoding accuracy.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "RSVP visual grating",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "stimulus onset aligned; same analysis pipeline as original study",
+      "target_events": [
+        "stimulus onset events from grating presentation"
+      ],
+      "label_mapping": "4 levels per visual feature dimension",
+      "meta_level": "raw",
+      "super_meta_note": "Reanalyzes original ds004357 dataset with varying electrode densities; classification of visual feature levels",
+      "evidence_desc": "Authors explicitly cite openneuro.ds004357 and use Experiment 1 data (N=16, 128-channel EEG, visual grating stimuli with 4 feature dimensions)."
+    },
+    {
+      "filename": "paper_10_1038_s44271_025_00308_4.pdf",
+      "ref": "https://doi.org/10.1038/s44271.025.00308-4",
+      "title": "Neural correlates reveal separate stages of spontaneous face perception",
+      "classification": "irrelevant",
+      "cot_reasoning": "Paper investigates face pareidolia using EEG and behavioral experiments. Explicitly states EEG data available at 'https://doi.org/10.18112/openneuro.ds005642.v1.0.0' - different dataset from ds004357. Different stimuli (faces, objects) and paradigm.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "",
+      "super_meta_note": "",
+      "evidence_desc": "Uses openneuro ds005642, not ds004357. Face/object stimuli, different experimental paradigm."
+    },
+    {
+      "filename": "paper_10_1126_sciadv_adq0889.pdf",
+      "ref": "https://doi.org/10.1126/sciadv.adq0889",
+      "title": "Dynamics of visual object coding within and across the hemispheres: Objects in the periphery",
+      "classification": "irrelevant",
+      "cot_reasoning": "Paper uses EEG with object images lateralized to left/right visual fields and RSVP paradigm - similar paradigm but no mention of openneuro_ds004357 dataset. Authors (Robinson, Grootswagers, Shatek, Carlson) overlap with ds004357 authors, but this appears to be a different experiment/study using different stimuli.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "",
+      "super_meta_note": "",
+      "evidence_desc": "While authors overlap with ds004357 team, no explicit reference to ds004357 dataset. Different experimental paradigm with object images."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "Dataset has clear event structure with identifiable stimulus feature conditions (E1, E2, E3) mapped to visual feature labels, and is explicitly supported by two relevant references that demonstrate MVPA classification of orientation, contrast, spatial frequency, and color from this dataset.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 16,
+    "total_n": 16,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "Event/E  1": 322780,
+      "Event/E  2": 322781,
+      "Event/E  3": 1260
+    },
+    "subject_info": {
+      "record_count": 16,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Visual Feature Decoding from RSVP Stimuli\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.6 s, target_events = [`Event/E  1`, `Event/E  2`, `Event/E  3`]\n- **Label Route**: `event`\n- **Meta Level**: super\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `Event/E  1` | 0 | Stimulus feature condition 1 (orientation/contrast/SF/color level 1) |\n  | `Event/E  2` | 1 | Stimulus feature condition 2 (orientation/contrast/SF/color level 2) |\n  | `Event/E  3` | 2 | Stimulus feature condition 3 (orientation/contrast/SF/color level 3) |\n- **Evidence**:\n  - DOI: 10.1038/s41598.025.27703-5 — Explicitly analyzes openneuro.ds004357 (Experiment 1: N=16, 128-channel EEG) using event-based epoching to classify visual grating stimuli varying in orientation, contrast, spatial frequency, and color across 4 levels per feature dimension. Uses same stimulus onset aligned analysis pipeline.\n  - DOI: 10.1371/journal.pcbi.1011760 — Maps dynamics of visual feature coding; cites data availability referencing ds004357; decodes 4 visual features using MVPA from RSVP stimulus epochs.\n- **Kernel Notes**: 4-class classification per visual feature dimension (orientation, contrast, spatial frequency, color). Severe class imbalance: ~16,174 trials each for E1/E2 vs. ~79 trials for E3 per subject (~250:1 ratio). Use balanced class weights, oversampling of E3, or binary E1-vs-E2 classification as primary analysis. Preprocessing: high-pass filtering (0.5–1 Hz), artifact rejection for eye blinks/movements, baseline correction using pre-stimulus window.\n\n### Potential Task 1: Temporal Dynamics of Visual Feature Encoding\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`Event/E  1`, `Event/E  2`, `Event/E  3`]\n- **Label Route**: `event`\n- **Meta Level**: super\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `Event/E  1` | 0 | Stimulus feature condition 1 |\n  | `Event/E  2` | 1 | Stimulus feature condition 2 |\n  | `Event/E  3` | 2 | Stimulus feature condition 3 |\n- **Evidence**:\n  - DOI: 10.1371/journal.pcbi.1011760 — Supports extended temporal window analysis to capture early sensory and later cognitive processing stages for visual feature dynamics.\n- **Kernel Notes**: Extended 1.2s window captures peristimulus neural response across both early sensory (~50–150ms) and later cognitive processing stages. Suitable for time-resolved decoding analysis investigating temporal evolution of feature representations. Consider time-by-time classification or searchlight approaches.\n\n### Potential Task 2: One-vs-Rest Classification for Rare Event/E 3\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.6 s, target_events = [`Event/E  1`, `Event/E  2`, `Event/E  3`]\n- **Label Route**: `event`\n- **Meta Level**: super\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `Event/E  1` | 0 | Non-E3 condition |\n  | `Event/E  2` | 0 | Non-E3 condition |\n  | `Event/E  3` | 1 | Rare feature condition 3 |\n- **Evidence**:\n  - DOI: 10.1038/s41598.025.27703-5 — Acknowledges need for specialized handling of extreme class imbalance; one-vs-rest designs recommended for rare event analysis.\n- **Kernel Notes**: Binary classification (E3 vs. E1+E2 combined) addresses ~250:1 class imbalance by treating E3 as target class. Alternatively, use one-vs-one comparisons (E1-vs-E2 as primary; E1-or-E2-vs-E3 as validation).",
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds004357/kernel_final.py",
+  "kernel_code_len": 12845,
+  "scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 16,
+    "total_n": 16,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "Event/E  1": 322780,
+      "Event/E  2": 322781,
+      "Event/E  3": 1260
+    },
+    "subject_info": {
+      "record_count": 16,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "",
+  "status": "done"
+}

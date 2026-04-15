@@ -1,0 +1,214 @@
+{
+  "phase": "done",
+  "budget_used": 6,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 2,
+    "kernel_loop": 1,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": true,
+    "ref_count": 9,
+    "category": "Sensory/Response"
+  },
+  "timestamp": "2026-04-11T01:56:38.887829+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.1016_j.neuroimage.2018.12.046.html",
+      "classification": "uncertain",
+      "ref": "10.1016/j.neuroimage.2018.12.046",
+      "error": "Extracted text too short (11 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds004018.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2018_12_046.pdf",
+      "ref": "10.1016/j.neuroimage.2018.12.046",
+      "title": "The representational dynamics of visual objects in rapid serial visual processing streams",
+      "classification": "relevant",
+      "cot_reasoning": "This is the ORIGINAL publication that created the dataset hosted on OpenNeuro (data available at osf.io/a7knv as stated in the paper). The paper explicitly uses 200 object images presented in RSVP at 5Hz and 20Hz, with boats and geometric star shapes as target categories - exactly matching openneuro_ds004018's task definition. The study performs LDA classification of epochs from -100 to 1000ms post-stimulus onset.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "RSVP (rapid serial visual presentation)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "tmin=-0.1s, tmax=1.0s (explicitly stated as -100ms to 1000ms)",
+      "target_events": [
+        "stars",
+        "boats"
+      ],
+      "label_mapping": "stars=0 (target detection task), boats=1",
+      "meta_level": "raw",
+      "super_meta_note": "Original study; dataset is hosted on osf.io/a7knv",
+      "evidence_desc": "16 participants, 200 visual objects, RSVP at 5Hz (200ms) and 20Hz (50ms), LDA classifiers for category decoding, boats vs stars as target stimuli with 8 exemplars each"
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2022_119350.pdf",
+      "ref": "10.1016/j.neuroimage.2022.119350",
+      "title": "Unique contributions of perceptual and conceptual humanness to object representations in the human brain",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper uses a previously published stimulus set from osf.io/a7knv but does NOT use the openneuro_ds004018 dataset specifically. The 16 EEG participants recorded neural responses to humanness judgments, not to stars/boats classification. The task is representational similarity analysis (RSA) for humanness features, not the RSVP category classification task defined for this dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Uses stimulus set from Grootswagers et al. 2019 but collects NEW humanness judgments from 191 participants; EEG data from 16 participants analyzed via RSA for humanness features"
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2022_119517.pdf",
+      "ref": "10.1016/j.neuroimage.2022.119517",
+      "title": "Capacity for movement is an organisational principle in object representations",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper uses DIFFERENT datasets: openneuro.ds003885 and openneuro.ds003887 as explicitly stated. The task is classifying movement vs aliveness (not stars vs boats). The 48 participants viewed 400 images from 40 categories - clearly a different dataset from openneuro_ds004018's 200 images focused on boat/star targets.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly cites different OpenNeuro datasets (ds003885, ds003887); task is movement/aliveness classification not stars/boats; 48 subjects, 400 images from 40 categories"
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2022_119754.pdf",
+      "ref": "10.1016/j.neuroimage.2022.119754",
+      "title": "A large and rich EEG dataset for modeling human visual object recognition",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper describes THINGS-EEG dataset with completely different parameters: 10 subjects, 82,160 trials, 16,740 image conditions from THINGS database (1854 object concepts). The openneuro_ds004018 dataset has only 2 subjects and 200 images focused on stars/boats. This is a separate dataset created by different authors at Freie Universität Berlin.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "THINGS-EEG dataset: 10 participants, 82,160 trials, 16,740 conditions from THINGS database; RSVP at 200ms SOA; used for DNN encoding models"
+    },
+    {
+      "filename": "paper_10_1038_s41597_021_01102_7.pdf",
+      "ref": "10.1038/s41597.021.01102.7",
+      "title": "Human EEG recordings for 1,854 concepts presented in rapid serial visual presentation streams",
+      "classification": "irrelevant",
+      "cot_reasoning": "This THINGS-EEG paper describes a dataset with 50 subjects, 22,248 images from 1,854 object concepts at 10Hz - fundamentally different from openneuro_ds004018 which has only 2 subjects and 200 images at 5Hz/20Hz. While both use RSVP paradigms, the stimulus sets, subject counts, and experimental parameters are entirely distinct.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "THINGS-EEG: 50 subjects, 26,248 images from 1,854 concepts, RSVP at 10Hz; different experimental setup than openneuro_ds004018"
+    },
+    {
+      "filename": "paper_10_3389_fnhum_2024_1385624.pdf",
+      "ref": "10.3389/fnhum.2024.1385624",
+      "title": "Measuring information alignment in hyperscanning research with representational analyses: moving beyond interbrain synchrony",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a theoretical/methodological paper about hyperscanning and interbrain synchrony measures, not a study using openneuro_ds004018 for object category classification. It uses simulated hyperscanning data from a different object recognition study (Shatek et al. 2022). The focus is on RSA methodology, not the stars/boats classification task.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Uses simulated hyperscanning data from Shatek et al. 2022 (48 subjects, 400 images from 40 categories); theoretical paper on IBS vs RSA methodology"
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "ref": "https://doi.org/10.1162/IMAG.a.999",
+      "title": "Expectation dynamically modulates the representational time course of objects and locations",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper investigates how predictions about object identity and location modulate neural representations using EEG and MVPA. While it also uses RSVP with object images, the experimental task is about expectation/predictive coding effects, not stars vs boats category classification. Different paradigm and research question from openneuro_ds004018's defined task.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "40 subjects, RSVP with object images, investigating predictive coding effects on representational fidelity; different research question than stars/boats classification"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset contains identifiable event labels for 'stars' and 'boats' categories in an RSVP paradigm, and a relevant reference (10.1016/j.neuroimage.2018.12.046) directly supports this RSVP category classification task using LDA classifiers on star/boat image onset epochs.",
+  "pre_scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_specific/openneuro_ds004018.py",
+    "kernel_sha256": "a915ca38a5a00be1735daeb2bc5965b61879e919953b924268449ea38774166b",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 2,
+    "total_n": 2,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "Event/E  1": 16216
+    },
+    "subject_info": {
+      "record_count": 2,
+      "age_complete": 2,
+      "sex_complete": 2,
+      "device_complete": 0,
+      "age_examples": [
+        "32.0"
+      ],
+      "sex_examples": [
+        "Male"
+      ]
+    },
+    "misc_channel_names": []
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: RSVP Object Category Classification (stars vs boats)\n\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s, target_events = [`stars`, `boats`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|-------|---------|\n  | `stars` | 0 | Star/celestial category RSVP image onset |\n  | `boats` | 1 | Boat/vehicle category RSVP image onset |\n- **Evidence**:\n  - DOI: 10.1016/j.neuroimage.2018.12.046 — 16 participants, 200 visual objects, RSVP at 5Hz (200ms ISI) and 20Hz (50ms ISI), LDA classifiers for category decoding, boats vs stars as primary target stimuli with 8 exemplars each. Window from -100ms baseline to 1000ms captures N1/P1/N2 components for visual object category processing.\n- **Kernel Notes**: Kernel scan shows unresolved event type `Event/E  1` (16216 occurrences); actual `stars`/`boats` labels need extraction from BIDS events.tsv directly. Verify that `stars` and `boats` event codes are properly parsed from raw BIDS structure. Presentation frequency (5Hz vs 20Hz) should be encoded as a covariate per-epoch since it affects temporal dynamics of category decoding.\n\n### Classical Task 2: RSVP Target vs Distractor Binary Classification\n\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.1 s, tmax = 2.0 s, target_events = [`stars`, `boats`]\n- **Label Route**: `misc`\n- **Meta Level**: super\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|-------|---------|\n  | `target` | 1 | Target stimulus in RSVP stream |\n  | `distractor` | 0 | Non-target distractor stimulus |\n- **Super Meta Notes**: Labels derived from original study stimulus metadata (stimlist.csv or equivalent). Kernel step: Load target vs distractor annotations from original stimulus files and merge with epoch timestamps based on presentation order. The `rt` field (raw level) may provide additional response-time context for target detection analysis.\n- **Evidence**:\n  - DOI: 10.1016/j.neuroimage.2018.12.046 — Extended 2.1s epoch window (tmin=-0.1s to tmax=2.0s) for target detection analysis capturing N2/N4 components; LDA binary classification of target vs distractor events.\n- **Kernel Notes**: Extract `stars` and `boats` epochs as base events, then map to target/distractor labels via stimulus metadata. The `rt` field in misc route is available (2/2 files complete) for response-time analysis. Extended window captures later semantic processing stages beyond early visual components. Encode presentation_frequency (5Hz vs 20Hz) as metadata covariate.\n\n### Potential Task 1: Super-meta RSVP Category Decoding\n\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s, target_events = [`stars`, `boats`]\n- **Label Route**: `misc`\n- **Meta Level**: super\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|-------|---------|\n  | `animate` | 0 | Animate/living category superordinate label |\n  | `inanimate` | 1 | Inanimate/non-living category superordinate label |\n- **Super Meta Notes**: Derive animacy labels (animate vs inanimate) from original stimulus metadata for all 200 images. `stars` are celestial/inanimate objects; `boats` are vehicles/inanimate objects. For more varied super-meta, include object identity labels (specific object identities within categories) if stimulus metadata provides this level of detail.\n- **Kernel Notes**: Load original stimulus metadata (200 images) and map each epoch to its animacy and category labels. Version super-meta labels in kernel output. Consider multi-level classification (animacy → category → identity) as hierarchical super-meta approach. Very small dataset (2 subjects) limits generalization; use within-subject cross-validation. No device information available; device field missing in BIDS metadata.",
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds004018/kernel_final.py",
+  "kernel_code_len": 12778,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds004018.py",
+    "kernel_sha256": "bc3ce5ec9f3b496c0d56da90177a7013c47f26490de533945a7641c986a4e033",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 2,
+    "total_n": 2,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 2,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds004018.py",
+  "status": "done"
+}

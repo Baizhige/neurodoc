@@ -1,0 +1,179 @@
+{
+  "phase": "done",
+  "budget_used": 8,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 4,
+    "kernel_loop": 1,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 5,
+    "category": "High-level Mental"
+  },
+  "timestamp": "2026-04-13T12:09:14.527276+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds006647.v1.0.1.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds006647.v1.0.1",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds006647.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1038_s41597_025_06189_w.pdf",
+      "ref": "https://doi.org/10.1038/s41597-025-06189-w",
+      "title": "An EEG Dataset on Aesthetic and Creative Judgments of Brief Structured Poetry",
+      "classification": "relevant",
+      "cot_reasoning": "This is the data descriptor paper for exactly openneuro_ds006647: it describes 51 participants, 64-channel EEG, 210 texts (70 Haiku, 70 Senryu, 70 controls), and five rating dimensions (aesthetic appeal, vivid imagery, emotional impact, originality, creativity). The paper explicitly defines the experimental paradigm, stimulus structure, and behavioral labels that form the basis for classification tasks on this dataset.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 3,
+      "paradigm": "Silent reading and evaluation of Haiku, Senryu, and non-poetic control texts; 5-dimensional 7-point ratings per stimulus",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "tmin=-0.2s, tmax=1.0s (typical for ERP), target_events=[65280,65281,65282,65283,65284,65285,65286,65287,65288]",
+      "target_events": [
+        "65280",
+        "65281",
+        "65282",
+        "65283",
+        "65284",
+        "65285",
+        "65286",
+        "65287",
+        "65288"
+      ],
+      "label_mapping": "Haiku vs Senryu vs non-poetic control (3-class); also continuous ratings on 5 dimensions (aesthetic appeal, vivid imagery, emotional impact, originality, creativity) for regression",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Paper explicitly presents and describes openneuro_ds006647: 51 participants, BioSemi 64-channel EEG at 512 Hz, 210 stimuli across three conditions, five behavioural rating dimensions, resting-state EEG, and BIDS-compliant data release on OpenNeuro."
+    },
+    {
+      "filename": "paper_10_1109_bibm_2017_8217975.pdf",
+      "ref": "https://doi.org/10.1109/bibm.2017.8217975",
+      "title": "Does Tang Poetry Affect Human Emotional State? A Pilot Study by EEG",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper studies emotional responses to Chinese Tang poetry video clips in 18 subjects using a NeuroScan system at 1000 Hz — an entirely different dataset with different stimuli, subjects, and recording setup. It has no relation to openneuro_ds006647.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Different dataset: 18 subjects, Tang poetry videos, NeuroScan system, 1000 Hz, emotion recognition paradigm. No connection to ds006647."
+    },
+    {
+      "filename": "paper_10_3389_fpsyg_2022_913521.pdf",
+      "ref": "https://doi.org/10.3389/fpsyg.2022.913521",
+      "title": "Decoding brain activities of literary metaphor comprehension: An event-related potential and EEG spectral analysis",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper investigates EEG/ERP responses to literary metaphors vs. non-literary metaphors vs. literal expressions in 48 Chinese-speaking subjects — a completely different dataset and paradigm unrelated to openneuro_ds006647.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Different dataset: 48 subjects, prime-target semantic relatedness judgment task for Chinese literary vs. non-literary metaphors. No connection to ds006647."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The relevant paper (s41597-025-06189-w) explicitly describes this dataset with 3 stimulus conditions (Haiku, Senryu, non-poetic control texts), confirming a classification task is viable. The dataset has clear event structure with 9 BioSemi trigger codes encoding stimulus onsets across conditions, supporting epoch-by-event classification.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 4,
+    "total_n": 4,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "65280": 4,
+      "65281": 848,
+      "65282": 848,
+      "65283": 848,
+      "65284": 852,
+      "65285": 4,
+      "65286": 4,
+      "65287": 4,
+      "65288": 4,
+      "boundary": 5
+    },
+    "subject_info": {
+      "record_count": 4,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": [
+      "EXG1",
+      "EXG2",
+      "EXG3",
+      "EXG4",
+      "EXG7",
+      "EXG8"
+    ]
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Poetry Condition Classification (Haiku vs Senryu vs Control)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [65281, 65282, 65283, 65284]\n- **Label Route**: `Annotation`\n- **Meta Level**: raw\n- **Target Definition**:\n\n| Event | y | Meaning |\n|-------|---|---------|\n| `65281` | 0 | Experimental condition code 65281 |\n| `65282` | 1 | Experimental condition code 65282 |\n| `65283` | 2 | Experimental condition code 65283 |\n| `65284` | 3 | Experimental condition code 65284 |\n\n- **Evidence**: DOI: https://doi.org/10.1038/s41597-025-06189-w\n- **Kernel Notes**: 65281-65284 each have 848 events (consistent experimental trials). 65284 has 852 events (possible extra baseline/rest event). Only these four codes should be used for primary classification (3 classes: Haiku vs Senryu vs non-poetic control). Verify exact condition mapping against events.tsv. The 4-event codes (65280, 65285-65288) represent special conditions or system markers and are excluded from primary analysis. Boundary events are admin markers to exclude. Use tmin=-0.2, tmax=1.0 window for stimulus-locked ERP analysis (N400, P300 components).\n\n### Normal Task 1: Extended Reading Window Analysis\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_long_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s, tmax = 3.0 s, overlap = null, target_events = [65281, 65282, 65283, 65284]\n- **Label Route**: `Annotation`\n- **Meta Level**: raw\n- **Target Definition**:\n\n| Event | y | Meaning |\n|-------|---|---------|\n| `65281` | 0 | Experimental condition code 65281 |\n| `65282` | 1 | Experimental condition code 65282 |\n| `65283` | 2 | Experimental condition code 65283 |\n| `65284` | 3 | Experimental condition code 65284 |\n\n- **Evidence**: DOI: https://doi.org/10.1038/s41597-025-06189-w\n- **Kernel Notes**: Extended 3.0s window captures sustained cognitive processing during poetry reading. Longer epoch aligns with paradigm description of reading and evaluating texts across five subjective dimensions. Same event exclusion criteria as Classical Task 1.\n\n### Potential Task 1: Aesthetic/Creative Judgment Regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [65281, 65282, 65283, 65284]\n- **Label Route**: `Annotation`\n- **Meta Level**: super\n- **Target Definition**:\n\n| Event | y | Meaning |\n|-------|---|---------|\n| `65281` | continuous | Continuous rating dimension |\n| `65282` | continuous | Continuous rating dimension |\n| `65283` | continuous | Continuous rating dimension |\n| `65284` | continuous | Continuous rating dimension |\n\n- **Evidence**: Plausible from paradigm: five 7-point rating dimensions (Aesthetic Appeal, Vivid Imagery, Being Moved, Originality, Creativity) described in DOI: https://doi.org/10.1038/s41597-025-06189-w\n- **Kernel Notes**: Requires super-meta integration from behavioral rating files (events.tsv) to map stimulus IDs to continuous rating values. Label route should merge raw trigger events with behavioral rating data. Regression targets are the five subjective dimensions; select primary dimension or multi-output regression as appropriate.",
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds006647/kernel_final.py",
+  "kernel_code_len": 11704,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds006647.py",
+    "kernel_sha256": "41238c913650e8aee93c6d08a502fd173adb57ece461b45c54422e369b91fdbd",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 4,
+    "total_n": 4,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "65280": 4,
+      "65281": 848,
+      "65282": 848,
+      "65283": 848,
+      "65284": 852,
+      "65285": 4,
+      "65286": 4,
+      "65287": 4,
+      "65288": 4,
+      "boundary": 5
+    },
+    "subject_info": {
+      "record_count": 4,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": [
+      "EXG1",
+      "EXG2",
+      "EXG3",
+      "EXG4",
+      "EXG7",
+      "EXG8"
+    ]
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds006647.py",
+  "status": "done"
+}

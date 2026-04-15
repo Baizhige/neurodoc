@@ -20,51 +20,46 @@ For the synchronous paradigms, each recording session began with an initial rela
 
 ## File Scan Result
 
-> **Kernel SHA256**: `e0ac5cab015f9218843c89b0b4e92a97c5dbd33e63a6a1a90863bafaa937b37e`
-> **EEGUnity Version**: `0.8.0`
-> **Scan Type**: Sampled (5/92 files)
-
+> **Kernel SHA256**: `a8832789924f840bc44bd3b38edc6fc29bb5dfedf3c46c596f9f27524bc69c51`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|---|---|---|---|---|
-| `5F: index finger MI` | ~170 | event | raw | Index finger motor imagery cue (5F paradigm) |
-| `5F: middle finger MI` | ~193 | event | raw | Middle finger motor imagery cue (5F paradigm) |
-| `5F: pinkie MI` | ~185 | event | raw | Pinky finger motor imagery cue (5F paradigm) |
-| `5F: ring finger MI` | ~183 | event | raw | Ring finger motor imagery cue (5F paradigm) |
-| `5F: thumb MI` | ~204 | event | raw | Thumb motor imagery cue (5F paradigm) |
-| `CLA: left hand MI` | ~321 | event | raw | Left-hand motor imagery cue (CLA paradigm) |
-| `CLA: passive state` | ~324 | event | raw | Passive state instruction (CLA paradigm) |
-| `CLA: right hand MI` | ~314 | event | raw | Right-hand motor imagery cue (CLA paradigm) |
-| `FREEFORM: left hand MI` | ~350 | event | raw | Left-hand motor imagery onset (FreeForm paradigm) |
-| `FREEFORM: right hand MI` | ~350 | event | raw | Right-hand motor imagery onset (FreeForm paradigm) |
-| `HaLT: left hand MI` | ~163 | event | raw | Left-hand motor imagery cue (HaLT paradigm) |
-| `HaLT: left leg MI` | ~155 | event | raw | Left leg motor imagery cue (HaLT paradigm) |
-| `HaLT: passive state` | ~156 | event | raw | Passive state instruction (HaLT paradigm) |
-| `HaLT: right hand MI` | ~159 | event | raw | Right-hand motor imagery cue (HaLT paradigm) |
-| `HaLT: right leg MI` | ~153 | event | raw | Right leg motor imagery cue (HaLT paradigm) |
-| `HaLT: tongue MI` | ~170 | event | raw | Tongue motor imagery cue (HaLT paradigm) |
-| `NoMT: left hand cue` | ~162 | event | raw | Visual cue for left hand (NoMT baseline) |
-| `NoMT: left leg cue` | ~154 | event | raw | Visual cue for left leg (NoMT baseline) |
-| `NoMT: passive cue` | ~156 | event | raw | Visual cue for passive state (NoMT baseline) |
-| `NoMT: right hand cue` | ~158 | event | raw | Visual cue for right hand (NoMT baseline) |
-| `NoMT: right leg cue` | ~153 | event | raw | Visual cue for right leg (NoMT baseline) |
-| `NoMT: tongue cue` | ~171 | event | raw | Visual cue for tongue (NoMT baseline) |
-| `admin: marker-91` | ~4 | admin | raw | unkown |
-| `admin: marker-92` | ~2 | admin | raw | unkown |
-| `admin: marker-99` | ~14 | admin | raw | unkown |
+|----------|---------------|------|------------|---------|
+| `5F: index finger MI` | 3308 | event | raw | Index finger motor imagery cue (5F paradigm) |
+| `5F: middle finger MI` | 3716 | event | raw | Middle finger motor imagery cue (5F paradigm) |
+| `5F: pinkie MI` | 3561 | event | raw | Pinky finger motor imagery cue (5F paradigm) |
+| `5F: ring finger MI` | 3578 | event | raw | Ring finger motor imagery cue (5F paradigm) |
+| `5F: thumb MI` | 3908 | event | raw | Thumb motor imagery cue (5F paradigm) |
+| `CLA: left hand MI` | 4624 | event | raw | Left-hand motor imagery cue (CLA paradigm) |
+| `CLA: passive state` | 4178 | event | raw | Passive state instruction (CLA paradigm) |
+| `CLA: right hand MI` | 4624 | event | raw | Right-hand motor imagery cue (CLA paradigm) |
+| `FREEFORM: left hand MI` | 1066 | event | raw | Left-hand motor imagery onset (FreeForm paradigm) |
+| `FREEFORM: right hand MI` | 1061 | event | raw | Right-hand motor imagery onset (FreeForm paradigm) |
+| `HaLT: left hand MI` | 4631 | event | raw | Left-hand motor imagery cue (HaLT paradigm) |
+| `HaLT: left leg MI` | 4564 | event | raw | Left leg motor imagery cue (HaLT paradigm) |
+| `HaLT: passive state` | 4560 | event | raw | Passive state instruction (HaLT paradigm) |
+| `HaLT: right hand MI` | 4593 | event | raw | Right-hand motor imagery cue (HaLT paradigm) |
+| `HaLT: right leg MI` | 4446 | event | raw | Right leg motor imagery cue (HaLT paradigm) |
+| `HaLT: tongue MI` | 4847 | event | raw | Tongue motor imagery cue (HaLT paradigm) |
+| `NoMT: left hand cue` | 1114 | event | raw | Visual cue for left hand (NoMT baseline) |
+| `NoMT: left leg cue` | 1113 | event | raw | Visual cue for left leg (NoMT baseline) |
+| `NoMT: passive cue` | 1103 | event | raw | Visual cue for passive state (NoMT baseline) |
+| `NoMT: right hand cue` | 1114 | event | raw | Visual cue for right hand (NoMT baseline) |
+| `NoMT: right leg cue` | 1076 | event | raw | Visual cue for right leg (NoMT baseline) |
+| `NoMT: tongue cue` | 1178 | event | raw | Visual cue for tongue (NoMT baseline) |
+| `admin: marker-91` | 63 | admin | raw | unkown |
+| `admin: marker-92` | 31 | admin | raw | unkown |
+| `admin: marker-99` | 172 | admin | raw | unkown |
 
-
-> Three markers are unknown.
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
-
 
 ## Tasks
 

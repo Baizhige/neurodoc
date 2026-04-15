@@ -1,0 +1,243 @@
+{
+  "phase": "done",
+  "budget_used": 8,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 4,
+    "kernel_loop": 1,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 10,
+    "category": "High-level Mental"
+  },
+  "timestamp": "2026-04-11T02:34:47.934883+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds003838.v1.0.6.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds003838.v1.0.6",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds003838_versions_1.0.0.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10.1038_s41597-022-01414-2.pdf",
+      "ref": "10.1038/s41597-022-01414-2",
+      "title": "Pupillometry and electroencephalography in the digit span task",
+      "classification": "partial",
+      "cot_reasoning": "This is the data descriptor paper for openneuro_ds003838, explicitly describing the dataset hosted on OpenNeuro. It describes event codes that encode digit position, sequence length, and recall outcome, providing the metadata needed for classification. However, the paper itself only describes the dataset without performing any ML classification on it. The paper mentions 'The dataset has never been used in any publications' at time of publication.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "digit span task",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "",
+      "target_events": [
+        "memory X/05 correct",
+        "memory X/09 correct",
+        "memory X/13 correct",
+        "memory X/05 error",
+        "memory X/09 error",
+        "memory X/13 error"
+      ],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Data descriptor explicitly references OpenNeuro ds003838 and describes event codes 500105-6013131 marking each digit with task type, position, sequence length, and recall outcome."
+    },
+    {
+      "filename": "paper_10.1038_s41598-023-48917-5.pdf",
+      "ref": "10.1038/s41598-023-48917-5",
+      "title": "Task-evoked pulse wave amplitude tracks cognitive load",
+      "classification": "partial",
+      "cot_reasoning": "This paper uses data from openneuro_ds003838 (78 of 86 participants) to analyze PWA and HR as measures of cognitive load. It references Kosachenko et al. and describes the same digit span paradigm with 5, 9, and 13 digit sequences. The analysis focuses on correlating peripheral physiological signals with memory load levels, not performing ML classification.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "digit span task",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Paper uses data from the same dataset, analyzing PWA and HR responses to cognitive load in digit span task, but performs correlational analysis rather than ML classification."
+    },
+    {
+      "filename": "paper_10.1111_psyp.14275.pdf",
+      "ref": "10.1111/psyp.14275",
+      "title": "EEG and pupillometric signatures of working memory overload",
+      "classification": "partial",
+      "cot_reasoning": "This paper explicitly uses EEG and pupillometry data from openneuro_ds003838 (86 participants) to study cognitive overload. It examines theta and alpha activity across load conditions (5, 9, 13 digits). The paper describes correlational analysis of neural and autonomic correlates of overload, not ML-based classification of EEG epochs.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "digit span task",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Uses same dataset to analyze EEG theta/alpha and pupil size as correlates of memory overload; analysis is correlational not classification-based."
+    },
+    {
+      "filename": "paper_10_1016_j_ijpsycho_2024_112355.pdf",
+      "ref": "10.1016/j.ijpsycho.2024.112355",
+      "title": "Working memory processes and intrinsic motivation: An EEG study",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper uses a Sternberg working memory task with N=48 participants, which is a fundamentally different paradigm from the digit span task in openneuro_ds003838. The paper examines motivation effects on WM processes but does not use the specific dataset or its event structure.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "Sternberg task",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Different task paradigm (Sternberg vs digit span), different sample (N=48 vs N=86), no reference to openneuro_ds003838 or its event codes."
+    },
+    {
+      "filename": "paper_10_1038_s41597_022_01414_2.pdf",
+      "ref": "10.1038/s41597-022-01414-2",
+      "title": "Pupillometry and electroencephalography in the digit span task",
+      "classification": "partial",
+      "cot_reasoning": "Duplicate of File 1. Same data descriptor paper for openneuro_ds003838. Describes the dataset structure and event codes but does not perform ML classification.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "digit span task",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "",
+      "target_events": [
+        "memory X/05 correct",
+        "memory X/09 correct",
+        "memory X/13 correct",
+        "memory X/05 error",
+        "memory X/09 error",
+        "memory X/13 error"
+      ],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Duplicate file of the data descriptor; same content as paper_10.1038_s41597-022-01414-2.pdf in File 1."
+    },
+    {
+      "filename": "paper_10_1038_s41598_023_48917_5.pdf",
+      "ref": "10.1038/s41598-023-48917-5",
+      "title": "Task-evoked pulse wave amplitude tracks cognitive load",
+      "classification": "partial",
+      "cot_reasoning": "Duplicate of File 2. Same paper analyzing PWA and HR from openneuro_ds003838 (78 participants). Performs correlational analysis of peripheral physiological signals with cognitive load, not ML classification.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "digit span task",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Duplicate file of Scientific Reports paper; same content as paper_10.1038_s41598-023-48917-5.pdf in File 2."
+    },
+    {
+      "filename": "paper_10_1088_1741_2552_ad9cc0.pdf",
+      "ref": "10.1088/1741-2552/ad9cc0",
+      "title": "A novel method of cognitive overload assessment based on a fusion feature selection using EEG signals",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper proposes an EEG-based cognitive overload assessment method using their own local dataset, not openneuro_ds003838. While it cites Kosachenko et al. as background literature, it applies the method to different data. The paper performs binary classification of cognitive overload states but on a proprietary dataset.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "cognitive overload task",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Uses own local EEG dataset for cognitive overload classification; only references openneuro_ds003838 indirectly via citation to related work."
+    },
+    {
+      "filename": "paper_10_1109_access_2024_3394036.pdf",
+      "ref": "10.1109/ACCESS.2024.3394036",
+      "title": "Exploring Central-Peripheral Nervous System Interaction Through Multimodal Biosignals: A Systematic Review",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a systematic review article examining CNS-PNS interaction literature. It reviews 61 articles on physiological signals during cognitive tasks but does not use openneuro_ds003838 or any specific dataset for analysis. No ML classification is performed.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Systematic review of literature; no primary data analysis on openneuro_ds003838 or any specific dataset."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has a well-defined event structure with clear binary labels (correct vs error memory encoding) across digit sequences of 5, 9, and 13 items. Although the reference extractions show 'partial' relevance (confirming the paradigm and event codes exist but not directly demonstrating ML classification), the analysis.md describes a concrete binary classification task (correct vs error memory encoding) with epoching parameters and class definitions. This constitutes identifiable event/label structure sufficient for feasibility.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 296,
+    "total_n": 296,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "[98]": 8
+    },
+    "subject_info": {
+      "record_count": 296,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "tasks_section": "## Tasks\n\n### Potential Task 1: Correct vs Error Memory Encoding (binary classification)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`memory X/05 correct`, `memory X/09 correct`, `memory X/13 correct`, `memory X/05 error`, `memory X/09 error`, `memory X/13 error`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `memory X/05 correct` | 0 | Digit correctly recalled later (5-item sequence) |\n  | `memory X/09 correct` | 0 | Digit correctly recalled later (9-item sequence) |\n  | `memory X/13 correct` | 0 | Digit correctly recalled later (13-item sequence) |\n  | `memory X/05 error` | 1 | Digit forgotten later (5-item sequence) |\n  | `memory X/09 error` | 1 | Digit forgotten later (9-item sequence) |\n  | `memory X/13 error` | 1 | Digit forgotten later (13-item sequence) |\n- **Evidence**:\n  - DOI: 10.1038/s41597-022-01414-2 — Data descriptor confirms dataset contains digit span task events encoding sequence length and recall outcome; event codes mark each digit with position, sequence length, and recall status.\n  - DOI: 10.1111/psyp.14275 — Analyzes EEG and pupillometric data from this dataset examining working memory overload effects; epoched data from digit presentation for correct vs error recall analysis.\n- **Kernel Notes**: Aggregate all correct events (regardless of digit position X) as class 0, all error events as class 1. Use pattern matching for `memory .*/correct` and `memory .*/error` since X represents digit position (1-5, 1-9, or 1-13). Exclude `STATUS` admin markers. Verify actual event ID format from events.tsv — placeholder 'X' in analysis.md requires regex extraction.\n\n### Potential Task 2: Working Memory Load Classification (multi-class)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -1.5 s *, tmax = 3.5 s *, target_events = [`memory X/05 correct`, `memory X/09 correct`, `memory X/13 correct`, `memory X/05 error`, `memory X/09 error`, `memory X/13 error`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `memory X/05 correct` | 0 | Low load (5 digits) correctly recalled |\n  | `memory X/05 error` | 0 | Low load (5 digits) forgotten |\n  | `memory X/09 correct` | 1 | Medium load (9 digits) correctly recalled |\n  | `memory X/09 error` | 1 | Medium load (9 digits) forgotten |\n  | `memory X/13 correct` | 2 | High load (13 digits) correctly recalled |\n  | `memory X/13 error` | 2 | High load (13 digits) forgotten |\n- **Evidence**:\n  - DOI: 10.1111/psyp.14275 — Examines working memory overload effects across digit sequences of 5, 9, and 13 items (load levels); paper uses same dataset for cognitive load analysis.\n- **Kernel Notes**: Class labels represent cognitive load level (5=low, 9=medium, 13=high), ignoring recall outcome for load classification. Paper epoched [−1500 3500 ms]; kernel should verify timing from events.tsv. *Parameters marked with * are inferred from paper methodology, not explicitly stated in dataset. Aggregate correct and error events per load level into 3 classes.\n\n### Normal Task 1: Digit Presentation Event Detection\n- **Task Type**: detection\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.5 s, tmax = 0.8 s, target_events = [`memory X/05 correct`, `memory X/09 correct`, `memory X/13 correct`, `memory X/05 error`, `memory X/09 error`, `memory X/13 error`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `memory X/05 correct` | 1 | Digit presentation event (5-item sequence, later recalled) |\n  | `memory X/09 correct` | 1 | Digit presentation event (9-item sequence, later recalled) |\n  | `memory X/13 correct` | 1 | Digit presentation event (13-item sequence, later recalled) |\n  | `memory X/05 error` | 1 | Digit presentation event (5-item sequence, later forgotten) |\n  | `memory X/09 error` | 1 | Digit presentation event (9-item sequence, later forgotten) |\n  | `memory X/13 error` | 1 | Digit presentation event (13-item sequence, later forgotten) |\n- **Evidence**:\n  - DOI: 10.1038/s41597-022-01414-2 — Data descriptor confirms event codes 500105-6013131 mark each digit with task type, position, sequence length, and recall outcome.\n- **Kernel Notes**: Single-class detection task for all digit presentation events regardless of sequence length or outcome. Serves as baseline for preprocessing and signal quality verification. Use pattern `memory .*/(correct|error)` to aggregate all digit events.",
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds003838/kernel_final.py",
+  "kernel_code_len": 10214,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds003838.py",
+    "kernel_sha256": "8760ef8f59d8096d402af858f6761db44f0c40a100ac54cfb32e524b4136db46",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 296,
+    "total_n": 296,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "[98]": 8
+    },
+    "subject_info": {
+      "record_count": 296,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": [
+      "PPG"
+    ]
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds003838.py",
+  "status": "done"
+}

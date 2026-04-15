@@ -70,3 +70,7 @@ Minimal placeholder content for File Scan Result info subsection.
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004147
+
+---
+
+> **auto_eeg FAILED**: While the dataset has clear paradigm description and identifiable event structure (Stimulus markers with behavioral outcome labels in events.tsv), no reference papers were classified as 'relevant' or 'partial'. The analysis.md alone provides sufficient task detail, but feasibility requires at least one usable reference per evaluation criteria.

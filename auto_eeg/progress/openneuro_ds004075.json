@@ -1,0 +1,30 @@
+{
+  "phase": "done",
+  "budget_used": 1,
+  "budget_breakdown": {
+    "feasibility": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 2,
+    "category": "Others"
+  },
+  "timestamp": "2026-04-11T02:33:13.297715+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds004075.v1.0.0.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds004075.v1.0.0",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds004075.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    }
+  ],
+  "feasible": false,
+  "feasibility_reason": "Although the dataset has BIDS-defined tasks (Context03, Context09, Context10) and a 64-channel EEG structure, the event structure shows 'no_events' detected, the paradigm is described as too vague to determine, and both reference extractions are classified as 'uncertain' with no useful context. Without identifiable event/label structure or supporting reference information, a concrete ML task cannot be reliably defined.",
+  "status": "failed"
+}

@@ -1,0 +1,140 @@
+{
+  "phase": "done",
+  "budget_used": 6,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 2,
+    "kernel_loop": 1,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 5,
+    "category": "Biological State"
+  },
+  "timestamp": "2026-04-13T01:05:47.045320+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds005420.v1.0.0.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds005420.v1.0.0",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds005420.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10.1038_s41597-019-0104-8.pdf",
+      "ref": "10.1038/s41597-019-0104-8",
+      "title": "EEG-BIDS, an extension to the brain imaging data structure for electroencephalography",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper is a methodological specification document describing the EEG-BIDS standard for organizing EEG data. While it references OpenNeuro as a repository that implements BIDS, it does not use the specific dataset openneuro_ds005420. The paper is about data formatting standards rather than any particular EEG analysis task.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Paper describes BIDS-EEG specification; no dataset-specific experiments or analysis of openneuro_ds005420."
+    },
+    {
+      "filename": "paper_10_1109_ubmk67458_2025_11207051.pdf",
+      "ref": "10.1109/UBMK67458.2025.11207051",
+      "title": "A Comparative Study of VGG-19 and a Custom CNN for Binary EEG-State Classification Using Composite Time-Frequency Imaging",
+      "classification": "relevant",
+      "cot_reasoning": "The paper explicitly uses OpenNeuro ds005420 for cross-dataset validation, as stated in the abstract: 'a cross-validation experiment on a second, distinct dataset (OpenNeuro ds005420) revealed a performance inversion.' They perform binary eyes-open vs eyes-closed classification using 10-s epochs with 1.0-s overlap, achieving 80.12% with a custom CNN and 74.96% with VGG-19 on this dataset.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "resting-state eyes-open vs eyes-closed",
+      "epoch_method_hint": "segmentation",
+      "epoch_params": "segment_length = 10 s, overlap = 1.0 s",
+      "target_events": [
+        "eyes-open (EO)",
+        "eyes-closed (EC)"
+      ],
+      "label_mapping": "EO = 0, EC = 1",
+      "meta_level": "super",
+      "super_meta_note": "Labels derived from BIDS task labels (Oa/Oc) in file naming; no discrete event markers in events.tsv. Continuous recordings segmented into 10-s epochs with 1.0-s overlap to generate sufficient samples for binary classification.",
+      "evidence_desc": "Abstract confirms: 'cross-validation experiment on a second, distinct dataset (OpenNeuro ds005420)'. DOI 10.1109/ubmk67458.2025.11207051. EEG converted to composite CWT images for VGG-19 and custom 6-layer CNN comparison. Dataset-specific: 20-channel EEG, 500 Hz sampling rate, 72 subjects females aged 60-80."
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "ref": "10.1111/psyp.70261",
+      "title": "Confirmation of a Useful Dark-Room Resting-State Procedure: Periodic and Aperiodic MEG Activity in Children",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper uses MEG (magnetoencephalography) data from 147 children aged 7.7-17.1 years, not EEG from the specific openneuro_ds005420 dataset. While it also studies eyes-open vs eyes-closed resting-state conditions, the modality (MEG vs EEG), population (children vs elderly females), and dataset are completely different. No mention of openneuro_ds005420.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Uses MEG data from children (N=147, 7.7-17.1 years), not EEG from elderly females. Wrong modality (MEG vs EEG), wrong age group, and wrong dataset. No reference to openneuro_ds005420."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has a well-defined paradigm (eyes-open vs eyes-closed resting-state EEG in females aged 60-80) and the relevant reference paper (10.1109/UBMK67458.2025.11207051) demonstrates successful binary classification using VGG-19 and CNN on this exact dataset by segmenting into 10-s epochs with 1-s overlap. The analysis.md provides clear task parameters for the eyes-open/eyes-closed classification.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 72,
+    "total_n": 72,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 72,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Eyes-Open vs Eyes-Closed Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 10 s, overlap = 1.0 s\n- **Label Route**: `event`\n- **Meta Level**: super\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `eyes-open (EO)` | 0 | Eyes open resting state |\n  | `eyes-closed (EC)` | 1 | Eyes closed resting state |\n- **Kernel Notes**: No discrete event markers exist in events.tsv. Condition labels (EO/EC) must be inferred from BIDS task identifiers in filenames (e.g., 'task-Oa' = eyes-open, 'task-Oc' = eyes-closed) or participants.tsv metadata. Apply bandpass filter (0.5–40 Hz) and artifact rejection (amplitude threshold ±100 μV) prior to segmentation. Assign binary labels per segment based on source recording's condition metadata. Use subject-wise train/test splits to avoid data leakage. The dataset contains only females aged 60–80 years; confirm that model generalizability to other demographics is beyond scope.\n- **Evidence**:\n  - DOI: 10.1109/UBMK67458.2025.11207051 — Validated on OpenNeuro ds005420 for cross-dataset validation using VGG-19 and custom 6-layer CNN. Converted EEG to composite CWT images for binary classification. Segmented raw files into 10-s epochs with 1.0-s overlap to generate sufficient samples. Dataset-specific parameters confirmed: 20-channel EEG, 500 Hz sampling rate, 72 subjects (females, age 60–80).\n\n### Normal Task 1: Resting-State Segmentation for Frequency-Domain Analysis\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 4 s, overlap = 0.5 s\n- **Label Route**: `event`\n- **Meta Level**: super\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `eyes-open (EO)` | 0 | Eyes open resting state |\n  | `eyes-closed (EC)` | 1 | Eyes closed resting state |\n- **Kernel Notes**: Shorter 4-s segments with 0.5-s overlap suitable for alpha/beta power comparisons between eyes-open and eyes-closed states. Condition labels derived from BIDS task identifiers (Oa/Oc) as described for Classical Task 1. Apply bandpass filter (0.5–40 Hz), notch filter (50/60 Hz), and artifact rejection before segmentation. This alternative segmentation scheme is plausible for frequency-domain analyses but lacks direct validation on this dataset.\n- **Evidence**:\n  - DOI: 10.1109/UBMK67458.2025.11207051 — Reference confirms 10-s segmentation approach; 4-s alternative is plausible for frequency-domain analyses but not directly validated.",
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds005420/kernel_final.py",
+  "kernel_code_len": 5055,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds005420.py",
+    "kernel_sha256": "d3b7b79c84680f3d40ce6c47df5ccebe2db47adda3250d9511022b86589da3bb",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 72,
+    "total_n": 72,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 72,
+      "age_complete": 72,
+      "sex_complete": 72,
+      "device_complete": 0,
+      "age_examples": [
+        "60-80"
+      ],
+      "sex_examples": [
+        "female"
+      ]
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds005420.py",
+  "status": "done"
+}

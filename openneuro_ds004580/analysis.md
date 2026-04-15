@@ -2,6 +2,7 @@
 
 **Dataset**: `openneuro_ds004580` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004580
 **Category**: Sensory/Response | **Subjects**: 30 | **Files (Completed)**: 30 | **Channels**: 64 | **Sampling Rate**: 512 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
@@ -9,64 +10,72 @@ Participants performed the Simon conflict task in which stimulus location (left/
 
 ## File Scan Result
 
+> **Kernel SHA256**: `0c5e640c70eceb34113cef4014f0b613acace1cf0752e233facc12fafc52723d`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `S 1` | 30x384 | short | raw | Congruent trial (stimulus side matches response side) |
-| `S 2` | 30x383 | short | raw | Incongruent trial (stimulus side opposite to response side) |
-| `S 3` | ~30xN | short | raw | Rare/catch trial |
-| `boundary` | ~30xN | admin | raw | Recording boundary marker |
-| `S255` | ~30xN | admin | raw | BrainVision overflow/system marker |
+| `S  1` | 55922 | event | raw | Congruent trial (stimulus location matches response side) |
+| `S  2` | 54800 | event | raw | Incongruent trial (stimulus location conflicts with response side) |
+| `S  3` | 1 | event | raw | Rare/catch trial |
+| `S255` | 6 | event | raw | BrainVision overflow/system marker |
+| `boundary` | 156 | event | raw | Recording boundary marker |
 
-> **Event Type Description**:
-> - `short`: short stimulus onset marker (presentation duration <2 s), for `epoch_by_event_hdf5`
-> - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
-> - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **not used for epoch**
 
 ### Info
-
-- **Route**: `stim`
-- **Candidate Trigger Labels**: `S 1`, `S 2`, `S 3`, `S255`
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | missing | N/A |
+| `subject_sex` | missing | N/A |
+| `device` | missing | N/A |
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Simon
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004580 DOI: https://doi.org/10.1101/2022.07.26.22278079
-
-
-### Normal Task 1: Congruent vs Incongruent Classification (binary)
+### Classical Task 1: Congruent vs Incongruent Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset), target_events = see Target Definition
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = ["S  1", "S  2"]
 - **Label Route**: `Annotation`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: boundary and S255 are admin events - exclude from target_events. S255 is a BrainVision system marker (overflow/sync), not a task event. S 3 (rare trials) can be optionally included as a third class.
+- **Meta Level**: raw
+- **Target Definition**:
 
 | Event | y | Meaning |
-|-------|---|---------|
-| `S 1` | 0 | Congruent trial |
-| `S 2` | 1 | Incongruent trial |
+|-------|-------|--------|
+| `S  1` | 0 | Congruent trial (stimulus location matches response side) |
+| `S  2` | 1 | Incongruent trial (stimulus location conflicts with response side) |
 
-## Data Quality Notes
+- **Evidence**: Paradigm documentation (Simon conflict task investigating N2/P3 ERP components); epoch alignment recommendations confirm S 1, S 2 stimulus markers with duration <2s are optimal for epoch_by_event_hdf5. DOI: https://doi.org/10.1101/2022.07.26.22278079
+- **Kernel Notes**: Subject-level processing should verify event counts (~1864 S 1/subject, ~1827 S 2/subject). Balanced design supports binary classification without resampling. Use Annotation channel for labels: S  1 → 0 (congruent), S 2 → 1 (incongruent). Exclude S255 (BrainVision overflow/admin, 6 total), boundary (156 total), and S 3 (only 1 occurrence, too sparse).
 
-- boundary and S255 must be excluded from epoching
-- Balanced S 1 and S 2 counts (~384 vs ~383 per subject)
-- 30 subjects with consistent congruent/incongruent structure
+### Potential Task 1: ERP Component Analysis (N2/P3 Conflict Effects)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.3 s, tmax = 0.8 s, overlap = null, target_events = ["S  1", "S  2"]
+- **Label Route**: `Annotation`
+- **Meta Level**: raw
+- **Target Definition**:
 
-## Kernel Responsibilities
+| Event | y | Meaning |
+|-------|-------|--------|
+| `S  1` | 0 | Congruent trial |
+| `S  2` | 1 | Incongruent trial |
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+- **Evidence**: Paradigm description explicitly states "study investigates conflict monitoring and executive control neural signatures (N2, P3 ERP components)". Extended window (-0.3s to 0.8s) recommended for classic N2 (~200-350ms) and P3 (~300-600ms) component extraction.
+- **Kernel Notes**: Baseline correction at -300 to -100ms recommended for ERP analysis. N2 amplitude differences between S 1 vs S 2 expected at fronto-central sites; P3 differences expected at parietal sites. Channel-level averaging should preserve 64-channel montage for topographic analysis.
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004580
+### Normal Task 1: Rare/Catch Trial Detection
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = ["S  3"]
+- **Label Route**: `stim`
+- **Meta Level**: raw
+- **Target Definition**:
+
+| Event | y | Meaning |
+|-------|-------|--------|
+| `S  3` | 2 | Rare/catch trial |
+
+- **Evidence**: Paradigm documents S 3 as "rare/catch trials", suggesting deviant detection paradigm embedded within Simon task. Epoch alignment recommendations note S 3 is too sparse for meaningful comparison (only 1 total across all subjects).
+- **Kernel Notes**: Cannot perform meaningful binary or multi-class classification due to extreme class imbalance (S  3: 1 occurrence vs S  1: 55922, S  2: 54800). Task documented for completeness; not recommended for primary analysis.

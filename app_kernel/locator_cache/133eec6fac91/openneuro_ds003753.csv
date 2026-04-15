@@ -1,26 +1,668 @@
-File Path,Domain Tag,File Type,Data Shape,Channel Names,Number of Channels,Sampling Rate,Duration,Completeness Check,Error,age,sex,events
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-001/eeg/sub-001_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 784250)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, EKG",66.0,500.0,1568.498,Completed,nan,19,Male,"Left Button: 94, STATUS: 68, Right Button: 66, FB: WIN COW: 63, FB: WIN PUPPY: 57, CUE: C - EASY COW: 40, CUE: D - HARD COW: 40, CUE: A - EASY PUPPY: 40, CUE: B - HARD PUPPY: 40, FB: LOSE PUPPY: 23, FB: LOSE COW: 17"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-002/eeg/sub-002_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 752025)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, EKG",66.0,500.0,1504.048,Completed,nan,20,Female,"Right Button: 80, Left Button: 80, STATUS: 68, FB: WIN COW: 62, FB: WIN PUPPY: 58, CUE: C - EASY COW: 40, CUE: A - EASY PUPPY: 40, CUE: B - HARD PUPPY: 40, CUE: D - HARD COW: 40, FB: LOSE PUPPY: 22, FB: LOSE COW: 18"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-003/eeg/sub-003_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 674375)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, EKG",66.0,500.0,1348.748,Completed,nan,20,Female,"Right Button: 117, STATUS: 70, FB: WIN PUPPY: 60, FB: WIN COW: 45, Left Button: 43, CUE: B - HARD PUPPY: 40, CUE: D - HARD COW: 40, CUE: A - EASY PUPPY: 40, CUE: C - EASY COW: 40, FB: LOSE COW: 35, FB: LOSE PUPPY: 20"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-004/eeg/sub-004_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 721625)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, EKG",66.0,500.0,1443.248,Completed,nan,20,Female,"Right Button: 96, STATUS: 70, Left Button: 64, FB: WIN COW: 63, FB: WIN PUPPY: 49, CUE: A - EASY PUPPY: 40, CUE: B - HARD PUPPY: 40, CUE: D - HARD COW: 40, CUE: C - EASY COW: 40, FB: LOSE PUPPY: 31, FB: LOSE COW: 17"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-005/eeg/sub-005_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 771675)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, EKG",66.0,500.0,1543.348,Completed,nan,22,Female,"Left Button: 82, Right Button: 78, STATUS: 69, FB: WIN COW: 58, FB: WIN PUPPY: 52, CUE: C - EASY COW: 40, CUE: B - HARD PUPPY: 40, CUE: A - EASY PUPPY: 40, CUE: D - HARD COW: 40, FB: LOSE PUPPY: 28, FB: LOSE COW: 22"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-006/eeg/sub-006_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 767175)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, EKG",66.0,500.0,1534.348,Completed,nan,22,Female,"Right Button: 96, STATUS: 68, Left Button: 64, FB: WIN COW: 52, FB: WIN PUPPY: 50, CUE: A - EASY PUPPY: 40, CUE: C - EASY COW: 40, CUE: D - HARD COW: 40, CUE: B - HARD PUPPY: 40, FB: LOSE PUPPY: 30, FB: LOSE COW: 28"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-007/eeg/sub-007_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 723750)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, EKG",66.0,500.0,1447.498,Completed,nan,22,Male,"Right Button: 93, STATUS: 70, Left Button: 67, FB: WIN COW: 59, FB: WIN PUPPY: 56, CUE: A - EASY PUPPY: 40, CUE: D - HARD COW: 40, CUE: C - EASY COW: 40, CUE: B - HARD PUPPY: 40, FB: LOSE PUPPY: 24, FB: LOSE COW: 21"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-008/eeg/sub-008_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 731025)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66.0,500.0,1462.048,Completed,nan,20,Female,"Left Button: 87, Right Button: 73, STATUS: 68, FB: WIN PUPPY: 60, FB: WIN COW: 51, CUE: A - EASY PUPPY: 40, CUE: D - HARD COW: 40, CUE: B - HARD PUPPY: 40, CUE: C - EASY COW: 40, FB: LOSE COW: 29, FB: LOSE PUPPY: 20"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-009/eeg/sub-009_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 689750)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66.0,500.0,1379.498,Completed,nan,18,Male,"Right Button: 82, Left Button: 78, STATUS: 70, FB: WIN COW: 64, FB: WIN PUPPY: 62, CUE: C - EASY COW: 40, CUE: A - EASY PUPPY: 40, CUE: D - HARD COW: 40, CUE: B - HARD PUPPY: 40, FB: LOSE PUPPY: 18, FB: LOSE COW: 16"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-010/eeg/sub-010_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 683750)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66.0,500.0,1367.498,Completed,nan,18,Female,"Right Button: 101, STATUS: 70, Left Button: 59, FB: WIN COW: 58, FB: WIN PUPPY: 57, CUE: B - HARD PUPPY: 40, CUE: A - EASY PUPPY: 40, CUE: C - EASY COW: 40, CUE: D - HARD COW: 40, FB: LOSE PUPPY: 23, FB: LOSE COW: 22"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-011/eeg/sub-011_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 834900)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66.0,500.0,1669.798,Completed,nan,18,Female,"Right Button: 105, STATUS: 68, FB: WIN PUPPY: 64, FB: WIN COW: 57, Left Button: 55, CUE: D - HARD COW: 40, CUE: A - EASY PUPPY: 40, CUE: C - EASY COW: 40, CUE: B - HARD PUPPY: 40, FB: LOSE COW: 23, FB: LOSE PUPPY: 16"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-012/eeg/sub-012_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 713575)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66.0,500.0,1427.148,Completed,nan,18,Female,"Left Button: 80, Right Button: 80, STATUS: 70, CUE: C - EASY COW: 40, FB: WIN COW: 40, CUE: B - HARD PUPPY: 40, FB: WIN PUPPY: 40, FB: LOSE PUPPY: 40, CUE: D - HARD COW: 40, FB: LOSE COW: 40, CUE: A - EASY PUPPY: 40"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-013/eeg/sub-013_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 822125)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66.0,500.0,1644.248,Completed,nan,19,Female,"Right Button: 87, Left Button: 73, STATUS: 68, FB: WIN PUPPY: 58, FB: WIN COW: 53, CUE: B - HARD PUPPY: 40, CUE: C - EASY COW: 40, CUE: A - EASY PUPPY: 40, CUE: D - HARD COW: 40, FB: LOSE COW: 27, FB: LOSE PUPPY: 22"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-014/eeg/sub-014_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 643450)","Fp1, Fz, F3, F7, Below Eye, FC5, FC1, C3, T7, Left Mastoid, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, Right Mastoid, CP6, CP2, Cz, C4, T8, Above Eye, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, Empty, EKG, AudioOutput",66.0,500.0,1286.898,Completed,nan,18,Female,"Left Button: 82, Right Button: 78, STATUS: 70, FB: WIN PUPPY: 52, FB: WIN COW: 50, CUE: D - HARD COW: 40, CUE: C - EASY COW: 40, CUE: A - EASY PUPPY: 40, CUE: B - HARD PUPPY: 40, FB: LOSE COW: 30, FB: LOSE PUPPY: 28"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-015/eeg/sub-015_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 764750)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66.0,500.0,1529.498,Completed,nan,19,Female,"Right Button: 82, Left Button: 78, STATUS: 61, FB: WIN COW: 59, FB: WIN PUPPY: 53, CUE: A - EASY PUPPY: 40, CUE: C - EASY COW: 40, CUE: B - HARD PUPPY: 40, CUE: D - HARD COW: 40, FB: LOSE PUPPY: 27, FB: LOSE COW: 21"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-016/eeg/sub-016_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 711375)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, EKG",66.0,500.0,1422.748,Completed,nan,18,Female,"Left Button: 87, Right Button: 73, STATUS: 70, FB: WIN COW: 52, FB: WIN PUPPY: 47, CUE: B - HARD PUPPY: 40, CUE: C - EASY COW: 40, CUE: D - HARD COW: 40, CUE: A - EASY PUPPY: 40, FB: LOSE PUPPY: 33, FB: LOSE COW: 28"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-017/eeg/sub-017_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 531400)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66.0,500.0,1062.798,Completed,nan,18,Female,"Left Button: 83, Right Button: 74, STATUS: 49, FB: LOSE COW: 44, FB: LOSE PUPPY: 41, CUE: A - EASY PUPPY: 40, CUE: D - HARD COW: 39, CUE: C - EASY COW: 39, CUE: B - HARD PUPPY: 39, FB: WIN PUPPY: 38, FB: WIN COW: 34"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-018/eeg/sub-018_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 655975)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66.0,500.0,1311.948,Completed,nan,27,Male,"Right Button: 83, Left Button: 77, STATUS: 70, FB: WIN PUPPY: 63, FB: WIN COW: 60, CUE: D - HARD COW: 40, CUE: A - EASY PUPPY: 40, CUE: B - HARD PUPPY: 40, CUE: C - EASY COW: 40, FB: LOSE COW: 20, FB: LOSE PUPPY: 17"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-019/eeg/sub-019_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 661225)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66.0,500.0,1322.448,Completed,nan,19,Female,"Right Button: 80, Left Button: 80, STATUS: 70, FB: WIN COW: 57, FB: WIN PUPPY: 55, CUE: D - HARD COW: 40, CUE: C - EASY COW: 40, CUE: B - HARD PUPPY: 40, CUE: A - EASY PUPPY: 40, FB: LOSE PUPPY: 25, FB: LOSE COW: 23"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-020/eeg/sub-020_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 714450)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66.0,500.0,1428.898,Completed,nan,18,Female,"Left Button: 94, STATUS: 69, Right Button: 66, FB: WIN PUPPY: 59, FB: WIN COW: 59, CUE: B - HARD PUPPY: 40, CUE: A - EASY PUPPY: 40, CUE: C - EASY COW: 40, CUE: D - HARD COW: 40, FB: LOSE PUPPY: 21, FB: LOSE COW: 21"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-021/eeg/sub-021_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 654375)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66.0,500.0,1308.748,Completed,nan,18,Female,"Right Button: 82, Left Button: 78, STATUS: 70, FB: WIN COW: 63, FB: WIN PUPPY: 63, CUE: D - HARD COW: 40, CUE: C - EASY COW: 40, CUE: B - HARD PUPPY: 40, CUE: A - EASY PUPPY: 40, FB: LOSE COW: 17, FB: LOSE PUPPY: 17"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-022/eeg/sub-022_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 639750)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66.0,500.0,1279.498,Completed,nan,22,Male,"Right Button: 88, Left Button: 72, STATUS: 70, FB: WIN COW: 57, FB: LOSE PUPPY: 53, CUE: D - HARD COW: 40, CUE: B - HARD PUPPY: 40, CUE: C - EASY COW: 40, CUE: A - EASY PUPPY: 40, FB: WIN PUPPY: 27, FB: LOSE COW: 23"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-023/eeg/sub-023_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 752625)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66.0,500.0,1505.248,Completed,nan,19,Female,"Right Button: 88, Left Button: 72, STATUS: 70, FB: WIN COW: 62, FB: WIN PUPPY: 60, CUE: B - HARD PUPPY: 40, CUE: D - HARD COW: 40, CUE: A - EASY PUPPY: 40, CUE: C - EASY COW: 40, FB: LOSE PUPPY: 20, FB: LOSE COW: 18"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-024/eeg/sub-024_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 1057250)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66.0,500.0,2114.498,Completed,nan,20,Male,"Left Button: 112, STATUS: 73, FB: WIN COW: 53, Right Button: 48, FB: WIN PUPPY: 43, CUE: D - HARD COW: 40, CUE: A - EASY PUPPY: 40, CUE: B - HARD PUPPY: 40, CUE: C - EASY COW: 40, FB: LOSE PUPPY: 37, FB: LOSE COW: 27"
-/home/public/eeg_dataset/openneuro_raw/ds003753/sub-025/eeg/sub-025_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 731025)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66.0,500.0,1462.048,Completed,nan,18,Female,"Left Button: 92, STATUS: 70, Right Button: 68, FB: WIN PUPPY: 56, FB: WIN COW: 54, CUE: A - EASY PUPPY: 40, CUE: B - HARD PUPPY: 40, CUE: D - HARD COW: 40, CUE: C - EASY COW: 40, FB: LOSE COW: 26, FB: LOSE PUPPY: 24"
+File Path,Domain Tag,File Type,Data Shape,Channel Names,Number of Channels,Sampling Rate,Duration,Completeness Check
+/home/public/eeg_dataset/openneuro_raw/ds003753/CHANGES,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/README,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2057_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2057_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2057_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2059_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2059_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2059_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2061_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2061_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2061_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2075_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2075_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2075_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2076_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2076_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2076_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2077_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2077_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2077_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2078_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2078_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2078_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2100_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2100_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2100_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2101_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2101_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2101_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2104_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2104_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2104_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2105_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2105_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2105_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2109_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2109_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2109_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2111_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2111_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2111_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2112_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2112_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2112_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2116_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2116_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2116_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2117_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2117_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2117_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2121_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2121_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2121_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2122_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2122_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2122_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2123_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2123_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2123_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2124_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2124_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2124_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2127_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2127_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2127_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2132_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2132_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2132_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2137_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2137_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2137_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2138_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2138_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2138_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2141_GOOD_STUFF.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2141_RL_Learn_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/BEH/2141_RL_Test_STATE.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/Convert2BIDS_BrownJackCav_E2.m,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/SUBJECTS.xlsx,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/code/substep_Behavior.m,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/dataset_description.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/participants.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/participants.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/1.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/10.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/11.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/12.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/13.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/14.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/15.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/16.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/17.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/18.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/19.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/2.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/20.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/21.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/22.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/23.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/24.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/25.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/26.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/27.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/28.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/29.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/3.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/30.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/31.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/32.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/33.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/34.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/35.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/36.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/37.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/38.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/39.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/4.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/40.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/41.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/42.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/43.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/44.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/45.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/46.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/47.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/48.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/49.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/5.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/50.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/51.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/52.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/53.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/54.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/55.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/56.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/57.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/58.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/59.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/6.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/60.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/7.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/8.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/9.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/CHAIRS/Thumbs.db,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/1.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/10.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/11.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/12.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/13.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/14.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/15.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/16.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/17.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/18.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/19.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/2.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/20.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/21.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/22.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/23.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/24.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/25.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/26.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/27.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/28.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/29.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/3.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/30.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/31.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/32.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/33.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/34.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/35.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/36.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/4.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/5.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/6.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/7.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/8.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/9.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/1.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/10.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/11.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/12.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/13.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/14.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/15.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/16.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/17.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/18.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/19.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/2.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/20.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/21.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/22.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/23.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/24.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/25.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/26.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/27.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/28.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/29.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/3.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/30.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/31.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/32.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/33.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/34.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/35.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/36.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/37.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/38.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/39.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/4.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/40.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/41.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/42.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/43.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/44.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/45.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/46.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/47.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/48.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/49.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/5.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/50.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/51.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/52.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/53.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/54.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/55.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/56.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/57.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/58.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/59.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/6.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/60.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/61.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/62.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/63.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/64.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/7.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/8.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/CHOICE_PICS/New folder/9.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/GOOD_STUFF_STIM.m,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/GOOD_STUFF_TASK.m,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/PROBES_Arousal.m,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/PROBES_Valence.m,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/P_LOSE.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/P_NULL.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/P_WIN.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/Reward_Instructions.m,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/Reward_Stim.mat,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/Slide1.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/Slide2.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/Slide3.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/Slide30.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/Slide4.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/Slide5.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/Slide6.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/WIN1.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/WIN2.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/arousal.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/IMAGE_RATER/pleasant.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PIC_RATER.m,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/1.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/10.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/11.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/12.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/13.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/14.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/15.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/16.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/17.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/18.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/19.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/2.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/20.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/21.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/22.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/23.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/24.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/25.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/26.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/27.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/28.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/29.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/3.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/30.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/31.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/32.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/33.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/34.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/35.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/36.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/37.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/38.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/39.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/4.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/40.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/41.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/42.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/43.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/44.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/45.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/46.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/47.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/48.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/49.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/5.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/50.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/51.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/52.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/53.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/54.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/55.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/56.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/57.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/58.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/59.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/6.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/60.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/61.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/62.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/63.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/64.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/65.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/66.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/67.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/68.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/69.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/7.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/70.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/71.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/72.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/73.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/74.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/75.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/76.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/77.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/78.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/79.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/8.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/80.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/9.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/PUPPIES/Thumbs.db,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/RL_Instructions.m,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/RL_Stim.m,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/TESTING.m,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/TRAINING.m,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/1.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/10.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/11.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/12.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/13.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/14.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/15.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/16.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/17.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/18.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/19.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/2.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/20.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/21.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/22.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/23.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/24.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/25.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/26.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/27.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/28.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/29.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/3.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/30.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/31.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/32.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/33.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/34.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/35.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/36.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/37.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/38.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/39.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/4.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/40.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/41.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/42.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/43.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/44.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/45.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/46.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/47.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/48.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/49.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/5.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/50.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/51.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/52.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/53.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/54.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/55.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/56.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/57.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/58.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/59.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/6.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/60.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/61.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/62.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/63.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/64.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/65.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/66.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/67.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/68.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/69.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/7.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/70.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/71.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/72.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/73.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/74.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/75.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/76.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/77.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/78.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/79.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/8.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/80.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/cows/9.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Bird1.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Bird2.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Bird3.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Bird4.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Chair1.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Chair2.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Chair3.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Chair4.jpg,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/RL_instructions.pptx,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide1.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide10.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide11.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide12.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide13.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide14.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide15.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide16.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide17.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide18.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide19.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide2.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide20.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide21.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide22.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide23.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide24.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide25.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide26.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide27.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide28.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide3.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide4.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide5.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide6.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide7.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide8.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/stimuli/E2 Task/instructions/Slide9.JPG,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-001/eeg/sub-001_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-001/eeg/sub-001_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-001/eeg/sub-001_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-001/eeg/sub-001_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-001/eeg/sub-001_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 784250)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, EKG",66,500.0,1568.498,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-001/eeg/sub-001_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-001/eeg/sub-001_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-001/eeg/sub-001_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-002/eeg/sub-002_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-002/eeg/sub-002_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-002/eeg/sub-002_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-002/eeg/sub-002_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-002/eeg/sub-002_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 752025)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, EKG",66,500.0,1504.048,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-002/eeg/sub-002_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-002/eeg/sub-002_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-002/eeg/sub-002_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-003/eeg/sub-003_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-003/eeg/sub-003_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-003/eeg/sub-003_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-003/eeg/sub-003_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-003/eeg/sub-003_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 674375)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, EKG",66,500.0,1348.748,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-003/eeg/sub-003_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-003/eeg/sub-003_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-003/eeg/sub-003_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-004/eeg/sub-004_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-004/eeg/sub-004_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-004/eeg/sub-004_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-004/eeg/sub-004_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-004/eeg/sub-004_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 721625)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, EKG",66,500.0,1443.248,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-004/eeg/sub-004_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-004/eeg/sub-004_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-004/eeg/sub-004_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-005/eeg/sub-005_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-005/eeg/sub-005_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-005/eeg/sub-005_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-005/eeg/sub-005_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-005/eeg/sub-005_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 771675)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, EKG",66,500.0,1543.348,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-005/eeg/sub-005_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-005/eeg/sub-005_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-005/eeg/sub-005_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-006/eeg/sub-006_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-006/eeg/sub-006_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-006/eeg/sub-006_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-006/eeg/sub-006_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-006/eeg/sub-006_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 767175)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, EKG",66,500.0,1534.348,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-006/eeg/sub-006_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-006/eeg/sub-006_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-006/eeg/sub-006_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-007/eeg/sub-007_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-007/eeg/sub-007_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-007/eeg/sub-007_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-007/eeg/sub-007_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-007/eeg/sub-007_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 723750)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, EKG",66,500.0,1447.498,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-007/eeg/sub-007_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-007/eeg/sub-007_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-007/eeg/sub-007_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-008/eeg/sub-008_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-008/eeg/sub-008_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-008/eeg/sub-008_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-008/eeg/sub-008_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-008/eeg/sub-008_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 731025)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66,500.0,1462.048,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-008/eeg/sub-008_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-008/eeg/sub-008_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-008/eeg/sub-008_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-009/eeg/sub-009_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-009/eeg/sub-009_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-009/eeg/sub-009_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-009/eeg/sub-009_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-009/eeg/sub-009_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 689750)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66,500.0,1379.498,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-009/eeg/sub-009_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-009/eeg/sub-009_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-009/eeg/sub-009_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-010/eeg/sub-010_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-010/eeg/sub-010_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-010/eeg/sub-010_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-010/eeg/sub-010_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-010/eeg/sub-010_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 683750)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66,500.0,1367.498,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-010/eeg/sub-010_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-010/eeg/sub-010_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-010/eeg/sub-010_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-011/eeg/sub-011_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-011/eeg/sub-011_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-011/eeg/sub-011_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-011/eeg/sub-011_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-011/eeg/sub-011_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 834900)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66,500.0,1669.798,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-011/eeg/sub-011_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-011/eeg/sub-011_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-011/eeg/sub-011_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-012/eeg/sub-012_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-012/eeg/sub-012_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-012/eeg/sub-012_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-012/eeg/sub-012_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-012/eeg/sub-012_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 713575)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66,500.0,1427.148,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-012/eeg/sub-012_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-012/eeg/sub-012_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-012/eeg/sub-012_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-013/eeg/sub-013_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-013/eeg/sub-013_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-013/eeg/sub-013_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-013/eeg/sub-013_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-013/eeg/sub-013_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 822125)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66,500.0,1644.248,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-013/eeg/sub-013_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-013/eeg/sub-013_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-013/eeg/sub-013_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-014/eeg/sub-014_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-014/eeg/sub-014_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-014/eeg/sub-014_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-014/eeg/sub-014_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-014/eeg/sub-014_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 643450)","Fp1, Fz, F3, F7, Below Eye, FC5, FC1, C3, T7, Left Mastoid, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, Right Mastoid, CP6, CP2, Cz, C4, T8, Above Eye, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, Empty, EKG, AudioOutput",66,500.0,1286.898,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-014/eeg/sub-014_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-014/eeg/sub-014_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-014/eeg/sub-014_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-015/eeg/sub-015_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-015/eeg/sub-015_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-015/eeg/sub-015_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-015/eeg/sub-015_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-015/eeg/sub-015_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 764750)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66,500.0,1529.498,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-015/eeg/sub-015_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-015/eeg/sub-015_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-015/eeg/sub-015_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-016/eeg/sub-016_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-016/eeg/sub-016_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-016/eeg/sub-016_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-016/eeg/sub-016_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-016/eeg/sub-016_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 711375)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, EKG",66,500.0,1422.748,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-016/eeg/sub-016_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-016/eeg/sub-016_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-016/eeg/sub-016_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-017/eeg/sub-017_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-017/eeg/sub-017_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-017/eeg/sub-017_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-017/eeg/sub-017_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-017/eeg/sub-017_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 531400)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66,500.0,1062.798,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-017/eeg/sub-017_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-017/eeg/sub-017_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-017/eeg/sub-017_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-018/eeg/sub-018_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-018/eeg/sub-018_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-018/eeg/sub-018_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-018/eeg/sub-018_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-018/eeg/sub-018_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 655975)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66,500.0,1311.948,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-018/eeg/sub-018_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-018/eeg/sub-018_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-018/eeg/sub-018_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-019/eeg/sub-019_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-019/eeg/sub-019_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-019/eeg/sub-019_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-019/eeg/sub-019_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-019/eeg/sub-019_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 661225)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66,500.0,1322.448,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-019/eeg/sub-019_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-019/eeg/sub-019_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-019/eeg/sub-019_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-020/eeg/sub-020_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-020/eeg/sub-020_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-020/eeg/sub-020_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-020/eeg/sub-020_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-020/eeg/sub-020_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 714450)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66,500.0,1428.898,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-020/eeg/sub-020_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-020/eeg/sub-020_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-020/eeg/sub-020_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-021/eeg/sub-021_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-021/eeg/sub-021_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-021/eeg/sub-021_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-021/eeg/sub-021_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-021/eeg/sub-021_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 654375)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66,500.0,1308.748,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-021/eeg/sub-021_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-021/eeg/sub-021_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-021/eeg/sub-021_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-022/eeg/sub-022_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-022/eeg/sub-022_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-022/eeg/sub-022_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-022/eeg/sub-022_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-022/eeg/sub-022_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 639750)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66,500.0,1279.498,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-022/eeg/sub-022_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-022/eeg/sub-022_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-022/eeg/sub-022_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-023/eeg/sub-023_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-023/eeg/sub-023_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-023/eeg/sub-023_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-023/eeg/sub-023_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-023/eeg/sub-023_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 752625)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66,500.0,1505.248,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-023/eeg/sub-023_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-023/eeg/sub-023_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-023/eeg/sub-023_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-024/eeg/sub-024_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-024/eeg/sub-024_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-024/eeg/sub-024_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-024/eeg/sub-024_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-024/eeg/sub-024_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 1057250)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66,500.0,2114.498,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-024/eeg/sub-024_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-024/eeg/sub-024_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-024/eeg/sub-024_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-025/eeg/sub-025_task-ProbabilisticSelection_channels.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-025/eeg/sub-025_task-ProbabilisticSelection_coordsystem.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-025/eeg/sub-025_task-ProbabilisticSelection_eeg.fdt,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-025/eeg/sub-025_task-ProbabilisticSelection_eeg.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-025/eeg/sub-025_task-ProbabilisticSelection_eeg.set,openneuro_ds003753,standard_data,"(66, 731025)","Fp1, Fz, F3, F7, FT9, FC5, FC1, C3, T7, TP9, CP5, CP1, Pz, P3, P7, O1, Oz, O2, P4, P8, TP10, CP6, CP2, Cz, C4, T8, FT10, FC6, FC2, F4, F8, Fp2, AF7, AF3, AFz, F1, F5, FT7, FC3, FCz, C1, C5, TP7, CP3, P1, P5, PO7, PO3, POz, PO4, PO8, P6, P2, CP4, TP8, C6, C2, FC4, FT8, F6, F2, AF4, AF8, EOG, SCR, AudioOutput",66,500.0,1462.048,Completed
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-025/eeg/sub-025_task-ProbabilisticSelection_electrodes.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-025/eeg/sub-025_task-ProbabilisticSelection_events.json,openneuro_ds003753,unknown,error,,,,,Unavailable
+/home/public/eeg_dataset/openneuro_raw/ds003753/sub-025/eeg/sub-025_task-ProbabilisticSelection_events.tsv,openneuro_ds003753,unknown,error,,,,,Unavailable

@@ -92,3 +92,7 @@ The provided title 'what_are_we_talking_about' without an accompanying README is
 > **Primary Label Routes**: Annotation, misc
 > **Evidence Keywords**: regression target
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004075
+
+---
+
+> **auto_eeg FAILED**: Although the dataset has BIDS-defined tasks (Context03, Context09, Context10) and a 64-channel EEG structure, the event structure shows 'no_events' detected, the paradigm is described as too vague to determine, and both reference extractions are classified as 'uncertain' with no useful context. Without identifiable event/label structure or supporting reference information, a concrete ML task cannot be reliably defined.

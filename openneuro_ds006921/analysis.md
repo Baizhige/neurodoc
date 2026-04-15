@@ -83,4 +83,8 @@ _No event markers detected (`no_events`). This dataset contains continuous resti
 ## Kernel Responsibilities
 
 > **Super Meta Required**: Yes
-> **Status**: wait_manual_review
+> **Status**: failed
+
+---
+
+> **auto_eeg FAILED**: The dataset has identifiable group labels (AmpPLP/AmpNoPLP/IC) and clear paradigm structure for resting-state group classification. However, the only 'partial' reference (paper_10_21203_rs_3_rs_8645281_v1.pdf) explicitly states 'supports_task: false' and uses mixed-effects models rather than ML classification, while the other two references are classified as 'uncertain'. The analysis.md provides task definitions, but without at least one reference that supports ML classification, feasibility cannot be established.

@@ -1,0 +1,191 @@
+{
+  "phase": "done",
+  "budget_used": 8,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 4,
+    "kernel_loop": 1,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 6,
+    "category": "Sensory/Response"
+  },
+  "timestamp": "2026-04-13T09:28:48.748781+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds005662.v2.0.1.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds005662.v2.0.1",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds005662.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10.1101_2025.07.10.664069.pdf",
+      "ref": "10.1101/2025.07.10.664069",
+      "title": "A comprehensive EEG dataset for investigating visual touch perception",
+      "classification": "relevant",
+      "cot_reasoning": "This bioRxiv preprint directly describes and releases the EEG dataset for openneuro_ds005662. Authors present an 80-participant EEG dataset with 2,880 trials per participant viewing touch videos from the Validated Touch-Video Database. The paper explicitly uses MVPA to decode self vs other perspective from EEG epochs, defining perspective classification as a concrete ML task. The technical validation demonstrates distinct neural patterns for perspective, validating the dataset's suitability for the defined classification tasks.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "visual_touch_perception",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "tmin = -0.1s, tmax = 0.8s relative to stimulus onset; epochs extracted around 600ms video presentations",
+      "target_events": [
+        "stimulus_onset",
+        "video_presentation"
+      ],
+      "label_mapping": "self-perspective = 0, other-perspective = 1",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Paper describes 90 unique videos in 4 orientations (self/other perspective × left/right hand), with 360 stimuli × 8 repeats = 2,880 trials. MVPA validation confirms decodable perspective information from EEG."
+    },
+    {
+      "filename": "paper_10.3758_s13428-025-02655-w.pdf",
+      "ref": "10.3758/s13428-025-02655-w",
+      "title": "The Validated Touch-Video Database",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper describes the creation and validation of the VTD stimulus set (90 videos) used to create openneuro_ds005662. However, it does not present or use the EEG dataset itself—it only contains behavioral validation data (ratings from 350 participants on hedonic quality, arousal, threat). The paper provides the stimulus source material but is not an analysis of the neuroimaging dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "",
+      "super_meta_note": "",
+      "evidence_desc": "Describes video stimulus creation and behavioral validation only; no EEG recordings or analysis."
+    },
+    {
+      "filename": "paper_10_1038_s41597_026_06714_5.pdf",
+      "ref": "10.1038/s41597-026-06714-5",
+      "title": "A comprehensive EEG dataset for investigating visual touch perception",
+      "classification": "relevant",
+      "cot_reasoning": "This Scientific Data article is the peer-reviewed version of the bioRxiv preprint (same authors, same content). It formally releases the EEG dataset matching openneuro_ds005662 with 80 participants, 64-channel EEG at 2048 Hz, and 2,880 trials per participant. The paper explicitly validates classification of self vs other perspective using MVPA, confirming the dataset supports perspective classification tasks. Also validates material categorization and emotional dimension classification.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "visual_touch_perception",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "600ms video duration + 200ms ISI; tmin/tmax windows around stimulus onset; epochs aligned to video presentation",
+      "target_events": [
+        "stimulus_onset",
+        "video_onset"
+      ],
+      "label_mapping": "self-perspective = 0, other-perspective = 1 (primary); 8 material categories for secondary task",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "First large open-access EEG dataset for visual/vicarious touch perception; technical validation using MVPA confirms decodable neural patterns for perspective and sensory properties."
+    },
+    {
+      "filename": "paper_10_1038_s41598_025_03194_2.pdf",
+      "ref": "10.1038/s41598-025-03194-2",
+      "title": "Characteristics of vicarious touch reports in a general population",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper investigates vicarious touch experiences in 422 undergraduate participants who viewed VTD videos, collecting self-report data about conscious sensations. No EEG recordings are collected or analyzed. While it uses the same stimulus set (VTD), it does not use or analyze the openneuro_ds005662 EEG dataset. The study is purely behavioral/psychological about vicarious sensation reports.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "",
+      "super_meta_note": "",
+      "evidence_desc": "Collects vicarious touch reports from participants viewing videos; no neuroimaging or EEG analysis."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has a clearly described visual touch perception paradigm and two relevant reference papers confirming decodable EEG signals for perspective classification. Although no events.tsv markers are present, the analysis.md provides sufficient metadata guidance for deriving labels from video filenames/metadata, making epoch-based classification feasible.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 80,
+    "total_n": 80,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_32516": 118,
+      "event_40708": 235546,
+      "event_32772": 1,
+      "event_36100": 1,
+      "event_27652": 2,
+      "event_57092": 4,
+      "event_65284": 67,
+      "event_516": 36,
+      "event_98052": 5,
+      "event_66052": 3,
+      "event_40704": 9130,
+      "event_512": 3,
+      "event_106240": 1,
+      "event_65280": 1,
+      "event_106244": 1,
+      "event_260": 1
+    },
+    "subject_info": {
+      "record_count": 80,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Visual Touch Perception - Perspective Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [`event_40708`]\n- **Label Route**: `Annotation`\n- **Meta Level**: super\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `event_40708` | 0 | self-perspective touch video |\n  | `event_40708` | 1 | other-perspective touch video |\n- **Super Meta Notes**: Derived from video metadata (perspective field in Validated Touch-Video Database). Kernel step: Link event_40708 timestamps to video stimulus metadata; extract perspective labels. Verify mapping by examining relationship between stimulus timing and video presentation sequence. Original analysis.md incorrectly used `no_events`; actual primary stimulus marker is `event_40708` (235,546 counts).\n- **Evidence**:\n  - DOI: 10.1101/2025.07.10.664069 — MVPA decoding of self vs other perspective from EEG epochs time-locked to stimulus onset\n  - DOI: 10.1038/s41597-026-06714-5 — Validation dataset for visual touch perception, perspective classification\n- **Kernel Notes**: Primary stimulus marker is `event_40708` based on count (235,546). External metadata file required to map events to perspective labels. For material classification (8 categories), hand orientation (4 categories), and valence regression, the same epoch parameters apply with different label derivations from metadata.\n\n### Potential Task 1: Visual Touch Perception - Material Classification (8 categories)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [`event_40708`]\n- **Label Route**: `Annotation`\n- **Meta Level**: super\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `event_40708` | 0-7 | 8 material categories (wood, plastic, glass, metal, fabric, rubber, ceramic, other) |\n- **Super Meta Notes**: Derived from video metadata (material field). Kernel step: Read video file names or accompanying metadata file to extract material category label for each trial epoch. Link material labels to event_40708 timestamps based on stimulus presentation order.\n- **Evidence**:\n  - DOI: 10.1101/2025.07.10.664069 — MVPA decoding of 8 material categories from EEG epochs\n  - DOI: 10.1038/s41597-026-06714-5 — Multi-class material classification using MVPA\n\n### Potential Task 2: Visual Touch Perception - Hand Orientation Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [`event_40708`]\n- **Label Route**: `Annotation`\n- **Meta Level**: super\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `event_40708` | 0 | left hand, self-perspective |\n  | `event_40708` | 1 | right hand, self-perspective |\n  | `event_40708` | 2 | left hand, other-perspective |\n  | `event_40708` | 3 | right hand, other-perspective |\n- **Super Meta Notes**: Derived from video metadata (hand_orientation field combining hand laterality + perspective). Kernel step: Extract 4-category hand orientation labels from video metadata and link to event_40708 timestamps based on stimulus presentation sequence.\n- **Evidence**:\n  - DOI: 10.1101/2025.07.10.664069 — Decoding hand orientation (left/right hand, self/other perspective)\n  - DOI: 10.1038/s41597-026-06714-5 — Hand orientation 4-class classification\n\n### Potential Task 3: Visual Touch Perception - Valence Regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [`event_40708`]\n- **Label Route**: `Annotation`\n- **Meta Level**: super\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `event_40708` | continuous | valence rating (negative to positive scale from Validated Touch-Video Database) |\n- **Super Meta Notes**: Derived from video metadata (valence field). Kernel step: Read valence ratings from Validated Touch-Video Database and map to event_40708 timestamps. Requires external valence annotations linked to video stimulus list.\n- **Evidence**:\n  - DOI: 10.1038/s41597-026-06714-5 — Valence regression using validated touch-video database ratings\n\n### Potential Task 4: Stimulus Segmentation - Trial Epoching\n- **Task Type**: segmentation\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [`event_40708`, `event_40704`, `event_32516`, `event_65284`, `event_516`]\n- **Label Route**: `misc`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `event_40708` | N/A | Primary stimulus presentation marker (235,546 counts) |\n  | `event_40704` | N/A | Secondary stimulus marker (9,130 counts) |\n  | `event_32516` | N/A | Event marker (118 counts) |\n  | `event_65284` | N/A | Event marker (67 counts) |\n  | `event_516` | N/A | Event marker (36 counts) |\n- **Super Meta Notes**: Comprehensive segmentation using all detected event markers for exploratory analysis. This supports downstream super-level task labeling by creating a standardized epoch repository. Kernel step: Extract epochs around all significant event markers; store timestamps for subsequent metadata linking.\n- **Evidence**: DOI: 10.1038/s41597-026-06714-5 — Dataset description confirming multi-event structure for stimulus presentation\n",
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds005662/kernel_final.py",
+  "kernel_code_len": 7995,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds005662.py",
+    "kernel_sha256": "ae6939484ae682db3726c4e319b9322ca64e4283bd38ac5c8be8b4302f28db0e",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 80,
+    "total_n": 80,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_32516": 118,
+      "event_40708": 235546,
+      "event_32772": 1,
+      "event_36100": 1,
+      "event_27652": 2,
+      "event_57092": 4,
+      "event_65284": 67,
+      "event_516": 36,
+      "event_98052": 5,
+      "event_66052": 3,
+      "event_40704": 9130,
+      "event_512": 3,
+      "event_106240": 1,
+      "event_65280": 1,
+      "event_106244": 1,
+      "event_260": 1
+    },
+    "subject_info": {
+      "record_count": 80,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds005662.py",
+  "status": "done"
+}

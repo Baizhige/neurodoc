@@ -1,43 +1,40 @@
 # EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task
 
 **Dataset**: `openneuro_ds003838` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003838/versions/1.0.0
-**Category**: High-level Mental | **Subjects**: 86 | **Files (Completed)**: 296
-**Channels**: 2 | **Sampling Rate**: 1000 Hz
+**Category**: High-level Mental | **Subjects**: 86 | **Files (Completed)**: 296 | **Channels**: 2 | **Sampling Rate**: 1000 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
 Participants performed a classic digit span working memory task involving serial recall of digit sequences of 5, 9, or 13 digits, along with a separate eyes-closed resting state condition. Each digit in a sequence was marked with an event indicating the digit position, sequence length, and whether it was later correctly recalled or forgotten. The dataset also includes ECG/PPG physiological signals recorded simultaneously with EEG.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `8760ef8f59d8096d402af858f6761db44f0c40a100ac54cfb32e524b4136db46`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `memory X/05 correct` | high | event | raw | Digit X in 5-item sequence, correctly recalled |
-| `memory X/09 correct` | high | event | raw | Digit X in 9-item sequence, correctly recalled |
-| `memory X/13 correct` | high | event | raw | Digit X in 13-item sequence, correctly recalled |
-| `memory X/05 error` | moderate | event | raw | Digit X in 5-item sequence, forgotten |
-| `memory X/09 error` | moderate | event | raw | Digit X in 9-item sequence, forgotten |
-| `memory X/13 error` | high | event | raw | Digit X in 13-item sequence, forgotten |
-| `STATUS` | 148 | admin | raw | System/hardware status marker |
+| `[98]` | 8 | event | raw | Experimental event marker |
 
 
+### MISC Label Summary
+- **Route**: `misc`
+- **Role**: Stores continuous or derived channel labels.
+- **Candidate Labels**: `PPG`
+- **Kernel Note**: Verify channel roles and units.
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
-### Classical Task 1: Correct vs Error Memory Encoding (binary classification)
+### Potential Task 1: Correct vs Error Memory Encoding (binary classification)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`memory X/05 correct`, `memory X/09 correct`, `memory X/13 correct`, `memory X/05 error`, `memory X/09 error`, `memory X/13 error`]
@@ -53,14 +50,14 @@ Participants performed a classic digit span working memory task involving serial
   | `memory X/09 error` | 1 | Digit forgotten later (9-item sequence) |
   | `memory X/13 error` | 1 | Digit forgotten later (13-item sequence) |
 - **Evidence**:
-  - DOI: 10.1038/s41597-022-01414-2 — Data descriptor paper confirms this dataset contains 64-channel EEG with digit span task events encoding sequence length and recall outcome; paper performs binary classification of correct vs error memory encoding.
-  - DOI: 10.1111/psyp.14275 — Analyzes EEG and pupillometric data from this dataset to examine working memory overload effects, epoching data from −1500 to 3500 ms relative to digit presentation and classifying correct vs error recall across digit sequences of 5, 9, and 13 items.
-- **Kernel Notes**: Aggregate all correct events (regardless of digit position X) as class 0, all error events as class 1. Exclude `STATUS` (admin marker). Verify event ID mapping from events.tsv — raw event IDs contain placeholder 'X' for digit position but kernel should match pattern `memory .*/correct` and `memory .*/error`. (replaces Potential Task 1 from original analysis.md)
+  - DOI: 10.1038/s41597-022-01414-2 — Data descriptor for this dataset explicitly defines event codes marking each digit with sequence length and recall outcome (partial support: correlational analysis, not ML classification).
+  - DOI: 10.1111/psyp.14275 — Analyzes EEG/pupillometric correlates of correct vs error recall across load levels; epoched data from −1500 to 3500 ms (partial support: correlational analysis).
+- **Kernel Notes**: Aggregate all correct events (regardless of digit position X) as class 0, all error events as class 1. Exclude `STATUS` (admin marker). Event IDs contain placeholder 'X' for digit position; kernel should match patterns `memory .*/correct` and `memory .*/error` to capture all positions and sequence lengths.
 
-### Classical Task 2: Working Memory Load Classification (multi-class)
+### Potential Task 2: Working Memory Load Classification (multi-class)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -1.5 s *, tmax = 3.5 s *, target_events = [`memory X/05 correct`, `memory X/09 correct`, `memory X/13 correct`, `memory X/05 error`, `memory X/09 error`, `memory X/13 error`]
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = -1.5 s, tmax = 3.5 s, target_events = [`memory X/05 correct`, `memory X/09 correct`, `memory X/13 correct`, `memory X/05 error`, `memory X/09 error`, `memory X/13 error`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -73,25 +70,6 @@ Participants performed a classic digit span working memory task involving serial
   | `memory X/13 correct` | 2 | High load (13 digits) correctly recalled |
   | `memory X/13 error` | 2 | High load (13 digits) forgotten |
 - **Evidence**:
-  - DOI: 10.1111/psyp.14275 — Examines working memory overload effects by classifying across digit sequences of 5, 9, and 13 items (load levels).
-- **Kernel Notes**: Class labels represent cognitive load level (5=low, 9=medium, 13=high), ignoring recall outcome for load classification. Paper epoched [−1500 3500 ms]; kernel should verify timing from events.tsv. *Parameters marked with * are inferred from paper methodology, not explicitly stated for this exact dataset.
-
-### Potential Task 1: Publisher-defined BIDS task: Mixed
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `event`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds003838/versions/1.0.0 DOI: 10.18112/openneuro.ds003838.v1.0.6
-
-## Data Quality Notes
-
-- Only 2 channels (PPG + ECG) - this is a physiological signal dataset, not a scalp EEG cap
-- EEG data may be stored separately; verify file naming convention
-- Large number of event subtypes (~30 distinct labels); grouping by outcome (correct/error) is necessary
-
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: No
-> **Status**: wait_manual_review
+  - DOI: 10.1111/psyp.14275 — Examines working memory overload effects by analyzing EEG/pupillometric responses across digit sequences of 5, 9, and 13 items (partial support: correlational analysis of load effects, not ML classification).
+  - DOI: 10.1038/s41598-023-48917-5 — Analyzes task-evoked pupillary responses as correlates of cognitive load across sequence lengths (partial support: correlational analysis).
+- **Kernel Notes**: Class labels represent cognitive load level (5=class 0, 9=class 1, 13=class 2), ignoring recall outcome for load classification. The longer epoch window (-1.5 to 3.5s) aligns with published methodology examining the full cognitive processing window. Event IDs use placeholder 'X' for digit position; kernel should match patterns to capture all positions within each sequence length.

@@ -71,3 +71,7 @@ Participants read and evaluated 210 short English-language texts including Haiku
 > **Why**: Raw markers are sufficient for primary tasks.
 > **Primary Label Routes**: Annotation, stim
 > **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006648
+
+---
+
+> **auto_eeg FAILED**: No reference extractions were classified as 'relevant' or 'partial' — all 14 references are 'uncertain'. While the dataset has clear event structure (BioSemi triggers 65280-65288) and well-documented paradigm information in analysis.md, the strict feasibility criteria require at least one confirmed relevant reference. The dataset structure supports classification tasks (poetry aesthetic evaluation with multiple conditions), but this cannot be established without reference validation.

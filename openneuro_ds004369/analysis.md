@@ -28,8 +28,8 @@ _No event markers detected (`no_events`). This dataset contains continuous EEG r
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
 ## Tasks
 
@@ -60,4 +60,8 @@ _No event markers detected (`no_events`). This dataset contains continuous EEG r
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: failed
+
+---
+
+> **auto_eeg FAILED**: No relevant or partial references exist in the extraction set (all are irrelevant/junk/uncertain), and while this is an OpenNeuro dataset with a described paradigm, the dataset explicitly lacks trial-level event markers and has no identifiable label structure in the EEG files. The analysis notes continuous segmentation as an unsupervised approach, but without events or external labels, no concrete supervised ML task can be defined.

@@ -2,6 +2,7 @@
 
 **Dataset**: `openneuro_ds001810` | **Year**: 2019 | **URL**: https://openneuro.org/datasets/ds001810
 **Category**: Sensory/Response | **Subjects**: 40 | **Files (Completed)**: 527 | **Channels**: 73 | **Sampling Rate**: 512 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
@@ -9,68 +10,100 @@ Participants performed an attentional blink (AB) task using a Rapid Serial Visua
 
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `2703333aa1996b7cde606d0917ec1d35e20c9d3e923c432e6adb7fd71f5f9d6d`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `T1_present_T2_present_lag3` | large | event | raw | T1 and T2 both present, short lag (within AB window) |
-| `T1_present_T2_absent_lag3` | large | event | raw | T1 present, T2 absent, short lag |
-| `T1_absent_T2_present` | large | event | raw | T1 absent, T2 present |
-| `T1_T2_lag8` | large | event | raw | T1 and T2 at long lag (outside AB window) |
-| `T1_onset` | large | event | raw | T1 target onset |
-| `T2_onset` | large | event | raw | T2 target onset |
-| `CM_baseline` (61440) | 261 files | admin | raw | BioSemi CM_in_range baseline - exclude |
-| `CM_out_of_range` (61694) | 263 files | admin | raw | BioSemi CM status - exclude |
-| `stimulus_onset` (61468) | large | event | raw | General stimulus onset |
-
-
-### MISC Label Summary
-
-- **Route**: `misc`
-- **Role**: Stores derived/continuous labels that are not native raw event IDs.
-- **Candidate Labels**: `response_time`
-- **Kernel Note**: Keep derivation source, unit, and version metadata.
+| `RSVP_stream_item` | 51145 | event | raw | RSVP stream visual stimulus item |
+| `STATUS_-6` | 408405 | event | raw | BioSemi hardware status code (baseline/continuous) |
+| `STATUS_126976` | 21 | event | raw | BioSemi hardware status marker |
+| `STATUS_127230` | 226 | event | raw | BioSemi hardware status marker |
+| `T1_T2_lag8` | 51144 | event | raw | T2 presented at lag-8 position (outside AB window) |
+| `T1_onset` | 34082 | event | raw | T1 target onset marker |
+| `T1_present_T2_present_lag3` | 51144 | event | raw | T2 presented at lag-3 position (within AB window) |
+| `T1_target` | 51144 | event | raw | T1 target identification event |
+| `T2_onset_variant1` | 23288 | event | raw | T2 onset at lag-3 (AB-susceptible) |
+| `T2_onset_variant2` | 27597 | event | raw | T2 onset at lag-8 (control) |
+| `T2_target` | 51115 | event | raw | T2 target identification event |
+| `response_hit` | 40784 | event | raw | Correct T2 detection response |
+| `response_miss` | 10216 | event | raw | Incorrect T2 detection (missed within AB window) |
+| `stimulus_lag_variant` | 17062 | event | raw | Stimulus lag variant marker |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
-### Potential Task 1: Attentional Blink Classification (multiclass)
+### Potential Task 1: T2 Detection Classification Across Attentional Blink Conditions
+
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = see Target Definition
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [T2_onset_variant1, T2_onset_variant2]
 - **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: BioSemi STATUS codes decoded via specific kernel. `CM_baseline` (61440) and `CM_out_of_range` (61694) are admin markers excluded. Regression target: `response_time`.
+- **Meta Level**: raw
+- **Target Definition**:
 
- | Event | y | Meaning |
- |-------|---|-法制---|
- | `T1_present_T2_present_lag3` | 0 | T2 detected within AB window |
- | `T1_present_T2_absent_lag3` | 1 | T2 missed within AB window |
- | `T1_absent_T2_present` | 2 | T2 present without T1 |
- | `T1_T2_lag8` | 3 | T2 detected outside AB window (control) |
- | `T1_onset` | 4 | T1 target onset |
- | `T2_onset` | 5 | T2 target onset |
+| Event | y | Meaning |
+|-------|-|-------|-------|
+| T2_onset_variant1 | 0 | T2 at AB-susceptible lag (lag-3) |
+| T2_onset_variant2 | 1 | T2 at control lag (lag-8) |
 
-## Data Quality Notes
+- **Evidence** (DOI): None available for this dataset; task supported by paradigm description and event structure alignment.
+- **Kernel Notes**: T2_onset_variant1 (~23.3k) and T2_onset_variant2 (~27.6k) likely encode T2 at different lag positions. The ~51k STATUS/61450 events represent RSVP stream items. CM_in_range (61440) and CM_out_of_range (61694) are BioSemi hardware markers excluded from analysis.
 
-- BioSemi STATUS channel encodes all triggers numerically; specific kernel maps codes to human-readable labels.
-- `61440` (CM_in_range) and `61694` (CM_out_of_range) are BioSemi hardware status codes - exclude from analysis.
-- Large dataset (527 files, 40 subjects x pre/during/post x anodal/cathodal conditions).
-- Verify that event code mapping is correct against the original paper before downstream use.
+### Potential Task 2: T2 Detection Accuracy Prediction
 
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [T2_onset_variant1, T2_onset_variant2]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
 
-## Kernel Responsibilities
+| Event | y | Meaning |
+|-------|-|-------|-------|
+| response_hit | 0 | Correct T2 detection |
+| response_miss | 1 | Incorrect T2 detection (missed within AB window) |
 
-> **Super Meta Required**: No
-> **Status**: wait_manual_review
+- **Evidence** (DOI): None available for this dataset; task plausible from paradigm (RSVP AB task with response recording).
+- **Kernel Notes**: response_hit (~40.8k) and response_miss (~10.2k) encode behavioral outcomes. Epochs should be aligned to T2 onset, then labeled by subsequent response. The ~31k imbalance between total T2 trials and responses may reflect no-response catch trials.
+
+### Potential Task 3: Response Time Regression
+
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [T2_onset_variant1, T2_onset_variant2]
+- **Label Route**: `misc`
+- **Meta Level**: super
+- **Target Definition**:
+
+| Event | y | Meaning |
+|-------|-|-------|-------|
+| response_time | continuous | RT from T2 onset to behavioral response |
+
+- **Evidence** (DOI): None available for this dataset; continuous RT labels stored in misc route.
+- **Kernel Notes**: response_time is a continuous variable stored via misc route. Preserve derivation metadata (unit: likely seconds/ms, version) for regression modeling. RT may vary as a function of tDCS phase (pre/during/post) and stimulation type (anodal/cathodal).
+
+### Potential Task 4: T1 Processing Event-Related Potential
+
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [T1_onset]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+
+| Event | y | Meaning |
+|-------|-|-------|-------|
+| T1_onset | 0 | T1 target onset |
+
+- **Evidence** (DOI): None available; task plausible from paradigm (T1 is first target in RSVP stream).
+- **Kernel Notes**: T1_onset (~34k) marks first target identification. Useful for examining T1 processing as baseline for AB effect. Combined with T2 onset epochs, enables lag-dependent comparison of ERP components (e.g., N2pc, P3).

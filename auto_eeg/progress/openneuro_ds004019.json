@@ -1,0 +1,184 @@
+{
+  "phase": "done",
+  "budget_used": 12,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 4,
+    "kernel_loop": 5,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 6,
+    "category": "High-level Mental"
+  },
+  "timestamp": "2026-04-11T02:17:42.301604+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds004019.v1.0.0.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds004019.v1.0.0",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds004019.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10.3389_fnhum.2022.760234.pdf",
+      "ref": "10.3389/fnhum.2022.760234",
+      "title": "Effect of Obesity on Arithmetic Processing in Preteens With High and Low Math Skills: An Event-Related Potentials Study",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly describes collecting ERPs during a delayed-verification arithmetic task from 62 preteens (31 low math skills, 31 high math skills), matching the exact dataset openneuro_ds004019. The study analyzes ERP components (P300, N400) time-locked to answer verification and examines correct vs incorrect responses, defining a concrete classification task with labels 0 and 1 for response correctness.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "delayed-verification arithmetic task",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "tmin=-0.2s, tmax=1.0s, target_events=['1','0'] around face/verification stimulus",
+      "target_events": [
+        "1",
+        "0"
+      ],
+      "label_mapping": "0=incorrect response, 1=correct response",
+      "meta_level": "raw",
+      "super_meta_note": "Additional factors: obesity status (obese/non-obese) and math skill level (high/low) as between-subject grouping variables",
+      "evidence_desc": "Paper describes 62 subjects (14 obese low-skill, 17 non-obese low-skill, 15 obese high-skill, 16 non-obese high-skill) performing addition and subtraction verification. ERP analysis focuses on P300 and N400 components comparing correct vs incorrect trials."
+    },
+    {
+      "filename": "paper_10.3389_fnhum.2022.760234_pdf.pdf",
+      "ref": "10.3389/fnhum.2022.760234",
+      "title": "Effect of Obesity on Arithmetic Processing in Preteens With High and Low Math Skills: An Event-Related Potentials Study",
+      "classification": "relevant",
+      "cot_reasoning": "This is a duplicate of the primary paper (same DOI 10.3389/fnhum.2022.760234) explicitly describing the dataset collection from 62 preteens performing delayed-verification arithmetic tasks. The analysis examines correct/incorrect response events with ERP components, matching the classification task defined for this dataset.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "delayed-verification arithmetic task",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "tmin=-0.2s, tmax=1.0s, target_events=['1','0'] around verification stimulus onset",
+      "target_events": [
+        "1",
+        "0"
+      ],
+      "label_mapping": "0=incorrect response, 1=correct response",
+      "meta_level": "raw",
+      "super_meta_note": "Duplicate of paper_10.3389_fnhum.2022.760234.pdf with identical content",
+      "evidence_desc": "Identical content to primary reference. Describes same 62-subject dataset with obese/non-obese and high/low math skill groups performing addition/subtraction verification."
+    },
+    {
+      "filename": "paper_10_3389_fnhum_2022_760234.pdf",
+      "ref": "10.3389/fnhum.2022.760234",
+      "title": "Effect of Obesity on Arithmetic Processing in Preteens With High and Low Math Skills: An Event-Related Potentials Study",
+      "classification": "relevant",
+      "cot_reasoning": "This is another duplicate of the same paper (DOI 10.3389/fnhum.2022.760234) describing the exact dataset openneuro_ds004019. The study collects ERPs from 62 preteens during arithmetic verification and analyzes P300/N400 components locked to correct/incorrect response events, defining a binary classification task.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "delayed-verification arithmetic task",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "tmin=-0.2s, tmax=1.0s, target_events=['1','0'] time-locked to verification stimulus",
+      "target_events": [
+        "1",
+        "0"
+      ],
+      "label_mapping": "0=incorrect response, 1=correct response",
+      "meta_level": "raw",
+      "super_meta_note": "Duplicate of primary reference with identical DOI and content",
+      "evidence_desc": "Third copy of the same publication. Matches the 62-subject dataset with delayed-verification arithmetic paradigm and correct/incorrect response classification."
+    },
+    {
+      "filename": "paper_https_ieeexplore_ieee_org_document_11008566.pdf",
+      "ref": "10.1109/TBME.2025.3529476",
+      "title": "A Novel Event-Related Neural Activity Extraction Technique by Fusing Neural Oscillation and Neural Synchronization",
+      "classification": "irrelevant",
+      "cot_reasoning": "This IEEE paper proposes a novel single-trial EEG extraction technique (CRNA) using ICA, NNMF, and ADMM. It evaluates electrode density effects on synthetic and existing benchmark datasets, not the specific openneuro_ds004019 dataset of obese preteens performing arithmetic tasks.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "none",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "Methods/engineering paper focused on EEG signal processing technique optimization, not cognitive neuroscience analysis of this specific dataset",
+      "evidence_desc": "Proposes and evaluates a computational method for extracting event-related neural activity using various electrode configurations (9-128 channels) on simulated/generic data. No mention of obesity, arithmetic processing, or preteen subjects."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has clear event structure with binary correctness labels (0=incorrect, 1=correct) suitable for classification. Three relevant reference papers (10.3389/fnhum.2022.760234) confirm this is a delayed-verification arithmetic task with 62 subjects, supporting a correct vs incorrect response classification task.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 62,
+    "total_n": 62,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "0": 4848,
+      "1": 9972,
+      "CELL": 256,
+      "SESS": 64,
+      "bgin": 14820,
+      "boundary": 250,
+      "ch++": 14820,
+      "face": 14820,
+      "prob": 14820,
+      "resp": 14087,
+      "sync": 312
+    },
+    "subject_info": {
+      "record_count": 62,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Correct vs Incorrect Arithmetic Response Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`1`, `0`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|-----|---------|\n  | `0` | 0 | Incorrect arithmetic response |\n  | `1` | 1 | Correct arithmetic response |\n- **Evidence**:\n  - DOI: 10.3389/fnhum.2022.760234 — This paper analyzes ERP components (P150, P300, N400) time-locked to answer choice presentation to compare obese vs non-obese preteens with high/low math skills on arithmetic verification tasks, using correct vs incorrect response events (1 and 0) for epoching.\n- **Kernel Notes**: Epochs are time-locked to answer choice onset (face/ch++ events). The `1` and `0` events mark response correctness concurrent with `resp`. Class imbalance (~70% correct across subjects) should be addressed using weighted loss or undersampling. Exclude admin markers (sync, CELL, SESS, boundary) from analysis.\n\n### Potential Task 1: Arithmetic Problem Type Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`prob`]\n- **Label Route**: `misc`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|-----|---------|\n  | `prob` | 0 | Addition problem |\n  | `prob` | 1 | Subtraction problem |\n- **Evidence**:\n  - Paradigm notes indicate addition and subtraction problems are used in the verification task. Problem type classification would enable analysis of neural differences between operation types.\n- **Kernel Notes**: Problem type labels may be embedded in the stimulus presentation metadata or event annotations. Requires parsing event metadata or stimulus codes to determine operation type. Exclude admin markers.\n\n### Potential Task 2: Response Timing Classification\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`resp`]\n- **Label Route**: `misc`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|-----|---------|\n  | `resp` | RT (ms) | Response time in milliseconds |\n- **Evidence**:\n  - Plausible from paradigm: response timing varies as a function of math skill and obesity status, which is central to the study design.\n- **Kernel Notes**: Use `resp` events (n=14,087) as epoch triggers. Extract response timing from event timestamps or stimulus codes. Exclude missed responses (trials without `resp`). Non-EEG channels (ECG, respiration) should be removed before analysis.",
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds004019/kernel_final.py",
+  "kernel_code_len": 8640,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds004019.py",
+    "kernel_sha256": "58f1a7b1af01814a0b283766fb3a3931292ebecb274da0ba0386859fe3b90f34",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 62,
+    "total_n": 62,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "0": 4848,
+      "1": 9972,
+      "CELL": 256,
+      "SESS": 64,
+      "bgin": 14820,
+      "boundary": 250,
+      "ch++": 14820,
+      "face": 14820,
+      "prob": 14820,
+      "resp": 14087,
+      "sync": 312
+    },
+    "subject_info": {
+      "record_count": 62,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds004019.py",
+  "status": "partial"
+}

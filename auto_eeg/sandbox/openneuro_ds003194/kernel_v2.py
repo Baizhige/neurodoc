@@ -1,0 +1,366 @@
+"""OpenNeuro DS003194 stage1 kernel for EEGUnity.
+
+Neuroepo multisession: Resting-state EEG from Parkinson's disease patients
+before/after 6-month Neuroepo drug administration. Clinical neurological
+assessment battery with eyes-closed/open, hyperventilation, and photic
+stimulation paradigms.
+
+Source: https://openneuro.org/datasets/ds003194
+Paper: DOI 10.3389/fnins.2022.841428
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import re
+from typing import Any, Dict, List, Optional
+
+import mne
+import numpy as np
+import pandas as pd
+
+
+# ---------------------------------------------------------------------------
+# Channel mapping (standard 19-channel 10-20 system)
+# Source: Dataset documentation / paper describing 19-channel setup
+# Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+_STANDARD_19_CHANNEL_NAMES = [
+    "Fp1", "Fp2",  # frontal pole
+    "F7", "F3", "Fz", "F4", "F8",  # frontal
+    "T3", "C3", "Cz", "C4", "T4",  # central
+    "T5", "P3", "Pz", "P4", "T6",  # parietal
+    "O1", "O2",  # occipital
+]
+
+# Mapping from possible raw channel name variants to standard names
+# Source: Observed channel name patterns in OpenNeuro EEG datasets
+# Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+_CHANNEL_ALIAS_MAP = {
+    # Common variations
+    "EEG Fp1": "Fp1", "EEG Fp2": "Fp2",
+    "EEG F7": "F7", "EEG F3": "F3", "EEG Fz": "Fz", "EEG F4": "F4", "EEG F8": "F8",
+    "EEG T3": "T3", "EEG C3": "C3", "EEG Cz": "Cz", "EEG C4": "C4", "EEG T4": "T4",
+    "EEG T5": "T5", "EEG P3": "P3", "EEG Pz": "Pz", "EEG P4": "P4", "EEG T6": "T6",
+    "EEG O1": "O1", "EEG O2": "O2",
+    # Alternative hyphen formats
+    "Fp1": "Fp1", "Fp2": "Fp2",
+    "F7": "F7", "F3": "F3", "Fz": "Fz", "F4": "F4", "F8": "F8",
+    "T3": "T3", "C3": "C3", "Cz": "Cz", "C4": "C4", "T4": "T4",
+    "T5": "T5", "P3": "P3", "Pz": "Pz", "P4": "P4", "T6": "T6",
+    "O1": "O1", "O2": "O2",
+    # Lowercase variants
+    "fp1": "Fp1", "fp2": "Fp2",
+    "f7": "F7", "f3": "F3", "fz": "Fz", "f4": "F4", "f8": "F8",
+    "t3": "T3", "c3": "C3", "cz": "Cz", "c4": "C4", "t4": "T4",
+    "t5": "T5", "p3": "P3", "pz": "Pz", "p4": "P4", "t6": "T6",
+    "o1": "O1", "o2": "O2",
+}
+
+# Spanish event label mappings to canonical English labels
+# Source: analysis.md Event Structure table
+# Annotator: Human, 2026-04-08
+_SPANISH_EVENT_MAP = {
+    "ojos cerrados": "eyes_closed",
+    "ojos abiertos": "eyes_open",
+    "recuperacion": "recovery",
+    "hiperventilacion 1": "hyperventilation_1",
+    "hiperventilacion 2": "hyperventilation_2",
+    "hiperventilacion 3": "hyperventilation_3",
+    "hiperventilacion 4": "hyperventilation_4",
+    "photic stimulation": "photic_stimulation",
+    "fotoestimulacion": "photic_stimulation",
+    "discontinuity": "admin_discontinuity",
+    "HPVOJOS ABIERTOS": "hyperventilation_eyes_open",
+    "HEPERVENTILACION OJOS ABIERTOS": "hyperventilation_eyes_open",
+}
+
+# Canonical event IDs for raw meta level
+_CANONICAL_EVENT_IDS = {
+    "eyes_closed": 1,
+    "eyes_open": 2,
+    "recovery": 3,
+    "hyperventilation_1": 4,
+    "hyperventilation_2": 5,
+    "hyperventilation_3": 6,
+    "hyperventilation_4": 7,
+    "photic_stimulation": 8,
+    "admin_discontinuity": 99,
+    "hyperventilation_eyes_open": 10,
+}
+
+
+def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
+    """Build a rename map for channels to standard 10-20 names."""
+    rename_map: Dict[str, str] = {}
+    existing_names = set(raw.ch_names)
+
+    for source_name in existing_names:
+        # Skip non-EEG channels
+        if source_name.lower() in ("stim", "misc", "ekg", "emg", "trigger"):
+            continue
+
+        # Try direct alias lookup
+        if source_name in _CHANNEL_ALIAS_MAP:
+            target = _CHANNEL_ALIAS_MAP[source_name]
+            if target != source_name:
+                rename_map[source_name] = target
+            continue
+
+        # Try case-insensitive match
+        source_lower = source_name.lower()
+        for alias, target in _CHANNEL_ALIAS_MAP.items():
+            if alias.lower() == source_lower and target != source_name:
+                rename_map[source_name] = target
+                break
+
+    return rename_map
+
+
+def _load_participants_tsv(dataset_path: str) -> Optional[pd.DataFrame]:
+    """Load participants.tsv if it exists."""
+    participants_path = os.path.join(dataset_path, "participants.tsv")
+    if os.path.exists(participants_path):
+        try:
+            return pd.read_csv(participants_path, sep="\t")
+        except Exception:
+            pass
+    return None
+
+
+def _get_subject_info(
+    participants_df: Optional[pd.DataFrame],
+    subject_id: str,
+) -> Dict[str, str]:
+    """Extract subject info from participants.tsv or return unknown."""
+    info = {
+        "age": "unknown",
+        "sex": "unknown",
+        "handedness": "unknown",
+    }
+
+    if participants_df is not None:
+        # Match subject ID (handle various formats: sub-01, 01, etc.)
+        subject_col = None
+        for col in participants_df.columns:
+            if "subject" in col.lower() or "participant" in col.lower():
+                subject_col = col
+                break
+
+        if subject_col:
+            # Try exact match first
+            match = participants_df[participants_df[subject_col] == subject_id]
+            if match.empty:
+                # Try without 'sub-' prefix
+                clean_id = re.sub(r"^sub-", "", subject_id)
+                match = participants_df[
+                    participants_df[subject_col].str.contains(clean_id, na=False)
+                ]
+
+            if not match.empty:
+                row = match.iloc[0]
+                # Age
+                age_col = None
+                for col in ["age", "Age", "AGE"]:
+                    if col in participants_df.columns:
+                        age_col = col
+                        break
+                if age_col:
+                    age_val = row.get(age_col)
+                    if pd.notna(age_val):
+                        info["age"] = str(int(float(age_val))) if isinstance(age_val, (int, float)) else str(age_val)
+
+                # Sex
+                sex_col = None
+                for col in ["sex", "Sex", "gender", "Gender"]:
+                    if col in participants_df.columns:
+                        sex_col = col
+                        break
+                if sex_col:
+                    sex_val = row.get(sex_col)
+                    if pd.notna(sex_val):
+                        sex_str = str(sex_val).lower().strip()
+                        if sex_str in ("m", "male", "hombre"):
+                            info["sex"] = "male"
+                        elif sex_str in ("f", "female", "mujer"):
+                            info["sex"] = "female"
+                        else:
+                            info["sex"] = "unknown"
+
+                # Handedness
+                handedness_col = None
+                for col in ["handedness", "Handedness", "hand", "Hand"]:
+                    if col in participants_df.columns:
+                        handedness_col = col
+                        break
+                if handedness_col:
+                    handed_val = row.get(handedness_col)
+                    if pd.notna(handed_val):
+                        handed_str = str(handed_val).lower().strip()
+                        if handed_str in ("r", "right", "diestro"):
+                            info["handedness"] = "right"
+                        elif handed_str in ("l", "left", "zurdo"):
+                            info["handedness"] = "left"
+
+    # Source: participants.tsv extracted values
+    # Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+    return info
+
+
+def _remap_annotations(annotations: mne.Annotations) -> mne.Annotations:
+    """Remap Spanish event labels to canonical English labels."""
+    new_descriptions = []
+    for desc in annotations.description:
+        desc_clean = str(desc).strip().lower()
+        # Check exact match first
+        if desc in _SPANISH_EVENT_MAP:
+            new_descriptions.append(_SPANISH_EVENT_MAP[desc])
+        # Check lowercase match
+        elif desc_clean in _SPANISH_EVENT_MAP:
+            new_descriptions.append(_SPANISH_EVENT_MAP[desc_clean])
+        else:
+            new_descriptions.append(desc)
+
+    new_annotations = mne.Annotations(
+        onset=annotations.onset,
+        duration=annotations.duration,
+        description=new_descriptions,
+        orig_time=annotations.orig_time,
+    )
+    return new_annotations
+
+
+class EEGUnityKernel:
+    """EEGUnity processing kernel for OpenNeuro DS003194.
+
+    This kernel handles the Neuroepo dataset: resting-state EEG recordings
+    from Parkinson's disease patients before/after 6-month Neuroepo drug
+    administration, including eyes-closed/open, hyperventilation, and
+    photic stimulation paradigms.
+    """
+
+    def __init__(self):
+        self._kernel_version = "1.0.0"
+        self._dataset_name = "openneuro_ds003194"
+
+    def get_channel_names(self) -> List[str]:
+        """Return list of expected standard channel names."""
+        return _STANDARD_19_CHANNEL_NAMES.copy()
+
+    def get_canonical_event_ids(self) -> Dict[str, int]:
+        """Return mapping of canonical event names to integer IDs."""
+        return _CANONICAL_EVENT_IDS.copy()
+
+    def _extract_session_info(self, row: pd.Series) -> Dict[str, str]:
+        """Extract session information from BIDS row."""
+        info = {
+            "session": "unknown",
+            "task": "unknown",
+        }
+
+        if "ses" in row:
+            info["session"] = str(row["ses"])
+        if "task" in row:
+            info["task"] = str(row["task"])
+
+        return info
+
+    def _infer_hardware_info(self, raw: mne.io.BaseRaw) -> Dict[str, str]:
+        """Infer hardware information from raw data attributes."""
+        info = {
+            "amplifier": "unknown",
+            "cap": "unknown",
+            "reference": "unknown",
+        }
+
+        # Try to extract from raw annotations description or hpi info
+        if hasattr(raw, "info") and raw.info:
+            # Check for reference channel hints
+            ch_names = raw.ch_names
+            if any("REF" in ch.upper() for ch in ch_names):
+                info["reference"] = "external_reference"
+            elif any("GND" in ch.upper() for ch in ch_names):
+                info["reference"] = "ground_reference"
+
+            # Check for mastoid reference hints
+            if any("M1" in ch.upper() or "M2" in ch.upper() for ch in ch_names):
+                info["reference"] = "mastoid"
+
+        # Source: Dataset documentation - standard clinical EEG setup
+        # Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+        return info
+
+    def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
+        """Apply EEGUnity kernel processing to raw data.
+
+        Args:
+            udataset: Dataset descriptor (unused for this kernel)
+            raw: MNE Raw object containing EEG data
+            row: DataFrame row with BIDS metadata
+
+        Returns:
+            Processed MNE Raw object
+        """
+        # Make a copy to avoid modifying the original
+        raw = raw.copy()
+
+        # Step 1: Rename channels to standard names if needed
+        rename_map = _build_channel_rename_map(raw)
+        if rename_map:
+            raw.rename_channels(rename_map)
+
+        # Step 2: Set channel types for any non-standard assignments
+        # Identify and set EOG, ECG channels if present
+        for ch_name in raw.ch_names:
+            ch_lower = ch_name.lower()
+            if ch_lower.startswith("eog") or "eye" in ch_lower:
+                try:
+                    raw.set_channel_types({ch_name: "eog"})
+                except Exception:
+                    pass
+            elif ch_lower.startswith("ecg") or "cardiac" in ch_lower:
+                try:
+                    raw.set_channel_types({ch_name: "ecg"})
+                except Exception:
+                    pass
+
+        # Step 3: Remap annotations to canonical labels
+        if raw.annotations is not None and len(raw.annotations) > 0:
+            raw.set_annotations(_remap_annotations(raw.annotations))
+
+        # Step 4: Set standard reference (average if no reference specified)
+        # Check if data needs re-referencing
+        ref_type = "average"
+        eeg_channels = mne.pick_types(raw.info, eeg=True)
+        if len(eeg_channels) > 0:
+            # For EDF files, typically already has a reference or is average
+            # We'll keep as-is unless explicitly specified
+            pass
+
+        # Step 5: Ensure standard montage if possible
+        # Try to set a standard 10-20 montage for known channels
+        available_channels = [
+            ch for ch in raw.ch_names
+            if ch in _STANDARD_19_CHANNEL_NAMES
+        ]
+        if len(available_channels) >= 19:
+            try:
+                montage = mne.channels.make_standard_montage("standard_1020")
+                raw.set_montage(montage, on_missing="warn")
+            except Exception:
+                pass
+
+        return raw
+
+
+# Module-level kernel instance for EEGUnity framework
+KERNEL = EEGUnityKernel()
+
+
+eegunity_description = {
+    "age": lambda row: _get_subject_info(None, row.get("subject_id", "unknown"))["age"],
+    "sex": lambda row: _get_subject_info(None, row.get("subject_id", "unknown"))["sex"],
+    "amplifier": lambda row: "unknown",
+    "cap": lambda row: "standard_1020",
+    "handedness": lambda row: _get_subject_info(None, row.get("subject_id", "unknown"))["handedness"],
+}

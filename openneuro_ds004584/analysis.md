@@ -2,31 +2,31 @@
 
 **Dataset**: `openneuro_ds004584` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004584
 **Category**: Biological State | **Subjects**: 149 | **Files (Completed)**: 149 | **Channels**: 63 | **Sampling Rate**: 500 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
 Resting-state EEG was collected from 149 participants (100 with Parkinson's disease and 49 healthy controls) who sat quietly with eyes open for approximately two minutes. The study characterizes spontaneous neural oscillatory patterns to differentiate PD patients from controls. No active task was required; participants fixated on a cross and remained still.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `de7bae0b0747c90586ecbdc69f8f1887fc75dfde0032dac7dc4c482e8c058d06`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `boundary` | 149 | admin | raw | Segment boundary marker inserted by recording software (exclude) |
+| `boundary` | 149 | event | raw | Segment boundary marker inserted by recording software (exclude) |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Cognitive Impairment Classification from Resting-State EEG
@@ -44,7 +44,7 @@ Resting-state EEG was collected from 149 participants (100 with Parkinson's dise
 - **Evidence**:
   - DOI: 10.21203/rs.3.rs-2666578/v1 — Shows LEAPD algorithm classifies cognitive impairment (MoCA<26) vs normal (MoCA>=26) from resting-state EEG with 80% accuracy on this dataset.
   - DOI: 10.1038/s41531-023-00602-0 — Confirms same dataset (100 PD + 49 controls) used for cognitive impairment detection using linear predictive coding.
-- **Kernel Notes**: Extract continuous resting-state EEG (~2-3 min per subject). Apply sliding-window segmentation. Compute spectral features (alpha, beta power) or LPC coefficients per segment. Use participant-level MoCA-derived labels for training. (replaces Potential Task 1 from original analysis.md)
+- **Kernel Notes**: Extract continuous resting-state EEG (~2-3 min per subject). Apply sliding-window segmentation. Compute spectral features (alpha, beta power) or LPC coefficients per segment. Use participant-level MoCA-derived labels for training.
 
 ### Classical Task 2: Parkinson's Disease vs Healthy Control Classification
 - **Task Type**: classification
@@ -62,21 +62,12 @@ Resting-state EEG was collected from 149 participants (100 with Parkinson's dise
   - DOI: 10.1038/s41398-025-03506-0 — Uses resting-state EEG from this dataset to classify Parkinson's disease vs healthy controls using frontal Alpha inter-hemispheric synchronization.
 - **Kernel Notes**: Compute Alpha band (8-13 Hz) envelope correlations between contralateral/ipsilateral frontal channels using sliding windows. Extract synchronization features per segment. Use participant-level PD/control labels for training.
 
-### Potential Task 1: Resting State Segmentation (segmentation)
-- **Task Type**: classification
-- **Epoch Method**: `segmentation`
+### Potential Task 1: Resting State Segmentation
+- **Task Type**: segmentation
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: None (no task events)
-- **Notes**: Only `boundary` admin markers present - pure resting-state dataset. Use sliding-window segmentation. PD vs. control group labels available from participants.tsv for downstream classification.
-
-## Data Quality Notes
-
-- Only boundary markers present; no trial events for epoch-locked classification.
-- PD vs. control labels available in participants.tsv.
-
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: Yes
-> **Status**: wait_manual_review
+- **Evidence**: None
+- **Kernel Notes**: Only `boundary` admin markers present; no behavioral or stimulus events. Sliding-window segmentation required for resting-state data. Shorter 2s segments with 50% overlap provide fine-grained temporal coverage for exploratory spectral or connectivity feature extraction. PD/control group labels available in participants.tsv for downstream classification tasks.

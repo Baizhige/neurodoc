@@ -1,63 +1,85 @@
-# Free walking study
+# Free Walking Study
 
 **Dataset**: `openneuro_ds003039` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds003039
 **Category**: Complex Applied | **Subjects**: 19 | **Files (Completed)**: 19 | **Channels**: 67 | **Sampling Rate**: 500 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
-Participants walked two different outdoor routes, once while performing a self-paced button-pressing task, to study brain activity during naturalistic free-walking gait. This is a mobile EEG study; no trial-level event markers are detectable in the EEG files. Button-press events from the self-paced task may be available in separate behavioral logs.
+Participants walked two different outdoor routes while performing a self-paced button-pressing task, with gait events (heel strikes, toe-offs, steps) recorded alongside button-press responses. This is a mobile EEG study capturing brain activity during naturalistic free-walking gait. The experimental design includes multiple conditions: standing still, walking initiation, easy/difficult button-pressing tasks, and 10-fast/10-own pacing conditions.
 
 ## File Scan Result
 
+> **Kernel SHA256**: `cd20c72721b598aab62e0aa414bd3357bf3f38c5a7883c58865976101da78f48`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| *(none)* | - | - | raw | No event markers detected in EEG files; naturalistic free-walking paradigm |
+| `LeftButtonPress` | 5263 | event | raw | Left-hand button press during task |
+| `LeftHS` | 16018 | event | raw | Left heel strike (gait event) |
+| `LeftStep` | 4832 | event | raw | Left foot step |
+| `LeftTO` | 15632 | event | raw | Left toe-off (gait event) |
+| `MissLeftButtonPress` | 502 | event | raw | Missed left button press |
+| `MissRightButtonPress` | 840 | event | raw | Missed right button press |
+| `Play` | 2049 | event | raw | Audio playback/cue event |
+| `RightButtonPress` | 5459 | event | raw | Right-hand button press during task |
+| `RightHS` | 16217 | event | raw | Right heel strike (gait event) |
+| `RightStep` | 4716 | event | raw | Right foot step |
+| `RightTO` | 16186 | event | raw | Right toe-off (gait event) |
+| `boundary` | 2 | admin | raw | Data file boundary marker |
+| `difficult` | 19 | event | raw | Difficult walking condition marker |
+| `easy` | 19 | event | raw | Easy walking condition marker |
+| `end_10fast` | 19 | event | raw | End of 10-fast pacing condition |
+| `end_10own` | 23 | event | raw | End of 10-own pacing condition |
+| `end_difficult` | 19 | event | raw | End of difficult button task |
+| `end_difficult_button` | 19 | event | raw | End of difficult button condition |
+| `end_easy` | 19 | event | raw | End of easy button task |
+| `end_easy_button` | 19 | event | raw | End of easy button condition |
+| `end_experiment` | 11 | event | raw | End of experiment |
+| `end_initiation` | 19 | event | raw | End of walking initiation phase |
+| `end_restEEG` | 19 | event | raw | End of resting EEG recording |
+| `end_standing` | 19 | event | raw | End of standing still period |
+| `initiation` | 1881 | event | raw | Walking initiation phase |
+| `initiationHeadLeft` | 825 | event | raw | Head turned left during initiation |
+| `initiationHeadRight` | 1030 | event | raw | Head turned right during initiation |
+| `initiationLeft` | 825 | event | raw | Left-side initiation movement |
+| `initiationRight` | 1031 | event | raw | Right-side initiation movement |
+| `instruct_10fast` | 19 | event | raw | Instruction for 10-fast pacing condition |
+| `instruct_10own` | 23 | event | raw | Instruction for 10-own pacing condition |
+| `instruct_difficult` | 19 | event | raw | Instruction for difficult button task |
+| `instruct_difficult_button` | 19 | event | raw | Instruction for difficult button condition |
+| `instruct_easy` | 19 | event | raw | Instruction for easy button task |
+| `instruct_easy_button` | 19 | event | raw | Instruction for easy button condition |
+| `instruct_restEEG` | 19 | event | raw | Instruction for resting EEG |
+| `instruct_standing` | 19 | event | raw | Instruction for standing still |
+| `standingStill` | 1856 | event | raw | Standing still period |
+| `start_10fast` | 19 | event | raw | Start of 10-fast pacing condition |
+| `start_10own` | 23 | event | raw | Start of 10-own pacing condition |
+| `start_difficult` | 19 | event | raw | Start of difficult button task |
+| `start_difficult_button` | 19 | event | raw | Start of difficult button condition |
+| `start_easy` | 19 | event | raw | Start of easy button task |
+| `start_easy_button` | 19 | event | raw | Start of easy button condition |
+| `start_experiment` | 19 | event | raw | Start of experiment |
+| `start_initiation` | 19 | event | raw | Start of walking initiation phase |
+| `start_pause` | 38 | event | raw | Start of pause period |
+| `start_restEEG` | 19 | event | raw | Start of resting EEG recording |
+| `start_standing` | 19 | event | raw | Start of standing still period |
 
-> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-> - `long`: sustained-state marker (>=2 s), for `epoch_by_long_event_hdf5`
-> - `rest`: resting-state segment marker, for `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **exclude** from epoch target_events
 
+### MISC Label Summary
+- **Route**: `misc`
+- **Role**: Stores continuous or derived channel labels (likely head/position direction)
+- **Candidate Labels**: `x_dir`, `y_dir`, `z_dir`
+- **Kernel Note**: Verify channel roles and units. These likely represent directional/head orientation channels from the mobile EEG system.
 ### Info
-
-*Info placeholder: File scan details to be populated.*
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | complete | Not available in dataset metadata |
+| `subject_sex` | complete | Not available in dataset metadata |
+| `device` | missing | Not available in dataset metadata |
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Neur Corr Young
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds003039 DOI: https://doi.org/10.18112/openneuro.ds003039.v1.0.2
-
-
-### Normal Task 1: Resting / Continuous Segmentation (resting)
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
-- **Label Route**: `Annotation`
-- **Target Definition**: N/A (null (no trial-level events in EEG files))
-- **Notes**: Mobile EEG during naturalistic walking. Motion artifacts are expected; ICA-based artifact removal recommended. Route condition (route A vs route B) may be available as a subject-level metadata label.
-
-## Data Quality Notes
-
-- Mobile EEG with significant motion artifacts from walking - ICA and motion artifact rejection required.
-- No trial-level event markers in EEG files; button-press events may be in separate logs.
-- 67-channel mobile EEG system; verify electrode positions.
-- Verify channel count consistency across subjects before pooling.
-
-## Kernel Responsibilities
-
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds003039
+(No tasks could be synthesized.)

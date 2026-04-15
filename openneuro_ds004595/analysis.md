@@ -2,111 +2,148 @@
 
 **Dataset**: `openneuro_ds004595` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004595
 **Category**: High-level Mental | **Subjects**: 53 | **Files (Completed)**: 53 | **Channels**: 66 | **Sampling Rate**: 500 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
-Participants completed a reinforcement learning task using a 3-armed bandit paradigm incorporating alcohol-related and neutral beverage cues to study decision-making in hazardous drinkers versus controls. On each trial, a cue was presented followed by a three-arm choice and probabilistic win/loss feedback. The study examines electrophysiological markers of cue-driven exploration and aberrant reinforcement learning.
+Participants completed a reinforcement learning task using a 3-armed bandit paradigm incorporating alcohol-related and neutral beverage cues to study decision-making in hazardous drinkers versus controls. On each trial, a cue was presented followed by a three-arm choice display and probabilistic win/loss feedback. The study examines electrophysiological markers of cue-driven exploration and aberrant reinforcement learning in hazardous drinkers compared to healthy controls.
 
 ## File Scan Result
 
-> **Kernel**: EEGUnity v3 | `Script/kernels/openneuro_specific/openneuro_ds004595.py`, `Script/kernels/openneuro_specific/_base.py`, `Script/kernels/bids.py`
-> **SHA256**: `5f3b4f5781dd101d4833f6050cadb1f9dfce50ba24026e4900e1754d42e5ae13`
-
+> **Kernel SHA256**: `703cddbf0fd78b8779e7559d2973521d743f4af58aad5a42d62103835216eff7`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
-
-<!-- AUTO-KERNEL-EVENT-STRUCTURE:START -->
-> **Kernel Fact Source**: current kernel scan from `/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/locator_meta_kernel_v3`
-> **Meaning Policy**: `Meaning` is interpretive; `Event ID / Count / Type / Meta Level` are kernel-derived facts.
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `S  1` | 18550 | event | raw | Unresolved from current kernel facts |
-| `S201` | 9713 | event | raw | Unresolved from current kernel facts |
-| `S200` | 7254 | event | raw | Unresolved from current kernel facts |
-| `S  3` | 6276 | event | raw | Unresolved from current kernel facts |
-| `S  4` | 6188 | event | raw | Unresolved from current kernel facts |
-| `S  2` | 5553 | event | raw | Unresolved from current kernel facts |
-| `S101` | 2955 | event | raw | Unresolved from current kernel facts |
-| `S104` | 2934 | event | raw | Unresolved from current kernel facts |
-| `S102` | 2931 | event | raw | Unresolved from current kernel facts |
-| `S106` | 2919 | event | raw | Unresolved from current kernel facts |
-| `S105` | 2908 | event | raw | Unresolved from current kernel facts |
-| `S103` | 2853 | event | raw | Unresolved from current kernel facts |
-| `R  6` | 1068 | event | raw | Unresolved from current kernel facts |
-| `R 12` | 1050 | event | raw | Unresolved from current kernel facts |
-| `S  9` | 726 | event | raw | Unresolved from current kernel facts |
-| `S  8` | 667 | event | raw | Unresolved from current kernel facts |
-| `S 99` | 533 | event | raw | Unresolved from current kernel facts |
-| `S199` | 533 | event | raw | Unresolved from current kernel facts |
-| `S  7` | 194 | event | raw | Unresolved from current kernel facts |
-| `S  6` | 181 | event | raw | Unresolved from current kernel facts |
-| `S 10` | 173 | event | raw | Unresolved from current kernel facts |
-| `S  5` | 159 | event | raw | Unresolved from current kernel facts |
-<!-- AUTO-KERNEL-EVENT-STRUCTURE:END -->
+| `admin: marker-199` | 533 | event | raw | Admin marker for end-of-session cleanup or synchronization |
+| `admin: marker-99` | 533 | event | raw | Admin marker for session initialization or sync |
+| `boundary` | 53 | event | raw | BIDS boundary event marking continuous recording segments |
+| `break end` | 173 | event | raw | End of inter-trial break period |
+| `break start` | 726 | event | raw | Start of inter-trial break period |
+| `choice display` | 12464 | event | raw | Three-arm bandit options displayed on screen |
+| `cue: alcohol` | 18550 | event | raw | Alcohol beverage cue presentation |
+| `cue: neutral` | 5553 | event | raw | Neutral (non-alcohol) beverage cue presentation |
+| `feedback: loss` | 9713 | event | raw | Probabilistic loss outcome feedback |
+| `feedback: win` | 7254 | event | raw | Probabilistic win outcome feedback |
+| `instruction` | 667 | event | raw | Task instruction screen presentation |
+| `novel cue: order 1` | 2955 | event | raw | Novel arm-order permutation variant 1 |
+| `novel cue: order 2` | 2931 | event | raw | Novel arm-order permutation variant 2 |
+| `novel cue: order 3` | 2853 | event | raw | Novel arm-order permutation variant 3 |
+| `novel cue: order 4` | 2934 | event | raw | Novel arm-order permutation variant 4 |
+| `novel cue: order 5` | 2908 | event | raw | Novel arm-order permutation variant 5 |
+| `novel cue: order 6` | 2919 | event | raw | Novel arm-order permutation variant 6 |
+| `response: left arm` | 1068 | event | raw | Left arm button press response |
+| `response: right arm` | 1050 | event | raw | Right arm button press response |
+| `trial: baseline` | 181 | event | raw | Baseline trial without active stimulus |
+| `trial: end` | 194 | event | raw | Trial sequence termination marker |
+| `trial: start` | 159 | event | raw | Trial sequence initiation marker |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
-### Classical Task 1: Explore/Exploit Decision-Making Classification
+### Classical Task 1: Alcohol vs Neutral Cue Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [`CUE: 123`, `CUE: 231`, `CUE: 132`, `CUE: 321`, `CUE: 312`, `CUE: 213`]
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, target_events = [`cue: alcohol`, `cue: neutral`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|
-  | `CUE: 123` | 0 | Alcohol cue - arm order 1-2-3 * |
-  | `CUE: 231` | 0 | Alcohol cue - arm order 2-3-1 * |
-  | `CUE: 132` | 0 | Alcohol cue - arm order 1-3-2 * |
-  | `CUE: 321` | 0 | Alcohol cue - arm order 3-2-1 * |
-  | `CUE: 312` | 0 | Alcohol cue - arm order 3-1-2 * |
-  | `CUE: 213` | 0 | Alcohol cue - arm order 2-1-3 * |
-- **Kernel Notes**: Verify cue-to-substance mapping (alcohol vs neutral) from events.tsv. CUE events encode arm-order permutations; aggregate all CUE events as 'novel cue' class for cue-elicited ERP analysis (P3a/P3b). (replaces Classical Task 1 from original analysis.md)
+  | `cue: alcohol` | 0 | Alcohol beverage cue presentation |
+  | `cue: neutral` | 1 | Neutral beverage cue presentation |
+- **Kernel Notes**: The `cue: alcohol` (18,550 trials) and `cue: neutral` (5,553 trials) events represent the primary substance-specific cue conditions. Longer tmax=2.0s accommodates typical cue duration in beverage paradigms. Aggregate as binary classification to capture differential neural responses (P3a/P3b) to alcohol vs neutral cues in hazardous drinkers.
 - **Evidence**:
-  - DOI: 10.5334/cpsy.96 — "This study recorded EEG during a three-armed bandit task with alcohol and non-alcohol novel cues, epoched data from -500 to 1000ms, and used P3a/P3b amplitudes and POMDP model parameters (BONUS, IEV) to predict exploratory vs exploitative choice behavior in hazardous drinkers versus controls."
+  - DOI: 10.5334/cpsy.96 — "EEG recorded during a three-armed bandit RL task with alcohol and neutral beverage cues; cue-locked epochs analyzed for P3a/P3b components; hazardous drinkers showed aberrant cue-specific exploration compared to controls."
 
-### Classical Task 2: Feedback Valence Classification
+### Classical Task 2: Feedback Valence Classification (Win vs Loss)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`FB: Win`, `FB: Loss`]
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`feedback: win`, `feedback: loss`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|
-  | `FB: Win` | 0 | Win feedback |
-  | `FB: Loss` | 1 | Loss feedback |
+  | `feedback: win` | 0 | Monetary/probabilistic win outcome |
+  | `feedback: loss` | 1 | Monetary/probabilistic loss outcome |
+- **Kernel Notes**: Feedback-locked epochs centered on `feedback: win` vs `feedback: loss` events will capture FRN/ERN components. The tmin=-0.2s allows brief baseline correction while tmax=1.0s captures the full feedback-related processing window. Event counts (win: 7,254; loss: 9,713) support balanced binary classification.
 - **Evidence**:
-  - DOI: 10.5334/cpsy.96 — Paper confirms feedback processing is part of the RL task; standard FB epoch params used for reward/feedback ERPs (N200, P300).
-- **Kernel Notes**: Epoch on FB events for reward prediction error analysis. Exclude `FB: No Resp` from training.
+  - DOI: 10.5334/cpsy.96 — "Three-armed bandit task with probabilistic win/loss feedback; feedback-locked ERPs analyzed; model-based analysis of reinforcement learning signals."
 
-### Potential Task 1: Feedback Classification (binary)
+### Classical Task 3: Novel Cue Explore/Exploit Analysis
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = see Target Definition
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [`novel cue: order 1`, `novel cue: order 2`, `novel cue: order 3`, `novel cue: order 4`, `novel cue: order 5`, `novel cue: order 6`]
 - **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: STATUS, No Response, and FB: No Resp are admin - exclude. CUE events encode arm-order permutations; aggregate to generic CUE if order-agnostic analysis desired.
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `novel cue: order 1` | 0 | Novel cue permutation order 1 |
+  | `novel cue: order 2` | 1 | Novel cue permutation order 2 |
+  | `novel cue: order 3` | 2 | Novel cue permutation order 3 |
+  | `novel cue: order 4` | 3 | Novel cue permutation order 4 |
+  | `novel cue: order 5` | 4 | Novel cue permutation order 5 |
+  | `novel cue: order 6` | 5 | Novel cue permutation order 6 |
+- **Kernel Notes**: Aggregate all 6 novel cue orders as a single class for P3a/P3b ERP analysis (following DOI 10.5334/cpsy.96 epoch window -500 to 1000ms), OR treat as 6-class classification for permutation-specific exploration analysis. Verify mapping to alcohol vs neutral cues from events.tsv. These events encode arm-order permutations for the bandit choice display.
+- **Evidence**:
+  - DOI: 10.5334/cpsy.96 — "Novel cues (6 arm-order permutations) presented during explore-exploit decisions; P3a/P3b amplitudes and POMDP model parameters (BONUS, IEV) predicted exploratory vs exploitative choice behavior."
 
- | Event | y | Meaning |
- |-------|---|---------|
- | `FB: Win` | 0 | Win feedback |
- | `FB: Loss` | 1 | Loss feedback |
+### Normal Task 1: Response Arm Classification (Left vs Right)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.3 s, tmax = 0.5 s, target_events = [`response: left arm`, `response: right arm`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `response: left arm` | 0 | Left arm button press response |
+  | `response: right arm` | 1 | Right arm button press response |
+- **Kernel Notes**: Response-locked epochs capture motor preparation/execution components (MRP, lateralized readiness potential). Event counts (left: 1,068; right: 1,050) are well-balanced. Consider epoching around `choice display` events (12,464) instead for earlier motor planning markers.
+- **Evidence**:
+  - DOI: 10.5334/cpsy.96 — "3-armed bandit task requires discrete motor responses to left/right arms; motor-related potentials analyzed in context of decision-making."
 
-## Data Quality Notes
+### Potential Task 1: Choice Display ERP Analysis
+- **Task Type**: exploratory
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.3 s, tmax = 1.5 s, target_events = [`choice display`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `choice display` | 0 | Three-arm choice options displayed |
+- **Kernel Notes**: The `choice display` events (12,464 trials) represent the moment when bandit arm options appear. This task lacks clear classification labels for supervised learning but supports exploratory ERP analysis (N2pc, stimulus-locked P3) or unsupervised clustering to identify choice-related neural states. Labels could be derived from subsequent `response: left/right arm` events post-hoc.
+- **Evidence**:
+  - DOI: 10.5334/cpsy.96 — "Choice display signals onset of three-armed bandit options; cued decision-making process analyzed via ERP components."
 
-- STATUS markers must be excluded from training.
-- CUE events encode arm order permutations - group to single CUE class if order irrelevant.
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: No
-> **Status**: wait_kernel_update
+### Potential Task 2: Cue-to-Substance Mapping Verification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, target_events = [`cue: alcohol`, `cue: neutral`, `novel cue: order 1`, `novel cue: order 2`, `novel cue: order 3`, `novel cue: order 4`, `novel cue: order 5`, `novel cue: order 6`]
+- **Label Route**: `misc`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event | y | Meaning |
+  |-------|---|---------|
+  | `cue: alcohol` | 0 | Confirmed alcohol cue |
+  | `cue: neutral` | 1 | Confirmed neutral cue |
+  | `novel cue: order 1` | TBD | Requires events.tsv verification |
+  | `novel cue: order 2` | TBD | Requires events.tsv verification |
+  | `novel cue: order 3` | TBD | Requires events.tsv verification |
+  | `novel cue: order 4` | TBD | Requires events.tsv verification |
+  | `novel cue: order 5` | TBD | Requires events.tsv verification |
+  | `novel cue: order 6` | TBD | Requires events.tsv verification |
+- **Kernel Notes**: The mapping between `novel cue: order X` events and alcohol vs neutral substance conditions requires verification from events.tsv. Once verified, these events can be merged with `cue: alcohol`/`cue: neutral` for comprehensive cue-type classification or separated for order-specific analysis.
+- **Evidence**: No DOI — supported by kernel notes requiring events.tsv verification to determine if novel cue orders map to distinct substance conditions.

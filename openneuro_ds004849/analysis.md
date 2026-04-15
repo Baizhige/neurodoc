@@ -72,4 +72,8 @@ An EEG dataset recorded during a social-cognitive paradigm involving multiple hi
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: failed
+
+---
+
+> **auto_eeg FAILED**: No relevant or partial references exist to support a concrete ML task on this dataset. While the analysis.md describes a clear multiclass classification task with 12 stimulus conditions from event triggers, all reference papers are classified as irrelevant or uncertain, and the exception for well-known public datasets cannot be applied since references do exist.

@@ -1,0 +1,13 @@
+{
+  "url": "https://api.minimax.io/v1",
+  "key": "sk-cp-Jd80movHGOZz2m_2BKwQn-Sz5oOI1Q5wNqOqu-khgfEoqyJEX1Hu7LyxOwTwFs50zkUye1KCNYA_9KcyYTrggM-xJgTSHi8KMDdbhudsnV5-h2l9sRko81E",
+  "model": "MiniMax-M2.7",
+  "proxy": "",
+  "python_env": "/home/zgchen/anaconda3/envs/EEG2_benchmark/bin/python",
+  "eegunity_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script",
+  "dataset_roots": [
+    "/home/public/eeg_dataset/openneuro_raw"
+  ],
+  "num_workers": 2,
+  "budget": 500
+}

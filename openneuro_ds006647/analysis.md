@@ -2,6 +2,7 @@
 
 **Dataset**: `openneuro_ds006647` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006647
 **Category**: High-level Mental | **Subjects**: 51 | **Files (Completed)**: 4 | **Channels**: 70 | **Sampling Rate**: 512 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
@@ -9,77 +10,107 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 
 ## File Scan Result
 
+> **Kernel SHA256**: `41238c913650e8aee93c6d08a502fd173adb57ece461b45c54422e369b91fdbd`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `65284` | 852 | short | raw | BioSemi trigger - stimulus/condition onset |
-| `65281` | 848 | short | raw | BioSemi trigger - stimulus/condition onset |
-| `65282` | 848 | short | raw | BioSemi trigger - stimulus/condition onset |
-| `65283` | 848 | short | raw | BioSemi trigger - stimulus/condition onset |
-| `65280` | 848 | short | raw | BioSemi trigger - stimulus/condition onset |
-| `65285` | 848 | short | raw | BioSemi trigger - stimulus/condition onset |
-| `65286` | 848 | short | raw | BioSemi trigger - stimulus/condition onset |
-| `65287` | 848 | short | raw | BioSemi trigger - stimulus/condition onset |
-| `65288` | 848 | short | raw | BioSemi trigger - stimulus/condition onset |
+| `65280` | 4 | event | raw | BioSemi calibration pulse |
+| `65281` | 848 | event | raw | BioSemi trigger - Haiku stimulus onset |
+| `65282` | 848 | event | raw | BioSemi trigger - Senryu stimulus onset |
+| `65283` | 848 | event | raw | BioSemi trigger - non-poetic control stimulus onset |
+| `65284` | 852 | event | raw | BioSemi trigger - additional condition stimulus onset |
+| `65285` | 4 | event | raw | BioSemi calibration pulse |
+| `65286` | 4 | event | raw | BioSemi calibration pulse |
+| `65287` | 4 | event | raw | BioSemi calibration pulse |
+| `65288` | 4 | event | raw | BioSemi calibration pulse |
 | `boundary` | 5 | admin | raw | Segment boundary marker |
 
-> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
 
 ### MISC Label Summary
-
-- **Route**: `stim`
-- **Role**: Trigger-channel or stimulus-marker based labeling.
-- **Candidate Trigger Labels**: Needs verification
-- **Kernel Note**: Keep trigger decoding table versioned and auditable.
-
+- **Route**: `misc`
+- **Role**: Stores continuous or derived channel labels.
+- **Candidate Labels**: `EXG1`, `EXG2`, `EXG3`, `EXG4`, `EXG7`, `EXG8`
+- **Kernel Note**: Verify channel roles and units.
 ### Info
-
-Placeholder for additional file scan metadata as needed.
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | missing | N/A |
+| `subject_sex` | missing | N/A |
+| `device` | missing | N/A |
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Readpoetry
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds006647 DOI: https://doi.org/10.18112/openneuro.ds006647.v1.0.1
-
-
-### Normal Task 1: Poetry Condition Classification (epoch_by_event)
+### Classical Task 1: Poetry Condition Classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = see Target Definition
-- **Label Route**: `Annotation`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: BioSemi trigger codes 65280-65288; decode from events.tsv to determine poetry vs. control mapping. `boundary` is an admin segment marker (exclude). Only 4 files present despite 51 subjects reported - dataset may be a subset or pilot.
+- **Epoch Method**: epoch_by_event_hdf5
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [65281, 65282, 65283, 65284]
+- **Label Route**: Annotation
+- **Meta Level**: raw
+- **Target Definition**:
 
- | Event | y | Meaning |
- |-------|---|---------|
- | `65284` | 0 | BioSemi condition code 65284 |
- | `65281` | 1 | BioSemi condition code 65281 |
- | `65282` | 2 | BioSemi condition code 65282 |
- | `65283` | 3 | BioSemi condition code 65283 |
- | `65280` | 4 | BioSemi condition code 65280 |
- | `65285` | 5 | BioSemi condition code 65285 |
- | `65286` | 6 | BioSemi condition code 65286 |
- | `65287` | 7 | BioSemi condition code 65287 |
- | `65288` | 8 | BioSemi condition code 65288 |
-## Data Quality Notes
+  | Event | y | Meaning |
+  |----|---|---|
+  | 65281 | 1 | BioSemi condition code 65281 (Haiku) |
+  | 65282 | 2 | BioSemi condition code 65282 (Senryu) |
+  | 65283 | 3 | BioSemi condition code 65283 (non-poetic control) |
+  | 65284 | 4 | BioSemi condition code 65284 (additional condition) |
 
-- Only 4 completed files despite 51 subjects reported; this appears to be a partial dataset.
-- `boundary` is a segment boundary marker and must be excluded from analysis.
-- BioSemi EDF trigger codes 65280-65288 need decoding from events.tsv.
+- **Evidence**: DOI: https://doi.org/10.1038/s41597-025-06189-w
+- **Kernel Notes**: Use high-count events (65281-65284, ~848 each) for primary classification. Low-count events (65280, 65285-65288, 4 each) are likely calibration pulses—exclude from analysis. Decode condition mapping from events.tsv for definitive label assignment. The reference paper confirms 3-class paradigm (Haiku, Senryu, non-poetic control); verify if 4 event codes map to 3 conditions or represent sub-conditions.
 
-## Kernel Responsibilities
+### Potential Task 1: Aesthetic Judgment Regression
+- **Task Type**: regression
+- **Epoch Method**: epoch_by_event_hdf5
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [65281, 65282, 65283, 65284]
+- **Label Route**: Annotation
+- **Meta Level**: super
+- **Target Definition**:
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+  | Event | y | Meaning |
+  |----|---|---|
+  | 65281 | continuous | Aesthetic Appeal rating (1-7 scale) |
+  | 65282 | continuous | Vivid Imagery rating (1-7 scale) |
+  | 65283 | continuous | Being Moved rating (1-7 scale) |
+  | 65284 | continuous | Originality/Creativity rating (1-7 scale) |
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006647
+- **Evidence**: DOI: https://doi.org/10.1038/s41597-025-06189-w (partial support for 5 continuous rating dimensions)
+- **Kernel Notes**: Requires super-level meta integration from behavioral ratings file (events.tsv). Labels are continuous rather than categorical; use regression loss instead of classification loss. Five dimensions reported: Aesthetic Appeal, Vivid Imagery, Being Moved, Originality, Creativity. Verify exact dimension-to-event mapping in events.tsv.
+
+### Potential Task 2: Sustained Reading Analysis
+- **Task Type**: segmentation
+- **Epoch Method**: epoch_by_segmentation_hdf5
+- **Epoch Parameters**: tmin = 0.0 s, tmax = null, overlap = null, segment_length = variable, target_events = [65281, 65282, 65283, 65284]
+- **Label Route**: Annotation
+- **Meta Level**: raw
+- **Target Definition**:
+
+  | Event | y | Meaning |
+  |----|---|---|
+  | 65281 | 1 | Reading segment for Haiku stimulus |
+  | 65282 | 2 | Reading segment for Senryu stimulus |
+  | 65283 | 3 | Reading segment for non-poetic control |
+  | 65284 | 4 | Reading segment for additional condition |
+
+- **Evidence**: Paradigm plausibility (no reference required)
+- **Kernel Notes**: Variable-length segments capture full reading period per trial. Align segments to stimulus onset markers. Use detected text offset or word count for segmentation boundaries rather than fixed duration. Exclude boundary markers (n=5 admin events).
+
+### Normal Task 1: Neural Correlates of Aesthetic and Creative Cognition
+- **Task Type**: classification
+- **Epoch Method**: epoch_by_event_hdf5
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [65281, 65282, 65283, 65284]
+- **Label Route**: Annotation
+- **Meta Level**: raw
+- **Target Definition**:
+
+  | Event | y | Meaning |
+  |----|---|---|
+  | 65281 | 1 | Poetry condition (aesthetic processing) |
+  | 65282 | 1 | Poetry condition (aesthetic processing) |
+  | 65283 | 0 | Non-poetry control condition |
+  | 65284 | 1 | Poetry condition (aesthetic processing) |
+
+- **Evidence**: DOI: https://doi.org/10.1038/s41597-025-06189-w (paradigm evidence, not direct classification-relevant)
+- **Kernel Notes**: Binary contrast between poetry (Haiku, Senryu, and additional conditions) and non-poetic control. Tests whether aesthetic processing during poetry reading produces distinct neural signatures. Collapse 3 poetry conditions into single class for binary analysis.

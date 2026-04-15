@@ -1,0 +1,136 @@
+{
+  "phase": "done",
+  "budget_used": 6,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "task_synthesis": 2,
+    "kernel_loop": 1,
+    "doc_write": 1
+  },
+  "context_summary": {
+    "has_kernel": true,
+    "ref_count": 4,
+    "category": "Action/Output"
+  },
+  "timestamp": "2026-04-10T16:28:24.953176+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds002720.v1.0.1.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds002720.v1.0.1",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds002720.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "omo-9781561592630-e-4002285347.pdf",
+      "ref": "10.1093/gmo/9781561592630.article.L2285347",
+      "title": "Brain-computer music interface [BCMI]",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a general Grove Music Online encyclopedia article providing an overview of BCMI technology and history. While it discusses EEG-based music control using alpha rhythms, it does not reference or use the specific openneuro_ds002720 'BCMI tempo' dataset. It is background literature on BCMIs rather than a paper that analyzes this particular dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "",
+      "super_meta_note": "",
+      "evidence_desc": "General BCMI encyclopedia article covering broad BCMI history and applications; no mention of openneuro_ds002720 or the specific tempo-based BCMI dataset."
+    },
+    {
+      "filename": "paper_10_1038_s41597_020-0507-6.pdf",
+      "ref": "10.1038/s41597-020-0507-6",
+      "title": "Neural and physiological data from participants listening to affective music",
+      "classification": "relevant",
+      "cot_reasoning": "This Scientific Data paper explicitly describes the 'BCMI tempo' dataset as one of four key datasets, matching openneuro_ds002720. It documents the EEG recordings from 18 participants who regulated alpha levels (lower/raise) to control music tempo, with 20-second labeled intervals per condition. DOI 10.1038/s41597-020-0507-6 is cited in the dataset's evidence as the definitive source describing this specific dataset.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "BCMI alpha regulation (lower vs. raise alpha)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "tmin=0s, tmax=20s, overlap=0.0, target_events=[1,2]",
+      "target_events": [
+        {
+          "id": "1",
+          "y": 0,
+          "meaning": "Lower alpha condition"
+        },
+        {
+          "id": "2",
+          "y": 1,
+          "meaning": "Raise alpha condition"
+        }
+      ],
+      "label_mapping": "Event 1 = class 0 (lower alpha), Event 2 = class 1 (raise alpha)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Paper explicitly defines 'BCMI tempo' dataset (openneuro_ds002720) with EEG from 18 participants controlling music tempo via alpha regulation; Table 1 shows 18 participants (4 female), age 19-28, ~1 hour recording per participant with synthetic music stimuli."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has a clear binary classification task (lower vs. raise alpha regulation) with well-defined event labels (event 1 and 2) spanning 20-second intervals. The reference paper (10.1038/s41597-020-0507-6) explicitly validates this BCMI tempo dataset and its paradigm, supporting the task. The analysis.md further specifies two concrete epoching strategies for this classification problem.",
+  "pre_scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_specific/openneuro_ds002720.py",
+    "kernel_sha256": "78c9f181bcecd2e25e2ca4786203c0cf1b9b791e205af0f6eecfbc2853aa6207",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 165,
+    "total_n": 165,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 165,
+      "age_complete": 165,
+      "sex_complete": 165,
+      "device_complete": 0,
+      "age_examples": [
+        "20",
+        "18",
+        "26",
+        "28",
+        "23",
+        "21"
+      ],
+      "sex_examples": [
+        "Male",
+        "Female"
+      ]
+    },
+    "misc_channel_names": []
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Alpha-State BCMI Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_long_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s, tmax = 20 s, overlap = 0.0, target_events = [`1`, `2`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `1` | 0 | Lower alpha condition |\n  | `2` | 1 | Raise alpha condition |\n- **Evidence**:\n  - DOI: 10.1038/s41597-020-0507-6 — Describes the BCMI tempo dataset (openneuro_ds002720) recorded during development of a tempo-based BCMI where participants regulated alpha levels to control music tempo; event JSON explicitly defines event 1 as Lower alpha and event 2 as Raise alpha.\n- **Kernel Notes**: Use long-event decoding over the full 20-second labeled interval. Twenty-two event files are empty — not every EEG file contains labeled events.\n\n### Classical Task 2: Continuous Segmentation Within BCMI Runs\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 4.0 s, overlap = 0.5\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event | y | Meaning |\n  |-------|---|---------|\n  | `1` | 0 | Lower alpha condition segment |\n  | `2` | 1 | Raise alpha condition segment |\n- **Evidence**:\n  - DOI: 10.1038/s41597-020-0507-6 — Segmentation alternative for cases where full 20-second long-event decoding is not desired.\n- **Kernel Notes**: Segment within labeled 20-second windows. Filter out the 22 empty event files before processing.",
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/auto_eeg/sandbox/openneuro_ds002720/kernel_final.py",
+  "kernel_code_len": 8687,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds002720.py",
+    "kernel_sha256": "11406a1faa6635fefaa021682d89e095da9ebedbd72b06b375f4cee09b5ae945",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 165,
+    "total_n": 165,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 165,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/app_kernel/kernels/openneuro_ds002720.py",
+  "status": "done"
+}

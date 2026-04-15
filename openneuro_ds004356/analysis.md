@@ -3,92 +3,64 @@
 **Dataset**: `openneuro_ds004356` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004356
 **Category**: Sensory/Response | **Subjects**: 22 | **Files (Completed)**: 24
 **Channels**: 34 | **Sampling Rate**: 10000 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
-The study measures subcortical Auditory Brainstem Responses (ABR) to continuous clicks, music genres, and speech stimuli using a deconvolution method. Participants passively listened to 12 different audio categories (Chinese speech, English speech, 8 music genres, acoustic guitar, and click trains) to compare subcortical and cortical neural encoding across stimulus types.
-
+The study measures subcortical Auditory Brainstem Responses (ABR) and cortical auditory evoked potentials to continuous music and speech stimuli using a deconvolution method. Participants passively listened to different audio categories while continuous EEG was recorded at 10,000 Hz from 34 channels. The paradigm compares neural encoding of music versus speech at both subcortical and cortical levels, with click trains serving as a control condition for ABR baseline measurement.
 
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `b639ef8e96701c29739e6b30f2e22d6f83e9c44ae028259f63acbad7e75782fb`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `click` | 22x10 | event | raw | Continuous click train stimulus |
-| `acoustic` | 22x40 | event | raw | Acoustic guitar stimulus |
-| `classical` | 22x40 | event | raw | Classical music stimulus |
-| `jazz` | 22x40 | event | raw | Jazz music stimulus |
-| `pop` | 22x40 | event | raw | Pop music stimulus |
-| `metal` | 22x40 | event | raw | Metal music stimulus |
-| `hiphop` | 22x40 | event | raw | Hip-hop music stimulus |
-| `chn_aud` | 22x40 | event | raw | Chinese speech stimulus |
-| `eng_aud` | 22x40 | event | raw | English speech stimulus |
-| `news` | 22x40 | event | raw | News speech stimulus |
-| `talk` | 22x40 | event | raw | Talk speech stimulus |
-| `interview` | 22x40 | event | raw | Interview speech stimulus |
-| `lecture` | 22x40 | event | raw | Lecture speech stimulus |
+| `Stimulus/S  1` | 12733 | event | raw | Continuous music stimulus block (or click train control) |
+| `Stimulus/S  2` | 10771 | event | raw | Continuous music stimulus block |
+| `Stimulus/S  4` | 69798 | event | raw | Continuous music stimulus block |
+| `Stimulus/S  8` | 51688 | event | raw | Continuous speech stimulus block |
 
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Music vs Speech Binary Classification from Auditory Brainstem Responses
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 12 s *, overlap = 0.0 *, target_events = [`acoustic`, `classical`, `jazz`, `pop`, `metal`, `hiphop`, `chn_aud`, `eng_aud`, `news`, `talk`, `interview`, `lecture`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 12.0 s, overlap = 0.0, target_events = [`Stimulus/S  1`, `Stimulus/S  2`, `Stimulus/S  4`, `Stimulus/S  8`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|
-  | `acoustic` | 0 | Music stimulus |
-  | `classical` | 0 | Music stimulus |
-  | `jazz` | 0 | Music stimulus |
-  | `pop` | 0 | Music stimulus |
-  | `metal` | 0 | Music stimulus |
-  | `hiphop` | 0 | Music stimulus |
-  | `chn_aud` | 1 | Speech stimulus |
-  | `eng_aud` | 1 | Speech stimulus |
-  | `news` | 1 | Speech stimulus |
-  | `talk` | 1 | Speech stimulus |
-  | `interview` | 1 | Speech stimulus |
-  | `lecture` | 1 | Speech stimulus |
+  | `Stimulus/S  1` | 0 | Music stimulus block |
+  | `Stimulus/S  2` | 0 | Music stimulus block |
+  | `Stimulus/S  4` | 0 | Music stimulus block |
+  | `Stimulus/S  8` | 1 | Speech stimulus block |
 - **Evidence**:
   - DOI: 10.1038/s41598-023-50438-0 — Binary classification of music vs speech based on auditory brainstem responses (ABR) using deconvolution on continuous 12s stimuli from OpenNeuro dataset ds004356
-- **Kernel Notes**: Extract continuous stimulus blocks (12s duration). Apply bandpass filtering appropriate for subcortical ABR analysis (e.g., 70-2000 Hz) or cortical analysis (e.g., 0.5-40 Hz). The paper analyzes both subcortical kernel [0,15]ms and cortical kernel [0,200]ms responses. Use label 0 for music categories, label 1 for speech categories. (replaces Classical Task 1 and Potential Task 1 from original analysis.md)
+  - DOI: 10.1101/2022.10.14.512309 — Preprint version demonstrating music vs speech subcortical response comparison with same paradigm
+- **Kernel Notes**: Extract continuous 12s stimulus blocks. Apply bandpass filtering for subcortical ABR (70-2000 Hz) or cortical analysis (0.5-40 Hz) depending on target response. Actual event IDs are Stimulus/S numeric codes (1,2,4,8) requiring mapping to descriptive categories from events.tsv metadata. Label 0 = music categories, label 1 = speech categories. The paper analyzes subcortical kernel [0,15]ms and cortical kernel [0,200]ms responses.
 
 ### Classical Task 2: Click Train ABR Control Task
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 12 s *, overlap = 0.0 *, target_events = [`click`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 12.0 s, overlap = 0.0, target_events = [`Stimulus/S  1`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|
-  | `click` | 0 | Click train control stimulus |
+  | `Stimulus/S  1` | 0 | Click train control stimulus |
 - **Evidence**:
   - DOI: 10.1038/s41598-023-50438-0 — Uses click train stimuli as control condition for measuring auditory brainstem responses
-- **Kernel Notes**: Extract continuous click train blocks (12s duration). Click trains serve as a reference/control condition for ABR analysis to establish baseline brainstem response characteristics. Apply appropriate ABR filtering (70-2000 Hz).
-
-## Data Quality Notes
-
-- Very high sampling rate (10 kHz) designed for subcortical ABR; bandpass filtering required for cortical analysis
-- 2 subjects have 2 files each (24 files, 22 subjects)
-- Balanced stimulus presentation (40 trials per condition for most categories)
-
-
-## Kernel Responsibilities
-
-> **Super Meta Required**: No
-> **Status**: wait_manual_review
+- **Kernel Notes**: Extract continuous click train blocks (12s duration). Click trains serve as reference/control condition for ABR baseline. Apply appropriate ABR filtering (70-2000 Hz). Event code 1 has lowest count (12,733) consistent with separate click train blocks vs continuous stimulus blocks.

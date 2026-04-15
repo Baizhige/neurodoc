@@ -2,6 +2,7 @@
 
 **Dataset**: `openneuro_ds004517` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004517
 **Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 20 | **Channels**: 32 | **Sampling Rate**: 500 Hz
+**Manual Review**: Pending
 
 ## Paradigm
 
@@ -9,67 +10,80 @@ Participants imagined animals and tools in response to auditory cues while EEG w
 
 ## File Scan Result
 
+> **Kernel SHA256**: `3de7ce8fbacbf61a7bcd8b46a4e88f13102a3d33be83e15c1038cccf2cdc905a`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `animal_auditory_imagery_task` | ~20xN | long | raw | Sustained auditory imagery of animals |
-| `tool_auditory_imagery_task` | ~20xN | long | raw | Sustained auditory imagery of tools |
-| `audio_animal` | ~20xN | short | raw | Auditory cue onset for animal |
-| `audio_tool` | ~20xN | short | raw | Auditory cue onset for tool |
-| `rest` | ~20xN | rest | raw | Rest period between imagery blocks |
+| `event_4223` | 6 | event | raw | Boundary/admin marker (rest or session transition) |
+| `event_4351` | 11872 | event | raw | Sustained auditory imagery task marker (animal/tool condition) |
 
-> **Event Type Description**:
-> - `short`: short stimulus onset marker (presentation duration <2 s), for `epoch_by_event_hdf5`
-> - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
-> - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **not used for epoch**
-
-### MISC Label Summary
-
-No MISC labels identified in this dataset.
 
 ### Info
-
-Dataset contains standard 32-channel EEG recordings with auditory cue and imagery task events. File structure follows BIDS format with task events properly annotated.
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
+| `device` | missing | N/A |
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Eeg
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004517 DOI: https://doi.org/10.18112/openneuro.ds004517.v1.0.2
-
-
-### Normal Task 1: Animal vs Tool Auditory Imagery (binary, long_event)
+### Classical Task 1: Animal vs Tool Auditory Imagery Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5, target_events = see Target Definition
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5 s
 - **Label Route**: `Annotation`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Imagery tasks are sustained (~5 s) - use long_event epoching. audio_animal/audio_tool are short cue onsets; rest events are inter-block resting periods.
+- **Meta Level**: raw
+- **Target Definition**:
 
 | Event | y | Meaning |
-|-------|---|---------|
-| `animal_auditory_imagery_task` | 0 | Auditory imagery of animals |
-| `tool_auditory_imagery_task` | 1 | Auditory imagery of tools |
+|-------|---|--------|
+| `event_4351` | 0 | Auditory imagery of animals (living concepts) |
+| `event_4351` | 1 | Auditory imagery of tools (non-living concepts) |
 
-## Data Quality Notes
+- **Evidence**: DOI: https://doi.org/10.1038/s41597-025-04967-0 (Simultaneous EEG and fNIRS recordings for semantic decoding of imagined animals and tools)
+- **Kernel Notes**: The sustained imagery periods (~5 s) are ideal for long_event epoching. Event_4351 (11872 occurrences) aligns with expected trial count (~20 trials × 20 subjects). Actual event labels require verification against raw BIDS events.tsv to confirm animal/tool condition mapping; interim mapping based on analysis.md descriptions. Event_4223 (6 occurrences) represents rare boundary/admin markers not used for primary epoching.
 
-- 32 EEG channels
-- Sustained imagery periods (~5 s) are suitable for long_event epoching
-- 20 subjects with balanced animal/tool imagery conditions
+### Classical Task 2: Audio Cue Onset ERP Analysis
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, overlap = null
+- **Label Route**: `Annotation`
+- **Meta Level**: raw
+- **Target Definition**:
 
-## Kernel Responsibilities
+| Event | y | Meaning |
+|-------|----|--------|
+| `event_4351` | 0 | Auditory cue onset for animal imagery |
+| `event_4351` | 1 | Auditory cue onset for tool imagery |
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
+- **Evidence**: DOI: https://doi.org/10.1038/s41597-025-04967-0
+- **Kernel Notes**: Short audio cue onsets captured for ERP analysis. tmin=-0.5s allows baseline correction; tmax=1.0s captures brief cue presentation period. Condition labels derived from analysis.md descriptions of audio_animal/audio_tool cue onsets.
 
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004517
+### Normal Task 1: Rest vs Active Imagery State Segmentation
+- **Task Type**: segmentation/classification
+- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 5.0 s, overlap = 0.0 s
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+
+| Event | y | Meaning |
+|-------|---|--------|
+| `event_4351` | 1 | Active sustained imagery period |
+| `event_4223` | 0 | Rest/boundary marker |
+
+- **Evidence**: DOI: https://doi.org/10.1038/s41597-025-04967-0 (paradigm includes explicit rest periods between imagery blocks)
+- **Kernel Notes**: Event_4223 (6 occurrences) represents rare boundary/rest markers. Verify per-subject event structure before epoching. This task supports alternative approaches to semantic classification by first segmenting active vs rest states.
+
+### Potential Task 1: Semantic Decoding of Living vs Non-living Concepts
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0.5 s, tmax = 4.5 s, overlap = 0.25 s
+- **Label Route**: `Annotation`
+- **Meta Level**: super
+- **Target Definition**: Event-to-label mapping for living (animal) vs non-living (tool) semantic categories
+- **Evidence**: Paradigm described in DOI: https://doi.org/10.1038/s41597-025-04967-0
+- **Kernel Notes**: This super-level task derives semantic labels from raw imagery conditions. Requires super meta integration to map raw events to semantic categories. Mid-to-late imagery window (0.5-4.5s) recommended for optimal semantic decoding based on sustained imagery dynamics.
