@@ -127,9 +127,61 @@ def _read_bids_sidecars(data_path: Path, log) -> Dict[str, Any]:
             result["participants_summary"] = ", ".join(summary_parts)
             result["participants_tsv_sample"] = "\n".join(lines[:8])  # header + 7 rows
             result["participants_full"] = text[:4000]
+
+            # v3: enumerate all columns with completeness + dtype inference
+            fields: List[Dict[str, Any]] = []
+            if rows:
+                columns = list(rows[0].keys())
+                # Skip participant_id — it's an identifier, not a label field
+                for col in columns:
+                    if col in ("participant_id", "subject_id", ""):
+                        continue
+                    values = [(r.get(col) or "").strip() for r in rows]
+                    non_empty = [v for v in values if v and v.lower() not in ("n/a", "na", "null", "none", "nan")]
+                    k = len(non_empty)
+                    # Determine completeness
+                    if n_total == 0:
+                        completeness = "missing"
+                    elif k == 0:
+                        completeness = "missing"
+                    elif k >= n_total * 0.99:
+                        completeness = "complete"
+                    elif k >= n_total * 0.5:
+                        completeness = f"partial ({k}/{n_total})"
+                    else:
+                        completeness = f"incomplete ({k}/{n_total})"
+                    # Infer dtype
+                    numeric = 0
+                    for v in non_empty[:50]:
+                        try:
+                            float(v)
+                            numeric += 1
+                        except ValueError:
+                            pass
+                    if non_empty and numeric >= 0.9 * len(non_empty[:50]):
+                        dtype = "numeric"
+                    else:
+                        dtype = "categorical"
+                    # Sample up to 3 unique values
+                    uniq = []
+                    for v in non_empty:
+                        if v not in uniq:
+                            uniq.append(v)
+                        if len(uniq) >= 3:
+                            break
+                    fields.append({
+                        "name": col,
+                        "completeness": completeness,
+                        "dtype": dtype,
+                        "sample_values": uniq,
+                    })
+            result["participants_fields"] = fields
         except Exception as e:
             result["participants_tsv_error"] = str(e)
         log(f"[Context] participants.tsv: {result.get('participants_summary', 'error')}")
+        if result.get("participants_fields"):
+            names = [f["name"] for f in result["participants_fields"]]
+            log(f"[Context] participants.tsv columns discovered: {names}")
 
     # --- dataset_description.json: DOI, name, authors ---
     p = data_path / "dataset_description.json"
@@ -190,6 +242,42 @@ def _read_bids_sidecars(data_path: Path, log) -> Dict[str, Any]:
     if events_tsv_samples:
         result["events_tsv_samples"] = events_tsv_samples
         log(f"[Context] events.tsv samples: {list(events_tsv_samples.keys())}")
+
+    # v3: discover non-canonical numeric columns in events.tsv for misc candidates
+    # Canonical columns (onset, duration, value, trial_type, sample, response_time*) are
+    # special; numeric *_time / *_score / *_rt columns become misc candidate label fields.
+    events_numeric_columns: Dict[str, List[str]] = {}
+    _CANONICAL_EVENT_COLS = {"onset", "duration", "sample", "value", "trial_type", "stim_type",
+                              "description", "hed", "block"}
+    for fname, sample in events_tsv_samples.items():
+        try:
+            rows = list(csv.DictReader(io.StringIO(sample), delimiter="\t"))
+            if not rows:
+                continue
+            candidates = []
+            for col in rows[0].keys():
+                if col in _CANONICAL_EVENT_COLS or not col:
+                    continue
+                vals = [(r.get(col) or "").strip() for r in rows]
+                non_empty = [v for v in vals if v and v.lower() not in ("n/a", "na", "null", "none")]
+                if not non_empty:
+                    continue
+                numeric = 0
+                for v in non_empty:
+                    try:
+                        float(v)
+                        numeric += 1
+                    except ValueError:
+                        pass
+                if numeric == len(non_empty):
+                    candidates.append(col)
+            if candidates:
+                events_numeric_columns[fname] = candidates
+        except Exception:
+            pass
+    if events_numeric_columns:
+        result["events_numeric_columns"] = events_numeric_columns
+        log(f"[Context] events.tsv numeric columns: {events_numeric_columns}")
 
     # --- first eeg.json: device/amplifier info ---
     for ep in sorted(data_path.glob("task-*_eeg.json"))[:1]:

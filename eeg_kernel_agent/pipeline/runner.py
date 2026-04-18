@@ -319,6 +319,7 @@ class Pipeline:
                     format_type=context.get("format_type", "unknown"),
                     eeg_header_summary=context.get("eeg_header_summary", ""),
                     event_annotations=event_annotations,
+                    misc_channel_names=(pre_scan_result or {}).get("misc_channel_names", []),
                 )
                 self._save("kernel_loop", tasks_section=tasks_section)
             else:
@@ -387,25 +388,7 @@ class Pipeline:
 
             # ── Phase 7: Doc Write ───────────────────────────────────────
             if cur <= self._phase_index("doc_write"):
-                # Re-synthesize tasks with actual event IDs from final scan
-                if scan_result.get("event_counts"):
-                    self.log("[Pipeline] Re-synthesizing tasks with actual scan event IDs...")
-                    budget_before = self.budget.used
-                    tasks_section = synthesize_tasks(
-                        self.dataset_name,
-                        context["analysis_md"],
-                        ref_extractions,
-                        event_ids_preview,
-                        context["category_skill"],
-                        self.call_llm,
-                        self.budget,
-                        self.log,
-                        bids_sidecars=context.get("bids_sidecars"),
-                        format_type=context.get("format_type", "unknown"),
-                        eeg_header_summary=context.get("eeg_header_summary", ""),
-                        event_annotations=event_annotations,
-                    )
-
+                status = "wait_manual_review" if kernel_ok else "wait_kernel_update"
                 analysis_md_new = generate_analysis_md(
                     self.dataset_name,
                     context,
@@ -416,10 +399,11 @@ class Pipeline:
                     self.budget,
                     self.log,
                     bids_sidecars=context.get("bids_sidecars"),
+                    event_annotations=event_annotations,
+                    status=status,
                 )
                 merge_and_write(self.dataset_name, analysis_md_new, scan_result, self.log,
                                bids_sidecars=context.get("bids_sidecars"))
-                status = "done" if kernel_ok else "partial"
                 self._save("done", status=status)
                 self.log(f"[Pipeline] Complete. Status: {status}. Budget used: {self.budget.used}/{self.budget.total}")
 

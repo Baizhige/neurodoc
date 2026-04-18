@@ -166,60 +166,77 @@ Output ONLY valid JSON, no markdown fences:
   "kernel_notes": "<implementation notes for the kernel team>"
 }"""
 
-# ── Phase-2-2 system prompt (task synthesis + self-check) ─────────────────────
+# ── Phase-2-2 system prompt (task synthesis + self-check, v3 taxonomy) ────────
 _P22_SYSTEM = """\
 You are an EEG machine learning task documentation expert. Write the complete "## Tasks" section
-of an EEG dataset's analysis.md by synthesising all evidence. Then self-check your output.
+of an EEG dataset's analysis.md following the v3 epoch/label taxonomy, then self-check.
 
 You receive: the full analysis.md, raw event IDs, Phase-1 extractions, Phase-2-1 epoch alignment,
 and a Category SKILL guide.
 
 === EEGUnity Epoch Methods (ONLY these three) ===
-1. epoch_by_event_hdf5        short discrete events: params tmin, tmax, target_events (list of raw IDs)
+1. epoch_by_event_hdf5        short discrete events: params tmin, tmax, target_events
 2. epoch_by_long_event_hdf5   long sustained annotations: params tmin, tmax, overlap, target_events
-3. epoch_by_segmentation_hdf5 sliding window, no annotations: params segment_length, overlap
+3. epoch_by_segmentation_hdf5 sliding window, no annotations: params segment_length, overlap;
+                              target_events MUST be []
 
-=== Task Template ===
+=== Task Template (v3) ===
 ### Classical Task N: <concise name>
-- **Task Type**: classification | regression | segmentation
+- **Task Type**: classification | regression
 - **Epoch Method**: `<method>`
 - **Epoch Parameters**: tmin = X s, tmax = X s, target_events = [`raw_id_a`, `raw_id_b`]
 - **Label Route**: `event` | `misc` | `info`
+- **Label Field**: `<channel_or_column_name>`     # ONLY when Route ∈ {misc, info}
 - **Meta Level**: raw | super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `raw_id_a` | 0 | Short description |
+  <route-specific table — see schema matrix below>
 - **Evidence**:
-  - <ref> — <evidence_desc: specific details — N-class, epoch window, consistency notes>
-- **Kernel Notes**: Key implementation steps. State epoch alignment (onset/offset).
+  - <ref> — <evidence_desc>
+- **Kernel Notes**: implementation steps; if Meta Level=super, describe the derivation.
 
-=== RULES ===
-RULE 1 — Event ID grounding: For Meta Level=raw, ALL IDs in target_events and Target Definition
-  MUST come from Available Raw Event IDs. Map paper terms → exact raw IDs.
-RULE 2 — Super meta: Super Meta Notes must say "Derived from [`raw_id`] by <computation>."
-RULE 3 — Task classification:
-  "Classical Task": ≥1 paper with classification=relevant AND has ref (DOI/URL/arXiv). ref required.
-  "Potential Task": plausible analysis; partial/indirect evidence allowed; ref optional but preferred.
-  Multiple papers supporting same task → ONE task with all refs listed under Evidence.
-  Existing Potential Tasks → upgrade to Classical if now evidenced, else preserve verbatim.
-RULE 4 — Refs: Only use refs from Phase-1 extractions. Never fabricate.
-RULE 5 — Mark unconfirmed params with * (e.g. tmin = -0.5 s *).
-RULE 6 — Epoch params: Use Phase-2-1 alignment recommendations as primary source.
-  If paper states different params, use paper's values and note deviation in Evidence desc.
-RULE 7 — Evidence desc must cover: task type, n-classes, epoch window used, any deviation.
-  Example: "4-class MI (left/right fist, both fists, feet), epoch_by_event_hdf5 tmin=0s tmax=3s
-  (cue onset); consistent with dataset annotation. Uses only imagery runs (R04/08/12)."
-  For partial evidence: "[partial] Mentions dataset for MI classification but does not specify
-  epoch window or exact class set."
-RULE 8 — Potential Tasks with partial evidence: include ref + mark evidence as [partial].
+=== Three Task Archetypes ===
+A — Event is the label  (Route=event, no Label Field)
+B1 — Native misc: label = numeric column of events.tsv (Route=misc, Meta=raw, regression only)
+B2 — Derived misc: label derived by kernel from participants.tsv (Route=misc, Meta=super, regression only)
+B3 — Native info: label = participants.tsv column used directly (Route=info)
+C  — No event; epoch_by_segmentation_hdf5 with subject-level label (Route=misc derived or info)
+
+=== Target Definition schema matrix (Route × Task Type) ===
+  event  classification  | Event ID | y | Meaning |
+  event  regression      | Event ID | Value | Meaning |
+  misc   regression      | MISC Channel | Value (unit) | Notes |
+  misc   classification  FORBIDDEN — use event or info instead
+  info   classification  | Info Field | Value | y | Meaning |
+  info   regression      | Info Field | Range (unit) | Notes |
+
+=== HARD RULES ===
+H1 ONE LABEL FIELD PER TASK. Multi-dimension labels split into N tasks.
+H2 CLASSIFICATION ≥ 2 DISTINCT y VALUES.
+H3 misc ROUTE IS REGRESSION-ONLY.
+H4 LABEL FIELD REQUIRED iff Route ∈ {misc, info}; FORBIDDEN when Route=event.
+H5 DERIVED MISC ⇒ Meta Level = super. Kernel Notes MUST describe derivation.
+H6 GROUND TRUTH only — do not invent fields. If the Label Field is not present in
+   events.tsv, participants.tsv, or the native misc list, DROP the task.
+H7 segmentation ⇒ target_events = [].
+
+=== Other Rules ===
+R1 Event grounding: target_events MUST come from Available Raw Event IDs.
+R2 Task classification:
+   "Classical Task": ≥1 paper with classification=relevant AND has ref. ref required.
+   "Potential Task": plausible analysis; partial/indirect evidence allowed.
+   Multiple papers → ONE task with all refs.
+R3 Refs: only from Phase-1 extractions. Never fabricate.
+R4 Mark unconfirmed params with * (e.g. tmin = -0.5 s *).
+R5 Use Phase-2-1 alignment recommendations as primary source.
+R6 Evidence desc must cover: task type, n-classes, epoch window, any deviation.
 
 === SELF-CHECK (perform AFTER writing tasks, fix before output) ===
-CHECK A: Every target_events entry exists in Available Raw Event IDs.
-CHECK B: Every Classical Task has at least one ref in Evidence.
-CHECK C: Epoch params match Phase-2-1 recommendations (or deviation is noted).
-CHECK D: No duplicate tasks describing the same epoch+label combination.
-CHECK E: Potential Tasks from original analysis.md that have no new evidence are preserved verbatim.
+A: target_events grounded in Available Raw Event IDs (skip when segmentation).
+B: Every Classical Task has at least one ref in Evidence.
+C: Epoch params match Phase-2-1 (or deviation noted).
+D: No duplicate tasks (same epoch+label combination).
+E: H1–H7 all satisfied — Label Field present iff non-event; classification has ≥2 y;
+   misc is regression-only; segmentation has target_events=[]; derived misc is super meta.
 
 === Output Format ===
 Return ONLY valid JSON (no markdown fences):
