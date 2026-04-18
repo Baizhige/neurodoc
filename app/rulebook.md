@@ -1,8 +1,19 @@
 # EEG Dataset `analysis.md` 文档生成与审核规则
 
-状态：草案 v0.5
+状态：草案 v0.6
 
-最近确认：2026-04-05
+最近确认：2026-04-18
+
+变更摘要（v0.5 → v0.6）：
+- 明确 **epoch 提取** 与 **label 提取** 为两条相互独立的轴，每个 Task 都必须各自声明。
+- 新增 `**Label Field**` 字段（第77条之三）：`Label Route ∈ {misc, info}` 时必填，命名 misc channel 或 `participants.tsv` 列名。
+- `misc` 路由限定为 regression-first（第77条之一扩充、第77条之六）；离散分类标签应走 `event` 或 `info`。
+- 新增“单目标任务”规则（第77条之五）：每个 Task 只允许一个 Label Field；多维度标签必须拆分为多个 Task。
+- 新增“分类任务 ≥2 类”规则（第77条之七）。
+- 新增“派生 misc → super meta”规则（第77条之八）：kernel 新创建的 misc channel 一律为 super meta，并要求在 `Kernel Notes` 记录派生步骤。
+- `### Info` 子节从固定三字段扩展为动态列出 `participants.tsv` 所有发现列（第57条之二修订），同时保留 `subject_age/subject_sex/device` 为必展示规范字段。
+- `Target Definition` 表格 schema 按 `Route × Task Type` 严格绑定（第77条之四）。
+- 新增第30条之三：`Manual Review` 仅由人类审核员填写；LLM 必须输出空白，生成流水线在后处理阶段强制清空。
 
 变更摘要（v0.4 → v0.5）：
 - 新增 `## File Scan Result` 顶层节，包含 Kernel 指纹 blockquote 与三个子节。
@@ -283,6 +294,12 @@ LLM 审核脚本负责：
 2. 如确需补充说明，应优先写入现有栏目下的 `Kernel Notes`、`Data Quality Notes` 或审核记录，而不应新增一级章节。
 3. 对既有历史文档进行实质性修订时，应同步删除不符合现行结构的额外章节，除非维护者另有明确要求。
 
+### 第30条之三 `Manual Review` 自动化行为
+
+1. 生成流水线中的 LLM 环节**不得**填写 `Manual Review` 字段（包括 `Pending`、`TBD`、`N/A` 等占位值）。
+2. LLM 应原样输出 `**Manual Review**:`（冒号后为空）。若 LLM 因模板复用意外填入任何非空值，流水线后处理必须强制清空该字段。
+3. 该字段内容只在人类审核员手工编辑 `analysis.md` 时才可出现非空值，填写规则见第30条。
+
 
 ## 第六章 Paradigm Area
 
@@ -535,15 +552,16 @@ LLM 审核脚本负责：
 
 1. 如某个任务使用 `misc` 作为 `Label Route`，则 `### MISC Label Summary` 必须存在。
 2. 若 `misc` 路由未实际用于任何任务，该子节可以省略。
+3. 原生 misc channel（扫描阶段发现）即使当前未被任务使用，也可以在本节登记供后续任务参考。
 
 ### 第56条 内容要求
 
-`### MISC Label Summary` 至少应说明：
+`### MISC Label Summary` 以表格形式呈现，列结构固定为 `Channel | Source | Meta | Notes`：
 
-1. 字段名称。
-2. 字段来源（原始表格、事件字段、companion file 等）。
-3. 字段是 `raw` 还是 `super`。
-4. 单位、对齐方式与必要的派生逻辑说明。
+1. `Channel`：misc channel 名称，与任务 `Label Field` 对应。
+2. `Source`：字段来源（如 `native (raw misc in EEG file)`、`native (events.tsv column: response_time)`、`derived from participants.tsv: p_factor`）。
+3. `Meta`：`raw` 或 `super`（派生 misc 必填 `super`，见第77条之八）。
+4. `Notes`：单位、对齐方式、派生逻辑、填充规则等实现说明。
 
 ### 第57条 自动化原则
 
@@ -560,12 +578,14 @@ LLM 审核脚本负责：
 ### 第57条之二 字段与完整性
 
 1. `### Info` 以表格形式呈现，固定列为 `Field`、`Completeness`、`Notes`。
-2. 以下字段为必填字段（可填 `missing`）：
+2. 以下字段为必展示规范字段，必须出现；若缺失填 `missing`：
    - `subject_age`
    - `subject_sex`
    - `device`
-3. 以下字段为可选字段，仅在数据集存在受试者分组概念时填写：
+3. 扫描阶段应额外枚举 `participants.tsv` 中发现的所有列（如 `handedness`、`p_factor`、`internalizing`、`diagnosis` 等），按发现顺序追加到表格中。
+4. 以下字段为规范性可选字段，仅在数据集存在受试者分组概念时显式登记（可与第3款发现列重复，但同一字段只出现一次）：
    - `subject_group`
+5. 任何 `Label Route = info` 的任务所引用的 `Label Field`，必须是本表中登记的字段名之一。
 
 ### 第57条之三 `Completeness` 合法取值
 
@@ -616,11 +636,12 @@ LLM 审核脚本负责：
 2. `Epoch Method`
 3. `Epoch Parameters`
 4. `Label Route`
-5. `Meta Level`
-6. `Target Definition`
-7. `Super Meta Notes`（如适用）
-8. `Evidence`（`Classical Task` 必填）
-9. `Kernel Notes`
+5. `Label Field`（`Label Route ∈ {misc, info}` 时必填；`event` 时不出现，见第77条之三）
+6. `Meta Level`
+7. `Target Definition`
+8. `Super Meta Notes`（如适用）
+9. `Evidence`（`Classical Task` 必填）
+10. `Kernel Notes`
 
 ### 第61条 历史遗留写法
 
@@ -784,12 +805,15 @@ LLM 审核脚本负责：
 3. 离散分类标签不应仅因实现方便而改写为 `misc`。
 4. 若任务属于例外情形，应在 `Kernel Notes` 中说明理由。
 
-### 第77条之一 epoch-level scalar regression 与计数目标
+### 第77条之一 `misc` 路由用途：epoch-level 标量与连续量
 
-1. 当任务目标是”每个 epoch 输出一个标量或计数”，如 `response_time`、评分、密度、持续时长或生理指标时，`Label Route` 应为 `misc`。
-2. 切窗锚点事件（用于 epoch 边界定位的事件）与监督信号路由相互独立；`Label Route = misc` 不妨碍 `Epoch Method` 使用事件锚定方式。
-3. 若该标量可由原始表格或 companion file 直接读取，标为 `raw`；若需配对、聚合或换算，标为 `super`。
-4. 采用本条任务时，`### MISC Label Summary` 必须说明字段来源、单位、对齐方式与必要的派生逻辑。
+1. `misc` 路由 **regression-first**：用于存储每个 segmentation 对应的连续值/标量标签，如 `response_time`、评分、密度、持续时长、生理指标、派生因子分（`p_factor`）等。
+2. 切窗锚点事件（用于 epoch 边界定位的事件）与监督信号路由相互独立；`Label Route = misc` 不妨碍 `Epoch Method` 使用事件锚定方式或 segmentation 方式。
+3. `misc` 来源分两类：
+   - **原生 misc**（native）：原始文件中已经存在的 misc channel，或可由 `events.tsv` 数值列（如 `response_time`）直接读取后逐 segmentation 填充。`Meta Level = raw`。
+   - **派生 misc**（derived）：kernel 根据外部表格（`participants.tsv`、companion file 等）或派生逻辑新创建的 misc channel，其值按 segmentation 填充（受试者级值在该受试者全部 segmentation 上为常数）。`Meta Level = super`，并适用第77条之八。
+4. 同一数据集允许存在多个 misc channel（如 `misc:p_factor`、`misc:externalizing`、`misc:response_time`）。每个 Task 只能引用其中一个，Task 的 `Label Field` 即为该 channel 名。
+5. 采用本路由的任务，`### MISC Label Summary` 必须登记字段来源、单位、对齐方式与必要的派生逻辑。
 
 ### 第77条之二 `Label Route = info` 时的 `Target Definition` 格式
 
@@ -800,8 +824,58 @@ LLM 审核脚本负责：
    | `subject_sex` | Male | 0 | Male subject |
    | `subject_sex` | Female | 1 | Female subject |
 
-2. `Info Field` 列的取值必须与 `### Info` 表中已登记的字段名称一致。
+2. `Info Field` 列的取值必须与 `### Info` 表中已登记的字段名称一致，并与 Task 的 `Label Field` 一致。
 3. 若该字段在 `### Info` 中的 `Completeness` 为 `missing` 或 `incomplete`，该任务不得成立为 `Classical Task`，至多为 `Potential Task`，并应在 `Kernel Notes` 中说明数据缺失情况。
+4. `info` 路由只适用于 `participants.tsv` 中**原样可用**的列（性别、年龄、原生分组）。若需 median split、标准化、配对或派生，应改用派生 misc（第77条之一、第77条之八）。
+
+### 第77条之三 `Label Field` 必填规则
+
+1. 所有 `Label Route ∈ {misc, info}` 的任务必须显式声明 `**Label Field**:` 子字段，指向对应 misc channel 名或 `participants.tsv` 列名。
+2. `Label Route = event` 的任务**不得**声明 `Label Field`，因事件 ID 本身即为标签来源。
+3. `Label Field` 取值必须可在文档内部定位：
+   - `Label Route = misc` ⇒ 出现在 `### MISC Label Summary`；
+   - `Label Route = info` ⇒ 出现在 `### Info`。
+4. `Label Field` 与 `Target Definition` 表格首列应保持同名对应。
+
+### 第77条之四 `Target Definition` 格式矩阵
+
+`Target Definition` 表格列结构由 `Label Route × Task Type` 联合决定：
+
+| Label Route | Task Type | 表头列 |
+|---|---|---|
+| `event` | `classification` | `\| Event ID \| y \| Meaning \|` |
+| `event` | `regression` | `\| Event ID \| Value \| Meaning \|`（罕见） |
+| `misc` | `regression` | `\| MISC Channel \| Value (unit) \| Notes \|` |
+| `misc` | `classification` | **禁止**（见第77条之六） |
+| `info` | `classification` | `\| Info Field \| Value \| y \| Meaning \|` |
+| `info` | `regression` | `\| Info Field \| Range (unit) \| Notes \|` |
+
+1. 表头与列顺序必须与上表完全一致；LLM 与人工审核员不得擅自增删列。
+2. `event` 路由下，所有 `Event ID` 列单元必须来自 `### Event Structure`（沿用第74条）。
+
+### 第77条之五 单目标任务规则
+
+1. 每个 Task 只编码一个学习目标（one Task = one Label Field）。
+2. 多维度标签（如心理测评四因子 `internalizing/externalizing/attention/p_factor`）必须拆分为多个 Task，每个 Task 取一个 Label Field。
+3. 若一份外部证据同时覆盖多个维度，应在每个拆分后的 Task 的 `Evidence` 中复用同一条目，而不是合并 Task。
+4. `Target Definition` 表格首列（Event ID / MISC Channel / Info Field）在该 Task 内只允许一个唯一值。
+
+### 第77条之六 `misc` 路由禁用 classification
+
+1. `Label Route = misc` 的任务，`Task Type` 必须为 `regression`。
+2. 若需在连续 misc 上执行分类（如阈值二分类），应在 `Label Route = info` 或 `Label Route = event` 下实现；或在派生 misc 中预先 bin 化并作为 `info` 字段登记。
+3. 对 `misc` 的任何 binning/median split 均视为派生行为，适用第77条之八。
+
+### 第77条之七 `classification` 任务的多类要求
+
+1. `Task Type = classification` 的任务，`Target Definition` 表中 `y` 列必须至少出现 2 个不同值。
+2. 若证据或数据只能支持单一类别（例如仅有 cue onset marker 而无对照类），该任务应改为 `regression`（若适用）或降级删除，不得保留单类 classification。
+
+### 第77条之八 派生 misc ⇒ super meta
+
+1. 任何 kernel 新创建的 misc channel 属于派生数据，其所承载任务的 `Meta Level` 必须为 `super`，并使 `Super Meta Required = Yes`（见第37条）。
+2. 派生 misc 必须在 `### MISC Label Summary` 中明确声明为派生来源，并在 Task 的 `Kernel Notes` 中写明派生步骤（从哪一列、如何填充到每个 segmentation、单位、异常值处理等）。
+3. 若派生来源字段本身在数据集中不存在（既不在 `events.tsv`、`participants.tsv`，也不在原生 misc channel），该任务不得成立，应删除。
 
 ### 第78条 `Meta Level`
 

@@ -1,0 +1,143 @@
+--- openneuro_ds005505/analysis.md (pre-v3)
++++ openneuro_ds005505/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds005505` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005505
+ **Category**: Complex Applied | **Subjects**: 136 | **Files (Completed)**: 1342 | **Channels**: 129 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -78,11 +78,11 @@
+ - **Task Type**: classification
+ - **Epoch Method**: epoch_by_event_hdf5
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.6 s, target_events = [`contrastTrial_start`, `left_target`, `right_target`, `left_buttonPress`, `right_buttonPress`]
+-- **Label Route**: info
++- **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-----------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `contrastTrial_start` | 0 | internalizing dimension (low) |
+   | `contrastTrial_start` | 1 | internalizing dimension (high) |
+   | `contrastTrial_start` | 0 | externalizing dimension (low) |
+@@ -100,11 +100,11 @@
+ - **Task Type**: regression
+ - **Epoch Method**: epoch_by_long_event_hdf5
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = null, target_events = [`video_start`, `video_stop`]
+-- **Label Route**: info
++- **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-----------|
++  | Event ID | Value | Meaning |
++  |---|---|---|
+   | `video_start` | age (continuous) | Participant age in years (5.2–21.7) |
+   | `video_start` | sex (categorical) | Participant sex (M/F) |
+ - **Evidence**:
+@@ -116,11 +116,11 @@
+ - **Task Type**: classification
+ - **Epoch Method**: epoch_by_event_hdf5
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.6 s, target_events = [`contrastTrial_start`, `left_target`, `right_target`, `left_buttonPress`, `right_buttonPress`]
+-- **Label Route**: event
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-----------|
++- **Label Route**: `event`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `left_target` | 0 | Left-side visual target stimulus |
+   | `right_target` | 1 | Right-side visual target stimulus |
+ - **Evidence**:
+@@ -132,11 +132,11 @@
+ - **Task Type**: classification
+ - **Epoch Method**: epoch_by_event_hdf5
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`seqLearning_start`, `dot_no1_ON`, `dot_no2_ON`, `dot_no3_ON`, `dot_no4_ON`, `dot_no5_ON`, `dot_no6_ON`, `dot_no7_ON`, `dot_no8_ON`]
+-- **Label Route**: event
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-----------|
++- **Label Route**: `event`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `seqLearning_start` | 0 | Sequence learning with 6 target dots |
+   | `seqLearning_start` | 1 | Sequence learning with 8 target dots |
+ - **Evidence**:
+@@ -148,11 +148,11 @@
+ - **Task Type**: classification
+ - **Epoch Method**: epoch_by_long_event_hdf5
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s, target_events = [`instructed_toOpenEyes`, `instructed_toCloseEyes`]
+-- **Label Route**: event
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-----------|
++- **Label Route**: `event`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `instructed_toOpenEyes` | 0 | Eyes-open rest phase |
+   | `instructed_toCloseEyes` | 1 | Eyes-close rest phase |
+ - **Evidence**:
+@@ -163,11 +163,11 @@
+ - **Task Type**: classification
+ - **Epoch Method**: epoch_by_event_hdf5
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 3.0 s, target_events = [`stim_ON`, `fixpoint_ON`, `surroundSuppB1_start`, `surroundSuppB2_start`]
+-- **Label Route**: event
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-----------|
++- **Label Route**: `event`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `stim_ON` | 0 | Visual stimulus with background |
+   | `stim_ON` | 1 | Visual stimulus without background |
+ - **Evidence**:
+@@ -179,11 +179,11 @@
+ - **Task Type**: classification
+ - **Epoch Method**: epoch_by_event_hdf5
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 2.0 s, target_events = [`newPage`, `trialResponse`]
+-- **Label Route**: event
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-----------|
++- **Label Route**: `event`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `newPage` | 0 | Incorrect response on subsequent trialResponse |
+   | `newPage` | 1 | Correct response on subsequent trialResponse |
+ - **Evidence**:
+@@ -195,11 +195,11 @@
+ - **Task Type**: classification
+ - **Epoch Method**: epoch_by_long_event_hdf5
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = null, target_events = [`video_start`, `video_stop`]
+-- **Label Route**: event
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-----------|
++- **Label Route**: `event`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `video_start` | 0 | DespicableMe (animated comedy) |
+   | `video_start` | 1 | DiaryOfAWimpyKid (animated comedy) |
+   | `video_start` | 2 | FunwithFractals (fractal visuals) |

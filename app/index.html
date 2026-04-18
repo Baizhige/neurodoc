@@ -1621,13 +1621,14 @@ function parseTasks(body) {
     const task = { kind:hm[1], num:parseInt(hm[2]), name:hm[3].trim(),
       taskType:'classification', epochMethod:'epoch_by_event_hdf5',
       epochParams:{ tmin:'', tmax:'', overlap:'', segment_length:'', custom:[] },
-      labelRoute:'event', metaLevel:'raw', targetRows:[], miscChannel:'', evidence:[], kernelNotes:'' };
+      labelRoute:'event', labelField:'', metaLevel:'raw', targetRows:[], miscChannel:'', evidence:[], kernelNotes:'' };
 
     const fv = (field) => { const re=new RegExp(`\\*\\*${escRe(field)}\\*\\*:\\s*\`?([^\`\n]+)\`?`); const m=part.match(re); return m?m[1].trim():''; };
     task.taskType = fv('Task Type') || 'classification';
     task.epochMethod = fv('Epoch Method') || 'epoch_by_event_hdf5';
     task.metaLevel = fv('Meta Level') || 'raw';
     task.labelRoute = fv('Label Route') || 'event';
+    task.labelField = fv('Label Field') || '';
     task.epochParams = parseEpochParams(fv('Epoch Parameters'), task.epochMethod);
 
     const tdm = part.match(/\*\*Target Definition\*\*:\s*([\s\S]*?)(?=\n- \*\*\w|$)/);
@@ -1635,10 +1636,20 @@ function parseTasks(body) {
       const tdb = tdm[1].trim();
       if (tdb.includes('|')) {
         const { rows } = parseMarkdownTable(tdb);
-        task.targetRows = rows.map(r=>({ label:(r[0]||'').replace(/^`|`$/g,'').trim(), y:(r[1]||'').trim(), meaning:(r[2]||'').trim() }));
+        // v3: misc-regression TD has 3 cols (Channel, Value, Notes) — store first col as miscChannel.
+        if (task.labelRoute === 'misc') {
+          if (rows.length) task.miscChannel = (rows[0][0]||'').replace(/^`|`$/g,'').trim();
+          if (!task.labelField) task.labelField = task.miscChannel;
+        } else {
+          task.targetRows = rows.map(r=>({ label:(r[0]||'').replace(/^`|`$/g,'').trim(), y:(r[1]||'').trim(), meaning:(r[2]||'').trim() }));
+          if (task.labelRoute === 'info' && !task.labelField && task.targetRows.length) {
+            task.labelField = task.targetRows[0].label;
+          }
+        }
       } else {
         const mm = tdb.match(/`([^`]+)`/);
         task.miscChannel = mm ? mm[1] : tdb.replace(/MISC\s+channel:?\s*/i,'').trim();
+        if (!task.labelField) task.labelField = task.miscChannel;
       }
     }
 
@@ -1657,17 +1668,48 @@ function serializeTasks(tasks) {
   let classN=0, potN=0;
   return tasks.map(task => {
     const num = task.kind==='Classical' ? ++classN : ++potN;
+    // v3: misc route is regression-only.
+    const taskType = (task.labelRoute==='misc') ? 'regression' : (task.taskType || 'classification');
     let teStr = '';
-    if (task.labelRoute!=='misc' && task.targetRows.length)
+    if (task.epochMethod === 'epoch_by_segmentation_hdf5') {
+      teStr = `, target_events = []`;
+    } else if (task.labelRoute!=='misc' && task.targetRows.length) {
       teStr = `, target_events = [${task.targetRows.map(r=>`\`${r.label}\``).join(', ')}]`;
+    }
     const epStr = task.epochParamsStr || '';
 
+    // v3: derive Label Field from canonical sources per route.
+    let labelField = (task.labelField||'').trim();
+    if (!labelField && task.labelRoute==='misc') labelField = (task.miscChannel||'').trim();
+    if (!labelField && task.labelRoute==='info' && task.targetRows.length) labelField = task.targetRows[0].label.trim();
+    const labelFieldLine = (task.labelRoute==='misc' || task.labelRoute==='info')
+      ? `\n- **Label Field**: \`${labelField}\``
+      : '';
+
+    // v3: Target Definition table header per Route × Task Type.
     let targetDef = '';
     if (task.labelRoute==='misc') {
-      targetDef = `MISC channel: \`${task.miscChannel}\``;
+      targetDef = `| MISC Channel | Value | Notes |\n  |---|---|---|\n  | \`${labelField}\` | continuous |  |`;
+    } else if (task.labelRoute==='info') {
+      if (taskType === 'regression') {
+        targetDef = `| Info Field | Range | Notes |\n  |---|---|---|`;
+        task.targetRows.forEach(r => {
+          targetDef += `\n  | \`${labelField || r.label}\` | ${r.y} | ${r.meaning} |`;
+        });
+        if (!task.targetRows.length) targetDef += `\n  | \`${labelField}\` |  |  |`;
+      } else {
+        targetDef = `| Info Field | Value | y | Meaning |\n  |---|---|---|---|`;
+        task.targetRows.forEach(r => {
+          targetDef += `\n  | \`${labelField || r.label}\` |  | ${r.y} | ${r.meaning} |`;
+        });
+      }
     } else {
-      const col = task.labelRoute==='info' ? 'Info' : 'Event';
-      targetDef = `| ${col} | y | Meaning |\n  |-------|---|---------|`;
+      // event route — header depends on classification vs regression
+      if (taskType === 'regression') {
+        targetDef = `| Event ID | Value | Meaning |\n  |---|---|---|`;
+      } else {
+        targetDef = `| Event ID | y | Meaning |\n  |---|---|---|`;
+      }
       task.targetRows.forEach(r => { targetDef += `\n  | \`${r.label}\` | ${r.y} | ${r.meaning} |`; });
     }
 
@@ -1681,10 +1723,10 @@ function serializeTasks(tasks) {
     }).filter(Boolean).join('\n');
 
     return `### ${task.kind} Task ${num}: ${task.name}
-- **Task Type**: ${task.taskType}
+- **Task Type**: ${taskType}
 - **Epoch Method**: \`${task.epochMethod}\`
 - **Epoch Parameters**: ${epStr}${teStr}
-- **Label Route**: \`${task.labelRoute}\`
+- **Label Route**: \`${task.labelRoute}\`${labelFieldLine}
 - **Meta Level**: ${task.metaLevel}
 - **Target Definition**:
   ${targetDef}
@@ -1806,6 +1848,12 @@ function onLabelRouteChange(idx, sel) {
   const newLr = sel.value;
   if (currentTasks[idx]) currentTasks[idx].labelRoute = newLr;
   const task = currentTasks[idx] || {};
+  // v3: misc route is regression-only — force task type and re-render the card.
+  if (newLr === 'misc' && task.taskType !== 'regression') {
+    task.taskType = 'regression';
+    renderTaskCards(document.getElementById('task-cards-container'));
+    return;
+  }
   const tdDiv = document.getElementById(`task-td-${idx}`);
   if (!tdDiv) return;
   if (newLr==='misc') {
@@ -1833,7 +1881,7 @@ function addTask(kind) {
   collectTaskCards();
   currentTasks.push({ kind, num:0, name:'', taskType:'classification', epochMethod:'epoch_by_event_hdf5',
     epochParams:{tmin:'',tmax:'',overlap:'',segment_length:'',custom:[]},
-    labelRoute:'event', metaLevel:'raw', targetRows:[], miscChannel:'', evidence:[], kernelNotes:'' });
+    labelRoute:'event', labelField:'', metaLevel:'raw', targetRows:[], miscChannel:'', evidence:[], kernelNotes:'' });
   renderTaskCards(document.getElementById('task-cards-container'));
   const tb = document.getElementById('fst-tab-tasks'); if(tb) tb.textContent=`Tasks (${currentTasks.length})`;
 }
@@ -1870,17 +1918,24 @@ function collectTaskCards() {
       epochMethod: method,
       epochParams: {tmin:'',tmax:'',overlap:'',segment_length:'',custom:[]},
       labelRoute: lr,
+      labelField: card.querySelector('.task-label-field')?.value.trim()||'',
       metaLevel: card.querySelector('.task-ml-sel')?.value||'raw',
       targetRows: [], miscChannel: '', evidence: [], kernelNotes: '',
       epochParamsStr: collectEpochParams(card, i, method),
     };
     if (lr==='misc') {
       task.miscChannel = card.querySelector('.task-misc-channel')?.value.trim()||'';
+      if (!task.labelField) task.labelField = task.miscChannel;
+      // v3: misc route is regression-only.
+      task.taskType = 'regression';
     } else {
       card.querySelectorAll(`#td-tbody-${i} tr`).forEach(tr => {
         const ins = tr.querySelectorAll('td input');
         if (ins.length>=3) task.targetRows.push({ label:ins[0].value.trim(), y:ins[1].value.trim(), meaning:ins[2].value.trim() });
       });
+      if (lr==='info' && !task.labelField && task.targetRows.length) {
+        task.labelField = task.targetRows[0].label;
+      }
     }
     // Collect evidence
     const evList = card.querySelector(`#ev-${i}-list`);
