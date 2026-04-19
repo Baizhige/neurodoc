@@ -1,0 +1,13 @@
+--- bcic_iii_2/analysis.md (pre-v3)
++++ bcic_iii_2/analysis.md (v3)
+@@ -41,8 +41,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `target_flash` | 1 | Flash of row/column containing attended character (P300 present) |
+   | `nontarget_flash` | 0 | Flash of row/column not containing attended character |
+ - **Evidence**:

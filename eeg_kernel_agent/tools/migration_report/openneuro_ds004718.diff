@@ -1,0 +1,56 @@
+--- openneuro_ds004718/analysis.md (pre-v3)
++++ openneuro_ds004718/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004718` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds004718
+ **Category**: Complex Applied | **Subjects**: 52 | **Files (Completed)**: 2003 | **Channels**: 62 | **Sampling Rate**: 1000 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -4509,16 +4509,18 @@
+ 
+ ## Tasks
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Classical Task 1: Word-Onset ERP Classification
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 0.6 s, target_events = [`word_onset`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `word_onset`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
+-  | `word_onset` | 0 | Word onset from NLP-aligned text |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `word_onset` | 0 | Word onset from NLP-aligned text |  |
+ - **Super Meta Notes**: Derived from NLP text-audio alignment pipeline. Kernel step: Load word-onset timestamps from annotation files (NOT raw STIM triggers). Paper indicates ~4473 word events per participant. Note: `word_onset` events not present in raw scan — must be loaded from NLP-derived annotation files.
+ - **Evidence**:
+   - DOI: 10.1038/s41597-024-03745-8 — EEG epoched at word onsets (0-600ms) for ERP and ISC analyses during Cantonese audiobook listening; NLP-aligned text annotations include word frequency, POS tags, and time-aligned speech segmentation.
+@@ -4531,8 +4533,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `story_code_1` | 0 | Story section code 1 (n=171) |
+   | `story_code_3` | 1 | Story section code 3 (n=268) |
+   | `story_code_4` | 2 | Story section code 4 (n=263) |
+@@ -4553,8 +4555,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `story_code_1` | 0 | Story/condition code 1 |
+   | `story_code_3` | 1 | Story/condition code 3 |
+   | `story_code_4` | 2 | Story/condition code 4 |

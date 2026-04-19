@@ -229,6 +229,44 @@ def _pick_sample_files(ds_dir: Path, n: int = 5) -> List[str]:
     return [all_files[i * step][1] for i in range(n)]
 
 
+def _format_kernel_requirements(kr: Optional[Dict[str, Any]]) -> str:
+    """Render the v2 task_synthesizer kernel_requirements dict into the kernel prompt."""
+    if not kr:
+        return ""
+    events = kr.get("required_event_ids") or []
+    native_misc = kr.get("required_native_misc") or []
+    info_fields = kr.get("required_info_fields") or []
+    derived = kr.get("derived_misc_channels") or []
+    if not (events or native_misc or info_fields or derived):
+        return ""
+    lines = [
+        "=== Kernel Requirements (from v2 task synthesizer — MUST be honored) ===",
+        "The kernel MUST produce output that exposes the following fields so that the",
+        "downstream scan + Tasks section can train on them. Anti-hallucination rules:",
+        "  * Do NOT fabricate a field that has no ground-truth source. If you cannot",
+        "    derive a required field from the actual data files, omit it — reconcile will",
+        "    drop the corresponding task rather than accept a hallucinated value.",
+        "  * source_field for derived misc MUST be an actual participants.tsv column.",
+        "",
+    ]
+    if events:
+        lines.append(f"Required event IDs (must appear in scan): {events}")
+    if native_misc:
+        lines.append(f"Required native misc channels (already in raw data): {native_misc}")
+    if info_fields:
+        lines.append(f"Required info fields (participants.tsv columns): {info_fields}")
+    if derived:
+        lines.append("Required derived misc channels (kernel MUST create these):")
+        for d in derived:
+            lines.append(
+                f"  - name = {d.get('name','?')!r}; "
+                f"source_field = {d.get('source_field','?')!r}; "
+                f"derivation = {d.get('derivation','?')}; "
+                f"evidence = {d.get('groundable_evidence','?')}"
+            )
+    return "\n".join(lines)
+
+
 def build_kernel(
     dataset_name: str,
     context: Dict[str, Any],
@@ -240,6 +278,7 @@ def build_kernel(
     python_env: str,
     eegunity_path: str,
     dataset_path: str,
+    kernel_requirements: Optional[Dict[str, Any]] = None,
 ) -> Tuple[str, Path, bool]:
     """
     Iterative kernel generation loop.
@@ -265,12 +304,15 @@ def build_kernel(
         for name, content in context.get("example_kernels", {}).items()
     )
 
+    reqs_block = _format_kernel_requirements(kernel_requirements)
+
     base_user = (
         f"Dataset: {dataset_name}\n\n"
         f"=== analysis.md ===\n{context['analysis_md'][:4000]}\n\n"
         f"=== Dataset directory tree ===\n{context['ds_tree'][:2000]}\n\n"
         f"=== Tasks to support ===\n{tasks_section[:3000]}\n\n"
-        f"=== KERNEL_RULEBOOK ===\n{context['rulebook'][:6000]}\n\n"
+        + (f"{reqs_block}\n\n" if reqs_block else "")
+        + f"=== KERNEL_RULEBOOK ===\n{context['rulebook'][:6000]}\n\n"
         f"=== SKILL patterns ===\n{skill_summary[:6000]}\n\n"
         f"=== Example kernels ===\n{example_summary[:6000]}\n\n"
         f"=== Existing kernel (if any, for reference) ===\n{context.get('existing_kernel', '')[:3000]}\n\n"

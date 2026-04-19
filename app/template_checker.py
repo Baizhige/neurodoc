@@ -172,6 +172,51 @@ Rules:
 - If a required File Scan Result subsection is missing, add it with minimal placeholder content.
 - Preserve all existing content as much as possible. Fix structure only.
 - Do not rewrite facts, field values, tables, task definitions, or narrative content unless needed to restore the required structure.
+
+=== v3 Task schema cheat-sheet (apply only when errors reference Task fields) ===
+
+Each task under ## Tasks uses this bullet format in this order:
+  ### Classical Task N: <name>   |   ### Potential Task N: <name>
+  - **Task Type**: classification | regression   (never "segmentation")
+  - **Epoch Method**: `epoch_by_event_hdf5` | `epoch_by_long_event_hdf5` | `epoch_by_segmentation_hdf5`
+  - **Epoch Parameters**: tmin = X s, tmax = X s, target_events = [`id_a`, ...]  (segmentation ⇒ [])
+  - **Label Route**: `event` | `misc` | `info`
+  - **Label Field**: `<name>`  ← REQUIRED iff Label Route ∈ {{misc, info}}; FORBIDDEN when Route = event
+  - **Meta Level**: raw | super
+  - **Target Definition**:
+    <route-specific table>
+  - **Evidence**:
+    - DOI: <ref> — <desc>   (Classical Task requires ≥1)
+  - **Notes**: <free-form task annotation; recommended: derivation steps for super-meta, parameter inference rationale>
+
+Target Definition table by Route × Task Type:
+  event  classification  | Event ID | y | Meaning |              (≥2 distinct y)
+  event  regression      | Event ID | Value | Meaning |
+  misc   regression      | MISC Channel | Value (unit) | Notes | (misc is regression-only)
+  info   classification  | Info Field | Value | y | Meaning |    (≥2 distinct y)
+  info   regression      | Info Field | Range (unit) | Notes |
+
+Hard invariants to satisfy when fixing v3 semantic errors:
+- H1: one Label Field per task — split multi-target tasks into N tasks.
+- H2: classification tasks need ≥2 distinct y values.
+- H3: Route = misc ⇒ Task Type = regression only.
+- H4: Label Field present iff Route ∈ {{misc, info}}.
+- H5: Derived misc ⇒ Meta Level = super. Notes SHOULD describe the derivation (recommended, not enforced).
+- H8: Epoch Parameters MUST include the minimum required keys for the declared Epoch Method
+      (epoch_by_event_hdf5: tmin/tmax/target_events; epoch_by_long_event_hdf5: tmin/tmax/overlap/target_events;
+      epoch_by_segmentation_hdf5: segment_length/overlap; target_events = [] for segmentation).
+- H6: segmentation ⇒ target_events = [].
+- H7: **Manual Review**: must be blank (reviewer-managed; never fill it in).
+
+If an error refers to `label_field_required_for_nonevent` — add a `- **Label Field**: ...` line.
+If `label_field_absent_for_event` — remove the stray Label Field line.
+If `target_def_schema_matches_route` — rewrite the TD header to match the matrix above.
+If `classification_task_has_multiple_classes` — either add a contrastive class row or switch Task Type to regression (or drop the task if no valid formulation exists).
+If `misc_classification_forbidden` — change Task Type to regression.
+If `segmentation_requires_empty_target_events` — clear target_events to [].
+If `epoch_parameters_complete` — add the missing required key(s) with a grounded value; if no
+value can be grounded, drop the task entirely rather than leaving a placeholder.
+
 - Return ONLY valid JSON, no markdown fences:
 {{"fixed_content": "<complete fixed analysis.md as a single string with \\n for newlines>"}}"""
 

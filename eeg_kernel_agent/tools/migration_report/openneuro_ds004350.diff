@@ -1,0 +1,83 @@
+--- openneuro_ds004350/analysis.md (pre-v3)
++++ openneuro_ds004350/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004350` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds004350
+ **Category**: High-level Mental | **Subjects**: 24 | **Files (Completed)**: 479 | **Channels**: 64 | **Sampling Rate**: 256 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -106,16 +106,16 @@
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.5 s, target_events = ["NB1: A", "NB1: B", "NB1: C", "NB1: D"]
+-- **Label Route**: `Annotation`
++- **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|-------|---|--------|
+-| `NB1: A` | 0 | N-back stimulus A |
+-| `NB1: B` | 1 | N-back stimulus B |
+-| `NB1: C` | 2 | N-back stimulus C |
+-| `NB1: D` | 3 | N-back stimulus D |
++  | Event ID | y | Meaning |
++  |---|---|---|
++  | `NB1: A` | 0 | N-back stimulus A |
++  | `NB1: B` | 1 | N-back stimulus B |
++  | `NB1: C` | 2 | N-back stimulus C |
++  | `NB1: D` | 3 | N-back stimulus D |
+ 
+ - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset README confirms NB1 as a BIDS-defined N-back task variant. Stimulus events (A/B/C/D) provide 4-class classification. Excludes system markers (NB1: 5/6/9/12 with count=1) and reaction time markers (NB1: rt) due to variable timing. Source: https://openneuro.org/datasets/ds004350
+ - **Kernel Notes**: Standard N-back uses variable ISI (~2000ms) with 500ms stimulus duration; epoch window accommodates full trial. Files are task-separated; use NB1-prefixed events only. The 1-back level targets working memory maintenance and updating processes.
+@@ -124,16 +124,16 @@
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.5 s, target_events = ["NB3: A", "NB3: B", "NB3: C", "NB3: D"]
+-- **Label Route**: `Annotation`
++- **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|-------|---|--------|
+-| `NB3: A` | 0 | N-back stimulus A |
+-| `NB3: B` | 1 | N-back stimulus B |
+-| `NB3: C` | 2 | N-back stimulus C |
+-| `NB3: D` | 3 | N-back stimulus D |
++  | Event ID | y | Meaning |
++  |---|---|---|
++  | `NB3: A` | 0 | N-back stimulus A |
++  | `NB3: B` | 1 | N-back stimulus B |
++  | `NB3: C` | 2 | N-back stimulus C |
++  | `NB3: D` | 3 | N-back stimulus D |
+ 
+ - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset README confirms NB3 as a BIDS-defined N-back task variant. Stimulus events (A/B/C/D) provide 4-class classification matching NB1 for cross-load comparison. Source: https://openneuro.org/datasets/ds004350
+ - **Kernel Notes**: Same parameters as NB1 for consistency across N-back levels. The 3-back level increases working memory load, allowing comparison of load-dependent neural signatures. Excludes reaction time markers (NB3: rt) due to variable timing.
+@@ -142,16 +142,16 @@
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, target_events = ["LG: largeHSmallH", "LG: largeHSmallT", "LG: largeTSmallH", "LG: largeTSmallT"]
+-- **Label Route**: `Annotation`
++- **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|-------|---|--------|
+-| `LG: largeHSmallH` | 0 | Congruent: Large H and Small H |
+-| `LG: largeHSmallT` | 1 | Incongruent: Large H and Small T |
+-| `LG: largeTSmallH` | 2 | Incongruent: Large T and Small H |
+-| `LG: largeTSmallT` | 3 | Congruent: Large T and Small T |
++  | Event ID | y | Meaning |
++  |---|---|---|
++  | `LG: largeHSmallH` | 0 | Congruent: Large H and Small H |
++  | `LG: largeHSmallT` | 1 | Incongruent: Large H and Small T |
++  | `LG: largeTSmallH` | 2 | Incongruent: Large T and Small H |
++  | `LG: largeTSmallT` | 3 | Congruent: Large T and Small T |
+ 
+ - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset README confirms LG as a BIDS-defined Local-Global hierarchical stimulus task. Four conditions support congruency classification (congruent vs incongruent) or 4-class stimulus classification. Source: https://openneuro.org/datasets/ds004350
+ - **Kernel Notes**: Epoch on stimulus onset captures early congruency processing (N400 component expected ~300-600ms). Excludes response events (LG: responseLargeH/T, responseSmallH/T) due to variable RT and participant-dependent timing. Extended tmax=2.0s accommodates hierarchical processing window.

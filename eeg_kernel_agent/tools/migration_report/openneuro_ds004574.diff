@@ -1,0 +1,33 @@
+--- openneuro_ds004574/analysis.md (pre-v3)
++++ openneuro_ds004574/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004574` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004574
+ **Category**: Sensory/Response | **Subjects**: 30 | **Files (Completed)**: 30 | **Channels**: 64 | **Sampling Rate**: 512 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -40,8 +40,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|--------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `S 1` | 0 | Standard stimulus |
+   | `S 2` | 1 | Deviant stimulus |
+   | `S 3` | 2 | Rare/target stimulus |
+@@ -56,8 +56,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|--|--------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `boundary` | 0 | Recording boundary marker |
+   | `S255` | 1 | BrainVision overflow/system marker |
+ - **Evidence**: No reference required for potential task; task is plausible from paradigm structure

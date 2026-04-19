@@ -1,0 +1,558 @@
+--- openneuro_ds007180/analysis.md (pre-v3)
++++ openneuro_ds007180/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds007180` | **Year**: 2026 | **URL**: https://openneuro.org/datasets/ds007180
+ **Category**: Complex Applied | **Subjects**: 25 | **Files (Completed)**: 25 | **Channels**: 63 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -103,62 +103,487 @@
+ 
+ ---
+ 
+-### Potential Task 1: Full 12-Class Movement Set Classification
+-
+-- **Task Type**: classification
+-- **Epoch Method**: `epoch_by_event_hdf5`
+-- **Epoch Parameters**: tmin = -0.4 s, tmax = 0.4 s, target_events = [`S13`, `S23`, `S33`, `S43`, `S53`, `S63`, `S73`, `S83`, `S93`, `S103`, `S113`, `S123`]
+-- **Label Route**: `event`
+-- **Meta Level**: raw
+-- **Target Definition**:
+-
+-| Event | y | Meaning |
+-|---|---|-------|
+-| `S13` | 0 | Movement type 1 — condition-3 epoch |
+-| `S23` | 1 | Movement type 2 — condition-3 epoch |
+-| `S33` | 2 | Movement type 3 — condition-3 epoch |
+-| `S43` | 3 | Movement type 4 — condition-3 epoch |
+-| `S53` | 4 | Movement type 5 — condition-3 epoch |
+-| `S63` | 5 | Movement type 6 — condition-3 epoch |
+-| `S73` | 6 | Movement type 7 — condition-3 epoch |
+-| `S83` | 7 | Movement type 8 — condition-3 epoch |
+-| `S93` | 8 | Movement type 9 — condition-3 epoch |
+-| `S103` | 9 | Movement type 10 — condition-3 epoch |
+-| `S113` | 10 | Movement type 11 — condition-3 epoch |
+-| `S123` | 11 | Movement type 12 — condition-3 epoch |
+-
+-- **Evidence**: Structural inference from event code pattern — all SXX3 events share a consistent count (1250–1750 per type) and the suffix-3 digit is uniform across all 12 movement-type groups, plausibly extending the 8-class paradigm to a full 12-class set. No direct reference available.
+-- **Kernel Notes**: S93–S123 yield ~1250 trials versus ~1750 for S13–S83, suggesting S9X–S12X may encode a distinct sub-paradigm block (e.g., different task phase, bilateral vs unilateral, or imagined vs executed extension). Kernel must verify sub-paradigm identity before merging all 12 classes. Apply class-balancing (downsample to 1250 trials per class) if merged. The S96/S106/S116/S126 low-count events (31–44 occurrences) are excluded from target_events and likely encode error or transition markers.
+-
+----
+-
+-### Potential Task 2: Exoskeleton Assistance Condition Binary Classification
+-
+-- **Task Type**: classification
+-- **Epoch Method**: `epoch_by_event_hdf5`
+-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S11`, `S12`, `S21`, `S22`, `S31`, `S32`, `S41`, `S42`, `S51`, `S52`, `S61`, `S62`, `S71`, `S72`, `S81`, `S82`]
+-- **Label Route**: `event`
+-- **Meta Level**: raw
+-- **Target Definition**:
+-
+-| Event | y | Meaning |
+-|---|---|-------|
+-| `S11` | 0 | Movement type 1 — assistance condition A |
+-| `S12` | 1 | Movement type 1 — assistance condition B |
+-| `S21` | 0 | Movement type 2 — assistance condition A |
+-| `S22` | 1 | Movement type 2 — assistance condition B |
+-| `S31` | 0 | Movement type 3 — assistance condition A |
+-| `S32` | 1 | Movement type 3 — assistance condition B |
+-| `S41` | 0 | Movement type 4 — assistance condition A |
+-| `S42` | 1 | Movement type 4 — assistance condition B |
+-| `S51` | 0 | Movement type 5 — assistance condition A |
+-| `S52` | 1 | Movement type 5 — assistance condition B |
+-| `S61` | 0 | Movement type 6 — assistance condition A |
+-| `S62` | 1 | Movement type 6 — assistance condition B |
+-| `S71` | 0 | Movement type 7 — assistance condition A |
+-| `S72` | 1 | Movement type 7 — assistance condition B |
+-| `S81` | 0 | Movement type 8 — assistance condition A |
+-| `S82` | 1 | Movement type 8 — assistance condition B |
+-
+-- **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
+-- **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
++### Potential Task 1: Full 12-Class Movement Set Classification — S13
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.4 s, tmax = 0.4 s, target_events = [`S13`, `S23`, `S33`, `S43`, `S53`, `S63`, `S73`, `S83`, `S93`, `S103`, `S113`, `S123`]
++- **Label Route**: `info`
++- **Label Field**: `S13`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S13` | 0 | Movement type 1 — condition-3 epoch |  |
++
++- **Evidence**: Structural inference from event code pattern — all SXX3 events share a consistent count (1250–1750 per type) and the suffix-3 digit is uniform across all 12 movement-type groups, plausibly extending the 8-class paradigm to a full 12-class set. No direct reference available.
++- **Kernel Notes**: S93–S123 yield ~1250 trials versus ~1750 for S13–S83, suggesting S9X–S12X may encode a distinct sub-paradigm block (e.g., different task phase, bilateral vs unilateral, or imagined vs executed extension). Kernel must verify sub-paradigm identity before merging all 12 classes. Apply class-balancing (downsample to 1250 trials per class) if merged. The S96/S106/S116/S126 low-count events (31–44 occurrences) are excluded from target_events and likely encode error or transition markers.
++
++---
++
++### Potential Task 2: Full 12-Class Movement Set Classification — S23
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.4 s, tmax = 0.4 s, target_events = [`S13`, `S23`, `S33`, `S43`, `S53`, `S63`, `S73`, `S83`, `S93`, `S103`, `S113`, `S123`]
++- **Label Route**: `info`
++- **Label Field**: `S23`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S23` | 1 | Movement type 2 — condition-3 epoch |  |
++
++- **Evidence**: Structural inference from event code pattern — all SXX3 events share a consistent count (1250–1750 per type) and the suffix-3 digit is uniform across all 12 movement-type groups, plausibly extending the 8-class paradigm to a full 12-class set. No direct reference available.
++- **Kernel Notes**: S93–S123 yield ~1250 trials versus ~1750 for S13–S83, suggesting S9X–S12X may encode a distinct sub-paradigm block (e.g., different task phase, bilateral vs unilateral, or imagined vs executed extension). Kernel must verify sub-paradigm identity before merging all 12 classes. Apply class-balancing (downsample to 1250 trials per class) if merged. The S96/S106/S116/S126 low-count events (31–44 occurrences) are excluded from target_events and likely encode error or transition markers.
++
++---
++
++### Potential Task 3: Full 12-Class Movement Set Classification — S33
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.4 s, tmax = 0.4 s, target_events = [`S13`, `S23`, `S33`, `S43`, `S53`, `S63`, `S73`, `S83`, `S93`, `S103`, `S113`, `S123`]
++- **Label Route**: `info`
++- **Label Field**: `S33`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S33` | 2 | Movement type 3 — condition-3 epoch |  |
++
++- **Evidence**: Structural inference from event code pattern — all SXX3 events share a consistent count (1250–1750 per type) and the suffix-3 digit is uniform across all 12 movement-type groups, plausibly extending the 8-class paradigm to a full 12-class set. No direct reference available.
++- **Kernel Notes**: S93–S123 yield ~1250 trials versus ~1750 for S13–S83, suggesting S9X–S12X may encode a distinct sub-paradigm block (e.g., different task phase, bilateral vs unilateral, or imagined vs executed extension). Kernel must verify sub-paradigm identity before merging all 12 classes. Apply class-balancing (downsample to 1250 trials per class) if merged. The S96/S106/S116/S126 low-count events (31–44 occurrences) are excluded from target_events and likely encode error or transition markers.
++
++---
++
++### Potential Task 4: Full 12-Class Movement Set Classification — S43
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.4 s, tmax = 0.4 s, target_events = [`S13`, `S23`, `S33`, `S43`, `S53`, `S63`, `S73`, `S83`, `S93`, `S103`, `S113`, `S123`]
++- **Label Route**: `info`
++- **Label Field**: `S43`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S43` | 3 | Movement type 4 — condition-3 epoch |  |
++
++- **Evidence**: Structural inference from event code pattern — all SXX3 events share a consistent count (1250–1750 per type) and the suffix-3 digit is uniform across all 12 movement-type groups, plausibly extending the 8-class paradigm to a full 12-class set. No direct reference available.
++- **Kernel Notes**: S93–S123 yield ~1250 trials versus ~1750 for S13–S83, suggesting S9X–S12X may encode a distinct sub-paradigm block (e.g., different task phase, bilateral vs unilateral, or imagined vs executed extension). Kernel must verify sub-paradigm identity before merging all 12 classes. Apply class-balancing (downsample to 1250 trials per class) if merged. The S96/S106/S116/S126 low-count events (31–44 occurrences) are excluded from target_events and likely encode error or transition markers.
++
++---
++
++### Potential Task 5: Full 12-Class Movement Set Classification — S53
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.4 s, tmax = 0.4 s, target_events = [`S13`, `S23`, `S33`, `S43`, `S53`, `S63`, `S73`, `S83`, `S93`, `S103`, `S113`, `S123`]
++- **Label Route**: `info`
++- **Label Field**: `S53`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S53` | 4 | Movement type 5 — condition-3 epoch |  |
++
++- **Evidence**: Structural inference from event code pattern — all SXX3 events share a consistent count (1250–1750 per type) and the suffix-3 digit is uniform across all 12 movement-type groups, plausibly extending the 8-class paradigm to a full 12-class set. No direct reference available.
++- **Kernel Notes**: S93–S123 yield ~1250 trials versus ~1750 for S13–S83, suggesting S9X–S12X may encode a distinct sub-paradigm block (e.g., different task phase, bilateral vs unilateral, or imagined vs executed extension). Kernel must verify sub-paradigm identity before merging all 12 classes. Apply class-balancing (downsample to 1250 trials per class) if merged. The S96/S106/S116/S126 low-count events (31–44 occurrences) are excluded from target_events and likely encode error or transition markers.
++
++---
++
++### Potential Task 6: Full 12-Class Movement Set Classification — S63
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.4 s, tmax = 0.4 s, target_events = [`S13`, `S23`, `S33`, `S43`, `S53`, `S63`, `S73`, `S83`, `S93`, `S103`, `S113`, `S123`]
++- **Label Route**: `info`
++- **Label Field**: `S63`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S63` | 5 | Movement type 6 — condition-3 epoch |  |
++
++- **Evidence**: Structural inference from event code pattern — all SXX3 events share a consistent count (1250–1750 per type) and the suffix-3 digit is uniform across all 12 movement-type groups, plausibly extending the 8-class paradigm to a full 12-class set. No direct reference available.
++- **Kernel Notes**: S93–S123 yield ~1250 trials versus ~1750 for S13–S83, suggesting S9X–S12X may encode a distinct sub-paradigm block (e.g., different task phase, bilateral vs unilateral, or imagined vs executed extension). Kernel must verify sub-paradigm identity before merging all 12 classes. Apply class-balancing (downsample to 1250 trials per class) if merged. The S96/S106/S116/S126 low-count events (31–44 occurrences) are excluded from target_events and likely encode error or transition markers.
++
++---
++
++### Potential Task 7: Full 12-Class Movement Set Classification — S73
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.4 s, tmax = 0.4 s, target_events = [`S13`, `S23`, `S33`, `S43`, `S53`, `S63`, `S73`, `S83`, `S93`, `S103`, `S113`, `S123`]
++- **Label Route**: `info`
++- **Label Field**: `S73`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S73` | 6 | Movement type 7 — condition-3 epoch |  |
++
++- **Evidence**: Structural inference from event code pattern — all SXX3 events share a consistent count (1250–1750 per type) and the suffix-3 digit is uniform across all 12 movement-type groups, plausibly extending the 8-class paradigm to a full 12-class set. No direct reference available.
++- **Kernel Notes**: S93–S123 yield ~1250 trials versus ~1750 for S13–S83, suggesting S9X–S12X may encode a distinct sub-paradigm block (e.g., different task phase, bilateral vs unilateral, or imagined vs executed extension). Kernel must verify sub-paradigm identity before merging all 12 classes. Apply class-balancing (downsample to 1250 trials per class) if merged. The S96/S106/S116/S126 low-count events (31–44 occurrences) are excluded from target_events and likely encode error or transition markers.
++
++---
++
++### Potential Task 8: Full 12-Class Movement Set Classification — S83
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.4 s, tmax = 0.4 s, target_events = [`S13`, `S23`, `S33`, `S43`, `S53`, `S63`, `S73`, `S83`, `S93`, `S103`, `S113`, `S123`]
++- **Label Route**: `info`
++- **Label Field**: `S83`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S83` | 7 | Movement type 8 — condition-3 epoch |  |
++
++- **Evidence**: Structural inference from event code pattern — all SXX3 events share a consistent count (1250–1750 per type) and the suffix-3 digit is uniform across all 12 movement-type groups, plausibly extending the 8-class paradigm to a full 12-class set. No direct reference available.
++- **Kernel Notes**: S93–S123 yield ~1250 trials versus ~1750 for S13–S83, suggesting S9X–S12X may encode a distinct sub-paradigm block (e.g., different task phase, bilateral vs unilateral, or imagined vs executed extension). Kernel must verify sub-paradigm identity before merging all 12 classes. Apply class-balancing (downsample to 1250 trials per class) if merged. The S96/S106/S116/S126 low-count events (31–44 occurrences) are excluded from target_events and likely encode error or transition markers.
++
++---
++
++### Potential Task 9: Full 12-Class Movement Set Classification — S93
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.4 s, tmax = 0.4 s, target_events = [`S13`, `S23`, `S33`, `S43`, `S53`, `S63`, `S73`, `S83`, `S93`, `S103`, `S113`, `S123`]
++- **Label Route**: `info`
++- **Label Field**: `S93`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S93` | 8 | Movement type 9 — condition-3 epoch |  |
++
++- **Evidence**: Structural inference from event code pattern — all SXX3 events share a consistent count (1250–1750 per type) and the suffix-3 digit is uniform across all 12 movement-type groups, plausibly extending the 8-class paradigm to a full 12-class set. No direct reference available.
++- **Kernel Notes**: S93–S123 yield ~1250 trials versus ~1750 for S13–S83, suggesting S9X–S12X may encode a distinct sub-paradigm block (e.g., different task phase, bilateral vs unilateral, or imagined vs executed extension). Kernel must verify sub-paradigm identity before merging all 12 classes. Apply class-balancing (downsample to 1250 trials per class) if merged. The S96/S106/S116/S126 low-count events (31–44 occurrences) are excluded from target_events and likely encode error or transition markers.
++
++---
++
++### Potential Task 10: Full 12-Class Movement Set Classification — S103
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.4 s, tmax = 0.4 s, target_events = [`S13`, `S23`, `S33`, `S43`, `S53`, `S63`, `S73`, `S83`, `S93`, `S103`, `S113`, `S123`]
++- **Label Route**: `info`
++- **Label Field**: `S103`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S103` | 9 | Movement type 10 — condition-3 epoch |  |
++
++- **Evidence**: Structural inference from event code pattern — all SXX3 events share a consistent count (1250–1750 per type) and the suffix-3 digit is uniform across all 12 movement-type groups, plausibly extending the 8-class paradigm to a full 12-class set. No direct reference available.
++- **Kernel Notes**: S93–S123 yield ~1250 trials versus ~1750 for S13–S83, suggesting S9X–S12X may encode a distinct sub-paradigm block (e.g., different task phase, bilateral vs unilateral, or imagined vs executed extension). Kernel must verify sub-paradigm identity before merging all 12 classes. Apply class-balancing (downsample to 1250 trials per class) if merged. The S96/S106/S116/S126 low-count events (31–44 occurrences) are excluded from target_events and likely encode error or transition markers.
++
++---
++
++### Potential Task 11: Full 12-Class Movement Set Classification — S113
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.4 s, tmax = 0.4 s, target_events = [`S13`, `S23`, `S33`, `S43`, `S53`, `S63`, `S73`, `S83`, `S93`, `S103`, `S113`, `S123`]
++- **Label Route**: `info`
++- **Label Field**: `S113`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S113` | 10 | Movement type 11 — condition-3 epoch |  |
++
++- **Evidence**: Structural inference from event code pattern — all SXX3 events share a consistent count (1250–1750 per type) and the suffix-3 digit is uniform across all 12 movement-type groups, plausibly extending the 8-class paradigm to a full 12-class set. No direct reference available.
++- **Kernel Notes**: S93–S123 yield ~1250 trials versus ~1750 for S13–S83, suggesting S9X–S12X may encode a distinct sub-paradigm block (e.g., different task phase, bilateral vs unilateral, or imagined vs executed extension). Kernel must verify sub-paradigm identity before merging all 12 classes. Apply class-balancing (downsample to 1250 trials per class) if merged. The S96/S106/S116/S126 low-count events (31–44 occurrences) are excluded from target_events and likely encode error or transition markers.
++
++---
++
++### Potential Task 12: Full 12-Class Movement Set Classification — S123
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.4 s, tmax = 0.4 s, target_events = [`S13`, `S23`, `S33`, `S43`, `S53`, `S63`, `S73`, `S83`, `S93`, `S103`, `S113`, `S123`]
++- **Label Route**: `info`
++- **Label Field**: `S123`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S123` | 11 | Movement type 12 — condition-3 epoch |  |
++
++- **Evidence**: Structural inference from event code pattern — all SXX3 events share a consistent count (1250–1750 per type) and the suffix-3 digit is uniform across all 12 movement-type groups, plausibly extending the 8-class paradigm to a full 12-class set. No direct reference available.
++- **Kernel Notes**: S93–S123 yield ~1250 trials versus ~1750 for S13–S83, suggesting S9X–S12X may encode a distinct sub-paradigm block (e.g., different task phase, bilateral vs unilateral, or imagined vs executed extension). Kernel must verify sub-paradigm identity before merging all 12 classes. Apply class-balancing (downsample to 1250 trials per class) if merged. The S96/S106/S116/S126 low-count events (31–44 occurrences) are excluded from target_events and likely encode error or transition markers.
++
++---
++
++### Potential Task 13: Exoskeleton Assistance Condition Binary Classification — S11
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S11`, `S12`, `S21`, `S22`, `S31`, `S32`, `S41`, `S42`, `S51`, `S52`, `S61`, `S62`, `S71`, `S72`, `S81`, `S82`]
++- **Label Route**: `info`
++- **Label Field**: `S11`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S11` | 0 | Movement type 1 — assistance condition A |  |
++
++- **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
++- **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
++### Potential Task 14: Exoskeleton Assistance Condition Binary Classification — S12
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S11`, `S12`, `S21`, `S22`, `S31`, `S32`, `S41`, `S42`, `S51`, `S52`, `S61`, `S62`, `S71`, `S72`, `S81`, `S82`]
++- **Label Route**: `info`
++- **Label Field**: `S12`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S12` | 1 | Movement type 1 — assistance condition B |  |
++
++- **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
++- **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
++### Potential Task 15: Exoskeleton Assistance Condition Binary Classification — S21
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S11`, `S12`, `S21`, `S22`, `S31`, `S32`, `S41`, `S42`, `S51`, `S52`, `S61`, `S62`, `S71`, `S72`, `S81`, `S82`]
++- **Label Route**: `info`
++- **Label Field**: `S21`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S21` | 0 | Movement type 2 — assistance condition A |  |
++
++- **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
++- **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
++### Potential Task 16: Exoskeleton Assistance Condition Binary Classification — S22
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S11`, `S12`, `S21`, `S22`, `S31`, `S32`, `S41`, `S42`, `S51`, `S52`, `S61`, `S62`, `S71`, `S72`, `S81`, `S82`]
++- **Label Route**: `info`
++- **Label Field**: `S22`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S22` | 1 | Movement type 2 — assistance condition B |  |
++
++- **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
++- **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
++### Potential Task 17: Exoskeleton Assistance Condition Binary Classification — S31
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S11`, `S12`, `S21`, `S22`, `S31`, `S32`, `S41`, `S42`, `S51`, `S52`, `S61`, `S62`, `S71`, `S72`, `S81`, `S82`]
++- **Label Route**: `info`
++- **Label Field**: `S31`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S31` | 0 | Movement type 3 — assistance condition A |  |
++
++- **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
++- **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
++### Potential Task 18: Exoskeleton Assistance Condition Binary Classification — S32
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S11`, `S12`, `S21`, `S22`, `S31`, `S32`, `S41`, `S42`, `S51`, `S52`, `S61`, `S62`, `S71`, `S72`, `S81`, `S82`]
++- **Label Route**: `info`
++- **Label Field**: `S32`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S32` | 1 | Movement type 3 — assistance condition B |  |
++
++- **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
++- **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
++### Potential Task 19: Exoskeleton Assistance Condition Binary Classification — S41
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S11`, `S12`, `S21`, `S22`, `S31`, `S32`, `S41`, `S42`, `S51`, `S52`, `S61`, `S62`, `S71`, `S72`, `S81`, `S82`]
++- **Label Route**: `info`
++- **Label Field**: `S41`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S41` | 0 | Movement type 4 — assistance condition A |  |
++
++- **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
++- **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
++### Potential Task 20: Exoskeleton Assistance Condition Binary Classification — S42
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S11`, `S12`, `S21`, `S22`, `S31`, `S32`, `S41`, `S42`, `S51`, `S52`, `S61`, `S62`, `S71`, `S72`, `S81`, `S82`]
++- **Label Route**: `info`
++- **Label Field**: `S42`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S42` | 1 | Movement type 4 — assistance condition B |  |
++
++- **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
++- **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
++### Potential Task 21: Exoskeleton Assistance Condition Binary Classification — S51
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S11`, `S12`, `S21`, `S22`, `S31`, `S32`, `S41`, `S42`, `S51`, `S52`, `S61`, `S62`, `S71`, `S72`, `S81`, `S82`]
++- **Label Route**: `info`
++- **Label Field**: `S51`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S51` | 0 | Movement type 5 — assistance condition A |  |
++
++- **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
++- **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
++### Potential Task 22: Exoskeleton Assistance Condition Binary Classification — S52
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S11`, `S12`, `S21`, `S22`, `S31`, `S32`, `S41`, `S42`, `S51`, `S52`, `S61`, `S62`, `S71`, `S72`, `S81`, `S82`]
++- **Label Route**: `info`
++- **Label Field**: `S52`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S52` | 1 | Movement type 5 — assistance condition B |  |
++
++- **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
++- **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
++### Potential Task 23: Exoskeleton Assistance Condition Binary Classification — S61
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S11`, `S12`, `S21`, `S22`, `S31`, `S32`, `S41`, `S42`, `S51`, `S52`, `S61`, `S62`, `S71`, `S72`, `S81`, `S82`]
++- **Label Route**: `info`
++- **Label Field**: `S61`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S61` | 0 | Movement type 6 — assistance condition A |  |
++
++- **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
++- **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
++### Potential Task 24: Exoskeleton Assistance Condition Binary Classification — S62
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S11`, `S12`, `S21`, `S22`, `S31`, `S32`, `S41`, `S42`, `S51`, `S52`, `S61`, `S62`, `S71`, `S72`, `S81`, `S82`]
++- **Label Route**: `info`
++- **Label Field**: `S62`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S62` | 1 | Movement type 6 — assistance condition B |  |
++
++- **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
++- **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
++### Potential Task 25: Exoskeleton Assistance Condition Binary Classification — S71
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S11`, `S12`, `S21`, `S22`, `S31`, `S32`, `S41`, `S42`, `S51`, `S52`, `S61`, `S62`, `S71`, `S72`, `S81`, `S82`]
++- **Label Route**: `info`
++- **Label Field**: `S71`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S71` | 0 | Movement type 7 — assistance condition A |  |
++
++- **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
++- **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
++### Potential Task 26: Exoskeleton Assistance Condition Binary Classification — S72
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S11`, `S12`, `S21`, `S22`, `S31`, `S32`, `S41`, `S42`, `S51`, `S52`, `S61`, `S62`, `S71`, `S72`, `S81`, `S82`]
++- **Label Route**: `info`
++- **Label Field**: `S72`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S72` | 1 | Movement type 7 — assistance condition B |  |
++
++- **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
++- **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
++### Potential Task 27: Exoskeleton Assistance Condition Binary Classification — S81
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S11`, `S12`, `S21`, `S22`, `S31`, `S32`, `S41`, `S42`, `S51`, `S52`, `S61`, `S62`, `S71`, `S72`, `S81`, `S82`]
++- **Label Route**: `info`
++- **Label Field**: `S81`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S81` | 0 | Movement type 8 — assistance condition A |  |
++
++- **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
++- **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
++### Potential Task 28: Exoskeleton Assistance Condition Binary Classification — S82
++
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S11`, `S12`, `S21`, `S22`, `S31`, `S32`, `S41`, `S42`, `S51`, `S52`, `S61`, `S62`, `S71`, `S72`, `S81`, `S82`]
++- **Label Route**: `info`
++- **Label Field**: `S82`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S82` | 1 | Movement type 8 — assistance condition B |  |
++
++- **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
++- **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.

@@ -1,0 +1,44 @@
+--- openneuro_ds004850/analysis.md (pre-v3)
++++ openneuro_ds004850/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004850` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004850
+ **Category**: Complex Applied | **Subjects**: 1 | **Files (Completed)**: 1 | **Channels**: 64 | **Sampling Rate**: 128 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -59,27 +59,28 @@
+ - **Task Type**: classification/segmentation
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
+ - **Meta Level**: raw
+ - **Target Definition**: Event/condition labels for Nback task (dataset-specific mapping)
+ - **Evidence**: Mentioned in OpenNeuro BIDS metadata as tasksCompleted; verify via dataset README for trial structure (typically 1-2s stimulus with variable ISI). Source: https://openneuro.org/datasets/ds004850 DOI: https://doi.org/10.18112/openneuro.ds004850.v1.0.0
+ - **Kernel Notes**: Parameters暂标记为待验证，待确认后填写。 Verify Nback trial structure and event mapping from task README before finalizing epoch extraction. Single aggregated file may limit subject-level Nback analysis.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 2: Trial Substructure Analysis (Nested Events)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 0.5 s, target_events = [51110, 52110, 52111, 53110, 53111, 54110, 54111, 55110, 55111, 71110, 72110, 72111, 73110, 73111, 74110, 74111, 75110, 75111]
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
+ - **Meta Level**: raw
+ - **Target Definition**: Nested variant codes (XYY10, XYY11) indicating trial substructure
+ - **Evidence**: XYYZZ format (category, sub-condition, variant) suggests nested experimental structure; variant codes (10/11) may indicate feedback, response, or condition subtypes not in primary 12-class mapping.
+ - **Kernel Notes**: 19 nested event types with consistent counts suggest structured trial sub-events; separate from primary 12-class task — verify if these represent stimulus-locked or response-locked events; may require distinct epoch windows for proper interpretation.
+ 
+-### Potential Task 3: Session/Sequence Marker Analysis
++### Potential Task 2: Session/Sequence Marker Analysis
+ - **Task Type**: detection
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 30.0 s, target_events = [2090, 2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098]
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
+ - **Meta Level**: raw
+ - **Target Definition**: Sequence/phase marker events
+ - **Evidence**: 2090-2098 series (counts: 66-124) suggest session or sequence markers; distinct from stimulus events.

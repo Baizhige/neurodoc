@@ -1,0 +1,43 @@
+--- openneuro_ds004841/analysis.md (pre-v3)
++++ openneuro_ds004841/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004841` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004841
+ **Category**: Complex Applied | **Subjects**: 11 | **Files (Completed)**: 147 | **Channels**: 70 | **Sampling Rate**: 256 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -216,20 +216,20 @@
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = N/A, target_events = see Target Definition
+-- **Label Route**: `Annotation`
++- **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 
+- | Event | y | Meaning |
+- |-------|---|--------|
+- | `4300200` | 0 | State transition (low→medium demand) |
+- | `4300300` | 1 | State transition (medium demand) |
+- | `4300400` | 2 | State transition (medium→high demand) |
+- | `4301000` | 3 | State transition (monitoring checkpoint) |
+- | `4302000` | 4 | State transition (scenario change) |
+- | `4303000` | 5 | State transition (complex scenario) |
+- | `4304000` | 6 | State transition (high cognitive load) |
+- | `4305000` | 7 | State transition (critical event) |
++  | Event ID | y | Meaning |
++  |---|---|---|
++  | `4300200` | 0 | State transition (low→medium demand) |
++  | `4300300` | 1 | State transition (medium demand) |
++  | `4300400` | 2 | State transition (medium→high demand) |
++  | `4301000` | 3 | State transition (monitoring checkpoint) |
++  | `4302000` | 4 | State transition (scenario change) |
++  | `4303000` | 5 | State transition (complex scenario) |
++  | `4304000` | 6 | State transition (high cognitive load) |
++  | `4305000` | 7 | State transition (critical event) |
+ 
+ - **Evidence**: Plausible from paradigm — 7-digit codes with format 43XXXXX encode state transitions requiring cognitive re-engagement. High event counts (464–789) support statistical classification.
+ - **Kernel Notes**: Captures event-related neural dynamics during vehicle state transitions. Short epoch window (-0.2 to 1.0 s) aligns with transient cognitive responses. Requires decode table for semantic state mapping. Type 1 kernel extracts raw transition labels from 43XXXXX events.

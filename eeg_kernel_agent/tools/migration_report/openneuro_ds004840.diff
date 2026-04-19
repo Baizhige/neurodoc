@@ -1,0 +1,43 @@
+--- openneuro_ds004840/analysis.md (pre-v3)
++++ openneuro_ds004840/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004840` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004840
+ **Category**: Complex Applied | **Subjects**: 9 | **Files (Completed)**: 68 | **Channels**: 10 | **Sampling Rate**: 1024 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -22,6 +22,12 @@
+ | `phase:PRE` | 68 | event | raw | Pre-intervention baseline (5 min resting state before music therapy) |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -38,8 +44,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: `super`
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `phase:PRE` | 0 | Pre-intervention baseline (5 min resting state before music therapy) |
+   | `phase:MTI` | 1 | Music Therapy Intervention period (during MAR session, ~15 min average) |
+   | `phase:POST` | 2 | Post-intervention recovery (5 min resting state after music therapy) |
+@@ -52,6 +58,6 @@
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
+-- **Label Route**: `event`
++- **Label Route**: `misc`
+ - **Target Definition**: None (unlabeled segmentation)
+ - **Notes**: Unlabeled continuous segmentation task using shorter 2s windows for exploratory physiological monitoring or feature extraction. No target labels required; suitable for unsupervised feature analysis, artifact detection, or dimensionality reduction benchmarking on clinical ICU data.

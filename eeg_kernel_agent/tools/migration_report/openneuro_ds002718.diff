@@ -1,0 +1,72 @@
+--- openneuro_ds002718/analysis.md (pre-v3)
++++ openneuro_ds002718/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds002718` | **Year**: 2015 | **URL**: https://openneuro.org/datasets/ds002718
+ **Category**: High-level Mental | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 74 | **Sampling Rate**: 250 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -33,6 +33,13 @@
+ | `unfamiliar_second_late` | 1316 | event | raw | Delayed repeat of an unfamiliar face |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `All stimulus events` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -49,8 +56,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `famous_new` | 0 | Famous face - first presentation |
+   | `unfamiliar_new` | 1 | Unfamiliar face - first presentation |
+   | `scrambled_new` | 2 | Scrambled face - first presentation |
+@@ -64,8 +71,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `famous_new` | 0 | Famous face - first presentation |
+   | `famous_second_early` | 1 | Famous face - second presentation (early lag) |
+   | `famous_second_late` | 2 | Famous face - second presentation (late lag) |
+@@ -85,8 +92,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `left_nonsym` | 0 | Left-button response: less symmetric than average |
+   | `left_sym` | 0 | Left-button response: more symmetric than average |
+   | `right_nonsym` | 1 | Right-button response: less symmetric than average |
+@@ -99,10 +106,11 @@
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 0.0 s, target_events = [`famous_new`, `unfamiliar_new`, `scrambled_new`, `famous_second_early`, `famous_second_late`, `unfamiliar_second_early`, `unfamiliar_second_late`, `scrambled_second_early`, `scrambled_second_late`]
+ - **Label Route**: `misc`
++- **Label Field**: `All stimulus events`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | All stimulus events | response_time (continuous) | Response time in milliseconds |
+ - **Evidence**: DOI: 10.1038/sdata.2015.1 reports mean RT ~955ms; response_time available via misc label route
+ - **Kernel Notes**: Regression task predicting response time from stimulus-locked epochs. Window ends at 0 (stimulus onset) to avoid contaminating with post-stimulus activity that correlates with response. Original paper reports mean RT ~955ms with substantial variance. Misc label derivation source and unit metadata must be retained.

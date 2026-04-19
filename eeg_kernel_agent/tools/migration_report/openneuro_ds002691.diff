@@ -1,0 +1,27 @@
+--- openneuro_ds002691/analysis.md (pre-v3)
++++ openneuro_ds002691/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds002691` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002691
+ **Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 20 | **Channels**: 32 | **Sampling Rate**: 250 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -144,6 +144,7 @@
+ 
+ ## Tasks
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Classical Task 1: Internal Attention State Classification
+ 
+ | Field | Value |
+@@ -192,6 +193,7 @@
+ 
+ ---
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 1: Sustained Attention Phase Classification
+ 
+ | Field | Value |

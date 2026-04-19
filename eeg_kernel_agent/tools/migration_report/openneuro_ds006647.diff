@@ -1,0 +1,52 @@
+--- openneuro_ds006647/analysis.md (pre-v3)
++++ openneuro_ds006647/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds006647` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006647
+ **Category**: High-level Mental | **Subjects**: 51 | **Files (Completed)**: 4 | **Channels**: 70 | **Sampling Rate**: 512 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -47,12 +47,12 @@
+ - **Task Type**: classification
+ - **Epoch Method**: epoch_by_event_hdf5
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [65281, 65282, 65283, 65284]
+-- **Label Route**: Annotation
++- **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 
+-  | Event | y | Meaning |
+-  |----|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | 65281 | 1 | BioSemi condition code 65281 (Haiku) |
+   | 65282 | 2 | BioSemi condition code 65282 (Senryu) |
+   | 65283 | 3 | BioSemi condition code 65283 (non-poetic control) |
+@@ -65,12 +65,12 @@
+ - **Task Type**: regression
+ - **Epoch Method**: epoch_by_event_hdf5
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [65281, 65282, 65283, 65284]
+-- **Label Route**: Annotation
++- **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+ 
+-  | Event | y | Meaning |
+-  |----|---|---|
++  | Event ID | Value | Meaning |
++  |---|---|---|
+   | 65281 | continuous | Aesthetic Appeal rating (1-7 scale) |
+   | 65282 | continuous | Vivid Imagery rating (1-7 scale) |
+   | 65283 | continuous | Being Moved rating (1-7 scale) |
+@@ -83,7 +83,7 @@
+ - **Task Type**: segmentation
+ - **Epoch Method**: epoch_by_segmentation_hdf5
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = null, overlap = null, segment_length = variable, target_events = [65281, 65282, 65283, 65284]
+-- **Label Route**: Annotation
++- **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 

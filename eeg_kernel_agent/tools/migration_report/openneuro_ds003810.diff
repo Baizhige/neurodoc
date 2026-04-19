@@ -1,0 +1,41 @@
+--- openneuro_ds003810/analysis.md (pre-v3)
++++ openneuro_ds003810/analysis.md (v3)
+@@ -3,7 +3,7 @@
+ **Dataset**: `openneuro_ds003810` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003810
+ **Category**: Action/Output | **Subjects**: 10 | **Files (Completed)**: 50
+ **Channels**: 15 | **Sampling Rate**: 125 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -48,11 +48,11 @@
+ - **Task Type**: classification
+ - **Epoch Method**: epoch_by_event_hdf5
+ - **Epoch Parameters**: tmin = 0.5 s, tmax = 2.5 s, target_events = [`OVTK_GDF_Right`, `OVTK_GDF_Tongue`]
+-- **Label Route**: event
++- **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `OVTK_GDF_Right` | 1 | Right hand motor imagery (kinesthetic grasp imagination) |
+   | `OVTK_GDF_Tongue` | 0 | Rest/idle condition (tongue imagery as control class) |
+ - **Evidence**:
+@@ -64,11 +64,11 @@
+ - **Task Type**: classification
+ - **Epoch Method**: epoch_by_segmentation_hdf5
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 3.5 s, segment_length = 4.0 s, overlap = null
+-- **Label Route**: Annotation
++- **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `OVTK_StimulationId_BaselineStart` | 0 | Resting baseline period (control class) |
+   | `OVTK_GDF_Right` | 1 | Right hand motor imagery (active class) |
+ - **Evidence**:

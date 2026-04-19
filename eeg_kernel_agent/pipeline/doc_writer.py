@@ -253,7 +253,7 @@ def _extract_derived_misc_fields(tasks_section: str) -> list:
         if route_m.group(1).lower() == "misc" and meta_m.group(1).lower() == "super":
             derived.append({
                 "field": field_m.group(1).strip(),
-                "source": "derived (per Task Kernel Notes)",
+                "source": "derived (per Task Notes)",
                 "notes": "Super Meta — kernel derives per-segmentation value",
             })
     # dedupe by field

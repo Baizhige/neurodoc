@@ -10,7 +10,7 @@
 - `misc` 路由限定为 regression-first（第77条之一扩充、第77条之六）；离散分类标签应走 `event` 或 `info`。
 - 新增“单目标任务”规则（第77条之五）：每个 Task 只允许一个 Label Field；多维度标签必须拆分为多个 Task。
 - 新增“分类任务 ≥2 类”规则（第77条之七）。
-- 新增“派生 misc → super meta”规则（第77条之八）：kernel 新创建的 misc channel 一律为 super meta，并要求在 `Kernel Notes` 记录派生步骤。
+- 新增“派生 misc → super meta”规则（第77条之八）：kernel 新创建的 misc channel 一律为 super meta，并建议在 Task 的 `Notes` 中记录派生步骤。
 - `### Info` 子节从固定三字段扩展为动态列出 `participants.tsv` 所有发现列（第57条之二修订），同时保留 `subject_age/subject_sex/device` 为必展示规范字段。
 - `Target Definition` 表格 schema 按 `Route × Task Type` 严格绑定（第77条之四）。
 - 新增第30条之三：`Manual Review` 仅由人类审核员填写；LLM 必须输出空白，生成流水线在后处理阶段强制清空。
@@ -291,7 +291,7 @@ LLM 审核脚本负责：
 ### 第30条之二 禁止额外章节
 
 1. 除维护者明确要求外，不得新增非模板一级栏目，例如 `## Meta`、独立 `## References`、自定义扩展说明区等。
-2. 如确需补充说明，应优先写入现有栏目下的 `Kernel Notes`、`Data Quality Notes` 或审核记录，而不应新增一级章节。
+2. 如确需补充说明，应优先写入现有栏目下的 Task `Notes`、`Data Quality Notes`、`### Kernel Notes`（`## Kernel Responsibilities` 下）或审核记录，而不应新增一级章节。
 3. 对既有历史文档进行实质性修订时，应同步删除不符合现行结构的额外章节，除非维护者另有明确要求。
 
 ### 第30条之三 `Manual Review` 自动化行为
@@ -473,7 +473,7 @@ LLM 审核脚本负责：
 
 1. `admin` 事件应显式保留在 `Event Structure` 表格中，不得默认删除。
 2. `admin` 事件默认不得作为监督学习任务的 `target_events`。
-3. 如确有例外，应提供强证据并在 `Kernel Notes` 中写明理由。
+3. 如确有例外，应提供强证据并在 Task 的 `Notes` 中写明理由。
 
 ### 第48条 `Meta Level` 的判定
 
@@ -536,7 +536,7 @@ LLM 审核脚本负责：
 
 1. 若标签、事件区间或辅助字段直接存在于数据集随附的官方 companion files、`participants.tsv`、行为表、sleep stage 文件或其他正式 sidecar 中，原则上可以作为合法信息源使用。
 2. 若上述信息本质上是离散事件或时间段，并将被用于 `target_events` 或事件型任务，必须先在 `Event Structure` 中登记后方可被任务引用。
-3. 若上述信息本质上是每 epoch 一个类别、标量、计数、评分或连续量，不应强行写入 `Event Structure`；应根据其最终路由写入 `MISC Label Summary` 或 `Kernel Notes`。
+3. 若上述信息本质上是每 epoch 一个类别、标量、计数、评分或连续量，不应强行写入 `Event Structure`；应根据其最终路由写入 `MISC Label Summary` 或 Task 的 `Notes`。
 4. 仅当这些字段可直接读取且无需额外推导时，方可视为 `raw`；若需要配对、映射、标准化、跨文件连接或规则重建，则应视为 `super`。
 
 
@@ -641,7 +641,7 @@ LLM 审核脚本负责：
 7. `Target Definition`
 8. `Super Meta Notes`（如适用）
 9. `Evidence`（`Classical Task` 必填）
-10. `Kernel Notes`
+10. `Notes`（自由补充说明，无强制格式；可用于 super meta 派生步骤、参数推断依据、审核备注等；旧文档字段名 `Kernel Notes` 自 v3 起统一改为 `Notes`。）
 
 ### 第61条 历史遗留写法
 
@@ -688,7 +688,7 @@ LLM 审核脚本负责：
    - 官方页面或官方说明中的推荐值
    - 明确使用该数据集的参考文献中的实际取值
    - 审核员或 LLM 基于专业知识给出的合理取值
-7. 如所选取值并非直接由官方页面或文献逐字给出，应在 `Kernel Notes` 中简要说明判断依据。
+7. 如所选取值并非直接由官方页面或文献逐字给出，应在 Task 的 `Notes` 中简要说明判断依据。
 
 ### 第63条 `Potential Task` 适用情形
 
@@ -737,7 +737,8 @@ LLM 审核脚本负责：
 
 ### 第69条 `Epoch Parameters` 一般规则
 
-`Epoch Parameters` 至少应提供当前 `Epoch Method` 所必需的参数。
+`Epoch Parameters` 至少应提供当前 `Epoch Method` 所必需的参数（见第70–72条）。必需参数的最小集合由语义规则 `epoch_parameters_complete` 在 `detect.py` 中强制检查，严重度为 `error`，无论 `Classical Task` 还是 `Potential Task` 均不得缺省。
+在必需参数之外，`Epoch Parameters` 允许以 `key = value` 形式补充任何 `MNE.Epoch` 接受的可选参数（如 `baseline`, `reject`, `picks` 等），这些补充参数不受 `epoch_parameters_complete` 约束。
 
 ### 第70条 `epoch_by_event_hdf5` 参数要求
 
@@ -803,7 +804,7 @@ LLM 审核脚本负责：
    - `Label Route = misc` 时，`Target Definition` 描述 MISC 字段到标量目标的对应关系。
    - `Label Route = info` 时，`Target Definition` 使用 `Info Field / Value → y` 映射表（见第77条之二）。
 3. 离散分类标签不应仅因实现方便而改写为 `misc`。
-4. 若任务属于例外情形，应在 `Kernel Notes` 中说明理由。
+4. 若任务属于例外情形，应在 Task 的 `Notes` 中说明理由。
 
 ### 第77条之一 `misc` 路由用途：epoch-level 标量与连续量
 
@@ -825,7 +826,7 @@ LLM 审核脚本负责：
    | `subject_sex` | Female | 1 | Female subject |
 
 2. `Info Field` 列的取值必须与 `### Info` 表中已登记的字段名称一致，并与 Task 的 `Label Field` 一致。
-3. 若该字段在 `### Info` 中的 `Completeness` 为 `missing` 或 `incomplete`，该任务不得成立为 `Classical Task`，至多为 `Potential Task`，并应在 `Kernel Notes` 中说明数据缺失情况。
+3. 若该字段在 `### Info` 中的 `Completeness` 为 `missing` 或 `incomplete`，该任务不得成立为 `Classical Task`，至多为 `Potential Task`，并应在 Task 的 `Notes` 中说明数据缺失情况。
 4. `info` 路由只适用于 `participants.tsv` 中**原样可用**的列（性别、年龄、原生分组）。若需 median split、标准化、配对或派生，应改用派生 misc（第77条之一、第77条之八）。
 
 ### 第77条之三 `Label Field` 必填规则
@@ -874,7 +875,7 @@ LLM 审核脚本负责：
 ### 第77条之八 派生 misc ⇒ super meta
 
 1. 任何 kernel 新创建的 misc channel 属于派生数据，其所承载任务的 `Meta Level` 必须为 `super`，并使 `Super Meta Required = Yes`（见第37条）。
-2. 派生 misc 必须在 `### MISC Label Summary` 中明确声明为派生来源，并在 Task 的 `Kernel Notes` 中写明派生步骤（从哪一列、如何填充到每个 segmentation、单位、异常值处理等）。
+2. 派生 misc 必须在 `### MISC Label Summary` 中明确声明为派生来源；**建议**在 Task 的 `Notes` 中写明派生步骤（从哪一列、如何填充到每个 segmentation、单位、异常值处理等）。该建议不受 `detect.py` 强制检查，仅作为审核与实现指引。
 3. 若派生来源字段本身在数据集中不存在（既不在 `events.tsv`、`participants.tsv`，也不在原生 misc channel），该任务不得成立，应删除。
 
 ### 第78条 `Meta Level`
@@ -884,7 +885,7 @@ LLM 审核脚本负责：
 3. 若标签需进行事件配对、类别折叠、主体信息映射、标准体系映射或连续变量计算，应标为 `super`。
 
 
-### 第五节 Evidence 与 Kernel Notes
+### 第五节 Evidence 与 Notes
 
 ### 第79条 `Evidence`
 
@@ -906,15 +907,17 @@ LLM 审核脚本负责：
 
 由于 LLM 可能在论文理解中产生幻觉，凡无法确认“确实使用了该数据集且确实支持该任务”的，应降级或删除，而非强行保留 `Classical Task`。
 
-### 第82条 `Kernel Notes`
+### 第82条 Task `Notes`
 
-`Kernel Notes` 用于说明代码实现时必须额外注意的事项，包括但不限于：
+自 v3 起，Task 块内的 `- **Notes**:` 字段（旧字段名 `Kernel Notes`）是**自由补充说明**，没有强制结构，亦不受 `detect.py` 强制检查。常见用途包括但不限于：
 
-1. 标签映射细节。
-2. 文件级上下文依赖。
-3. 外部表格解析要求。
-4. 事件配对与窗口生成规则。
-5. 需排除的管理员事件或伪事件。
+1. 标签映射细节、文件级上下文依赖、外部表格解析要求。
+2. 事件配对、窗口生成规则、需排除的管理员事件或伪事件。
+3. super meta 派生步骤（见第77条之八，建议性要求）。
+4. `Epoch Parameters` 的推断依据（见第73条第2、3款）。
+5. `Classical Task` 参数与官方或参考文献不一致时的人工判断。
+
+**Task `Notes` 与 `## Kernel Responsibilities` 下的 `### Kernel Notes` 子节的区别**：前者是单个 Task 的自由批注；后者是 kernel 实现层面、跨 Task 的实现备忘。二者可以同时存在，不要混用。
 
 
 ## 第十一章 Data Quality Notes Area

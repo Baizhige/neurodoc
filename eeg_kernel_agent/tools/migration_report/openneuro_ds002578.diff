@@ -1,0 +1,50 @@
+--- openneuro_ds002578/analysis.md (pre-v3)
++++ openneuro_ds002578/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds002578` | **Year**: 2004/2021 | **URL**: https://openneuro.org/datasets/ds002578
+ **Category**: Sensory/Response | **Subjects**: 2 | **Files (Completed)**: 2 | **Channels**: 256 | **Sampling Rate**: 256 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -65,30 +65,31 @@
+   - DOI: 10.1523/jneurosci.3477-07.2007 — Partially supports visual oddball paradigm with target/non-target classification structure; establishes epoch parameters and P300/N200 ERP components typical for this task.
+ - **Kernel Notes**: Only 2 completed EEG files available (extremely limited sample size). Target events indicate attended location matches stimulus location; non-target events encode attend/cue mismatches. Apply baseline correction from -0.2 to 0 s for optimal P300 detection.
+ 
+-### Potential Task 2: Target Reaction Time Regression
++### Potential Task 1: Target Reaction Time Regression
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [`target: attend-3 cue-3`, `target: attend-4 cue-4`]
+-- **Label Route**: `misc`
++- **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | Value | Meaning |
++  |---|---|---|
+   | `target: attend-3 cue-3` | continuous | Reaction time in seconds derived from target event to subsequent Response marker |
+   | `target: attend-4 cue-4` | continuous | Reaction time in seconds derived from target event to subsequent Response marker |
+ - **Evidence**:
+   - DOI: 10.1523/jneurosci.3477-07.2007 — Supports regression approach via single-trial theta power correlation with reaction time; paradigm includes button press responses to targets.
+ - **Kernel Notes**: Derive RT by pairing target events with subsequent Response marker. Verify Response marker timing falls within 0.1–1.5 s window per typical RT ranges. Filter false alarm responses (1202 Response markers vs 479 targets suggests ~2.5 responses per target on average; may include anticipatory or incorrect responses requiring filtering).
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 3: Response False Alarm Detection
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.3 s, tmax = 0.3 s, target_events = [`Response`]
+-- **Label Route**: `stim`
++- **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Response` | derived | Correct response (y=1) if preceded by target event within 0.1–1.5 s; False alarm response (y=0) otherwise |
+ - **Evidence**:
+   - DOI: 10.1523/jneurosci.3477-07.2007 — Selective attention paradigms typically include false alarm monitoring; response-locked analysis plausible for error detection.

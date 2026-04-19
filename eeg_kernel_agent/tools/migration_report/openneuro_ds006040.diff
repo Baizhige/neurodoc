@@ -1,0 +1,174 @@
+--- openneuro_ds006040/analysis.md (pre-v3)
++++ openneuro_ds006040/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds006040` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006040
+ **Category**: High-level Mental | **Subjects**: 28 | **Files (Completed)**: 1064 | **Channels**: 64 | **Sampling Rate**: 5000 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -28,6 +28,17 @@
+ | `qrs` | 170358 | admin | raw | Cardiac QRS complex |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `correct_trial` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `incorrect_trial` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `in_zone` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `out_zone` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `S245` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -37,75 +48,121 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: gradCPT Trial Correctness Classification
++### Classical Task 1: gradCPT Trial Correctness Classification — correct_trial
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, target_events = [`S155`, `S245`, `S254`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `correct_trial`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-----|---------|
+-  | `correct_trial` | 0 | Correct commission (S245+press) or correct omission (S155+no press) |
+-  | `incorrect_trial` | 1 | Commission error (S155+press) or omission error (S245+no press) |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `correct_trial` | 0 | Correct commission (S245+press) or correct omission (S155+no press) |  |
+ - **Evidence**:
+   - DOI: 10.1038/s41597-026-06616-6 — Classifies correct vs incorrect trials (commission/omission errors) in sustained attention using gradCPT stimuli (S155=mountain/standard, S245=city/target) and button press responses (S254).
+ - **Kernel Notes**: Epoch around each S155/S245 stimulus. Within each epoch, check for presence/absence of S254 to derive trial outcome. S254 count (813) is low relative to stimuli (400k+), indicating mostly correct withhold responses. Downsample from 5000 Hz before processing.
+ 
+-### Classical Task 2: gradCPT Attention State Classification (In-Zone vs Out-of-Zone)
++### Classical Task 2: gradCPT Trial Correctness Classification — incorrect_trial
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, target_events = [`S155`, `S245`, `S254`]
++- **Label Route**: `info`
++- **Label Field**: `incorrect_trial`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `incorrect_trial` | 1 | Commission error (S155+press) or omission error (S245+no press) |  |
++- **Evidence**:
++  - DOI: 10.1038/s41597-026-06616-6 — Classifies correct vs incorrect trials (commission/omission errors) in sustained attention using gradCPT stimuli (S155=mountain/standard, S245=city/target) and button press responses (S254).
++- **Kernel Notes**: Epoch around each S155/S245 stimulus. Within each epoch, check for presence/absence of S254 to derive trial outcome. S254 count (813) is low relative to stimuli (400k+), indicating mostly correct withhold responses. Downsample from 5000 Hz before processing.
++
++### Classical Task 3: gradCPT Attention State Classification (In-Zone vs Out-of-Zone) — in_zone
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, target_events = [`S155`, `S245`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `in_zone`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-----|---------|
+-  | `in_zone` | 0 | Low RT variability (sustained attention maintained) |
+-  | `out_zone` | 1 | High RT variability (attention lapses) |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `in_zone` | 0 | Low RT variability (sustained attention maintained) |  |
+ - **Evidence**:
+   - DOI: 10.1038/s41597-026-06616-6 — Classifies in-the-zone vs out-of-the-zone attention states based on RT variability during correct trials in gradCPT.
+ - **Kernel Notes**: Must compute reaction time from S254 events and derive rolling RT variability (e.g., coefficient of variation over 5-10 trial rolling window). Low variability → in_zone (y=0), high variability → out_zone (y=1). Downsample from 5000 Hz before processing.
+ 
+-### Classical Task 3: gradCPT Stimulus Classification (Mountain vs City)
++### Classical Task 4: gradCPT Attention State Classification (In-Zone vs Out-of-Zone) — out_zone
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, target_events = [`S155`, `S245`]
++- **Label Route**: `info`
++- **Label Field**: `out_zone`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `out_zone` | 1 | High RT variability (attention lapses) |  |
++- **Evidence**:
++  - DOI: 10.1038/s41597-026-06616-6 — Classifies in-the-zone vs out-of-the-zone attention states based on RT variability during correct trials in gradCPT.
++- **Kernel Notes**: Must compute reaction time from S254 events and derive rolling RT variability (e.g., coefficient of variation over 5-10 trial rolling window). Low variability → in_zone (y=0), high variability → out_zone (y=1). Downsample from 5000 Hz before processing.
++
++### Classical Task 5: gradCPT Stimulus Classification (Mountain vs City)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, target_events = [`S155`, `S245`]
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-----|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `S155` | 0 | Standard stimulus (mountain scene, withhold response) |
+   | `S245` | 1 | Target stimulus (city scene, press button) |
+ - **Evidence**:
+   - DOI: 10.1038/s41597-026-06616-6 — Uses gradCPT paradigm with mountain (S155) as frequent standard and city (S245) as rare target stimuli.
+ - **Kernel Notes**: Basic stimulus-locked epoching for S155 vs S245 classification. S155 is more frequent (201922 vs 201110 events). Downsample from 5000 Hz before processing.
+ 
+-### Potential Task 1: gradCPT Sustained Attention Timecourse Analysis
+-- **Task Type**: classification
++### Potential Task 1: gradCPT Sustained Attention Timecourse Analysis — in_zone
++- **Task Type**: regression
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = -30.0 s, tmax = 30.0 s, segment_length = 60.0 s, target_events = [`S155`, `S245`]
+ - **Label Route**: `misc`
++- **Label Field**: `in_zone`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-----|---------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `in_zone` | 0 | Sustained attention maintained (low RT variability over segment) |
++- **Evidence**:
++  - DOI: 10.1038/s41597-026-06616-6 — Supports sustained attention analysis using rolling variability metrics across consecutive correct trials.
++- **Kernel Notes**: Use longer segments (60s) to capture attentional fluctuations over time. Compute rolling RT variability across correct trials within segment window. Requires RT extraction from S254 timing relative to preceding stimulus. Downsample from 5000 Hz before processing.
++
++### Potential Task 2: gradCPT Sustained Attention Timecourse Analysis — out_zone
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = -30.0 s, tmax = 30.0 s, segment_length = 60.0 s, target_events = [`S155`, `S245`]
++- **Label Route**: `misc`
++- **Label Field**: `out_zone`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `out_zone` | 1 | Attention lapses (high RT variability over segment) |
+ - **Evidence**:
+   - DOI: 10.1038/s41597-026-06616-6 — Supports sustained attention analysis using rolling variability metrics across consecutive correct trials.
+ - **Kernel Notes**: Use longer segments (60s) to capture attentional fluctuations over time. Compute rolling RT variability across correct trials within segment window. Requires RT extraction from S254 timing relative to preceding stimulus. Downsample from 5000 Hz before processing.
+ 
+-### Potential Task 2: gradCPT Reaction Time Prediction
++### Potential Task 3: gradCPT Reaction Time Prediction
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, target_events = [`S245`]
+-- **Label Route**: `stim`
++- **Label Route**: `misc`
++- **Label Field**: `S245` + S254`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-----|---------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `S245` + S254 | RT in ms | Reaction time for correct target responses |
+ - **Evidence**:
+   - DOI: 10.1038/s41597-026-06616-6 — GradCPT measures sustained attention via RT variability; RT extraction from S254 events is documented.

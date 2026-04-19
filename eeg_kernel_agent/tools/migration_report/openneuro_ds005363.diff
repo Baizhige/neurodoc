@@ -1,0 +1,296 @@
+--- openneuro_ds005363/analysis.md (pre-v3)
++++ openneuro_ds005363/analysis.md (v3)
+@@ -96,6 +96,25 @@
+ | `inanimate` | 12505 | event | raw |  |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `animate` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `inanimate` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Stimulus/S 65` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Stimulus/S 66` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Stimulus/S 67` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Stimulus/S 68` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Stimulus/S 69` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Stimulus/S 4` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Stimulus/S 5` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Stimulus/S 6` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Stimulus/S 7` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `...` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Stimulus/S 57` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -105,56 +124,226 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Animate vs Inanimate Visual Object Classification
+-- **Task Type**: classification
++### Classical Task 1: Animate vs Inanimate Visual Object Classification — animate` (MISC)
++- **Task Type**: regression
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 0.75 s, target_events = [`Stimulus/S 65`, `Stimulus/S 66`, `Stimulus/S 67`, `Stimulus/S 68`, `Stimulus/S 69`]
+ - **Label Route**: `misc`
++- **Label Field**: `animate` (MISC)`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `animate` (MISC) | 0 | Animate objects (faces, animals) |
+-  | `inanimate` (MISC) | 1 | Inanimate objects (places, objects) |
+ - **Super Meta Notes**: Pre-computed super-level labels exist in MISC channel (`animate`: 8524 trials, `inanimate`: 12505 trials). Alternatively, derive from raw events by grouping animate (S65, S66: faces/animals) as y=0 and inanimate (S67: places; S68, S69: objects) as y=1. Kernel step: extract binary labels directly from MISC channel or apply supra-category grouping to raw stimulus events.
+ - **Evidence**:
+   - DOI: 10.1016/j.cub.2025.03.062 — "Healthy aging delays and dedifferentiates high-level visual representations" (Haupt et al., 2025, Current Biology). Uses ORHA dataset with 43 older + 43 younger adults viewing 64 images across 4 categories (faces, animals, places, objects). Performs multivariate EEG pattern classification with animate vs inanimate supra-category grouping. Validates that aging delays and dedifferentiates high-level visual representations.
+   - DOI: 10.1162/IMAG.a.1033 — "What does my network learn?" uses ORHA dataset as control dataset to validate generalizability of deep learning interpretability methods for EEG, performing 2-class animate vs inanimate decoding.
+ - **Kernel Notes**: Use pre-computed 'animate'/'inanimate' MISC labels for efficiency. Exclude S99 (fixation/separator marker, 21460 events) and 'admin: fixation_marker' (20476 events) from epoching. Individual exemplar codes S4-S57 excluded from this task.
+ 
+-### Classical Task 2: Visual Category Classification (5-class)
+-- **Task Type**: classification
+-- **Epoch Method**: `epoch_by_event_hdf5`
+-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`Stimulus/S 65`, `Stimulus/S 66`, `Stimulus/S 67`, `Stimulus/S 68`, `Stimulus/S 69`]
+-- **Label Route**: `event`
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `Stimulus/S 65` | 0 | Visual category 1 (faces) |
+-  | `Stimulus/S 66` | 1 | Visual category 2 (animals) |
+-  | `Stimulus/S 67` | 2 | Visual category 3 (places) |
+-  | `Stimulus/S 68` | 3 | Visual category 4 (objects) |
+-  | `Stimulus/S 69` | 4 | Visual category 5 (objects) |
+-- **Evidence**:
+-  - DOI: 10.1016/j.cub.2025.03.062 — Explicitly investigates 4-category visual object recognition (faces, animals, places, objects) using S65-S69 event codes with multivariate EEG classification across 86 subjects (43 older, 43 younger).
+-- **Kernel Notes**: Include 200ms pre-stimulus baseline for proper baseline correction. Exclude S99 fixation marker (21460 events) to avoid event density issues. S4-S57 encode individual exemplar identities (~1315 trials each, 60+ items)—reserved for RSA task. S255 (2 events) likely experimental outlier; exclude.
+-
+-### Potential Task 1: Representational Similarity Analysis (RSA) - Exemplar Level
+-- **Task Type**: encoding/RSA
+-- **Epoch Method**: `epoch_by_event_hdf5`
+-- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = [`Stimulus/S 4`, `Stimulus/S 5`, `Stimulus/S 6`, `Stimulus/S 7`, `Stimulus/S 8`, `Stimulus/S 9`, `Stimulus/S 10`, `Stimulus/S 11`, `Stimulus/S 12`, `Stimulus/S 13`, `Stimulus/S 14`, `Stimulus/S 15`, `Stimulus/S 16`, `Stimulus/S 17`, `Stimulus/S 18`, `Stimulus/S 19`, `Stimulus/S 20`, `Stimulus/S 21`, `Stimulus/S 22`, `Stimulus/S 23`, `Stimulus/S 24`, `Stimulus/S 25`, `Stimulus/S 26`, `Stimulus/S 27`, `Stimulus/S 28`, `Stimulus/S 29`, `Stimulus/S 30`, `Stimulus/S 31`, `Stimulus/S 32`, `Stimulus/S 33`, `Stimulus/S 34`, `Stimulus/S 35`, `Stimulus/S 36`, `Stimulus/S 37`, `Stimulus/S 38`, `Stimulus/S 39`, `Stimulus/S 40`, `Stimulus/S 41`, `Stimulus/S 42`, `Stimulus/S 43`, `Stimulus/S 44`, `Stimulus/S 45`, `Stimulus/S 46`, `Stimulus/S 47`, `Stimulus/S 48`, `Stimulus/S 49`, `Stimulus/S 50`, `Stimulus/S 51`, `Stimulus/S 52`, `Stimulus/S 53`, `Stimulus/S 54`, `Stimulus/S 55`, `Stimulus/S 56`, `Stimulus/S 57`]
+-- **Label Route**: `event`
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `Stimulus/S 4` | 0 | Exemplar image 1 |
+-  | `Stimulus/S 5` | 1 | Exemplar image 2 |
+-  | `Stimulus/S 6` | 2 | Exemplar image 3 |
+-  | `Stimulus/S 7` | 3 | Exemplar image 4 |
+-  | ... | ... | ... |
+-  | `Stimulus/S 57` | 53 | Exemplar image 54 |
+-- **Evidence**:
+-  - DOI: 10.1016/j.cub.2025.03.062 — Uses representational similarity analysis on EEG responses to individual exemplar images (64 images across 4 categories) to track age-related changes in neural object coding patterns.
+-- **Kernel Notes**: 60+ exemplar codes with ~1313-1315 trials each provide sufficient stimulus diversity for RSA. Standard 1s post-stimulus window captures neural object coding patterns. Exclude category codes S65-S69 (used for classification tasks) and fixation markers S99/admin: fixation_marker.
++### Classical Task 2: Animate vs Inanimate Visual Object Classification — inanimate` (MISC)
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 0.75 s, target_events = [`Stimulus/S 65`, `Stimulus/S 66`, `Stimulus/S 67`, `Stimulus/S 68`, `Stimulus/S 69`]
++- **Label Route**: `misc`
++- **Label Field**: `inanimate` (MISC)`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
++  | `inanimate` (MISC) | 1 | Inanimate objects (places, objects) |
++- **Super Meta Notes**: Pre-computed super-level labels exist in MISC channel (`animate`: 8524 trials, `inanimate`: 12505 trials). Alternatively, derive from raw events by grouping animate (S65, S66: faces/animals) as y=0 and inanimate (S67: places; S68, S69: objects) as y=1. Kernel step: extract binary labels directly from MISC channel or apply supra-category grouping to raw stimulus events.
++- **Evidence**:
++  - DOI: 10.1016/j.cub.2025.03.062 — "Healthy aging delays and dedifferentiates high-level visual representations" (Haupt et al., 2025, Current Biology). Uses ORHA dataset with 43 older + 43 younger adults viewing 64 images across 4 categories (faces, animals, places, objects). Performs multivariate EEG pattern classification with animate vs inanimate supra-category grouping. Validates that aging delays and dedifferentiates high-level visual representations.
++  - DOI: 10.1162/IMAG.a.1033 — "What does my network learn?" uses ORHA dataset as control dataset to validate generalizability of deep learning interpretability methods for EEG, performing 2-class animate vs inanimate decoding.
++- **Kernel Notes**: Use pre-computed 'animate'/'inanimate' MISC labels for efficiency. Exclude S99 (fixation/separator marker, 21460 events) and 'admin: fixation_marker' (20476 events) from epoching. Individual exemplar codes S4-S57 excluded from this task.
++
++### Classical Task 3: Visual Category Classification (5-class) — Stimulus/S 65
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`Stimulus/S 65`, `Stimulus/S 66`, `Stimulus/S 67`, `Stimulus/S 68`, `Stimulus/S 69`]
++- **Label Route**: `info`
++- **Label Field**: `Stimulus/S 65`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Stimulus/S 65` | 0 | Visual category 1 (faces) |  |
++- **Evidence**:
++  - DOI: 10.1016/j.cub.2025.03.062 — Explicitly investigates 4-category visual object recognition (faces, animals, places, objects) using S65-S69 event codes with multivariate EEG classification across 86 subjects (43 older, 43 younger).
++- **Kernel Notes**: Include 200ms pre-stimulus baseline for proper baseline correction. Exclude S99 fixation marker (21460 events) to avoid event density issues. S4-S57 encode individual exemplar identities (~1315 trials each, 60+ items)—reserved for RSA task. S255 (2 events) likely experimental outlier; exclude.
++
++### Classical Task 4: Visual Category Classification (5-class) — Stimulus/S 66
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`Stimulus/S 65`, `Stimulus/S 66`, `Stimulus/S 67`, `Stimulus/S 68`, `Stimulus/S 69`]
++- **Label Route**: `info`
++- **Label Field**: `Stimulus/S 66`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Stimulus/S 66` | 1 | Visual category 2 (animals) |  |
++- **Evidence**:
++  - DOI: 10.1016/j.cub.2025.03.062 — Explicitly investigates 4-category visual object recognition (faces, animals, places, objects) using S65-S69 event codes with multivariate EEG classification across 86 subjects (43 older, 43 younger).
++- **Kernel Notes**: Include 200ms pre-stimulus baseline for proper baseline correction. Exclude S99 fixation marker (21460 events) to avoid event density issues. S4-S57 encode individual exemplar identities (~1315 trials each, 60+ items)—reserved for RSA task. S255 (2 events) likely experimental outlier; exclude.
++
++### Classical Task 5: Visual Category Classification (5-class) — Stimulus/S 67
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`Stimulus/S 65`, `Stimulus/S 66`, `Stimulus/S 67`, `Stimulus/S 68`, `Stimulus/S 69`]
++- **Label Route**: `info`
++- **Label Field**: `Stimulus/S 67`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Stimulus/S 67` | 2 | Visual category 3 (places) |  |
++- **Evidence**:
++  - DOI: 10.1016/j.cub.2025.03.062 — Explicitly investigates 4-category visual object recognition (faces, animals, places, objects) using S65-S69 event codes with multivariate EEG classification across 86 subjects (43 older, 43 younger).
++- **Kernel Notes**: Include 200ms pre-stimulus baseline for proper baseline correction. Exclude S99 fixation marker (21460 events) to avoid event density issues. S4-S57 encode individual exemplar identities (~1315 trials each, 60+ items)—reserved for RSA task. S255 (2 events) likely experimental outlier; exclude.
++
++### Classical Task 6: Visual Category Classification (5-class) — Stimulus/S 68
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`Stimulus/S 65`, `Stimulus/S 66`, `Stimulus/S 67`, `Stimulus/S 68`, `Stimulus/S 69`]
++- **Label Route**: `info`
++- **Label Field**: `Stimulus/S 68`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Stimulus/S 68` | 3 | Visual category 4 (objects) |  |
++- **Evidence**:
++  - DOI: 10.1016/j.cub.2025.03.062 — Explicitly investigates 4-category visual object recognition (faces, animals, places, objects) using S65-S69 event codes with multivariate EEG classification across 86 subjects (43 older, 43 younger).
++- **Kernel Notes**: Include 200ms pre-stimulus baseline for proper baseline correction. Exclude S99 fixation marker (21460 events) to avoid event density issues. S4-S57 encode individual exemplar identities (~1315 trials each, 60+ items)—reserved for RSA task. S255 (2 events) likely experimental outlier; exclude.
++
++### Classical Task 7: Visual Category Classification (5-class) — Stimulus/S 69
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`Stimulus/S 65`, `Stimulus/S 66`, `Stimulus/S 67`, `Stimulus/S 68`, `Stimulus/S 69`]
++- **Label Route**: `info`
++- **Label Field**: `Stimulus/S 69`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Stimulus/S 69` | 4 | Visual category 5 (objects) |  |
++- **Evidence**:
++  - DOI: 10.1016/j.cub.2025.03.062 — Explicitly investigates 4-category visual object recognition (faces, animals, places, objects) using S65-S69 event codes with multivariate EEG classification across 86 subjects (43 older, 43 younger).
++- **Kernel Notes**: Include 200ms pre-stimulus baseline for proper baseline correction. Exclude S99 fixation marker (21460 events) to avoid event density issues. S4-S57 encode individual exemplar identities (~1315 trials each, 60+ items)—reserved for RSA task. S255 (2 events) likely experimental outlier; exclude.
++
++### Potential Task 1: Representational Similarity Analysis (RSA) - Exemplar Level — Stimulus/S 4
++- **Task Type**: encoding/rsa
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = [`Stimulus/S 4`, `Stimulus/S 5`, `Stimulus/S 6`, `Stimulus/S 7`, `Stimulus/S 8`, `Stimulus/S 9`, `Stimulus/S 10`, `Stimulus/S 11`, `Stimulus/S 12`, `Stimulus/S 13`, `Stimulus/S 14`, `Stimulus/S 15`, `Stimulus/S 16`, `Stimulus/S 17`, `Stimulus/S 18`, `Stimulus/S 19`, `Stimulus/S 20`, `Stimulus/S 21`, `Stimulus/S 22`, `Stimulus/S 23`, `Stimulus/S 24`, `Stimulus/S 25`, `Stimulus/S 26`, `Stimulus/S 27`, `Stimulus/S 28`, `Stimulus/S 29`, `Stimulus/S 30`, `Stimulus/S 31`, `Stimulus/S 32`, `Stimulus/S 33`, `Stimulus/S 34`, `Stimulus/S 35`, `Stimulus/S 36`, `Stimulus/S 37`, `Stimulus/S 38`, `Stimulus/S 39`, `Stimulus/S 40`, `Stimulus/S 41`, `Stimulus/S 42`, `Stimulus/S 43`, `Stimulus/S 44`, `Stimulus/S 45`, `Stimulus/S 46`, `Stimulus/S 47`, `Stimulus/S 48`, `Stimulus/S 49`, `Stimulus/S 50`, `Stimulus/S 51`, `Stimulus/S 52`, `Stimulus/S 53`, `Stimulus/S 54`, `Stimulus/S 55`, `Stimulus/S 56`, `Stimulus/S 57`]
++- **Label Route**: `info`
++- **Label Field**: `Stimulus/S 4`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Event | y | Meaning |
++  |-------|---|---------|
++  | `Stimulus/S 4` | 0 | Exemplar image 1 |
++  | `Stimulus/S 5` | 1 | Exemplar image 2 |
++  | `Stimulus/S 6` | 2 | Exemplar image 3 |
++  | `Stimulus/S 7` | 3 | Exemplar image 4 |
++  | ... | ... | ... |
++  | `Stimulus/S 57` | 53 | Exemplar image 54 |
++- **Evidence**:
++  - DOI: 10.1016/j.cub.2025.03.062 — Uses representational similarity analysis on EEG responses to individual exemplar images (64 images across 4 categories) to track age-related changes in neural object coding patterns.
++- **Kernel Notes**: 60+ exemplar codes with ~1313-1315 trials each provide sufficient stimulus diversity for RSA. Standard 1s post-stimulus window captures neural object coding patterns. Exclude category codes S65-S69 (used for classification tasks) and fixation markers S99/admin: fixation_marker.
++### Potential Task 2: Representational Similarity Analysis (RSA) - Exemplar Level — Stimulus/S 5
++- **Task Type**: encoding/rsa
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = [`Stimulus/S 4`, `Stimulus/S 5`, `Stimulus/S 6`, `Stimulus/S 7`, `Stimulus/S 8`, `Stimulus/S 9`, `Stimulus/S 10`, `Stimulus/S 11`, `Stimulus/S 12`, `Stimulus/S 13`, `Stimulus/S 14`, `Stimulus/S 15`, `Stimulus/S 16`, `Stimulus/S 17`, `Stimulus/S 18`, `Stimulus/S 19`, `Stimulus/S 20`, `Stimulus/S 21`, `Stimulus/S 22`, `Stimulus/S 23`, `Stimulus/S 24`, `Stimulus/S 25`, `Stimulus/S 26`, `Stimulus/S 27`, `Stimulus/S 28`, `Stimulus/S 29`, `Stimulus/S 30`, `Stimulus/S 31`, `Stimulus/S 32`, `Stimulus/S 33`, `Stimulus/S 34`, `Stimulus/S 35`, `Stimulus/S 36`, `Stimulus/S 37`, `Stimulus/S 38`, `Stimulus/S 39`, `Stimulus/S 40`, `Stimulus/S 41`, `Stimulus/S 42`, `Stimulus/S 43`, `Stimulus/S 44`, `Stimulus/S 45`, `Stimulus/S 46`, `Stimulus/S 47`, `Stimulus/S 48`, `Stimulus/S 49`, `Stimulus/S 50`, `Stimulus/S 51`, `Stimulus/S 52`, `Stimulus/S 53`, `Stimulus/S 54`, `Stimulus/S 55`, `Stimulus/S 56`, `Stimulus/S 57`]
++- **Label Route**: `info`
++- **Label Field**: `Stimulus/S 5`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Event | y | Meaning |
++  |-------|---|---------|
++  | `Stimulus/S 4` | 0 | Exemplar image 1 |
++  | `Stimulus/S 5` | 1 | Exemplar image 2 |
++  | `Stimulus/S 6` | 2 | Exemplar image 3 |
++  | `Stimulus/S 7` | 3 | Exemplar image 4 |
++  | ... | ... | ... |
++  | `Stimulus/S 57` | 53 | Exemplar image 54 |
++- **Evidence**:
++  - DOI: 10.1016/j.cub.2025.03.062 — Uses representational similarity analysis on EEG responses to individual exemplar images (64 images across 4 categories) to track age-related changes in neural object coding patterns.
++- **Kernel Notes**: 60+ exemplar codes with ~1313-1315 trials each provide sufficient stimulus diversity for RSA. Standard 1s post-stimulus window captures neural object coding patterns. Exclude category codes S65-S69 (used for classification tasks) and fixation markers S99/admin: fixation_marker.
++### Potential Task 3: Representational Similarity Analysis (RSA) - Exemplar Level — Stimulus/S 6
++- **Task Type**: encoding/rsa
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = [`Stimulus/S 4`, `Stimulus/S 5`, `Stimulus/S 6`, `Stimulus/S 7`, `Stimulus/S 8`, `Stimulus/S 9`, `Stimulus/S 10`, `Stimulus/S 11`, `Stimulus/S 12`, `Stimulus/S 13`, `Stimulus/S 14`, `Stimulus/S 15`, `Stimulus/S 16`, `Stimulus/S 17`, `Stimulus/S 18`, `Stimulus/S 19`, `Stimulus/S 20`, `Stimulus/S 21`, `Stimulus/S 22`, `Stimulus/S 23`, `Stimulus/S 24`, `Stimulus/S 25`, `Stimulus/S 26`, `Stimulus/S 27`, `Stimulus/S 28`, `Stimulus/S 29`, `Stimulus/S 30`, `Stimulus/S 31`, `Stimulus/S 32`, `Stimulus/S 33`, `Stimulus/S 34`, `Stimulus/S 35`, `Stimulus/S 36`, `Stimulus/S 37`, `Stimulus/S 38`, `Stimulus/S 39`, `Stimulus/S 40`, `Stimulus/S 41`, `Stimulus/S 42`, `Stimulus/S 43`, `Stimulus/S 44`, `Stimulus/S 45`, `Stimulus/S 46`, `Stimulus/S 47`, `Stimulus/S 48`, `Stimulus/S 49`, `Stimulus/S 50`, `Stimulus/S 51`, `Stimulus/S 52`, `Stimulus/S 53`, `Stimulus/S 54`, `Stimulus/S 55`, `Stimulus/S 56`, `Stimulus/S 57`]
++- **Label Route**: `info`
++- **Label Field**: `Stimulus/S 6`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Event | y | Meaning |
++  |-------|---|---------|
++  | `Stimulus/S 4` | 0 | Exemplar image 1 |
++  | `Stimulus/S 5` | 1 | Exemplar image 2 |
++  | `Stimulus/S 6` | 2 | Exemplar image 3 |
++  | `Stimulus/S 7` | 3 | Exemplar image 4 |
++  | ... | ... | ... |
++  | `Stimulus/S 57` | 53 | Exemplar image 54 |
++- **Evidence**:
++  - DOI: 10.1016/j.cub.2025.03.062 — Uses representational similarity analysis on EEG responses to individual exemplar images (64 images across 4 categories) to track age-related changes in neural object coding patterns.
++- **Kernel Notes**: 60+ exemplar codes with ~1313-1315 trials each provide sufficient stimulus diversity for RSA. Standard 1s post-stimulus window captures neural object coding patterns. Exclude category codes S65-S69 (used for classification tasks) and fixation markers S99/admin: fixation_marker.
++### Potential Task 4: Representational Similarity Analysis (RSA) - Exemplar Level — Stimulus/S 7
++- **Task Type**: encoding/rsa
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = [`Stimulus/S 4`, `Stimulus/S 5`, `Stimulus/S 6`, `Stimulus/S 7`, `Stimulus/S 8`, `Stimulus/S 9`, `Stimulus/S 10`, `Stimulus/S 11`, `Stimulus/S 12`, `Stimulus/S 13`, `Stimulus/S 14`, `Stimulus/S 15`, `Stimulus/S 16`, `Stimulus/S 17`, `Stimulus/S 18`, `Stimulus/S 19`, `Stimulus/S 20`, `Stimulus/S 21`, `Stimulus/S 22`, `Stimulus/S 23`, `Stimulus/S 24`, `Stimulus/S 25`, `Stimulus/S 26`, `Stimulus/S 27`, `Stimulus/S 28`, `Stimulus/S 29`, `Stimulus/S 30`, `Stimulus/S 31`, `Stimulus/S 32`, `Stimulus/S 33`, `Stimulus/S 34`, `Stimulus/S 35`, `Stimulus/S 36`, `Stimulus/S 37`, `Stimulus/S 38`, `Stimulus/S 39`, `Stimulus/S 40`, `Stimulus/S 41`, `Stimulus/S 42`, `Stimulus/S 43`, `Stimulus/S 44`, `Stimulus/S 45`, `Stimulus/S 46`, `Stimulus/S 47`, `Stimulus/S 48`, `Stimulus/S 49`, `Stimulus/S 50`, `Stimulus/S 51`, `Stimulus/S 52`, `Stimulus/S 53`, `Stimulus/S 54`, `Stimulus/S 55`, `Stimulus/S 56`, `Stimulus/S 57`]
++- **Label Route**: `info`
++- **Label Field**: `Stimulus/S 7`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Event | y | Meaning |
++  |-------|---|---------|
++  | `Stimulus/S 4` | 0 | Exemplar image 1 |
++  | `Stimulus/S 5` | 1 | Exemplar image 2 |
++  | `Stimulus/S 6` | 2 | Exemplar image 3 |
++  | `Stimulus/S 7` | 3 | Exemplar image 4 |
++  | ... | ... | ... |
++  | `Stimulus/S 57` | 53 | Exemplar image 54 |
++- **Evidence**:
++  - DOI: 10.1016/j.cub.2025.03.062 — Uses representational similarity analysis on EEG responses to individual exemplar images (64 images across 4 categories) to track age-related changes in neural object coding patterns.
++- **Kernel Notes**: 60+ exemplar codes with ~1313-1315 trials each provide sufficient stimulus diversity for RSA. Standard 1s post-stimulus window captures neural object coding patterns. Exclude category codes S65-S69 (used for classification tasks) and fixation markers S99/admin: fixation_marker.
++### Potential Task 5: Representational Similarity Analysis (RSA) - Exemplar Level — ...
++- **Task Type**: encoding/rsa
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = [`Stimulus/S 4`, `Stimulus/S 5`, `Stimulus/S 6`, `Stimulus/S 7`, `Stimulus/S 8`, `Stimulus/S 9`, `Stimulus/S 10`, `Stimulus/S 11`, `Stimulus/S 12`, `Stimulus/S 13`, `Stimulus/S 14`, `Stimulus/S 15`, `Stimulus/S 16`, `Stimulus/S 17`, `Stimulus/S 18`, `Stimulus/S 19`, `Stimulus/S 20`, `Stimulus/S 21`, `Stimulus/S 22`, `Stimulus/S 23`, `Stimulus/S 24`, `Stimulus/S 25`, `Stimulus/S 26`, `Stimulus/S 27`, `Stimulus/S 28`, `Stimulus/S 29`, `Stimulus/S 30`, `Stimulus/S 31`, `Stimulus/S 32`, `Stimulus/S 33`, `Stimulus/S 34`, `Stimulus/S 35`, `Stimulus/S 36`, `Stimulus/S 37`, `Stimulus/S 38`, `Stimulus/S 39`, `Stimulus/S 40`, `Stimulus/S 41`, `Stimulus/S 42`, `Stimulus/S 43`, `Stimulus/S 44`, `Stimulus/S 45`, `Stimulus/S 46`, `Stimulus/S 47`, `Stimulus/S 48`, `Stimulus/S 49`, `Stimulus/S 50`, `Stimulus/S 51`, `Stimulus/S 52`, `Stimulus/S 53`, `Stimulus/S 54`, `Stimulus/S 55`, `Stimulus/S 56`, `Stimulus/S 57`]
++- **Label Route**: `info`
++- **Label Field**: `...`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Event | y | Meaning |
++  |-------|---|---------|
++  | `Stimulus/S 4` | 0 | Exemplar image 1 |
++  | `Stimulus/S 5` | 1 | Exemplar image 2 |
++  | `Stimulus/S 6` | 2 | Exemplar image 3 |
++  | `Stimulus/S 7` | 3 | Exemplar image 4 |
++  | ... | ... | ... |
++  | `Stimulus/S 57` | 53 | Exemplar image 54 |
++- **Evidence**:
++  - DOI: 10.1016/j.cub.2025.03.062 — Uses representational similarity analysis on EEG responses to individual exemplar images (64 images across 4 categories) to track age-related changes in neural object coding patterns.
++- **Kernel Notes**: 60+ exemplar codes with ~1313-1315 trials each provide sufficient stimulus diversity for RSA. Standard 1s post-stimulus window captures neural object coding patterns. Exclude category codes S65-S69 (used for classification tasks) and fixation markers S99/admin: fixation_marker.
++### Potential Task 6: Representational Similarity Analysis (RSA) - Exemplar Level — Stimulus/S 57
++- **Task Type**: encoding/rsa
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = [`Stimulus/S 4`, `Stimulus/S 5`, `Stimulus/S 6`, `Stimulus/S 7`, `Stimulus/S 8`, `Stimulus/S 9`, `Stimulus/S 10`, `Stimulus/S 11`, `Stimulus/S 12`, `Stimulus/S 13`, `Stimulus/S 14`, `Stimulus/S 15`, `Stimulus/S 16`, `Stimulus/S 17`, `Stimulus/S 18`, `Stimulus/S 19`, `Stimulus/S 20`, `Stimulus/S 21`, `Stimulus/S 22`, `Stimulus/S 23`, `Stimulus/S 24`, `Stimulus/S 25`, `Stimulus/S 26`, `Stimulus/S 27`, `Stimulus/S 28`, `Stimulus/S 29`, `Stimulus/S 30`, `Stimulus/S 31`, `Stimulus/S 32`, `Stimulus/S 33`, `Stimulus/S 34`, `Stimulus/S 35`, `Stimulus/S 36`, `Stimulus/S 37`, `Stimulus/S 38`, `Stimulus/S 39`, `Stimulus/S 40`, `Stimulus/S 41`, `Stimulus/S 42`, `Stimulus/S 43`, `Stimulus/S 44`, `Stimulus/S 45`, `Stimulus/S 46`, `Stimulus/S 47`, `Stimulus/S 48`, `Stimulus/S 49`, `Stimulus/S 50`, `Stimulus/S 51`, `Stimulus/S 52`, `Stimulus/S 53`, `Stimulus/S 54`, `Stimulus/S 55`, `Stimulus/S 56`, `Stimulus/S 57`]
++- **Label Route**: `info`
++- **Label Field**: `Stimulus/S 57`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Event | y | Meaning |
++  |-------|---|---------|
++  | `Stimulus/S 4` | 0 | Exemplar image 1 |
++  | `Stimulus/S 5` | 1 | Exemplar image 2 |
++  | `Stimulus/S 6` | 2 | Exemplar image 3 |
++  | `Stimulus/S 7` | 3 | Exemplar image 4 |
++  | ... | ... | ... |
++  | `Stimulus/S 57` | 53 | Exemplar image 54 |
++- **Evidence**:
++  - DOI: 10.1016/j.cub.2025.03.062 — Uses representational similarity analysis on EEG responses to individual exemplar images (64 images across 4 categories) to track age-related changes in neural object coding patterns.
++- **Kernel Notes**: 60+ exemplar codes with ~1313-1315 trials each provide sufficient stimulus diversity for RSA. Standard 1s post-stimulus window captures neural object coding patterns. Exclude category codes S65-S69 (used for classification tasks) and fixation markers S99/admin: fixation_marker.

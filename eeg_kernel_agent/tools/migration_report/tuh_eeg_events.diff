@@ -1,0 +1,53 @@
+--- tuh_eeg_events/analysis.md (pre-v3)
++++ tuh_eeg_events/analysis.md (v3)
+@@ -34,19 +34,21 @@
+ 
+ ## Tasks
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Classical Task 1: Neurological EEG event detection/classification
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
+-- **Label Route**: `event`
++- **Label Route**: `info`
+ - **Target Definition**: Event classes from expert annotations (e.g., spikes, periodic discharges, artifacts, background).
+ - **Evidence**: TUH EEG Events Corpus provides time-stamped multi-class event annotations as the primary benchmark target. Source: https://isip.piconepress.com/projects/tuh_eeg/ DOI: 10.1109/globalsip.2013.6736803
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 1: EEG Event Classification (epoch_by_event)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = see Target Definition
+-- **Label Route**: `event`
++- **Label Route**: `info`
+ - **Target Definition**: Event-to-label mapping table below.
+ - **Notes**: Exclude `eye movement` and `artifact` events from classification targets. For binary detection: background (y=0) vs. any epileptiform event (y=1). `.rec` sidecar files must be present alongside `.edf` files.
+ 
+@@ -57,19 +59,19 @@
+ | `generalized periodic epileptiform discharges` | 2 | GPEDs |
+ | `periodic lateralized epileptiform discharges` | 3 | PLEDs |
+ 
+-### Potential Task 2: Epileptiform vs. Normal EEG Detection (epoch_by_event)
++### Potential Task 1: Epileptiform vs. Normal EEG Detection (epoch_by_event)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = see Target Definition
+ - **Label Route**: `event`
+ - **Target Definition**: Event-to-label mapping table below.
+ 
+-| Event | y | Meaning |
+-|-------|---|-|
+-| `background` | 0 | Normal EEG |
+-| `spike and sharp wave` | 1 | Epileptiform |
+-| `generalized periodic epileptiform discharges` | 1 | Epileptiform |
+-| `periodic lateralized epileptiform discharges` | 1 | Epileptiform |
++  | Event ID | y | Meaning |
++  |---|---|---|
++  | `background` | 0 | Normal EEG |
++  | `spike and sharp wave` | 1 | Epileptiform |
++  | `generalized periodic epileptiform discharges` | 1 | Epileptiform |
++  | `periodic lateralized epileptiform discharges` | 1 | Epileptiform |
+ 
+ ## Data Quality Notes
+ 

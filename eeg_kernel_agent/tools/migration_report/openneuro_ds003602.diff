@@ -1,0 +1,81 @@
+--- openneuro_ds003602/analysis.md (pre-v3)
++++ openneuro_ds003602/analysis.md (v3)
+@@ -3,7 +3,7 @@
+ **Dataset**: `openneuro_ds003602` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003602
+ **Category**: High-level Mental | **Subjects**: 234 | **Files (Completed)**: 699
+ **Channels**: 35 | **Sampling Rate**: 1000 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -192,11 +192,12 @@
+ 
+ ## Tasks
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Classical Task 1: Emotional Valence Classification (Multiclass)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset)
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
+ - **Target Definition**: Event-to-label mapping for valence conditions.
+ - **Meta Level**: raw
+ 
+@@ -209,11 +210,12 @@
+ - **Evidence**: Paradigm described in dataset publication; emotional picture viewing with standardized valence categories is a well-established EEG paradigm (International Affective Picture System). DOI: https://doi.org/10.18112/openneuro.ds003602.v1.0.1
+ - **Kernel Notes**: Use general valence events (NegStim/NeuStim/PosStim) for primary classification. Exclude alcohol-specific variants (NegAlc*, PosAlc*, etc.) for clean valence-only labels. 230 trials per condition ensures balanced classes.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Classical Task 2: Alcohol Cue Reactivity Classification
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.5 s (relative to event onset)
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
+ - **Target Definition**: Event-to-label mapping for alcohol vs non-alcohol content.
+ - **Meta Level**: raw
+ 
+@@ -229,11 +231,12 @@
+ - **Evidence**: Alcohol cue reactivity paradigm is a standard addiction neuroscience protocol; dataset specifically examines CSA-problem drinking links. DOI: https://doi.org/10.18112/openneuro.ds003602.v1.0.1
+ - **Kernel Notes**: Use "WithoutStartle" variants for clean alcohol/non-alcohol comparison (690 trials each class). Extended tmax=1.5s captures late positive complex (LPC) associated with appetitive processing. Can stratify by valence for 2x3 design.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Classical Task 3: Resting-State Classification
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 120.0 s (per block)
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
+ - **Target Definition**: Rest block type labels.
+ - **Meta Level**: raw
+ 
+@@ -279,11 +282,12 @@
+ - **Evidence**: Startle probe timing variants present in dataset (230 trials per condition); startle reflex paradigm is established in affective neuroscience.
+ - **Kernel Notes**: P1000/P2000/P3000 indicate startle probes delivered at 1 s, 2 s, or 3 s after picture onset. Can analyze probe timing × valence interactions or align epochs to probe onset for startle response ERPs.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 1: Trauma × Emotion Interaction Analysis
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset)
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
+ - **Target Definition**: Combined valence × subject group labels (requires behavioral/clinical data merge).
+ - **Meta Level**: super
+ 
+@@ -297,11 +301,11 @@
+ - **Evidence**: Dataset explicitly studies CSA-problem drinking links; subject-level clinical data (CSA history, problem drinking measures) available in phenotype data.
+ - **Kernel Notes**: Requires merging EEG epochs with behavioral/clinical annotations (super-level meta). Hypothesis: CSA history modulates emotional reactivity to negative stimuli. 234 subjects provides adequate sample for subgroup analysis.
+ 
+-### Potential Task 2: Problem Drinking Severity Regression
++### Potential Task 1: Problem Drinking Severity Regression
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.5 s (relative to event onset)
+-- **Label Route**: `Annotation`
++- **Label Route**: `misc`
+ - **Target Definition**: Continuous AUDIT/ADS scores as target variable.
+ - **Meta Level**: super
+ 

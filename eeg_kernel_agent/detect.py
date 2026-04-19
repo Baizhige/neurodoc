@@ -508,6 +508,38 @@ def segmentation_requires_empty_target_events(analysis_text: str, **_) -> tuple[
     return False, ""
 
 
+_EPOCH_METHOD_REQUIRED_KEYS: dict[str, set[str]] = {
+    "epoch_by_event_hdf5": {"tmin", "tmax", "target_events"},
+    "epoch_by_long_event_hdf5": {"tmin", "tmax", "overlap", "target_events"},
+    "epoch_by_segmentation_hdf5": {"segment_length", "overlap"},
+}
+
+
+@_cc
+def epoch_parameters_complete(analysis_text: str, **_) -> tuple[bool, str]:
+    """Each Task's Epoch Parameters must contain the minimum keys for its Epoch Method
+    (rulebook 第69–72条). Extra MNE keys are allowed; only the minimum set is enforced."""
+    tasks_text = _extract_section(analysis_text, "Tasks")
+    if not tasks_text:
+        return False, ""
+    missing: list[str] = []
+    for block in _split_task_blocks(tasks_text):
+        raw_method = _task_field(block, "Epoch Method")
+        method = raw_method.strip().strip("`").lower()
+        required = _EPOCH_METHOD_REQUIRED_KEYS.get(method)
+        if not required:
+            # Unknown/absent Epoch Method — a different rule already flags this; skip.
+            continue
+        params = _task_field(block, "Epoch Parameters")
+        present = {m.group(1) for m in re.finditer(r"\b(\w+)\s*=", params)}
+        absent = sorted(required - present)
+        if absent:
+            missing.append(f"{_task_title(block)}: [{method}] missing {absent}")
+    if missing:
+        return True, "; ".join(missing)
+    return False, ""
+
+
 @_cc
 def misc_route_requires_section(analysis_text: str, **_) -> tuple[bool, str]:
     """Label Route=misc requires ### MISC Label Summary to exist."""
@@ -844,6 +876,61 @@ def _check_rule(
             detail = ""
 
     return violated, detail
+
+
+# ── In-memory checker (used by app server) ───────────────────────────────────
+
+def load_rules(rulebook_path: Path | str | None = None) -> list[dict]:
+    """Load the semantic rulebook. Caller-friendly wrapper around yaml.safe_load."""
+    path = Path(rulebook_path) if rulebook_path else DEFAULT_RULEBOOK
+    if not path.exists():
+        return []
+    return yaml.safe_load(path.read_text(encoding="utf-8")).get("rules", []) or []
+
+
+def check_analysis_text(
+    analysis_text: str,
+    dataset_name: str = "",
+    kernel_text: str = "",
+    severity_filter: str | None = None,
+    rules: list[dict] | None = None,
+    rulebook_path: Path | str | None = None,
+) -> list[dict]:
+    """Run rules against an in-memory analysis.md string (no disk I/O).
+
+    Used by app/server.py to validate unsaved content. Skips rules whose
+    `target` is `kernel` when no kernel_text is supplied.
+    """
+    if rules is None:
+        rules = load_rules(rulebook_path)
+
+    violations: list[dict] = []
+    for rule in rules:
+        sev = rule.get("severity", "warning")
+        if severity_filter and sev != severity_filter:
+            continue
+
+        target = rule.get("target", "analysis_md")
+        texts_to_check: list[tuple[str, str]] = []
+        if target in ("analysis_md", "both") and analysis_text:
+            texts_to_check.append(("analysis_md", analysis_text))
+        if target in ("kernel", "both") and kernel_text:
+            texts_to_check.append(("kernel", kernel_text))
+
+        for file_type, text in texts_to_check:
+            violated, detail = _check_rule(
+                text, rule, dataset_name=dataset_name, kernel_text=kernel_text
+            )
+            if violated:
+                violations.append({
+                    "dataset": dataset_name,
+                    "rule_id": rule["id"],
+                    "severity": sev,
+                    "target": file_type,
+                    "desc": rule.get("desc", ""),
+                    "detail": detail,
+                })
+    return violations
 
 
 # ── Dataset checker ───────────────────────────────────────────────────────────

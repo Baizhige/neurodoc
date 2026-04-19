@@ -1,0 +1,33 @@
+--- openneuro_ds004196/analysis.md (pre-v3)
++++ openneuro_ds004196/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004196` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004196
+ **Category**: High-level Mental | **Subjects**: 4 | **Files (Completed)**: 4 | **Channels**: 73 | **Sampling Rate**: 512 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -46,8 +46,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `event_111` | 0 | Social word: child |
+   | `event_112` | 0 | Social word: daughter |
+   | `event_113` | 0 | Social word: father |
+@@ -69,8 +69,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `event_111` | 0 | Social word: child |
+   | `event_112` | 1 | Social word: daughter |
+   | `event_113` | 2 | Social word: father |

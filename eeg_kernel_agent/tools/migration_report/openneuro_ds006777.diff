@@ -1,0 +1,48 @@
+--- openneuro_ds006777/analysis.md (pre-v3)
++++ openneuro_ds006777/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds006777` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006777
+ **Category**: Sensory/Response | **Subjects**: 132 | **Files (Completed)**: 132 | **Channels**: 73 | **Sampling Rate**: 512 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -28,6 +28,13 @@
+ | `event_65539` | 1 | admin | raw | System artifact (exclude) |
+ | `event_65737` | 483 | admin | raw | System artifact (exclude) |
+ 
++
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `Subject-level covariate` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
+ 
+ ### Info
+ | Field | Completeness | Notes |
+@@ -86,16 +93,17 @@
+ - **Kernel Notes**: Epochs locked to event_1 (Response_button) isolate motor preparation (LRP) and execution components. A 600 ms pre-response window captures motor preparation; 400 ms post-response covers post-movement rebound. Baseline correction: −0.6 to −0.4 s relative to response. Analyze separately from stimulus-locked epochs to avoid conflation of sensory and motor activity.
+ 
+ ### Potential Task 1: Group Membership Prediction (ASD vs. Neurotypical)
+-- **Task Type**: classification
++- **Task Type**: regression
+ - **Epoch Method**: epoch_by_segmentation_hdf5
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s
+-- **Label Route**: misc
++- **Label Route**: `misc`
++- **Label Field**: `Subject-level covariate`
+ - **Meta Level**: super
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|---|---|---|
+-| Subject-level covariate | group_label | ASD vs. NT group membership from participant metadata |
++  | MISC Channel | Value | Notes |
++  |---|---|---|
++  | Subject-level covariate | group_label | ASD vs. NT group membership from participant metadata |
+ 
+ - **Evidence** (DOI): https://doi.org/10.18112/openneuro.ds006777.v1.0.0
+ - **Kernel Notes**: SFARI cohort includes ASD and neurotypical participants. Group membership is a subject-level covariate, not an event label; route via misc with source (participant metadata) and version metadata. May be combined with stimulus-locked epochs for group-difference decoding.

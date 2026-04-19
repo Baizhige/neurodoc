@@ -1,0 +1,36 @@
+--- figshare_stroke/analysis.md (pre-v3)
++++ figshare_stroke/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `figshare_stroke` | **Year**: 2022 | **URL**: https://figshare.com/articles/dataset/EEG_datasets_of_stroke_patients/21679035/5
+ **Category**: Action/Output | **Subjects**: 50 | **Files (Completed)**: 50 | **Channels**: 33 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Jiping Cui
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -41,8 +41,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Motor imagery beginning - Left hand` | 0 | Left-hand motor imagery |
+   | `Motor imagery beginning - Right hand` | 1 | Right-hand motor imagery |
+ - **Evidence**:
+@@ -51,11 +51,12 @@
+   - DOI: 10.48084/etasr.15300 — Uses figshare stroke motor imagery dataset (50 patients, 40 trials each) to classify left-hand vs right-hand motor imagery EEG signals using CNN, LSTM, and hybrid CNN-LSTM models.
+ - **Kernel Notes**: tmin=0.0s marks MI onset precisely per event markers. Some papers use tmin=0.5s or 1.0s to avoid residual Visual Evoked Potentials (VEPs) from the preceding instruction cue.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 2: Stroke Patient Subgroup Classification (epoch_by_event)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, target_events = see Target Definition
+-- **Label Route**: `event`
++- **Label Route**: `info`
+ - **Target Definition**: Same as Task 1 (MI events); group labels (age, lesion side, etc.) from `participants.tsv`.
+ - **Notes**: Clinical metadata (age, sex, stroke side, handedness) is embedded in the kernel's `_SUBJECT_DICT`. Cross-subject analysis with clinical covariates is the primary use case.
+ 

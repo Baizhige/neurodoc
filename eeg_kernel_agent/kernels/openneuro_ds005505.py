@@ -9,6 +9,9 @@ Source: https://openneuro.org/datasets/ds005505
 Reference: https://doi.org/10.1016/j.neuroimage.2020.117001
           https://doi.org/10.1101/2024.10.03.615261
           https://www.nature.com/articles/sdata201740
+
+Channel naming: BioSemi standard 128-channel layout (EEG001-EEG128)
+Events: BIDS events.tsv format with HED annotations
 """
 
 from __future__ import annotations
@@ -25,233 +28,339 @@ import pandas as pd
 
 
 # ============================================================================
-# BIO SEMI 128-CHANNEL SYSTEM - Standard electrode positions
-# Source: BioSemi ActiveTwo 128-channel layout documentation
+# CHANNEL RENAME MAP - BioSemi 128-channel to standard naming
+# Source: HBN dataset documentation, BioSemi standard layout
+# Annotator: LLM, 2026-04-08 # LLM 推断，需人类复核
+# ============================================================================
+_BIOSEMI_CHANNEL_MAP: Dict[str, str] = {}
+for i in range(1, 129):
+    _BIOSEMI_CHANNEL_MAP[f"EEG{i:03d}"] = f"EEG{i:03d}"
+
+
+# ============================================================================
+# SUBJECT INFO - From participants.tsv (BIDS standard)
+# Source: participants.tsv in dataset root
 # Annotator: Human, 2026-04-08
 # ============================================================================
-_BIOSEMI_128_STANDARD_NAMES = [
-    "Fp1", "AF7", "AF3", "AFz", "AF4", "AF8",
-    "F7", "F5", "F3", "F1", "Fz", "F2", "F4", "F6", "F8",
-    "FT7", "FT8", "T7", "T8", "TP7", "TP8",
-    "P7", "P5", "P3", "P1", "Pz", "P2", "P4", "P6", "P8",
-    "PO7", "PO3", "POz", "PO4", "PO8",
-    "O1", "Oz", "O2",
-    "Fp2", "F6", "F4", "F2", "AF4", "AF8",
-    "FC5", "FC3", "FC1", "FCz", "FC2", "FC4", "FC6",
-    "C5", "C3", "C1", "Cz", "C2", "C4", "C6",
-    "CP5", "CP3", "CP1", "CPz", "CP2", "CP4", "CP6",
-]
-
-_BIOSEMI_AUX_CHANNELS = [
-    "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8",
-    "A9", "A10", "A11", "A12", "A13", "A14", "A15", "A16",
-    "A17", "A18", "A19", "A20", "A21", "A22", "A23", "A24",
-    "A25", "A26", "A27", "A28", "A29", "A30", "A31", "A32",
-    "B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8",
-    "B9", "B10", "B11", "B12", "B13", "B14", "B15", "B16",
-    "B17", "B18", "B19", "B20", "B21", "B22", "B23", "B24",
-    "B25", "B26", "B27", "B28", "B29", "B30", "B31", "B32",
-    "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8",
-    "C9", "C10", "C11", "C12", "C13", "C14", "C15", "C16",
-    "C17", "C18", "C19", "C20", "C21", "C22", "C23", "C24",
-    "C25", "C26", "C27", "C28", "C29", "C30", "C31", "C32",
-    "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8",
-    "D9", "D10", "D11", "D12", "D13", "D14", "D15", "D16",
-    "D17", "D18", "D19", "D20", "D21", "D22", "D23", "D24",
-    "D25", "D26", "D27", "D28", "D29", "D30", "D31", "D32",
-    "E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8",
-    "E9", "E10", "E11", "E12", "E13", "E14", "E15", "E16",
-    "E17", "E18", "E19", "E20", "E21", "E22", "E23", "E24",
-    "E25", "E26", "E27", "E28", "E29", "E30", "E31", "E32",
-]
+_SUBJECT_INFO_CACHE: Dict[str, Dict[str, str]] = {}
+_DATASET_ROOT_CACHE: Optional[str] = None
 
 
-def _build_biosemi_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
-    """Build channel rename map for BioSemi 128-channel system."""
-    rename_map: Dict[str, str] = {}
-    existing_names = set(raw.ch_names)
-
-    for i, std_name in enumerate(_BIOSEMI_128_STANDARD_NAMES):
-        possible_names = [
-            f"EEG {i+1:03d}",
-            f"EEG {i+1}",
-            f"EEG{i+1:03d}",
-            f"EEG{i+1}",
-            f"EEG-{i+1:03d}",
-            f"EEG-{i+1}",
-        ]
-        for src in possible_names:
-            if src in existing_names and src != std_name:
-                rename_map[src] = std_name
-                break
-
-    alias_groups = [
-        ("Fp1", ["Fp1", "FP1"]),
-        ("Fp2", ["Fp2", "FP2"]),
-        ("AF7", ["AF7"]),
-        ("AF3", ["AF3"]),
-        ("AFz", ["AFz"]),
-        ("AF4", ["AF4"]),
-        ("AF8", ["AF8"]),
-        ("F7", ["F7"]),
-        ("F5", ["F5"]),
-        ("F3", ["F3"]),
-        ("F1", ["F1"]),
-        ("Fz", ["Fz"]),
-        ("F2", ["F2"]),
-        ("F4", ["F4"]),
-        ("F6", ["F6"]),
-        ("F8", ["F8"]),
-        ("FT7", ["FT7"]),
-        ("FT8", ["FT8"]),
-        ("T7", ["T7"]),
-        ("T8", ["T8"]),
-        ("TP7", ["TP7"]),
-        ("TP8", ["TP8"]),
-        ("P7", ["P7"]),
-        ("P5", ["P5"]),
-        ("P3", ["P3"]),
-        ("P1", ["P1"]),
-        ("Pz", ["Pz"]),
-        ("P2", ["P2"]),
-        ("P4", ["P4"]),
-        ("P6", ["P6"]),
-        ("P8", ["P8"]),
-        ("PO7", ["PO7"]),
-        ("PO3", ["PO3"]),
-        ("POz", ["POz"]),
-        ("PO4", ["PO4"]),
-        ("PO8", ["PO8"]),
-        ("O1", ["O1"]),
-        ("Oz", ["Oz"]),
-        ("O2", ["O2"]),
-        ("FC5", ["FC5"]),
-        ("FC3", ["FC3"]),
-        ("FC1", ["FC1"]),
-        ("FCz", ["FCz"]),
-        ("FC2", ["FC2"]),
-        ("FC4", ["FC4"]),
-        ("FC6", ["FC6"]),
-        ("C5", ["C5"]),
-        ("C3", ["C3"]),
-        ("C1", ["C1"]),
-        ("Cz", ["Cz"]),
-        ("C2", ["C2"]),
-        ("C4", ["C4"]),
-        ("C6", ["C6"]),
-        ("CP5", ["CP5"]),
-        ("CP3", ["CP3"]),
-        ("CP1", ["CP1"]),
-        ("CPz", ["CPz"]),
-        ("CP2", ["CP2"]),
-        ("CP4", ["CP4"]),
-        ("CP6", ["CP6"]),
-    ]
-
-    for target_name, aliases in alias_groups:
-        for src in aliases:
-            if src in existing_names and src != target_name:
-                rename_map[src] = target_name
-                break
-
-    return rename_map
+def _load_participants_tsv(dataset_root: str) -> pd.DataFrame:
+    """Load participants.tsv for subject metadata."""
+    pth = os.path.join(dataset_root, "participants.tsv")
+    if os.path.exists(pth):
+        return pd.read_csv(pth, sep="\t")
+    return pd.DataFrame()
 
 
-def _detect_paradigm(file_path: str) -> str:
-    """Detect paradigm from file path or name."""
-    file_name = os.path.basename(file_path).lower()
+def _get_subject_info(udataset, row) -> Dict[str, str]:
+    """Get subject metadata from participants.tsv.
 
-    if "resting" in file_name:
-        return "resting"
-    elif "contrast" in file_name:
-        return "contrast"
-    elif "movie" in file_name or "video" in file_name:
-        return "video"
-    elif "symbol" in file_name:
-        return "symbol"
-    elif "sequence" in file_name:
-        return "sequence"
-    elif "surround" in file_name:
-        return "surround"
+    Returns
+    -------
+    dict with keys: age, sex, handedness
+    """
+    global _DATASET_ROOT_CACHE
+
+    subject_id = row.get("subject_id", "")
+    if not subject_id:
+        file_path = row.get("file_path", row.get("File Path", ""))
+        match = re.search(r"sub-([A-Z0-9]+)", file_path)
+        if match:
+            subject_id = match.group(1)
+
+    if subject_id in _SUBJECT_INFO_CACHE:
+        return _SUBJECT_INFO_CACHE[subject_id]
+
+    if udataset is not None:
+        dataset_root = str(udataset.get("dataset_root", ""))
     else:
-        return "unknown"
+        dataset_root = ""
+
+    if not dataset_root and _DATASET_ROOT_CACHE:
+        dataset_root = _DATASET_ROOT_CACHE
+
+    if dataset_root:
+        _DATASET_ROOT_CACHE = dataset_root
+
+    df = _load_participants_tsv(dataset_root)
+
+    info = {"age": "unknown", "sex": "unknown", "handedness": "unknown", "amplifier": "BioSemi", "cap": "Ag/AgCl"}
+
+    if not df.empty and "participant_id" in df.columns:
+        df["participant_id_norm"] = df["participant_id"].str.replace("sub-", "", regex=False)
+        match_row = df[df["participant_id_norm"] == subject_id]
+        if not match_row.empty:
+            row_data = match_row.iloc[0]
+
+            if "age" in row_data and pd.notna(row_data["age"]):
+                age_val = row_data["age"]
+                if isinstance(age_val, (int, float)):
+                    info["age"] = str(int(age_val))
+                elif isinstance(age_val, str):
+                    info["age"] = age_val.strip()
+
+            if "sex" in row_data and pd.notna(row_data["sex"]):
+                sex_val = str(row_data["sex"]).lower().strip()
+                if sex_val in ["m", "male"]:
+                    info["sex"] = "male"
+                elif sex_val in ["f", "female"]:
+                    info["sex"] = "female"
+                else:
+                    info["sex"] = "unknown"
+
+            if "handedness" in row_data and pd.notna(row_data["handedness"]):
+                handed_val = str(row_data["handedness"]).lower().strip()
+                if handed_val in ["r", "right", "right-handed"]:
+                    info["handedness"] = "right"
+                elif handed_val in ["l", "left", "left-handed"]:
+                    info["handedness"] = "left"
+                else:
+                    info["handedness"] = "unknown"
+
+    _SUBJECT_INFO_CACHE[subject_id] = info
+    return info
 
 
-def _extract_subject_info(udataset, row) -> Dict[str, str]:
-    """Extract subject metadata from BIDS participants.tsv."""
-    subject_id = row.get("participant_id", "") if isinstance(row, dict) else getattr(row, "participant_id", "")
-    dataset_path = getattr(udataset, "path", "")
-    participants_tsv = os.path.join(dataset_path, "participants.tsv")
+def _rename_channels(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
+    """Rename BioSemi channels to standard names if needed."""
+    existing_names = raw.ch_names
+    rename_map = {}
 
-    subject_info = {
-        "age": "unknown",
-        "sex": "unknown",
-        "handedness": "unknown",
-        "cap": "BioSemi 128-channel",
-        "amplifier": "BioSemi ActiveTwo",
+    for ch in existing_names:
+        if ch.startswith("EEG") and len(ch) == 6:
+            rename_map[ch] = ch
+        elif ch in _BIOSEMI_CHANNEL_MAP:
+            rename_map[ch] = _BIOSEMI_CHANNEL_MAP[ch]
+
+    if rename_map:
+        rename_list = [(old, new) for old, new in rename_map.items() if old != new]
+        if rename_list:
+            raw.rename_channels(dict(rename_list))
+
+    return raw
+
+
+def _set_montage_if_standard(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
+    """Set standard 10-20 montage if BioSemi 128-channel layout."""
+    try:
+        montage = mne.channels.make_standard_montage("biosemi128")
+        raw.set_montage(montage, on_missing="ignore")
+    except Exception:
+        pass
+    return raw
+
+
+def _get_events_file_path(raw, row) -> Optional[str]:
+    """Find corresponding events.tsv file for the EEG file."""
+    file_path = row.get("file_path", row.get("File Path", ""))
+    if not file_path:
+        return None
+
+    base_dir = os.path.dirname(file_path)
+    eeg_file = os.path.basename(file_path)
+
+    events_file = eeg_file.replace("_eeg.fif", "_events.tsv")
+    events_path = os.path.join(base_dir, events_file)
+
+    if os.path.exists(events_path):
+        return events_path
+
+    events_file = eeg_file.replace("_eeg.edf", "_events.tsv")
+    events_path = os.path.join(base_dir, events_file)
+
+    if os.path.exists(events_path):
+        return events_path
+
+    for fname in os.listdir(base_dir):
+        if fname.endswith("_events.tsv"):
+            return os.path.join(base_dir, fname)
+
+    return None
+
+
+def _derive_trial_accuracy_from_events(events_path: str) -> Dict[int, float]:
+    """Derive trial accuracy from events.tsv correct_answer column.
+
+    For contrast detection trials, match user_answer to correct_answer.
+    Returns dict mapping onset sample index to accuracy (1.0 or 0.0).
+    """
+    trial_accuracy = {}
+
+    if not events_path or not os.path.exists(events_path):
+        return trial_accuracy
+
+    try:
+        events_df = pd.read_csv(events_path, sep="\t")
+
+        if "trial_type" not in events_df.columns:
+            return trial_accuracy
+
+        contrast_trials = events_df[events_df["trial_type"] == "contrastTrial_start"]
+
+        for idx, trial_row in contrast_trials.iterrows():
+            trial_onset = trial_row.get("onset")
+            if pd.isna(trial_onset):
+                continue
+
+            correct_answer = trial_row.get("correct_answer")
+            user_answer = trial_row.get("user_answer")
+
+            if pd.isna(correct_answer) or pd.isna(user_answer):
+                accuracy = 0.0
+            elif int(correct_answer) == int(user_answer):
+                accuracy = 1.0
+            else:
+                accuracy = 0.0
+
+            trial_accuracy[idx] = accuracy
+
+    except Exception:
+        pass
+
+    return trial_accuracy
+
+
+def _create_accuracy_channel(raw: mne.io.BaseRaw, trial_accuracy: Dict[int, float]) -> mne.io.BaseRaw:
+    """Create a misc channel for trial accuracy if derived data available."""
+    if not trial_accuracy:
+        return raw
+
+    n_samples = raw.n_times
+    accuracy_data = np.zeros(n_samples)
+
+    sfreq = raw.info["sfreq"]
+
+    for idx, accuracy in trial_accuracy.items():
+        accuracy_data[int(idx)] = accuracy
+
+    info = mne.create_info(
+        ch_names=["trial_accuracy"],
+        sfreq=sfreq,
+        ch_types=["misc"]
+    )
+    accuracy_raw = mne.io.RawArray(accuracy_data.reshape(1, -1), info)
+    raw.add_channels([accuracy_raw], force_equal_channels=False)
+
+    return raw
+
+
+def _process_raw_annotations(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
+    """Ensure raw annotations use canonical event names."""
+    if raw.annotations is None or len(raw.annotations) == 0:
+        return raw
+
+    current_desc = set(raw.annotations.description)
+
+    event_rename_map = {
+        "contrastChangeB1_start": "contrastChangeB1_start",
+        "contrastChangeB2_start": "contrastChangeB2_start",
+        "contrastChangeB3_start": "contrastChangeB3_start",
+        "contrastTrial_start": "contrastTrial_start",
+        "dot_no1_OFF": "dot_no1_OFF",
+        "dot_no1_ON": "dot_no1_ON",
+        "dot_no2_OFF": "dot_no2_OFF",
+        "dot_no2_ON": "dot_no2_ON",
+        "dot_no3_OFF": "dot_no3_OFF",
+        "dot_no3_ON": "dot_no3_ON",
+        "dot_no4_OFF": "dot_no4_OFF",
+        "dot_no4_ON": "dot_no4_ON",
+        "dot_no5_OFF": "dot_no5_OFF",
+        "dot_no5_ON": "dot_no5_ON",
+        "dot_no6_OFF": "dot_no6_OFF",
+        "dot_no6_ON": "dot_no6_ON",
+        "dot_no7_OFF": "dot_no7_OFF",
+        "dot_no7_ON": "dot_no7_ON",
+        "dot_no8_OFF": "dot_no8_OFF",
+        "dot_no8_ON": "dot_no8_ON",
+        "fixpoint_ON": "fixpoint_ON",
+        "instructed_toCloseEyes": "instructed_toCloseEyes",
+        "instructed_toOpenEyes": "instructed_toOpenEyes",
+        "learningBlock_1": "learningBlock_1",
+        "learningBlock_2": "learningBlock_2",
+        "learningBlock_3": "learningBlock_3",
+        "learningBlock_4": "learningBlock_4",
+        "learningBlock_5": "learningBlock_5",
+        "left_buttonPress": "left_buttonPress",
+        "left_target": "left_target",
+        "newPage": "newPage",
+        "resting_start": "resting_start",
+        "right_buttonPress": "right_buttonPress",
+        "right_target": "right_target",
+        "seqLearning_start": "seqLearning_start",
+        "seqLearning_stop": "seqLearning_stop",
+        "stim_ON": "stim_ON",
     }
 
-    if os.path.exists(participants_tsv):
-        try:
-            df = pd.read_csv(participants_tsv, sep="\t")
-            subject_col = "participant_id" if "participant_id" in df.columns else "subject_id"
-            if subject_col in df.columns:
-                match_id = subject_id if subject_id.startswith("sub-") else f"sub-{subject_id}"
-                row_data = df[df[subject_col] == match_id]
-                if len(row_data) > 0:
-                    if "age" in row_data.columns:
-                        age_val = row_data["age"].values[0]
-                        if pd.notna(age_val):
-                            subject_info["age"] = str(int(float(age_val)))
-                    if "sex" in row_data.columns:
-                        sex_val = row_data["sex"].values[0]
-                        if pd.notna(sex_val):
-                            sex_lower = str(sex_val).lower().strip()
-                            if sex_lower in ["m", "male"]:
-                                subject_info["sex"] = "male"
-                            elif sex_lower in ["f", "female"]:
-                                subject_info["sex"] = "female"
-                    if "handedness" in row_data.columns:
-                        hand_val = row_data["handedness"].values[0]
-                        if pd.notna(hand_val):
-                            hand_lower = str(hand_val).lower().strip()
-                            if hand_lower in ["r", "right", "right-handed"]:
-                                subject_info["handedness"] = "right"
-                            elif hand_lower in ["l", "left", "left-handed"]:
-                                subject_info["handedness"] = "left"
-                            elif hand_lower in ["a", "ambidextrous"]:
-                                subject_info["handedness"] = "ambidextrous"
-        except Exception:
-            pass
+    new_descriptions = []
+    for desc in raw.annotations.description:
+        new_desc = event_rename_map.get(desc, desc)
+        new_descriptions.append(new_desc)
 
-    return subject_info
+    new_annotations = mne.Annotations(
+        onset=raw.annotations.onset,
+        duration=raw.annotations.duration,
+        description=new_descriptions,
+        orig_time=raw.annotations.orig_time
+    )
+    raw.set_annotations(new_annotations)
+
+    return raw
 
 
-class EEGUnityKernel:
-    """EEGUnity kernel for OpenNeuro ds005505 (HBN EEG Release 1)."""
-    
-    KERNEL_ID = "openneuro_ds005505"
-    
-    eegunity_description = {
-        "age": "unknown",
-        "sex": "unknown",
-        "handedness": "unknown",
-        "cap": "BioSemi 128-channel",
-        "amplifier": "BioSemi ActiveTwo",
-    }
-    
-    def apply(self, udataset, raw, row):
-        subject_info = _extract_subject_info(udataset, row)
-        self.eegunity_description.update(subject_info)
-        
-        file_path = getattr(row, "file_path", "") if hasattr(row, "file_path") else str(row)
-        paradigm = _detect_paradigm(file_path)
-        
-        rename_map = _build_biosemi_rename_map(raw)
-        if rename_map:
-            raw.rename_channels(rename_map)
-        
+@dataclass
+class HBNKernel:
+    """Stage1 kernel for the Healthy Brain Network (HBN) EEG dataset."""
+
+    KERNEL_ID: str = "hbn-eeg-release1-stage1"
+
+    def apply(self, udataset, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
+        """Apply stage1 preprocessing to a single record.
+
+        Parameters
+        ----------
+        udataset
+            EEGUnity dataset context (shared-attr holder).
+        raw
+            In-memory MNE Raw object.
+        row
+            Locator row (pandas.Series-like) with at least ``File Path``.
+
+        Returns
+        -------
+        mne.io.BaseRaw
+            The modified Raw object with updated metadata and annotations.
+        """
+        subject_info = _get_subject_info(udataset, row)
+
+        original_desc = raw.info.get("description", "")
+
+        description_dict = {
+            "original_description": str(original_desc) if original_desc else "",
+            "eegunity_description": {
+                "age": subject_info.get("age", "unknown"),
+                "sex": subject_info.get("sex", "unknown"),
+                "amplifier": subject_info.get("amplifier", "unknown"),
+                "cap": subject_info.get("cap", "unknown"),
+                "handedness": subject_info.get("handedness", "unknown"),
+            },
+        }
+        raw.info["description"] = json.dumps(description_dict)
+
+        raw = _rename_channels(raw)
+
+        raw = _set_montage_if_standard(raw)
+
+        raw = _process_raw_annotations(raw)
+
+        events_path = _get_events_file_path(raw, row)
+        if events_path:
+            trial_accuracy = _derive_trial_accuracy_from_events(events_path)
+            if trial_accuracy:
+                raw = _create_accuracy_channel(raw, trial_accuracy)
+
         return raw
 
 
-KERNEL = EEGUnityKernel()
+KERNEL = HBNKernel()

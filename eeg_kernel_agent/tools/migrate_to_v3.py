@@ -323,6 +323,16 @@ def _rewrite_task_content(original: str, kind: str, route: str, task_type: str,
             block, count=1,
         )
 
+    # v3: rename Task-scoped `- **Kernel Notes**:` bullet to `- **Notes**:`.
+    # Task scope is enforced by the containing `### (Classical|Potential) Task` block —
+    # this regex only matches bullet-list fields within that block, so it will not touch
+    # the document-level `### Kernel Notes` subsection under `## Kernel Responsibilities`.
+    block = re.sub(
+        r"(-\s*\*\*)Kernel Notes(\*\*\s*:)",
+        r"\1Notes\2",
+        block,
+    )
+
     return block
 
 
@@ -362,7 +372,7 @@ def _ensure_misc_label_summary(analysis_text: str, tasks_text: str) -> str:
 
     rows = ["| Channel | Source | Meta | Notes |", "|---|---|---|---|"]
     for f in fields:
-        rows.append(f"| `{f}` | derived (per Task Kernel Notes) | super "
+        rows.append(f"| `{f}` | derived (per Task Notes) | super "
                     f"| Super Meta — kernel derives per-segmentation value |")
     block = "\n### MISC Label Summary\n\n" + "\n".join(rows) + "\n"
 

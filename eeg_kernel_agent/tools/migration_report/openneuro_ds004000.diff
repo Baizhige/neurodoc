@@ -1,0 +1,93 @@
+--- openneuro_ds004000/analysis.md (pre-v3)
++++ openneuro_ds004000/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004000` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004000
+ **Category**: High-level Mental | **Subjects**: 43 | **Files (Completed)**: 86 | **Channels**: 132 | **Sampling Rate**: 2048 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -71,8 +71,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Stimulus/S 64` | 0 | Healthy control (HC) participant |
+   | `Stimulus/S 64` | 1 | Schizophrenia patient (SCZ) |
+ - **Super Meta Notes**: Labels derived from clinical diagnosis (participants.tsv) not raw event markers. Kernel must load participant diagnosis and merge with epoch labels based on subject ID. The stimulus onset events S64/S96/S128/S160 represent offer/condition markers in the responder condition.
+@@ -84,31 +84,60 @@
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 0.7 s, overlap = 0.0, target_events = [`Stimulus/S 64`, `Stimulus/S 96`, `Stimulus/S128`, `Stimulus/S160`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `Any segment`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Segment | y | Meaning |
+-  |---------|---|---------|
+-  | Any segment | 0 | Healthy control (HC) participant |
+-  | Any segment | 1 | Schizophrenia patient (SCZ) |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | Any segment | 0 | Healthy control (HC) participant |  |
++  | Any segment | 1 | Schizophrenia patient (SCZ) |  |
+ - **Super Meta Notes**: Labels derived from clinical diagnosis (participants.tsv) not raw event markers. Analysis focuses on pre-stimulus window (-0.7s to 0s) during responder condition. Kernel must compute functional connectivity metrics within alpha band (8-13 Hz) for each segment.
+ - **Evidence**:
+   - DOI: 10.1016/j.schres.2023.01.029 — Uses openneuro_ds004000 dataset to analyze EEG dynamic functional connectivity comparing healthy controls and schizophrenia patients during Ultimatum Game responder condition, finding significant fronto-occipital alpha-band connectivity differences in pre-stimulus window. Confirms dataset identity and supports segmentation approach.
+ - **Kernel Notes**: Segment continuous data using 0.7s sliding windows aligned to stimulus onset events with no overlap; compute imaginary coherence in alpha band (8-13 Hz); merge segment labels with participant clinical diagnosis from participants.tsv; exclude segments containing blink artifacts.
+ 
+-### Potential Task 1: Button Press Response Classification during Ultimatum Game Decision
++### Potential Task 1: Button Press Response Classification during Ultimatum Game Decision — Response/R 1
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.3 s, tmax = 0.8 s, target_events = [`Response/R 1`, `Response/R 3`]
++- **Label Route**: `info`
++- **Label Field**: `Response/R 1`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Response/R 1` | 0 | Accept offer response |  |
++  | `Response/R 1` | 1 | Reject offer response |  |
++- **Potential Meta Notes**: Response events R1/R3 indicate button presses for accept/reject decisions. However, these events appear in only 6/1 files respectively, suggesting alternative response encoding or response-locked analysis may require epoching from preceding stimulus events. Behavioral analysis of accept/reject patterns is plausible from paradigm alone.
++- **Evidence**: N/A
++- **Kernel Notes**: Verify response event coding scheme in events.tsv; if R1/R3 presence is limited, consider epoching from stimulus onset and aligning to response events post-hoc; verify mapping of R1 vs R3 to accept/reject.
++
++### Normal Task 1: Fairness Processing Analysis during Ultimatum Game Responder Condition
++- **Task Type**: regression/classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.6 s, target_events = [`Stimulus/S193`, `Stimulus/S194`, `Stimulus/S195`, `Stimulus/S196`, `Stimulus/S197`, `Stimulus/S198`, `Stimulus/S199`, `Stimulus/S200`, `Stimulus/S201`, `Stimulus/S225`, `Stimulus/S226`, `Stimulus/S227`, `Stimulus/S228`, `Stimulus/S229`, `Stimulus/S230`, `Stimulus/S231`, `Stimulus/S232`, `Stimulus/S233`]
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+   | Event | y | Meaning |
+   |-------|---|---------|
+-  | `Response/R 1` | 0 | Accept offer response |
+-  | `Response/R 1` | 1 | Reject offer response |
+-  | `Response/R 3` | 0 | Accept offer response |
+-  | `Response/R 3` | 1 | Reject offer response |
++  | `Stimulus/S193`-`S201` | 0-8 | Offer amount (fairness condition) |
++  | `Stimulus/S225`-`S233` | 0-8 | Offer amount (fairness condition) |
++- **Normal Meta Notes**: Condition-specific markers (S193-S233) encode offer types representing different fairness levels. These markers appear in 28-42 files suggesting variable condition presentation across participants. FRN and P300 ERP components should differentiate between unfair/fair offers.
++- **Evidence**: DOI: 10.1016/j.schres.2017.05.037 — Supports fairness processing analysis via ERP components (FRN, P2) modulated by offer unfairness.
++- **Kernel Notes**: Map condition-specific markers to offer values using events.tsv; include only participants with complete condition presentation; verify S193-S201 and S225-S233 marker correspondence to different offer types.### Potential Task 2: Button Press Response Classification during Ultimatum Game Decision — Response/R 3
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.3 s, tmax = 0.8 s, target_events = [`Response/R 1`, `Response/R 3`]
++- **Label Route**: `info`
++- **Label Field**: `Response/R 3`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Response/R 3` | 0 | Accept offer response |  |
++  | `Response/R 3` | 1 | Reject offer response |  |
+ - **Potential Meta Notes**: Response events R1/R3 indicate button presses for accept/reject decisions. However, these events appear in only 6/1 files respectively, suggesting alternative response encoding or response-locked analysis may require epoching from preceding stimulus events. Behavioral analysis of accept/reject patterns is plausible from paradigm alone.
+ - **Evidence**: N/A
+ - **Kernel Notes**: Verify response event coding scheme in events.tsv; if R1/R3 presence is limited, consider epoching from stimulus onset and aligning to response events post-hoc; verify mapping of R1 vs R3 to accept/reject.

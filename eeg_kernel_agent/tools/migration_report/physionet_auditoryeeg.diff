@@ -1,0 +1,104 @@
+--- physionet_auditoryeeg/analysis.md (pre-v3)
++++ physionet_auditoryeeg/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `physionet_auditoryeeg` | **Year**: 2021 | **URL**: https://physionet.org/content/auditory-eeg/1.0.0/
+ **Category**: High-level Mental | **Subjects**: 19 | **Files (Completed)**: 205 | **Channels**: 13 | **Sampling Rate**: 200 Hz
+-**Manual Review**: Liu Peng
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -50,14 +50,15 @@
+ ## Tasks
+ 
+ ### Classical Task 1: Biometric Identification (Subject Classification)
+-- **Task Type**: classification
++- **Task Type**: regression
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 5.0 s, overlap = 2.5 s
+ - **Label Route**: `misc`
++- **Label Field**: `biometric_identity`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `biometric_identity` | 0-19 | Subject identifier (20 subjects, s01-s20) |
+ - **Super Meta Notes**: Derived from raw event(s) by extracting subject ID from filename (e.g., s01_ex01.mat → subject 1). Kernel step: Parse subject ID from filename pattern `{subject}_ex{code}.mat` and assign numeric label 0-19.
+ - **Evidence**:
+@@ -66,14 +67,15 @@
+ - **Kernel Notes**: Extract subject ID from filename using regex pattern. Files from subject 5 (ex05) may have missing data; verify subject count matches actual files. Use 5-second windows with 50% overlap as specified in the paper.
+ 
+ ### Classical Task 2: Stimulus Language Classification (Native vs Non-native)
+-- **Task Type**: classification
++- **Task Type**: regression
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 5.0 s, overlap = 2.5 s
+ - **Label Route**: `misc`
++- **Label Field**: `stimulus_language`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `stimulus_language` | 0 | Native language song |
+   | `stimulus_language` | 1 | Non-native language song |
+ - **Super Meta Notes**: Derived from raw event(s) [`auditory_native_song_in_ear`, `auditory_nonnative_song_in_ear`, `auditory_native_song_bone`, `auditory_nonnative_song_bone`]. Kernel step: Map native song events to label 0, non-native song events to label 1. Exclude neutral music events.
+@@ -82,14 +84,15 @@
+ - **Kernel Notes**: Group auditory events by language type. Native songs include `auditory_native_song_in_ear` and `auditory_native_song_bone` (y=0). Non-native songs include `auditory_nonnative_song_in_ear` and `auditory_nonnative_song_bone` (y=1). Neutral music events should be excluded from this binary classification task.
+ 
+ ### Classical Task 3: Device Modality Classification (In-ear vs Bone Conduction)
+-- **Task Type**: classification
++- **Task Type**: regression
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 5.0 s, overlap = 2.5 s
+ - **Label Route**: `misc`
++- **Label Field**: `device_modality`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `device_modality` | 0 | In-ear headphones |
+   | `device_modality` | 1 | Bone-conduction headphones |
+ - **Super Meta Notes**: Derived from raw event(s) [`auditory_native_song_in_ear`, `auditory_nonnative_song_in_ear`, `auditory_neutral_music_in_ear`, `auditory_native_song_bone`, `auditory_nonnative_song_bone`]. Kernel step: Map in-ear events to label 0, bone-conduction events to label 1.
+@@ -104,8 +107,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `auditory_native_song_in_ear` | 0 | Native song, in-ear |
+   | `auditory_nonnative_song_in_ear` | 1 | Non-native song, in-ear |
+   | `auditory_neutral_music_in_ear` | 2 | Neutral music, in-ear |
+@@ -122,15 +125,15 @@
+ - **Label Route**: `event`
+ - **Target Definition**: Event-to-label mapping table below.
+ 
+-| Event | y | Meaning |
+-|-------|---|---------|
+-| `resting_eyes_open` | 0 | Resting state |
+-| `resting_eyes_closed` | 0 | Resting state |
+-| `auditory_native_song_in_ear` | 1 | Any auditory condition |
+-| `auditory_nonnative_song_in_ear` | 1 | Any auditory condition |
+-| `auditory_neutral_music_in_ear` | 1 | Any auditory condition |
+-| `auditory_native_song_bone` | 1 | Any auditory condition |
+-| `auditory_nonnative_song_bone` | 1 | Any auditory condition |
++  | Event ID | y | Meaning |
++  |---|---|---|
++  | `resting_eyes_open` | 0 | Resting state |
++  | `resting_eyes_closed` | 0 | Resting state |
++  | `auditory_native_song_in_ear` | 1 | Any auditory condition |
++  | `auditory_nonnative_song_in_ear` | 1 | Any auditory condition |
++  | `auditory_neutral_music_in_ear` | 1 | Any auditory condition |
++  | `auditory_native_song_bone` | 1 | Any auditory condition |
++  | `auditory_nonnative_song_bone` | 1 | Any auditory condition |
+ 
+ ## Data Quality Notes
+ 

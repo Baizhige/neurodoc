@@ -74,7 +74,7 @@ Write the complete "## Tasks" section of an analysis.md file.
 ### Classical Task N: <concise name>
 - **Task Type**: classification | regression
 - **Epoch Method**: `epoch_by_event_hdf5 | epoch_by_long_event_hdf5 | epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = X s, tmax = X s, target_events = [`id_a`, `id_b`]
+- **Epoch Parameters**: <minimum required keys per method — see Epoch Parameters rules below>
 - **Label Route**: `event | misc | info`
 - **Label Field**: `<channel_or_column_name>`     # ONLY when Label Route ∈ {misc, info}
 - **Meta Level**: raw | super
@@ -82,7 +82,19 @@ Write the complete "## Tasks" section of an analysis.md file.
   <route-specific table — see schema matrix below>
 - **Evidence**:
   - DOI: <doi_or_ref> — <description>
-- **Kernel Notes**: <implementation notes, including derivation steps if Meta Level=super>
+- **Notes**: <free-form task annotation; recommended for super-meta derivation steps and parameter-inference rationale>
+
+=== Epoch Parameters rules (MANDATORY — detect.py rule epoch_parameters_complete, severity=error) ===
+Every Task MUST list AT LEAST these keys in Epoch Parameters for its declared Epoch Method:
+  * epoch_by_event_hdf5       — tmin, tmax, target_events
+  * epoch_by_long_event_hdf5  — tmin, tmax, overlap, target_events
+  * epoch_by_segmentation_hdf5 — segment_length, overlap (target_events MUST be [])
+Format examples:
+  epoch_by_event_hdf5:       `tmin = 0 s, tmax = 3 s, target_events = [\`left\`, \`right\`]`
+  epoch_by_long_event_hdf5:  `tmin = 0 s, tmax = 4 s, overlap = 0.5, target_events = [\`rest\`]`
+  epoch_by_segmentation_hdf5: `segment_length = 4 s, overlap = 0.5, target_events = []`
+Additional MNE.Epoch parameters (e.g. baseline, reject, picks) are allowed as extra `key = value` pairs.
+If you do not have ground-truth values for the required keys, DROP the task — do not leave them blank or placeholder.
 
 === Three Task Archetypes (choose one per task) ===
 
@@ -122,8 +134,9 @@ ARCHETYPE C — No event; segmentation + subject-level label
 3. misc ROUTE IS REGRESSION-ONLY. If you want discrete labels from a misc value, put
    the derivation into the kernel and use Route=info or Route=event.
 4. LABEL FIELD REQUIRED iff Route ∈ {misc, info}; FORBIDDEN when Route=event.
-5. DERIVED MISC ⇒ Meta Level=super. Kernel Notes MUST describe the derivation step
+5. DERIVED MISC ⇒ Meta Level=super. Notes SHOULD describe the derivation step
    (how the kernel creates the misc channel from participants.tsv or elsewhere).
+   (Recommended, not enforced by detect.py — the Notes field is freeform.)
 6. GROUND TRUTH: If the Label Field is not present in events.tsv numeric columns,
    participants.tsv columns, OR the native misc channel list provided below, DROP the task.
    Do not invent fields.
@@ -523,16 +536,20 @@ def _strip_ungrounded_label_fields(
         lf = label_field_raw.strip().strip("`")
         lf = lf.split()[0] if lf else ""
         # For derived misc, the Label Field names a NEW channel, not an existing one —
-        # but Kernel Notes must derive it from a grounded source. We accept the task
-        # if any grounded name appears anywhere in the block's Kernel Notes + Label Field.
+        # but Notes (freeform) may describe the derivation. Accept the task if any
+        # grounded name appears in Notes (preferred) or Kernel Notes (legacy docs).
         meta_level = (_get_task_field(block, "Meta Level") or "").strip("`").lower()
-        kernel_notes = _get_task_field(block, "Kernel Notes") or ""
+        notes_text = (
+            _get_task_field(block, "Notes")
+            or _get_task_field(block, "Kernel Notes")
+            or ""
+        )
 
         grounded_here = lf in grounded_names
         if (not grounded_here) and route == "misc" and meta_level == "super":
             # Allow derived misc if the derivation step names a grounded source
             for name in grounded_names:
-                if re.search(rf"\b{re.escape(name)}\b", kernel_notes):
+                if re.search(rf"\b{re.escape(name)}\b", notes_text):
                     grounded_here = True
                     break
 

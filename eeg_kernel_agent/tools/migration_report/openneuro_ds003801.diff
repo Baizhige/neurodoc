@@ -1,0 +1,55 @@
+--- openneuro_ds003801/analysis.md (pre-v3)
++++ openneuro_ds003801/analysis.md (v3)
+@@ -3,7 +3,7 @@
+ **Dataset**: `openneuro_ds003801` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003801
+ **Category**: Complex Applied | **Subjects**: 20 | **Files (Completed)**: 20
+ **Channels**: 24 | **Sampling Rate**: 250 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -50,6 +50,13 @@
+ | `yes` | 156 | event | raw | Yes response button press |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `N/A (experimental instruction metadata)` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -66,8 +73,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: `raw`
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `start_sound1_sit` | 0 | Sitting condition during sound 1 presentation |
+   | `start_sound2_sit` | 0 | Sitting condition during sound 2 presentation |
+   | `start_sound3_sit` | 0 | Sitting condition during sound 3 presentation |
+@@ -85,14 +92,15 @@
+ - **Kernel Notes**: Use start_soundX_sit/walk events as epoch anchors. Each epoch captures the full listening block (until corresponding stop_soundX event). Condition label is directly encoded in event ID suffix. Walking condition segments will contain significant motion artifacts from locomotion; specialized preprocessing (ICA, ASR) recommended. 20 subjects × up to 12 listening blocks per condition provides adequate samples for classification.
+ 
+ ### Potential Task 1: Auditory Attention Decoding (Attended vs Ignored Speaker)
+-- **Task Type**: classification
++- **Task Type**: regression
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 60.0 s, overlap = 0.0
+ - **Label Route**: `misc`
++- **Label Field**: `N/A (experimental instruction metadata)`
+ - **Meta Level**: `super`
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | N/A (experimental instruction metadata) | 0 | Participant instructed to attend to this speaker |
+   | N/A (experimental instruction metadata) | 1 | Participant instructed to ignore this speaker |
+ - **Super Meta Notes**: Labels derived from experimental protocol (dichotic listening task where participants were instructed to attend to one of two competing speakers). Kernel step: For each 60s segment, compute mTRF-based speech envelope reconstruction from EEG, then calculate correlation between reconstructed envelope and audio envelopes of both speakers. Classify as attended if correlation with speaker A envelope exceeds that with speaker B envelope. Requires speech stimulus audio files and per-block attended speaker metadata from experimental design.

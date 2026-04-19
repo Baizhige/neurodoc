@@ -14,8 +14,10 @@ from .doc_writer import generate_analysis_md, merge_and_write, write_failed_anal
 from .event_annotator import annotate_events
 from .kernel_builder import build_kernel, install_kernel
 from .ref_analyzer import analyze_references
+from .reconcile import reconcile as reconcile_tasks
 from .scan_bridge import get_event_ids_preview, run_scan
-from .task_synthesizer import judge_feasibility, synthesize_tasks
+from .task_synthesizer import judge_feasibility
+from .task_synthesizer_v2 import synthesize_tasks_v2
 
 BIDS_ROOT = Path(__file__).parent.parent.parent
 AGENT_DIR = Path(__file__).parent.parent
@@ -29,9 +31,10 @@ PHASES = [
     "feasibility",
     "pre_scan",           # initial scan (before kernel) for event IDs
     "event_annotation",   # P3a+P3b: isolated event meaning annotation
-    "task_synthesis",
+    "task_synthesis",     # v2: aggregate → fill → detect gate → repair
     "kernel_loop",
     "scan",               # final scan with new kernel
+    "reconcile",          # prune hallucinated tasks; at most 1 kernel patch + rescan
     "doc_write",
     "done",
 ]
@@ -304,9 +307,9 @@ class Pipeline:
 
             self._check_pause()
 
-            # ── Phase 4: Task Synthesis ──────────────────────────────────
+            # ── Phase 4: Task Synthesis (v2 — aggregate+fill+gate+repair) ─
             if cur <= self._phase_index("task_synthesis"):
-                tasks_section = synthesize_tasks(
+                tasks_section, kernel_requirements = synthesize_tasks_v2(
                     self.dataset_name,
                     context["analysis_md"],
                     ref_extractions,
@@ -321,10 +324,15 @@ class Pipeline:
                     event_annotations=event_annotations,
                     misc_channel_names=(pre_scan_result or {}).get("misc_channel_names", []),
                 )
-                self._save("kernel_loop", tasks_section=tasks_section)
+                self._save(
+                    "kernel_loop",
+                    tasks_section=tasks_section,
+                    kernel_requirements=kernel_requirements,
+                )
             else:
                 self.log("[Pipeline] Resuming: skipping task_synthesis")
                 tasks_section = self.progress.get("tasks_section", "## Tasks\n\n(pending)")
+                kernel_requirements = self.progress.get("kernel_requirements", {})
 
             self._check_pause()
 
@@ -344,6 +352,7 @@ class Pipeline:
                     self._python_env,
                     self._eegunity_path,
                     dataset_path,
+                    kernel_requirements=kernel_requirements,
                 )
                 self._save("scan",
                            kernel_ok=kernel_ok,
@@ -376,11 +385,59 @@ class Pipeline:
                     self.log,
                 )
                 scan_for_progress = {k: v for k, v in scan_result.items() if k != "df"}
-                self._save("doc_write", scan_result=scan_for_progress,
+                self._save("reconcile", scan_result=scan_for_progress,
                            installed_kernel_path=kernel_path_for_scan)
             else:
                 self.log("[Pipeline] Resuming: skipping scan")
                 scan_result = self.progress.get("scan_result", {})
+
+            self._check_pause()
+
+            # ── Phase 6.5: Reconcile Tasks ↔ Scan ───────────────────────
+            if cur <= self._phase_index("reconcile"):
+                def _rescan(new_kernel_path: str) -> Dict[str, Any]:
+                    res = run_scan(
+                        self.dataset_name,
+                        new_kernel_path,
+                        self._dataset_roots,
+                        self._eegunity_path,
+                        self._num_workers,
+                        self.log,
+                    )
+                    return res
+
+                def _install(new_code: str) -> str:
+                    p = install_kernel(new_code, self.dataset_name, self.log)
+                    return str(p)
+
+                tasks_section, scan_result, kernel_code_post, did_patch = reconcile_tasks(
+                    tasks_section,
+                    scan_result,
+                    kernel_requirements or {},
+                    self._load_installed_kernel_code(kernel_path_for_scan),
+                    self.dataset_name,
+                    context.get("bids_sidecars"),
+                    self.call_llm,
+                    self.budget,
+                    self.log,
+                    rescan_func=_rescan,
+                    install_func=_install,
+                )
+                if did_patch:
+                    # install_kernel writes to AGENT_DIR / "kernels" / f"{dataset_name}.py"
+                    kernel_path_for_scan = str(
+                        AGENT_DIR / "kernels" / f"{self.dataset_name}.py"
+                    )
+                scan_for_progress = {k: v for k, v in scan_result.items() if k != "df"}
+                self._save(
+                    "doc_write",
+                    tasks_section=tasks_section,
+                    scan_result=scan_for_progress,
+                    reconcile_patched=did_patch,
+                    installed_kernel_path=kernel_path_for_scan,
+                )
+            else:
+                self.log("[Pipeline] Resuming: skipping reconcile")
 
             # Re-generate event_ids_preview from final scan
             event_ids_preview = get_event_ids_preview(scan_result)
@@ -434,6 +491,20 @@ class Pipeline:
         import scan_engine
         p = scan_engine.find_dataset_path(self.dataset_name, self._dataset_roots)
         return p or ""
+
+    def _load_installed_kernel_code(self, path_hint: str) -> str:
+        """Read the kernel source from the installed path (or the fallback canonical location)."""
+        candidates = []
+        if path_hint:
+            candidates.append(Path(path_hint))
+        candidates.append(AGENT_DIR / "kernels" / f"{self.dataset_name}.py")
+        for p in candidates:
+            try:
+                if p.exists():
+                    return p.read_text(encoding="utf-8")
+            except Exception:
+                continue
+        return ""
 
     def _find_data_dir(self) -> str:
         """Find raw data directory without importing scan_engine."""

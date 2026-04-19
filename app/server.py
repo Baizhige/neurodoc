@@ -18,6 +18,93 @@ if str(BASE_DIR) not in sys.path:
 
 from app import template_checker
 
+_AGENT_DIR = BASE_DIR / "eeg_kernel_agent"
+if str(_AGENT_DIR) not in sys.path:
+    sys.path.insert(0, str(_AGENT_DIR))
+try:
+    import detect as _detect  # eeg_kernel_agent/detect.py
+    _DETECT_RULES = _detect.load_rules()
+except Exception as _detect_err:
+    _detect = None
+    _DETECT_RULES = []
+    print(f"[server] WARNING: eeg_kernel_agent/detect.py not loadable: {_detect_err}")
+
+
+def _run_semantic_checks(analysis_text: str, dataset_name: str = "") -> list[dict]:
+    """Invoke detect.py cross-checks on in-memory analysis.md text. Returns [] on failure."""
+    if _detect is None or not _DETECT_RULES:
+        return []
+    try:
+        return _detect.check_analysis_text(
+            analysis_text,
+            dataset_name=dataset_name,
+            rules=_DETECT_RULES,
+        )
+    except Exception as e:
+        print(f"[server] detect.check_analysis_text failed: {e}")
+        return []
+
+
+def _check_tasks_fragment(tasks_section: str, dataset_name: str = "") -> list[str]:
+    """Stub the synthesized Tasks section into a minimal analysis.md and run
+    Task-scoped cross-checks. Returns human-readable strings.
+
+    Only Task-scoped rules (those that inspect ## Tasks content) meaningfully
+    fire here; rules that require other sections are harmless no-ops.
+    """
+    ts = (tasks_section or "").strip()
+    if not ts.startswith("##"):
+        ts = "## Tasks\n\n" + ts
+    shell = (
+        "# Analysis\n\n"
+        "## Paradigm\n\n(stub)\n\n"
+        "## File Scan Result\n\n"
+        "### Event Structure\n\n| Event ID | Count | Type | Meta Level | Meaning |\n|---|---|---|---|---|\n\n"
+        "### MISC Label Summary\n\n| Channel | Source | Meta | Notes |\n|---|---|---|---|\n\n"
+        "### Info\n\n| Field | Value | Completeness | Notes |\n|---|---|---|---|\n\n"
+        f"{ts}\n\n"
+        "## Data Quality Notes\n\n- (stub)\n\n"
+        "## Kernel Responsibilities\n\n> **Status**: wait_manual_review\n"
+    )
+    violations = _run_semantic_checks(shell, dataset_name=dataset_name)
+    # Only surface rules that point at the Tasks section or derived checks.
+    task_relevant = {
+        "label_field_required_for_nonevent",
+        "label_field_absent_for_event",
+        "info_label_field_in_info_section",
+        "misc_label_field_in_misc_section",
+        "target_def_schema_matches_route",
+        "single_target_per_task",
+        "misc_classification_forbidden",
+        "classification_task_has_multiple_classes",
+        "derived_misc_requires_super_meta",
+        "segmentation_requires_empty_target_events",
+        "target_events_in_event_structure",
+        "classical_task_evidence",
+        "task_order_classical_first",
+        "task_numbering_from_one",
+        "no_mi_on_phase_markers",
+    }
+    filtered = [v for v in violations if v.get("rule_id") in task_relevant]
+    return _format_semantic_errors(filtered)
+
+
+def _format_semantic_errors(violations: list[dict]) -> list[str]:
+    """Shape detect.py violations into short strings for the LLM repair prompt."""
+    lines = []
+    for v in violations:
+        rid = v.get("rule_id", "?")
+        sev = v.get("severity", "?")
+        desc = v.get("desc", "") or ""
+        detail = v.get("detail", "") or ""
+        if desc and detail:
+            lines.append(f"[{sev}] {rid}: {desc} — {detail}")
+        elif desc:
+            lines.append(f"[{sev}] {rid}: {desc}")
+        else:
+            lines.append(f"[{sev}] {rid}: {detail}")
+    return lines
+
 try:
     import requests as _requests
     _HAS_REQUESTS = True
@@ -100,7 +187,9 @@ TASK A — Relevance classification (one of):
 
 TASK B — Task extraction (fill for relevant/partial; leave empty only for irrelevant/junk):
   supports_task      : true if classification=relevant AND a concrete ML task with labels is defined.
-  task_type          : "classification" | "regression" | "segmentation" | "none"
+  task_type          : "classification" | "regression" | "none"
+                       (v3: Task Type is the learning target type, NOT the epoch method.
+                        segmentation is an Epoch Method, not a Task Type.)
   n_classes          : integer number of classes, or 0 if unclear
   paradigm           : brief paradigm description (e.g. "4-class MI left/right fist, both fists, feet")
   epoch_method_hint  : "event-based" | "long-event" | "segmentation" | "unclear"
@@ -120,7 +209,7 @@ Output ONLY valid JSON, no surrounding text or markdown fences:
   "classification": "relevant|partial|irrelevant|uncertain|junk",
   "cot_reasoning": "<3-6 sentence chain-of-thought>",
   "supports_task": true|false,
-  "task_type": "classification|regression|segmentation|none",
+  "task_type": "classification|regression|none",
   "n_classes": 0,
   "paradigm": "",
   "epoch_method_hint": "event-based|long-event|segmentation|unclear",
@@ -184,7 +273,7 @@ and a Category SKILL guide.
 ### Classical Task N: <concise name>
 - **Task Type**: classification | regression
 - **Epoch Method**: `<method>`
-- **Epoch Parameters**: tmin = X s, tmax = X s, target_events = [`raw_id_a`, `raw_id_b`]
+- **Epoch Parameters**: <minimum required keys for the method — see Epoch Parameters rules below>
 - **Label Route**: `event` | `misc` | `info`
 - **Label Field**: `<channel_or_column_name>`     # ONLY when Route ∈ {misc, info}
 - **Meta Level**: raw | super
@@ -192,7 +281,15 @@ and a Category SKILL guide.
   <route-specific table — see schema matrix below>
 - **Evidence**:
   - <ref> — <evidence_desc>
-- **Kernel Notes**: implementation steps; if Meta Level=super, describe the derivation.
+- **Notes**: free-form task annotation (recommended: super-meta derivation steps, parameter inference rationale).
+
+=== Epoch Parameters rules (MANDATORY — detect.py rule epoch_parameters_complete, severity=error) ===
+Every Task MUST list AT LEAST these keys in Epoch Parameters for its declared Epoch Method:
+  * epoch_by_event_hdf5       — tmin, tmax, target_events
+  * epoch_by_long_event_hdf5  — tmin, tmax, overlap, target_events
+  * epoch_by_segmentation_hdf5 — segment_length, overlap (target_events MUST be [])
+Extra MNE.Epoch parameters (baseline, reject, picks, ...) are allowed as additional `key = value` pairs.
+If you cannot ground the required keys, DROP the task — do not leave them blank.
 
 === Three Task Archetypes ===
 A — Event is the label  (Route=event, no Label Field)
@@ -214,7 +311,8 @@ H1 ONE LABEL FIELD PER TASK. Multi-dimension labels split into N tasks.
 H2 CLASSIFICATION ≥ 2 DISTINCT y VALUES.
 H3 misc ROUTE IS REGRESSION-ONLY.
 H4 LABEL FIELD REQUIRED iff Route ∈ {misc, info}; FORBIDDEN when Route=event.
-H5 DERIVED MISC ⇒ Meta Level = super. Kernel Notes MUST describe derivation.
+H5 DERIVED MISC ⇒ Meta Level = super. Notes SHOULD describe the derivation
+   (recommended, not enforced — Notes is freeform).
 H6 GROUND TRUTH only — do not invent fields. If the Label Field is not present in
    events.tsv, participants.tsv, or the native misc list, DROP the task.
 H7 segmentation ⇒ target_events = [].
@@ -237,6 +335,9 @@ C: Epoch params match Phase-2-1 (or deviation noted).
 D: No duplicate tasks (same epoch+label combination).
 E: H1–H7 all satisfied — Label Field present iff non-event; classification has ≥2 y;
    misc is regression-only; segmentation has target_events=[]; derived misc is super meta.
+F: Epoch Parameters contain all MINIMUM required keys for the declared Epoch Method
+   (see rules table above). Missing a required key (e.g. `overlap` for long-event) is a
+   hard error and will be rejected by detect.py. If you lack a value, DROP the task.
 
 === Output Format ===
 Return ONLY valid JSON (no markdown fences):
@@ -576,7 +677,14 @@ def api_put_dataset(name):
 def api_template_check():
     data = request.get_json(silent=True) or {}
     content = data.get("content", "")
-    return jsonify(template_checker.check_analysis_template(content))
+    dataset_name = data.get("dataset", "")
+    result = template_checker.check_analysis_template(content)
+    semantic = _run_semantic_checks(content, dataset_name=dataset_name)
+    result["semantic_errors"] = _format_semantic_errors(semantic)
+    result["semantic_errors_raw"] = semantic
+    if semantic and result.get("ok"):
+        result["ok"] = False
+    return jsonify(result)
 
 
 @app.route("/api/rulebook")
@@ -659,17 +767,22 @@ def api_template_fix_with_llm(name):
 
     content = analysis_path.read_text(encoding="utf-8", errors="replace")
     check = template_checker.check_analysis_template(content)
-    if check["ok"]:
+    semantic_violations = _run_semantic_checks(content, dataset_name=name)
+    semantic_errors = _format_semantic_errors(semantic_violations)
+
+    if check["ok"] and not semantic_errors:
         return jsonify({
             "fixed_content": content,
             "template_check": check,
-            "message": "Document already matches the required template.",
+            "semantic_errors": [],
+            "message": "Document already matches the required template and v3 semantic rules.",
         })
 
+    combined_errors = list(check["errors"]) + semantic_errors
     prompts = template_checker.build_template_repair_messages(
         dataset_name=name,
         content=content,
-        errors=check["errors"],
+        errors=combined_errors,
     )
     try:
         raw = _call_llm([
@@ -693,9 +806,12 @@ def api_template_fix_with_llm(name):
             raise ValueError("LLM returned empty content.")
 
         fixed_check = template_checker.check_analysis_template(fixed_content)
+        fixed_semantic = _run_semantic_checks(fixed_content, dataset_name=name)
         return jsonify({
             "fixed_content": fixed_content,
             "template_check": fixed_check,
+            "semantic_errors": _format_semantic_errors(fixed_semantic),
+            "semantic_errors_raw": fixed_semantic,
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 502
@@ -867,18 +983,26 @@ def api_tasks_phase2(name):
                               flags=re.IGNORECASE).strip()
             m = re.search(r"(##\s*Tasks[\s\S]+)", stripped)
             if m:
-                return jsonify({"tasks_section": m.group(1).strip(),
+                ts = m.group(1).strip()
+                return jsonify({"tasks_section": ts,
                                 "num_classical_tasks": -1, "num_potential_tasks": -1,
-                                "p21": p21_result, "summary": ""})
+                                "p21": p21_result, "summary": "",
+                                "semantic_errors": _check_tasks_fragment(ts, name)})
             m2 = re.search(r"(###\s+(?:Classical|Potential)\s+Task[\s\S]+)", stripped)
             if m2:
-                return jsonify({"tasks_section": "## Tasks\n\n" + m2.group(1).strip(),
+                ts = "## Tasks\n\n" + m2.group(1).strip()
+                return jsonify({"tasks_section": ts,
                                 "num_classical_tasks": -1, "num_potential_tasks": -1,
-                                "p21": p21_result, "summary": ""})
+                                "p21": p21_result, "summary": "",
+                                "semantic_errors": _check_tasks_fragment(ts, name)})
             return jsonify({"error": f"Phase-2-2 parse failed: {err}",
                             "p21": p21_result}), 502
 
         parsed["p21"] = p21_result
+        if isinstance(parsed, dict) and parsed.get("tasks_section"):
+            parsed["semantic_errors"] = _check_tasks_fragment(
+                parsed["tasks_section"], name
+            )
         return jsonify(parsed)
     except Exception as e:
         return jsonify({"error": str(e), "p21": p21_result}), 500

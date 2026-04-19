@@ -1,0 +1,91 @@
+--- openneuro_ds005507/analysis.md (pre-v3)
++++ openneuro_ds005507/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds005507` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005507
+ **Category**: Complex Applied | **Subjects**: 183 | **Files (Completed)**: 1812 | **Channels**: 129 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -78,11 +78,11 @@
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
+-- **Label Route**: `misc`
++- **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | Value | Meaning |
++  |---|---|---|
+   | `resting_start` | continuous | Functional connectivity features from resting-state EEG epochs |
+   | `video_start` | continuous | Functional connectivity features from movie-viewing EEG epochs |
+ - **Super Meta Notes**: Derived from raw events [`resting_start`, `video_start`, `video_stop`] by computing imaginary coherence (iCOH) on 2-s sliding windows, then regressing against phenotypic variables (age, sex, IQ, ADHD, anxiety, SES, CBCL). Kernel step: Extract EEG epochs around events → compute FC matrix → join with phenotypic table → train regression model.
+@@ -94,11 +94,11 @@
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
+-- **Label Route**: `misc`
++- **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `resting_start` | ADHD | Attention-deficit/hyperactivity disorder |
+   | `resting_start` | ODD | Oppositional defiant disorder |
+   | `resting_start` | ASD | Autism spectrum disorder |
+@@ -118,8 +118,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `contrastTrial_start` | 0 | Still-unknown learning state |
+   | `contrastTrial_start` | 1 | Newly-learned learning state |
+   | `contrastTrial_start` | 2 | Known learning state |
+@@ -135,8 +135,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `left_target` | 0 | Left-side target stimulus |
+   | `right_target` | 1 | Right-side target stimulus |
+ - **Evidence**:
+@@ -165,13 +165,14 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `surroundSuppB1_start` | 1 | Surrounding suppression block 1 |
+   | `surroundSuppB2_start` | 2 | Surrounding suppression block 2 |
+ - **Evidence**: Paradigm exists in dataset (291 total events across two block types). DOI: 10.1016/j.neuroimage.2020.117001 mentions surround suppression as passive task.
+ - **Kernel Notes**: Verify behavioral outcome measures for suppression effect quantification. Lower event count (154 + 137) may require combining blocks.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 2: Symbol search cognitive task analysis
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+@@ -179,8 +180,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `symbolSearch_start` | continuous | Symbol search task epochs (accuracy/RT from misc) |
+ - **Evidence**: Paradigm exists in dataset (107 events). DOI: 10.1038/sdata.2017.40 describes active tasks including symbol search.
+ - **Kernel Notes**: Low event count (107) suggests few trials per subject. May require aggregation across subjects for population-level analysis. Verify accuracy/RT availability in behavioral files.

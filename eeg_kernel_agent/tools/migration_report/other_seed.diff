@@ -1,0 +1,126 @@
+--- other_seed/analysis.md (pre-v3)
++++ other_seed/analysis.md (v3)
+@@ -29,45 +29,95 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Three-class Emotion Valence Classification (Positive/Neutral/Negative)
++### Classical Task 1: Three-class Emotion Valence Classification (Positive/Neutral/Negative) — positive
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 4.0 s, overlap = 2.0 s *
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `positive`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Label | y | Meaning |
+-  |-------|---|---------|
+-  | `positive` | 0 | Positive emotion (valence +1) |
+-  | `neutral` | 1 | Neutral emotion (valence 0) |
+-  | `negative` | 2 | Negative emotion (valence -1) |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `positive` | 0 | Positive emotion (valence +1) |  |
+ - **Super Meta Notes**: Derived from experimental stimulus protocol (film clips designed to elicit specific emotions). Labels stored in companion `*_label.mat` files (+1 positive, 0 neutral, -1 negative). Kernel must align EEG epochs with label files by subject ID and session ID (trial order within each session).
+ - **Evidence**:
+   - DOI: 10.1007/s12559-025-10516-z — Fuzzy linguistic summarization with Russell's circumplex model achieved 80% accuracy classifying SEED EEG into three valence categories using frontal alpha/beta bands.
+   - DOI: 10.3389/fnins.2018.00162 — Used 4-s sliding window with 2-s overlap from middle 1-minute of each 4-min trial for 3-class emotion recognition.
+ - **Kernel Notes**: Segment continuous EEG into 4-s windows with 2-s overlap. For each window, record subject ID and session ID. Load valence labels from corresponding `*_label.mat` file and map: +1→positive (y=0), 0→neutral (y=1), -1→negative (y=2). (replaces Classical Task 1 from original analysis.md)
+ 
+-### Classical Task 2: Binary Emotion Classification (Positive vs Negative)
++### Classical Task 2: Three-class Emotion Valence Classification (Positive/Neutral/Negative) — neutral
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 4.0 s, overlap = 2.0 s *
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `neutral`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Label | y | Meaning |
+-  |-------|---|---------|
+-  | `positive` | 0 | Positive emotion (valence +1) |
+-  | `negative` | 1 | Negative emotion (valence -1) |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `neutral` | 1 | Neutral emotion (valence 0) |  |
++- **Super Meta Notes**: Derived from experimental stimulus protocol (film clips designed to elicit specific emotions). Labels stored in companion `*_label.mat` files (+1 positive, 0 neutral, -1 negative). Kernel must align EEG epochs with label files by subject ID and session ID (trial order within each session).
++- **Evidence**:
++  - DOI: 10.1007/s12559-025-10516-z — Fuzzy linguistic summarization with Russell's circumplex model achieved 80% accuracy classifying SEED EEG into three valence categories using frontal alpha/beta bands.
++  - DOI: 10.3389/fnins.2018.00162 — Used 4-s sliding window with 2-s overlap from middle 1-minute of each 4-min trial for 3-class emotion recognition.
++- **Kernel Notes**: Segment continuous EEG into 4-s windows with 2-s overlap. For each window, record subject ID and session ID. Load valence labels from corresponding `*_label.mat` file and map: +1→positive (y=0), 0→neutral (y=1), -1→negative (y=2). (replaces Classical Task 1 from original analysis.md)
++
++### Classical Task 3: Three-class Emotion Valence Classification (Positive/Neutral/Negative) — negative
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 4.0 s, overlap = 2.0 s *
++- **Label Route**: `info`
++- **Label Field**: `negative`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `negative` | 2 | Negative emotion (valence -1) |  |
++- **Super Meta Notes**: Derived from experimental stimulus protocol (film clips designed to elicit specific emotions). Labels stored in companion `*_label.mat` files (+1 positive, 0 neutral, -1 negative). Kernel must align EEG epochs with label files by subject ID and session ID (trial order within each session).
++- **Evidence**:
++  - DOI: 10.1007/s12559-025-10516-z — Fuzzy linguistic summarization with Russell's circumplex model achieved 80% accuracy classifying SEED EEG into three valence categories using frontal alpha/beta bands.
++  - DOI: 10.3389/fnins.2018.00162 — Used 4-s sliding window with 2-s overlap from middle 1-minute of each 4-min trial for 3-class emotion recognition.
++- **Kernel Notes**: Segment continuous EEG into 4-s windows with 2-s overlap. For each window, record subject ID and session ID. Load valence labels from corresponding `*_label.mat` file and map: +1→positive (y=0), 0→neutral (y=1), -1→negative (y=2). (replaces Classical Task 1 from original analysis.md)
++
++### Classical Task 4: Binary Emotion Classification (Positive vs Negative) — positive
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 4.0 s, overlap = 2.0 s *
++- **Label Route**: `info`
++- **Label Field**: `positive`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `positive` | 0 | Positive emotion (valence +1) |  |
+ - **Super Meta Notes**: Derived from SEED label files (+1 positive, -1 negative). Neutral trials (valence 0) discarded. Kernel aligns EEG epochs with external label files by subject and session.
+ - **Evidence**:
+   - DOI: 10.3389/fnins.2018.00162 — Binary cross-subject emotion classification (positive vs negative) using 4-s sliding window with 2-s overlap from middle 1-minute segment of each 4-minute trial, achieving cross-subject generalization.
+ - **Kernel Notes**: Same segmentation as Classical Task 1, but filter to only positive (y=0) and negative (y=1) classes. Neutral labels are excluded.
+ 
++### Classical Task 5: Binary Emotion Classification (Positive vs Negative) — negative
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 4.0 s, overlap = 2.0 s *
++- **Label Route**: `info`
++- **Label Field**: `negative`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `negative` | 1 | Negative emotion (valence -1) |  |
++- **Super Meta Notes**: Derived from SEED label files (+1 positive, -1 negative). Neutral trials (valence 0) discarded. Kernel aligns EEG epochs with external label files by subject and session.
++- **Evidence**:
++  - DOI: 10.3389/fnins.2018.00162 — Binary cross-subject emotion classification (positive vs negative) using 4-s sliding window with 2-s overlap from middle 1-minute segment of each 4-minute trial, achieving cross-subject generalization.
++- **Kernel Notes**: Same segmentation as Classical Task 1, but filter to only positive (y=0) and negative (y=1) classes. Neutral labels are excluded.
++
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 1: Emotion Valence Classification - 3-Class (epoch_by_segmentation + external labels)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 4.0 s, overlap = 2.0 s
+-- **Label Route**: `event`
++- **Label Route**: `info`
+ - **Target Definition**: N/A from EEG annotations - apply labels post-hoc from `*_label.mat`:
+ - **Notes**: Segment the EEG into fixed windows during each video clip period. Map each epoch to the clip's valence label from the corresponding `*_label.mat` file. The kernel records subject ID and session ID in the description field to help align with label files.
+ 
+@@ -77,11 +127,12 @@
+ | `0` | 1 | Neutral emotion |
+ | `-1` | 2 | Negative emotion |
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 2: Binary Emotion Classification - Positive vs. Negative (epoch_by_segmentation)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_segmentation`
+ - **Epoch Parameters**: segment_length = 4.0 s, overlap = 2.0 s
+-- **Label Route**: `event`
++- **Label Route**: `info`
+ - **Target Definition**: Needs verification.
+ - **Notes**: Use positive (y=0) and negative (y=2) labels only; discard neutral trials.
+ 
