@@ -1,0 +1,102 @@
+--- openneuro_ds004043/analysis.md (pre-v3)
++++ openneuro_ds004043/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004043` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004043
+ **Category**: Sensory/Response | **Subjects**: 20 | **Files (Completed)**: 40 | **Channels**: 63 | **Sampling Rate**: 250 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -35,34 +35,77 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Cued vs Uncued Orientation Classification
++### Classical Task 1: Cued vs Uncued Orientation Classification — E 1
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, baseline = (None, 0), target_events = [`E 1`, `E 2`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `E 1`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-------|---------|
+-  | `E 1` | 0 | Cued/attended orientation (target feature dimension) |
+-  | `E 2` | 1 | Uncued/ignored orientation (non-attended feature dimension) |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `E 1` | 0 | Cued/attended orientation (target feature dimension) |  |
+ - **Evidence**:
+   - DOI: 10.1038/s41598-022-10687-x — MVPA with LDA classifiers decoded cued vs uncued orientation from EEG epochs (-100 to 800ms) in non-target trials; attention effect emerged ~230ms after stimulus onset
+   - DOI: 10.1101/2021.05.24.445376 — Multivariate pattern analysis decoded cued vs uncued orientation coding over time from -100ms to 800ms post-stimulus; controlled for temporal expectation as independent variable
+ - **Kernel Notes**: Filter epochs to include only non-target trials (exclude `E 3` marker trials which are targets/foils occurring ~100x less frequently). The analysis focuses on non-target stimuli to isolate pure attention effects from target-detection confounds. Verify event ID mapping from events.tsv — E 1 and E 2 must be confirmed as cued and uncued condition markers respectively. High event counts (~174K per condition per file) result in large epoch sets; consider compute-efficient MVPA pipelines.
+ 
+-### Potential Task 1: Multiclass Attention Condition Decoding
++### Classical Task 2: Cued vs Uncued Orientation Classification — E 2
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, baseline = (None, 0), target_events = [`E 1`, `E 2`]
++- **Label Route**: `info`
++- **Label Field**: `E 2`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `E 2` | 1 | Uncued/ignored orientation (non-attended feature dimension) |  |
++- **Evidence**:
++  - DOI: 10.1038/s41598-022-10687-x — MVPA with LDA classifiers decoded cued vs uncued orientation from EEG epochs (-100 to 800ms) in non-target trials; attention effect emerged ~230ms after stimulus onset
++  - DOI: 10.1101/2021.05.24.445376 — Multivariate pattern analysis decoded cued vs uncued orientation coding over time from -100ms to 800ms post-stimulus; controlled for temporal expectation as independent variable
++- **Kernel Notes**: Filter epochs to include only non-target trials (exclude `E 3` marker trials which are targets/foils occurring ~100x less frequently). The analysis focuses on non-target stimuli to isolate pure attention effects from target-detection confounds. Verify event ID mapping from events.tsv — E 1 and E 2 must be confirmed as cued and uncued condition markers respectively. High event counts (~174K per condition per file) result in large epoch sets; consider compute-efficient MVPA pipelines.
++
++### Potential Task 1: Multiclass Attention Condition Decoding — E 1
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, baseline = (None, 0), target_events = [`E 1`, `E 2`, `E 3`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `E 1`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-------|---------|
+-  | `E 1` | 0 | Attention condition 1 (grating stimulus onset) |
+-  | `E 2` | 1 | Attention condition 2 (grating stimulus onset) |
+-  | `E 3` | 2 | Target/distractor stimulus onset |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `E 1` | 0 | Attention condition 1 (grating stimulus onset) |  |
+ - **Evidence**:
+   - DOI: 10.1038/s41598-022-10687-x (partial) — The study design included three stimulus conditions presented in a rapid 10Hz stream; multiclass decoding of all conditions is theoretically feasible but not explicitly reported in the published MVPA analysis which focused on binary cued vs uncued comparison
+ - **Kernel Notes**: Standard epoching will yield highly imbalanced class sizes (E 3 ~1.3K vs E 1/E 2 ~174K each). Stratified sampling or class weighting required. Confirm event-to-condition mapping from events.tsv — E 1/E 2/E 3 semantics may vary across subjects or sessions. Boundary events (n=20) likely mark recording segment breaks; handle appropriately during epoching.
++### Potential Task 2: Multiclass Attention Condition Decoding — E 2
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, baseline = (None, 0), target_events = [`E 1`, `E 2`, `E 3`]
++- **Label Route**: `info`
++- **Label Field**: `E 2`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `E 2` | 1 | Attention condition 2 (grating stimulus onset) |  |
++- **Evidence**:
++  - DOI: 10.1038/s41598-022-10687-x (partial) — The study design included three stimulus conditions presented in a rapid 10Hz stream; multiclass decoding of all conditions is theoretically feasible but not explicitly reported in the published MVPA analysis which focused on binary cued vs uncued comparison
++- **Kernel Notes**: Standard epoching will yield highly imbalanced class sizes (E 3 ~1.3K vs E 1/E 2 ~174K each). Stratified sampling or class weighting required. Confirm event-to-condition mapping from events.tsv — E 1/E 2/E 3 semantics may vary across subjects or sessions. Boundary events (n=20) likely mark recording segment breaks; handle appropriately during epoching.
++### Potential Task 3: Multiclass Attention Condition Decoding — E 3
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, baseline = (None, 0), target_events = [`E 1`, `E 2`, `E 3`]
++- **Label Route**: `info`
++- **Label Field**: `E 3`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `E 3` | 2 | Target/distractor stimulus onset |  |
++- **Evidence**:
++  - DOI: 10.1038/s41598-022-10687-x (partial) — The study design included three stimulus conditions presented in a rapid 10Hz stream; multiclass decoding of all conditions is theoretically feasible but not explicitly reported in the published MVPA analysis which focused on binary cued vs uncued comparison
++- **Kernel Notes**: Standard epoching will yield highly imbalanced class sizes (E 3 ~1.3K vs E 1/E 2 ~174K each). Stratified sampling or class weighting required. Confirm event-to-condition mapping from events.tsv — E 1/E 2/E 3 semantics may vary across subjects or sessions. Boundary events (n=20) likely mark recording segment breaks; handle appropriately during epoching.

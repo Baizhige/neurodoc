@@ -1,0 +1,102 @@
+--- openneuro_ds005508/analysis.md (pre-v3)
++++ openneuro_ds005508/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds005508` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005508
+ **Category**: Complex Applied | **Subjects**: 324 | **Files (Completed)**: 3342 | **Channels**: 129 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -74,15 +74,16 @@
+ 
+ ## Tasks
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Classical Task 1: Resting-State Psychiatric Disorder Classification
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0 s, tmax = 20.0 s (eyes-open) * or 40.0 s (eyes-closed) *, overlap = 0.0, target_events = [`instructed_toOpenEyes`, `instructed_toCloseEyes`]
+-- **Label Route**: `misc`
++- **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `instructed_toOpenEyes` | DSM-V diagnosis from subject metadata | Resting EEG during eyes-open; label from clinical assessment |
+   | `instructed_toCloseEyes` | DSM-V diagnosis from subject metadata | Resting EEG during eyes-closed; label from clinical assessment |
+ - **Super Meta Notes**: Labels derived from subject-level psychiatric diagnoses (ADHD, ODD, CD, Anxiety, Mood, ASD, Psychosis spectrum) and continuous symptom severity measures from companion HBN clinical assessment files. Kernel step: Load per-subject diagnosis vector from metadata; assign same label to all resting-state epochs from that subject. Multi-label formulation possible (subjects may have comorbid diagnoses).
+@@ -123,33 +124,51 @@
+   - Paradigm: Clear event structure with 9,806 left-target and 9,909 right-target trials; block markers (`contrastTrial_start`: 20,646) confirm experimental context
+ - **Kernel Notes**: Epoch around target stimulus onsets to capture visual ERP components (N100, P200, P300). Pre-stimulus window (-0.5 to 0 s) provides baseline. Filter epochs to ensure they fall within `contrastTrial_start` blocks. Consider side-agnostic target vs. non-target classification by adding `stim_ON` as non-target events.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 1: Sequence Learning State Classification
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [`stim_ON`, `fixpoint_ON`]
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
++- **Label Field**: `stim_ON` (within learning block)`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `stim_ON` (within learning block) | Learning state from behavioral recall | Stimulus at unknown/newly-learned/known stage |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `stim_ON` (within learning block) | Learning state from behavioral recall | Stimulus at unknown/newly-learned/known stage |  |
+ - **Super Meta Notes**: Learning state labels (unknown vs. newly-learned vs. known) must be derived from participant behavioral recall reports. Kernel step: Parse trial sequence within `learningBlock_1` through `learningBlock_5` (1,468 combined); join with per-subject recall accuracy data to assign learning state labels. States progress from unknown → newly-learned → known as blocks advance.
+ - **Evidence**:
+   - DOI: `10.1038/sdata.2017.40` — Describes sequence learning paradigm with explicit learning state categories
+   - Paradigm: Block markers (`seqLearning_start`: 296, `learningBlock_1-5`: 1,468) and stimulus events exist, but learning state labels require derivation from behavioral data not present in event structure
+ - **Kernel Notes**: Requires joining EEG epochs with external behavioral recall files to determine learning state. Use subject-wise splits—learning state is confounded with time within session. Alternative: predict block number (1-5) as proxy for learning progression.
+ 
+-### Potential Task 2: Surrounding Suppression Visual Processing
++### Potential Task 1: Surrounding Suppression Visual Processing — dot_no1_ON` through `dot_no7_ON
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.5 s, target_events = [`dot_no1_ON`, `dot_no2_ON`, `dot_no3_ON`, `dot_no4_ON`, `dot_no5_ON`, `dot_no6_ON`, `dot_no7_ON`, `dot_no8_ON`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `dot_no1_ON` through `dot_no7_ON`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `dot_no1_ON` through `dot_no7_ON` | 0 | Standard surround condition |
+-  | `dot_no8_ON` | 1 | Deviant/singleton surround condition |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `dot_no1_ON` through `dot_no7_ON` | 0 | Standard surround condition |  |
++- **Evidence**:
++  - Paradigm: Surrounding suppression blocks (`surroundSuppB1_start`: 278, `surroundSuppB2_start`: 270) with 8 dot pattern types (~10,000 combined onset events). Dot_no8 has fewer trials (867) suggesting it may be the deviant/singleton condition.
++  - DOI: `10.1038/sdata.2017.40` — Lists surround suppression as core paradigm
++- **Kernel Notes**: Longer tmax=1.5s captures sustained suppression effects. Condition labels (standard vs. deviant) require verification from paradigm documentation. Alternative: binary classification of dot patterns by surround configuration if stimulus parameters are known.
++
++### Potential Task 2: Surrounding Suppression Visual Processing — dot_no8_ON
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.5 s, target_events = [`dot_no1_ON`, `dot_no2_ON`, `dot_no3_ON`, `dot_no4_ON`, `dot_no5_ON`, `dot_no6_ON`, `dot_no7_ON`, `dot_no8_ON`]
++- **Label Route**: `info`
++- **Label Field**: `dot_no8_ON`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `dot_no8_ON` | 1 | Deviant/singleton surround condition |  |
+ - **Evidence**:
+   - Paradigm: Surrounding suppression blocks (`surroundSuppB1_start`: 278, `surroundSuppB2_start`: 270) with 8 dot pattern types (~10,000 combined onset events). Dot_no8 has fewer trials (867) suggesting it may be the deviant/singleton condition.
+   - DOI: `10.1038/sdata.2017.40` — Lists surround suppression as core paradigm
+@@ -159,7 +178,7 @@
+ - **Task Type**: regression / classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 300.0 s, overlap = 0.5, segment_length = 10.0 s, target_events = [`video_start`, `video_stop`]
+-- **Label Route**: `misc`
++- **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+   | Event | y | Meaning |

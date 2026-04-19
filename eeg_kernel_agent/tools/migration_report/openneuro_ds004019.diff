@@ -1,0 +1,72 @@
+--- openneuro_ds004019/analysis.md (pre-v3)
++++ openneuro_ds004019/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004019` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004019
+ **Category**: High-level Mental | **Subjects**: 62 | **Files (Completed)**: 62 | **Channels**: 132 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -46,14 +46,15 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `0` | 0 | Incorrect arithmetic response |
+   | `1` | 1 | Correct arithmetic response |
+ - **Evidence**:
+   - DOI: 10.3389/fnhum.2022.760234 — This paper analyzes ERP components (P150, P300, N400) time-locked to answer choice presentation to compare obese vs non-obese preteens with high/low math skills on arithmetic verification tasks, using correct vs incorrect response events (`1` and `0`) for epoching.
+ - **Kernel Notes**: Epochs are time-locked to response correctness events (`0`, `1`) which occur concurrent with `resp`. Class imbalance (~67% correct: 9972 vs 4848 incorrect) should be addressed using weighted loss or stratified undersampling. Exclude admin markers (sync, CELL, SESS) and boundary markers from analysis.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 1: Face Verification Stimulus Classification
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+@@ -61,12 +62,13 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `face` | - | Verification digit (face stimulus) onset |
+ - **Evidence**: Plausible from paradigm alone — face events mark the verification digit presentation in the delayed-verification arithmetic task. Stimulus-locked analysis of face events enables investigation of perceptual evaluation processes independent of response execution. The face event precedes the response (`resp`) and correctness markers (`0`, `1`), allowing separation of stimulus evaluation from response selection.
+ - **Kernel Notes**: Epochs time-locked to face stimulus onset capture early perceptual processing. Can be combined with correctness labels from concurrent `0`/`1` events using super meta for secondary analysis. Remove non-EEG channels (ECG/Respiration) before analysis.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 2: Arithmetic Problem Presentation Analysis
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+@@ -74,12 +76,13 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `prob` | - | Arithmetic problem onset |
+ - **Evidence**: Plausible from paradigm alone — the `prob` event marks initial arithmetic problem presentation. Problem-locked epochs capture encoding and initial calculation processes, distinct from verification and response stages. Supports analysis of obesity and math skill effects on arithmetic problem processing.
+ - **Kernel Notes**: Problem presentation epochs capture the earliest cognitive stage of the trial. Subsequent events (`bgin`, `ch++`, `face`, `resp`) follow in sequence, enabling multi-stage trial analysis. No direct reference ties this to a specific classification task, making it a potential exploratory analysis.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 3: Choice/Comparison Stimulus Classification
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+@@ -87,8 +90,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `ch++` | - | Choice/comparison stimulus onset |
+ - **Evidence**: Plausible from paradigm alone — the `ch++` event represents the choice/comparison stimulus presentation, distinct from the face verification digit. Epoching on this event enables analysis of comparison processing stages separate from face verification and response execution.
+ - **Kernel Notes**: The paradigm contains both `ch++` and `face` events, suggesting distinct cognitive stages. Verify original stimulus presentation logic to confirm whether `ch++` and `face` represent different trial phases or alternative stimulus types. Epoch parameter overlap with other tasks (tmin=-0.2s, tmax=1.0s) ensures consistency across analyses.

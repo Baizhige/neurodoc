@@ -1,0 +1,91 @@
+--- openneuro_ds003506/analysis.md (pre-v3)
++++ openneuro_ds003506/analysis.md (v3)
+@@ -3,7 +3,7 @@
+ **Dataset**: `openneuro_ds003506` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003506
+ **Category**: High-level Mental | **Subjects**: 56 | **Files (Completed)**: 84
+ **Channels**: 67 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -44,30 +44,45 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Reward vs. No-Reward Feedback Classification (RewP ERP)
++### Classical Task 1: Reward vs. No-Reward Feedback Classification (RewP ERP) — S  3` (reward)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -6.0 s, tmax = 2.0 s, target_events = [`S  3`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `S  3` (reward)`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
+-  | `S  3` (reward) | 1 | Reward feedback (positive outcome, +1) |
+-  | `S  3` (no-reward) | 0 | No-reward feedback (negative outcome, 0) |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S  3` (reward) | 1 | Reward feedback (positive outcome, +1) |  |
+ - **Evidence**:
+   - DOI: `10.1016/j.brainres.2019.146541` — Supports Reward Positivity (RewP) analysis comparing EEG responses to reward (+1) versus no-reward (0) feedback in Parkinson's disease patients and healthy controls during a reinforcement learning paradigm.
+ - **Kernel Notes**: Event code mapping required: `S  3` (21,837 events) corresponds to feedback stimulus events. Apply baseline correction using -0.2 s to 0 s pre-stimulus interval. Verify reward/no-reward split from accompanying events.tsv. Exclude boundary markers. Non-EEG channels (X, Y, Z positional, VEOG) should be excluded before analysis.
+ 
+-### Classical Task 2: Response Side Classification (Motor Execution)
++### Classical Task 2: Reward vs. No-Reward Feedback Classification (RewP ERP) — S  3` (no-reward)
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -6.0 s, tmax = 2.0 s, target_events = [`S  3`]
++- **Label Route**: `info`
++- **Label Field**: `S  3` (no-reward)`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `S  3` (no-reward) | 0 | No-reward feedback (negative outcome, 0) |  |
++- **Evidence**:
++  - DOI: `10.1016/j.brainres.2019.146541` — Supports Reward Positivity (RewP) analysis comparing EEG responses to reward (+1) versus no-reward (0) feedback in Parkinson's disease patients and healthy controls during a reinforcement learning paradigm.
++- **Kernel Notes**: Event code mapping required: `S  3` (21,837 events) corresponds to feedback stimulus events. Apply baseline correction using -0.2 s to 0 s pre-stimulus interval. Verify reward/no-reward split from accompanying events.tsv. Exclude boundary markers. Non-EEG channels (X, Y, Z positional, VEOG) should be excluded before analysis.
++
++### Classical Task 3: Response Side Classification (Motor Execution)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S  7`, `S 10`]
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `S  7` | 0 | Left-hand button press response |
+   | `S 10` | 1 | Right-hand button press response |
+ - **Evidence**:
+@@ -89,20 +104,22 @@
+   - DOI: `10.1016/j.brainres.2019.146541` — The paradigm explicitly includes both volitional (self-initiated) and instructed (cue-driven) choice trials.
+ - **Kernel Notes**: Event code mapping required: `S  1` (5,631 events) and `S  2` (5,727 events) likely represent instruction/event codes for the two choice conditions. Verify volitional/instructed mapping from events.tsv. The analysis.md references 'Instr' markers (168 total) but these may map differently in the actual event structure.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 1: Instruction Type Classification (Match vs. Choose)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.3 s, tmax = 1.5 s, target_events = [`S  5`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
+ - **Meta Level**: raw
+ - **Target Definition**: Classify epochs based on instruction type indicating whether participants should make a free choice ('Choose') or match a target ('Match').
+ - **Notes**: Event code mapping required: `S  5` (10,728 events) may represent instruction presentation events. The analysis.md mentions 'Instr' markers (168 total) for Match/Choose instructions. Verify mapping from events.tsv before analysis. Exclude boundary markers (84 occurrences) from epoching.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 2: Imperative Stimulus-Response Alignment
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.5 s, target_events = [`S  4`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
+ - **Meta Level**: raw
+ - **Target Definition**: Epochs aligned to imperative stimulus onset to capture stimulus-locked ERPs and response preparation.
+ - **Notes**: Event code mapping required: `S  4` (10,918 events) likely corresponds to imperative stimulus requiring response. The analysis.md references 'Imperative Stimulus' (84 events per file) but actual event counts suggest multiple stimulus types. Verify mapping in events.tsv.

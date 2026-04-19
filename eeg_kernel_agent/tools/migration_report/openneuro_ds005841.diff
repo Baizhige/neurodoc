@@ -1,0 +1,44 @@
+--- openneuro_ds005841/analysis.md (pre-v3)
++++ openneuro_ds005841/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds005841` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005841
+ **Category**: Complex Applied | **Subjects**: 48 | **Files (Completed)**: 288 | **Channels**: 73 | **Sampling Rate**: 512 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -59,8 +59,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `event_53` | 0 | VR stimulus condition (low-count event; verify via events.tsv) |
+   | `event_55` | 1 | VR stimulus condition (low-count event; verify via events.tsv) |
+   | `event_56` | 2 | VR stimulus condition (low-count event; verify via events.tsv) |
+@@ -77,8 +77,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `event_53` | 0 | Unpredictable (random) VR stimulus condition |
+   | `event_55` | 1 | Unpredictable (random) VR stimulus condition |
+   | `event_56` | 2 | Unpredictable (random) VR stimulus condition |
+@@ -95,8 +95,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `event_53` | 0 | Dark luminance VR stimulus |
+   | `event_55` | 1 | Dark luminance VR stimulus |
+   | `event_56` | 2 | Light luminance VR stimulus |

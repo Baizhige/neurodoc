@@ -1,0 +1,13 @@
+--- openneuro_ds005787/analysis.md (pre-v3)
++++ openneuro_ds005787/analysis.md (v3)
+@@ -40,8 +40,8 @@
+ - **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`stim_on`, `resp`, `begin`, `end`]
+ - **Label Route**: `event`
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `stim_on` | 0 | Stimulus onset |
+   | `resp` | 1 | Button-press response |
+   | `begin` | 2 | Block begin |

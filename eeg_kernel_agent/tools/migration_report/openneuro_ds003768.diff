@@ -1,0 +1,44 @@
+--- openneuro_ds003768/analysis.md (pre-v3)
++++ openneuro_ds003768/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds003768` | **Year**: 2026 | **URL**: https://openneuro.org/datasets/ds003768
+ **Category**: Biological State | **Subjects**: 33 | **Files (Completed)**: 254 | **Channels**: 32 | **Sampling Rate**: 5000 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -42,8 +42,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: `super`
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Stimulus/S  1` | 0 | Wake (W) |
+   | `Stimulus/S  1` | 1 | NREM1 (N1) |
+   | `Stimulus/S  2` | 2 | NREM2 (N2) |
+@@ -61,8 +61,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: `super`
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Stimulus/S  1` | 0 | Awake (W) |
+   | `Stimulus/S  1` | 1 | Sleep (N1) |
+   | `Stimulus/S  2` | 1 | Sleep (N2) |
+@@ -80,8 +80,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: `super`
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Stimulus/S  1` | 0 | Sleep stage transition marker (W/N1 onset) |
+   | `Stimulus/S  2` | 1 | Sleep stage transition marker (N2 onset) |
+   | `Stimulus/S  3` | 2 | Sleep stage transition marker (N3 onset) |

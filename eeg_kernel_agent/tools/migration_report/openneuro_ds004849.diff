@@ -1,0 +1,13 @@
+--- openneuro_ds004849/analysis.md (pre-v3)
++++ openneuro_ds004849/analysis.md (v3)
+@@ -47,8 +47,8 @@
+ - **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`2200`, `72011`, `52011`, `75011`, `55011`, `73011`, `74011`, `53011`, `54011`, `71011`, `2201`, `51011`]
+ - **Label Route**: `event`
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `2200` | 0 | Dominant trigger code (primary condition) |
+   | `72011` | 1 | Trigger code (category 7, type 2) |
+   | `52011` | 2 | Trigger code (category 5, type 2) |

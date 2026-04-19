@@ -594,7 +594,7 @@ const STEP_GUIDE = [
         heading: 'Tasks — B: Epoch Method & Parameters',
         items: [
           { key: 's1-6', text: 'Is the <strong>Epoch Method</strong> appropriate? Event-locked (<code>epoch_by_event_hdf5</code>) for discrete cues; continuous segmentation (<code>epoch_by_continuous_hdf5</code>) for resting-state or long recordings.' },
-          { key: 's1-7', text: 'Are <strong>Epoch Parameters</strong> consistent with your selected reference(s)? If multiple references report different windows, choose the most representative or a reasonable compromise, and note the rationale in Kernel Notes.' },
+          { key: 's1-7', text: 'Are <strong>Epoch Parameters</strong> consistent with your selected reference(s)? If multiple references report different windows, choose the most representative or a reasonable compromise, and note the rationale in the task <strong>Notes</strong>. Required minimum keys per method: <code>event</code>→tmin/tmax/target_events; <code>long-event</code>→tmin/tmax/overlap/target_events; <code>segmentation</code>→segment_length/overlap.' },
         ]
       },
       {
@@ -1098,7 +1098,14 @@ function parseMarkdownTable(text) {
 
 // ─── Bullet List Helpers ──────────────────────────────────────────────────────
 function parseBullets(text) {
-  return text.split('\n').filter(l => l.trim().startsWith('-')).map(l => l.replace(/^-\s*/,'').trim()).filter(Boolean);
+  const raw = (text||'').replace(/\r\n/g,'\n');
+  const bulletLines = raw.split('\n').filter(l => l.trim().startsWith('-'));
+  if (bulletLines.length) {
+    return bulletLines.map(l => l.replace(/^\s*-\s*/,'').trim()).filter(Boolean);
+  }
+  // Fallback: preserve non-bullet content (e.g. single-line `Kernel Notes: foo`)
+  const trimmed = raw.trim();
+  return trimmed ? [trimmed] : [];
 }
 function buildBulletEditor(id, items) {
   const rows = (items.length ? items : ['']).map((item,i) =>
@@ -1218,11 +1225,20 @@ function parseEpochParams(epLine, method) {
     const m = epLine.match(new RegExp(`${escRe(key)}\\s*=\\s*([^,*\\]\\n]+)`));
     return m ? m[1].replace(/\s*s\s*$/, '').replace(/\*/g, '').trim() : '';
   };
-  const result = { tmin:'', tmax:'', overlap:'', segment_length:'', custom:[] };
+  const result = { tmin:'', tmax:'', overlap:'', segment_length:'', target_events:[], custom:[] };
   result.tmin = get('tmin');
   result.tmax = get('tmax');
   result.overlap = get('overlap');
   result.segment_length = get('segment_length');
+  // Extract target_events array (v3 decouples this from Target Definition rows).
+  const teMatch = epLine.match(/target_events\s*=\s*\[([^\]]*)\]/);
+  if (teMatch) {
+    const inner = teMatch[1];
+    const backticked = [...inner.matchAll(/`([^`]+)`/g)].map(m=>m[1]);
+    result.target_events = backticked.length
+      ? backticked
+      : inner.split(',').map(s=>s.trim().replace(/^`|`$/g,'')).filter(Boolean);
+  }
   // Extract custom params: any key=value not in required set
   const required = new Set(['tmin','tmax','overlap','segment_length','target_events']);
   const allPairs = [...epLine.matchAll(/(\w+)\s*=\s*([^,\n\]]+)/g)];
@@ -1246,6 +1262,20 @@ function buildEpochParamsEditor(ep, method, idx) {
     </div>`
   ).join('');
 
+  const teArr = Array.isArray(ep.target_events) ? ep.target_events : [];
+  const teStr = teArr.join(', ');
+  const teDisabled = isSeg ? 'disabled' : '';
+  const tePlaceholder = isSeg ? 'must be [] for segmentation' : 'e.g. left_target, right_target';
+  const teHint = isSeg
+    ? 'Segmentation has no event anchors — locked to [].'
+    : 'Event IDs that anchor each epoch (v3: decoupled from Target Definition).';
+  const teFieldHtml = `
+      <div class="epoch-field" style="flex:2;min-width:240px">
+        <label>target_events ${isSeg ? '' : '<span class="req-mark">*</span>'} <span class="unit">(comma-separated)</span></label>
+        <input type="text" class="ep-target-events" value="${esc(teStr)}" placeholder="${tePlaceholder}" ${teDisabled}>
+        <div class="epoch-hint" style="font-size:10px;margin-top:2px">${teHint}</div>
+      </div>`;
+
   let requiredHtml = '';
   if (isEvent || isLong) {
     requiredHtml = `
@@ -1260,7 +1290,8 @@ function buildEpochParamsEditor(ep, method, idx) {
       ${isLong ? `<div class="epoch-field">
         <label>overlap <span class="req-mark">*</span> <span class="unit">(0–1)</span></label>
         <input type="text" class="ep-overlap" value="${esc(ep.overlap)}" placeholder="e.g. 0.5">
-      </div>` : ''}`;
+      </div>` : ''}
+      ${teFieldHtml}`;
   } else if (isSeg) {
     requiredHtml = `
       <div class="epoch-field">
@@ -1270,7 +1301,8 @@ function buildEpochParamsEditor(ep, method, idx) {
       <div class="epoch-field">
         <label>overlap <span class="req-mark">*</span> <span class="unit">(0–1)</span></label>
         <input type="text" class="ep-overlap" value="${esc(ep.overlap)}" placeholder="e.g. 0.5">
-      </div>`;
+      </div>
+      ${teFieldHtml}`;
   }
 
   return `<div class="epoch-params-block" id="ep-block-${idx}">
@@ -1279,7 +1311,7 @@ function buildEpochParamsEditor(ep, method, idx) {
     <div class="epoch-custom-title">Optional parameters (key = value)</div>
     <div class="epoch-custom-list" id="ep-custom-${idx}">${customRows}</div>
     <button class="btn-add-bullet" onclick="addEpochCustom(${idx})" style="margin-top:4px">+ Add param</button>
-    <div class="epoch-hint">Set parameters based on your selected reference(s). If multiple references report different windows, choose the most representative or a reasonable compromise — note the rationale in Kernel Notes.</div>
+    <div class="epoch-hint">Set parameters based on your selected reference(s). If multiple references report different windows, choose the most representative or a reasonable compromise — note the rationale in the task <strong>Notes</strong>. Required minimum keys: event→tmin/tmax/target_events; long-event→tmin/tmax/overlap/target_events; segmentation→segment_length/overlap.</div>
     <div class="epoch-hint" style="margin-top:3px">Params map to <code>epoch_params</code> / <code>segment_params</code> in EEGUnity. Valid keys: <code>baseline</code>, <code>reject</code>, <code>picks</code>, etc.</div>
   </div>`;
 }
@@ -1299,7 +1331,7 @@ function addEpochCustom(idx) {
 
 function collectEpochParams(card, idx, method) {
   const block = card.querySelector(`#ep-block-${idx}`);
-  if (!block) return '';
+  if (!block) return { str: '', target_events: [] };
   const isEvent = method === 'epoch_by_event_hdf5';
   const isLong = method === 'epoch_by_long_event_hdf5';
   const isSeg = method === 'epoch_by_segmentation_hdf5';
@@ -1324,7 +1356,14 @@ function collectEpochParams(card, idx, method) {
     const v = row.querySelector('.epoch-custom-val')?.value.trim();
     if (k && v) parts.push(`${k} = ${v}`);
   });
-  return parts.join(', ');
+  // target_events: locked to [] for segmentation; otherwise parse comma list.
+  const teRaw = isSeg ? '' : (block.querySelector('.ep-target-events')?.value.trim() || '');
+  const teArr = teRaw ? teRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+  const teStr = teArr.length
+    ? `target_events = [${teArr.map(e => `\`${e}\``).join(', ')}]`
+    : `target_events = []`;
+  parts.push(teStr);
+  return { str: parts.join(', '), target_events: teArr };
 }
 
 // ─── Step Dispatch ────────────────────────────────────────────────────────────
@@ -1519,6 +1558,9 @@ function renderFileScanTasks(content) {
 }
 
 function switchFSTTab(tab) {
+  // v3: sync pending Task edits into currentTasks BEFORE hiding the pane so
+  // content (esp. Kernel Notes) isn't lost if the Tasks pane is later re-rendered.
+  try { collectTaskCards(); } catch (_) {}
   document.getElementById('fst-tab-scan').classList.toggle('active', tab==='scan');
   document.getElementById('fst-tab-tasks').classList.toggle('active', tab==='tasks');
   document.getElementById('fst-pane-scan').style.display = tab==='scan' ? '' : 'none';
@@ -1611,6 +1653,44 @@ function getMiscWarning(channelName) {
   return null;
 }
 
+// ─── v3 Target Definition schema helpers ─────────────────────────────────────
+// Modes driven by Label Route × Task Type (see rulebook 第77条之四).
+function tdMode(task) {
+  const lr = task.labelRoute || 'event';
+  const tt = (lr === 'misc') ? 'regression' : (task.taskType || 'classification');
+  if (lr === 'event'  && tt === 'classification') return 'ev_cls';
+  if (lr === 'event'  && tt === 'regression')     return 'ev_reg';
+  if (lr === 'misc')                              return 'misc_reg';
+  if (lr === 'info'   && tt === 'classification') return 'info_cls';
+  if (lr === 'info'   && tt === 'regression')     return 'info_reg';
+  return 'ev_cls';
+}
+const _TD_SCHEMA = {
+  ev_cls:   { headers: ['Event ID','y','Meaning'],            placeholders: ['event id','0/1','meaning'] },
+  ev_reg:   { headers: ['Event ID','Value','Meaning'],        placeholders: ['event id','value','meaning'] },
+  misc_reg: { headers: ['MISC Channel','Value','Notes'],      placeholders: ['channel','value (unit)','notes'] },
+  info_cls: { headers: ['Info Field','Value','y','Meaning'],  placeholders: ['info field','value','0/1','meaning'] },
+  info_reg: { headers: ['Info Field','Range','Notes'],        placeholders: ['info field','range','notes'] },
+};
+function tdHeaders(mode) { return (_TD_SCHEMA[mode] || _TD_SCHEMA.ev_cls).headers; }
+function tdPlaceholders(mode) { return (_TD_SCHEMA[mode] || _TD_SCHEMA.ev_cls).placeholders; }
+function tdRowCells(mode, row, fallbackLabel='') {
+  const l = (row.label || fallbackLabel || '').trim();
+  switch (mode) {
+    case 'info_cls': return [l, (row.value||''), (row.y||''), (row.meaning||'')];
+    case 'misc_reg':
+    case 'info_reg': return [l, (row.y||''), (row.meaning||'')];
+    default:         return [l, (row.y||''), (row.meaning||'')];
+  }
+}
+function tdRowFromCells(mode, cells) {
+  const get = (i) => (cells[i]||'').trim();
+  if (mode === 'info_cls') {
+    return { label: get(0), value: get(1), y: get(2), meaning: get(3) };
+  }
+  return { label: get(0), y: get(1), meaning: get(2) };
+}
+
 // ─── Task Parsing ─────────────────────────────────────────────────────────────
 function parseTasks(body) {
   const tasks = [];
@@ -1620,7 +1700,7 @@ function parseTasks(body) {
     if (!hm) continue;
     const task = { kind:hm[1], num:parseInt(hm[2]), name:hm[3].trim(),
       taskType:'classification', epochMethod:'epoch_by_event_hdf5',
-      epochParams:{ tmin:'', tmax:'', overlap:'', segment_length:'', custom:[] },
+      epochParams:{ tmin:'', tmax:'', overlap:'', segment_length:'', target_events:[], custom:[] },
       labelRoute:'event', labelField:'', metaLevel:'raw', targetRows:[], miscChannel:'', evidence:[], kernelNotes:'' };
 
     const fv = (field) => { const re=new RegExp(`\\*\\*${escRe(field)}\\*\\*:\\s*\`?([^\`\n]+)\`?`); const m=part.match(re); return m?m[1].trim():''; };
@@ -1636,15 +1716,15 @@ function parseTasks(body) {
       const tdb = tdm[1].trim();
       if (tdb.includes('|')) {
         const { rows } = parseMarkdownTable(tdb);
-        // v3: misc-regression TD has 3 cols (Channel, Value, Notes) — store first col as miscChannel.
+        const mode = tdMode(task);
+        task.targetRows = rows.map(r => tdRowFromCells(mode, r.map(c => (c||'').replace(/^`|`$/g,''))));
+        // misc: labelField = channel from first row (or existing).
         if (task.labelRoute === 'misc') {
-          if (rows.length) task.miscChannel = (rows[0][0]||'').replace(/^`|`$/g,'').trim();
-          if (!task.labelField) task.labelField = task.miscChannel;
-        } else {
-          task.targetRows = rows.map(r=>({ label:(r[0]||'').replace(/^`|`$/g,'').trim(), y:(r[1]||'').trim(), meaning:(r[2]||'').trim() }));
-          if (task.labelRoute === 'info' && !task.labelField && task.targetRows.length) {
-            task.labelField = task.targetRows[0].label;
-          }
+          const first = task.targetRows[0]?.label || '';
+          task.miscChannel = first;
+          if (!task.labelField) task.labelField = first;
+        } else if (task.labelRoute === 'info' && !task.labelField && task.targetRows.length) {
+          task.labelField = task.targetRows[0].label;
         }
       } else {
         const mm = tdb.match(/`([^`]+)`/);
@@ -1656,7 +1736,9 @@ function parseTasks(body) {
     const evm = part.match(/\*\*Evidence\*\*:\s*([\s\S]*?)(?=\n- \*\*\w|$)/);
     if (evm) task.evidence = parseEvidence(evm[1].trim());
 
-    const knm = part.match(/\*\*Kernel Notes\*\*:\s*([\s\S]*?)(?=\n- \*\*\w|$)/);
+    // v3 uses `**Notes**:`; legacy docs use `**Kernel Notes**:`. Accept either.
+    const knm = part.match(/\*\*Notes\*\*:\s*([\s\S]*?)(?=\n- \*\*\w|$)/)
+             || part.match(/\*\*Kernel Notes\*\*:\s*([\s\S]*?)(?=\n- \*\*\w|$)/);
     if (knm) task.kernelNotes = knm[1].trim();
 
     tasks.push(task);
@@ -1667,72 +1749,84 @@ function parseTasks(body) {
 function serializeTasks(tasks) {
   let classN=0, potN=0;
   return tasks.map(task => {
-    const num = task.kind==='Classical' ? ++classN : ++potN;
+    const num = task.kind === 'Classical' ? ++classN : ++potN;
     // v3: misc route is regression-only.
-    const taskType = (task.labelRoute==='misc') ? 'regression' : (task.taskType || 'classification');
-    let teStr = '';
-    if (task.epochMethod === 'epoch_by_segmentation_hdf5') {
-      teStr = `, target_events = []`;
-    } else if (task.labelRoute!=='misc' && task.targetRows.length) {
-      teStr = `, target_events = [${task.targetRows.map(r=>`\`${r.label}\``).join(', ')}]`;
-    }
-    const epStr = task.epochParamsStr || '';
+    const taskType = (task.labelRoute === 'misc') ? 'regression' : (task.taskType || 'classification');
+    const effectiveTask = { ...task, taskType };
+    const mode = tdMode(effectiveTask);
 
-    // v3: derive Label Field from canonical sources per route.
-    let labelField = (task.labelField||'').trim();
-    if (!labelField && task.labelRoute==='misc') labelField = (task.miscChannel||'').trim();
-    if (!labelField && task.labelRoute==='info' && task.targetRows.length) labelField = task.targetRows[0].label.trim();
-    const labelFieldLine = (task.labelRoute==='misc' || task.labelRoute==='info')
+    // epochParamsStr already contains target_events = [...] (from collectEpochParams).
+    // If it's missing (e.g. freshly parsed), append one from epochParams.target_events.
+    let epStr = task.epochParamsStr || '';
+    if (!/target_events\s*=/.test(epStr)) {
+      const teArr = (task.epochMethod === 'epoch_by_segmentation_hdf5')
+        ? []
+        : (task.epochParams?.target_events || []);
+      const teStr = teArr.length
+        ? `target_events = [${teArr.map(e => `\`${e}\``).join(', ')}]`
+        : `target_events = []`;
+      epStr = epStr ? `${epStr}, ${teStr}` : teStr;
+    }
+
+    // Label Field (required iff route ∈ {misc, info}).
+    let labelField = (task.labelField || '').trim();
+    if (!labelField && task.labelRoute === 'misc') labelField = (task.miscChannel || '').trim();
+    if (!labelField && task.labelRoute === 'info' && task.targetRows?.length) {
+      labelField = (task.targetRows[0].label || '').trim();
+    }
+    const labelFieldLine = (task.labelRoute === 'misc' || task.labelRoute === 'info')
       ? `\n- **Label Field**: \`${labelField}\``
       : '';
 
-    // v3: Target Definition table header per Route × Task Type.
-    let targetDef = '';
-    if (task.labelRoute==='misc') {
-      targetDef = `| MISC Channel | Value | Notes |\n  |---|---|---|\n  | \`${labelField}\` | continuous |  |`;
-    } else if (task.labelRoute==='info') {
-      if (taskType === 'regression') {
-        targetDef = `| Info Field | Range | Notes |\n  |---|---|---|`;
-        task.targetRows.forEach(r => {
-          targetDef += `\n  | \`${labelField || r.label}\` | ${r.y} | ${r.meaning} |`;
-        });
-        if (!task.targetRows.length) targetDef += `\n  | \`${labelField}\` |  |  |`;
-      } else {
-        targetDef = `| Info Field | Value | y | Meaning |\n  |---|---|---|---|`;
-        task.targetRows.forEach(r => {
-          targetDef += `\n  | \`${labelField || r.label}\` |  | ${r.y} | ${r.meaning} |`;
-        });
-      }
-    } else {
-      // event route — header depends on classification vs regression
-      if (taskType === 'regression') {
-        targetDef = `| Event ID | Value | Meaning |\n  |---|---|---|`;
-      } else {
-        targetDef = `| Event ID | y | Meaning |\n  |---|---|---|`;
-      }
-      task.targetRows.forEach(r => { targetDef += `\n  | \`${r.label}\` | ${r.y} | ${r.meaning} |`; });
+    // Target Definition table — schema-aware per Route × Task Type.
+    const hdrs = tdHeaders(mode);
+    const headerLine = `| ${hdrs.join(' | ')} |`;
+    const sepLine = `|${hdrs.map(() => '---').join('|')}|`;
+    const fallback = (mode === 'misc_reg' || mode === 'info_cls' || mode === 'info_reg') ? labelField : '';
+    let rowsArr = task.targetRows && task.targetRows.length ? task.targetRows : [];
+    if (!rowsArr.length) {
+      // Emit one placeholder row so the table is well-formed (esp. for misc_reg).
+      rowsArr = [{ label: fallback, y: '', meaning: '', value: '' }];
     }
+    const rowLines = rowsArr.map(r => {
+      const cells = tdRowCells(mode, r, fallback);
+      const wrap = (c, i) => {
+        const v = (c || '').toString().trim();
+        // Backtick the first column (ID column) when non-empty.
+        if (i === 0 && v) return `\`${v}\``;
+        return v;
+      };
+      return `  | ${cells.map(wrap).join(' | ')} |`;
+    });
+    const targetDef = `${headerLine}\n  ${sepLine}\n${rowLines.join('\n')}`;
 
-    const evLines = (task.evidence||[]).map(e => {
-      const ref = (e.ref||'').trim();
-      const desc = (e.desc||'').trim();
+    const evLines = (task.evidence || []).map(e => {
+      const ref = (e.ref || '').trim();
+      const desc = (e.desc || '').trim();
       if (ref && desc) return `  - ${ref} — ${desc}`;
       if (ref) return `  - ${ref}`;
       if (desc) return `  - ${desc}`;
       return '';
     }).filter(Boolean).join('\n');
 
+    // v3 Notes: multi-line → markdown bullet list; single-line → inline.
+    const knRaw = (task.kernelNotes || '').trim();
+    const knLines = knRaw ? knRaw.split('\n').map(s => s.trim()).filter(Boolean) : [];
+    const kernelNotesBlock = knLines.length <= 1
+      ? `- **Notes**: ${knLines[0] || ''}`
+      : `- **Notes**:\n${knLines.map(l => `  - ${l}`).join('\n')}`;
+
     return `### ${task.kind} Task ${num}: ${task.name}
 - **Task Type**: ${taskType}
 - **Epoch Method**: \`${task.epochMethod}\`
-- **Epoch Parameters**: ${epStr}${teStr}
+- **Epoch Parameters**: ${epStr}
 - **Label Route**: \`${task.labelRoute}\`${labelFieldLine}
 - **Meta Level**: ${task.metaLevel}
 - **Target Definition**:
   ${targetDef}
 - **Evidence**:
 ${evLines}
-- **Kernel Notes**: ${task.kernelNotes}`;
+${kernelNotesBlock}`;
   }).join('\n\n');
 }
 
@@ -1753,35 +1847,112 @@ function renderTaskCards(container) {
   container.querySelectorAll('.bullet-input').forEach(ta => autoResize(ta));
 }
 
+function buildTargetDefEditor(task, idx) {
+  const mode = tdMode(task);
+  const hdrs = tdHeaders(mode);
+  const phs = tdPlaceholders(mode);
+  const nCols = hdrs.length;
+  const labelField = (task.labelField || task.miscChannel || '').trim();
+  const fallback = (mode === 'misc_reg' || mode === 'info_cls' || mode === 'info_reg') ? labelField : '';
+  const rowsArr = (task.targetRows && task.targetRows.length)
+    ? task.targetRows
+    : [{label:'',y:'',meaning:'',value:''}];
+  // Column widths (4-col vs 3-col).
+  const widths = (nCols === 4) ? ['24%','20%','10%','42%'] : ['34%','22%','40%'];
+  let thead = '<thead><tr>';
+  hdrs.forEach((h,i) => { thead += `<th style="width:${widths[i]}">${h}</th>`; });
+  thead += '<th style="width:30px"></th></tr></thead>';
+  let tbody = `<tbody id="td-tbody-${idx}">`;
+  rowsArr.forEach(row => {
+    const cells = tdRowCells(mode, row, fallback);
+    tbody += '<tr>';
+    cells.forEach((v, ci) => {
+      tbody += `<td><input type="text" value="${esc(v||'')}" placeholder="${esc(phs[ci]||'')}"></td>`;
+    });
+    tbody += `<td><button class="btn-row-del" onclick="this.closest('tr').remove()">×</button></td></tr>`;
+  });
+  tbody += '</tbody>';
+  const addBtn = (mode === 'misc_reg' || mode === 'info_reg')
+    ? ''  // single-row tables for continuous/range routes
+    : `<button class="btn-row-add" onclick="addTdRow(${idx})">+ Add row</button>`;
+  return `<table class="td-table" id="td-table-${idx}" data-td-mode="${mode}">${thead}${tbody}</table>${addBtn}`;
+}
+
 function buildTaskCard(task, idx) {
   const classSelClass = task.kind==='Classical' ? 'selected-classical' : '';
   const potSelClass = task.kind==='Potential' ? 'selected-potential' : '';
   const epOpts = EPOCH_METHODS.map(m=>`<option value="${m}" ${task.epochMethod===m?'selected':''}>${m}</option>`).join('');
   const lrOpts = LABEL_ROUTES.map(lr=>`<option value="${lr}" ${task.labelRoute===lr?'selected':''}>${lr}</option>`).join('');
   const mlOpts = ['raw','super'].map(ml=>`<option value="${ml}" ${task.metaLevel===ml?'selected':''}>${ml}</option>`).join('');
-  const ttOpts = ['classification','regression'].map(tt=>`<option value="${tt}" ${task.taskType===tt?'selected':''}>${tt}</option>`).join('');
+  // v3: misc route locks Task Type to regression.
+  const isMisc = task.labelRoute === 'misc';
+  const ttOpts = ['classification','regression'].map(tt => {
+    const disabled = (isMisc && tt === 'classification') ? 'disabled' : '';
+    const selected = (task.taskType === tt) ? 'selected' : '';
+    return `<option value="${tt}" ${selected} ${disabled}>${tt}</option>`;
+  }).join('');
 
-  let targetDefHtml = '';
-  if (task.labelRoute==='misc') {
-    const w = getMiscWarning(task.miscChannel);
-    targetDefHtml = `<div class="misc-channel-wrap">
-      <input type="text" class="task-misc-channel" value="${esc(task.miscChannel)}"
-        placeholder="MISC channel name (must exist in MISC Label Summary)"
-        oninput="updateMiscWarning(${idx},this)">
-      ${w ? `<div class="misc-warning" id="misc-warn-${idx}">${w}</div>` : `<div class="misc-warning" id="misc-warn-${idx}" style="display:none"></div>`}
-    </div>`;
-  } else {
-    const col = task.labelRoute==='info' ? 'Info' : 'Event';
-    const rows = (task.targetRows.length ? task.targetRows : [{label:'',y:'',meaning:''}])
-      .map(r=>`<tr><td><input type="text" value="${esc(r.label)}" placeholder="id"></td><td><input type="text" value="${esc(r.y)}" placeholder="0/1" style="width:45px"></td><td><input type="text" value="${esc(r.meaning)}" placeholder="Meaning"></td><td><button class="btn-row-del" onclick="this.closest('tr').remove()">×</button></td></tr>`).join('');
-    targetDefHtml = `<table class="td-table" id="td-table-${idx}">
-      <thead><tr><th>${col}</th><th style="width:50px">y</th><th>Meaning</th><th style="width:30px"></th></tr></thead>
-      <tbody id="td-tbody-${idx}">${rows}</tbody></table>
-      <button class="btn-row-add" onclick="addTdRow(${idx})">+ Add row</button>`;
-  }
+  const targetDefHtml = buildTargetDefEditor(task, idx);
 
   const epHtml = buildEpochParamsEditor(task.epochParams, task.epochMethod, idx);
   const evHtml = buildEvidenceEditor(`ev-${idx}`, task.evidence||[]);
+
+  // Label Field input: shown only for non-event routes.
+  const showLF = (task.labelRoute === 'misc' || task.labelRoute === 'info');
+  const lfValue = (task.labelField || task.miscChannel || '').trim();
+  const lfMissing = showLF && !lfValue;
+  const lfBorder = lfMissing ? 'border-color:#dc2626;box-shadow:0 0 0 2px #fee2e2;' : '';
+  const lfHint = isMisc
+    ? 'MISC channel name (must exist in MISC Label Summary).'
+    : (task.labelRoute === 'info' ? 'participants.tsv column name.' : '');
+  const labelFieldFieldHtml = `
+    <div class="task-field task-field-label-field" id="lf-wrap-${idx}" style="${showLF?'':'display:none'}">
+      <label>Label Field ${showLF ? '<span class="req-mark">*</span>' : ''}</label>
+      <input type="text" class="task-label-field" value="${esc(lfValue)}"
+        placeholder="${esc(isMisc ? 'e.g. response_time' : 'e.g. subject_sex')}"
+        oninput="onLabelFieldInput(${idx},this)"
+        style="${lfBorder}">
+      <p class="field-hint" style="margin-top:3px">${lfHint}</p>
+    </div>`;
+
+  // Task-card-level validation messages (inline; v3 invariants).
+  const validationMsgs = [];
+  if (lfMissing) validationMsgs.push('Label Field is required when Label Route ∈ {misc, info}.');
+  if (task.taskType === 'classification' && task.labelRoute !== 'misc') {
+    const ys = (task.targetRows||[]).map(r => (r.y||'').trim()).filter(Boolean);
+    const unique = new Set(ys);
+    if (unique.size < 2) validationMsgs.push('Classification requires ≥2 distinct y values in Target Definition.');
+  }
+  if (task.epochMethod === 'epoch_by_segmentation_hdf5'
+      && Array.isArray(task.epochParams?.target_events)
+      && task.epochParams.target_events.length) {
+    validationMsgs.push('Segmentation requires target_events = []; the non-empty value will be dropped on save.');
+  }
+  // v3 rule epoch_parameters_complete (rulebook 第69–72条, detect.py severity=error).
+  const ep = task.epochParams || {};
+  const hasVal = (v) => v !== undefined && v !== null && String(v).trim() !== '';
+  const reqByMethod = {
+    epoch_by_event_hdf5:       ['tmin','tmax','target_events'],
+    epoch_by_long_event_hdf5:  ['tmin','tmax','overlap','target_events'],
+    epoch_by_segmentation_hdf5:['segment_length','overlap'],
+  };
+  const reqKeys = reqByMethod[task.epochMethod] || [];
+  const missingKeys = reqKeys.filter(k => {
+    if (k === 'target_events') {
+      // For segmentation, [] counts as present; for event/long-event, at least one id required.
+      const te = Array.isArray(ep.target_events) ? ep.target_events : [];
+      return task.epochMethod === 'epoch_by_segmentation_hdf5' ? false : te.length === 0;
+    }
+    return !hasVal(ep[k]);
+  });
+  if (missingKeys.length) {
+    validationMsgs.push(`Epoch Parameters missing required key(s) for ${task.epochMethod}: ${missingKeys.join(', ')}.`);
+  }
+  const validationHtml = validationMsgs.length
+    ? `<div class="task-validation" style="margin-top:6px;padding:6px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:5px;color:#b91c1c;font-size:11px">
+         ${validationMsgs.map(m => `<div>• ${esc(m)}</div>`).join('')}
+       </div>`
+    : '';
 
   return `<div class="task-card" data-task-idx="${idx}">
     <div class="task-card-header">
@@ -1795,7 +1966,9 @@ function buildTaskCard(task, idx) {
       <button class="btn-del-task" onclick="deleteTask(${idx})">×</button>
     </div>
     <div class="task-fields-row">
-      <div class="task-field"><label>Task Type</label><select class="task-type-sel">${ttOpts}</select></div>
+      <div class="task-field"><label>Task Type</label><select class="task-type-sel" onchange="onTaskTypeChange(${idx},this)">${ttOpts}</select>
+        ${isMisc ? `<p class="field-hint" style="margin-top:3px;color:#b45309">misc route is regression-only (rulebook 第77条之六).</p>` : ''}
+      </div>
       <div class="task-field" style="flex:2;min-width:200px"><label>Epoch Method</label>
         <select class="task-epoch-method-sel" onchange="onEpochMethodChange(${idx},this)">${epOpts}</select></div>
       <div class="task-field">
@@ -1803,6 +1976,7 @@ function buildTaskCard(task, idx) {
         <select class="task-lr-sel" onchange="onLabelRouteChange(${idx},this)">${lrOpts}</select>
         <p class="field-hint" style="margin-top:3px"><code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">event</code> = event stream, <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">misc</code> = scalar/continuous channel, <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">info</code> = subject metadata</p>
       </div>
+      ${labelFieldFieldHtml}
       <div class="task-field">
         <label>Meta Level</label>
         <select class="task-ml-sel">${mlOpts}</select>
@@ -1813,6 +1987,7 @@ function buildTaskCard(task, idx) {
     <div class="task-td-section">
       <label>Target Definition</label>
       <div id="task-td-${idx}">${targetDefHtml}</div>
+      ${validationHtml}
     </div>
     <div class="task-text-field">
       <label>Evidence <span style="font-size:10px;font-weight:400;color:var(--muted)">— DOI: reference — description</span></label>
@@ -1820,17 +1995,49 @@ function buildTaskCard(task, idx) {
       ${evHtml}
     </div>
     <div class="task-text-field">
-      <label>Kernel Notes</label>
+      <label>Notes <span style="font-size:10px;font-weight:400;color:var(--muted)">— free-form (super-meta derivation, parameter rationale, audit notes)</span></label>
       ${buildBulletEditor(`kn-${idx}`, parseBullets(task.kernelNotes))}
     </div>
   </div>`;
 }
 
 function addTdRow(taskIdx) {
-  const tbody = document.getElementById(`td-tbody-${taskIdx}`); if (!tbody) return;
+  const table = document.getElementById(`td-table-${taskIdx}`);
+  const tbody = document.getElementById(`td-tbody-${taskIdx}`);
+  if (!tbody || !table) return;
+  const mode = table.getAttribute('data-td-mode') || 'ev_cls';
+  const phs = tdPlaceholders(mode);
+  const nCols = tdHeaders(mode).length;
   const tr = document.createElement('tr');
-  tr.innerHTML = `<td><input type="text" value="" placeholder="id"></td><td><input type="text" value="" placeholder="0/1" style="width:45px"></td><td><input type="text" value="" placeholder="Meaning"></td><td><button class="btn-row-del" onclick="this.closest('tr').remove()">×</button></td>`;
+  let html = '';
+  for (let i = 0; i < nCols; i++) {
+    html += `<td><input type="text" value="" placeholder="${esc(phs[i]||'')}"></td>`;
+  }
+  html += `<td><button class="btn-row-del" onclick="this.closest('tr').remove()">×</button></td>`;
+  tr.innerHTML = html;
   tbody.appendChild(tr);
+}
+
+function onLabelFieldInput(idx, input) {
+  if (!currentTasks[idx]) return;
+  const v = (input.value || '').trim();
+  currentTasks[idx].labelField = v;
+  if (currentTasks[idx].labelRoute === 'misc') currentTasks[idx].miscChannel = v;
+  // Toggle red border based on emptiness.
+  input.style.borderColor = v ? '' : '#dc2626';
+  input.style.boxShadow = v ? '' : '0 0 0 2px #fee2e2';
+}
+
+function onTaskTypeChange(idx, sel) {
+  collectTaskCards();
+  if (!currentTasks[idx]) return;
+  // v3: misc route is locked to regression; override silently.
+  if (currentTasks[idx].labelRoute === 'misc' && sel.value !== 'regression') {
+    currentTasks[idx].taskType = 'regression';
+  } else {
+    currentTasks[idx].taskType = sel.value;
+  }
+  renderTaskCards(document.getElementById('task-cards-container'));
 }
 function selectTaskKind(idx, kind, btn) {
   const card = btn.closest('.task-card');
@@ -1839,37 +2046,30 @@ function selectTaskKind(idx, kind, btn) {
 }
 function onEpochMethodChange(idx, sel) {
   collectTaskCards();
-  if (currentTasks[idx]) currentTasks[idx].epochMethod = sel.value;
-  const wrap = document.getElementById(`ep-wrap-${idx}`);
-  if (wrap) wrap.innerHTML = buildEpochParamsEditor(currentTasks[idx]?.epochParams || {tmin:'',tmax:'',overlap:'',segment_length:'',custom:[]}, sel.value, idx);
+  if (!currentTasks[idx]) return;
+  currentTasks[idx].epochMethod = sel.value;
+  // Segmentation locks target_events to [].
+  if (sel.value === 'epoch_by_segmentation_hdf5') {
+    currentTasks[idx].epochParams = currentTasks[idx].epochParams || {tmin:'',tmax:'',overlap:'',segment_length:'',target_events:[],custom:[]};
+    currentTasks[idx].epochParams.target_events = [];
+  }
+  renderTaskCards(document.getElementById('task-cards-container'));
 }
 function onLabelRouteChange(idx, sel) {
   collectTaskCards();
   const newLr = sel.value;
-  if (currentTasks[idx]) currentTasks[idx].labelRoute = newLr;
-  const task = currentTasks[idx] || {};
-  // v3: misc route is regression-only — force task type and re-render the card.
-  if (newLr === 'misc' && task.taskType !== 'regression') {
-    task.taskType = 'regression';
-    renderTaskCards(document.getElementById('task-cards-container'));
-    return;
+  if (!currentTasks[idx]) return;
+  const task = currentTasks[idx];
+  task.labelRoute = newLr;
+  // v3: misc route is regression-only.
+  if (newLr === 'misc') task.taskType = 'regression';
+  // Leaving misc/info → clear labelField; entering misc/info → seed from targetRows[0] if empty.
+  if (newLr === 'event') {
+    task.labelField = '';
+  } else if (!task.labelField) {
+    task.labelField = task.targetRows?.[0]?.label || task.miscChannel || '';
   }
-  const tdDiv = document.getElementById(`task-td-${idx}`);
-  if (!tdDiv) return;
-  if (newLr==='misc') {
-    const w = getMiscWarning(task.miscChannel||'');
-    tdDiv.innerHTML = `<div class="misc-channel-wrap">
-      <input type="text" class="task-misc-channel" value="${esc(task.miscChannel||'')}"
-        placeholder="MISC channel name" oninput="updateMiscWarning(${idx},this)">
-      ${w?`<div class="misc-warning" id="misc-warn-${idx}">${w}</div>`:`<div class="misc-warning" id="misc-warn-${idx}" style="display:none"></div>`}
-    </div>`;
-  } else {
-    const col = newLr==='info' ? 'Info' : 'Event';
-    const rows = (task.targetRows||[{label:'',y:'',meaning:''}]).map(r=>
-      `<tr><td><input type="text" value="${esc(r.label)}" placeholder="id"></td><td><input type="text" value="${esc(r.y)}" placeholder="0/1" style="width:45px"></td><td><input type="text" value="${esc(r.meaning)}" placeholder="Meaning"></td><td><button class="btn-row-del" onclick="this.closest('tr').remove()">×</button></td></tr>`
-    ).join('');
-    tdDiv.innerHTML = `<table class="td-table" id="td-table-${idx}"><thead><tr><th>${col}</th><th style="width:50px">y</th><th>Meaning</th><th style="width:30px"></th></tr></thead><tbody id="td-tbody-${idx}">${rows}</tbody></table><button class="btn-row-add" onclick="addTdRow(${idx})">+ Add row</button>`;
-  }
+  renderTaskCards(document.getElementById('task-cards-container'));
 }
 function updateMiscWarning(idx, input) {
   const w = getMiscWarning(input.value.trim());
@@ -1880,7 +2080,7 @@ function updateMiscWarning(idx, input) {
 function addTask(kind) {
   collectTaskCards();
   currentTasks.push({ kind, num:0, name:'', taskType:'classification', epochMethod:'epoch_by_event_hdf5',
-    epochParams:{tmin:'',tmax:'',overlap:'',segment_length:'',custom:[]},
+    epochParams:{tmin:'',tmax:'',overlap:'',segment_length:'',target_events:[],custom:[]},
     labelRoute:'event', labelField:'', metaLevel:'raw', targetRows:[], miscChannel:'', evidence:[], kernelNotes:'' });
   renderTaskCards(document.getElementById('task-cards-container'));
   const tb = document.getElementById('fst-tab-tasks'); if(tb) tb.textContent=`Tasks (${currentTasks.length})`;
@@ -1911,43 +2111,59 @@ function collectTaskCards() {
     const kind = kindBtn ? kindBtn.dataset.kind : 'Classical';
     const method = card.querySelector('.task-epoch-method-sel')?.value || 'epoch_by_event_hdf5';
     const lr = card.querySelector('.task-lr-sel')?.value || 'event';
+    const rawTaskType = card.querySelector('.task-type-sel')?.value || 'classification';
+    // v3: misc route is regression-only.
+    const taskType = (lr === 'misc') ? 'regression' : rawTaskType;
+    const ep = collectEpochParams(card, i, method);
     const task = {
       kind, num:0,
-      name: card.querySelector('.task-name-input')?.value.trim()||'',
-      taskType: card.querySelector('.task-type-sel')?.value||'classification',
+      name: card.querySelector('.task-name-input')?.value.trim() || '',
+      taskType,
       epochMethod: method,
-      epochParams: {tmin:'',tmax:'',overlap:'',segment_length:'',custom:[]},
+      epochParams: {
+        tmin:'', tmax:'', overlap:'', segment_length:'',
+        target_events: ep.target_events || [],
+        custom: [],
+      },
       labelRoute: lr,
-      labelField: card.querySelector('.task-label-field')?.value.trim()||'',
-      metaLevel: card.querySelector('.task-ml-sel')?.value||'raw',
-      targetRows: [], miscChannel: '', evidence: [], kernelNotes: '',
-      epochParamsStr: collectEpochParams(card, i, method),
+      labelField: card.querySelector('.task-label-field')?.value.trim() || '',
+      metaLevel: card.querySelector('.task-ml-sel')?.value || 'raw',
+      targetRows: [],
+      miscChannel: '',
+      evidence: [],
+      kernelNotes: '',
+      epochParamsStr: ep.str,
     };
-    if (lr==='misc') {
-      task.miscChannel = card.querySelector('.task-misc-channel')?.value.trim()||'';
-      if (!task.labelField) task.labelField = task.miscChannel;
-      // v3: misc route is regression-only.
-      task.taskType = 'regression';
-    } else {
-      card.querySelectorAll(`#td-tbody-${i} tr`).forEach(tr => {
-        const ins = tr.querySelectorAll('td input');
-        if (ins.length>=3) task.targetRows.push({ label:ins[0].value.trim(), y:ins[1].value.trim(), meaning:ins[2].value.trim() });
-      });
-      if (lr==='info' && !task.labelField && task.targetRows.length) {
-        task.labelField = task.targetRows[0].label;
-      }
+    // Collect TD rows per mode (from the rendered table's data-td-mode).
+    const tdTable = card.querySelector(`#td-table-${i}`);
+    const mode = tdTable ? (tdTable.getAttribute('data-td-mode') || tdMode(task)) : tdMode(task);
+    card.querySelectorAll(`#td-tbody-${i} tr`).forEach(tr => {
+      const ins = [...tr.querySelectorAll('td input')];
+      const cells = ins.map(x => x.value);
+      const row = tdRowFromCells(mode, cells);
+      // Keep row if any cell is non-empty.
+      const anyVal = Object.values(row).some(v => (v||'').toString().trim() !== '');
+      if (anyVal) task.targetRows.push(row);
+    });
+    if (lr === 'misc') {
+      const first = task.targetRows[0]?.label || '';
+      if (!task.labelField) task.labelField = first;
+      task.miscChannel = task.labelField;
+    } else if (lr === 'info' && !task.labelField && task.targetRows.length) {
+      task.labelField = task.targetRows[0].label;
     }
     // Collect evidence
     const evList = card.querySelector(`#ev-${i}-list`);
     if (evList) evList.querySelectorAll('.evidence-row').forEach(row => {
-      const ref = row.querySelector('.evidence-ref')?.value.trim()||'';
-      const desc = row.querySelector('.evidence-desc')?.value.trim()||'';
-      if (ref||desc) task.evidence.push({ ref, desc });
+      const ref = row.querySelector('.evidence-ref')?.value.trim() || '';
+      const desc = row.querySelector('.evidence-desc')?.value.trim() || '';
+      if (ref || desc) task.evidence.push({ ref, desc });
     });
     // Collect kernel notes
     const knList = card.querySelector(`#kn-${i}-list`);
     if (knList) {
-      task.kernelNotes = [...knList.querySelectorAll('.bullet-input')].map(t=>t.value.trim()).filter(Boolean).join('\n');
+      task.kernelNotes = [...knList.querySelectorAll('.bullet-input')]
+        .map(t => t.value.trim()).filter(Boolean).join('\n');
     }
     currentTasks.push(task);
   });

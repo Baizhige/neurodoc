@@ -1,0 +1,107 @@
+--- openneuro_ds003825/analysis.md (pre-v3)
++++ openneuro_ds003825/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds003825` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003825
+ **Category**: Sensory/Response | **Subjects**: 50 | **Files (Completed)**: 100 | **Channels**: 64 | **Sampling Rate**: 250 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -38,49 +38,84 @@
+ 
+ ## Tasks
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Classical Task 1: RSVP Object Concept Classification
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s, target_events = [`E 1`]
+-- **Label Route**: `stim`
++- **Label Route**: `info`
++- **Label Field**: `E 1`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-|
+-  | `E 1` | 0–1853 | One of 1,854 object concepts from THINGS stimulus set |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `E 1` | 0–1853 | One of 1,854 object concepts from THINGS stimulus set |  |
+ - **Super Meta Notes**: Labels for 1,854 object concepts must be derived from THINGS stimulus design files (external to raw events). Raw E 1 markers provide only timing; concept identity requires super meta lookup by trial index.
+ - **Evidence**:
+   - DOI: 10.1038/s41597-021-01102-7 — "linear discriminant classifiers to decode between 1,854 object concepts and 200 validation images presented in RSVP streams at 10 Hz"; epochs from -100 to 1000 ms relative to stimulus onset (E1 triggers)
+   - DOI: 10.1038/s41597-021-01102-7 — "22,248 images spanning 1,854 object concepts" across 50 subjects
+ - **Kernel Notes**: Use only E 1 for epoch extraction (E 2 is redundant with identical count ~22,248 per subject). The 1,854 concept labels require super meta derivation from THINGS stimulus design files linked by trial order. Consider stratified subsampling across concepts due to high epoch count (~1.2M E 1 events per subject). Sub-06 has partial data (~12,360 events).
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 1: RSVP Block Boundary Detection
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, target_events = [`E 3`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `E 3`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-|
+-  | `E 3` | 1 | Block/sequence boundary marker |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `E 3` | 1 | Block/sequence boundary marker |  |
+ - **Super Meta Notes**: N/A
+ - **Evidence**:
+   - DOI: 10.1038/s41597-021-01102-7 — describes RSVP streams with block structure; E 3 count (~84 per subject) suggests block-level organization
+   - Partial Evidence: Epoch alignment recommendations specify E 3 marks block/sequence boundaries with longer epoch window (-500ms to 2000ms)
+ - **Kernel Notes**: E 3 occurs ~84 times per subject—sparse but useful for modeling sustained attention or block-level effects. Longer epoch window (tmin=-0.5, tmax=2.0) captures pre/post block transition dynamics. For binary classification (block vs. non-block), use E 3 as positive class and subsampled E 1 as negative class.
+ 
+-### Potential Task 2: Event Marker Reliability Check
++### Potential Task 1: Event Marker Reliability Check — E 1
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.1 s, tmax = 0.3 s, target_events = [`E 1`, `E 2`]
++- **Label Route**: `info`
++- **Label Field**: `E 1`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `E 1` | 0 | Primary stimulus onset (RSVP image) |  |
++- **Super Meta Notes**: N/A
++- **Evidence**:
++  - Plausible from paradigm: E 1 and E 2 have identical counts (~22,248 each per subject), suggesting E 2 may be redundant or encode condition flags not documented in raw events
++- **Kernel Notes**: E 1 and E 2 are redundant markers for the same stimulus stream (10 Hz RSVP). This task serves as a data quality check—near-perfect classification would confirm redundancy, while poor classification may reveal timing offsets. Useful for validating preprocessing pipeline.
++
++### Normal Task 1: Stimulus Onset Detection
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, target_events = [`E 1`, `boundary`]
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+   | Event | y | Meaning |
+   |-------|---|-|
+-  | `E 1` | 0 | Primary stimulus onset (RSVP image) |
+-  | `E 2` | 1 | Secondary condition marker |
++  | `E 1` | 1 | Valid RSVP stimulus onset |
++  | `boundary` | 0 | Data boundary artifact |
++- **Super Meta Notes**: N/A
++- **Evidence**:
++  - DOI: 10.1038/s41597-021-01102-7 — documents continuous RSVP streams with artifact segments flagged by boundary markers
++  - Partial Evidence: 52 boundary events suggest segment breaks requiring detection for epoch quality control
++- **Kernel Notes**: Distinguishing valid stimulus epochs from boundary artifacts supports data cleaning pipeline. Boundary events (n=52) are rare but critical for artifact detection. Use short epoch window to capture transient boundary effects.### Potential Task 2: Event Marker Reliability Check — E 2
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.3 s, target_events = [`E 1`, `E 2`]
++- **Label Route**: `info`
++- **Label Field**: `E 2`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `E 2` | 1 | Secondary condition marker |  |
+ - **Super Meta Notes**: N/A
+ - **Evidence**:
+   - Plausible from paradigm: E 1 and E 2 have identical counts (~22,248 each per subject), suggesting E 2 may be redundant or encode condition flags not documented in raw events

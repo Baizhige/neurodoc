@@ -1,0 +1,353 @@
+--- openneuro_ds002724/analysis.md (pre-v3)
++++ openneuro_ds002724/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds002724` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002724
+ **Category**: High-level Mental | **Subjects**: 17 | **Files (Completed)**: 96 | **Channels**: 37 | **Sampling Rate**: 1000 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -29,48 +29,290 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Affective Music Condition Classification (Short-epoch)
+-- **Task Type**: classification
+-- **Epoch Method**: `epoch_by_event_hdf5`
+-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to music condition onset), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+-- **Label Route**: `Annotation`
+-- **Meta Level**: raw
+-- **Target Definition**:
+-
+-| Event | y | Meaning |
+-|---|---|---|
+-| `1` | 0 | Music condition 1 (affective state A1) |
+-| `2` | 1 | Music condition 2 (affective state A2) |
+-| `3` | 2 | Music condition 3 (affective state A3) |
+-| `4` | 3 | Music condition 4 (affective state A4) |
+-| `5` | 4 | Music condition 5 (affective state A5) |
+-| `6` | 5 | Music condition 6 (affective state A6) |
+-| `7` | 6 | Music condition 7 (affective state A7) |
+-| `8` | 7 | Music condition 8 (affective state A8) |
+-| `9` | 8 | Music condition 9 (affective state A9) |
+-
+-- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
+-- **Kernel Notes**: Short epochs (-0.2 to 1.0s) capture initial neural response to affective state induction. Verify event channel naming in raw data (may differ from standard). 9-class balanced design across ~95-96 files per condition. Decode valence/arousal mapping from Daly et al. 2018.
+-
+-### Classical Task 2: Affective Music Condition Classification (Sustained-segment)
+-- **Task Type**: classification
+-- **Epoch Method**: `epoch_by_long_event_hdf5`
+-- **Epoch Parameters**: tmin = 0.0 s, tmax = 40.0 s (full stimulus duration), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+-- **Label Route**: `Annotation`
+-- **Meta Level**: raw
+-- **Target Definition**:
+-
+-| Event | y | Meaning |
+-|---|---|---|
+-| `1` | 0 | Music condition 1 (sustained affective state) |
+-| `2` | 1 | Music condition 2 (sustained affective state) |
+-| `3` | 2 | Music condition 3 (sustained affective state) |
+-| `4` | 3 | Music condition 4 (sustained affective state) |
+-| `5` | 4 | Music condition 5 (sustained affective state) |
+-| `6` | 5 | Music condition 6 (sustained affective state) |
+-| `7` | 6 | Music condition 7 (sustained affective state) |
+-| `8` | 7 | Music condition 8 (sustained affective state) |
+-| `9` | 8 | Music condition 9 (sustained affective state) |
++### Classical Task 1: Affective Music Condition Classification (Short-epoch) — 1
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to music condition onset), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `1`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `1` | 0 | Music condition 1 (affective state A1) |  |
++
++- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
++- **Kernel Notes**: Short epochs (-0.2 to 1.0s) capture initial neural response to affective state induction. Verify event channel naming in raw data (may differ from standard). 9-class balanced design across ~95-96 files per condition. Decode valence/arousal mapping from Daly et al. 2018.
++
++### Classical Task 2: Affective Music Condition Classification (Short-epoch) — 2
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to music condition onset), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `2`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `2` | 1 | Music condition 2 (affective state A2) |  |
++
++- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
++- **Kernel Notes**: Short epochs (-0.2 to 1.0s) capture initial neural response to affective state induction. Verify event channel naming in raw data (may differ from standard). 9-class balanced design across ~95-96 files per condition. Decode valence/arousal mapping from Daly et al. 2018.
++
++### Classical Task 3: Affective Music Condition Classification (Short-epoch) — 3
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to music condition onset), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `3`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `3` | 2 | Music condition 3 (affective state A3) |  |
++
++- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
++- **Kernel Notes**: Short epochs (-0.2 to 1.0s) capture initial neural response to affective state induction. Verify event channel naming in raw data (may differ from standard). 9-class balanced design across ~95-96 files per condition. Decode valence/arousal mapping from Daly et al. 2018.
++
++### Classical Task 4: Affective Music Condition Classification (Short-epoch) — 4
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to music condition onset), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `4`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `4` | 3 | Music condition 4 (affective state A4) |  |
++
++- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
++- **Kernel Notes**: Short epochs (-0.2 to 1.0s) capture initial neural response to affective state induction. Verify event channel naming in raw data (may differ from standard). 9-class balanced design across ~95-96 files per condition. Decode valence/arousal mapping from Daly et al. 2018.
++
++### Classical Task 5: Affective Music Condition Classification (Short-epoch) — 5
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to music condition onset), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `5`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `5` | 4 | Music condition 5 (affective state A5) |  |
++
++- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
++- **Kernel Notes**: Short epochs (-0.2 to 1.0s) capture initial neural response to affective state induction. Verify event channel naming in raw data (may differ from standard). 9-class balanced design across ~95-96 files per condition. Decode valence/arousal mapping from Daly et al. 2018.
++
++### Classical Task 6: Affective Music Condition Classification (Short-epoch) — 6
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to music condition onset), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `6`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `6` | 5 | Music condition 6 (affective state A6) |  |
++
++- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
++- **Kernel Notes**: Short epochs (-0.2 to 1.0s) capture initial neural response to affective state induction. Verify event channel naming in raw data (may differ from standard). 9-class balanced design across ~95-96 files per condition. Decode valence/arousal mapping from Daly et al. 2018.
++
++### Classical Task 7: Affective Music Condition Classification (Short-epoch) — 7
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to music condition onset), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `7`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `7` | 6 | Music condition 7 (affective state A7) |  |
++
++- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
++- **Kernel Notes**: Short epochs (-0.2 to 1.0s) capture initial neural response to affective state induction. Verify event channel naming in raw data (may differ from standard). 9-class balanced design across ~95-96 files per condition. Decode valence/arousal mapping from Daly et al. 2018.
++
++### Classical Task 8: Affective Music Condition Classification (Short-epoch) — 8
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to music condition onset), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `8`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `8` | 7 | Music condition 8 (affective state A8) |  |
++
++- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
++- **Kernel Notes**: Short epochs (-0.2 to 1.0s) capture initial neural response to affective state induction. Verify event channel naming in raw data (may differ from standard). 9-class balanced design across ~95-96 files per condition. Decode valence/arousal mapping from Daly et al. 2018.
++
++### Classical Task 9: Affective Music Condition Classification (Short-epoch) — 9
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to music condition onset), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `9`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `9` | 8 | Music condition 9 (affective state A9) |  |
++
++- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
++- **Kernel Notes**: Short epochs (-0.2 to 1.0s) capture initial neural response to affective state induction. Verify event channel naming in raw data (may differ from standard). 9-class balanced design across ~95-96 files per condition. Decode valence/arousal mapping from Daly et al. 2018.
++
++### Classical Task 10: Affective Music Condition Classification (Sustained-segment) — 1
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 40.0 s (full stimulus duration), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `1`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `1` | 0 | Music condition 1 (sustained affective state) |  |
++
++- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
++- **Kernel Notes**: 40-second continuous music clips induce sustained affective states. Long event epoching captures entire stimulus period for decoding valence/arousal patterns. Cue duration (40s) is critical parameter. Physiological channels (ECG, GSR) present alongside EEG.
++
++### Classical Task 11: Affective Music Condition Classification (Sustained-segment) — 2
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 40.0 s (full stimulus duration), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `2`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `2` | 1 | Music condition 2 (sustained affective state) |  |
++
++- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
++- **Kernel Notes**: 40-second continuous music clips induce sustained affective states. Long event epoching captures entire stimulus period for decoding valence/arousal patterns. Cue duration (40s) is critical parameter. Physiological channels (ECG, GSR) present alongside EEG.
++
++### Classical Task 12: Affective Music Condition Classification (Sustained-segment) — 3
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 40.0 s (full stimulus duration), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `3`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `3` | 2 | Music condition 3 (sustained affective state) |  |
++
++- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
++- **Kernel Notes**: 40-second continuous music clips induce sustained affective states. Long event epoching captures entire stimulus period for decoding valence/arousal patterns. Cue duration (40s) is critical parameter. Physiological channels (ECG, GSR) present alongside EEG.
++
++### Classical Task 13: Affective Music Condition Classification (Sustained-segment) — 4
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 40.0 s (full stimulus duration), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `4`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `4` | 3 | Music condition 4 (sustained affective state) |  |
++
++- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
++- **Kernel Notes**: 40-second continuous music clips induce sustained affective states. Long event epoching captures entire stimulus period for decoding valence/arousal patterns. Cue duration (40s) is critical parameter. Physiological channels (ECG, GSR) present alongside EEG.
++
++### Classical Task 14: Affective Music Condition Classification (Sustained-segment) — 5
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 40.0 s (full stimulus duration), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `5`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `5` | 4 | Music condition 5 (sustained affective state) |  |
++
++- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
++- **Kernel Notes**: 40-second continuous music clips induce sustained affective states. Long event epoching captures entire stimulus period for decoding valence/arousal patterns. Cue duration (40s) is critical parameter. Physiological channels (ECG, GSR) present alongside EEG.
++
++### Classical Task 15: Affective Music Condition Classification (Sustained-segment) — 6
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 40.0 s (full stimulus duration), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `6`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `6` | 5 | Music condition 6 (sustained affective state) |  |
++
++- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
++- **Kernel Notes**: 40-second continuous music clips induce sustained affective states. Long event epoching captures entire stimulus period for decoding valence/arousal patterns. Cue duration (40s) is critical parameter. Physiological channels (ECG, GSR) present alongside EEG.
++
++### Classical Task 16: Affective Music Condition Classification (Sustained-segment) — 7
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 40.0 s (full stimulus duration), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `7`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `7` | 6 | Music condition 7 (sustained affective state) |  |
++
++- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
++- **Kernel Notes**: 40-second continuous music clips induce sustained affective states. Long event epoching captures entire stimulus period for decoding valence/arousal patterns. Cue duration (40s) is critical parameter. Physiological channels (ECG, GSR) present alongside EEG.
++
++### Classical Task 17: Affective Music Condition Classification (Sustained-segment) — 8
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 40.0 s (full stimulus duration), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `8`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `8` | 7 | Music condition 8 (sustained affective state) |  |
++
++- **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
++- **Kernel Notes**: 40-second continuous music clips induce sustained affective states. Long event epoching captures entire stimulus period for decoding valence/arousal patterns. Cue duration (40s) is critical parameter. Physiological channels (ECG, GSR) present alongside EEG.
++
++### Classical Task 18: Affective Music Condition Classification (Sustained-segment) — 9
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 40.0 s (full stimulus duration), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
++- **Label Route**: `info`
++- **Label Field**: `9`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `9` | 8 | Music condition 9 (sustained affective state) |  |
+ 
+ - **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
+ - **Kernel Notes**: 40-second continuous music clips induce sustained affective states. Long event epoching captures entire stimulus period for decoding valence/arousal patterns. Cue duration (40s) is critical parameter. Physiological channels (ECG, GSR) present alongside EEG.
+@@ -79,7 +321,7 @@
+ - **Task Type**: classification/segmentation
+ - **Epoch Method**: `epoch_by_segmentation_hdf5` or `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: segment_length = Needs verification, overlap = Needs verification, target_events = [Needs verification]
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
+ - **Meta Level**: super
+ - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
+ - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds002724

@@ -1,0 +1,128 @@
+--- openneuro_ds002893/analysis.md (pre-v3)
++++ openneuro_ds002893/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds002893` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds002893
+ **Category**: Sensory/Response | **Subjects**: 49 | **Files (Completed)**: 52 | **Channels**: 36 | **Sampling Rate**: 250 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -31,50 +31,99 @@
+ 
+ ## Tasks
+ 
+-### Potential Task 1: ERP Target Detection (P300/Oddball)
++### Potential Task 1: ERP Target Detection (P300/Oddball) — target
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [Needs verification]
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
++- **Label Field**: `target`
+ - **Meta Level**: raw
+ - **Target Definition**: Target vs non-target stimulus events (standard/deviant classification)
+ 
+-| Event | y | Meaning |
+-|---|---|---|
+-| `target` | 1 | Target stimulus (oddball) |
+-| `standard` | 0 | Standard/background stimulus |
+-| `deviant` | 1 | Deviant stimulus (if distinct from target) |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `target` | 1 | Target stimulus (oddball) |  |
+ 
+ - **Evidence**: DOI: https://doi.org/10.18112/openneuro.ds002893.v2.0.0 | Dual-oddball paradigm core study objective; standard P300/Oddball target detection supported by paradigm description alone.
+ - **Kernel Notes**: No events detected in kernel scan. Paradigm logic supports P300 target classification. Verify event IDs in accompanying *_events.tsv files. Standard oddball/P300 epoch window captures classic ERP response. Alignment to target stimulus onset.
+ 
+-### Potential Task 2: Attention Modality Classification (binary)
++### Potential Task 2: ERP Target Detection (P300/Oddball) — standard
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [Needs verification]
++- **Label Route**: `info`
++- **Label Field**: `standard`
++- **Meta Level**: raw
++- **Target Definition**: Target vs non-target stimulus events (standard/deviant classification)
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `standard` | 0 | Standard/background stimulus |  |
++
++- **Evidence**: DOI: https://doi.org/10.18112/openneuro.ds002893.v2.0.0 | Dual-oddball paradigm core study objective; standard P300/Oddball target detection supported by paradigm description alone.
++- **Kernel Notes**: No events detected in kernel scan. Paradigm logic supports P300 target classification. Verify event IDs in accompanying *_events.tsv files. Standard oddball/P300 epoch window captures classic ERP response. Alignment to target stimulus onset.
++
++### Potential Task 3: ERP Target Detection (P300/Oddball) — deviant
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [Needs verification]
++- **Label Route**: `info`
++- **Label Field**: `deviant`
++- **Meta Level**: raw
++- **Target Definition**: Target vs non-target stimulus events (standard/deviant classification)
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `deviant` | 1 | Deviant stimulus (if distinct from target) |  |
++
++- **Evidence**: DOI: https://doi.org/10.18112/openneuro.ds002893.v2.0.0 | Dual-oddball paradigm core study objective; standard P300/Oddball target detection supported by paradigm description alone.
++- **Kernel Notes**: No events detected in kernel scan. Paradigm logic supports P300 target classification. Verify event IDs in accompanying *_events.tsv files. Standard oddball/P300 epoch window captures classic ERP response. Alignment to target stimulus onset.
++
++### Potential Task 4: Attention Modality Classification (binary) — attend_auditory
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5, target_events = [attend_auditory, attend_visual]
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
++- **Label Field**: `attend_auditory`
+ - **Meta Level**: super
+ - **Target Definition**: Sustained attention modality blocks
+ 
+-| Event | y | Meaning |
+-|---|---|---|
+-| `attend_auditory` | 0 | Sustained auditory attention block |
+-| `attend_visual` | 1 | Sustained visual attention block |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `attend_auditory` | 0 | Sustained auditory attention block |  |
+ 
+ - **Evidence**: DOI: https://doi.org/10.18112/openneuro.ds002893.v2.0.0 | Interleaved dual-oddball with selective attention to auditory or visual modalities supported by paradigm description.
+ - **Kernel Notes**: Sustained `attend_*` states require overlapping sliding windows to capture extended neural states. The 0.5 overlap enables continuous modality classification. `shift_attention` is admin/transition-only; exclude from classification target. Derivation of high-level attention labels may require Type 2 super meta integration.
+ 
++### Potential Task 5: Attention Modality Classification (binary) — attend_visual
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5, target_events = [attend_auditory, attend_visual]
++- **Label Route**: `info`
++- **Label Field**: `attend_visual`
++- **Meta Level**: super
++- **Target Definition**: Sustained attention modality blocks
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `attend_visual` | 1 | Sustained visual attention block |  |
++
++- **Evidence**: DOI: https://doi.org/10.18112/openneuro.ds002893.v2.0.0 | Interleaved dual-oddball with selective attention to auditory or visual modalities supported by paradigm description.
++- **Kernel Notes**: Sustained `attend_*` states require overlapping sliding windows to capture extended neural states. The 0.5 overlap enables continuous modality classification. `shift_attention` is admin/transition-only; exclude from classification target. Derivation of high-level attention labels may require Type 2 super meta integration.
++
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 3: Attention Shift Detection
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [shift_attention]
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
++- **Label Field**: `shift_attention`
+ - **Meta Level**: raw
+ - **Target Definition**: Attention modality switch events
+ 
+-| Event | y | Meaning |
+-|---|---|---|
+-| `shift_attention` | 1 | Attention modality transition cue |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `shift_attention` | 1 | Attention modality transition cue |  |
+ 
+ - **Evidence**: DOI: https://doi.org/10.18112/openneuro.ds002893.v2.0.0 | Spoken and printed attention cue instructions for modality switching supported by paradigm description.
+ - **Kernel Notes**: `shift_attention` is a transition cue marking the moment of modality switching. Epoching around it can reveal cue-locked ERP components (CNV, frontal midlines) associated with attention reorientation. Treat as admin event; do not include in sustained attention classification targets.

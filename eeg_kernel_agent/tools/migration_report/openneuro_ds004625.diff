@@ -1,0 +1,114 @@
+--- openneuro_ds004625/analysis.md (pre-v3)
++++ openneuro_ds004625/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004625` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004625
+ **Category**: Complex Applied | **Subjects**: 32 | **Files (Completed)**: 543 | **Channels**: 284 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -35,6 +35,16 @@
+ | `spare-boundary` | 3 | admin | raw | Spare boundary (exclude) |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `CGY-T 1` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `CGY-M 1` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `CWR-M 1` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Segment within TrialStart/TrialEnd` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -51,8 +61,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|  
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `LHS` | 0 | Left heel strike |
+   | `LTO` | 1 | Left toe off |
+   | `RHS` | 2 | Right heel strike |
+@@ -62,32 +72,64 @@
+   - DOI: 10.1371/journal.pone.0278646 — Uneven terrain treadmill walking study; validates gait event detection methodology as part of Mind in Motion parent study
+ - **Kernel Notes**: High-density 284-channel EEG during walking requires ICA-based artifact correction for motion artifacts. Exclude administrative events (`boundary`, `LS-Sync`, `spare-boundary`). Restrict epochs to walking bouts using TrialStart/TrialEnd markers. Verify no epoch overlap contamination given high event counts (~65,000 gait events per type). Onset alignment at heel-strike/toe-off captures neural activity preceding and following each step.
+ 
+-### Classical Task 2: Terrain Condition Classification
++### Classical Task 2: Terrain Condition Classification — CGY-T 1
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s, target_events = [`CGY-T 1`, `CWR-M 1`, `CGY-M 1`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `CGY-T 1`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|  
+-  | `CGY-T 1` | 0 | Terrain change trigger |
+-  | `CGY-M 1` | 1 | Gait measurement marker (terrain segment) |
+-  | `CWR-M 1` | 2 | Cobblestone walk marker |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `CGY-T 1` | 0 | Terrain change trigger |  |
+ - **Evidence**:
+   - DOI: 10.1162/imag.a.1039 — Examines EEG alpha/beta band power changes across terrain unevenness levels (flat, low, medium, high)
+   - DOI: 10.3389/fnagi.2025.1644741 — Measures walking speed across four terrain conditions; terrain condition labels derive from experimental design markers
+ - **Kernel Notes**: Extended tmax of 4.0s accommodates neural processing of terrain transitions during gait. Verify terrain type mapping from events.tsv — `CGY-T 1` indicates transition to specific terrain, `CWR-M 1` indicates cobblestone condition. Additional terrain labels may require derivation from trial metadata. Onset alignment captures pre-transition baseline through adaptation period. Use `spare-M 1` sparingly (n=635) as supplementary terrain markers.
+ 
+-### Classical Task 3: Gait Speed Regression
++### Classical Task 3: Terrain Condition Classification — CGY-M 1
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s, target_events = [`CGY-T 1`, `CWR-M 1`, `CGY-M 1`]
++- **Label Route**: `info`
++- **Label Field**: `CGY-M 1`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `CGY-M 1` | 1 | Gait measurement marker (terrain segment) |  |
++- **Evidence**:
++  - DOI: 10.1162/imag.a.1039 — Examines EEG alpha/beta band power changes across terrain unevenness levels (flat, low, medium, high)
++  - DOI: 10.3389/fnagi.2025.1644741 — Measures walking speed across four terrain conditions; terrain condition labels derive from experimental design markers
++- **Kernel Notes**: Extended tmax of 4.0s accommodates neural processing of terrain transitions during gait. Verify terrain type mapping from events.tsv — `CGY-T 1` indicates transition to specific terrain, `CWR-M 1` indicates cobblestone condition. Additional terrain labels may require derivation from trial metadata. Onset alignment captures pre-transition baseline through adaptation period. Use `spare-M 1` sparingly (n=635) as supplementary terrain markers.
++
++### Classical Task 4: Terrain Condition Classification — CWR-M 1
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s, target_events = [`CGY-T 1`, `CWR-M 1`, `CGY-M 1`]
++- **Label Route**: `info`
++- **Label Field**: `CWR-M 1`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `CWR-M 1` | 2 | Cobblestone walk marker |  |
++- **Evidence**:
++  - DOI: 10.1162/imag.a.1039 — Examines EEG alpha/beta band power changes across terrain unevenness levels (flat, low, medium, high)
++  - DOI: 10.3389/fnagi.2025.1644741 — Measures walking speed across four terrain conditions; terrain condition labels derive from experimental design markers
++- **Kernel Notes**: Extended tmax of 4.0s accommodates neural processing of terrain transitions during gait. Verify terrain type mapping from events.tsv — `CGY-T 1` indicates transition to specific terrain, `CWR-M 1` indicates cobblestone condition. Additional terrain labels may require derivation from trial metadata. Onset alignment captures pre-transition baseline through adaptation period. Use `spare-M 1` sparingly (n=635) as supplementary terrain markers.
++
++### Classical Task 5: Gait Speed Regression
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 7.0 s, overlap = 0.86 (approximately 6s overlap for 1s slide)
+ - **Label Route**: `misc`
++- **Label Field**: `Segment within TrialStart/TrialEnd`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|  
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | Segment within TrialStart/TrialEnd | Continuous speed (m/s) | Walking speed extracted from force-sensitive insole kinematic data |
+ - **Evidence**:
+   - DOI: 10.3389/fnagi.2025.1644741 — Walking speed extracted across terrain conditions (flat, low, medium, high) as continuous regression target

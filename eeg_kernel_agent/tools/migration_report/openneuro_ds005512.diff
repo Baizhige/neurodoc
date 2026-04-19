@@ -1,0 +1,55 @@
+--- openneuro_ds005512/analysis.md (pre-v3)
++++ openneuro_ds005512/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds005512` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005512
+ **Category**: Complex Applied | **Subjects**: 257 | **Files (Completed)**: 2320 | **Channels**: 129 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -65,6 +65,13 @@
+ | `video_stop` | 877 | event | raw | Movie watching offset |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `DSM-V diagnosis column` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -75,14 +82,15 @@
+ ## Tasks
+ 
+ ### Classical Task 1: Psychiatric Diagnosis Classification from Resting EEG
+-- **Task Type**: classification
++- **Task Type**: regression
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 40.0 s, overlap = 0.95, target_events = [`instructed_toCloseEyes`, `resting_start`]
+ - **Label Route**: `misc`
++- **Label Field**: `DSM-V diagnosis column`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | DSM-V diagnosis column | 0 | No diagnosis (neurotypical) |
+   | DSM-V diagnosis column | 1 | Presence of diagnosis (ADHD/ANX/SLD/ASD/DISR/COM/DEP/Other) |
+ - **Evidence**:
+@@ -112,8 +120,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `instructed_toOpenEyes` | 0 | Eyes-open resting state |
+   | `instructed_toCloseEyes` | 1 | Eyes-closed resting state |
+   | `video_start` | 2 | Movie watching onset |

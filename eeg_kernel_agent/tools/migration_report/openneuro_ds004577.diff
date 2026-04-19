@@ -1,0 +1,39 @@
+--- openneuro_ds004577/analysis.md (pre-v3)
++++ openneuro_ds004577/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004577` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004577
+ **Category**: Biological State | **Subjects**: 103 | **Files (Completed)**: 103 | **Channels**: 128 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -29,11 +29,25 @@
+ 
+ ## Tasks
+ 
+-### Potential Task 1: Eyes-Closed vs Eyes-Open State Classification
++### Potential Task 1: Eyes-Closed vs Eyes-Open State Classification — eyes_closed
+ - **Task Type**: binary_classification
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `eyes_closed`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Event | y | Meaning |
++  |-------|---|---------|
++  | `eyes_closed` | 0 | Eyes-closed resting state segment |
++  | `eyes_open` | 1 | Eyes-open resting state segment |
++- **Evidence (DOI)**: — (plausible from paradigm alone; no direct classification reference)
++- **Kernel Notes**: Resting-state continuous EEG from infants without discrete trial structure. Apply sliding window segmentation across the recording to generate epochs. Exclude or flag segments containing or adjacent to `discontinuity` events to avoid artifact-corrupted data. Subject-level normalization may be necessary given wide age range (1-12 months). Binary classification task: eyes-open vs eyes-closed state segments. Class balance between states may vary substantially across subjects due to variable state duration; ensure balanced sampling during training. The 50% overlap increases temporal resolution for detecting developmental changes but increases computational cost; reduce overlap to 0.0 if compute-constrained.### Potential Task 2: Eyes-Closed vs Eyes-Open State Classification — eyes_open
++- **Task Type**: binary_classification
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
++- **Label Route**: `info`
++- **Label Field**: `eyes_open`
+ - **Meta Level**: raw
+ - **Target Definition**:
+   | Event | y | Meaning |

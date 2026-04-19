@@ -1,0 +1,179 @@
+--- openneuro_ds003570/analysis.md (pre-v3)
++++ openneuro_ds003570/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds003570` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003570
+ **Category**: Sensory/Response | **Subjects**: 34 | **Files (Completed)**: 34 | **Channels**: 64 | **Sampling Rate**: 2048 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -52,6 +52,15 @@
+ | `two` | 48960 | event | raw | Second chord onset trigger in three-chord sequence (primary epoching reference) |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `*_S` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `*_deviantE*` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `*_deviantF*` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -61,35 +70,65 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Brain connectivity regression for musical training prediction
++### Classical Task 1: Brain connectivity regression for musical training prediction — *_S
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.4 s, tmax = 1.2 s, target_events = [`two`], reject = [`boundary`]
+ - **Label Route**: `misc`
++- **Label Field**: `*_S`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `*_S` | `standard` | standard chord (correctly responded or not) |
++- **Super Meta Notes**: Labels derived from experimental paradigm conditions embedded in event names. Each chord root (five6, fiveRoot, four6, fourRoot) has three condition types. Labels map to condition identifiers used to compute brain connectivity predictors: Psi(Ex) - Psi(Fu) and log.BP(Ex) - log.BP(Fu). These super-level connectivity features predict weekly improvisation hours, weekly classical hours, and dIES behavioral metrics via regression.
++- **Evidence**:
++  - DOI: 10.1016/j.neuroimage.2021.118458 — Explicitly uses OpenNeuro ds003570 EEG data; phase slope index and alpha-band inter-network connectivity as features; 34 musicians performing auditory oddball task; predicts self-reported improvisation and classical training hours via regression; analysis uses three temporal windows: pre-response (-400 to 0ms), inter-chord (0-400ms), post-response (0-400ms).
++- **Kernel Notes**: Use `two` events (48960) as primary epoching trigger aligned to second chord onset. Condition labels encoded in event names: `_S` = standard, `_deviantE` = exemplar deviant, `_deviantF` = function deviant. Numeric codes (16128, 16228, 16368) are rare admin markers—ignore. Decode events.tsv to map condition labels to `two` onset events for full trial classification. High sampling rate (2048 Hz); decimate to 500-1000 Hz after anti-aliasing filtering before connectivity computation.
++
++### Classical Task 2: Brain connectivity regression for musical training prediction — *_deviantE*
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.4 s, tmax = 1.2 s, target_events = [`two`], reject = [`boundary`]
++- **Label Route**: `misc`
++- **Label Field**: `*_deviantE*`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `*_deviantE*` | `exemplar_deviant` | exemplar deviant chord (same functional class, different inversion) |
++- **Super Meta Notes**: Labels derived from experimental paradigm conditions embedded in event names. Each chord root (five6, fiveRoot, four6, fourRoot) has three condition types. Labels map to condition identifiers used to compute brain connectivity predictors: Psi(Ex) - Psi(Fu) and log.BP(Ex) - log.BP(Fu). These super-level connectivity features predict weekly improvisation hours, weekly classical hours, and dIES behavioral metrics via regression.
++- **Evidence**:
++  - DOI: 10.1016/j.neuroimage.2021.118458 — Explicitly uses OpenNeuro ds003570 EEG data; phase slope index and alpha-band inter-network connectivity as features; 34 musicians performing auditory oddball task; predicts self-reported improvisation and classical training hours via regression; analysis uses three temporal windows: pre-response (-400 to 0ms), inter-chord (0-400ms), post-response (0-400ms).
++- **Kernel Notes**: Use `two` events (48960) as primary epoching trigger aligned to second chord onset. Condition labels encoded in event names: `_S` = standard, `_deviantE` = exemplar deviant, `_deviantF` = function deviant. Numeric codes (16128, 16228, 16368) are rare admin markers—ignore. Decode events.tsv to map condition labels to `two` onset events for full trial classification. High sampling rate (2048 Hz); decimate to 500-1000 Hz after anti-aliasing filtering before connectivity computation.
++
++### Classical Task 3: Brain connectivity regression for musical training prediction — *_deviantF*
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.4 s, tmax = 1.2 s, target_events = [`two`], reject = [`boundary`]
++- **Label Route**: `misc`
++- **Label Field**: `*_deviantF*`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `*_deviantF*` | `function_deviant` | function deviant chord (different functional class) |
+ - **Super Meta Notes**: Labels derived from experimental paradigm conditions embedded in event names. Each chord root (five6, fiveRoot, four6, fourRoot) has three condition types. Labels map to condition identifiers used to compute brain connectivity predictors: Psi(Ex) - Psi(Fu) and log.BP(Ex) - log.BP(Fu). These super-level connectivity features predict weekly improvisation hours, weekly classical hours, and dIES behavioral metrics via regression.
+ - **Evidence**:
+   - DOI: 10.1016/j.neuroimage.2021.118458 — Explicitly uses OpenNeuro ds003570 EEG data; phase slope index and alpha-band inter-network connectivity as features; 34 musicians performing auditory oddball task; predicts self-reported improvisation and classical training hours via regression; analysis uses three temporal windows: pre-response (-400 to 0ms), inter-chord (0-400ms), post-response (0-400ms).
+ - **Kernel Notes**: Use `two` events (48960) as primary epoching trigger aligned to second chord onset. Condition labels encoded in event names: `_S` = standard, `_deviantE` = exemplar deviant, `_deviantF` = function deviant. Numeric codes (16128, 16228, 16368) are rare admin markers—ignore. Decode events.tsv to map condition labels to `two` onset events for full trial classification. High sampling rate (2048 Hz); decimate to 500-1000 Hz after anti-aliasing filtering before connectivity computation.
+ 
+-### Classical Task 2: Mismatch negativity response classification
+-- **Task Type**: classification
++### Classical Task 4: Mismatch negativity response classification — *_S
++- **Task Type**: regression
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [`two`], reject = [`boundary`]
+ - **Label Route**: `misc`
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-------|--------|
++- **Label Field**: `*_S`
++- **Meta Level**: raw
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `*_S` | `standard` | standard chord |
+-  | `*_deviantE*` | `exemplar_deviant` | exemplar deviant (same function, different inversion) |
+-  | `*_deviantF*` | `function_deviant` | function deviant (different function) |
+ - **Evidence**:
+   - DOI: 10.1177/0305735618779444 — ERP study examining N2c and P3b components discriminating exemplar from function deviants; behavioral discrimination predicted by neural discriminability; improvisation experience modulates condition discrimination.
+ - **Kernel Notes**: Three-class classification of chord type conditions. ERPs should show standard vs. deviant mismatches (MMN/N2c effects) and function vs. exemplar differences (P3b effects). Epoch parameters match recommended -0.2 to 0.8s window for chord onset analysis. Improvisation experience may serve as group variable for cross-subject analysis.
+@@ -110,11 +149,73 @@
+   - DOI: 10.1177/0305735618779444 — P600 effects reported for musical violations; response-accuracy events available for validation of syntactic processing.
+ - **Kernel Notes**: Response events have lower counts than `one`/`two` (48960), indicating not all trials received recorded responses. P600 expected 500-700ms post-stimulus for error detection. Two-class contrast (correct vs. incorrect) or three-class analysis possible. Compare with epochs from Task 1 epoched by condition to validate response-accuracy mapping.
+ 
++### Classical Task 5: Mismatch negativity response classification — *_deviantE*
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [`two`], reject = [`boundary`]
++- **Label Route**: `misc`
++- **Label Field**: `*_deviantE*`
++- **Meta Level**: raw
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
++  | `*_deviantE*` | `exemplar_deviant` | exemplar deviant (same function, different inversion) |
++- **Evidence**:
++  - DOI: 10.1177/0305735618779444 — ERP study examining N2c and P3b components discriminating exemplar from function deviants; behavioral discrimination predicted by neural discriminability; improvisation experience modulates condition discrimination.
++- **Kernel Notes**: Three-class classification of chord type conditions. ERPs should show standard vs. deviant mismatches (MMN/N2c effects) and function vs. exemplar differences (P3b effects). Epoch parameters match recommended -0.2 to 0.8s window for chord onset analysis. Improvisation experience may serve as group variable for cross-subject analysis.
++
++### Normal Task 1: Response accuracy classification for P600 validation
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.4 s, tmax = 0.8 s, target_events = [`Correct - Exemplar!`, `Correct - Function!`, `Incorrect - Standard!`], reject = [`boundary`]
++- **Label Route**: `event`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Event | y | Meaning |
++  |-------|-------|--------|
++  | `Correct - Exemplar!` | correct_exemplar | correct response to exemplar deviant (2499) |
++  | `Correct - Function!` | correct_function | correct response to function deviant (2936) |
++  | `Incorrect - Standard!` | incorrect_standard | incorrect response to standard chord (2675) |
++- **Evidence**:
++  - DOI: 10.1177/0305735618779444 — P600 effects reported for musical violations; response-accuracy events available for validation of syntactic processing.
++- **Kernel Notes**: Response events have lower counts than `one`/`two` (48960), indicating not all trials received recorded responses. P600 expected 500-700ms post-stimulus for error detection. Two-class contrast (correct vs. incorrect) or three-class analysis possible. Compare with epochs from Task 1 epoched by condition to validate response-accuracy mapping.
++
++### Classical Task 6: Mismatch negativity response classification — *_deviantF*
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [`two`], reject = [`boundary`]
++- **Label Route**: `misc`
++- **Label Field**: `*_deviantF*`
++- **Meta Level**: raw
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
++  | `*_deviantF*` | `function_deviant` | function deviant (different function) |
++- **Evidence**:
++  - DOI: 10.1177/0305735618779444 — ERP study examining N2c and P3b components discriminating exemplar from function deviants; behavioral discrimination predicted by neural discriminability; improvisation experience modulates condition discrimination.
++- **Kernel Notes**: Three-class classification of chord type conditions. ERPs should show standard vs. deviant mismatches (MMN/N2c effects) and function vs. exemplar differences (P3b effects). Epoch parameters match recommended -0.2 to 0.8s window for chord onset analysis. Improvisation experience may serve as group variable for cross-subject analysis.
++
++### Normal Task 1: Response accuracy classification for P600 validation
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.4 s, tmax = 0.8 s, target_events = [`Correct - Exemplar!`, `Correct - Function!`, `Incorrect - Standard!`], reject = [`boundary`]
++- **Label Route**: `event`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Event | y | Meaning |
++  |-------|-------|--------|
++  | `Correct - Exemplar!` | correct_exemplar | correct response to exemplar deviant (2499) |
++  | `Correct - Function!` | correct_function | correct response to function deviant (2936) |
++  | `Incorrect - Standard!` | incorrect_standard | incorrect response to standard chord (2675) |
++- **Evidence**:
++  - DOI: 10.1177/0305735618779444 — P600 effects reported for musical violations; response-accuracy events available for validation of syntactic processing.
++- **Kernel Notes**: Response events have lower counts than `one`/`two` (48960), indicating not all trials received recorded responses. P600 expected 500-700ms post-stimulus for error detection. Two-class contrast (correct vs. incorrect) or three-class analysis possible. Compare with epochs from Task 1 epoched by condition to validate response-accuracy mapping.
++
+ ### Potential Task 1: Continuous EEG connectivity segmentation
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5, segment_length = 2.0 s
+-- **Label Route**: `event`
++- **Label Route**: `misc`
+ - **Target Definition**: N/A (null labels; unsupervised analysis)
+ - **Notes**: For exploratory connectivity or time-frequency decomposition when trial-level condition labels are unavailable. Two-second windows capture one full chord presentation cycle. Fifty percent overlap enables sliding-window connectivity estimates. High sampling rate (2048 Hz) provides fine temporal resolution for frequency-domain analysis.
+ - **Kernel Notes**: No condition labels required for unsupervised segmentation; suitable for resting-state-like connectivity baselines or data quality checks before condition-specific analysis.

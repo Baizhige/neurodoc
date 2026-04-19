@@ -1,0 +1,22 @@
+--- other_openbmi/analysis.md (pre-v3)
++++ other_openbmi/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `other_openbmi` | **Year**: 2019 | **URL**: https://gigadb.org/dataset/100542
+ **Category**: Action/Output | **Subjects**: 54 | **Files (Completed)**: 108 | **Channels**: 62 | **Sampling Rate**: 1000 Hz
+-**Manual Review**: Chengxuan Qin
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -40,8 +40,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `left hand MI` | 0 | Left-hand motor imagery |
+   | `right hand MI` | 1 | Right-hand motor imagery |
+ - **Evidence**:

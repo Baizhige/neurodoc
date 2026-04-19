@@ -1,0 +1,24 @@
+--- openneuro_ds003555/analysis.md (pre-v3)
++++ openneuro_ds003555/analysis.md (v3)
+@@ -21,6 +21,12 @@
+ | - | - | - | raw | No event markers detected; continuous sleep EEG recording |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++
+ ### Info
+ 
+ | Field | Completeness | Notes |
+@@ -34,7 +40,7 @@
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
+-- **Label Route**: `event`
++- **Label Route**: `misc`
+ - **Target Definition**: N/A (null, no label; for unsupervised or HFO detection)
+ - **Notes**: High sampling rate (2000 Hz) is appropriate for HFO detection (80-500 Hz). Sleep stage labels (if available from hypnogram) can serve as y labels for sleep classification tasks. No trial-level events present.
+ 

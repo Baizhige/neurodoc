@@ -1,0 +1,32 @@
+--- openneuro_ds001849/analysis.md (pre-v3)
++++ openneuro_ds001849/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds001849` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds001849
+ **Category**: Biological State | **Subjects**: 15 | **Files (Completed)**: 120 | **Channels**: 30 | **Sampling Rate**: 5000 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -34,14 +34,15 @@
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.05, tmax = 0.25, overlap = 0.0
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `R128`
+ - **Meta Level**: `raw`
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|---|---|---|
+-| R128 | active | TMS pulse with active stimulation |
+-| R128 | sham | TMS pulse with sham stimulation |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | R128 | active | TMS pulse with active stimulation |  |
++  | R128 | sham | TMS pulse with sham stimulation |  |
+ 
+ - **Evidence**: DOI: 10.1371/journal.pone.0216185
+ - **Kernel Notes**: R128 is classified as a BrainVision administrative marker in this dataset's event structure. However, TMS pulses were delivered during recording (per paradigm description), and the cited reference confirms this dataset was used for site-specific TMS-EEG analysis (DLPFC, M1, PPC) with active vs. sham conditions. Verify that R128 aligns with TMS delivery timing; if not, TMS pulse timestamps may need extraction from separate metadata files. High sampling rate (5000 Hz) requires downsampling before analysis. TMS artifact rejection may be needed for the ~50 ms post-pulse window.

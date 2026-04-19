@@ -1,0 +1,85 @@
+--- openneuro_ds005510/analysis.md (pre-v3)
++++ openneuro_ds005510/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds005510` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005510
+ **Category**: Complex Applied | **Subjects**: 3000 | **Files (Completed)**: 1227 | **Channels**: 129 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -80,11 +80,11 @@
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0 s, tmax = 4 s, overlap = 0.5, target_events = [`resting_start`, `instructed_toOpenEyes`, `instructed_toCloseEyes`]
+-- **Label Route**: `misc`
++- **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-|
++  | Event ID | Value | Meaning |
++  |---|---|---|
+   | `resting_start` | continuous | Resting-state EEG epochs for FC computation |
+   | `instructed_toOpenEyes` | continuous | Eyes-open resting state |
+   | `instructed_toCloseEyes` | continuous | Eyes-closed resting state |
+@@ -92,15 +92,16 @@
+   - DOI: `10.1016/j.neuroimage.2020.117001` — Uses HBN Biobank EEG data (n=1657) to analyze imaginary coherence functional connectivity across resting, video, and flicker tasks, correlating FC features with phenotypic measures (age, sex, IQ, ADHD, anxiety, SES).
+ - **Kernel Notes**: Combine resting-state epochs from `resting_start`, `instructed_toOpenEyes`, and `instructed_toCloseEyes` events. Compute connectivity features (iCOH) per 4s epoch with 50% overlap in delta (0.5–4 Hz), theta (4–7.5 Hz), alpha (7.5–15 Hz), and beta (15–30 Hz) bands. Join EEG-derived features with phenotypic CSV tables using subject IDs. Subject-wise cross-validation splits are mandatory to prevent label leakage. The `externalizing_factor` and `p_factor` from misc channel can serve as primary regression targets; verify derivation source (CBCL/SWAN/SCARED factor analysis version).
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Classical Task 2: Multi-Label Psychiatric Diagnosis Classification from Resting EEG
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0 s, tmax = 4 s, overlap = 0.5, target_events = [`resting_start`, `instructed_toOpenEyes`, `instructed_toCloseEyes`]
+-- **Label Route**: `misc`
++- **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `resting_start` | multi-label binary (7 classes) | Resting-state EEG epochs for diagnosis classification |
+   | `instructed_toOpenEyes` | multi-label binary (7 classes) | Eyes-open resting state |
+   | `instructed_toCloseEyes` | multi-label binary (7 classes) | Eyes-closed resting state |
+@@ -174,29 +175,29 @@
+   - DOI: `10.1101/2024.10.03.615261` — Dataset paper documents lateralized target events (`left_target`, `right_target`) as part of the visual paradigm.
+ - **Kernel Notes**: Extract epochs from lateralized target onset events with balanced counts (left: 2793, right: 2796). Compute lateralized ERP components (N2pc at posterior contralateral electrodes ~200ms, P3 at 300–500ms) to assess spatial attention. Pair with `left_buttonPress`/`right_buttonPress` for response-locked analysis. May be extended to brain-computer interface (BCI) binary classification using posterior parietal channels. `trialResponse` events can serve as quality check for stimulus-response mapping.
+ 
+-### Potential Task 7: Symbol Search Cognitive Load Analysis
++### Potential Task 1: Symbol Search Cognitive Load Analysis
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0 s, tmax = 4 s, overlap = 0.5, target_events = [`symbolSearch_start`]
+-- **Label Route**: `misc`
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-|
++- **Label Route**: `event`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Event ID | Value | Meaning |
++  |---|---|---|
+   | `symbolSearch_start` | continuous | Symbol search task onset (visual search/working memory) |
+ - **Evidence**:
+   - DOI: `10.1101/2024.10.03.615261` — Dataset paper lists symbol search as one of six HBN-EEG tasks involving sustained visual attention and working memory.
+ - **Kernel Notes**: Extract long epochs from `symbolSearch_start` (n=86) with 4s windows and 50% overlap. Symbol search is a cognitive task involving visual search and working memory, implicating frontal theta and parietal alpha dynamics. Join with `response_time` from misc channel for RT-linked analysis. `newPage` events (n=224) may provide trial-level segmentation within the symbol search block if finer resolution is needed. Low event count limits statistical power — consider pooling across subjects for group-level analysis.
+ 
+-### Potential Task 8: Surround Suppression ERP Paradigm
++### Potential Task 2: Surround Suppression ERP Paradigm
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [`dot_no1_ON`, `dot_no2_ON`, `dot_no3_ON`, `dot_no4_ON`, `dot_no5_ON`, `dot_no6_ON`, `dot_no7_ON`, `dot_no8_ON`]
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-|
++  | Event ID | Value | Meaning |
++  |---|---|---|
+   | `dot_no1_ON` | continuous | Surround suppression stimulus element 1 onset |
+   | `dot_no2_ON` | continuous | Surround suppression stimulus element 2 onset |
+   | `dot_no3_ON` | continuous | Surround suppression stimulus element 3 onset |

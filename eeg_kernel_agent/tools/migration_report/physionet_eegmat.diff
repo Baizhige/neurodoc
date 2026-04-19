@@ -1,0 +1,44 @@
+--- physionet_eegmat/analysis.md (pre-v3)
++++ physionet_eegmat/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `physionet_eegmat` | **Year**: 2020 | **URL**: https://physionet.org/content/eegmat/1.0.0/
+ **Category**: High-level Mental | **Subjects**: 36 | **Files (Completed)**: 72 | **Channels**: 23 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Liu Peng
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -40,8 +40,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Background EEG;Count Quality: Good` | 0 | Resting-state EEG |
+   | `Background EEG;Count Quality: Bad` | 0 | Resting-state EEG |
+   | `Mental Arithmetic Task EEG;Count Quality: Good` | 1 | Mental arithmetic task |
+@@ -57,8 +57,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Mental Arithmetic Task EEG;Count Quality: Bad` | 0 | Poor arithmetic performance |
+   | `Mental Arithmetic Task EEG;Count Quality: Good` | 1 | Good arithmetic performance |
+ - **Evidence**:
+@@ -74,8 +74,8 @@
+ - **Meta Level**: super
+ - **Super Meta Notes**: Derived from raw events [`Mental Arithmetic Task EEG;Count Quality: Good`, `Mental Arithmetic Task EEG;Count Quality: Bad`] by k-means clustering on log-band power features (delta, theta, alpha, beta). Kernel step: Extract log-band power features from 5s EEG segments, apply k-means (k=2), map clusters to High-stress/Low-stress labels based on posterior overlap with Count Quality. See DOI: 10.1109/wccest66994.2025.11389948
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Mental Arithmetic Task EEG;Count Quality: Good` | 0 | Low-stress (good performers) |
+   | `Mental Arithmetic Task EEG;Count Quality: Bad` | 1 | High-stress (poor performers) |
+ - **Evidence**:

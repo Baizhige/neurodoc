@@ -1,0 +1,65 @@
+--- openneuro_ds004151/analysis.md (pre-v3)
++++ openneuro_ds004151/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004151` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004151
+ **Category**: Sensory/Response | **Subjects**: 57 | **Files (Completed)**: 57 | **Channels**: 128 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -42,11 +42,11 @@
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [`Ton-`, `Ton+`]
+-- **Label Route**: `misc`
++- **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-|
++  | Event ID | Value | Meaning |
++  |---|---|---|
+   | `Ton-` | continuous | Go trial — BMI score (regression target) |
+   | `Ton+` | continuous | Stop-signal trial — BMI score (regression target) |
+ - **Evidence**:
+@@ -60,15 +60,16 @@
+     6. Assign BMI value as regression target to all epochs from each participant
+     7. Train stepwise multiple linear regression model to predict BMI from network features
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Classical Task 2: BMI Group Classification from Stop-Signal Task EEG
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [`Ton-`, `Ton+`]
+-- **Label Route**: `misc`
++- **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Ton-` | categorical | Go trial — BMI group (obese=1 / normal-weight=0) |
+   | `Ton+` | categorical | Stop-signal trial — BMI group (obese=1 / normal-weight=0) |
+ - **Evidence**:
+@@ -81,6 +82,7 @@
+     5. Class imbalance: ~70% go vs ~30% stop trials; consider stratified sampling during model training
+     6. Verify participant group labels exist in dataset metadata or derive from BMI values stored in misc route
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 1: Go vs Stop Trial Type Classification
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+@@ -88,8 +90,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Ton-` | categorical | Go trial — response required |
+   | `Ton+` | categorical | Stop-signal trial — inhibition required |
+ - **Evidence**: Plausible from paradigm structure alone; stop-signal paradigm inherently defines two distinct trial types with different cognitive demands (response execution vs response inhibition)

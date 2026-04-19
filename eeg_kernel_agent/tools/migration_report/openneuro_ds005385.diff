@@ -1,0 +1,198 @@
+--- openneuro_ds005385/analysis.md (pre-v3)
++++ openneuro_ds005385/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds005385` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005385
+ **Category**: Biological State | **Subjects**: 608 | **Files (Completed)**: 3264 | **Channels**: 65 | **Sampling Rate**: 1000 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -3005,55 +3005,164 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Age Group Classification from Resting-State EEG Connectivity
++### Classical Task 1: Age Group Classification from Resting-State EEG Connectivity — age_20_29
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
+-- **Label Route**: `event` | `misc`
++- **Label Route**: `info`
++- **Label Field**: `age_20_29`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `age_20_29` | 0 | Age group 20-29 years |
+-  | `age_30_39` | 1 | Age group 30-39 years |
+-  | `age_40_49` | 2 | Age group 40-49 years |
+-  | `age_50_59` | 3 | Age group 50-59 years |
+-  | `age_60_70` | 4 | Age group 60-70 years |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `age_20_29` | 0 | Age group 20-29 years |  |
+ - **Super Meta Notes**: Derived from raw EEG by computing eLORETA-based lagged linear connectivity matrices in 7 frequency bands (delta, theta, alpha1, alpha2, beta1, beta2, gamma), then extracting small-world network metrics (clustering coefficient Cw, path length L, small-worldness SW) for hemispheric subnetworks (DMN, FN, AN). Kernel step: Bandpass filter 1-45 Hz, compute connectivity matrices, derive graph-theoretic features, classify age groups.
+ - **Evidence**:
+   - DOI: `10.1007/s11357-025-02042-5` — Age-dependent hemispheric small-world networks study analyzing 539 subjects from OpenNeuro ds005385, using graph-theory analysis with concrete ML pipeline for age classification.
+   - DOI: `10.3390/brainsci12020218` — Age-Related Alterations in EEG Network Connectivity study, supporting age classification methodology and connectivity analysis.
+ - **Kernel Notes**: Verify subject age metadata availability in dataset. Filter to 1-45 Hz. Compute eLORETA connectivity in 7 bands. Extract small-world features per hemisphere. Map ages to 5 bins (20-29, 30-39, 40-49, 50-59, 60-70). Exclude administrative events during segmentation.
+ 
+-### Classical Task 2: EEG Biomarker Reliability Classification (Super Meta)
++### Classical Task 2: Age Group Classification from Resting-State EEG Connectivity — age_30_39
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
++- **Label Route**: `info`
++- **Label Field**: `age_30_39`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `age_30_39` | 1 | Age group 30-39 years |  |
++- **Super Meta Notes**: Derived from raw EEG by computing eLORETA-based lagged linear connectivity matrices in 7 frequency bands (delta, theta, alpha1, alpha2, beta1, beta2, gamma), then extracting small-world network metrics (clustering coefficient Cw, path length L, small-worldness SW) for hemispheric subnetworks (DMN, FN, AN). Kernel step: Bandpass filter 1-45 Hz, compute connectivity matrices, derive graph-theoretic features, classify age groups.
++- **Evidence**:
++  - DOI: `10.1007/s11357-025-02042-5` — Age-dependent hemispheric small-world networks study analyzing 539 subjects from OpenNeuro ds005385, using graph-theory analysis with concrete ML pipeline for age classification.
++  - DOI: `10.3390/brainsci12020218` — Age-Related Alterations in EEG Network Connectivity study, supporting age classification methodology and connectivity analysis.
++- **Kernel Notes**: Verify subject age metadata availability in dataset. Filter to 1-45 Hz. Compute eLORETA connectivity in 7 bands. Extract small-world features per hemisphere. Map ages to 5 bins (20-29, 30-39, 40-49, 50-59, 60-70). Exclude administrative events during segmentation.
++
++### Classical Task 3: Age Group Classification from Resting-State EEG Connectivity — age_40_49
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
++- **Label Route**: `info`
++- **Label Field**: `age_40_49`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `age_40_49` | 2 | Age group 40-49 years |  |
++- **Super Meta Notes**: Derived from raw EEG by computing eLORETA-based lagged linear connectivity matrices in 7 frequency bands (delta, theta, alpha1, alpha2, beta1, beta2, gamma), then extracting small-world network metrics (clustering coefficient Cw, path length L, small-worldness SW) for hemispheric subnetworks (DMN, FN, AN). Kernel step: Bandpass filter 1-45 Hz, compute connectivity matrices, derive graph-theoretic features, classify age groups.
++- **Evidence**:
++  - DOI: `10.1007/s11357-025-02042-5` — Age-dependent hemispheric small-world networks study analyzing 539 subjects from OpenNeuro ds005385, using graph-theory analysis with concrete ML pipeline for age classification.
++  - DOI: `10.3390/brainsci12020218` — Age-Related Alterations in EEG Network Connectivity study, supporting age classification methodology and connectivity analysis.
++- **Kernel Notes**: Verify subject age metadata availability in dataset. Filter to 1-45 Hz. Compute eLORETA connectivity in 7 bands. Extract small-world features per hemisphere. Map ages to 5 bins (20-29, 30-39, 40-49, 50-59, 60-70). Exclude administrative events during segmentation.
++
++### Classical Task 4: Age Group Classification from Resting-State EEG Connectivity — age_50_59
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
++- **Label Route**: `info`
++- **Label Field**: `age_50_59`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `age_50_59` | 3 | Age group 50-59 years |  |
++- **Super Meta Notes**: Derived from raw EEG by computing eLORETA-based lagged linear connectivity matrices in 7 frequency bands (delta, theta, alpha1, alpha2, beta1, beta2, gamma), then extracting small-world network metrics (clustering coefficient Cw, path length L, small-worldness SW) for hemispheric subnetworks (DMN, FN, AN). Kernel step: Bandpass filter 1-45 Hz, compute connectivity matrices, derive graph-theoretic features, classify age groups.
++- **Evidence**:
++  - DOI: `10.1007/s11357-025-02042-5` — Age-dependent hemispheric small-world networks study analyzing 539 subjects from OpenNeuro ds005385, using graph-theory analysis with concrete ML pipeline for age classification.
++  - DOI: `10.3390/brainsci12020218` — Age-Related Alterations in EEG Network Connectivity study, supporting age classification methodology and connectivity analysis.
++- **Kernel Notes**: Verify subject age metadata availability in dataset. Filter to 1-45 Hz. Compute eLORETA connectivity in 7 bands. Extract small-world features per hemisphere. Map ages to 5 bins (20-29, 30-39, 40-49, 50-59, 60-70). Exclude administrative events during segmentation.
++
++### Classical Task 5: Age Group Classification from Resting-State EEG Connectivity — age_60_70
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
++- **Label Route**: `info`
++- **Label Field**: `age_60_70`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `age_60_70` | 4 | Age group 60-70 years |  |
++- **Super Meta Notes**: Derived from raw EEG by computing eLORETA-based lagged linear connectivity matrices in 7 frequency bands (delta, theta, alpha1, alpha2, beta1, beta2, gamma), then extracting small-world network metrics (clustering coefficient Cw, path length L, small-worldness SW) for hemispheric subnetworks (DMN, FN, AN). Kernel step: Bandpass filter 1-45 Hz, compute connectivity matrices, derive graph-theoretic features, classify age groups.
++- **Evidence**:
++  - DOI: `10.1007/s11357-025-02042-5` — Age-dependent hemispheric small-world networks study analyzing 539 subjects from OpenNeuro ds005385, using graph-theory analysis with concrete ML pipeline for age classification.
++  - DOI: `10.3390/brainsci12020218` — Age-Related Alterations in EEG Network Connectivity study, supporting age classification methodology and connectivity analysis.
++- **Kernel Notes**: Verify subject age metadata availability in dataset. Filter to 1-45 Hz. Compute eLORETA connectivity in 7 bands. Extract small-world features per hemisphere. Map ages to 5 bins (20-29, 30-39, 40-49, 50-59, 60-70). Exclude administrative events during segmentation.
++
++### Classical Task 6: EEG Biomarker Reliability Classification (Super Meta) — biomarker_negative
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 5.0 s, overlap = 0.0
+-- **Label Route**: `event` | `misc`
++- **Label Route**: `info`
++- **Label Field**: `biomarker_negative`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `biomarker_negative` | 0 | Below delta power threshold (non-biomarker) |
+-  | `biomarker_positive` | 1 | Above delta power threshold (biomarker-positive) |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `biomarker_negative` | 0 | Below delta power threshold (non-biomarker) |  |
+ - **Super Meta Notes**: Derived from raw EEG by computing right fronto-temporal delta band (1-4 Hz) power from 5-min eyes-closed and eyes-open resting recordings. Threshold applied to classify biomarker-positive vs biomarker-negative. Kernel step: Bandpass filter 1-60 Hz, compute delta band PSD, apply threshold from training data to produce binary labels.
+ - **Evidence**:
+   - DOI: `10.1038/s41597-024-03797-w` — Official Scientific Data publication describing ds005385 dataset structure (64-channel, 1000Hz, 608 subjects, 208 follow-up) for resting-state EEG biomarker analysis.
+   - DOI: `10.1038/s41598-025-26778-4` — Electrophysiological resting-state signatures study using graph metrics (efficiency, clustering) from same cohort for biomarker validation.
+ - **Kernel Notes**: Verify baseline vs 5-year follow-up session identification. Filter 1-60 Hz. Compute delta band (1-4 Hz) power from right frontal (F4, F8) and right temporal (T4, T6) electrodes. Apply classification threshold. Verify event ID mapping from events.tsv.
+ 
+-### Potential Task 1: Resting Condition Segmentation (long event)
++### Classical Task 7: EEG Biomarker Reliability Classification (Super Meta) — biomarker_positive
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 5.0 s, overlap = 0.0
++- **Label Route**: `info`
++- **Label Field**: `biomarker_positive`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `biomarker_positive` | 1 | Above delta power threshold (biomarker-positive) |  |
++- **Super Meta Notes**: Derived from raw EEG by computing right fronto-temporal delta band (1-4 Hz) power from 5-min eyes-closed and eyes-open resting recordings. Threshold applied to classify biomarker-positive vs biomarker-negative. Kernel step: Bandpass filter 1-60 Hz, compute delta band PSD, apply threshold from training data to produce binary labels.
++- **Evidence**:
++  - DOI: `10.1038/s41597-024-03797-w` — Official Scientific Data publication describing ds005385 dataset structure (64-channel, 1000Hz, 608 subjects, 208 follow-up) for resting-state EEG biomarker analysis.
++  - DOI: `10.1038/s41598-025-26778-4` — Electrophysiological resting-state signatures study using graph metrics (efficiency, clustering) from same cohort for biomarker validation.
++- **Kernel Notes**: Verify baseline vs 5-year follow-up session identification. Filter 1-60 Hz. Compute delta band (1-4 Hz) power from right frontal (F4, F8) and right temporal (T4, T6) electrodes. Apply classification threshold. Verify event ID mapping from events.tsv.
++
++### Potential Task 1: Resting Condition Segmentation (long event) — event_1`–`event_256
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `event_1`–`event_256`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `event_1`–`event_256` | — | Primary condition markers (~160-260 each) |
+-  | `event_255` | 0 | Secondary condition marker (95 occurrences) |
+-  | `event_256` | 1 | Tertiary condition marker (2 occurrences) |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `event_1`–`event_256` | — | Primary condition markers (~160-260 each) |  |
++- **Notes**: The dataset uses BrainVision S-codes (S1-S207+) to encode specific resting-state conditions (pre/post cognitive tasks × eyes open/closed). Event IDs with ~200 counts likely correspond to primary condition markers, while lower-count events represent session-specific or follow-up markers. Subject-specific events (counts 1-3) correspond to follow-up sessions.
++- **Evidence**:
++  - DOI: `10.1038/s41597-024-03797-w` — Dataset publication confirming S-code event structure for rest condition encoding across sessions.
++- **Kernel Notes**: Primary condition markers (event_1 through event_256) encode resting-state conditions. Higher-count events (~200 each) map to main paradigm conditions. Subject-specific events with counts 1-3 represent follow-up session markers. Verify condition marker mapping against paradigm documentation.### Potential Task 2: Resting Condition Segmentation (long event) — event_255
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5
++- **Label Route**: `info`
++- **Label Field**: `event_255`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `event_255` | 0 | Secondary condition marker (95 occurrences) |  |
++- **Notes**: The dataset uses BrainVision S-codes (S1-S207+) to encode specific resting-state conditions (pre/post cognitive tasks × eyes open/closed). Event IDs with ~200 counts likely correspond to primary condition markers, while lower-count events represent session-specific or follow-up markers. Subject-specific events (counts 1-3) correspond to follow-up sessions.
++- **Evidence**:
++  - DOI: `10.1038/s41597-024-03797-w` — Dataset publication confirming S-code event structure for rest condition encoding across sessions.
++- **Kernel Notes**: Primary condition markers (event_1 through event_256) encode resting-state conditions. Higher-count events (~200 each) map to main paradigm conditions. Subject-specific events with counts 1-3 represent follow-up session markers. Verify condition marker mapping against paradigm documentation.### Potential Task 3: Resting Condition Segmentation (long event) — event_256
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5
++- **Label Route**: `info`
++- **Label Field**: `event_256`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `event_256` | 1 | Tertiary condition marker (2 occurrences) |  |
+ - **Notes**: The dataset uses BrainVision S-codes (S1-S207+) to encode specific resting-state conditions (pre/post cognitive tasks × eyes open/closed). Event IDs with ~200 counts likely correspond to primary condition markers, while lower-count events represent session-specific or follow-up markers. Subject-specific events (counts 1-3) correspond to follow-up sessions.
+ - **Evidence**:
+   - DOI: `10.1038/s41597-024-03797-w` — Dataset publication confirming S-code event structure for rest condition encoding across sessions.

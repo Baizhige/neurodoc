@@ -1,0 +1,55 @@
+--- openneuro_ds004851/analysis.md (pre-v3)
++++ openneuro_ds004851/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004851` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004851
+ **Category**: Complex Applied | **Subjects**: 65 | **Files (Completed)**: 65 | **Channels**: 72 | **Sampling Rate**: 2048 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -74,8 +74,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `HID: stimulus_A_onset` | 0 | Primary stimulus type A |
+   | `HID: stimulus_B_onset` | 1 | Primary stimulus type B |
+   | `HID: stimulus_C_onset` | 2 | Primary stimulus type C |
+@@ -92,8 +92,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `HID: secondary_81_onset` | 0 | Secondary stimulus category 81 (trial-level, 973x) |
+   | `HID: secondary_80A_onset` | 1 | Secondary stimulus category 80A (195x) |
+   | `HID: secondary_80B_onset` | 2 | Secondary stimulus category 80B (194x) |
+@@ -101,15 +101,17 @@
+ - **Evidence**: DOI not available — task defined based on paradigm structure and epoch alignment recommendations
+ - **Kernel Notes**: 4-class secondary stimulus classification. secondary_81_onset is trial-level (973x); secondary_80_onset is block-level (65x) and may require separate handling. secondary_80A/B are trial-level with 194-195 counts. Event codes 8xxx map to secondary stimulus categories per paradigm description. Response events available for validation analysis.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 3: Block-Level Marker Analysis
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = -1.0 s, tmax = 5.0 s, target_events = [`HID: block_marker_01` through `HID: block_marker_19`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `HID: block_marker_01` through `HID: block_marker_19`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `HID: block_marker_01` through `HID: block_marker_19` | 0–18 | Block identifier (19 distinct blocks) |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `HID: block_marker_01` through `HID: block_marker_19` | 0–18 | Block identifier (19 distinct blocks) |  |
+ - **Evidence**: DOI not available — task defined based on kernel event analysis showing 70xx codes (7001-7019) appear exactly 65 times (once per subject)
+ - **Kernel Notes**: Block markers at 7001-7019 occur once per subject (65x) indicating trial design structure. Long epoch window allows analysis of block-level state transitions and sustained cognitive workload effects. Do NOT include in stimulus-level epoching — separate handling required per epoch alignment complications.

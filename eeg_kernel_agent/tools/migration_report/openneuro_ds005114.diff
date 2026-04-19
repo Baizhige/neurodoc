@@ -1,0 +1,332 @@
+--- openneuro_ds005114/analysis.md (pre-v3)
++++ openneuro_ds005114/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds005114` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005114
+ **Category**: High-level Mental | **Subjects**: 62 | **Files (Completed)**: 217 | **Channels**: 65 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -126,86 +126,266 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: DPX Cognitive Control Classification
+-- **Task Type**: classification
+-- **Epoch Method**: `epoch_by_event_hdf5`
+-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`CueAOnset`, `CueBOnset`, `Probe_aX_onset`, `Probe_aY_onset`, `Probe_bY_onset`, `Response: CueCorr`, `Response: Probe_Corr`, `Response: Probe_Incorr`]
+-- **Label Route**: `event`
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|--------|
+-  | `CueAOnset` | 0 | Cue A onset (context maintenance) |
+-  | `CueBOnset` | 1 | Cue B onset (context maintenance) |
+-  | `Probe_aX_onset` | 2 | Probe aX (AX trial - expected congruent) |
+-  | `Probe_aY_onset` | 3 | Probe aY (AY trial - unexpected incongruent) |
+-  | `Probe_bY_onset` | 4 | Probe bY (BY trial - control) |
+-  | `Response: CueCorr` | 5 | Correct cue response |
+-  | `Response: Probe_Corr` | 6 | Correct probe response |
+-  | `Response: Probe_Incorr` | 7 | Incorrect probe response |
+-- **Evidence**:
+-  - DOI: 10.1016/j.neuropsychologia.2019.107125 — ERPs predict symptomatic distress and recovery in sub-acute mTBI; DPX task for cognitive control assessment with P3a/P3b ERP analysis in mTBI vs controls
+-  - DOI: 10.1007/s11682-019-00171-y — Joint analysis of frontal theta synchrony following mTBI using DPX task variant of AX-CPT in same patient cohort
+-- **Kernel Notes**: Event mapping verified: S 37 (50,287) → `Response: CueCorr`, S 51 (35,272) → `Probe_aX_onset`, S 45 (3,626) → `Response: Probe_Incorr`, S 43 (33,178) → `CueBOnset`, S 44 (2,235) → `Probe_aY_onset`, S 42 (1,391) → `Probe_bY_onset`. Exclude S 41 (STATUS), S 99 (practice filler), and boundary markers from training.
+-
+-### Potential Task 1: Cue-Locked Context Maintenance (P3a)
++### Classical Task 1: DPX Cognitive Control Classification — CueAOnset
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`CueAOnset`, `CueBOnset`, `Probe_aX_onset`, `Probe_aY_onset`, `Probe_bY_onset`, `Response: CueCorr`, `Response: Probe_Corr`, `Response: Probe_Incorr`]
++- **Label Route**: `info`
++- **Label Field**: `CueAOnset`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `CueAOnset` | 0 | Cue A onset (context maintenance) |  |
++- **Evidence**:
++  - DOI: 10.1016/j.neuropsychologia.2019.107125 — ERPs predict symptomatic distress and recovery in sub-acute mTBI; DPX task for cognitive control assessment with P3a/P3b ERP analysis in mTBI vs controls
++  - DOI: 10.1007/s11682-019-00171-y — Joint analysis of frontal theta synchrony following mTBI using DPX task variant of AX-CPT in same patient cohort
++- **Kernel Notes**: Event mapping verified: S 37 (50,287) → `Response: CueCorr`, S 51 (35,272) → `Probe_aX_onset`, S 45 (3,626) → `Response: Probe_Incorr`, S 43 (33,178) → `CueBOnset`, S 44 (2,235) → `Probe_aY_onset`, S 42 (1,391) → `Probe_bY_onset`. Exclude S 41 (STATUS), S 99 (practice filler), and boundary markers from training.
++
++### Classical Task 2: DPX Cognitive Control Classification — CueBOnset
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`CueAOnset`, `CueBOnset`, `Probe_aX_onset`, `Probe_aY_onset`, `Probe_bY_onset`, `Response: CueCorr`, `Response: Probe_Corr`, `Response: Probe_Incorr`]
++- **Label Route**: `info`
++- **Label Field**: `CueBOnset`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `CueBOnset` | 1 | Cue B onset (context maintenance) |  |
++- **Evidence**:
++  - DOI: 10.1016/j.neuropsychologia.2019.107125 — ERPs predict symptomatic distress and recovery in sub-acute mTBI; DPX task for cognitive control assessment with P3a/P3b ERP analysis in mTBI vs controls
++  - DOI: 10.1007/s11682-019-00171-y — Joint analysis of frontal theta synchrony following mTBI using DPX task variant of AX-CPT in same patient cohort
++- **Kernel Notes**: Event mapping verified: S 37 (50,287) → `Response: CueCorr`, S 51 (35,272) → `Probe_aX_onset`, S 45 (3,626) → `Response: Probe_Incorr`, S 43 (33,178) → `CueBOnset`, S 44 (2,235) → `Probe_aY_onset`, S 42 (1,391) → `Probe_bY_onset`. Exclude S 41 (STATUS), S 99 (practice filler), and boundary markers from training.
++
++### Classical Task 3: DPX Cognitive Control Classification — Probe_aX_onset
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`CueAOnset`, `CueBOnset`, `Probe_aX_onset`, `Probe_aY_onset`, `Probe_bY_onset`, `Response: CueCorr`, `Response: Probe_Corr`, `Response: Probe_Incorr`]
++- **Label Route**: `info`
++- **Label Field**: `Probe_aX_onset`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Probe_aX_onset` | 2 | Probe aX (AX trial - expected congruent) |  |
++- **Evidence**:
++  - DOI: 10.1016/j.neuropsychologia.2019.107125 — ERPs predict symptomatic distress and recovery in sub-acute mTBI; DPX task for cognitive control assessment with P3a/P3b ERP analysis in mTBI vs controls
++  - DOI: 10.1007/s11682-019-00171-y — Joint analysis of frontal theta synchrony following mTBI using DPX task variant of AX-CPT in same patient cohort
++- **Kernel Notes**: Event mapping verified: S 37 (50,287) → `Response: CueCorr`, S 51 (35,272) → `Probe_aX_onset`, S 45 (3,626) → `Response: Probe_Incorr`, S 43 (33,178) → `CueBOnset`, S 44 (2,235) → `Probe_aY_onset`, S 42 (1,391) → `Probe_bY_onset`. Exclude S 41 (STATUS), S 99 (practice filler), and boundary markers from training.
++
++### Classical Task 4: DPX Cognitive Control Classification — Probe_aY_onset
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`CueAOnset`, `CueBOnset`, `Probe_aX_onset`, `Probe_aY_onset`, `Probe_bY_onset`, `Response: CueCorr`, `Response: Probe_Corr`, `Response: Probe_Incorr`]
++- **Label Route**: `info`
++- **Label Field**: `Probe_aY_onset`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Probe_aY_onset` | 3 | Probe aY (AY trial - unexpected incongruent) |  |
++- **Evidence**:
++  - DOI: 10.1016/j.neuropsychologia.2019.107125 — ERPs predict symptomatic distress and recovery in sub-acute mTBI; DPX task for cognitive control assessment with P3a/P3b ERP analysis in mTBI vs controls
++  - DOI: 10.1007/s11682-019-00171-y — Joint analysis of frontal theta synchrony following mTBI using DPX task variant of AX-CPT in same patient cohort
++- **Kernel Notes**: Event mapping verified: S 37 (50,287) → `Response: CueCorr`, S 51 (35,272) → `Probe_aX_onset`, S 45 (3,626) → `Response: Probe_Incorr`, S 43 (33,178) → `CueBOnset`, S 44 (2,235) → `Probe_aY_onset`, S 42 (1,391) → `Probe_bY_onset`. Exclude S 41 (STATUS), S 99 (practice filler), and boundary markers from training.
++
++### Classical Task 5: DPX Cognitive Control Classification — Probe_bY_onset
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`CueAOnset`, `CueBOnset`, `Probe_aX_onset`, `Probe_aY_onset`, `Probe_bY_onset`, `Response: CueCorr`, `Response: Probe_Corr`, `Response: Probe_Incorr`]
++- **Label Route**: `info`
++- **Label Field**: `Probe_bY_onset`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Probe_bY_onset` | 4 | Probe bY (BY trial - control) |  |
++- **Evidence**:
++  - DOI: 10.1016/j.neuropsychologia.2019.107125 — ERPs predict symptomatic distress and recovery in sub-acute mTBI; DPX task for cognitive control assessment with P3a/P3b ERP analysis in mTBI vs controls
++  - DOI: 10.1007/s11682-019-00171-y — Joint analysis of frontal theta synchrony following mTBI using DPX task variant of AX-CPT in same patient cohort
++- **Kernel Notes**: Event mapping verified: S 37 (50,287) → `Response: CueCorr`, S 51 (35,272) → `Probe_aX_onset`, S 45 (3,626) → `Response: Probe_Incorr`, S 43 (33,178) → `CueBOnset`, S 44 (2,235) → `Probe_aY_onset`, S 42 (1,391) → `Probe_bY_onset`. Exclude S 41 (STATUS), S 99 (practice filler), and boundary markers from training.
++
++### Classical Task 6: DPX Cognitive Control Classification — Response: CueCorr
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`CueAOnset`, `CueBOnset`, `Probe_aX_onset`, `Probe_aY_onset`, `Probe_bY_onset`, `Response: CueCorr`, `Response: Probe_Corr`, `Response: Probe_Incorr`]
++- **Label Route**: `info`
++- **Label Field**: `Response: CueCorr`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Response: CueCorr` | 5 | Correct cue response |  |
++- **Evidence**:
++  - DOI: 10.1016/j.neuropsychologia.2019.107125 — ERPs predict symptomatic distress and recovery in sub-acute mTBI; DPX task for cognitive control assessment with P3a/P3b ERP analysis in mTBI vs controls
++  - DOI: 10.1007/s11682-019-00171-y — Joint analysis of frontal theta synchrony following mTBI using DPX task variant of AX-CPT in same patient cohort
++- **Kernel Notes**: Event mapping verified: S 37 (50,287) → `Response: CueCorr`, S 51 (35,272) → `Probe_aX_onset`, S 45 (3,626) → `Response: Probe_Incorr`, S 43 (33,178) → `CueBOnset`, S 44 (2,235) → `Probe_aY_onset`, S 42 (1,391) → `Probe_bY_onset`. Exclude S 41 (STATUS), S 99 (practice filler), and boundary markers from training.
++
++### Classical Task 7: DPX Cognitive Control Classification — Response: Probe_Corr
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`CueAOnset`, `CueBOnset`, `Probe_aX_onset`, `Probe_aY_onset`, `Probe_bY_onset`, `Response: CueCorr`, `Response: Probe_Corr`, `Response: Probe_Incorr`]
++- **Label Route**: `info`
++- **Label Field**: `Response: Probe_Corr`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Response: Probe_Corr` | 6 | Correct probe response |  |
++- **Evidence**:
++  - DOI: 10.1016/j.neuropsychologia.2019.107125 — ERPs predict symptomatic distress and recovery in sub-acute mTBI; DPX task for cognitive control assessment with P3a/P3b ERP analysis in mTBI vs controls
++  - DOI: 10.1007/s11682-019-00171-y — Joint analysis of frontal theta synchrony following mTBI using DPX task variant of AX-CPT in same patient cohort
++- **Kernel Notes**: Event mapping verified: S 37 (50,287) → `Response: CueCorr`, S 51 (35,272) → `Probe_aX_onset`, S 45 (3,626) → `Response: Probe_Incorr`, S 43 (33,178) → `CueBOnset`, S 44 (2,235) → `Probe_aY_onset`, S 42 (1,391) → `Probe_bY_onset`. Exclude S 41 (STATUS), S 99 (practice filler), and boundary markers from training.
++
++### Classical Task 8: DPX Cognitive Control Classification — Response: Probe_Incorr
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`CueAOnset`, `CueBOnset`, `Probe_aX_onset`, `Probe_aY_onset`, `Probe_bY_onset`, `Response: CueCorr`, `Response: Probe_Corr`, `Response: Probe_Incorr`]
++- **Label Route**: `info`
++- **Label Field**: `Response: Probe_Incorr`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Response: Probe_Incorr` | 7 | Incorrect probe response |  |
++- **Evidence**:
++  - DOI: 10.1016/j.neuropsychologia.2019.107125 — ERPs predict symptomatic distress and recovery in sub-acute mTBI; DPX task for cognitive control assessment with P3a/P3b ERP analysis in mTBI vs controls
++  - DOI: 10.1007/s11682-019-00171-y — Joint analysis of frontal theta synchrony following mTBI using DPX task variant of AX-CPT in same patient cohort
++- **Kernel Notes**: Event mapping verified: S 37 (50,287) → `Response: CueCorr`, S 51 (35,272) → `Probe_aX_onset`, S 45 (3,626) → `Response: Probe_Incorr`, S 43 (33,178) → `CueBOnset`, S 44 (2,235) → `Probe_aY_onset`, S 42 (1,391) → `Probe_bY_onset`. Exclude S 41 (STATUS), S 99 (practice filler), and boundary markers from training.
++
++### Potential Task 1: Cue-Locked Context Maintenance (P3a) — CueAOnset
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`CueAOnset`, `CueBOnset`]
+-- **Label Route**: `event`
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|--------|
+-  | `CueAOnset` | 0 | Cue A (valid context - expect aX probe) |
+-  | `CueBOnset` | 1 | Cue B (invalid context - expect non-a probe) |
++- **Label Route**: `info`
++- **Label Field**: `CueAOnset`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `CueAOnset` | 0 | Cue A (valid context - expect aX probe) |  |
+ - **Evidence**:
+   - DOI: 10.1016/j.neuropsychologia.2019.107125 — P3a component analysis for proactive cognitive control
+ - **Kernel Notes**: Cue-locked epochs capture P3a and context maintenance processes. Window [-0.2, 1.0]s covers baseline and ERP components. Task supports decomposition of proactive control via CueA vs CueB discrimination.
+ 
+-### Potential Task 2: Probe-Locked Response Inhibition (P3b)
++### Potential Task 2: Cue-Locked Context Maintenance (P3a) — CueBOnset
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`CueAOnset`, `CueBOnset`]
++- **Label Route**: `info`
++- **Label Field**: `CueBOnset`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `CueBOnset` | 1 | Cue B (invalid context - expect non-a probe) |  |
++- **Evidence**:
++  - DOI: 10.1016/j.neuropsychologia.2019.107125 — P3a component analysis for proactive cognitive control
++- **Kernel Notes**: Cue-locked epochs capture P3a and context maintenance processes. Window [-0.2, 1.0]s covers baseline and ERP components. Task supports decomposition of proactive control via CueA vs CueB discrimination.
++
++### Potential Task 3: Probe-Locked Response Inhibition (P3b) — Probe_aX_onset
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [`Probe_aX_onset`, `Probe_aY_onset`, `Probe_bY_onset`]
+-- **Label Route**: `event`
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|--------|
+-  | `Probe_aX_onset` | 0 | AX trial (expected - go response) |
+-  | `Probe_aY_onset` | 1 | AY trial (unexpected - no-go) |
+-  | `Probe_bY_onset` | 2 | BY trial (no-go control) |
++- **Label Route**: `info`
++- **Label Field**: `Probe_aX_onset`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Probe_aX_onset` | 0 | AX trial (expected - go response) |  |
+ - **Evidence**:
+   - DOI: 10.1016/j.neuropsychologia.2019.107125 — P3b component analysis for reactive cognitive control
+ - **Kernel Notes**: Probe-locked epochs capture P3b and response-related processes. Window [-0.2, 0.8]s covers expected (aX), unexpected (aY), and BY probe responses. Task supports decomposition of reactive control via probe discrimination.
+ 
+-### Potential Task 3: Response-Locked Error Monitoring
++### Potential Task 4: Probe-Locked Response Inhibition (P3b) — Probe_aY_onset
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [`Probe_aX_onset`, `Probe_aY_onset`, `Probe_bY_onset`]
++- **Label Route**: `info`
++- **Label Field**: `Probe_aY_onset`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Probe_aY_onset` | 1 | AY trial (unexpected - no-go) |  |
++- **Evidence**:
++  - DOI: 10.1016/j.neuropsychologia.2019.107125 — P3b component analysis for reactive cognitive control
++- **Kernel Notes**: Probe-locked epochs capture P3b and response-related processes. Window [-0.2, 0.8]s covers expected (aX), unexpected (aY), and BY probe responses. Task supports decomposition of reactive control via probe discrimination.
++
++### Potential Task 5: Probe-Locked Response Inhibition (P3b) — Probe_bY_onset
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [`Probe_aX_onset`, `Probe_aY_onset`, `Probe_bY_onset`]
++- **Label Route**: `info`
++- **Label Field**: `Probe_bY_onset`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Probe_bY_onset` | 2 | BY trial (no-go control) |  |
++- **Evidence**:
++  - DOI: 10.1016/j.neuropsychologia.2019.107125 — P3b component analysis for reactive cognitive control
++- **Kernel Notes**: Probe-locked epochs capture P3b and response-related processes. Window [-0.2, 0.8]s covers expected (aX), unexpected (aY), and BY probe responses. Task supports decomposition of reactive control via probe discrimination.
++
++### Potential Task 6: Response-Locked Error Monitoring — Response: CueCorr
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 0.5 s, target_events = [`Response: CueCorr`, `Response: Probe_Corr`, `Response: Probe_Incorr`]
+-- **Label Route**: `event`
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|--------|
+-  | `Response: CueCorr` | 0 | Correct cue response (S 37) |
+-  | `Response: Probe_Corr` | 1 | Correct probe response |
+-  | `Response: Probe_Incorr` | 2 | Incorrect probe response (S 45) |
++- **Label Route**: `info`
++- **Label Field**: `Response: CueCorr`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Response: CueCorr` | 0 | Correct cue response (S 37) |  |
+ - **Evidence**:
+   - DOI: 10.1016/j.neuropsychologia.2019.107125 — Error-related negativity and feedback processing in mTBI
+ - **Kernel Notes**: Response-locked epochs capture feedback processing and error monitoring. Window [-0.5, 0.5]s covers correct/incorrect response events. Useful for error-related negativity (ERN) analysis in cognitive control assessment.
+ 
+-### Potential Task 4: mTBI Subgroup Classification
++### Potential Task 7: Response-Locked Error Monitoring — Response: Probe_Corr
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.5 s, tmax = 0.5 s, target_events = [`Response: CueCorr`, `Response: Probe_Corr`, `Response: Probe_Incorr`]
++- **Label Route**: `info`
++- **Label Field**: `Response: Probe_Corr`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Response: Probe_Corr` | 1 | Correct probe response |  |
++- **Evidence**:
++  - DOI: 10.1016/j.neuropsychologia.2019.107125 — Error-related negativity and feedback processing in mTBI
++- **Kernel Notes**: Response-locked epochs capture feedback processing and error monitoring. Window [-0.5, 0.5]s covers correct/incorrect response events. Useful for error-related negativity (ERN) analysis in cognitive control assessment.
++
++### Potential Task 8: Response-Locked Error Monitoring — Response: Probe_Incorr
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.5 s, tmax = 0.5 s, target_events = [`Response: CueCorr`, `Response: Probe_Corr`, `Response: Probe_Incorr`]
++- **Label Route**: `info`
++- **Label Field**: `Response: Probe_Incorr`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Response: Probe_Incorr` | 2 | Incorrect probe response (S 45) |  |
++- **Evidence**:
++  - DOI: 10.1016/j.neuropsychologia.2019.107125 — Error-related negativity and feedback processing in mTBI
++- **Kernel Notes**: Response-locked epochs capture feedback processing and error monitoring. Window [-0.5, 0.5]s covers correct/incorrect response events. Useful for error-related negativity (ERN) analysis in cognitive control assessment.
++
++### Potential Task 9: mTBI Subgroup Classification
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`CueAOnset`, `CueBOnset`, `Probe_aX_onset`, `Probe_aY_onset`, `Probe_bY_onset`]
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
++- **Label Field**: `participant_group`
+ - **Meta Level**: `super`
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|--------|
+-  | participant_group | 0 | mTBI patient |
+-  | participant_group | 1 | healthy control |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | participant_group | 0 | mTBI patient |  |
++  | participant_group | 1 | healthy control |  |
+ - **Evidence**:
+   - DOI: 10.1007/s11682-019-00171-y — Same patient cohort with mTBI vs healthy control comparison
+ - **Kernel Notes**: Group labels from participants.tsv enable mTBI subgroup analysis. Super meta-level classification combines EEG features with clinical group membership. Verify group label availability in participants.tsv before training.

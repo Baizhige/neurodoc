@@ -1,0 +1,113 @@
+--- openneuro_ds004635/analysis.md (pre-v3)
++++ openneuro_ds004635/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004635` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004635
+ **Category**: Biological State | **Subjects**: 48 | **Files (Completed)**: 1 | **Channels**: 129 | **Sampling Rate**: 1000 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -30,20 +30,81 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: EEG Microstate Segmentation
++### Classical Task 1: EEG Microstate Segmentation — microstate 1
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 1 s, overlap = 0.0
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `microstate 1`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `microstate 1` | 0 | First canonical topographic pattern identified by modified k-means clustering |
+-  | `microstate 2` | 1 | Second canonical topographic pattern identified by modified k-means clustering |
+-  | `microstate 3` | 2 | Third canonical topographic pattern identified by modified k-means clustering |
+-  | `microstate 4` | 3 | Fourth canonical topographic pattern identified by modified k-means clustering |
+-  | `microstate 5` | 4 | Fifth canonical topographic pattern identified by modified k-means clustering |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `microstate 1` | 0 | First canonical topographic pattern identified by modified k-means clustering |  |
++- **Evidence**:
++  - DOI: 10.1007/s10548-024-01043-5 — Published tutorial in Brain Topography (2024) using the same 48-infant dataset; provides step-by-step microstate analysis workflow with 5 canonical classes, temporal metrics (GEV, duration, coverage, occurrence, transition probabilities), and reliability assessment.
++  - DOI: 10.21203/rs.3.rs-3164735.v1 — Preprint version (July 2023) with identical methodology; identifies 5 microstate classes during video-watching resting-state and assesses test-retest reliability across infants.
++- **Kernel Notes**: Segment continuous EEG into 1-second non-overlapping windows. Compute Global Field Power (GFP) for each segment and identify GFP peaks. Apply modified k-means clustering to identify 5 canonical topographic patterns (labels 0-4). Assign each 1-second segment to its dominant microstate class based on GFP-peak topographic similarity. Extract microstate metrics: Global Explained Variance (GEV), duration, coverage, occurrence, and transition probabilities for downstream reliability analysis. Boundary events (`bgin`, `TRSP`) mark recording segment transitions for quality checks but are not used as classification labels. Note: single aggregated file prevents subject-level separation; class imbalance potential if microstate distribution is uneven.
++
++### Classical Task 2: EEG Microstate Segmentation — microstate 2
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 1 s, overlap = 0.0
++- **Label Route**: `info`
++- **Label Field**: `microstate 2`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `microstate 2` | 1 | Second canonical topographic pattern identified by modified k-means clustering |  |
++- **Evidence**:
++  - DOI: 10.1007/s10548-024-01043-5 — Published tutorial in Brain Topography (2024) using the same 48-infant dataset; provides step-by-step microstate analysis workflow with 5 canonical classes, temporal metrics (GEV, duration, coverage, occurrence, transition probabilities), and reliability assessment.
++  - DOI: 10.21203/rs.3.rs-3164735.v1 — Preprint version (July 2023) with identical methodology; identifies 5 microstate classes during video-watching resting-state and assesses test-retest reliability across infants.
++- **Kernel Notes**: Segment continuous EEG into 1-second non-overlapping windows. Compute Global Field Power (GFP) for each segment and identify GFP peaks. Apply modified k-means clustering to identify 5 canonical topographic patterns (labels 0-4). Assign each 1-second segment to its dominant microstate class based on GFP-peak topographic similarity. Extract microstate metrics: Global Explained Variance (GEV), duration, coverage, occurrence, and transition probabilities for downstream reliability analysis. Boundary events (`bgin`, `TRSP`) mark recording segment transitions for quality checks but are not used as classification labels. Note: single aggregated file prevents subject-level separation; class imbalance potential if microstate distribution is uneven.
++
++### Classical Task 3: EEG Microstate Segmentation — microstate 3
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 1 s, overlap = 0.0
++- **Label Route**: `info`
++- **Label Field**: `microstate 3`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `microstate 3` | 2 | Third canonical topographic pattern identified by modified k-means clustering |  |
++- **Evidence**:
++  - DOI: 10.1007/s10548-024-01043-5 — Published tutorial in Brain Topography (2024) using the same 48-infant dataset; provides step-by-step microstate analysis workflow with 5 canonical classes, temporal metrics (GEV, duration, coverage, occurrence, transition probabilities), and reliability assessment.
++  - DOI: 10.21203/rs.3.rs-3164735.v1 — Preprint version (July 2023) with identical methodology; identifies 5 microstate classes during video-watching resting-state and assesses test-retest reliability across infants.
++- **Kernel Notes**: Segment continuous EEG into 1-second non-overlapping windows. Compute Global Field Power (GFP) for each segment and identify GFP peaks. Apply modified k-means clustering to identify 5 canonical topographic patterns (labels 0-4). Assign each 1-second segment to its dominant microstate class based on GFP-peak topographic similarity. Extract microstate metrics: Global Explained Variance (GEV), duration, coverage, occurrence, and transition probabilities for downstream reliability analysis. Boundary events (`bgin`, `TRSP`) mark recording segment transitions for quality checks but are not used as classification labels. Note: single aggregated file prevents subject-level separation; class imbalance potential if microstate distribution is uneven.
++
++### Classical Task 4: EEG Microstate Segmentation — microstate 4
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 1 s, overlap = 0.0
++- **Label Route**: `info`
++- **Label Field**: `microstate 4`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `microstate 4` | 3 | Fourth canonical topographic pattern identified by modified k-means clustering |  |
++- **Evidence**:
++  - DOI: 10.1007/s10548-024-01043-5 — Published tutorial in Brain Topography (2024) using the same 48-infant dataset; provides step-by-step microstate analysis workflow with 5 canonical classes, temporal metrics (GEV, duration, coverage, occurrence, transition probabilities), and reliability assessment.
++  - DOI: 10.21203/rs.3.rs-3164735.v1 — Preprint version (July 2023) with identical methodology; identifies 5 microstate classes during video-watching resting-state and assesses test-retest reliability across infants.
++- **Kernel Notes**: Segment continuous EEG into 1-second non-overlapping windows. Compute Global Field Power (GFP) for each segment and identify GFP peaks. Apply modified k-means clustering to identify 5 canonical topographic patterns (labels 0-4). Assign each 1-second segment to its dominant microstate class based on GFP-peak topographic similarity. Extract microstate metrics: Global Explained Variance (GEV), duration, coverage, occurrence, and transition probabilities for downstream reliability analysis. Boundary events (`bgin`, `TRSP`) mark recording segment transitions for quality checks but are not used as classification labels. Note: single aggregated file prevents subject-level separation; class imbalance potential if microstate distribution is uneven.
++
++### Classical Task 5: EEG Microstate Segmentation — microstate 5
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 1 s, overlap = 0.0
++- **Label Route**: `info`
++- **Label Field**: `microstate 5`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `microstate 5` | 4 | Fifth canonical topographic pattern identified by modified k-means clustering |  |
+ - **Evidence**:
+   - DOI: 10.1007/s10548-024-01043-5 — Published tutorial in Brain Topography (2024) using the same 48-infant dataset; provides step-by-step microstate analysis workflow with 5 canonical classes, temporal metrics (GEV, duration, coverage, occurrence, transition probabilities), and reliability assessment.
+   - DOI: 10.21203/rs.3.rs-3164735.v1 — Preprint version (July 2023) with identical methodology; identifies 5 microstate classes during video-watching resting-state and assesses test-retest reliability across infants.
+@@ -56,8 +117,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `bgin` | 0 | Recording segment start marker |
+   | `TRSP` | 1 | Transition segment boundary marker |
+ - **Evidence**: None — task is plausible from paradigm but insufficient events for robust supervised learning.

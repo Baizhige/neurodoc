@@ -1,0 +1,38 @@
+--- openneuro_ds004369/analysis.md (pre-v3)
++++ openneuro_ds004369/analysis.md (v3)
+@@ -24,6 +24,12 @@
+ | `no_events` | N/A | admin | raw | No discrete event markers detected; use continuous segmentation or external metadata labels. |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++
+ ### Info
+ 
+ | Field | Completeness | Notes |
+@@ -33,11 +39,12 @@
+ | `device` | missing | N/A |
+ ## Tasks
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Classical Task 1: Publisher-defined BIDS task: Attended Speaker Paradigm
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
+-- **Label Route**: `event`
++- **Label Route**: `info`
+ - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
+ - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004369 DOI: 10.18112/openneuro.ds004369.v1.0.1
+ 
+@@ -46,7 +53,7 @@
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
+-- **Label Route**: `event`
++- **Label Route**: `misc`
+ - **Target Definition**: N/A (unsupervised segmentation)
+ - **Notes**: No trial markers in EEG files; use sliding window segmentation. Only 7 channels (very low-density). Subject-level labels (attended speaker, blink/pause occurrence) may be available from behavioral logs.
+ 

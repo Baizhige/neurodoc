@@ -1,0 +1,123 @@
+--- openneuro_ds004408/analysis.md (pre-v3)
++++ openneuro_ds004408/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004408` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004408
+ **Category**: High-level Mental | **Subjects**: 380 | **Files (Completed)**: 380 | **Channels**: 128 | **Sampling Rate**: 512 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -34,14 +34,14 @@
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5 s
+-- **Label Route**: `misc` (external stimulus metadata)
++- **Label Route**: `event`
+ - **Meta Level**: `raw`
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|---|---|---|
+-| `continuous_speech_listening` | Speech envelope (RMS amplitude) | Low-frequency cortical entrainment to speech envelope |
+-| `continuous_speech_listening` | Phoneme onsets/features | Phoneme-level processing markers |
++  | Event ID | Value | Meaning |
++  |---|---|---|
++  | `continuous_speech_listening` | Speech envelope (RMS amplitude) | Low-frequency cortical entrainment to speech envelope |
++  | `continuous_speech_listening` | Phoneme onsets/features | Phoneme-level processing markers |
+ 
+ - **Notes**: The speech envelope and phoneme labels must be extracted from external stimulus audio files. Use Hilbert envelope or gammatone filterbank for envelope extraction. Phoneme timing can be derived via forced alignment (e.g., Montreal Forced Aligner) or pre-existing annotations.
+ 
+@@ -57,15 +57,15 @@
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5 s
+-- **Label Route**: `misc` (external linguistic annotations)
++- **Label Route**: `event`
+ - **Meta Level**: `raw`
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|---|---|---|
+-| `continuous_speech_listening` | Phonotactic probability | Sequential phonological constraints |
+-| `continuous_speech_listening` | Word surprisal | Information-theoretic predictability |
+-| `continuous_speech_listening` | Semantic features | Meaning-based representations |
++  | Event ID | Value | Meaning |
++  |---|---|---|
++  | `continuous_speech_listening` | Phonotactic probability | Sequential phonological constraints |
++  | `continuous_speech_listening` | Word surprisal | Information-theoretic predictability |
++  | `continuous_speech_listening` | Semantic features | Meaning-based representations |
+ 
+ - **Notes**: Requires external text annotations aligned to stimulus audio. Use pre-trained language models to compute word-level surprisal and entropy. Phonotactic features can be derived from probabilistic phonotactic databases.
+ 
+@@ -81,14 +81,14 @@
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5 s
+-- **Label Route**: `misc` (external acoustic features)
++- **Label Route**: `event`
+ - **Meta Level**: `raw`
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|---|---|---|
+-| `continuous_speech_listening` | Spectrogram (gammatone filterbank) | Time-frequency acoustic representation |
+-| `continuous_speech_listening` | Envelope modulation spectrum | Amplitude modulation in delta-theta range |
++  | Event ID | Value | Meaning |
++  |---|---|---|
++  | `continuous_speech_listening` | Spectrogram (gammatone filterbank) | Time-frequency acoustic representation |
++  | `continuous_speech_listening` | Envelope modulation spectrum | Amplitude modulation in delta-theta range |
+ 
+ - **Notes**: Extract multi-channel gammatone filterbank features (4th order, 128 channels spanning 100–8000 Hz) from stimulus audio. Compute envelope via Hilbert transform or root-mean-square in 20 ms windows.
+ 
+@@ -99,18 +99,19 @@
+ 
+ - **Kernel Notes**: Baseline acoustic feature models establish the stimulus-response relationship before adding higher-order linguistic predictors. Essential for separating acoustic from linguistic encoding contributions.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 4: Deep Neural Network Speech Decoding
+ 
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5 s
+-- **Label Route**: `misc` (stimulus-derived labels)
++- **Label Route**: `event`
+ - **Meta Level**: `raw`
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|---|---|---|
+-| `continuous_speech_listening` | 1 (matched) / 0 (mismatched) | Match-mismatch speech decoding |
++  | Event ID | y | Meaning |
++  |---|---|---|
++  | `continuous_speech_listening` | 1 (matched) / 0 (mismatched) | Match-mismatch speech decoding |
+ 
+ - **Notes**: Requires creating matched/mismatched stimulus pairs or using pre-existing match-mismatch paradigms. Train neural networks (CNN, LSTM, or transformer-based) to decode speech features from EEG. This task is methodology-transfer from ICASSP Challenge datasets.
+ 
+@@ -119,19 +120,19 @@
+ 
+ - **Kernel Notes**: Deep learning approaches may capture non-linear stimulus-response relationships missed by linear mTRF models. Transfer learning from pre-trained audio encoders (e.g., wav2vec, HuBERT) to EEG domain is a promising direction.
+ 
+-### Potential Task 5: Cognitive Load and Attention Modulation
++### Potential Task 1: Cognitive Load and Attention Modulation
+ 
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: segment_length = 60.0 s (long segments)
+-- **Label Route**: `misc` (stimulus-derived)
++- **Label Route**: `event`
+ - **Meta Level**: `raw`
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|---|---|---|
+-| `continuous_speech_listening` | Narrative segment difficulty | Comprehension difficulty index |
+-| `continuous_speech_listening` | Attention lapses | Pre-processed attention estimates |
++  | Event ID | Value | Meaning |
++  |---|---|---|
++  | `continuous_speech_listening` | Narrative segment difficulty | Comprehension difficulty index |
++  | `continuous_speech_listening` | Attention lapses | Pre-processed attention estimates |
+ 
+ - **Notes**: Requires external annotations of narrative complexity or pre-computed attention metrics. Long-segment analysis captures sustained attention and fatigue effects not visible in short windows.
+ 

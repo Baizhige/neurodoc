@@ -1,0 +1,32 @@
+--- openneuro_ds005416/analysis.md (pre-v3)
++++ openneuro_ds005416/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds005416` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005416
+ **Category**: Complex Applied | **Subjects**: 23 | **Files (Completed)**: 23 | **Channels**: 64 | **Sampling Rate**: 1000 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -33,14 +33,15 @@
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `subjective_rating`
+ - **Meta Level**: super
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|---|---|---|
+-| subjective_rating | comfort | Comfort state (ratings: normal/relaxed on 5-point scale) |
+-| subjective_rating | fatigue | Fatigue state (ratings: mild/moderate/severe on 5-point scale) |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | subjective_rating | comfort | Comfort state (ratings: normal/relaxed on 5-point scale) |  |
++  | subjective_rating | fatigue | Fatigue state (ratings: mild/moderate/severe on 5-point scale) |  |
+ 
+ - **Notes**: Continuous EEG segmented into sliding windows. Labels derived from per-subject, per-scene subjective ratings (5-point ordinal scales for fatigue level and comfort level). Binary classification: comfort state vs fatigue state. Analysis focuses on brain network connectivity features (PLV, betweenness centrality, clustering coefficient, node efficiency, characteristic path length) in delta (0.5–4 Hz), theta (4–8 Hz), alpha (8–13 Hz) bands.
+ 

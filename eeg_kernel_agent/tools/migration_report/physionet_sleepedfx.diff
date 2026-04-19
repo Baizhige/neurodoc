@@ -1,0 +1,33 @@
+--- physionet_sleepedfx/analysis.md (pre-v3)
++++ physionet_sleepedfx/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `physionet_sleepedfx` | **Year**: 1987-1991/1994 | **URL**: https://physionet.org/content/sleep-edfx/1.0.0/
+ **Category**: Biological State | **Subjects**: 106 | **Files (Completed)**: 197 | **Channels**: 7 | **Sampling Rate**: 100 Hz
+-**Manual Review**: Chengxuan Qin
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -46,8 +46,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Sleep stage W` | 0 | Wake |
+   | `Sleep stage 1` | 1 | NREM Stage 1 |
+   | `Sleep stage 2` | 2 | NREM Stage 2 |
+@@ -65,8 +65,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Sleep stage W` | 0 | Wake |
+   | `Sleep stage 1` | 1 | Any sleep (stages 1-4 and R) |
+   | `Sleep stage 2` | 1 | Any sleep |

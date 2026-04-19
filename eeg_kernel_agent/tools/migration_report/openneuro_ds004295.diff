@@ -1,0 +1,61 @@
+--- openneuro_ds004295/analysis.md (pre-v3)
++++ openneuro_ds004295/analysis.md (v3)
+@@ -3,7 +3,7 @@
+ **Dataset**: `openneuro_ds004295` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004295
+ **Category**: High-level Mental | **Subjects**: 26 | **Files (Completed)**: 26
+ **Channels**: 66 | **Sampling Rate**: 1024 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -35,6 +35,13 @@
+ | `stimulus` | 27954 | event | raw | Generic stimulus trigger — decode to extract reinforcement condition (reward/punishment) and reversal phase (pre/post) |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `response_time` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -51,8 +58,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `feedback_positive` | 0 | Positive feedback (reward gain / punishment avoidance success) |
+   | `feedback_negative` | 1 | Negative feedback (reward loss / punishment failure) |
+ - **Super Meta Notes**: N/A
+@@ -84,8 +91,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `sample_stimulus` | 0 | Sample stimulus (first in pair, S100) |
+   | `probe_stimulus` | 1 | Probe stimulus (second in pair, S200) |
+ - **Super Meta Notes**: N/A
+@@ -97,10 +104,11 @@
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 0.5 s, segmentation_events = derived from stimulus or response events
+ - **Label Route**: `misc`
++- **Label Field**: `response_time`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `response_time` | continuous | Trial-by-trial response latency (ms) |
+ - **Super Meta Notes**: N/A
+ - **Evidence**: N/A

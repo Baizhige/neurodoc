@@ -1,0 +1,48 @@
+--- openneuro_ds004802/analysis.md (pre-v3)
++++ openneuro_ds004802/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004802` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004802
+ **Category**: High-level Mental | **Subjects**: 79 | **Files (Completed)**: 79 | **Channels**: 73 | **Sampling Rate**: 512 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -75,6 +75,12 @@
+ | `event_68` | 294 | event | raw |  |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -84,6 +90,7 @@
+ 
+ ## Tasks
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Classical Task 1: Loneliness Classification
+ 
+ **Task Type**: binary_classification | **Epoch Method**: epoch_by_event_hdf5 | **Label Route**: misc
+@@ -168,6 +175,7 @@
+ 
+ ---
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 1: Hyperalertness vs Hypersensitivity Mechanism Classification
+ 
+ **Task Type**: classification | **Epoch Method**: epoch_by_event_hdf5 | **Label Route**: event
+@@ -192,6 +200,7 @@
+ 
+ ---
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 2: Response-Related Processing
+ 
+ **Task Type**: classification | **Epoch Method**: epoch_by_event_hdf5 | **Label Route**: event

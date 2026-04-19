@@ -373,6 +373,13 @@ rules:
     function: "segmentation_requires_empty_target_events"
     severity: "error"
 
+  - id: "epoch_parameters_complete"
+    desc: "Epoch Parameters must list the minimum required keys for the declared Epoch Method (rulebook 第69–72条)."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "epoch_parameters_complete"
+    severity: "error"
+
   - id: "manual_review_blank"
     desc: "Manual Review field must be blank in generated documents (rulebook 第30条之三)."
     target: "analysis_md"

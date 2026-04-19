@@ -1,0 +1,30 @@
+--- zenodo_3618205/analysis.md (pre-v3)
++++ zenodo_3618205/analysis.md (v3)
+@@ -38,11 +38,12 @@
+ 
+ ## Tasks
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 1: Auditory Attention Decoding - Left vs. Right (epoch_by_long_event)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 60.0 s (or full trial duration), overlap = 30.0 s, target_events = see Target Definition
+-- **Label Route**: `event`
++- **Label Route**: `info`
+ - **Target Definition**: Event-to-label mapping table below.
+ - **Notes**: Use only files from the selective attention task. MMN and resting state files have different event structures.
+ 
+@@ -51,11 +52,12 @@
+ | `attend_left` | 0 | Attend to left-ear speaker |
+ | `attend_right` | 1 | Attend to right-ear speaker |
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 2: Normal-Hearing vs. Hearing-Impaired Group Comparison (epoch_by_long_event)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: As in Task 1, target_events = see Target Definition
+-- **Label Route**: `event`
++- **Label Route**: `info`
+ - **Target Definition**: Needs verification.
+ - **Notes**: Group labels (normal-hearing / hearing-impaired) must be derived from subject ID and companion demographics file. Primary comparison is neural tracking of attended speech across the two groups.
+ 

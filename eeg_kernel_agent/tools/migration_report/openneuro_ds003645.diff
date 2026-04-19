@@ -1,0 +1,22 @@
+--- openneuro_ds003645/analysis.md (pre-v3)
++++ openneuro_ds003645/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds003645` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds003645
+ **Category**: Sensory/Response | **Subjects**: 18 | **Files (Completed)**: 114 | **Channels**: 395 | **Sampling Rate**: 1100 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -44,8 +44,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | event_1 | 0 | Famous/familiar face stimulus (condition 1) |
+   | event_2 | 0 | Famous/familiar face stimulus (condition 2) |
+   | event_3 | 1 | Unfamiliar face stimulus (condition 1) |

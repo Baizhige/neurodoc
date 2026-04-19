@@ -1,0 +1,94 @@
+--- openneuro_ds004067/analysis.md (pre-v3)
++++ openneuro_ds004067/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004067` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004067
+ **Category**: High-level Mental | **Subjects**: 80 | **Files (Completed)**: 83 | **Channels**: 63 | **Sampling Rate**: 2000 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -76,14 +76,14 @@
+ - **Task Type**: classification
+ - **Epoch Method**: epoch_by_event_hdf5
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = ["Stimulus/PhotoSupport", "Stimulus/PhotoOppose"]
+-- **Label Route**: event
++- **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|-------|---|---------|
+-| `Stimulus/PhotoSupport` | 0 | Support-framing sociopolitical protest photo |
+-| `Stimulus/PhotoOppose` | 1 | Oppose-framing sociopolitical protest photo |
++  | Event ID | y | Meaning |
++  |---|---|---|
++  | `Stimulus/PhotoSupport` | 0 | Support-framing sociopolitical protest photo |
++  | `Stimulus/PhotoOppose` | 1 | Oppose-framing sociopolitical protest photo |
+ 
+ - **Evidence**: DOI: 10.1016/j.cortex.2022.03.008
+ - **Kernel Notes**: Epoch window captures early visual ERP components (P1/N1) and extends through attitude formation period. Negative tmin allows baseline correction. Trigger decoding table must be versioned and auditable. Verify PhotoSupport/PhotoOppose event timing offset between BIDS sidecar and raw trigger channel.
+@@ -128,15 +128,15 @@
+ - **Task Type**: classification
+ - **Epoch Method**: epoch_by_event_hdf5
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.5 s, target_events = ["Stimulus/SocHigh", "Stimulus/SocMed", "Stimulus/SocLow"]
+-- **Label Route**: event
++- **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|---|---|---------|
+-| `Stimulus/SocHigh` | 0 | Social influence cue - high agreement |
+-| `Stimulus/SocMed` | 1 | Social influence cue - medium agreement |
+-| `Stimulus/SocLow` | 2 | Social influence cue - low agreement |
++  | Event ID | y | Meaning |
++  |---|---|---|
++  | `Stimulus/SocHigh` | 0 | Social influence cue - high agreement |
++  | `Stimulus/SocMed` | 1 | Social influence cue - medium agreement |
++  | `Stimulus/SocLow` | 2 | Social influence cue - low agreement |
+ 
+ - **Evidence**: Paradigm description; DOI: 10.10106/j.cortex.2022.03.008 references social influence cues as experimental manipulation
+ - **Kernel Notes**: Slightly longer tmax (1.5 s) recommended to capture later processing stages related to social feedback integration and metacognitive evaluation. Ensure inter-stimulus intervals prevent overlap contamination with preceding photo events.
+@@ -145,28 +145,29 @@
+ - **Task Type**: regression
+ - **Epoch Method**: epoch_by_event_hdf5
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = ["Stimulus/Resp1", "Stimulus/Resp2", "Stimulus/Resp3", "Stimulus/Resp4", "Stimulus/Resp5", "Stimulus/Resp6", "Stimulus/Resp7"]
+-- **Label Route**: event
++- **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|-------|----|---------|
+-| `Stimulus/Resp1` | 1 | Rating response level 1 |
+-| `Stimulus/Resp2` | 2 | Rating response level 2 |
+-| `Stimulus/Resp3` | 3 | Rating response level 3 |
+-| `Stimulus/Resp4` | 4 | Rating response level 4 |
+-| `Stimulus/Resp5` | 5 | Rating response level 5 |
+-| `Stimulus/Resp6` | 6 | Rating response level 6 |
+-| `Stimulus/Resp7` | 7 | Rating response level 7 |
++  | Event ID | Value | Meaning |
++  |---|---|---|
++  | `Stimulus/Resp1` | 1 | Rating response level 1 |
++  | `Stimulus/Resp2` | 2 | Rating response level 2 |
++  | `Stimulus/Resp3` | 3 | Rating response level 3 |
++  | `Stimulus/Resp4` | 4 | Rating response level 4 |
++  | `Stimulus/Resp5` | 5 | Rating response level 5 |
++  | `Stimulus/Resp6` | 6 | Rating response level 6 |
++  | `Stimulus/Resp7` | 7 | Rating response level 7 |
+ 
+ - **Evidence**: Paradigm description; DOI: 10.10106/j.cortex.2022.03.008 (perceptual confidence task for metacognition assessment)
+ - **Kernel Notes**: Response-locked epoching could provide alternative alignment but requires knowing response timing. The 7-point rating scale spans both attitude and confidence dimensions.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 3: Combined Moral Conviction × Social Influence Classification
+ - **Task Type**: classification
+ - **Epoch Method**: epoch_by_segmentation_hdf5
+ - **Epoch Parameters**: segment_length = Needs verification, overlap = Needs verification, segment_alignment = stimulus onset
+-- **Label Route**: Annotation
++- **Label Route**: `info`
+ - **Meta Level**: raw
+ - **Target Definition**: Combined labeling of moral conviction level and social influence condition across trial segments
+ - **Evidence**: Paradigm description; DOI: 10.10106/j.cortex.2022.03.008 (examined interaction between moral conviction and social influence cues)

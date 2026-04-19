@@ -1,0 +1,22 @@
+--- openneuro_ds004657/analysis.md (pre-v3)
++++ openneuro_ds004657/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004657` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004657
+ **Category**: Complex Applied | **Subjects**: N/A | **Files (Completed)**: 119 | **Channels**: 74 | **Sampling Rate**: 1024 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -197,8 +197,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------||---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Driving 231 V1` | 0 | Driving condition 231, variant 1 (dominant, ~10k) |
+   | `Driving 231 V2` | 1 | Driving condition 231, variant 2 (dominant, ~10k) |
+   | `Driving 411 V1` | 2 | Driving condition 411, variant 1 (dominant, ~10k) |

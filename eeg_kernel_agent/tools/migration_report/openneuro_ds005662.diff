@@ -1,0 +1,76 @@
+--- openneuro_ds005662/analysis.md (pre-v3)
++++ openneuro_ds005662/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds005662` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005662
+ **Category**: Sensory/Response | **Subjects**: N/A | **Files (Completed)**: 80 | **Channels**: 65 | **Sampling Rate**: 2048 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -48,11 +48,11 @@
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [`event_40708`, `event_40704`]
+-- **Label Route**: `misc`
++- **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `event_40708` | 0 | self-perspective touch video |
+   | `event_40708` | 1 | other-perspective touch video |
+   | `event_40704` | 0 | self-perspective touch video |
+@@ -67,11 +67,11 @@
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [`event_40708`, `event_40704`]
+-- **Label Route**: `misc`
++- **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `event_40708` | 0 | wood material |
+   | `event_40708` | 1 | plastic material |
+   | `event_40708` | 2 | glass material |
+@@ -90,11 +90,11 @@
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [`event_40708`, `event_40704`]
+-- **Label Route**: `misc`
++- **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `event_40708` | 0 | left hand, self-perspective |
+   | `event_40708` | 1 | right hand, self-perspective |
+   | `event_40708` | 2 | left hand, other-perspective |
+@@ -105,15 +105,15 @@
+   - DOI: 10.1038/s41597-026-06714-5 — Hand orientation 4-class classification validated
+ - **Kernel Notes**: 4-class classification; verify expected trial counts per class (~720 trials/class across dataset).
+ 
+-### Potential Task 4: Visual Touch Perception - Valence Regression
++### Potential Task 1: Visual Touch Perception - Valence Regression
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [`event_40708`, `event_40704`]
+-- **Label Route**: `misc`
++- **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | Value | Meaning |
++  |---|---|---|
+   | `event_40708` | continuous | valence rating (negative to positive scale from Validated Touch-Video Database) |
+   | `event_40708` | continuous | arousal rating (low to high) |
+ - **Super Meta Notes**: Valence/arousal ratings available in Validated Touch-Video Database but NOT validated in EEG decoding papers. Paradigm plausible (affective response to observed touch), but requires independent validation.

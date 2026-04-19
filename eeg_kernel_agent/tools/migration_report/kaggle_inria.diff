@@ -1,0 +1,36 @@
+--- kaggle_inria/analysis.md (pre-v3)
++++ kaggle_inria/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `kaggle_inria` | **Year**: 2015 | **URL**: https://www.kaggle.com/c/inria-bci-challenge
+ **Category**: Action/Output | **Subjects**: 26 | **Files (Completed)**: 130 | **Channels**: 58 | **Sampling Rate**: 200 Hz
+-**Manual Review**: Mingze Tang
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -39,8 +39,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `good feedback to P300` | 0 | Correct BCI feedback (classifier output matched user intent) |
+   | `wrong feedback to P300` | 1 | Incorrect BCI feedback (classifier output differed from user intent) |
+ - **Evidence**:
+@@ -50,11 +50,12 @@
+   - DOI: 10.1088/1741-2552/aace8c — Evaluates EEGNet on ERN paradigm with epochs [0, 1.25]s post feedback.
+ - **Kernel Notes**: FeedBackEvent channel (column 57) encodes feedback onset times; match labels from TrainLabels.csv by feedback ID (e.g., S01_Sess01_FB001). Exclude sessions with `unknown feedback to P300` (test set). Bandpass filter 1-40Hz recommended per paper preprocessing. (replaces Potential Task 1 from original analysis.md)
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 1: Subject Identification via Feedback-Related Potentials
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = 0 s, tmax = 1.3 s, target_events = [`good feedback to P300`, `wrong feedback to P300`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
+ - **Target Definition**: Use feedback events to derive subject identity labels (26 subjects).
+ - **Notes**: Task uses positive vs negative feedback-related ERP responses for biometric authentication. SVM with EMD-based features achieves up to 0.99 accuracy. Labels are derived from subject IDs, not feedback correctness.
+ 
