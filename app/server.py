@@ -17,6 +17,12 @@ if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
 
 from app import template_checker
+from eeg_kernel_agent.llm_adapter import (
+    anthropic_to_openai_response,
+    call_llm_text,
+    post_llm_json,
+    resolve_llm_config,
+)
 
 _AGENT_DIR = BASE_DIR / "eeg_kernel_agent"
 if str(_AGENT_DIR) not in sys.path:
@@ -543,27 +549,7 @@ def _call_llm(messages, timeout=180):
     cfg = {}
     if CONFIG_FILE.exists():
         cfg = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
-    base_url = cfg.get("url", "").rstrip("/")
-    key = cfg.get("key", "")
-    model = cfg.get("model", "")
-    proxy = cfg.get("proxy", "").strip()
-    if not base_url:
-        raise ValueError("LLM URL not configured")
-    endpoint = f"{base_url}/chat/completions"
-    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {key}"}
-    body = {"model": model, "messages": messages}
-    if _HAS_REQUESTS:
-        proxies = {"http": proxy, "https": proxy} if proxy else None
-        resp = _requests.post(endpoint, headers=headers, json=body,
-                              timeout=timeout, proxies=proxies)
-        resp.raise_for_status()
-        return resp.json()["choices"][0]["message"]["content"]
-    else:
-        import urllib.request
-        req_data = json.dumps(body).encode("utf-8")
-        req = urllib.request.Request(endpoint, data=req_data, headers=headers, method="POST")
-        with urllib.request.urlopen(req, timeout=timeout) as r:
-            return json.loads(r.read().decode("utf-8"))["choices"][0]["message"]["content"]
+    return call_llm_text(cfg, messages, timeout=timeout)
 
 
 def _parse_llm_json(raw):
@@ -701,10 +687,31 @@ def api_config():
         if CONFIG_FILE.exists():
             cfg = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
         else:
-            cfg = {"url": "", "key": "", "model": "", "proxy": ""}
-        return jsonify(cfg)
+            cfg = {"BASE_URL": "", "ANTHROPIC_BASE_URL": "", "key": "", "model": "", "proxy": ""}
+        try:
+            normalized = resolve_llm_config(cfg)
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 400
+        result = dict(cfg)
+        result["BASE_URL"] = normalized["BASE_URL"]
+        result["ANTHROPIC_BASE_URL"] = normalized["ANTHROPIC_BASE_URL"]
+        result.setdefault("key", "")
+        result.setdefault("model", "")
+        result.setdefault("proxy", "")
+        return jsonify(result)
     data = request.get_json(silent=True) or {}
-    CONFIG_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    try:
+        normalized = resolve_llm_config(data)
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    to_save = {
+        "BASE_URL": normalized["BASE_URL"],
+        "ANTHROPIC_BASE_URL": normalized["ANTHROPIC_BASE_URL"],
+        "key": normalized["key"],
+        "model": normalized["model"],
+        "proxy": normalized["proxy"],
+    }
+    CONFIG_FILE.write_text(json.dumps(to_save, ensure_ascii=False, indent=2), encoding="utf-8")
     return jsonify({"ok": True})
 
 
@@ -713,47 +720,29 @@ def api_llm():
     cfg = {}
     if CONFIG_FILE.exists():
         cfg = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
-    base_url = cfg.get("url", "").rstrip("/")
-    key = cfg.get("key", "")
-    model = cfg.get("model", "")
-    proxy = cfg.get("proxy", "").strip()
-    if not base_url:
+    try:
+        resolved_cfg = resolve_llm_config(cfg)
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    if not resolved_cfg.get("active_url"):
         return jsonify({"error": "LLM URL not configured. Open Settings to configure."}), 400
 
     body = request.get_json(silent=True) or {}
-    body["model"] = model
+    messages = body.get("messages") or []
     # remove stream flag — some providers reject it
     body.pop("stream", None)
 
-    endpoint = f"{base_url}/chat/completions"
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {key}",
-    }
-
-    if _HAS_REQUESTS:
-        proxies = {"http": proxy, "https": proxy} if proxy else None
-        try:
-            resp = _requests.post(endpoint, headers=headers, json=body,
-                                  timeout=90, proxies=proxies)
-            resp.raise_for_status()
-            return jsonify(resp.json())
-        except _requests.HTTPError as e:
-            return jsonify({"error": f"HTTP {e.response.status_code}: {e.response.text}"}), 502
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
-    else:
-        # fallback: urllib (no proxy support)
-        import urllib.request, urllib.error
-        req_data = json.dumps(body).encode("utf-8")
-        req = urllib.request.Request(endpoint, data=req_data, headers=headers, method="POST")
-        try:
-            with urllib.request.urlopen(req, timeout=90) as r:
-                return jsonify(json.loads(r.read().decode("utf-8")))
-        except urllib.error.HTTPError as e:
-            return jsonify({"error": f"HTTP {e.code}: {e.read().decode('utf-8','replace')}"}), 502
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
+    try:
+        data = post_llm_json(resolved_cfg, messages, timeout=90, extra_body=body)
+        if resolved_cfg["provider"] == "anthropic":
+            return jsonify(anthropic_to_openai_response(data))
+        return jsonify(data)
+    except Exception as e:
+        response = getattr(e, "response", None)
+        status = getattr(response, "status_code", None)
+        if status is not None:
+            return jsonify({"error": f"HTTP {status}: {getattr(response, 'text', '')}"}), 502
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/api/template/fix_with_llm/<name>", methods=["POST"])

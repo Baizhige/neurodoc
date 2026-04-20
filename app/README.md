@@ -27,9 +27,12 @@ Then open http://127.0.0.1:5000 in your browser.
 ## LLM Integration
 
 Open **Settings** (top right) and configure:
-- **API Base URL** — any OpenAI-compatible endpoint (e.g. `https://api.openai.com/v1`)
+- **BASE_URL** — any OpenAI-compatible endpoint (e.g. `https://api.openai.com/v1`)
+- **ANTHROPIC_BASE_URL** — any Anthropic-compatible endpoint (e.g. `https://api.kimi.com/coding/`)
 - **API Key** — your API key
 - **Model** — model name (e.g. `gpt-4o`)
+
+Only one of `BASE_URL` or `ANTHROPIC_BASE_URL` may be configured at a time.
 
 Then use the **LLM Chat** tab in the right panel to ask questions about the current dataset and step.
 

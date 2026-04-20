@@ -448,7 +448,8 @@ table.event-table td textarea.meaning-cell:focus { outline: 1px solid var(--acce
 <div id="modal-overlay" class="modal-overlay">
   <div id="modal">
     <h2>LLM Settings</h2>
-    <div class="form-group"><label>API Base URL</label><input type="text" id="cfg-url" placeholder="https://api.minimax.io/v1"></div>
+    <div class="form-group"><label>BASE_URL (OpenAI-compatible)</label><input type="text" id="cfg-base-url" placeholder="https://api.minimax.io/v1"></div>
+    <div class="form-group"><label>ANTHROPIC_BASE_URL (Anthropic-compatible)</label><input type="text" id="cfg-anthropic-base-url" placeholder="https://api.kimi.com/coding/"></div>
     <div class="form-group"><label>API Key</label><input type="password" id="cfg-key" placeholder="sk-..."></div>
     <div class="form-group"><label>Model</label><input type="text" id="cfg-model" placeholder="MiniMax-M2.7"></div>
     <div class="form-group"><label>Proxy (optional, e.g. http://localhost:7897)</label><input type="text" id="cfg-proxy" placeholder="Leave empty if not needed"></div>
@@ -694,7 +695,8 @@ async function loadConfig() {
   try {
     const r = await fetch('/api/config');
     const cfg = await r.json();
-    document.getElementById('cfg-url').value = cfg.url || '';
+    document.getElementById('cfg-base-url').value = cfg.BASE_URL || cfg.url || '';
+    document.getElementById('cfg-anthropic-base-url').value = cfg.ANTHROPIC_BASE_URL || '';
     document.getElementById('cfg-key').value = cfg.key || '';
     document.getElementById('cfg-model').value = cfg.model || '';
     document.getElementById('cfg-proxy').value = cfg.proxy || '';
@@ -2956,11 +2958,25 @@ function updateChatTokenHint() {
 function openSettings(){document.getElementById('modal-overlay').classList.add('open');}
 function closeSettings(){document.getElementById('modal-overlay').classList.remove('open');}
 async function saveSettings(){
-  const url=document.getElementById('cfg-url').value.trim();
+  const BASE_URL=document.getElementById('cfg-base-url').value.trim();
+  const ANTHROPIC_BASE_URL=document.getElementById('cfg-anthropic-base-url').value.trim();
   const key=document.getElementById('cfg-key').value.trim();
   const model=document.getElementById('cfg-model').value.trim();
   const proxy=document.getElementById('cfg-proxy').value.trim();
-  await fetch('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url,key,model,proxy})});
+  if(BASE_URL && ANTHROPIC_BASE_URL){
+    alert('Please configure only one of BASE_URL or ANTHROPIC_BASE_URL.');
+    return;
+  }
+  const r = await fetch('/api/config',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({BASE_URL,ANTHROPIC_BASE_URL,key,model,proxy})
+  });
+  const d = await r.json();
+  if(!r.ok){
+    alert(d.error || 'Failed to save settings.');
+    return;
+  }
   closeSettings();
 }
 document.getElementById('modal-overlay').onclick=function(e){if(e.target===this)closeSettings();};
