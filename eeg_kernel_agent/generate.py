@@ -36,6 +36,7 @@ MACHINE_CFG_DIR = AGENT_DIR / "machine_config"
 
 sys.path.insert(0, str(AGENT_DIR))
 
+from llm_adapter import resolve_llm_config
 from pipeline.runner import Pipeline, load_progress
 
 
@@ -148,7 +149,11 @@ def main():
     print(f"[generate] Datasets ({len(datasets)}): {', '.join(datasets[:5])}{'...' if len(datasets) > 5 else ''}")
     print(f"[generate] Workers: {workers} batch × {eegunity_workers} eegunity")
     print(f"[generate] Fresh: {args.fresh} | Logs: {LOGS_DIR}/")
-    print(f"[generate] LLM: {cfg.get('model')} @ {cfg.get('url')}")
+    llm_cfg = resolve_llm_config(cfg)
+    print(
+        f"[generate] LLM: {cfg.get('model')} "
+        f"({llm_cfg.get('active_url_key') or 'UNSET'}) @ {llm_cfg.get('active_url')}"
+    )
 
     stop_event = threading.Event()
     results_lock = threading.Lock()

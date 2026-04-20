@@ -21,6 +21,11 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import pandas as pd
 
+try:
+    from .llm_adapter import resolve_llm_config
+except ImportError:
+    from llm_adapter import resolve_llm_config
+
 # ---------------------------------------------------------------------------
 # Machine identity
 # ---------------------------------------------------------------------------
@@ -55,6 +60,11 @@ def load_machine_config() -> Dict:
             cfg["dataset_roots"] = [old] if old else []
         cfg.setdefault("dataset_roots", [])
         cfg.setdefault("num_workers", _default_workers)
+        cfg.setdefault("BASE_URL", "")
+        cfg.setdefault("ANTHROPIC_BASE_URL", "")
+        cfg.setdefault("key", "")
+        cfg.setdefault("model", "")
+        cfg.setdefault("proxy", "")
         return cfg
     return {
         "dataset_roots": [],
@@ -62,7 +72,8 @@ def load_machine_config() -> Dict:
         "num_workers": _default_workers,
         "machine_id": get_machine_id(),
         "hostname": platform.node(),
-        "url": "",
+        "BASE_URL": "",
+        "ANTHROPIC_BASE_URL": "",
         "key": "",
         "model": "",
         "proxy": "",
@@ -88,10 +99,16 @@ def load_llm_config() -> Dict[str, str]:
             pass
     # Override: machine config (allows per-machine LLM settings)
     mc = load_machine_config()
-    for key in ("url", "key", "model", "proxy"):
+    for key in ("BASE_URL", "ANTHROPIC_BASE_URL", "url", "key", "model", "proxy"):
         if mc.get(key):
             cfg[key] = mc[key]
-    return cfg
+    resolved = resolve_llm_config(cfg)
+    # Keep the original shape mostly intact while exposing normalized fields.
+    result = dict(cfg)
+    result["BASE_URL"] = resolved["BASE_URL"]
+    result["ANTHROPIC_BASE_URL"] = resolved["ANTHROPIC_BASE_URL"]
+    result["url"] = resolved["active_url"] if resolved["provider"] == "openai" else ""
+    return result
 
 
 # ---------------------------------------------------------------------------

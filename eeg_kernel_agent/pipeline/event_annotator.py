@@ -14,6 +14,10 @@ import re
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
+try:
+    from ..llm_adapter import call_llm_text
+except ImportError:
+    from llm_adapter import call_llm_text
 from .ref_analyzer import _parse_json
 
 # ---------------------------------------------------------------------------
@@ -525,14 +529,14 @@ def annotate_events_standalone(
     """
     Run P3a+P3b without the full pipeline. Useful for testing.
 
-    llm_config: {"url": "...", "key": "...", "model": "..."}
+    llm_config: {"BASE_URL": "..." | "ANTHROPIC_BASE_URL": "...", "key": "...", "model": "..."}
 
     Example:
         from eeg_kernel_agent.pipeline.event_annotator import annotate_events_standalone
         result = annotate_events_standalone(
             "openneuro_ds004447",
             "/home/public/eeg_dataset/openneuro_raw/ds004447",
-            {"url": "http://...", "key": "...", "model": "..."},
+            {"BASE_URL": "http://...", "key": "...", "model": "..."},
         )
         print(json.dumps(result, indent=2, ensure_ascii=False))
     """
@@ -548,19 +552,7 @@ def annotate_events_standalone(
 
     # Minimal call_llm
     def _call_llm(messages):
-        import requests
-        url = llm_config["url"].rstrip("/") + "/chat/completions"
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {llm_config.get('key', '')}",
-        }
-        body = {
-            "model": llm_config.get("model", ""),
-            "messages": messages,
-        }
-        r = requests.post(url, headers=headers, json=body, timeout=240)
-        r.raise_for_status()
-        return r.json()["choices"][0]["message"]["content"]
+        return call_llm_text(llm_config, messages, timeout=240)
 
     log_lines: List[str] = []
     def _log(msg):

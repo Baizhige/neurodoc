@@ -13,6 +13,10 @@ from .context_builder import build_context
 from .doc_writer import generate_analysis_md, merge_and_write, write_failed_analysis
 from .event_annotator import annotate_events
 from .kernel_builder import build_kernel, install_kernel
+try:
+    from ..llm_adapter import extract_text_from_response, post_llm_json, resolve_llm_config
+except ImportError:
+    from llm_adapter import extract_text_from_response, post_llm_json, resolve_llm_config
 from .ref_analyzer import analyze_references
 from .reconcile import reconcile as reconcile_tasks
 from .scan_bridge import get_event_ids_preview, run_scan
@@ -102,10 +106,7 @@ class Pipeline:
         self._dataset_roots = config.get("dataset_roots", [])
         self._num_workers = int(config.get("num_workers", 2))
 
-        self._llm_url = config.get("url", "").rstrip("/")
-        self._llm_key = config.get("key", "")
-        self._llm_model = config.get("model", "")
-        self._llm_proxy = config.get("proxy", "")
+        self._llm_config = resolve_llm_config(config)
 
     # ── logging ────────────────────────────────────────────────────────────
 
@@ -121,15 +122,8 @@ class Pipeline:
     def call_llm(self, messages: List[Dict], timeout: int = 240) -> str:
         import time
         self._check_pause()
-        if not self._llm_url:
+        if not self._llm_config.get("active_url"):
             raise ValueError("LLM URL not configured in eeg_kernel_agent settings.")
-
-        endpoint = f"{self._llm_url}/chat/completions"
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {self._llm_key}",
-        }
-        body = {"model": self._llm_model, "messages": messages}
 
         last_exc = None
         for attempt in range(3):
@@ -138,25 +132,8 @@ class Pipeline:
                 self.log(f"[LLM] Retry {attempt}/2 after {delay}s (prev: {last_exc})")
                 time.sleep(delay)
             try:
-                import requests as _req
-                proxies = {"http": self._llm_proxy, "https": self._llm_proxy} if self._llm_proxy else None
-                resp = _req.post(endpoint, headers=headers, json=body, timeout=timeout, proxies=proxies)
-                resp.raise_for_status()
-                data = resp.json()
-                # Handle sensitive-content flags or empty choices
-                choices = data.get("choices") or []
-                if not choices:
-                    raise ValueError(f"Empty choices in response: {data.get('base_resp', data)}")
-                content = (choices[0].get("message") or {}).get("content")
-                if content is None:
-                    raise ValueError(f"Null content in response (input_sensitive={data.get('input_sensitive')})")
-                return content
-            except ImportError:
-                import urllib.request
-                data = json.dumps(body).encode("utf-8")
-                req = urllib.request.Request(endpoint, data=data, headers=headers, method="POST")
-                with urllib.request.urlopen(req, timeout=timeout) as r:
-                    return json.loads(r.read().decode("utf-8"))["choices"][0]["message"]["content"]
+                data = post_llm_json(self._llm_config, messages, timeout=timeout)
+                return extract_text_from_response(data, self._llm_config["provider"])
             except Exception as e:
                 last_exc = e
                 # Only retry on server errors (5xx) or connection issues
