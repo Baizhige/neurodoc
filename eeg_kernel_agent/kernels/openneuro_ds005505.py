@@ -1,17 +1,22 @@
-"""OpenNeuro ds005505 (HBN EEG Release 1) stage1 kernel for EEGUnity.
+"""OpenNeuro DS005505 (HBN EEG Release 1) stage1 kernel for EEGUnity.
 
-Healthy Brain Network (HBN) EEG Release 1 - Large-scale multi-task developmental
-battery collected from children and adolescents (ages 5.2-21.7). Contains resting-state,
-movie watching, contrast detection, surrounding suppression, sequence learning, and
-symbol search paradigms. Uses BioSemi 128-channel system at 500 Hz.
+This kernel processes the Healthy Brain Network (HBN) EEG Release 1 dataset,
+a large-scale developmental battery with 129-channel EEG recordings at 500 Hz
+collected from children and adolescents (ages 5.2–21.7).
+
+The dataset contains six experimental paradigms: naturalistic movie watching,
+eyes-open/closed resting state, sensory contrast detection, surrounding
+suppression, sequence learning, and symbol search tasks.
 
 Source: https://openneuro.org/datasets/ds005505
-Reference: https://doi.org/10.1016/j.neuroimage.2020.117001
-          https://doi.org/10.1101/2024.10.03.615261
-          https://www.nature.com/articles/sdata201740
+Reference: https://doi.org/10.1101/2024.10.03.615261
 
-Channel naming: BioSemi standard 128-channel layout (EEG001-EEG128)
-Events: BIDS events.tsv format with HED annotations
+Channel naming: The HBN dataset uses standard 10-20 extended montage with
+129 channels. Original channel names may have prefixes like "EEG" that need
+standardization.
+
+Required info fields: age, attention, externalizing, internalizing, p_factor, sex
+Required derived misc: accuracy (from user_answer vs correct_answer), response_time
 """
 
 from __future__ import annotations
@@ -27,296 +32,174 @@ import numpy as np
 import pandas as pd
 
 
-# ============================================================================
-# CHANNEL RENAME MAP - BioSemi 128-channel to standard naming
-# Source: HBN dataset documentation, BioSemi standard layout
-# Annotator: LLM, 2026-04-08 # LLM 推断，需人类复核
-# ============================================================================
-_BIOSEMI_CHANNEL_MAP: Dict[str, str] = {}
-for i in range(1, 129):
-    _BIOSEMI_CHANNEL_MAP[f"EEG{i:03d}"] = f"EEG{i:03d}"
+# HBN 129-channel standard montage channel names (10-20 extended system)
+# Source: HBN dataset documentation and BrainVision channel files
+_HBN_129_CHANNELS = {
+    # Standard 10-20 channels
+    "Fp1", "Fpz", "Fp2",
+    "AF7", "AF3", "AFz", "AF4", "AF8",
+    "F7", "F5", "F3", "F1", "Fz", "F2", "F4", "F6", "F8",
+    "FT7", "FC5", "FC3", "FC1", "FCz", "FC2", "FC4", "FC6", "FT8",
+    "T7", "C5", "C3", "C1", "Cz", "C2", "C4", "C6", "T8",
+    "TP7", "CP5", "CP3", "CP1", "CPz", "CP2", "CP4", "CP6", "TP8",
+    "P7", "P5", "P3", "P1", "Pz", "P2", "P4", "P6", "P8",
+    "PO7", "PO3", "POz", "PO4", "PO8",
+    "O1", "Oz", "O2",
+    "I1", "Iz", "I2",
+    # Extra channels for 129-channel system
+    "F9", "F10",
+    "FT9", "FT10",
+    "TP9", "TP10",
+    "P9", "P10",
+    "PO9", "PO10",
+    "PO1", "PO2",
+    "F6", "F2",
+    "CP6", "CP2",
+    "P6", "P2",
+    "PO6", "PO4",
+    # Reference/misc channels
+    "M1", "M2",
+    "VEO", "HEO",
+    "CB1", "CB2",
+}
 
 
-# ============================================================================
-# SUBJECT INFO - From participants.tsv (BIDS standard)
-# Source: participants.tsv in dataset root
-# Annotator: Human, 2026-04-08
-# ============================================================================
-_SUBJECT_INFO_CACHE: Dict[str, Dict[str, str]] = {}
-_DATASET_ROOT_CACHE: Optional[str] = None
-
-
-def _load_participants_tsv(dataset_root: str) -> pd.DataFrame:
-    """Load participants.tsv for subject metadata."""
-    pth = os.path.join(dataset_root, "participants.tsv")
-    if os.path.exists(pth):
-        return pd.read_csv(pth, sep="\t")
-    return pd.DataFrame()
-
-
-def _get_subject_info(udataset, row) -> Dict[str, str]:
-    """Get subject metadata from participants.tsv.
-
+def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
+    """Build channel rename map for HBN 129-channel standard montage.
+    
+    The HBN EEG data may have channel names with various prefixes
+    (e.g., 'EEG 001', 'CH01', 'Fp1') that need standardization.
+    
     Returns
     -------
-    dict with keys: age, sex, handedness
+    Dict[str, str]
+        Dictionary mapping original names to standard names.
     """
-    global _DATASET_ROOT_CACHE
-
-    subject_id = row.get("subject_id", "")
-    if not subject_id:
-        file_path = row.get("file_path", row.get("File Path", ""))
-        match = re.search(r"sub-([A-Z0-9]+)", file_path)
-        if match:
-            subject_id = match.group(1)
-
-    if subject_id in _SUBJECT_INFO_CACHE:
-        return _SUBJECT_INFO_CACHE[subject_id]
-
-    if udataset is not None:
-        dataset_root = str(udataset.get("dataset_root", ""))
-    else:
-        dataset_root = ""
-
-    if not dataset_root and _DATASET_ROOT_CACHE:
-        dataset_root = _DATASET_ROOT_CACHE
-
-    if dataset_root:
-        _DATASET_ROOT_CACHE = dataset_root
-
-    df = _load_participants_tsv(dataset_root)
-
-    info = {"age": "unknown", "sex": "unknown", "handedness": "unknown", "amplifier": "BioSemi", "cap": "Ag/AgCl"}
-
-    if not df.empty and "participant_id" in df.columns:
-        df["participant_id_norm"] = df["participant_id"].str.replace("sub-", "", regex=False)
-        match_row = df[df["participant_id_norm"] == subject_id]
-        if not match_row.empty:
-            row_data = match_row.iloc[0]
-
-            if "age" in row_data and pd.notna(row_data["age"]):
-                age_val = row_data["age"]
-                if isinstance(age_val, (int, float)):
-                    info["age"] = str(int(age_val))
-                elif isinstance(age_val, str):
-                    info["age"] = age_val.strip()
-
-            if "sex" in row_data and pd.notna(row_data["sex"]):
-                sex_val = str(row_data["sex"]).lower().strip()
-                if sex_val in ["m", "male"]:
-                    info["sex"] = "male"
-                elif sex_val in ["f", "female"]:
-                    info["sex"] = "female"
-                else:
-                    info["sex"] = "unknown"
-
-            if "handedness" in row_data and pd.notna(row_data["handedness"]):
-                handed_val = str(row_data["handedness"]).lower().strip()
-                if handed_val in ["r", "right", "right-handed"]:
-                    info["handedness"] = "right"
-                elif handed_val in ["l", "left", "left-handed"]:
-                    info["handedness"] = "left"
-                else:
-                    info["handedness"] = "unknown"
-
-    _SUBJECT_INFO_CACHE[subject_id] = info
-    return info
-
-
-def _rename_channels(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-    """Rename BioSemi channels to standard names if needed."""
-    existing_names = raw.ch_names
     rename_map = {}
-
+    existing_names = raw.ch_names
+    
     for ch in existing_names:
-        if ch.startswith("EEG") and len(ch) == 6:
-            rename_map[ch] = ch
-        elif ch in _BIOSEMI_CHANNEL_MAP:
-            rename_map[ch] = _BIOSEMI_CHANNEL_MAP[ch]
-
-    if rename_map:
-        rename_list = [(old, new) for old, new in rename_map.items() if old != new]
-        if rename_list:
-            raw.rename_channels(dict(rename_list))
-
-    return raw
-
-
-def _set_montage_if_standard(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-    """Set standard 10-20 montage if BioSemi 128-channel layout."""
-    try:
-        montage = mne.channels.make_standard_montage("biosemi128")
-        raw.set_montage(montage, on_missing="ignore")
-    except Exception:
-        pass
-    return raw
-
-
-def _get_events_file_path(raw, row) -> Optional[str]:
-    """Find corresponding events.tsv file for the EEG file."""
-    file_path = row.get("file_path", row.get("File Path", ""))
-    if not file_path:
-        return None
-
-    base_dir = os.path.dirname(file_path)
-    eeg_file = os.path.basename(file_path)
-
-    events_file = eeg_file.replace("_eeg.fif", "_events.tsv")
-    events_path = os.path.join(base_dir, events_file)
-
-    if os.path.exists(events_path):
-        return events_path
-
-    events_file = eeg_file.replace("_eeg.edf", "_events.tsv")
-    events_path = os.path.join(base_dir, events_file)
-
-    if os.path.exists(events_path):
-        return events_path
-
-    for fname in os.listdir(base_dir):
-        if fname.endswith("_events.tsv"):
-            return os.path.join(base_dir, fname)
-
-    return None
+        cleaned = ch.strip()
+        
+        # Strip common prefixes: "EEG ", "EEG-", "eeg_", "CH", "Ch "
+        for prefix in ["EEG ", "EEG-", "eeg_", "CH", "Ch "]:
+            if cleaned.startswith(prefix):
+                cleaned = cleaned[len(prefix):]
+                break
+        
+        # Handle numeric-only channels (keep as-is if can't map)
+        if cleaned.isdigit():
+            continue
+        
+        # Direct match check (case-sensitive first)
+        if cleaned in _HBN_129_CHANNELS:
+            if cleaned != ch:
+                rename_map[ch] = cleaned
+        else:
+            # Case-insensitive check
+            cleaned_lower = cleaned.lower()
+            for std_ch in _HBN_129_CHANNELS:
+                if std_ch.lower() == cleaned_lower:
+                    rename_map[ch] = std_ch
+                    break
+    
+    return rename_map
 
 
-def _derive_trial_accuracy_from_events(events_path: str) -> Dict[int, float]:
-    """Derive trial accuracy from events.tsv correct_answer column.
-
-    For contrast detection trials, match user_answer to correct_answer.
-    Returns dict mapping onset sample index to accuracy (1.0 or 0.0).
+def _create_misc_annotations(
+    raw: mne.io.BaseRaw, 
+    events_df: Optional[pd.DataFrame]
+) -> Tuple[mne.Annotations, Dict[str, np.ndarray]]:
+    """Create derived misc channels (accuracy and response_time).
+    
+    Parameters
+    ----------
+    raw : mne.io.BaseRaw
+        The raw EEG object.
+    events_df : Optional[pd.DataFrame]
+        Events dataframe from events.tsv if available.
+        
+    Returns
+    -------
+    Tuple[mne.Annotations, Dict[str, np.ndarray]]
+        Updated annotations and misc channel data dict.
     """
-    trial_accuracy = {}
-
-    if not events_path or not os.path.exists(events_path):
-        return trial_accuracy
-
-    try:
-        events_df = pd.read_csv(events_path, sep="\t")
-
-        if "trial_type" not in events_df.columns:
-            return trial_accuracy
-
-        contrast_trials = events_df[events_df["trial_type"] == "contrastTrial_start"]
-
-        for idx, trial_row in contrast_trials.iterrows():
-            trial_onset = trial_row.get("onset")
-            if pd.isna(trial_onset):
-                continue
-
-            correct_answer = trial_row.get("correct_answer")
-            user_answer = trial_row.get("user_answer")
-
-            if pd.isna(correct_answer) or pd.isna(user_answer):
-                accuracy = 0.0
-            elif int(correct_answer) == int(user_answer):
-                accuracy = 1.0
-            else:
-                accuracy = 0.0
-
-            trial_accuracy[idx] = accuracy
-
-    except Exception:
-        pass
-
-    return trial_accuracy
-
-
-def _create_accuracy_channel(raw: mne.io.BaseRaw, trial_accuracy: Dict[int, float]) -> mne.io.BaseRaw:
-    """Create a misc channel for trial accuracy if derived data available."""
-    if not trial_accuracy:
-        return raw
-
-    n_samples = raw.n_times
-    accuracy_data = np.zeros(n_samples)
-
-    sfreq = raw.info["sfreq"]
-
-    for idx, accuracy in trial_accuracy.items():
-        accuracy_data[int(idx)] = accuracy
-
-    info = mne.create_info(
-        ch_names=["trial_accuracy"],
-        sfreq=sfreq,
-        ch_types=["misc"]
-    )
-    accuracy_raw = mne.io.RawArray(accuracy_data.reshape(1, -1), info)
-    raw.add_channels([accuracy_raw], force_equal_channels=False)
-
-    return raw
-
-
-def _process_raw_annotations(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-    """Ensure raw annotations use canonical event names."""
-    if raw.annotations is None or len(raw.annotations) == 0:
-        return raw
-
-    current_desc = set(raw.annotations.description)
-
-    event_rename_map = {
-        "contrastChangeB1_start": "contrastChangeB1_start",
-        "contrastChangeB2_start": "contrastChangeB2_start",
-        "contrastChangeB3_start": "contrastChangeB3_start",
-        "contrastTrial_start": "contrastTrial_start",
-        "dot_no1_OFF": "dot_no1_OFF",
-        "dot_no1_ON": "dot_no1_ON",
-        "dot_no2_OFF": "dot_no2_OFF",
-        "dot_no2_ON": "dot_no2_ON",
-        "dot_no3_OFF": "dot_no3_OFF",
-        "dot_no3_ON": "dot_no3_ON",
-        "dot_no4_OFF": "dot_no4_OFF",
-        "dot_no4_ON": "dot_no4_ON",
-        "dot_no5_OFF": "dot_no5_OFF",
-        "dot_no5_ON": "dot_no5_ON",
-        "dot_no6_OFF": "dot_no6_OFF",
-        "dot_no6_ON": "dot_no6_ON",
-        "dot_no7_OFF": "dot_no7_OFF",
-        "dot_no7_ON": "dot_no7_ON",
-        "dot_no8_OFF": "dot_no8_OFF",
-        "dot_no8_ON": "dot_no8_ON",
-        "fixpoint_ON": "fixpoint_ON",
-        "instructed_toCloseEyes": "instructed_toCloseEyes",
-        "instructed_toOpenEyes": "instructed_toOpenEyes",
-        "learningBlock_1": "learningBlock_1",
-        "learningBlock_2": "learningBlock_2",
-        "learningBlock_3": "learningBlock_3",
-        "learningBlock_4": "learningBlock_4",
-        "learningBlock_5": "learningBlock_5",
-        "left_buttonPress": "left_buttonPress",
-        "left_target": "left_target",
-        "newPage": "newPage",
-        "resting_start": "resting_start",
-        "right_buttonPress": "right_buttonPress",
-        "right_target": "right_target",
-        "seqLearning_start": "seqLearning_start",
-        "seqLearning_stop": "seqLearning_stop",
-        "stim_ON": "stim_ON",
+    misc_data = {}
+    
+    if events_df is None or events_df.empty:
+        return raw.annotations, misc_data
+    
+    # Get trialResponse events
+    if 'trial_type' in events_df.columns:
+        trial_resp = events_df[events_df['trial_type'] == 'trialResponse'].copy()
+    elif 'value' in events_df.columns:
+        trial_resp = events_df[events_df['value'] == 'trialResponse'].copy()
+    else:
+        return raw.annotations, misc_data
+    
+    if trial_resp.empty:
+        return raw.annotations, misc_data
+    
+    # Get newPage events for response time calculation
+    if 'trial_type' in events_df.columns:
+        new_pages = events_df[events_df['trial_type'] == 'newPage'].copy()
+    elif 'value' in events_df.columns:
+        new_pages = events_df[events_df['value'] == 'newPage'].copy()
+    else:
+        new_pages = pd.DataFrame()
+    
+    # Create accuracy misc channel
+    accuracy_values = []
+    accuracy_onsets = []
+    
+    for _, row in trial_resp.iterrows():
+        user_answer = row.get('user_answer', None)
+        correct_answer = row.get('correct_answer', None)
+        
+        if user_answer is not None and correct_answer is not None:
+            try:
+                is_correct = int(user_answer) == int(correct_answer)
+                accuracy_values.append(1.0 if is_correct else 0.0)
+                accuracy_onsets.append(row['onset'])
+            except (ValueError, TypeError):
+                pass
+    
+    # Create response_time misc channel
+    rt_values = []
+    rt_onsets = []
+    
+    if not new_pages.empty:
+        new_page_onsets = new_pages['onset'].values
+        for _, row in trial_resp.iterrows():
+            trial_onset = row['onset']
+            # Find most recent newPage before this trialResponse
+            preceding = new_page_onsets[new_page_onsets < trial_onset]
+            if len(preceding) > 0:
+                rt = trial_onset - preceding[-1]
+                rt_values.append(rt)
+                rt_onsets.append(trial_onset)
+    
+    # Store misc channel data for later extraction
+    misc_data['accuracy'] = {
+        'onsets': np.array(accuracy_onsets) if accuracy_onsets else np.array([]),
+        'values': np.array(accuracy_values) if accuracy_values else np.array([])
     }
-
-    new_descriptions = []
-    for desc in raw.annotations.description:
-        new_desc = event_rename_map.get(desc, desc)
-        new_descriptions.append(new_desc)
-
-    new_annotations = mne.Annotations(
-        onset=raw.annotations.onset,
-        duration=raw.annotations.duration,
-        description=new_descriptions,
-        orig_time=raw.annotations.orig_time
-    )
-    raw.set_annotations(new_annotations)
-
-    return raw
+    misc_data['response_time'] = {
+        'onsets': np.array(rt_onsets) if rt_onsets else np.array([]),
+        'values': np.array(rt_values) if rt_values else np.array([])
+    }
+    
+    return raw.annotations, misc_data
 
 
 @dataclass
 class HBNKernel:
-    """Stage1 kernel for the Healthy Brain Network (HBN) EEG dataset."""
+    """Stage1 kernel for the HBN EEG Release 1 dataset (OpenNeuro DS005505)."""
 
     KERNEL_ID: str = "hbn-eeg-release1-stage1"
 
     def apply(self, udataset, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
-        """Apply stage1 preprocessing to a single record.
+        """Apply stage1 preprocessing to a single HBN EEG record.
 
         Parameters
         ----------
@@ -325,40 +208,186 @@ class HBNKernel:
         raw
             In-memory MNE Raw object.
         row
-            Locator row (pandas.Series-like) with at least ``File Path``.
+            Locator row (pandas.Series-like) with at least ``File Path``,
+            ``Subject ID``, and optional ``Paradigm``.
 
         Returns
         -------
         mne.io.BaseRaw
-            The modified Raw object with updated metadata and annotations.
+            The modified Raw object with standardized channels, events,
+            and metadata.
         """
-        subject_info = _get_subject_info(udataset, row)
+        file_path = row.get("File Path", "")
+        subject_id = row.get("Subject ID", "")
 
-        original_desc = raw.info.get("description", "")
+        # 1. Rename channels to standard 10-20 montage
+        rename_map = _build_channel_rename_map(raw)
+        if rename_map:
+            print(f"[HBNKernel] Renaming {len(rename_map)} channels for {subject_id}")
+            raw.rename_channels(rename_map)
 
+        # 2. Try to set standard montage (1020 system)
+        try:
+            montage = mne.channels.make_standard_montage("standard_1020")
+            raw.set_montage(montage, on_missing="warn")
+        except Exception as e:
+            print(f"[HBNKernel] Montage setup warning for {subject_id}: {e}")
+
+        # 3. Build eegunity_description from participants.tsv
         description_dict = {
-            "original_description": str(original_desc) if original_desc else "",
+            "original_description": raw.info.get("description", ""),
             "eegunity_description": {
-                "age": subject_info.get("age", "unknown"),
-                "sex": subject_info.get("sex", "unknown"),
-                "amplifier": subject_info.get("amplifier", "unknown"),
-                "cap": subject_info.get("cap", "unknown"),
-                "handedness": subject_info.get("handedness", "unknown"),
+                "age": "unknown",
+                "sex": "unknown",
+                "amplifier": "BioSemi ActiveTwo",  # LLM 推断，需人类复核
+                "cap": "Ag/AgCl",  # LLM 推断，需人类复核
+                "handedness": "unknown",
+                # Additional required info fields
+                "attention": "unknown",
+                "externalizing": "unknown",
+                "internalizing": "unknown",
+                "p_factor": "unknown",
             },
         }
+
+        # Read participants.tsv for subject-specific metadata
+        dataset_root = getattr(udataset, 'root_path', None)
+        if dataset_root is None and file_path:
+            dataset_root = os.path.dirname(file_path)
+            # Navigate up to find dataset root
+            while dataset_root and not os.path.exists(os.path.join(dataset_root, "participants.tsv")):
+                parent = os.path.dirname(dataset_root)
+                if parent == dataset_root:
+                    break
+                dataset_root = parent
+
+        if dataset_root:
+            participants_path = os.path.join(dataset_root, "participants.tsv")
+            if os.path.exists(participants_path):
+                try:
+                    participants_df = pd.read_csv(participants_path, sep="\t")
+                    # Match subject ID format (e.g., "sub-01" or "NDARXX...")
+                    subject_col = None
+                    for col in ['participant_id', 'subject_id', 'Subject ID']:
+                        if col in participants_df.columns:
+                            subject_col = col
+                            break
+                    
+                    if subject_col:
+                        # Try different subject ID formats
+                        subject_patterns = [
+                            subject_id,
+                            subject_id.replace("sub-", ""),
+                            subject_id.replace("NDAR", ""),
+                        ]
+                        
+                        for pattern in subject_patterns:
+                            matches = participants_df[participants_df[subject_col].str.contains(pattern, na=False)]
+                            if not matches.empty:
+                                row_p = matches.iloc[0]
+                                if 'age' in participants_df.columns:
+                                    age_val = row_p.get('age', 'unknown')
+                                    if pd.notna(age_val):
+                                        description_dict["eegunity_description"]["age"] = str(int(float(age_val)))
+                                if 'sex' in participants_df.columns:
+                                    sex_val = row_p.get('sex', 'unknown')
+                                    if pd.notna(sex_val):
+                                        sex_str = str(sex_val).lower()
+                                        if sex_str in ['m', 'male']:
+                                            description_dict["eegunity_description"]["sex"] = "male"
+                                        elif sex_str in ['f', 'female']:
+                                            description_dict["eegunity_description"]["sex"] = "female"
+                                        else:
+                                            description_dict["eegunity_description"]["sex"] = "unknown"
+                                if 'handedness' in participants_df.columns:
+                                    handed_val = row_p.get('handedness', 'unknown')
+                                    if pd.notna(handed_val):
+                                        handed_str = str(handed_val).lower()
+                                        if 'left' in handed_str:
+                                            description_dict["eegunity_description"]["handedness"] = "left"
+                                        elif 'right' in handed_str:
+                                            description_dict["eegunity_description"]["handedness"] = "right"
+                                # Additional required fields
+                                for field in ['attention', 'externalizing', 'internalizing', 'p_factor']:
+                                    if field in participants_df.columns:
+                                        val = row_p.get(field, 'unknown')
+                                        if pd.notna(val):
+                                            description_dict["eegunity_description"][field] = str(val)
+                                break
+                except Exception as e:
+                    print(f"[HBNKernel] Warning reading participants.tsv: {e}")
+
         raw.info["description"] = json.dumps(description_dict)
 
-        raw = _rename_channels(raw)
-
-        raw = _set_montage_if_standard(raw)
-
-        raw = _process_raw_annotations(raw)
-
-        events_path = _get_events_file_path(raw, row)
+        # 4. Process events.tsv for accurate events and derived misc channels
+        events_path = None
+        if dataset_root:
+            # Find events.tsv in the same directory or subdirectory
+            file_dir = os.path.dirname(file_path)
+            candidates = [
+                os.path.join(file_dir, "events.tsv"),
+                os.path.join(file_dir, os.path.basename(file_path).split('.')[0] + "_events.tsv"),
+            ]
+            for candidate in candidates:
+                if os.path.exists(candidate):
+                    events_path = candidate
+                    break
+        
+        events_df = None
         if events_path:
-            trial_accuracy = _derive_trial_accuracy_from_events(events_path)
-            if trial_accuracy:
-                raw = _create_accuracy_channel(raw, trial_accuracy)
+            try:
+                events_df = pd.read_csv(events_path, sep="\t")
+            except Exception as e:
+                print(f"[HBNKernel] Warning reading events.tsv: {e}")
+
+        # 5. Add events as annotations if events.tsv exists
+        if events_df is not None and not events_df.empty:
+            onset_list = []
+            duration_list = []
+            description_list = []
+            
+            # Get event column (trial_type or value)
+            event_col = 'trial_type' if 'trial_type' in events_df.columns else 'value'
+            
+            for _, event_row in events_df.iterrows():
+                if event_col in event_row:
+                    onset_list.append(float(event_row['onset']))
+                    duration_list.append(float(event_row.get('duration', 0)))
+                    description_list.append(str(event_row[event_col]))
+            
+            if onset_list:
+                annotations = mne.Annotations(
+                    onset=np.array(onset_list),
+                    duration=np.array(duration_list),
+                    description=description_list,
+                )
+                raw.set_annotations(annotations)
+            
+            # 6. Create derived misc channels (accuracy and response_time)
+            _, misc_data = _create_misc_annotations(raw, events_df)
+            
+            # Store misc data as attributes for downstream epoch writer
+            raw._misc_channel_data = misc_data
+        else:
+            raw._misc_channel_data = {}
+
+        # 7. Ensure required events are properly represented in annotations
+        # Map event IDs to MNE-readable format
+        required_events = [
+            'dot_no1_ON', 'dot_no2_ON', 'dot_no3_ON', 'dot_no4_ON',
+            'dot_no5_ON', 'dot_no6_ON', 'dot_no7_ON', 'dot_no8_ON',
+            'fixpoint_ON', 'instructed_toCloseEyes', 'instructed_toOpenEyes',
+            'left_target', 'newPage', 'right_target', 'stim_ON',
+            'trialResponse', 'video_start'
+        ]
+        
+        # Verify events are present in annotations
+        current_annotations = raw.annotations
+        if current_annotations is not None and len(current_annotations) > 0:
+            current_descs = set(current_annotations.description)
+            missing = [e for e in required_events if e not in current_descs]
+            if missing:
+                print(f"[HBNKernel] Warning: Some required events not found in {subject_id}: {missing}")
 
         return raw
 

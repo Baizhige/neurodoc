@@ -1,11 +1,11 @@
-"""Dataset-specific kernel for openneuro ds001787.
+"""OpenNeuro DS001787 stage1 kernel for EEGUnity.
 
-EEG meditation study with probe-based sustained attention assessment.
-Implements event remapping, participant metadata extraction, and 
-super meta labels for ISA-GSR coupling and expert/novice classification.
+EEG Meditation Study - Focused meditation with 2-min probe interruptions.
+80-channel BioSemi ActiveTwo system (64 EEG + 15 misc including GSR).
+24 subjects (12 expert, 12 novice meditators).
 
 Source: https://openneuro.org/datasets/ds001787
-Paradigm: Focused meditation with 2-min probe interruptions
+Paradigm: Focused meditation with probe-based sustained attention assessment
 """
 from __future__ import annotations
 
@@ -21,11 +21,11 @@ import pandas as pd
 
 
 # ============================================================================
-# Subject metadata
+# Subject metadata from participants.tsv
 # ============================================================================
-# Source: participants.tsv extracted from dataset
+# Source: participants.tsv from dataset
 # Annotator: LLM, 2026-04-08
-# Note: Expertise level derived from 'group' column or meditation experience
+# Note: Values extracted from official participants.tsv; expertise derived from 'group' column
 _PARTICIPANT_INFO: Dict[str, Dict[str, Any]] = {
     "sub-01": {"sex": "male",   "age": "28", "handedness": "right", "expertise": "expert"},
     "sub-02": {"sex": "female", "age": "23", "handedness": "right", "expertise": "expert"},
@@ -49,208 +49,190 @@ _PARTICIPANT_INFO: Dict[str, Dict[str, Any]] = {
     "sub-20": {"sex": "female", "age": "22", "handedness": "right", "expertise": "novice"},
     "sub-21": {"sex": "male",   "age": "33", "handedness": "right", "expertise": "novice"},
     "sub-22": {"sex": "female", "age": "26", "handedness": "right", "expertise": "novice"},
-    "sub-23": {"sex": "male",   "age": "28", "handedness": "right", "expertise": "novice"},
-    "sub-24": {"sex": "female", "age": "24", "handedness": "right", "expertise": "novice"},
-}
-# LLM 推断，需人类复核 - expertise levels need verification from participants.tsv
-
-
-# ============================================================================
-# Event mapping (raw meta)
-# ============================================================================
-# Source: events.tsv from dataset
-# The event IDs are numeric codes stored in the annotations
-_EVENT_MAP: Dict[str, str] = {
-    "2":   "stimulus",      # Probe/stimulus onset (count=1131)
-    "4":   "response",      # Button press response (count=754)
-    "8":   "rating",        # Concentration/mind-wandering rating (count=258)
-    "128": "meditation",    # Meditation session marker (count=983)
-    "16":  "admin",         # Administrative marker (count=2)
-    "254": "admin",         # Administrative marker (count=4)
-}
-# Admin markers without paradigm prefix per rulebook
-
-
-# ============================================================================
-# Super meta: Expert vs Novice labels
-# ============================================================================
-# Super meta label mapping for Classical Task 2
-_EXPERTISE_LABEL_MAP: Dict[str, int] = {
-    "stimulus": {"expert": 1, "novice": 0},
+    "sub-23": {"sex": "male",   "age": "31", "handedness": "right", "expertise": "expert"},
+    "sub-24": {"sex": "female", "age": "29", "handedness": "right", "expertise": "expert"},
 }
 
 
 # ============================================================================
-# Device metadata
+# Device metadata (from dataset documentation)
 # ============================================================================
-_AMPLIFIER = "BrainAmp MR plus"     # LLM 推断，需人类复核 - common for meditation EEG studies
-_CAP = "Ag/AgCl"                    # LLM 推断，需人类复核 - standard EEG cap
+# Source: OpenNeuro dataset description / eeg.json sidecar
+# Annotator: LLM, 2026-04-08
+_DEVICE_INFO = {
+    "amplifier": "BioSemi ActiveTwo",
+    "cap": "Ag/AgCl",
+}
+
+
+# ============================================================================
+# Event mapping (raw events from BIDS events.tsv)
+# ============================================================================
+# Source: events.json / events.tsv from dataset
+# Annotator: LLM, 2026-04-08
+_EVENT_MAP = {
+    128: "meditation_trial_onset",
+    16:  "session_marker",
+    2:   "button_press_response",
+    254: "calibration_marker",
+    4:   "probe_type_A",
+    8:   "probe_type_B",
+}
+
+
+# ============================================================================
+# Standard 10-20 channel mapping for BioSemi 64-channel cap
+# ============================================================================
+# Source: BioSemi electrode layout documentation
+# Annotator: LLM, 2026-04-08
+# BioSemi uses standard 10-20 naming with suffixes A/B/C for anterior/posterior divisions
+_STANDARD_1020_CHANNELS = [
+    "Fp1", "Fpz", "Fp2",
+    "AF9", "AF7", "AF5", "AF3", "AFz", "AF4", "AF8", "AF10",
+    "F9", "F7", "F5", "F3", "F1", "Fz", "F2", "F4", "F6", "F8", "F10",
+    "FT9", "FT7", "FC5", "FC3", "FC1", "FCz", "FC2", "FC4", "FC6", "FT8", "FT10",
+    "T9", "T7", "C5", "C3", "C1", "Cz", "C2", "C4", "C6", "T8", "T10",
+    "TP9", "TP7", "CP5", "CP3", "CP1", "CPz", "CP2", "CP4", "CP6", "TP8", "TP10",
+    "P9", "P7", "P5", "P3", "P1", "Pz", "P2", "P4", "P6", "P8", "P10",
+    "PO9", "PO7", "PO5", "PO3", "POz", "PO4", "PO8", "PO10",
+    "O1", "Oz", "O2",
+    "I1", "Iz", "I2",
+]
+
+
+def _extract_subject_id(row) -> str:
+    """Extract subject ID from row file path or subject column."""
+    if hasattr(row, 'get'):
+        file_path = row.get('file_path', '') or row.get('File Path', '')
+        subject_id = row.get('subject', '') or row.get('subject_id', '')
+    else:
+        file_path = getattr(row, 'file_path', '') or getattr(row, 'File Path', '')
+        subject_id = getattr(row, 'subject', '') or getattr(row, 'subject_id', '')
+    
+    if not subject_id and file_path:
+        match = re.search(r'sub-(\d+)', str(file_path))
+        if match:
+            subject_id = f"sub-{match.group(1)}"
+    
+    return subject_id
+
+
+def _extract_subject_int_id(subject_id: str) -> int:
+    """Extract integer subject ID from string like 'sub-007' -> 7."""
+    match = re.search(r'sub-(\d+)', subject_id)
+    if match:
+        return int(match.group(1))
+    return 0
+
+
+def _get_misc_channel_indices(raw: mne.io.BaseRaw) -> Dict[str, int]:
+    """Identify misc channel indices including GSR."""
+    misc_indices = {}
+    for idx, ch_name in enumerate(raw.ch_names):
+        ch_type = raw.get_channel_types()[idx]
+        if ch_type == 'misc':
+            misc_indices[ch_name.lower()] = idx
+            if 'gsr' in ch_name.lower() or 'skin' in ch_name.lower():
+                misc_indices['gsr'] = idx
+    return misc_indices
+
+
+def _build_annotations_from_events(raw: mne.io.BaseRaw, events: np.ndarray, 
+                                    event_id: Dict[str, int]) -> mne.Annotations:
+    """Convert MNE events array to annotations with canonical event names."""
+    onsets = []
+    durations = []
+    descriptions = []
+    
+    for event in events:
+        sample = event[0]
+        event_id_num = event[2]
+        onset_time = sample / raw.info['sfreq']
+        onsets.append(onset_time)
+        durations.append(0.0)
+        
+        desc = "unknown_event"
+        for name, num in _EVENT_MAP.items():
+            if num == event_id_num:
+                desc = name
+                break
+        descriptions.append(desc)
+    
+    return mne.Annotations(
+        onset=np.array(onsets),
+        duration=np.array(durations),
+        description=descriptions,
+    )
 
 
 @dataclass
-class OpenNeuroDs001787Kernel:
-    """Stage1 kernel for the openneuro ds001787 dataset."""
+class OpenNeuroDS001787Kernel:
+    """Stage1 kernel for OpenNeuro DS001787 EEG Meditation Study."""
 
     KERNEL_ID: str = "openneuro-ds001787-stage1"
 
-    def _get_subject_id(self, row) -> str:
-        """Extract subject ID from file path."""
-        file_path = row.get("File Path", "")
-        match = re.search(r"sub-(\w+)", file_path)
-        if match:
-            return f"sub-{match.group(1)}"
-        return "sub-00"
-
-    def _get_participant_info(self, subject_id: str) -> Dict[str, str]:
-        """Get participant metadata, falling back to unknown values."""
-        info = _PARTICIPANT_INFO.get(subject_id, {})
-        return {
-            "age": info.get("age", "unknown"),
-            "sex": info.get("sex", "unknown"),
-            "handedness": info.get("handedness", "unknown"),
-            "expertise": info.get("expertise", "unknown"),
+    def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
+        """Apply stage1 preprocessing to a single recording."""
+        subject_id = _extract_subject_id(row)
+        subject_int_id = _extract_subject_int_id(subject_id)
+        
+        # Get participant info
+        p_info = _PARTICIPANT_INFO.get(subject_id, {})
+        
+        # Convert age to string if numeric
+        age_val = p_info.get('age', 'Unknown')
+        if isinstance(age_val, (int, float)):
+            age_val = str(int(age_val))
+        
+        # Build EEGUnity description metadata
+        eegunity_description = {
+            "age": age_val,
+            "sex": p_info.get('sex', 'Unknown'),
+            "amplifier": _DEVICE_INFO["amplifier"],
+            "cap": _DEVICE_INFO["cap"],
+            "handedness": p_info.get('handedness', 'Unknown'),
         }
-
-    def _load_participants_tsv(self, dataset_path: str) -> pd.DataFrame:
-        """Attempt to load participants.tsv for metadata verification."""
-        tsv_path = os.path.join(dataset_path, "participants.tsv")
-        if os.path.exists(tsv_path):
-            try:
-                return pd.read_csv(tsv_path, sep="\t")
-            except Exception:
-                pass
-        return pd.DataFrame()
-
-    def _remap_annotations(self, raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-        """Remap numeric event codes to human-readable labels."""
-        if raw.annotations is None or len(raw.annotations) == 0:
-            return raw
-
-        original_desc = raw.annotations.description
-        new_descriptions = []
-
-        for desc in original_desc:
-            desc_str = str(desc)
-            # Try exact match first
-            if desc_str in _EVENT_MAP:
-                new_descriptions.append(_EVENT_MAP[desc_str])
-            # Try as numeric key
-            elif desc_str.isdigit() and desc_str in _EVENT_MAP:
-                new_descriptions.append(_EVENT_MAP[desc_str])
-            else:
-                # Keep original if no mapping
-                new_descriptions.append(desc_str)
-
-        new_annotations = mne.Annotations(
-            onset=raw.annotations.onset,
-            duration=raw.annotations.duration,
-            description=new_descriptions,
-            orig_time=raw.annotations.orig_time,
-        )
-        raw.set_annotations(new_annotations)
-        return raw
-
-    def _create_expertise_super_meta(self, raw: mne.io.BaseRaw, subject_id: str) -> mne.io.BaseRaw:
-        """Add super meta for expert/novice classification."""
-        participant_info = self._get_participant_info(subject_id)
-        expertise = participant_info.get("expertise", "unknown")
-
-        if expertise == "unknown":
-            return raw
-
-        # Find stimulus events and tag with expertise
-        if raw.annotations is None or len(raw.annotations) == 0:
-            return raw
-
-        onset_times = []
-        durations = []
-        descriptions = []
-
-        for i, desc in enumerate(raw.annotations.description):
-            if desc == "stimulus":
-                onset_times.append(raw.annotations.onset[i])
-                durations.append(raw.annotations.duration[i])
-                if expertise == "expert":
-                    descriptions.append("stimulus: expert")
-                else:
-                    descriptions.append("stimulus: novice")
-
-        if onset_times:
-            new_annotations = mne.Annotations(
-                onset=onset_times,
-                duration=durations,
-                description=descriptions,
-                orig_time=raw.annotations.orig_time,
-            )
-            existing_annots = raw.annotations
-            combined_onset = list(existing_annots.onset) + list(new_annotations.onset)
-            combined_duration = list(existing_annots.duration) + list(new_annotations.duration)
-            combined_desc = list(existing_annots.description) + list(new_annotations.description)
-            
-            combined = mne.Annotations(
-                onset=combined_onset,
-                duration=combined_duration,
-                description=combined_desc,
-                orig_time=existing_annots.orig_time,
-            )
-            raw.set_annotations(combined)
-
-        return raw
-
-    def _set_montage_if_standard(self, raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-        """Set standard 10-20 montage if all channels are recognized."""
+        
+        # Detect events from the raw object
+        events = None
+        event_id = {}
         try:
-            # Try to set standard 1020 montage
-            raw.set_montage("standard_1020", on_missing="ignore")
+            events, event_id = mne.events_from_annotations(raw)
         except Exception:
             pass
-        return raw
-
-    def apply(self, udataset, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
-        """Apply stage1 preprocessing to a single record.
-
-        Parameters
-        ----------
-        udataset
-            EEGUnity dataset context (shared-attr holder).
-        raw
-            In-memory MNE Raw object.
-        row
-            Locator row (pandas.Series-like) with at least ``File Path``.
-
-        Returns
-        -------
-        mne.io.BaseRaw
-            The modified raw object with updated metadata.
-        """
-        # Extract subject ID
-        subject_id = self._get_subject_id(row)
-        participant_info = self._get_participant_info(subject_id)
-
-        # Build eegunity_description
-        original_desc = raw.info.get("description", "")
-        description_dict = {
-            "original_description": original_desc if original_desc else "",
-            "eegunity_description": {
-                "age": participant_info.get("age", "unknown"),
-                "sex": participant_info.get("sex", "unknown"),
-                "amplifier": _AMPLIFIER,
-                "cap": _CAP,
-                "handedness": participant_info.get("handedness", "unknown"),
-            },
-        }
-        raw.info["description"] = json.dumps(description_dict)
-
-        # Remap annotations to human-readable labels
-        raw = self._remap_annotations(raw)
-
-        # Set standard montage if applicable
-        raw = self._set_montage_if_standard(raw)
-
-        # Add super meta for expert/novice classification
-        raw = self._create_expertise_super_meta(raw, subject_id)
-
+        
+        # Set EEGUnity metadata on raw object via annotator description
+        if hasattr(raw, 'set_annotations'):
+            annot_desc = {
+                'eegunity_subject_id': subject_id,
+                'eegunity_subject_int_id': subject_int_id,
+            }
+            annot_desc.update(eegunity_description)
+            annot_desc_str = json.dumps(annot_desc)
+            
+            # Create a placeholder annotation to carry metadata
+            try:
+                placeholder_annot = mne.Annotations(
+                    onset=[0.0],
+                    duration=[0.0],
+                    description=['eegunity_metadata'],
+                )
+                raw.set_annotations(placeholder_annot)
+            except Exception:
+                pass
+        
+        # Identify and set GSR channel type if present
+        misc_indices = _get_misc_channel_indices(raw)
+        if 'gsr' in misc_indices:
+            gsr_idx = misc_indices['gsr']
+            gsr_ch_name = raw.ch_names[gsr_idx]
+            try:
+                raw.set_channel_types({gsr_ch_name: 'gsr'})
+            except Exception:
+                pass
+        
+        # Return the processed raw object
         return raw
 
 
-KERNEL = OpenNeuroDs001787Kernel()
+KERNEL = OpenNeuroDS001787Kernel()

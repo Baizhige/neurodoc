@@ -16,7 +16,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 try:
     from ..llm_adapter import call_llm_text
-except ImportError:
+except (ImportError, ValueError):
     from llm_adapter import call_llm_text
 from .ref_analyzer import _parse_json
 

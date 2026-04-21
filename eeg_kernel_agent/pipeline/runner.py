@@ -15,7 +15,7 @@ from .event_annotator import annotate_events
 from .kernel_builder import build_kernel, install_kernel
 try:
     from ..llm_adapter import extract_text_from_response, post_llm_json, resolve_llm_config
-except ImportError:
+except (ImportError, ValueError):
     from llm_adapter import extract_text_from_response, post_llm_json, resolve_llm_config
 from .ref_analyzer import analyze_references
 from .reconcile import reconcile as reconcile_tasks
@@ -399,6 +399,7 @@ class Pipeline:
                     self.log,
                     rescan_func=_rescan,
                     install_func=_install,
+                    data_dir=self._find_data_dir(),
                 )
                 if did_patch:
                     # install_kernel writes to AGENT_DIR / "kernels" / f"{dataset_name}.py"

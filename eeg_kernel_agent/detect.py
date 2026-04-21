@@ -350,6 +350,204 @@ def misc_label_field_in_misc_section(analysis_text: str, **_) -> tuple[bool, str
     return False, ""
 
 
+# ── v3.1 dispatchability cross-checks (participants.tsv + factory dry-run) ────
+
+
+def _locate_participants_tsv(dataset_name: str) -> Path | None:
+    """Best-effort search for <dataset>/participants.tsv using machine config roots."""
+    if not dataset_name:
+        return None
+    try:
+        import sys as _sys
+        if str(AGENT_DIR) not in _sys.path:
+            _sys.path.insert(0, str(AGENT_DIR))
+        import scan_engine  # type: ignore
+        cfg = scan_engine.load_machine_config()
+        roots = cfg.get("dataset_roots") or []
+        path = scan_engine.find_dataset_path(dataset_name, roots)
+        if path:
+            p = Path(path) / "participants.tsv"
+            if p.exists():
+                return p
+    except Exception:
+        pass
+    return None
+
+
+def _read_participants_columns(dataset_name: str) -> set[str] | None:
+    """Return the set of column names in participants.tsv, or None if unreadable."""
+    tsv = _locate_participants_tsv(dataset_name)
+    if tsv is None:
+        return None
+    try:
+        first_line = tsv.read_text(encoding="utf-8").splitlines()[0]
+        return {c.strip() for c in first_line.split("\t") if c.strip()}
+    except Exception:
+        return None
+
+
+def _parse_task_block_for_factory(block: str) -> dict:
+    """Convert a markdown task block into the dict shape expected by build_dataset_from_task."""
+    route = _task_field(block, "Label Route").lower() or None
+    ttype = _task_field(block, "Task Type").lower() or None
+    label_field = _task_field(block, "Label Field") or None
+    header, body = _task_target_def_table(block)
+    norm = _normalize_td_header(header) if header else []
+
+    rows: list[dict] = []
+    for raw_cells in body:
+        cells = [c.strip().strip("`").strip() for c in raw_cells]
+        if not cells or not any(cells):
+            continue
+        row: dict = {}
+        for key, val in zip(norm, cells):
+            if key == "event id":
+                row["event_id"] = val
+            elif key == "info field":
+                row["info_field"] = val
+            elif key == "misc channel":
+                row["misc_channel"] = val
+            elif key == "y":
+                try:
+                    row["y"] = int(val)
+                except (ValueError, TypeError):
+                    row["y"] = val
+            elif key == "value":
+                if ttype == "regression" and route == "event":
+                    try:
+                        row["value"] = float(val)
+                    except (ValueError, TypeError):
+                        row["value"] = val
+                else:
+                    row["value"] = val
+            elif key == "meaning":
+                row["meaning"] = val
+            elif key == "range":
+                row["range"] = val
+            elif key == "notes":
+                row["notes"] = val
+        rows.append(row)
+
+    return {
+        "label_route": route,
+        "task_type": ttype,
+        "label_field": label_field,
+        "target_rows": rows,
+    }
+
+
+@_cc
+def info_label_field_in_participants(analysis_text: str, dataset_name: str = "", **_) -> tuple[bool, str]:
+    """Route = info ⇒ Label Field must be a column in participants.tsv (authoritative)."""
+    tasks_text = _extract_section(analysis_text, "Tasks")
+    if not tasks_text:
+        return False, ""
+    cols = _read_participants_columns(dataset_name)
+    if cols is None:
+        return False, ""  # cannot verify without participants.tsv; stay silent
+    missing: list[str] = []
+    for block in _split_task_blocks(tasks_text):
+        route = _task_field(block, "Label Route").lower()
+        if route != "info":
+            continue
+        lf = _task_field(block, "Label Field")
+        if not lf:
+            continue
+        if lf not in cols:
+            missing.append(f"{_task_title(block)}: {lf!r}")
+    if missing:
+        return True, f"info Label Fields not in participants.tsv {sorted(cols)}: {missing}"
+    return False, ""
+
+
+def _collect_kernel_misc_channels(dataset_name: str) -> set[str] | None:
+    """Read kernel_requirements from progress JSON (if present) to get declared misc channels.
+
+    Returns None when no progress file is available; the caller should treat
+    missing data as 'cannot verify' rather than 'violated'.
+    """
+    if not dataset_name:
+        return None
+    progress_path = BIDS_ROOT / "eeg_kernel_agent" / "progress" / f"{dataset_name}.json"
+    if not progress_path.exists():
+        return None
+    try:
+        data = __import__("json").loads(progress_path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    req = (data.get("kernel_requirements") or {}) if isinstance(data, dict) else {}
+    channels: set[str] = set()
+    for n in (req.get("required_native_misc") or []):
+        if isinstance(n, str) and n:
+            channels.add(n)
+    for d in (req.get("derived_misc_channels") or []):
+        name = d.get("name") if isinstance(d, dict) else None
+        if name:
+            channels.add(name)
+    return channels
+
+
+@_cc
+def misc_label_field_has_misc_channel(analysis_text: str, dataset_name: str = "", **_) -> tuple[bool, str]:
+    """Route = misc ⇒ Label Field must be declared in kernel_requirements (native or derived)."""
+    tasks_text = _extract_section(analysis_text, "Tasks")
+    if not tasks_text:
+        return False, ""
+    declared = _collect_kernel_misc_channels(dataset_name)
+    # Fall back to the ### MISC Label Summary first column when progress JSON absent.
+    if declared is None:
+        misc_text = _extract_subsection(_extract_section(analysis_text, "File Scan Result"),
+                                         "MISC Label Summary")
+        declared = _first_column_backticked(misc_text)
+    missing: list[str] = []
+    for block in _split_task_blocks(tasks_text):
+        route = _task_field(block, "Label Route").lower()
+        if route != "misc":
+            continue
+        lf = _task_field(block, "Label Field")
+        if not lf:
+            continue
+        if lf not in declared:
+            missing.append(f"{_task_title(block)}: {lf!r}")
+    if missing:
+        return True, (
+            f"misc Label Fields not declared in kernel_requirements "
+            f"(native or derived): {missing}"
+        )
+    return False, ""
+
+
+@_cc
+def task_dataset_dispatchable(analysis_text: str, **_) -> tuple[bool, str]:
+    """Every Task must dispatch via build_dataset_from_task(dry_run=True)."""
+    tasks_text = _extract_section(analysis_text, "Tasks")
+    if not tasks_text:
+        return False, ""
+    try:
+        import sys as _sys
+        if str(BIDS_ROOT) not in _sys.path:
+            _sys.path.insert(0, str(BIDS_ROOT))
+        from eeg_kernel_agent.dataset_api import (  # type: ignore
+            DatasetDispatchError,
+            build_dataset_from_task,
+        )
+    except Exception as exc:
+        return False, f"(dataset_api import failed: {exc})"
+
+    problems: list[str] = []
+    for block in _split_task_blocks(tasks_text):
+        task = _parse_task_block_for_factory(block)
+        try:
+            build_dataset_from_task(task, dry_run=True)
+        except DatasetDispatchError as exc:
+            problems.append(f"{_task_title(block)} [{exc.kind}]: {exc.message}")
+        except Exception as exc:
+            problems.append(f"{_task_title(block)} [unexpected]: {exc}")
+    if problems:
+        return True, "; ".join(problems)
+    return False, ""
+
+
 @_cc
 def target_def_schema_matches_route(analysis_text: str, **_) -> tuple[bool, str]:
     """TD table header must match the Route × Task Type canonical schema."""

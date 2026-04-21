@@ -318,10 +318,31 @@ rules:
     severity: "error"
 
   - id: "info_label_field_in_info_section"
-    desc: "For Label Route = info tasks, the Label Field must be registered in ### Info (rulebook 第57条之二 第5款, 第77条之三 第3款)."
+    desc: "For Label Route = info tasks, the Label Field should be registered in ### Info. Downgraded to warning in favour of `info_label_field_in_participants` which reads participants.tsv directly (rulebook 第57条之二 第5款, 第77条之三 第3款)."
     target: "analysis_md"
     check: "cross_check"
     function: "info_label_field_in_info_section"
+    severity: "warning"
+
+  - id: "info_label_field_in_participants"
+    desc: "For Label Route = info tasks, the Label Field must correspond to a column in participants.tsv (authoritative source; rulebook v3.1)."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "info_label_field_in_participants"
+    severity: "error"
+
+  - id: "misc_label_field_has_misc_channel"
+    desc: "For Label Route = misc tasks, the Label Field must be a native MISC channel or a derived misc channel declared in kernel_requirements (rulebook v3.1)."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "misc_label_field_has_misc_channel"
+    severity: "error"
+
+  - id: "task_dataset_dispatchable"
+    desc: "Every Task block must be statically dispatchable by dataset_api.build_dataset_from_task(dry_run=True) (rulebook v3.1)."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "task_dataset_dispatchable"
     severity: "error"
 
   - id: "misc_label_field_in_misc_section"
