@@ -39,11 +39,31 @@ CANONICAL_INFO_FIELDS = {"subject_age", "subject_sex", "device", "age", "sex", "
 # Whitelist construction from scan output
 # ──────────────────────────────────────────────────────────────────────────────
 
+def _read_participants_columns(data_dir: Optional[str]) -> set:
+    """Return the authoritative set of columns in participants.tsv, or empty set."""
+    if not data_dir:
+        return set()
+    p = Path(data_dir) / "participants.tsv"
+    if not p.exists():
+        return set()
+    try:
+        header = p.read_text(encoding="utf-8").splitlines()[0]
+    except Exception:
+        return set()
+    return {c.strip() for c in header.split("\t") if c.strip()}
+
+
 def build_scan_whitelist(
     scan_result: Dict[str, Any],
     bids_sidecars: Optional[Dict[str, Any]] = None,
+    data_dir: Optional[str] = None,
 ) -> Dict[str, set]:
-    """Return {'events': set, 'misc': set, 'info': set} of what the kernel actually exposes."""
+    """Return {'events': set, 'misc': set, 'info': set} of what the kernel actually exposes.
+
+    The info set is authoritative-first: if `data_dir` is given we read the
+    header of `<data_dir>/participants.tsv` directly. We also include anything
+    the sidecar cache lists plus the canonical keys as a safety net.
+    """
     events = set()
     for k in (scan_result.get("event_counts") or {}).keys():
         events.add(str(k))
@@ -54,6 +74,7 @@ def build_scan_whitelist(
             misc.add(c)
 
     info = set(CANONICAL_INFO_FIELDS)
+    info.update(_read_participants_columns(data_dir))
     if bids_sidecars:
         for f in (bids_sidecars.get("participants_fields") or []):
             name = f.get("name") if isinstance(f, dict) else None
@@ -329,6 +350,7 @@ def reconcile(
     log,
     rescan_func: Optional[Callable[[str], Dict[str, Any]]] = None,
     install_func: Optional[Callable[[str], str]] = None,
+    data_dir: Optional[str] = None,
 ) -> Tuple[str, Dict[str, Any], str, bool]:
     """Reconcile tasks against scan. Drops hallucinated tasks, optionally patches kernel once.
 
@@ -339,11 +361,13 @@ def reconcile(
       kernel_code          — current kernel Python source (for patching).
       rescan_func          — callable(new_kernel_path) -> new scan_result; required for patch path.
       install_func         — callable(new_kernel_code) -> installed_kernel_path; required for patch path.
+      data_dir             — raw BIDS dataset directory; used to read participants.tsv header
+                             directly so the info whitelist is authoritative.
 
     Returns:
       (final_tasks_section, final_scan_result, final_kernel_code, did_patch)
     """
-    whitelist = build_scan_whitelist(scan_result, bids_sidecars)
+    whitelist = build_scan_whitelist(scan_result, bids_sidecars, data_dir)
     log(
         f"[Reconcile] Scan whitelist: "
         f"events={len(whitelist['events'])}, misc={len(whitelist['misc'])}, info={len(whitelist['info'])}"
@@ -374,7 +398,7 @@ def reconcile(
                 new_kernel_code = patched_code
                 did_patch = True
                 # Re-classify with fresh whitelist
-                whitelist = build_scan_whitelist(new_scan_result, bids_sidecars)
+                whitelist = build_scan_whitelist(new_scan_result, bids_sidecars, data_dir)
                 log(
                     f"[Reconcile] Post-patch whitelist: "
                     f"events={len(whitelist['events'])}, misc={len(whitelist['misc'])}, info={len(whitelist['info'])}"

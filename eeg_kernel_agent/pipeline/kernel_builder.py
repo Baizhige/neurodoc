@@ -32,12 +32,23 @@ MANDATORY requirements — violating any will cause rejection:
    — DO NOT split across lines, DO NOT add type annotations to parameters, DO NOT rename udataset/raw/row
 3. raw.info["description"] = json.dumps({
        "original_description": <original>,
-       "eegunity_description": {"age": str, "sex": str, "amplifier": str, "cap": str, "handedness": str}
+       "eegunity_description": {"age": str, "sex": str, "amplifier": str, "cap": str, "handedness": str,
+                                 <any extra required info fields, verbatim from participants.tsv>}
    })
 4. age is always a STRING (e.g. "22", not 22)
 5. sex is always lowercase: "male" / "female" / "unknown"
 6. Inferred values: add comment  # LLM 推断，需人类复核
 7. Channel rename BEFORE set_montage()
+8. When `required_info_fields` is non-empty in kernel_requirements, the kernel MUST read
+   the listed columns from participants.tsv for the current subject and include them as
+   STRING values inside eegunity_description (see above). The downstream epoch writer
+   attaches every non-canonical key as a source-level HDF5 attr so InfoDataset can reach it.
+   If a column is genuinely missing for a subject, use "unknown" (do NOT fabricate).
+9. When `required_native_misc` or `derived_misc_channels` is non-empty, the kernel MUST
+   ensure those channel names exist on the returned raw as misc-type channels (native misc
+   typically already exists; derived ones need to be computed and appended). The epoch
+   method passes these names to the v2.1 HDF5 writer as `misc_channels=[...]` so
+   MISCDataset can read them.
 """
 
 _KERNEL_FIX_SYSTEM = """\
@@ -47,7 +58,19 @@ Fix ONLY what is broken. Output your fix as a Python code block ONLY:
 <full corrected kernel source code here>
 ```
 
-MANDATORY: def apply(self, udataset, raw, row) -> mne.io.BaseRaw:  — exact signature, one line, no type hints on params."""
+MANDATORY — any violation will fail validation again:
+- def apply(self, udataset, raw, row) -> mne.io.BaseRaw:  — exact signature, one line, no type hints on params
+- Inside apply(), one literal statement:
+    raw.info["description"] = json.dumps({
+        "original_description": <original>,
+        "eegunity_description": { ... populated ... },
+    })
+  Do NOT use `raw.info["description"] = {}` / `.update(...)` / dict assignment —
+  MNE stores description as a STRING, not a dict.
+- When the error lists `required_info_fields`, read each one from participants.tsv
+  for the current subject and put it (as str) into eegunity_description.
+- When the error lists `derived_misc_channels`, create each one as an MNE misc-type
+  channel on the returned raw (constant value broadcast across the full duration)."""
 
 _RULEBOOK_VALIDATION_CHECKS = [
     (r"KERNEL\s*=\s*\w+\(", "KERNEL = ... object missing at module level"),
@@ -62,12 +85,114 @@ _RULEBOOK_VALIDATION_CHECKS = [
 ]
 
 
-def _static_validate(code: str) -> List[str]:
-    """Quick static checks before running subprocess."""
-    errors = []
+def _extract_apply_body(code: str) -> str:
+    """Return the text of def apply(...) body, or '' if not parsable.
+
+    Handles optional return-type annotations like `-> mne.io.BaseRaw:`.
+    """
+    m = re.search(r"def apply\s*\([^)]*\)[^:\n]*:\s*\n", code)
+    if not m:
+        return ""
+    start = m.end()
+    lines = code[start:].splitlines(keepends=True)
+    if not lines:
+        return ""
+    # Determine body indent from first non-blank line
+    body_indent = None
+    for line in lines:
+        stripped = line.lstrip()
+        if stripped and not stripped.startswith("#"):
+            body_indent = len(line) - len(stripped)
+            break
+    if body_indent is None or body_indent == 0:
+        return ""
+    body: List[str] = []
+    for line in lines:
+        if not line.strip():
+            body.append(line)
+            continue
+        indent = len(line) - len(line.lstrip())
+        if indent < body_indent:
+            break
+        body.append(line)
+    return "".join(body)
+
+
+def _static_validate(code: str,
+                    kernel_requirements: Optional[Dict[str, Any]] = None) -> List[str]:
+    """Quick static checks before running subprocess.
+
+    Hardened v3.1: when kernel_requirements declares required_info_fields or
+    derived_misc_channels, the kernel source MUST reference each name. Also
+    requires the eegunity_description dict to be populated at apply() time
+    (dynamic json.dumps into raw.info['description']) rather than as a
+    class-level static — previous rules only checked for the field names as
+    string literals, which a static dict could satisfy trivially.
+    """
+    errors: List[str] = []
     for pattern, msg in _RULEBOOK_VALIDATION_CHECKS:
         if not re.search(pattern, code):
             errors.append(f"STATIC CHECK FAILED: {msg}")
+
+    # Rule #3 (tightened): apply() body must assign raw.info["description"] via
+    # json.dumps(...) so the per-subject eegunity_description is actually
+    # written per file. A class-level dict alone never reaches raw.info.
+    apply_body = _extract_apply_body(code)
+    if apply_body:
+        has_dynamic_write = re.search(
+            r"raw\.info\[\s*['\"]description['\"]\s*\]\s*=\s*json\.dumps\s*\(",
+            apply_body,
+        )
+        if not has_dynamic_write:
+            errors.append(
+                "STATIC CHECK FAILED: apply() body must contain the EXACT line "
+                "`raw.info[\"description\"] = json.dumps({...})` (rulebook #3). "
+                "MNE stores description as a STRING, not a dict — do NOT use "
+                "`raw.info[\"description\"] = {}` / `.update(...)` / dict assignment. "
+                "Build a dict with keys `original_description` and "
+                "`eegunity_description`, then json.dumps it in ONE statement."
+            )
+    else:
+        errors.append(
+            "STATIC CHECK FAILED: cannot locate apply() body for dynamic-write check."
+        )
+
+    if kernel_requirements:
+        info_fields = kernel_requirements.get("required_info_fields") or []
+        missing_info = [
+            f for f in info_fields
+            if not re.search(rf"\b{re.escape(f)}\b", code)
+        ]
+        if missing_info:
+            errors.append(
+                "STATIC CHECK FAILED: required_info_fields not referenced in kernel "
+                f"(must be read from participants.tsv and put into eegunity_description): "
+                f"{missing_info}"
+            )
+
+        derived = kernel_requirements.get("derived_misc_channels") or []
+        missing_misc = []
+        for d in derived:
+            name = d.get("name") if isinstance(d, dict) else None
+            if name and not re.search(rf"\b{re.escape(name)}\b", code):
+                missing_misc.append(name)
+        if missing_misc:
+            errors.append(
+                "STATIC CHECK FAILED: derived_misc_channels not created in kernel "
+                f"(must appear as misc-type channels on raw): {missing_misc}"
+            )
+
+        native_misc = kernel_requirements.get("required_native_misc") or []
+        missing_native = [
+            n for n in native_misc
+            if not re.search(rf"\b{re.escape(n)}\b", code)
+        ]
+        if missing_native:
+            errors.append(
+                "STATIC CHECK FAILED: required_native_misc not referenced in kernel: "
+                f"{missing_native}"
+            )
+
     return errors
 
 
@@ -379,7 +504,7 @@ def build_kernel(
             continue
 
         # Static validation (RULEBOOK compliance)
-        static_errors = _static_validate(kernel_code)
+        static_errors = _static_validate(kernel_code, kernel_requirements)
         if static_errors:
             last_error = "\n".join(static_errors)
             fail_path = sandbox_dir / f"kernel_v{version}_FAILED.py"

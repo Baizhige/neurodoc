@@ -1,6 +1,6 @@
 # eeg_kernel_agent
 
-Automated pipeline for generating EEG dataset kernel files and `analysis.md` documentation from BIDS datasets.
+Automated pipeline for generating EEG dataset kernel files and `analysis.md` documentation from BIDS datasets, plus a torch `Dataset` API that turns the resulting HDF5 files into (data, label, meta) batches.
 
 ---
 
@@ -11,9 +11,10 @@ eeg_kernel_agent/
 ├── generate.py          # Entry point — full pipeline runner
 ├── detect.py            # Semantic rule checker for analysis.md / kernel files
 ├── scan_engine.py       # EEGUnity scan core (machine identity, locator cache, HDF5 scan)
+├── llm_adapter.py       # Dual-provider LLM adapter (OpenAI-compatible + Anthropic)
 ├── upgrade.py           # Placeholder (not yet implemented)
 ├── pipeline/            # Modular pipeline stages
-│   ├── runner.py           # Phase orchestrator with resume logic
+│   ├── runner.py           # Phase orchestrator with resume logic (PHASES list)
 │   ├── context_builder.py
 │   ├── ref_analyzer.py
 │   ├── event_annotator.py
@@ -24,6 +25,13 @@ eeg_kernel_agent/
 │   ├── scan_bridge.py
 │   ├── doc_writer.py
 │   └── budget.py
+├── dataset_api/         # Torch Dataset classes that read v2.1 HDF5 files
+│   ├── base.py             # BaseHDF5Dataset (lazy per-worker file handle)
+│   ├── event_dataset.py    # EventDataset — label route = event
+│   ├── misc_dataset.py     # MISCDataset — label route = misc (regression-only)
+│   ├── info_dataset.py     # InfoDataset — label route = info
+│   ├── factory.py          # build_dataset_from_task(task, h5_path, dry_run=...)
+│   └── tests/              # pytest suite (37 tests)
 ├── tools/
 │   └── migrate_to_v3.py # Non-LLM batch migration: pre-v3 analysis.md → v3 schema
 ├── rulebook/
@@ -31,10 +39,11 @@ eeg_kernel_agent/
 ├── kernels/             # Generated kernel files (one .py per dataset)
 ├── progress/            # Per-dataset pipeline state JSON (resume checkpoints)
 ├── evidence_cache/      # Cached LLM evidence from Phase 3 event annotation
+├── locator_cache/       # Scan locator CSVs keyed by machine id
 ├── logs/                # Per-dataset run logs (<dataset>.log)
 ├── machine_config/      # Machine-specific config JSON (API key, model, paths)
 ├── sandbox/             # Temporary kernel testing sandbox
-└── design.md            # Architecture and design notes
+└── design_old.md        # Legacy design notes
 ```
 
 ---
@@ -44,18 +53,26 @@ eeg_kernel_agent/
 ### Prerequisites
 
 ```bash
-pip install openai anthropic pyyaml fitz  # fitz = PyMuPDF for PDF parsing
+pip install openai anthropic pyyaml pymupdf h5py torch pytest
 ```
 
-A machine config file must exist in `machine_config/` (any `.json` file). Minimum fields:
+A machine config file must exist in `machine_config/` (any `.json` file). Actual schema:
 
 ```json
 {
-  "api_key": "sk-...",
-  "model": "claude-opus-4-7",
-  "data_root": "/path/to/BIDS/datasets"
+  "url": "https://api.minimax.io/v1",
+  "key": "sk-...",
+  "model": "MiniMax-M2.7",
+  "proxy": "",
+  "python_env": "/path/to/python/bin/python",
+  "eegunity_path": "/path/to/Script",
+  "dataset_roots": ["/path/to/BIDS/datasets"],
+  "num_workers": 2,
+  "budget": 500
 }
 ```
+
+`url`/`key`/`model` (OpenAI-compatible) and `ANTHROPIC_BASE_URL` (Anthropic) are both handled by `llm_adapter.py`; whichever is configured takes precedence.
 
 ### Generate a dataset
 
@@ -73,56 +90,63 @@ python generate.py --dataset openneuro_ds001784 --fresh
 python generate.py --dataset openneuro_ds001784 --config machine_config/my_machine.json
 ```
 
-Output: `<BIDS_ROOT>/<dataset>/analysis.md` + `kernels/<dataset>.py`
+Output: `<BIDS_ROOT>/<dataset>/analysis.md` + `kernels/<dataset>.py`.
 
 ### Check a dataset with detect.py
 
 ```bash
-# Check one dataset
 python detect.py --dataset openneuro_ds001784
-
-# Check all datasets
 python detect.py --all
-
-# Filter to errors only
 python detect.py --all --severity error
-
-# Use a custom rulebook
 python detect.py --dataset openneuro_ds001784 --rulebook rulebook/semantic_rules.yaml
 ```
 
-Output: per-dataset violation report + summary table printed to stdout.
+### Load a dataset for training
+
+```python
+from eeg_kernel_agent.dataset_api import build_dataset_from_task
+
+task = {
+    "label_route": "info",
+    "task_type": "regression",
+    "label_field": "p_factor",
+}
+ds = build_dataset_from_task(task, h5_path="<BIDS>/openneuro_ds005505/ds005505.hdf5", max_len=800)
+for data, label, meta in ds:  # data: (n_ch, n_times), label: float32, meta: {source_group}
+    ...
+```
+
+See §`dataset_api/` below for the full route × task-type matrix.
 
 ---
 
 ## Pipeline Flow (`generate.py`)
 
-`generate.py` loads a machine config, resolves the list of datasets, then spawns one thread per dataset (up to `--workers`). Each dataset runs through `pipeline/runner.py`.
-
-### Phases (in order)
+Each dataset runs through `pipeline/runner.py`, which orchestrates the `PHASES` list:
 
 | Phase | Module | Description |
 |-------|--------|-------------|
-| **1. context** | `context_builder.py` | Collect static metadata: BIDS `dataset_description.json`, existing `analysis.md`, kernel file, events/channels TSV files, participants, README. Builds the full context dict passed to all later phases. |
-| **2. ref_analysis** | `ref_analyzer.py` | Batched LLM call over all reference PDFs/HTML in one large-context pass (~170 K tokens). Extracts paradigm description, task definitions, and DOI-tagged evidence snippets. |
-| **3. feasibility** | `task_synthesizer.py` | Single LLM call: given the dataset description and reference extractions, decide whether a concrete ML task is feasible (yes/partial/no + rationale). Pipeline aborts here for "no". |
-| **3.5. pre_scan** | `scan_bridge.py` | Run a lightweight EEGUnity scan before kernel generation to collect real event IDs. These IDs are passed to task synthesis so `target_events` lists are grounded in actual data. |
-| **3b. event_annotation** | `event_annotator.py` | **Isolation-guaranteed**: reads dataset files only (no paper content, no paradigm labels). Multi-turn evidence collection (P3a) followed by a single annotation call (P3b) to assign meanings to each event code. |
-| **4. task_synthesis** | `task_synthesizer_v2.py` | Two-step per-reference synthesis: (a) aggregate — one LLM call per ref extraction to propose task candidates + kernel_needs, deduped across refs; (b) fill — one LLM call per candidate to produce the v3 Task block (Epoch Method/Parameters, Label Route/Field, Meta Level, Target Definition, Evidence, Notes). Runs `detect.py` as a gate on a shell analysis.md and repairs up to 2 rounds. Emits both `tasks_section` and a `kernel_requirements` JSON contract (must-have events / native misc / info fields / derived-misc specs). |
-| **5. kernel_loop** | `kernel_builder.py` | Iterative LLM + subprocess loop: generate a Python kernel that satisfies `kernel_requirements`, run it in `sandbox/`, capture errors/output, feed back to LLM, repeat until the scan passes or budget is exhausted. |
-| **6. scan** | `scan_bridge.py` | Full EEGUnity scan with the new kernel. Produces structured scan results (event tables, MISC summary, info fields). |
-| **6.5. reconcile** | `reconcile.py` | Validate each task's referenced fields (target_events, label_field) against a scan whitelist (events ∪ native misc ∪ info fields ∪ participants columns). Rules: missing event IDs → drop (kernels cannot invent events); missing info fields → drop (kernels cannot synthesize participants columns); missing misc channel that the task's `kernel_requirements.must_derive_misc` covers → one kernel patch + rescan attempt; otherwise drop. Prevents misc-channel hallucinations from leaking through. |
-| **7. doc_write** | `doc_writer.py` | Assemble and write the final `analysis.md`. Merges the reconciled Tasks section, post-reconcile scan results (Event Structure, MISC Label Summary, Info), Paradigm section from ref analysis, and Kernel Responsibilities. |
+| **1. context** | `context_builder.py` | Collect static metadata: BIDS `dataset_description.json`, existing `analysis.md`, kernel file, events/channels TSV files, participants, README. |
+| **2. ref_analysis** | `ref_analyzer.py` | Batched LLM call over all reference PDFs/HTML in one large-context pass. Extracts paradigm description, task definitions, and DOI-tagged evidence snippets. |
+| **3. feasibility** | `task_synthesizer.py` | Single LLM call deciding whether a concrete ML task is feasible. Pipeline aborts here for "no". |
+| **3.5. pre_scan** | `scan_bridge.py` | Lightweight EEGUnity scan before kernel generation to collect real event IDs. |
+| **3b. event_annotation** | `event_annotator.py` | **Isolation-guaranteed**: dataset files only (no paper content). P3a multi-turn evidence collection → P3b single annotation call. |
+| **4. task_synthesis** | `task_synthesizer_v2.py` | Aggregate → fill → detect gate (up to 2 repair rounds). Emits `tasks_section` and `kernel_requirements`. |
+| **5. kernel_loop** | `kernel_builder.py` | Iterative LLM + subprocess loop (`MAX_VERSIONS=5`): generate a kernel, run it in `sandbox/`, feed errors back. **Hardened static validator** (see below) rejects kernels that don't honour `kernel_requirements`. |
+| **6. scan** | `scan_bridge.py` | Full EEGUnity scan with the new kernel. Produces event tables, MISC summary, info fields. |
+| **6.5. reconcile** | `reconcile.py` | Validate each task against a scan whitelist = events ∪ native misc ∪ (CANONICAL_INFO_FIELDS ∪ participants.tsv header ∪ sidecar fields). Missing event/info/misc → drop or one-shot kernel patch (see below). |
+| **7. doc_write** | `doc_writer.py` | Assemble and write the final `analysis.md`. |
+| **8. done** | — | Terminal state. `status` ∈ `{wait_manual_review, wait_kernel_update, failed}`. |
 
 ### Resume logic
 
-Progress is saved as JSON in `progress/<dataset>.json` after each phase. On re-run (without `--fresh`), the pipeline skips all completed phases and resumes from the last saved phase. Use `--fresh` to restart from scratch.
+Progress is saved in `progress/<dataset>.json` after each phase. Re-running without `--fresh` resumes from the last completed phase.
 
 ### Budget tracking
 
-`pipeline/budget.py` implements a simple prompt-count budget (`Budget` class). Each LLM call charges the budget by phase name. If the budget is exhausted (`BudgetExhausted`), the pipeline saves its current state and exits cleanly for that dataset.
+`pipeline/budget.py` charges each LLM call by phase name. Hitting the cap raises `BudgetExhausted`; the pipeline saves state and exits cleanly for that dataset.
 
-### Task ↔ Kernel co-synthesis
+### Task ↔ Kernel co-synthesis (Phase 4 contract)
 
 Phase 4 produces two artifacts that travel together:
 
@@ -130,9 +154,9 @@ Phase 4 produces two artifacts that travel together:
 2. **`kernel_requirements`** — structured JSON contract handed to `kernel_builder`:
    ```jsonc
    {
-     "required_event_ids":     ["left_target", "right_target", "trialResponse"],
-     "required_native_misc":   ["trialResponse"],
-     "required_info_fields":   ["age", "p_factor"],
+     "required_event_ids":   ["left_target", "right_target", "trialResponse"],
+     "required_native_misc": [],
+     "required_info_fields": ["age", "p_factor"],
      "derived_misc_channels": [
        {"name": "accuracy",
         "source_field": "trialResponse:user_answer + correct_answer",
@@ -140,58 +164,120 @@ Phase 4 produces two artifacts that travel together:
         "groundable_evidence": "task-symbolSearch_events.json defines both columns",
         "used_by": ["2-class symbol search trial accuracy"]}
      ],
-     "_dropped_candidates": [
-       {"paradigm": "surround suppression classification",
-        "reason": "stim_ON events (13278) have no per-trial label distinguishing stimulus conditions"}
-     ]
+     "_dropped_candidates": [...]
    }
    ```
 
-The aggregate step is told to drop any derived-misc candidate whose source field is not actually present in `bids_sidecars` / reference evidence, and to log rejected paradigms in `_dropped_candidates` with an explicit reason. This is the anti-hallucination line of defense in Phase 4.
+The aggregate step drops any derived-misc candidate whose source field is not present in `bids_sidecars` / reference evidence, and logs rejected paradigms in `_dropped_candidates` with an explicit reason.
 
-The reconcile phase (6.5) is the second line of defense: even if the kernel was built to the requirements, it then validates the produced scan output against every field the Tasks section references. Missing event IDs or info fields are unrecoverable (kernels cannot invent rows in `events.tsv` or columns in `participants.tsv`) and cause the task to be dropped. Missing derived-misc channels that *were* declared in `derived_misc_channels` get one LLM-driven kernel patch + rescan attempt.
+### Defence-in-depth
+
+1. **Phase 4 aggregate** — reject derived-misc whose source isn't in `bids_sidecars` or reference evidence.
+2. **Phase 5 static validator** (`kernel_builder._static_validate`) — reject kernels that don't honour `kernel_requirements`:
+   - `apply()` body must contain `raw.info["description"] = json.dumps({...})` (not class-level static dict, not `.update()`)
+   - every name in `required_info_fields` must appear verbatim in the source
+   - every name in `derived_misc_channels[*].name` must appear verbatim in the source
+   - every name in `required_native_misc` must appear verbatim in the source
+3. **Phase 6.5 reconcile** — final scan validated against the whitelist (events ∪ misc ∪ info). Info whitelist is built by reading `<data_dir>/participants.tsv` directly — so kernels cannot silently rely on a stale sidecar cache. Unrecoverable misses (event/info) → drop the task; missing derived-misc that was declared in `kernel_requirements.derived_misc_channels` → one LLM kernel patch + rescan.
+
+---
+
+## `dataset_api/` — HDF5 v2.1 → torch Dataset
+
+The epoch method writes a v2.1 HDF5 file per dataset (schema: see `Script/eegunity/utils/h5.py` → `h5EpochDatasetV2`). `dataset_api` reads that file and produces `(tensor, label, meta)` for the training loop.
+
+### Factory dispatch
+
+```python
+from eeg_kernel_agent.dataset_api import (
+    build_dataset_from_task,
+    DatasetDispatchError,
+    EventDataset, MISCDataset, InfoDataset,
+)
+
+# dry_run validates task schema without opening HDF5 — used by detect.py
+build_dataset_from_task(task, dry_run=True)
+
+# non-dry-run: returns a ready-to-use torch Dataset
+ds = build_dataset_from_task(task, h5_path="file.hdf5", max_len=800)
+```
+
+### Route × Task Type matrix
+
+| Route | Task Type | Class | Required task fields | Reads |
+|-------|-----------|-------|----------------------|-------|
+| event | classification | `EventDataset` | `target_rows=[{event_id, y, meaning}...]` | `/epoch_meta/event_code` + root `label_map` |
+| event | regression | `EventDataset` | `target_rows=[{event_id, value, meaning}...]` | same |
+| misc | regression | `MISCDataset` | `label_field` (the misc channel name) | `/misc_meta/<name>` (NaN rows excluded) |
+| misc | classification | — | **forbidden** (rulebook §77条之六) | — |
+| info | classification | `InfoDataset` | `label_field`, `target_rows=[{info_field, value, y, meaning}...]` → `info_map` | `/source_meta/<group>/.attrs[<field>]` broadcast per source |
+| info | regression | `InfoDataset` | `label_field` | same, float-parsed |
+
+`DatasetDispatchError.kind` ∈ `{schema, bad_target_def, missing_event, missing_misc, missing_info}`. Reconcile and detect both reuse the dry-run path to prove a Task block is dispatchable before accepting it.
+
+### HDF5 v2.1 schema (`Script/eegunity/utils/h5.py`)
+
+```
+/
+├─ attrs: version="2.1", sfreq, ch_names, n_channels, n_times,
+│         label_map, n_epochs_total,
+│         info_fields (JSON list[str]; v2.1)
+├─ data (N, C, T) float32
+├─ epoch_meta/{source_group, event_code}
+├─ misc_meta/                           (v2.1, optional)
+│  ├─ <misc_name> (N,) float32
+│  └─ attrs.names
+└─ source_meta/<group>/
+   └─ attrs: file_path, age, gender, amplifier, cap, handedness,
+             <any participants.tsv column captured by the kernel>
+   └─ info (uint8): pickled mne.Info bytes
+```
+
+v2.0 files (pre-`misc_meta`, pre-`info_fields` root attr) are still readable by `EventDataset`.
 
 ---
 
 ## `detect.py` — Semantic Rule Checker
 
-`detect.py` validates `analysis.md` and the kernel file against rules defined in `rulebook/semantic_rules.yaml`. It can be used standalone or imported by `app/server.py` for in-app validation.
+Validates `analysis.md` and the kernel file against `rulebook/semantic_rules.yaml`. Standalone CLI or imported by `app/server.py`.
 
 ### How it works
 
-1. **Load rules** — parses `semantic_rules.yaml` into a dict of rule metadata (id, description, severity, type).
-2. **Cross-checks** — ~26 Python functions registered via `@_cc` decorator implement the actual checks. Each function receives `analysis_text` and optional `kernel_text`, `dataset_name`.
-3. **YAML rule checks** — simple pattern/absence checks defined purely in YAML (no Python code needed).
-4. **Severity levels** — `error`, `warning`, `info`. CLI `--severity` filters output.
+1. **Load rules** — parses `semantic_rules.yaml` into rule metadata.
+2. **Cross-checks** — 29 Python functions registered via `@_cc` decorator. Each receives `analysis_text` + optional `kernel_text`, `dataset_name`.
+3. **YAML rule checks** — simple pattern/absence checks defined entirely in YAML.
+4. **Severity** — `error`, `warning`, `info`. CLI `--severity` filters.
 
-### In-memory API (for app/server.py)
+### In-memory API
 
 ```python
 from eeg_kernel_agent import detect
-
-rules = detect.load_rules()                      # load and cache rulebook
-result = detect.check_analysis_text(
+rules = detect.load_rules()
+violations = detect.check_analysis_text(
     analysis_text=content,
-    dataset_name="openneuro_ds001784",
+    dataset_name="openneuro_ds005505",
     kernel_text=None,
-    severity_filter=None,                        # or "error"
+    severity_filter=None,
     rules=rules,
 )
-# result: list of {"rule_id": ..., "severity": ..., "message": ...}
 ```
 
-### Key cross-checks implemented
+### Key cross-checks
 
-| Rule ID | Description |
-|---------|-------------|
-| `label_field_required_for_nonevent` | Label Field is required when Label Route ∈ {misc, info} |
-| `label_field_absent_for_event` | Label Field must be absent when Label Route = event |
-| `misc_classification_forbidden` | misc route is regression-only |
-| `classification_task_has_multiple_classes` | classification needs ≥2 distinct y values in Target Definition |
-| `segmentation_requires_empty_target_events` | segmentation epoch method → target_events = [] |
-| `epoch_parameters_complete` | Each task's Epoch Parameters must contain all required keys for its Epoch Method (see table below) |
-| `target_def_schema_matches_route` | Target Definition table header must match Route × Task Type |
-| `manual_review_blank` | Manual Review field must be left blank |
+| Rule ID | Severity | Description |
+|---------|----------|-------------|
+| `label_field_required_for_nonevent` | error | Label Field required when Route ∈ {misc, info} |
+| `label_field_absent_for_event` | error | Label Field absent when Route = event |
+| `misc_classification_forbidden` | error | misc route is regression-only |
+| `classification_task_has_multiple_classes` | error | classification needs ≥2 distinct y |
+| `segmentation_requires_empty_target_events` | error | segmentation ⇒ `target_events=[]` |
+| `epoch_parameters_complete` | error | Epoch Parameters must list required keys (see below) |
+| `target_def_schema_matches_route` | error | TD header must match Route × Task Type |
+| `info_label_field_in_participants` | error | info-route Label Field must be a column in `participants.tsv` (authoritative) |
+| `misc_label_field_has_misc_channel` | error | misc-route Label Field must be declared in `kernel_requirements` (native or derived) |
+| `task_dataset_dispatchable` | error | Every Task must dispatch via `build_dataset_from_task(dry_run=True)` |
+| `info_label_field_in_info_section` | warning | Label Field should also appear in `### Info` (downgraded; the authoritative check is against participants.tsv) |
+| `manual_review_blank` | warning | Manual Review field must be blank in generated docs |
 
 **Minimum Epoch Parameters keys by method:**
 
@@ -205,37 +291,37 @@ result = detect.check_analysis_text(
 
 ## `scan_engine.py` — EEGUnity Scan Core
 
-Handles the low-level EEG data scanning used in Phases 3.5 and 6:
+Used in Phases 3.5 and 6:
 
-- **Machine identity** — stable UUID derived from hardware fingerprint, cached in `locator_cache/`.
-- **Locator cache** — maps dataset names to data file paths so scans do not require re-discovery.
+- **Machine identity** — stable UUID from hardware fingerprint, cached per-machine.
+- **Locator cache** (`locator_cache/<machine_id>/`) — dataset name → data file list, avoids re-discovery on subsequent scans.
 - **EEGUnity integration** — spawns the EEGUnity scan subprocess, captures structured results (event counts, channel names, participant info).
-- **HDF5 output** — manages the scan output HDF5 files written to the BIDS dataset directory.
+- **Dual-config loader** — machine config + `app/config.json` (main app config is a fallback for LLM fields only).
+
+---
+
+## `llm_adapter.py` — Dual-provider LLM Adapter
+
+- `resolve_llm_config(cfg)` → normalises OpenAI-compatible (`BASE_URL`) vs Anthropic (`ANTHROPIC_BASE_URL`) into a single provider-selected dict.
+- `call_llm_text(...)` / `post_llm_json(...)` / `extract_text_from_response(...)` — provider-agnostic wrappers used by every pipeline stage.
 
 ---
 
 ## `tools/migrate_to_v3.py` — Schema Migration
 
-Non-LLM rule-based rewriter that upgrades pre-v3 `analysis.md` files to the v3 Task schema:
+Non-LLM rule-based rewriter: pre-v3 `analysis.md` → v3 Task schema.
 
-1. Adds `**Label Field**:` bullet when Label Route ∈ {misc, info}.
-2. Rewrites Target Definition table headers to match Route × Task Type matrix.
+1. Adds `**Label Field**:` bullet when Route ∈ {misc, info}.
+2. Rewrites Target Definition headers to match Route × Task Type.
 3. Splits tasks with multiple first-column values into N separate tasks.
 4. Marks single-class classifications with `<!-- MIGRATION: ... -->` review comments.
-5. Normalizes `**Manual Review**:` to blank.
-6. Inserts `### MISC Label Summary` block when any task uses misc route.
+5. Normalises `**Manual Review**:` to blank.
+6. Inserts `### MISC Label Summary` when any task uses misc route.
 7. Renames `**Kernel Notes**:` → `**Notes**:` at the Task level.
 
-For batch migration of Status=Completed datasets, see `Script/migrate_completed_to_v3.py`.
-
 ```bash
-# Dry-run (print diff, no writes)
 python -m eeg_kernel_agent.tools.migrate_to_v3 openneuro_ds001784 --dry-run
-
-# Apply to one dataset
 python -m eeg_kernel_agent.tools.migrate_to_v3 openneuro_ds001784
-
-# Apply to all datasets
 python -m eeg_kernel_agent.tools.migrate_to_v3 --all
 ```
 
@@ -243,41 +329,33 @@ python -m eeg_kernel_agent.tools.migrate_to_v3 --all
 
 ## `rulebook/semantic_rules.yaml`
 
-Defines every semantic rule checked by `detect.py`. Two types:
+Every semantic rule is defined here. Types:
 
-- **cross_check** — rule has a matching Python function in `detect.py` (identified by `id` matching the function name).
-- **pattern / absence** — rule is fully defined in YAML via a regex pattern or a required-string check.
+- **cross_check** — paired with a Python function in `detect.py` (matched by `function:` key).
+- **pattern / section_exists / field_value** — fully defined in YAML, no Python needed.
 
-Each rule entry has: `id`, `description`, `severity` (`error`/`warning`/`info`), `type`.
+Each rule entry has `id`, `desc`, `severity` (`error`/`warning`), and `check` type.
 
 ---
 
 ## `kernels/`
 
-One Python file per dataset, generated by the kernel build loop. Each kernel defines how to load and preprocess the raw EEG data into HDF5 format for the EEGUnity scanner. Kernels are named `<dataset>.py` (e.g., `openneuro_ds001784.py`).
+One Python file per dataset generated by the kernel build loop. Each kernel defines `apply(self, udataset, raw, row) -> mne.io.BaseRaw` with EXACT signature. The hardened static validator rejects kernels that miss any `kernel_requirements` name or don't dynamically write `raw.info["description"] = json.dumps(...)`.
 
 ---
 
 ## `progress/`
 
-JSON checkpoint files (`<dataset>.json`) written after each pipeline phase. Fields include `phase` (last completed phase name), `budget_used`, `budget_breakdown`, and phase-specific output data. Delete or use `--fresh` to restart.
+JSON checkpoint per dataset. Fields: `phase` (last completed phase), `budget_used`, `budget_breakdown`, and phase-specific output (`ref_extractions`, `pre_scan_result`, `event_annotations`, `tasks_section`, `kernel_requirements`, `scan_result`, `kernel_ok`, `status`, …). Delete or use `--fresh` to restart. Edit `phase` manually to rewind (e.g. set `phase="task_synthesis"` + `kernel_ok=false` to re-enter kernel_loop without rescanning).
 
 ---
 
 ## `machine_config/`
 
-One JSON file per machine. Auto-detected at runtime (uses the alphabetically last file if multiple exist). Must contain at minimum:
-
-```json
-{
-  "api_key": "...",
-  "model": "claude-opus-4-7",
-  "data_root": "/absolute/path/to/datasets"
-}
-```
+One JSON per machine, auto-detected at runtime (alphabetically last if multiple exist). See `Quick Start → Prerequisites` above for the full schema.
 
 ---
 
 ## `upgrade.py`
 
-Placeholder — not yet implemented. Intended for incremental updates to existing kernels or analysis.md without a full re-run. Currently exits immediately with an informational message; use `generate.py --fresh` in the meantime.
+Placeholder — exits with an informational message. Use `generate.py --fresh` (or the progress-rewind trick above) in the meantime.
