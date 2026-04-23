@@ -655,6 +655,62 @@ def classification_task_has_multiple_classes(analysis_text: str, **_) -> tuple[b
 
 
 @_cc
+def classification_y_zero_indexed_sequential(analysis_text: str, **_) -> tuple[bool, str]:
+    """Classification tasks: distinct y values must be exactly {0, 1, ..., N-1}.
+
+    Applies to event classification (col 'y') and info classification (col 'y').
+    Many-to-one mapping is allowed (multiple Event IDs / Info values → same y).
+    Rejects: string y labels, gapped y (e.g. {0, 2}), 1-based y (e.g. {1, 2}).
+    """
+    tasks_text = _extract_section(analysis_text, "Tasks")
+    if not tasks_text:
+        return False, ""
+    bad: list[str] = []
+    for block in _split_task_blocks(tasks_text):
+        if _task_field(block, "Task Type").lower() != "classification":
+            continue
+        route = _task_field(block, "Label Route").lower()
+        header, body = _task_target_def_table(block)
+        if not header or not body:
+            continue
+        normalized = _normalize_td_header(header)
+        if "y" in normalized:
+            y_idx = normalized.index("y")
+        elif route == "event":
+            y_idx = 1
+        elif route == "info":
+            y_idx = 2
+        else:
+            continue
+        y_ints: set[int] = set()
+        non_int: list[str] = []
+        for row in body:
+            if y_idx >= len(row):
+                continue
+            raw = row[y_idx].strip("`").strip()
+            if not raw:
+                continue
+            try:
+                y_ints.add(int(raw))
+            except (ValueError, TypeError):
+                non_int.append(raw)
+        if non_int:
+            bad.append(f"{_task_title(block)}: non-int y values {non_int}")
+            continue
+        if not y_ints:
+            continue
+        expected = set(range(len(y_ints)))
+        if y_ints != expected:
+            bad.append(
+                f"{_task_title(block)}: y={sorted(y_ints)} != expected 0..{len(y_ints)-1} "
+                f"(y must be 0-based sequential; many-to-one merges OK but no gaps or offset)"
+            )
+    if bad:
+        return True, "; ".join(bad)
+    return False, ""
+
+
+@_cc
 def derived_misc_requires_super_meta(analysis_text: str, **_) -> tuple[bool, str]:
     """Route=misc task whose Label Field is not a native misc channel ⇒ Meta Level=super."""
     tasks_text = _extract_section(analysis_text, "Tasks")

@@ -12,7 +12,7 @@ from .budget import Budget, BudgetExhausted
 from .context_builder import build_context
 from .doc_writer import generate_analysis_md, merge_and_write, write_failed_analysis
 from .event_annotator import annotate_events
-from .kernel_builder import build_kernel, install_kernel
+from .kernel_builder import build_kernel, install_kernel, patch_kernel_for_events
 try:
     from ..llm_adapter import extract_text_from_response, post_llm_json, resolve_llm_config
 except (ImportError, ValueError):
@@ -361,6 +361,16 @@ class Pipeline:
                     self._num_workers,
                     self.log,
                 )
+                # Post-scan safety net (Change #1c): if event_counts is empty AND tasks
+                # require event IDs, make ONE more LLM patch attempt before reconcile.
+                scan_result = self._maybe_recover_empty_events(
+                    scan_result,
+                    kernel_requirements or {},
+                    kernel_path_for_scan,
+                    context,
+                )
+                # If recovery installed a new kernel, kernel_path_for_scan may have changed
+                kernel_path_for_scan = scan_result.pop("_recovered_kernel_path", kernel_path_for_scan)
                 scan_for_progress = {k: v for k, v in scan_result.items() if k != "df"}
                 self._save("reconcile", scan_result=scan_for_progress,
                            installed_kernel_path=kernel_path_for_scan)
@@ -498,6 +508,78 @@ class Pipeline:
                 if candidate.is_dir():
                     return str(candidate)
         return ""
+
+    def _maybe_recover_empty_events(
+        self,
+        scan_result: Dict[str, Any],
+        kernel_requirements: Dict[str, Any],
+        kernel_path_for_scan: str,
+        context: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Post-scan safety net: one-shot LLM patch + rescan when event_counts is empty.
+
+        Fires only when the downstream tasks actually require event IDs; otherwise a
+        legitimately silent dataset is left alone. Returns scan_result, augmented with
+        `_recovered_kernel_path` (popped by the caller) if a new kernel was installed.
+        """
+        ev = scan_result.get("event_counts") or {}
+        required_ids = kernel_requirements.get("required_event_ids") or []
+        if ev or not required_ids:
+            return scan_result
+        data_dir = self._find_data_dir()
+        if not data_dir:
+            return scan_result
+        ds_dir = Path(data_dir)
+        # Reuse the kernel_builder's sample-picker for consistent coverage.
+        try:
+            from .kernel_builder import _pick_sample_files
+            sample_files = _pick_sample_files(ds_dir)
+        except Exception:
+            sample_files = []
+        if not sample_files:
+            return scan_result
+        self.log(
+            f"[Pipeline] event_counts empty post-scan; required_event_ids={required_ids[:5]}"
+            f"{'...' if len(required_ids) > 5 else ''} — attempting one kernel patch."
+        )
+        current_code = self._load_installed_kernel_code(kernel_path_for_scan)
+        if not current_code:
+            return scan_result
+        events_numeric_columns = (context.get("bids_sidecars") or {}).get("events_numeric_columns") or {}
+        try:
+            patched = patch_kernel_for_events(
+                current_code,
+                self.dataset_name,
+                ds_dir,
+                sample_files,
+                events_numeric_columns,
+                required_ids,
+                self.call_llm,
+                self.budget,
+                self.log,
+            )
+        except Exception as exc:
+            self.log(f"[Pipeline] event recovery patch failed: {exc}")
+            return scan_result
+        if not patched:
+            return scan_result
+        # Install + rescan
+        installed = install_kernel(patched, self.dataset_name, self.log)
+        new_scan = run_scan(
+            self.dataset_name,
+            str(installed),
+            self._dataset_roots,
+            self._eegunity_path,
+            self._num_workers,
+            self.log,
+        )
+        new_ev = new_scan.get("event_counts") or {}
+        if not new_ev:
+            self.log("[Pipeline] event recovery: still empty after rescan; proceeding (reconcile will drop event tasks)")
+        else:
+            self.log(f"[Pipeline] event recovery: rescan now sees {len(new_ev)} event types")
+        new_scan["_recovered_kernel_path"] = str(installed)
+        return new_scan
 
     def _write_partial_output(self, context, scan_result, tasks_section):
         """Best-effort partial output when budget is exhausted."""

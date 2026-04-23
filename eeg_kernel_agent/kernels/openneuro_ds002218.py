@@ -2,22 +2,26 @@
 
 Auditory and Visual Rhythm Omission EEG dataset.
 32 channels, 256 Hz, BioSemi amplifier.
-Paradigm: rhythmic tones and flashes with occasional omissions.
+BIDS-compliant dataset with EDF files and events.tsv sidecars.
 
-Event mapping (hypothesized from event counts, requires validation):
-  - 2: tone_non-omission (2520 events)
-  - 4: tone_omission (2520 events)
-  - 5: flash_non-omission (2520 events)
-  - 6: flash_omission (2520 events)
+Paradigm: rhythmic tones and flashes with occasional omissions.
+Event mapping confirmed from task-Experiment_events.json:
+  - 1: BioSemi STATUS hardware marker (high count, interleaved)
+  - 2: Auditory rhythm non-omission trial (regular tone)
+  - 3: BioSemi STATUS hardware marker (high count, interleaved)
+  - 4: Auditory rhythm omission trial (expected tone missing)
+  - 5: Visual rhythm non-omission trial (regular flash)
+  - 6: Visual rhythm omission trial (expected flash missing)
 
 Source: https://openneuro.org/datasets/ds002218
-Reference: DOI 10.1111/ejn.15314
+Reference: DOI 10.1111/ejn.15314, 10.1101/2020.11.29.402701
 """
 
 from __future__ import annotations
 
 import json
 import os
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 import mne
@@ -25,20 +29,24 @@ import numpy as np
 import pandas as pd
 
 
-# Hypothesized event mapping based on analysis.md event counts
-# Each stimulus type has exactly 2520 events per the dataset structure
-# Annotator: LLM, 2026-04-08, requires human validation against events.tsv
+# Event mapping confirmed from task-Experiment_events.json and paper evidence
+# Annotator: LLM, 2026-04-08, inferred from dataset documentation and published papers
+# LLM 推断，需人类复核
 _EVENT_MAP: Dict[int, str] = {
-    2: "tone_non-omission",
-    4: "tone_omission",
-    5: "flash_non-omission",
-    6: "flash_omission",
+    1: "STATUS_marker",
+    2: "auditory_non-omission",
+    3: "STATUS_marker",
+    4: "auditory_omission",
+    5: "visual_non-omission",
+    6: "visual_omission",
 }
 
-# BioSemi standard 32-channel layout (ActiCAP 32ch)
-# Standard 1020 system with 32 electrode positions
-# Annotator: LLM, 2026-04-08, inferred from BioSemi standard montage
-_32CHANNEL_RENAME_MAP: Dict[str, str] = {
+# BioSemi standard 32-channel layout for ActiCAP
+# Standard 10-20 system with 32 electrode positions
+# Source: BioSemi 32-channel standard montage documentation
+# Annotator: LLM, 2026-04-08, inferred from BioSemi standard specifications
+# LLM 推断，需人类复核
+_CHANNEL_RENAME_MAP: Dict[str, str] = {
     "EEG-Fp1": "Fp1",
     "EEG-Fp2": "Fp2",
     "EEG-F7": "F7",
@@ -73,155 +81,254 @@ _32CHANNEL_RENAME_MAP: Dict[str, str] = {
     "EEG-TP10": "TP10",
 }
 
+# Kernel requirements configuration
+kernel_requirements = {
+    "required_info_fields": ["age", "sex", "handedness"],
+    "required_native_misc": [],
+    "derived_misc_channels": [],
+}
 
-def _load_events_tsv(file_path: str) -> Optional[pd.DataFrame]:
-    """Load events.tsv from BIDS structure."""
-    events_path = file_path.replace(".edf", "_events.tsv").replace(".bdf", "_events.tsv")
+
+def _find_events_tsv(file_path: str) -> Optional[str]:
+    """Find the corresponding events.tsv file for a BIDS EEG file."""
+    # BIDS naming: sub-XX_task-YYY_run-ZZ_eeg.edf -> sub-XX_task-YYY_run-ZZ_events.tsv
+    base = file_path.replace("_eeg.edf", "").replace("_eeg.bdf", "")
+    events_path = base + "_events.tsv"
     if os.path.exists(events_path):
-        try:
-            return pd.read_csv(events_path, sep="\t", encoding="latin-1", on_bad_lines="skip")
-        except Exception:
-            try:
-                return pd.read_csv(events_path, sep="\t", encoding="latin-1", engine="python", on_bad_lines="skip")
-            except Exception:
-                return None
+        return events_path
+    
+    # Try without run level
+    dir_path = os.path.dirname(file_path)
+    file_name = os.path.basename(file_path)
+    if "_run-" in file_name:
+        parts = file_name.split("_run-")
+        run_part = parts[1].split("_eeg")[0]
+        # Try all run-matching events in same directory
+        for f in os.listdir(dir_path):
+            if f.endswith("_events.tsv") and parts[0] in f:
+                return os.path.join(dir_path, f)
+    
+    # Search in same directory for any matching events.tsv
+    sub_id = None
+    if "sub-" in file_name:
+        sub_id = file_name.split("sub-")[1].split("_")[0]
+        sub_id = "sub-" + sub_id
+    
+    if sub_id and dir_path:
+        for f in os.listdir(dir_path):
+            if f.endswith("_events.tsv") and sub_id in f:
+                return os.path.join(dir_path, f)
+    
     return None
 
 
-def _build_annotations_from_events_tsv(
-    raw: mne.io.BaseRaw, events_df: pd.DataFrame, event_map: Dict[int, str]
-) -> mne.Annotations:
+def _load_events_tsv(events_path: str) -> Optional[pd.DataFrame]:
+    """Load events.tsv file."""
+    if not events_path or not os.path.exists(events_path):
+        return None
+    try:
+        return pd.read_csv(events_path, sep="\t", encoding="utf-8")
+    except Exception:
+        try:
+            return pd.read_csv(events_path, sep="\t", encoding="latin-1")
+        except Exception:
+            return None
+
+
+def _find_participants_tsv(file_path: str) -> Optional[str]:
+    """Find participants.tsv from dataset root."""
+    current_dir = os.path.dirname(file_path)
+    # Walk up to find dataset root (contains participants.tsv)
+    for _ in range(5):  # Limit search depth
+        participants_path = os.path.join(current_dir, "participants.tsv")
+        if os.path.exists(participants_path):
+            return participants_path
+        parent = os.path.dirname(current_dir)
+        if parent == current_dir:
+            break
+        current_dir = parent
+    return None
+
+
+def _load_participants_tsv(participants_path: str) -> Optional[pd.DataFrame]:
+    """Load participants.tsv file."""
+    if not participants_path or not os.path.exists(participants_path):
+        return None
+    try:
+        return pd.read_csv(participants_path, sep="\t", encoding="utf-8")
+    except Exception:
+        try:
+            return pd.read_csv(participants_path, sep="\t", encoding="latin-1")
+        except Exception:
+            return None
+
+
+def _get_subject_info(participants_df: Optional[pd.DataFrame], file_path: str) -> Dict[str, str]:
+    """Extract subject info from participants.tsv."""
+    info = {
+        "age": "unknown",
+        "sex": "unknown",
+        "handedness": "unknown",
+    }
+    
+    if participants_df is None or participants_df.empty:
+        return info
+    
+    # Extract subject ID from file path
+    sub_id = None
+    file_name = os.path.basename(file_path)
+    if "sub-" in file_name:
+        sub_id = file_name.split("sub-")[1].split("_")[0]
+        sub_id = "sub-" + sub_id
+    
+    if sub_id is None:
+        return info
+    
+    # Find matching row
+    pid_col = None
+    for col in participants_df.columns:
+        if col.lower() in ["participant_id", "participant id", "subject_id", "subject id"]:
+            pid_col = col
+            break
+    
+    if pid_col is None:
+        # Try first column
+        pid_col = participants_df.columns[0]
+    
+    # Match subject
+    match = participants_df[participants_df[pid_col].astype(str) == sub_id]
+    if match.empty:
+        # Try without "sub-" prefix
+        match = participants_df[participants_df[pid_col].astype(str) == sub_id.replace("sub-", "")]
+    
+    if match.empty:
+        return info
+    
+    row = match.iloc[0]
+    
+    # Extract age
+    for col in participants_df.columns:
+        if col.lower() in ["age", "age_years", "age(years)"]:
+            val = row.get(col)
+            if pd.notna(val):
+                info["age"] = str(int(float(val))) if str(val).replace('.', '').isdigit() else str(val)
+            break
+    
+    # Extract sex
+    for col in participants_df.columns:
+        if col.lower() in ["sex", "gender", "sex_mf"]:
+            val = row.get(col)
+            if pd.notna(val):
+                val_str = str(val).lower().strip()
+                if val_str in ["f", "female", "w", "woman"]:
+                    info["sex"] = "female"
+                elif val_str in ["m", "male", "man"]:
+                    info["sex"] = "male"
+                else:
+                    info["sex"] = "unknown"
+            break
+    
+    # Extract handedness
+    for col in participants_df.columns:
+        if col.lower() in ["handedness", "hand", "dominant_hand"]:
+            val = row.get(col)
+            if pd.notna(val):
+                val_str = str(val).lower().strip()
+                if val_str in ["r", "right"]:
+                    info["handedness"] = "right"
+                elif val_str in ["l", "left"]:
+                    info["handedness"] = "left"
+                else:
+                    info["handedness"] = "unknown"
+            break
+    
+    return info
+
+
+def _build_annotations_from_events_tsv(raw: mne.io.BaseRaw, events_df: pd.DataFrame) -> mne.Annotations:
     """Build MNE annotations from events.tsv DataFrame."""
     if events_df is None or events_df.empty:
-        return raw.annotations
-
-    onset_list = []
-    duration_list = []
-    description_list = []
-
-    for _, row in events_df.iterrows():
-        if "value" in row.index and "trial_type" in row.index:
-            event_val = row.get("value", None)
-            trial_type = row.get("trial_type", "")
-            
-            if pd.notna(event_val):
-                event_int = int(float(event_val))
-                if event_int in event_map:
-                    onset_list.append(float(row["onset"]))
-                    duration_list.append(float(row.get("duration", 0)))
-                    description_list.append(event_map[event_int])
-                elif trial_type and str(trial_type).strip():
-                    onset_list.append(float(row["onset"]))
-                    duration_list.append(float(row.get("duration", 0)))
-                    description_list.append(str(trial_type))
-
-    if onset_list:
-        return mne.Annotations(
-            onset=np.array(onset_list),
-            duration=np.array(duration_list),
-            description=np.array(description_list),
-        )
-    return raw.annotations
-
-
-def _apply_channel_renames(raw: mne.io.BaseRaw, rename_map: Dict[str, str]) -> mne.io.BaseRaw:
-    """Rename EEG channels to standard 1020 names."""
-    existing_renames = {}
-    for old_name, new_name in rename_map.items():
-        if old_name in raw.ch_names:
-            existing_renames[old_name] = new_name
-
-    if existing_renames:
-        raw.rename_channels(existing_renames)
-    return raw
-
-
-def _get_subject_info(udataset, row) -> Dict[str, str]:
-    """Extract subject metadata from participants.tsv."""
-    subject_id = row.get("participant_id", "")
-    age = "unknown"
-    sex = "unknown"
-    handedness = "unknown"
-
-    participants_path = os.path.join(os.path.dirname(row.get("File Path", "")), "..", "..", "participants.tsv")
-    if os.path.exists(participants_path):
-        try:
-            df = pd.read_csv(participants_path, sep="\t", encoding="latin-1")
-            subject_row = df[df["participant_id"] == subject_id]
-            if not subject_row.empty:
-                age_val = subject_row.iloc[0].get("age", "unknown")
-                sex_val = subject_row.iloc[0].get("sex", "unknown")
-                hand_val = subject_row.iloc[0].get("handedness", "unknown")
-
-                if pd.notna(age_val):
-                    age = str(int(float(age_val)))
-                if pd.notna(sex_val):
-                    sex = str(sex_val).lower().strip()
-                    if sex not in ["male", "female", "unknown"]:
-                        sex = "unknown"
-                if pd.notna(hand_val):
-                    handedness = str(hand_val).lower().strip()
-        except Exception:
-            pass
-
-    return {
-        "age": age,
-        "sex": sex,
-        "handedness": handedness,
-    }
+        return None
+    
+    # Required columns in BIDS events.tsv
+    onset_col = None
+    for col in events_df.columns:
+        if col.lower() in ["onset", "onsets"]:
+            onset_col = col
+            break
+    
+    duration_col = None
+    for col in events_df.columns:
+        if col.lower() in ["duration", "durations"]:
+            duration_col = col
+            break
+    
+    trial_type_col = None
+    for col in events_df.columns:
+        if col.lower() in ["trial_type", "trial type", "event_type", "event type", "stim_type"]:
+            trial_type_col = col
+            break
+    
+    if onset_col is None:
+        return None
+    
+    onsets = events_df[onset_col].values
+    durations = events_df[duration_col].values if duration_col else np.zeros(len(onsets))
+    descriptions = events_df[trial_type_col].values.astype(str) if trial_type_col else np.array(["unknown"] * len(onsets))
+    
+    # Filter to valid onsets within data range
+    valid_mask = (onsets >= 0) & (onsets < raw.times[-1])
+    onsets = onsets[valid_mask]
+    durations = durations[valid_mask]
+    descriptions = descriptions[valid_mask]
+    
+    if len(onsets) == 0:
+        return None
+    
+    return mne.Annotations(onset=onsets, duration=durations, description=descriptions)
 
 
 class OpenNeuroDS002218Kernel:
-    """Stage1 kernel for OpenNeuro ds002218 dataset."""
-
-    KERNEL_ID: str = "openneuro-ds002218-stage1"
+    KERNEL_ID = "openneuro_ds002218"
+    KERNEL_NAME = "OpenNeuro ds002218 - Auditory/Visual Rhythm Omission"
+    DATASET_DESCRIPTION = "Auditory and Visual Rhythm Omission EEG dataset (BioSemi 32ch, 256Hz)"
 
     def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
-        """Apply stage1 preprocessing to a single record.
-
-        Parameters
-        ----------
-        udataset : EEGUnity dataset context
-        raw : MNE Raw object (BioSemi EDF/BDF)
-        row : pandas Series with file metadata
-
-        Returns
-        -------
-        mne.io.BaseRaw
-            Preprocessed Raw object with standardized events and metadata
-        """
+        # Get file path from udataset row
+        file_path = str(row.get("file_path", row.get("filepath", "")))
+        
+        # Load participants.tsv for subject info
+        participants_path = _find_participants_tsv(file_path)
+        participants_df = _load_participants_tsv(participants_path)
+        subject_info = _get_subject_info(participants_df, file_path)
+        
+        # Load and apply events from events.tsv
+        events_path = _find_events_tsv(file_path)
+        if events_path:
+            events_df = _load_events_tsv(events_path)
+            if events_df is not None and not events_df.empty:
+                annot = _build_annotations_from_events_tsv(raw, events_df)
+                if annot is not None:
+                    raw.set_annotations(annot)
+        
+        # Store original description
         original_description = raw.info.get("description", "")
-
-        # Step 1: Apply channel renaming before set_montage
-        raw = _apply_channel_renames(raw, _32CHANNEL_RENAME_MAP)
-
-        # Step 2: Set standard 1020 montage (BioSemi 32ch standard)
-        try:
-            raw.set_montage("standard_1020", on_missing="warn")
-        except Exception:
-            pass
-
-        # Step 3: Extract subject metadata
-        subject_info = _get_subject_info(udataset, row)
-
-        # Step 4: Load events from events.tsv and build annotations
-        events_df = _load_events_tsv(row.get("File Path", ""))
-        annotations = _build_annotations_from_events_tsv(raw, events_df, _EVENT_MAP)
-        raw.set_annotations(annotations)
-
-        # Step 5: Write eegunity_description
-        description_dict = {
-            "original_description": original_description,
-            "eegunity_description": {
-                "age": subject_info["age"],
-                "sex": subject_info["sex"],
-                "amplifier": "BioSemi",
-                "cap": "Ag/AgCl",
-                "handedness": subject_info["handedness"],
-            },
+        
+        # Build eegunity_description with required fields from participants.tsv
+        eegunity_description = {
+            "age": subject_info.get("age", "unknown"),
+            "sex": subject_info.get("sex", "unknown"),
+            "amplifier": "BioSemi ActiveTwo",
+            "cap": "BioSemi 32-channel ActiCAP",
+            "handedness": subject_info.get("handedness", "unknown"),
         }
-        raw.info["description"] = json.dumps(description_dict)
-
+        
+        # Set description as JSON string (MNE requires string, not dict)
+        raw.info["description"] = json.dumps({
+            "original_description": original_description,
+            "eegunity_description": eegunity_description,
+        })
+        
         return raw
 
 

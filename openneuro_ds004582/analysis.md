@@ -69,3 +69,7 @@ No additional scan information available.
 ---
 
 > **auto_eeg FAILED**: The dataset lacks trial-level event markers needed to epoch data by emotional condition—only hardware markers (New Segment/) are present. All reference extractions are irrelevant or uncertain, providing no alternative labeling approach. Without identifiable event/label structure, no concrete supervised ML task can be defined.
+
+---
+
+> **Pipeline FAILED**: The events.tsv shows only a single 'New Segment/' hardware marker with value=1 at time 0.0 across all files—there are no trial-level stimulus markers encoding the experimental conditions (angry/neutral primes, target faces, or participant responses). The README describes a rich 222-trial paradigm, but these condition labels are completely absent from the BIDS event files. Without any event markers mapping to the emotional arousal manipulation or realness judgments, no supervised classification or regression task can be constructed from this dataset as currently released.

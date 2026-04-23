@@ -2,23 +2,23 @@
 
 **Dataset**: `openneuro_ds001849` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds001849
 **Category**: Biological State | **Subjects**: 15 | **Files (Completed)**: 120 | **Channels**: 30 | **Sampling Rate**: 5000 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
-Resting-state EEG data recorded in conjunction with Transcranial Magnetic Stimulation (TMS). Subjects were at rest (no active task) while TMS pulses were delivered; the R128 marker in BrainVision format marks a system/response trigger present in all files but does not indicate a meaningful task event. The primary scientific interest is resting-state oscillatory dynamics and TMS-evoked potentials.
+Resting-state EEG data recorded in conjunction with Transcranial Magnetic Stimulation (TMS). Subjects were at rest with no active task while single-pulse TMS was delivered to three stimulation sites (DLPFC, M1, PPC) in both active and sham conditions. The R128 marker serves as the TMS pulse trigger for epoching; all condition labels must be derived from BIDS acquisition entities in filenames rather than event markers.
 
 ## File Scan Result
 
-> **Kernel SHA256**: `7b81a6091c86b9f1d9e9de67e1b15d497deb4a8b30611562665b6abc79aebad3`
+> **Kernel SHA256**: `2431a8f0a63df523216e52313865a716bfe9114d0b950d95fdba5d32db2fc9ba`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `admin: R128` | 11961 | event | raw |  |
-| `admin: boundary` | 135 | event | raw |  |
+| `R128` | 11961 | event | raw | TMS pulse trigger marker |
+| `boundary` | 135 | admin | raw | Data segment boundary marker |
 
 
 ### Info
@@ -30,28 +30,48 @@ Resting-state EEG data recorded in conjunction with Transcranial Magnetic Stimul
 
 ## Tasks
 
-### Classical Task 1: TMS-Evoked Potential Classification
+### Classical Task 1: TMS-evoked potential classification: active vs sham
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.05, tmax = 0.25, overlap = 0.0
+- **Epoch Parameters**: tmin = -0.1 s *, tmax = 0.5 s *, target_events = [`R128`]
 - **Label Route**: `event`
-- **Meta Level**: `raw`
+- **Meta Level**: raw
 - **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `R128` (active conditions: dlpfcactive, m1active, ppcactive) | 0 | Active TMS stimulation |
+  | `R128` (sham conditions: dlpfcsham, m1sham, ppcsham) | 1 | Sham TMS stimulation |
+- **Evidence**:
+  - 10.1371/journal.pone.0216185 — The reference paper explicitly uses this dataset to classify TMS-evoked EEG potentials as site-specific neural responses versus artifacts, comparing active vs sham TMS conditions across three stimulation sites (DLPFC, M1, PPC). Classification is 2-class (active vs sham) with analysis focused on post-stimulus time windows, particularly components before ~80ms considered site-specific.
+- **Notes**: The condition label (active vs sham) must be derived from the BIDS acquisition filename (e.g., `acq-dlpfcactive` vs `acq-dlpfcsham`) since no explicit condition labels exist in the events data. All `R128` events within a given file share the same condition label. The three active conditions (DLPFC, M1, PPC) are merged to y=0 and three sham conditions are merged to y=1, as the core classification is active vs sham TMS effect rather than site-specific classification.
 
-| Event | y | Meaning |
-|---|---|---|
-| R128 | active | TMS pulse with active stimulation |
-| R128 | sham | TMS pulse with sham stimulation |
-
-- **Evidence**: DOI: 10.1371/journal.pone.0216185
-- **Kernel Notes**: R128 is classified as a BrainVision administrative marker in this dataset's event structure. However, TMS pulses were delivered during recording (per paradigm description), and the cited reference confirms this dataset was used for site-specific TMS-EEG analysis (DLPFC, M1, PPC) with active vs. sham conditions. Verify that R128 aligns with TMS delivery timing; if not, TMS pulse timestamps may need extraction from separate metadata files. High sampling rate (5000 Hz) requires downsampling before analysis. TMS artifact rejection may be needed for the ~50 ms post-pulse window.
-
-### Normal Task 1: Resting-State Continuous Segmentation
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
+### Classical Task 2: TMS-evoked potential classification: 6-class site x condition
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.1 s *, tmax = 0.5 s *, target_events = [`R128`]
 - **Label Route**: `event`
-- **Target Definition**: N/A (null — no task events; R128 is admin)
-- **Meta Level**: `raw`
-- **Evidence**: DOI: 10.1371/journal.pone.0216185 (resting-state oscillatory dynamics mentioned in context of TMS-EEG analysis)
-- **Kernel Notes**: R128 appears in all 120 files (~100 occurrences per file) and is a BrainVision recording artifact marker — not a stimulus or response event. Since no genuine task events exist, epochs should be created by segmenting the continuous resting-state recording. High sampling rate (5000 Hz) may require downsampling for computational efficiency. Verify 30-channel consistency across subjects before pooling.
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `dlpfcactive` | 0 | DLPFC active stimulation |
+  | `dlpfcsham` | 1 | DLPFC sham stimulation |
+  | `m1active` | 2 | M1 active stimulation |
+  | `m1sham` | 3 | M1 sham stimulation |
+  | `ppcactive` | 4 | PPC active stimulation |
+  | `ppcsham` | 5 | PPC sham stimulation |
+- **Evidence**:
+  - 10.1371/journal.pone.0216185 — Freedberg et al. (2020) analyzes three stimulation sites (DLPFC, M1, PPC) each with active and sham conditions, yielding 6 distinct acquisition conditions. The paper's cosine similarity analysis compares across all site-condition combinations.
+- **Notes**: Labels are derived from the BIDS `acq-` entity in filenames (e.g., `acq-dlpfcactive`), not from event markers. The `R128` event serves as the pulse trigger for epoching; the 6-class structure represents the full factorial design of site (DLPFC/M1/PPC) × condition (active/sham). This task requires the kernel to map each `R128` epoch to its corresponding acquisition condition based on the source file's BIDS entities. The 2-class active-vs-sham version is Task 1; this 6-class version captures the full experimental design as analyzed in the paper's cosine similarity comparisons.
+
+## Data Quality Notes
+
+- Very high sampling rate of 5000 Hz may require downsampling for efficient processing.
+- Subject age, sex, and device metadata are completely missing from the dataset.
+- Condition labels (active/sham and stimulation site) are not present in event data and must be parsed from BIDS filename entities.
+- All `R128` events within a single file share the same condition, requiring file-level label assignment rather than event-level labeling.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_kernel_update

@@ -2,7 +2,7 @@
 
 **Dataset**: `openneuro_ds004367` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004367
 **Category**: High-level Mental | **Subjects**: 42 | **Files (Completed)**: 40 | **Channels**: 68 | **Sampling Rate**: 1200 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
@@ -10,7 +10,7 @@ A visual motion discrimination task involving left/right direction decisions on 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `fd3a406f83993e897bdf96fc13992ab48abb39a55c04c33855d983f9b9234a21`
+> **Kernel SHA256**: `d89b05628847049682560ac8a7ac64ce492a8d1b6c4c74a813f598c6943268a0`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
@@ -29,85 +29,91 @@ A visual motion discrimination task involving left/right direction decisions on 
 
 ## Tasks
 
-### Classical Task 1: Motion Direction Classification (RDK)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [3072, 3456, 3584, 3968, 4096, 4480]
-- **Label Route**: `Annotation`
+### Potential Task 1: Age Regression
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.0, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `Age`
 - **Meta Level**: raw
 - **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | Age | 19–60 (years) | Continuous age in years from participants.tsv; subject-level label applied to all segments |
+- **Evidence**:
+  - participants.tsv — Age column complete for all 40 participants (sample values: 40, 19, 26; range 19–60)
+- **Notes**: B3 archetype using native participants.tsv info field. Segmentation approach with 2-second non-overlapping windows produces multiple samples per subject, all sharing the same age label. Standard for subject-level regression when no event structure is needed.
 
-| Event | y | Meaning |
-|---|---|---|
-| `3072` | 0 | Motion stimulus onset (direction/coherence Level 1) |
-| `3456` | 1 | Motion stimulus onset (direction/coherence Level 2) |
-| `3584` | 2 | Motion stimulus onset (direction/coherence Level 3) |
-| `3968` | 3 | Motion stimulus onset (direction/coherence Level 4) |
-| `4096` | 4 | Motion stimulus onset (direction/coherence Level 5) |
-| `4480` | 5 | Motion stimulus onset (direction/coherence Level 6) |
-
-- **Evidence**: DOI: https://doi.org/10.1101/2022.10.19.22281249; Paradigm: visual motion discrimination task with RDK stimuli requiring left/right direction decisions
-- **Kernel Notes**: Numerical trigger codes require kernel-level decoding to map raw IDs to direction/coherence labels. Keep versioned trigger decoding table for reproducibility. High-density 68-channel EEG (including EOG/ECG) may require ICA for artifact removal before classification.
-
-### Classical Task 2: Metacognitive Confidence Regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.5 s, target_events = [confi]
-- **Label Route**: `Annotation`
-- **Meta Level**: super
-- **Target Definition**:
-
-| Event | y | Meaning |
-|---|---|---|
-| `confi` | continuous | Confidence rating (0.0–1.0 visual analog scale) |
-
-- **Evidence**: DOI: https://doi.org/10.1101/2022.10.19.22281249; Paradigm: metacognitive confidence assessment using visual analog scale following RDK decisions
-- **Kernel Notes**: Confidence values are derived labels from the misc channel. Preserve derivation schema (source=misc, unit=proportion, version=1.0). Requires Type 2 kernel processing to extract and merge high-level metacognitive labels not directly in raw events.
-
-### Normal Task 1: Response-Locked Motor Potential Analysis
+### Potential Task 2: Gender Classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.3 s, tmax = 0.8 s, target_events = [left_, right]
-- **Label Route**: `Annotation`
-- **Meta Level**: super
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.0, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `Gender`
+- **Meta Level**: raw
 - **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | Gender | M | 0 | Male |
+  | Gender | F | 1 | Female |
+- **Evidence**:
+  - participants.tsv — Gender column complete for all 40 participants with values M/F (sample: S01=M, S02=M, S03=M)
+  - README — Study reports 31 male and 9 female participants total (16 males + 4 females in patient group, 15 males + 7 females in control group)
+- **Notes**: Subject-level demographic prediction task. EEG segments are extracted via non-overlapping 2-second segmentation and labeled by participant Gender from participants.tsv. Binary classification with 0-based integer labels for sklearn compatibility.
 
-| Event | y | Meaning |
-|---|---|---|
-| `left_` | 0 | Left direction response (N=11,884 trials) |
-| `right` | 1 | Right direction response (N=81 trials) |
-
-- **Evidence**: Paradigm: response markers extracted from trigger stream for motor planning assessment; Epoch alignment recommendation confirms response-locked analysis
-- **Kernel Notes**: Asymmetric trial distribution (left=11,884 vs right=81) suggests unequal condition sampling per subject. Use caution with class imbalance handling. Response markers derived from raw numerical codes require decoding.
-
-### Potential Task 1: Response Time Regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, target_events = [left_, right, confi]
-- **Label Route**: `misc`
-- **Meta Level**: super
-- **Target Definition**:
-
-| Event | y | Meaning |
-|---|---|---|
-| `left_` | continuous | Response time aligned to left response |
-| `right` | continuous | Response time aligned to right response |
-| `confi` | continuous | Confidence rating as secondary predictor |
-
-- **Evidence**: Paradigm: response_time listed as candidate MISC label; Dataset metadata supports response time extraction for RT analysis
-- **Kernel Notes**: Response time values stored in misc channel require derivation source preservation. Keep mapping schema versioned (source=stim/misc, unit=ms).
-
-### Potential Task 2: Feedback Processing Classification
+### Potential Task 3: Patient vs Control Classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [feedb]
-- **Label Route**: `Annotation`
-- **Meta Level**: super
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.0, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `Group`
+- **Meta Level**: raw
 - **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | Group | Patient | 0 | Schizophrenia spectrum disorder patient |
+  | Group | Control | 1 | Healthy control participant |
+- **Evidence**:
+  - https://doi.org/10.1038/s41537-023-00333-4 — Group variable distinguishes schizophrenia spectrum disorder patients (N=20) from healthy controls (N=22); primary clinical contrast in study design with binary classification of clinical relevance.
+- **Notes**: Segmentation-based approach for clinical group classification. Each 2-second segment inherits the participant's group label from participants.tsv. The published paper explicitly analyzes group differences in metacognition and EEG markers, supporting this contrast as a meaningful ML target. Segment length inferred from typical ERP/oscillatory analysis windows in clinical EEG studies.
 
-| Event | y | Meaning |
-|---|---|---|
-| `feedb` | binary | Feedback onset marker (correct/incorrect) |
+### Potential Task 4: Segmented RDK Task with Group Label
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `Group`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | Group | Patient | 0 | Schizophrenia spectrum disorder (schizophrenia or schizoaffective disorder) |
+  | Group | Control | 1 | Healthy control participant |
+- **Evidence**:
+  - https://doi.org/10.1038/s41537-023-00333-4 — Archetype C task using continuous EEG segmentation during RDK task performance with patient/control group as label; sliding windows capture sustained task-state differences between clinical groups.
+- **Notes**: Segmentation-based approach with no event locking. The 2-second window length and 50% overlap are inferred from the need to capture sustained oscillatory dynamics rather than transient ERPs, as group differences in this clinical paradigm are expected to manifest in ongoing task-related EEG activity rather than time-locked responses. The Group label is drawn from participants.tsv, a native info field requiring no kernel derivation.
 
-- **Evidence**: Paradigm: feedback presentation follows confidence assessment; Event counts (feedb=11,881) align with trial structure
-- **Kernel Notes**: Feedback labels require decoding of numerical trigger codes to determine correct/incorrect status. May need supplementary annotation for feedback valence.
+### Potential Task 5: Segmented RDK Task with Age Label
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `Age`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | Age | 19–60 (years) | Continuous age prediction from 2-second EEG segments during random-dot kinematogram task performance |
+- **Evidence**:
+  - participants.tsv — Age column available for all 40 subjects with range 19-60 years (complete, numeric)
+  - README — Study includes 22 healthy controls and 20 schizophrenia spectrum participants with age variation
+- **Notes**: Archetype C with native info field (Age). Segmentation-based epochs with 50% overlap to maximize data utilization for regression. Age effects on motion processing and decision-making dynamics captured in sustained EEG patterns during RDK task.
+
+## Data Quality Notes
+
+- No known data quality issues.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

@@ -2,7 +2,7 @@
 
 **Dataset**: `openneuro_ds003490` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003490
 **Category**: Sensory/Response | **Subjects**: 50 | **Files (Completed)**: 75 | **Channels**: 67 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
@@ -10,23 +10,23 @@ A three-stimulus auditory oddball task (standard tones, target tones requiring b
 
 ## File Scan Result
 
-> **Kernel SHA256**: `a66ae57b2e72950c6a8876202001fd45ad0894ebb4db219fc36faf0c041a5f64`
+> **Kernel SHA256**: `7eed99c23187737b1771b37bd447699725593af250d425a9cb95c01999b5a4d4`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `S  1` | 2280 | event | raw | Eyes Open resting block |
-| `S  2` | 2280 | event | raw | Eyes Closed resting block |
-| `S  3` | 2252 | event | raw | Resting block (sub-condition or session) |
-| `S  4` | 2254 | event | raw | Resting block (sub-condition or session) |
-| `S 85` | 1 | admin | raw | BioSemi STATUS marker - exclude |
-| `S200` | 2230 | event | raw | Standard tone (frequent non-target) |
-| `S201` | 10166 | event | raw | Target tone (requires button press, P3b) |
-| `S202` | 2229 | event | raw | Novel distractor tone (rare, P3a) |
-| `S255` | 1 | admin | raw | BioSemi STATUS marker - exclude |
-| `boundary` | 75 | event | raw | Recording boundary marker - exclude |
+| `S  1` | 2280 | event | raw | Unknown - not observed in available BIDS files; likely oddball task stimulus |
+| `S  2` | 2280 | event | raw | Unknown - not observed in available BIDS files; likely oddball task stimulus |
+| `S  3` | 2252 | event | raw | Trial phase onset: Eyes Closed (1Hz trigger marker for eyes-closed resting state) |
+| `S  4` | 2254 | event | raw | Trial phase onset: Eyes Closed (1Hz trigger marker for eyes-closed resting state, alternating with S  3) |
+| `S 85` | 1 | event | raw | Unknown - not observed in available BIDS files; likely oddball task marker |
+| `S200` | 2230 | event | raw | Unknown - not observed in available BIDS files; likely oddball task stimulus |
+| `S201` | 10166 | event | raw | Unknown - not observed in available BIDS files; likely oddball task stimulus |
+| `S202` | 2229 | event | raw | Unknown - not observed in available BIDS files; likely oddball task stimulus |
+| `S255` | 1 | event | raw | Unknown - not observed in available BIDS files; likely oddball task marker |
+| `boundary` | 75 | admin | raw | Data segment boundary marker |
 
 
 ### Info
@@ -38,50 +38,98 @@ A three-stimulus auditory oddball task (standard tones, target tones requiring b
 
 ## Tasks
 
-### Classical Task 1: Parkinson's Disease vs Healthy Control Classification
+### Classical Task 1: PD vs Control classification (3-stim oddball)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -2.0 s, tmax = 2.0 s, target_events = [`S200`, `S201`, `S202`]
 - **Label Route**: `event`
-- **Meta Level**: `super`
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|--|-------|
-  | `S200` | 0 | Standard tone (non-target) |
-  | `S201` | 1 | Target tone (requires button press) |
-  | `S202` | 2 | Novel distractor tone |
-- **Super Meta Notes**: Subject-level classification of PD patients (ON/OFF medication) vs healthy controls using EEG features extracted from tone-evoked epochs (±2s). Aggregate epoch-level complexity features (LZC, SampEn), frequency domain (FFT), or texture features (Haralick, Fractal) per subject, then classify groups using SVM or RF. Group labels derived from participants.tsv (PD_ON, PD_OFF, HC). Verify S200/S201/S202 mapping to Standard/Target/Novel via StimChannel; exclude STATUS markers (S 85, S255) and boundary events.
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | S200 | 0 | Standard stimulus (frequent non-target) |
+  | S201 | 1 | Target stimulus (requires button-press response) |
+  | S202 | 2 | Novel distractor stimulus (rare non-target) |
 - **Evidence**:
-  - DOI: 10.1016/j.clinph.2017.11.023 — SVM pattern classifiers on EEG novelty responses achieved 82% accuracy classifying PD vs controls; 3-class (PD_ON/PD_OFF/HC) classification supported
-  - DOI: 10.21528/cbic2023.027 — Haralick and Fractal texture features from ±2s EEG epochs used to classify PD vs healthy controls; RF achieved 79.49% accuracy
-  - DOI: 10.1038/s41598-025-00826-5 — EEG complexity metrics (Lempel-Ziv, sample entropy) during 3-stimulus oddball classify PD patients from healthy controls
-- **Kernel Notes**: Load participants.tsv for group mapping. Extract epochs around S200/S201/S202 events per subject, compute features per epoch, aggregate (mean/std) to subject level. Exclude S 85 and S255 (BioSemi STATUS). Do not mix tone epochs with resting-state blocks.
+  - 10.1016/j.clinph.2017.11.023 — Original publication (PMID:29294412) describing 3-stimulus auditory oddball paradigm with S200/S201/S202 event structure and ±2s epochs for P300/MMN analysis.
+  - 10.21528/cbic2023.027 — CBIC 2023 replication confirming same paradigm parameters and event coding.
+- **Notes**: Events S200/S201/S202 are present in the EEG file headers and pre-scan counts but do not appear in the available BIDS events.tsv files for task-Rest sessions. The dataset_description.json and README confirm the full study includes '3-Stim Auditory Oddball' alongside Rest, but only task-Rest files were converted to BIDS format in this release. The high pre-scan counts and header annotations confirm these events belong to the oddball task data. For task execution, the kernel must access these events from the raw EEG file annotations (e.g., .set file annotations) rather than BIDS events.tsv.
 
-### Potential Task 1: Auditory Tone Type Classification (multiclass)
+### Potential Task 1: PD vs Control from resting EEG (Group classification)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [`S200`, `S201`, `S202`]
-- **Label Route**: `event`
-- **Meta Level**: `raw`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `Group`
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|--|-------|
-  | `S200` | 0 | Standard tone (frequent non-target) |
-  | `S201` | 1 | Target tone (infrequent, P3b) |
-  | `S202` | 2 | Novel tone (rare distractor, P3a) |
-- **Evidence**: DOI: 10.1016/j.clinph.2017.11.023 — Midfrontal EEG responses to novelty discriminate stimulus types; standard oddball paradigm supports tone categorization via P300 components
-- **Kernel Notes**: Onset-aligned epoching captures P300 (P3a/P3b) components distinguishing Novel/Target from Standard. Verify event mapping via StimChannel. Exclude S 85, S255, boundary. Rest blocks are separate paradigm—do not combine.
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | Group | PD | 0 | Parkinson's disease |
+  | Group | CTL | 1 | Control (healthy) |
+- **Evidence**:
+- **Notes**: Resting-state EEG segmentation task for subject-level group classification. Continuous 2-second windows with 50% overlap are extracted from the eyes-closed resting state data (marked by S 3/S 4 alternating triggers at 1Hz). Each window inherits the participant's Group label from participants.tsv (PD vs CTL). This is a B3 archetype using native info field with no kernel derivation required. The epoch parameters are inferred from standard resting-state biomarker segmentation practices since the dataset provides continuous resting recordings without trial structure.
 
-### Potential Task 2: Eyes Open vs Eyes Closed Classification
+### Potential Task 2: PD Medication ON vs OFF Classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5, segment_length = 2.0 s, target_events = [`S  1`, `S  2`, `S  3`, `S  4`]
-- **Label Route**: `event`
-- **Meta Level**: `raw`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2.0 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `sess1_Med`
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|--|-------|
-  | `S  1` | 0 | Eyes Open resting block |
-  | `S  2` | 1 | Eyes Closed resting block |
-- **Evidence**: Paradigm documentation indicates eyes open (S 1) and eyes closed (S 2) blocks; S 3/S 4 may represent additional rest conditions or sub-blocks
-- **Kernel Notes**: Sustained resting-state blocks require sliding window approach (50% overlap) to capture ongoing dynamics. Exclude STATUS (S 85, S255) and boundary events. Do not mix rest epochs with tone epochs.
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | sess1_Med | ON | 0 | PD patient on dopaminergic medication |
+  | sess1_Med | OFF | 1 | PD patient off dopaminergic medication |
+- **Evidence**:
+  - 10.1016/j.clinph.2017.11.023 — Original paper reports ON vs OFF medication comparison within PD group; participants counterbalanced with ~1 week separation between sessions
+- **Notes**: This task uses session-level medication state from participants.tsv. The sess1_Med column encodes ON/OFF for PD patients (CTL subjects have 'n/a'). For classification, only PD subjects with valid ON/OFF labels are included. The counterbalanced design (sess1=ON/sess2=OFF or sess1=OFF/sess2=ON) enables within-subject medication state classification. Segmentation with 2s windows and 50% overlap is standard for continuous resting-state EEG biomarker extraction. The epoch parameters are inferred from typical biomarker analysis pipelines for Parkinson's disease EEG.
+
+### Potential Task 3: Age regression from resting EEG
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `age`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 48–84 (years) | Continuous age from participants.tsv; complete for all 50 subjects (25 PD, 25 CTL) |
+- **Evidence**:
+  - participants.tsv — age column complete (N=50, range 48–84 years), numeric dtype suitable for regression
+  - README — confirms 25 Parkinson patients and 25 matched controls with age-matched design
+  - dataset_description.json — confirms resting EEG task ("EEG: 3-Stim Auditory Oddball and Rest in Parkinson's")
+- **Notes**: Standard segmentation approach for age prediction from continuous resting-state EEG. 2-second windows with 50% overlap generate sufficient samples from ~588s recordings while preserving stationarity. Age is a native participants.tsv column requiring no kernel derivation.
+
+### Potential Task 4: Sex classification from resting EEG
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5 *, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `sex`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | sex | Male | 0 | Male participant |
+  | sex | Female | 1 | Female participant |
+- **Evidence**:
+  - participants.tsv — Complete categorical column with 32 Male and 18 Female entries across 50 subjects
+  - dataset_description.json — Confirms dataset is "EEG: 3-Stim Auditory Oddball and Rest in Parkinson's" with resting-state data
+- **Notes**: Binary sex classification from continuous resting-state EEG using 2-second non-overlapping segments with 50% overlap. The task uses the native `sex` column from participants.tsv (archetype B3), requiring no kernel derivation. Standard approach for EEG-based demographic prediction benchmarks.
+
+## Data Quality Notes
+
+- The dataset contains a discrepancy between the BIDS events.tsv files and the raw EEG file annotations: the oddball task events (S200, S201, S202) are present in EEG headers but missing from available BIDS events.tsv files, which only cover task-Rest sessions.
+- Only resting-state EEG files were converted to BIDS format in this release; the 3-stimulus auditory oddball task data exists in raw EEG files but was not BIDS-converted.
+- The `device` field is completely missing from info metadata, limiting hardware-specific quality assessments.
+- The `sess1_Med` field is only partial (25/50 subjects), which may affect the medication ON/OFF classification task sample size.
+- S 3 and S 4 event meanings are inferred from context as eyes-closed resting state 1Hz trigger markers; their exact alternation pattern should be verified during manual review.
+- Boundary markers (75 total) indicate data segment boundaries that must be excluded from continuous analysis to avoid edge artifacts.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

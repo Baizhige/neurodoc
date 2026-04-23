@@ -1,68 +1,162 @@
 # MAVIS
 
 **Dataset**: `openneuro_ds004010` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004010
-**Category**: Sensory/Response | **Subjects**: 24 | **Files (Completed)**: 24
-**Channels**: 64 | **Sampling Rate**: 1000 Hz
+**Category**: Sensory/Response | **Subjects**: 24 | **Files (Completed)**: 24 | **Channels**: 64 | **Sampling Rate**: 1000 Hz
+**Manual Review**:
 
 ## Paradigm
 
-A multisensory detection task (MAVIS) in which participants identified auditory and visual targets embedded within simultaneous audio-visual noise streams to investigate selective attention and crossmodal sensory processing. The dataset contains continuous EEG recordings without discrete event markers, suggesting the stimuli were presented as ongoing streams rather than discrete trials.
+A multisensory detection task (MAVIS) in which participants identified auditory and visual targets embedded within simultaneous audio-visual noise streams to investigate selective attention and crossmodal sensory processing. Participants attended to either auditory or visual modality in sustained attention blocks, with stimulus conditions varying in spectral exponent properties. EEG was recorded with 64 channels at 1000 Hz using a Brain Products system with event markers for block onsets, stimulus conditions, target onsets, and responses.
 
 ## File Scan Result
 
+> **Kernel SHA256**: `4beb8110131aae5992a0343909970197c066b8c37de124c54b632c9c9b5ed898`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
-
-_No event markers detected (`no_events`). This dataset contains continuous EEG recordings without trial-level annotations._
-
-> **Event Type Description**:
-> - `short`: short stimulus onset marker (presentation duration <2 s), for `epoch_by_event_hdf5`
-> - `long`: long-term status flag (retention period is usually >=2 s), used for `epoch_by_long_event_hdf5`
-> - `rest`: Rest block tag, used for `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-> - `admin`: system/boundary marker, **not used for epoch**
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `no_events` | N/A | admin | raw | No discrete event markers detected; use continuous segmentation or external metadata labels. |
+| `101` | 25 | event | raw | Trial phase onset: End of block 10 |
+| `11` | 25 | event | raw | Trial phase onset: End of block 1 |
+| `111` | 37 | event | raw | Trial phase onset: End of block 11 |
+| `121` | 25 | event | raw | Trial phase onset: End of block 12 |
+| `200` | 6101 | event | raw | Trial-level stimulus condition marker |
+| `201` | 1959 | event | raw | Trial-level stimulus condition marker |
+| `202` | 1641 | event | raw | Trial-level stimulus condition marker |
+| `203` | 1099 | event | raw | Trial-level stimulus condition marker |
+| `21` | 25 | event | raw | Trial phase onset: End of block 2 |
+| `220` | 2700 | event | raw | Trial-level stimulus condition marker |
+| `221` | 2700 | event | raw | Trial-level stimulus condition marker |
+| `222` | 2700 | event | raw | Trial-level stimulus condition marker |
+| `223` | 2700 | event | raw | Trial-level stimulus condition marker |
+| `230` | 2700 | event | raw | Trial-level stimulus condition marker |
+| `231` | 2771 | event | raw | Trial-level stimulus condition marker |
+| `232` | 2700 | event | raw | Trial-level stimulus condition marker |
+| `233` | 2764 | event | raw | Trial-level stimulus condition marker |
+| `31` | 25 | event | raw | Trial phase onset: End of block 3 |
+| `33` | 8267 | event | raw | Response given, space bar pressed |
+| `34` | 3174 | event | raw | No response given within time window (during trial) |
+| `41` | 25 | event | raw | Trial phase onset: End of block 4 |
+| `44` | 8395 | event | raw | Onset of auditory target |
+| `45` | 2428 | event | raw | Auditory catch trial, time point of 'target' |
+| `51` | 25 | event | raw | Trial phase onset: End of block 5 |
+| `55` | 8400 | event | raw | Onset of visual target |
+| `56` | 2400 | event | raw | Visual catch trial, time point of 'target' |
+| `61` | 244 | event | raw | Trial phase onset: End of block 6 |
+| `66` | 150 | event | raw | Trial phase onset: Auditory attention block |
+| `71` | 25 | event | raw | Trial phase onset: End of block 7 |
+| `77` | 150 | event | raw | Trial phase onset: Visual attention block |
+| `81` | 25 | event | raw | Trial phase onset: End of block 8 |
+| `91` | 25 | event | raw | Trial phase onset: End of block 9 |
+| `nan` | 24 | admin | raw | Missing or undefined marker |
+
 
 ### Info
-
-_Placeholder for additional file scan information._
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
+| `device` | missing | N/A |
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: MAVIS
-- **Task Type**: classification/segmentation
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
-- **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
-- **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004010 DOI: https://doi.org/10.18112/openneuro.ds004010.v1.0.0
+### Classical Task 1: 2-class auditory vs visual attention
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s *, tmax = 30 s *, overlap = 0 *, target_events = [`66`, `77`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | 66 | 0 | Auditory attention block |
+  | 77 | 1 | Visual attention block |
+- **Evidence**:
+  - 10.7554/elife.70068 — The paper explicitly describes a multisensory detection task where participants attended to either auditory or visual modality. Event IDs 66 (auditory attention block) and 77 (visual attention block) mark the onset of sustained attention periods. Classification distinguishes between these two attention conditions using continuous EEG during the blocks.
+  - task-MultisensoryDetectionTask_events.json — Confirms x66 = "Auditory attention block" and x77 = "Visual attention block" in the Levels field.
+  - sub-1_task-MAVIS_events.tsv — Confirms event values 66 and 77 appear in actual data with corresponding trial_type descriptions.
+- **Notes**: The task uses sustained attention block onsets (event IDs 66 and 77) as anchors for epoching. Block durations are not explicitly stated in metadata; the 30s segment length with 0 overlap is inferred from the epoch_hint as a reasonable duration for sustained attention analysis, marked with *. The long-event epoching method allows extraction of continuous EEG segments during attention blocks for classification of auditory vs visual attention states.
 
-### Normal Task 1: Continuous EEG Segmentation (resting/continuous)
+### Potential Task 1: 16-class stimulus condition classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s *, tmax = 2.0 s *, target_events = [`200`, `201`, `202`, `203`, `220`, `221`, `222`, `223`, `230`, `231`, `232`, `233`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | 200 | 0 | Trial-level stimulus condition marker (spectral exponent condition) |
+  | 201 | 1 | Trial-level stimulus condition marker (spectral exponent condition) |
+  | 202 | 2 | Trial-level stimulus condition marker (spectral exponent condition) |
+  | 203 | 3 | Trial-level stimulus condition marker (spectral exponent condition) |
+  | 220 | 4 | Trial-level stimulus condition marker (spectral exponent condition) |
+  | 221 | 5 | Trial-level stimulus condition marker (spectral exponent condition) |
+  | 222 | 6 | Trial-level stimulus condition marker (spectral exponent condition) |
+  | 223 | 7 | Trial-level stimulus condition marker (spectral exponent condition) |
+  | 230 | 8 | Trial-level stimulus condition marker (spectral exponent condition) |
+  | 231 | 9 | Trial-level stimulus condition marker (spectral exponent condition) |
+  | 232 | 10 | Trial-level stimulus condition marker (spectral exponent condition) |
+  | 233 | 11 | Trial-level stimulus condition marker (spectral exponent condition) |
+- **Evidence**:
+- **Notes**: The candidate proposes 16 classes but only 12 distinct event IDs are present in the data (200-203, 220-223, 230-233). The evidence summary mentions "plus any additional 200-series codes discovered" but no additional codes exist in the available event ID list. This task is emitted as a 12-class classification with the available codes. The systematic structure of these codes (200s, 220s, 230s with final digits 0-3) suggests encoding of spectral exponent × attention modality combinations per the TaskDescription mentioning "different spectral exponents between 1 and 4", but the exact mapping is not confirmed in available sidecars. Epoch window extended to 2s to capture sustained spectral dynamics as noted in the candidate's rationale.
+
+### Potential Task 2: Age Regression
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
-- **Label Route**: `Annotation`
-- **Target Definition**: None (no trial-level events available)
-- **Notes**: No event markers present. Use continuous segmentation for downstream tasks such as subject identification or spectral analysis. Task condition labels (if any) must come from external behavioral logs or stimulus delivery system.
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `Age`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|-------------|-------|
+  | Age | 18–27 (years) | Subject chronological age from participants.tsv; complete for all N=24 subjects. All segments from a given subject share the same age label. |
+- **Evidence**:
+- **Notes**: Native info field regression task using continuous EEG segmentation. No kernel derivation required—Age is directly available in participants.tsv with complete coverage. Segmentation parameters default to 2s windows with 50% overlap for subject-level prediction; all values inferred from task category defaults.
+
+### Potential Task 3: Gender Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `Gender`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | Gender | M | 0 | Male |
+  | Gender | F | 1 | Female |
+- **Evidence**:
+- **Notes**: Binary subject-level classification from continuous EEG segments. Participants.tsv provides complete Gender column with M/F values for all 24 subjects. Segmentation with 2s windows and 50% overlap yields multiple samples per subject; the model must learn to aggregate or classify from segment-level features. No kernel derivation needed — Gender is a native participants.tsv column.
+
+### Potential Task 4: Handedness Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `Handedness`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | Handedness | R | 0 | right-handed |
+  | Handedness | L | 1 | left-handed |
+- **Evidence**:
+- **Notes**: Subject-level binary classification from continuous EEG segments. Uses 2-second non-overlapping segments (50% overlap) with subject handedness as label. The participants.tsv shows complete Handedness data with values R/L. Sample shows mostly R subjects; check class balance before training.
 
 ## Data Quality Notes
 
-- No trial-level event markers; only continuous EEG available
-- Stimulus delivery information may be in auxiliary files outside the BIDS structure
-- 64 channels at 1000 Hz provides good temporal resolution for auditory processing analysis
+- Event marker `nan` appears 24 times (once per subject on average), indicating occasional missing or undefined triggers that should be excluded from analysis
+- Stimulus condition markers (200-203, 220-223, 230-233) have highly imbalanced counts (ranging from ~1,099 to ~6,101), which may affect classification performance and requires stratified sampling
+- Block-end markers (`11`, `21`, `31`, etc.) show inconsistent counts (25 for most blocks, but 37 for block 11 and 244 for block 6), suggesting possible recording anomalies or protocol variations for certain blocks
+- Response markers (`33` vs `34`) indicate substantial missing-response trials (~28% no-response rate), which may reflect task difficulty or participant engagement issues
+- Device metadata is missing from info fields, limiting hardware-specific reproducibility
+- `subject_age` and `subject_sex` fields are marked complete but duplicate `Age` and `Gender` fields; verify consistency across these redundant columns
+- Block duration for attention blocks (event IDs 66 and 77) is not explicitly documented; the 30s epoch length for the primary task is inferred and requires manual verification against actual stimulus logs
 
 ## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004010
-
----
-
-> **auto_eeg FAILED**: The dataset explicitly contains no discrete event markers (no_events), only continuous EEG recordings. Without trial-level event structure and no relevant or partial reference papers supporting the MAVIS paradigm, there is no identifiable label structure to support a concrete ML classification or regression task. While continuous segmentation is suggested, it requires external behavioral logs not currently available.
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

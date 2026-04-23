@@ -46,6 +46,28 @@ def _require(cond: bool, kind: str, msg: str, **extra) -> None:
         raise DatasetDispatchError(kind=kind, message=msg, **extra)
 
 
+def _validate_zero_indexed_sequential(y_values, where: str) -> None:
+    """Enforce that the distinct y values form set(range(N)). Many-to-one OK.
+
+    Rejects: non-int y (should be caught upstream), gapped y ({0, 2}),
+    offset y ({1, 2}), empty. Runs at factory dry_run so detect.py and
+    reconcile both get the check for free.
+    """
+    s = set(y_values)
+    if not s:
+        raise DatasetDispatchError(
+            kind="bad_target_def",
+            message=f"{where}: no y values after parsing.",
+        )
+    expected = set(range(len(s)))
+    if s != expected:
+        raise DatasetDispatchError(
+            kind="bad_target_def",
+            message=(f"{where}: distinct y values {sorted(s)} are not 0-based sequential "
+                     f"(expected 0..{len(s)-1}; many-to-one merges OK but no gaps or offset)."),
+        )
+
+
 def _parse_events_map(task: Dict[str, Any]) -> Dict[str, Any]:
     rows = task.get("target_rows") or []
     _require(bool(rows), "bad_target_def", "event task has empty Target Definition.")
@@ -60,11 +82,19 @@ def _parse_events_map(task: Dict[str, Any]) -> Dict[str, Any]:
             try:
                 events_map[eid] = int(y)
             except (ValueError, TypeError):
-                events_map[eid] = y
+                raise DatasetDispatchError(
+                    kind="bad_target_def",
+                    message=(f"classification row has non-int y={y!r} in row {r}; "
+                             f"y must be a 0-based int (rulebook v3.2)."),
+                )
         else:
             v = r.get("value")
             _require(v is not None, "bad_target_def", f"regression row missing value: {r}")
             events_map[eid] = float(v)
+    if task_type == "classification":
+        _validate_zero_indexed_sequential(
+            events_map.values(), where="event-classification task",
+        )
     return events_map
 
 
@@ -77,7 +107,17 @@ def _parse_info_map(task: Dict[str, Any]) -> Dict[str, int]:
         y = r.get("y")
         _require(val is not None and y is not None,
                  "bad_target_def", f"info classification row needs value+y: {r}")
-        info_map[str(val)] = int(y)
+        try:
+            info_map[str(val)] = int(y)
+        except (ValueError, TypeError):
+            raise DatasetDispatchError(
+                kind="bad_target_def",
+                message=(f"info classification row has non-int y={y!r} in row {r}; "
+                         f"y must be a 0-based int (rulebook v3.2)."),
+            )
+    _validate_zero_indexed_sequential(
+        info_map.values(), where="info-classification task",
+    )
     return info_map
 
 

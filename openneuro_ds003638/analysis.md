@@ -1,88 +1,85 @@
 # EEG: Electrophysiological Biomarkers of Behavioral Dimensions from Cross-Species Paradigms
 
 **Dataset**: `openneuro_ds003638` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003638
-**Category**: High-level Mental | **Subjects**: 57 | **Files (Completed)**: 57
-**Channels**: 73 | **Sampling Rate**: 512 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 57 | **Files (Completed)**: 57 | **Channels**: 73 | **Sampling Rate**: 512 Hz
+**Manual Review**:
 
 ## Paradigm
 
-This study employs three cross-species behavioral paradigms (5-Choice Continuous Performance Task [5CCPT], Probabilistic Reward/Punishment task [PRBP], and Pavlovian-to-Instrumental Transfer [PST]) to identify electrophysiological biomarkers associated with various behavioral dimensions including attention, impulsivity, and reward sensitivity. All 57 subjects completed all three paradigms in a single session. Stimulus events are encoded as numeric trigger codes (65281-65287 range) with behavioral responses marked by dedicated event codes.
+This study employs three cross-species behavioral paradigms (5-Choice Continuous Performance Task [5CCPT], Probabilistic Reward/Punishment task [PRBP], and Pavlovian-to-Instrumental Transfer [PST]) to identify electrophysiological biomarkers associated with various behavioral dimensions including attention, impulsivity, and reward sensitivity. All 57 subjects completed all three paradigms in a single session. Stimulus events are encoded as numeric trigger codes with behavioral responses marked by dedicated event codes. EEG was recorded with 73 channels at 512 Hz sampling rate.
 
 ## File Scan Result
 
-> **Kernel SHA256**: `e2c2e371d51eb263216d014c69af0620a485e5e2670b66f0567a375a1d6d2c74`
+> **Kernel SHA256**: `c2a2ef344f6f244253df13aa1d78c12743cd86515c5af5512f519c499626be7d`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `event_130816` | 166 | event | raw | Task initialization/sync event |
-| `event_131070` | 170 | event | raw | Task initialization/sync event |
-| `event_131071` | 1 | event | raw | Session start marker |
-| `event_65281` | 1476 | event | raw | 5CCPT stimulus code 1 (circle) |
-| `event_65282` | 1475 | event | raw | 5CCPT stimulus code 2 (cross) |
-| `event_65283` | 1476 | event | raw | 5CCPT stimulus code 3 (diamond) |
-| `event_65284` | 1475 | event | raw | 5CCPT stimulus code 4 (square) |
-| `event_65285` | 1476 | event | raw | 5CCPT stimulus code 5 (triangle) |
-| `event_65286` | 1476 | event | raw | 5CCPT stimulus code 6 (star) |
-| `event_65287` | 2911 | event | raw | 5CCPT stimulus code 7 (target/hit) |
-| `event_65291` | 1355 | event | raw | PRBP feedback code (probabilistic outcome) |
-| `event_65292` | 1254 | event | raw | PRBP feedback code (probabilistic outcome) |
-| `event_65293` | 1371 | event | raw | PRBP feedback code (high/low reward) |
-| `event_65294` | 1325 | event | raw | PRBP feedback code (high/low punishment) |
-| `event_65295` | 1338 | event | raw | PRBP feedback code (feedback valence) |
-| `event_65301` | 2006 | event | raw | Response code 1 (5CCPT response) |
-| `event_65302` | 4427 | event | raw | Response code 2 (5CCPT response) |
-| `event_65303` | 2859 | event | raw | Response code 3 (5CCPT response) |
-| `event_65305` | 2126 | event | raw | Response code 5 (5CCPT response) |
-| `event_65310` | 1412 | event | raw | Response code 10 (5CCPT response) |
-| `event_65311` | 8199 | event | raw | Response code 11 (5CCPT response/hit) |
-| `event_65312` | 4865 | event | raw | Response code 12 (5CCPT response) |
-| `event_65313` | 38 | event | raw | Response code 13 (5CCPT response) |
-| `event_65316` | 12 | event | raw | PST cue code (rare event) |
-| `event_65319` | 3323 | event | raw | PRBP/PST event code |
-| `event_65320` | 3936 | event | raw | PRBP/PST event code |
-| `event_65321` | 90 | event | raw | PST cue code A |
-| `event_65322` | 37 | event | raw | PST cue code B |
-| `event_65323` | 54 | event | raw | PST cue code C |
-| `event_65324` | 44 | event | raw | PST cue code |
-| `event_65325` | 47 | event | raw | PST cue code |
-| `event_65326` | 1487 | event | raw | PRBP trial start/code |
-| `event_65327` | 1487 | event | raw | PRBP trial start/code |
-| `event_65330` | 1826 | event | raw | Task event code |
-| `event_65336` | 979 | event | raw | 5CCPT block/code |
-| `event_65337` | 981 | event | raw | 5CCPT block/code |
-| `event_65338` | 2 | event | raw | PST rare event |
-| `event_65339` | 623 | event | raw | 5CCPT block event |
-| `event_65340` | 641 | event | raw | 5CCPT block event |
-| `event_65341` | 3 | event | raw | Rare/error event |
-| `event_65342` | 3 | event | raw | Rare/error event |
-| `event_65343` | 45 | event | raw | PST cue event |
-| `event_65344` | 3 | event | raw | Rare/error event |
-| `event_65345` | 3 | event | raw | Rare/error event |
-| `event_65346` | 602 | event | raw | 5CCPT block event |
-| `event_65347` | 603 | event | raw | 5CCPT block event |
-| `event_65349` | 204 | event | raw | Task event |
-| `event_65360` | 425 | event | raw | PRBP/PST event |
-| `event_65361` | 1679 | event | raw | PRBP/PST event |
-| `event_65362` | 1232 | event | raw | PRBP/PST event |
-| `event_65363` | 1496 | event | raw | PRBP/PST event |
-| `event_65364` | 581 | event | raw | PRBP/PST event |
-| `event_65366` | 834 | event | raw | PRBP/PST event |
-| `event_65396` | 22281 | event | raw | Response/feedback baseline (most frequent) |
-| `event_65397` | 14138 | event | raw | Response/feedback event |
-| `event_65398` | 370 | event | raw | PST cue type |
-| `event_65399` | 370 | event | raw | PST cue type |
-| `event_65401` | 322 | event | raw | PST cue event |
-| `event_65402` | 322 | event | raw | PST cue event |
-| `event_65406` | 1 | event | raw | Session end marker |
-| `event_65407` | 1 | event | raw | Session end marker |
+| `event_130816` | 166 | admin | raw | System status marker: recording boundary or session state (STATUS with value 65280 in lower 8 bits, variant 0) |
+| `event_131070` | 170 | admin | raw | System status marker: recording boundary or session state (STATUS with value 65278 in lower 8 bits, variant 254) |
+| `event_131071` | 1 | admin | raw | System status marker: recording boundary or session state (STATUS with value 65279 in lower 8 bits, variant 255) |
+| `event_65281` | 1476 | event | raw | 5CCPT: Go stimulus 1 onset |
+| `event_65282` | 1475 | event | raw | 5CCPT: Go stimulus 2 onset |
+| `event_65283` | 1476 | event | raw | 5CCPT: Go stimulus 3 onset |
+| `event_65284` | 1475 | event | raw | 5CCPT: Go stimulus 4 onset |
+| `event_65285` | 1476 | event | raw | 5CCPT: Go stimulus 5 onset |
+| `event_65286` | 1476 | event | raw | 5CCPT: NoGo stimulus onset |
+| `event_65287` | 2911 | event | raw | 5CCPT: Mask onset (easy/unmasked condition, trigger 7) |
+| `event_65291` | 1355 | event | raw | 5CCPT: Go Response Hit (correct response to Go stimulus 1) |
+| `event_65292` | 1254 | event | raw | 5CCPT: Go Response Hit (correct response to Go stimulus 2) |
+| `event_65293` | 1371 | event | raw | 5CCPT: Go Response Hit (correct response to Go stimulus 3) |
+| `event_65294` | 1325 | event | raw | 5CCPT: Go Response Hit (correct response to Go stimulus 4) |
+| `event_65295` | 1338 | event | raw | 5CCPT: Go Response Hit (correct response to Go stimulus 5) |
+| `event_65301` | 2006 | event | raw | 5CCPT: Instant Go Response (response code 21) |
+| `event_65302` | 4427 | event | raw | 5CCPT: Mask onset (hard/masked condition, trigger 22) |
+| `event_65303` | 2859 | event | raw | 5CCPT: Instant Go Response (response code 23) |
+| `event_65305` | 2126 | event | raw | 5CCPT: Instant Go Response (response code 25) |
+| `event_65310` | 1412 | event | raw | 5CCPT: NoGo Non-Response Correct Rejection (CR) |
+| `event_65311` | 8199 | event | raw | PST: Image pair displayed (Probabilistic Learning trial onset) |
+| `event_65312` | 4865 | event | raw | PST: Correct feedback onset |
+| `event_65313` | 38 | event | raw | PST: Block or condition marker (trigger 33, block-related) |
+| `event_65316` | 12 | event | raw | PST: Block or condition marker (trigger 36) |
+| `event_65319` | 3323 | event | raw | PST: Block or condition marker (trigger 39, Incorrect feedback or block identifier) |
+| `event_65320` | 3936 | event | raw | PST: Incorrect feedback onset (trigger 40, variant) |
+| `event_65321` | 90 | event | raw | PST: Block or condition marker (trigger 41) |
+| `event_65322` | 37 | event | raw | PST: Block or condition marker (trigger 42) |
+| `event_65323` | 54 | event | raw | PST: Block or condition marker (trigger 43) |
+| `event_65324` | 44 | event | raw | PST: Block or condition marker (trigger 44) |
+| `event_65325` | 47 | event | raw | PST: Block or condition marker (trigger 45) |
+| `event_65326` | 1487 | event | raw | 5CCPT: False alarm to NoGo stimulus (incorrect response, trigger 46) |
+| `event_65327` | 1487 | event | raw | 5CCPT: False alarm to NoGo stimulus (incorrect response, trigger 47) |
+| `event_65330` | 1826 | event | raw | 5CCPT: False alarm to NoGo stimulus (incorrect response, trigger 50) |
+| `event_65336` | 979 | event | raw | 5CCPT: Incorrect response to Go stimulus (trigger 56) |
+| `event_65337` | 981 | event | raw | 5CCPT: Incorrect response to Go stimulus (trigger 57) |
+| `event_65338` | 2 | event | raw | 5CCPT: Incorrect response to Go stimulus (trigger 58, rare) |
+| `event_65339` | 623 | event | raw | 5CCPT: Incorrect response to Go stimulus (trigger 59) |
+| `event_65340` | 641 | event | raw | 5CCPT: Incorrect response to Go stimulus (trigger 60) |
+| `event_65341` | 3 | event | raw | 5CCPT: False alarm to NoGo stimulus (trigger 61, rare) |
+| `event_65342` | 3 | event | raw | 5CCPT: False alarm to NoGo stimulus (trigger 62, rare) |
+| `event_65343` | 45 | event | raw | 5CCPT: False alarm to NoGo stimulus (trigger 63) |
+| `event_65344` | 3 | event | raw | 5CCPT: False alarm to NoGo stimulus (trigger 64, rare) |
+| `event_65345` | 3 | event | raw | 5CCPT: False alarm to NoGo stimulus (trigger 65, rare) |
+| `event_65346` | 602 | event | raw | 5CCPT: False alarm to NoGo stimulus (trigger 66) |
+| `event_65347` | 603 | event | raw | 5CCPT: False alarm to NoGo stimulus (trigger 67) |
+| `event_65349` | 204 | event | raw | 5CCPT: False alarm to NoGo stimulus (trigger 69) |
+| `event_65360` | 425 | event | raw | 5CCPT: Go Non-Response Miss (omitted response to Go stimulus, trigger 80) |
+| `event_65361` | 1679 | event | raw | 5CCPT: False alarm to NoGo stimulus (trigger 81) |
+| `event_65362` | 1232 | event | raw | 5CCPT: False alarm to NoGo stimulus (trigger 82) |
+| `event_65363` | 1496 | event | raw | 5CCPT: False alarm to NoGo stimulus (trigger 83) |
+| `event_65364` | 581 | event | raw | 5CCPT: False alarm to NoGo stimulus (trigger 84) |
+| `event_65366` | 834 | event | raw | 5CCPT: False alarm to NoGo stimulus (trigger 86) |
+| `event_65396` | 22281 | event | raw | PRBP: 1 second clock tick (trial timing marker) |
+| `event_65397` | 14138 | event | raw | PRBP: Visual feedback to every third response |
+| `event_65398` | 370 | event | raw | PRBP: Sloppy responding feedback, start of 2 second timeout |
+| `event_65399` | 370 | event | raw | PRBP: Restoration of normal screen |
+| `event_65401` | 322 | event | raw | PRBP: Level complete reward display |
+| `event_65402` | 322 | event | raw | PRBP: Level complete reward display offset |
+| `event_65406` | 1 | event | raw | PRBP: Task marker (trigger 126, rare) |
+| `event_65407` | 1 | event | raw | PRBP: Task marker (trigger 127, rare) |
 
 
-### MISC Label Summary
-*No misc channels detected in this dataset.*
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
@@ -92,91 +89,59 @@ This study employs three cross-species behavioral paradigms (5-Choice Continuous
 
 ## Tasks
 
-### Classical Task 1: 5C-CPT Target vs Nontarget Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [see Target Definition]
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | 65281-65286 (stimulus codes, nontarget range) | 0 | Nontarget stimuli (5C-CPT correct rejections) |
-  | 65287 (target stimulus code) | 1 | Target stimuli (5C-CPT hits) |
-- **Evidence**:
-  - DOI: 10.1038/s41398-021-01562-w — Primary dataset publication; describes 57 subjects, 73 channels at 512 Hz, and 5C-CPT paradigm with target/nontarget event codes. Paper explicitly identifies target vs nontarget as a primary classification dimension.
-- **Kernel Notes**: Event code 65287 appears as the highest-count stimulus event (2911 occurrences) and likely represents target stimuli (hits). The 65281-65286 codes with ~1475-1476 counts each likely represent the 6 nontarget stimulus shapes. The paper specifies cue-locked analysis with tmin=-0.5s, tmax=+1.0s.
-
-### Classical Task 2: Probabilistic Reward/Punishment (PRBP) Feedback Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [feedback event codes]
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | 65291-65295 | 0 | High probability reward/punishment feedback |
-  | 65396, 65397 (high-frequency baseline events) | 1 | Low probability feedback / error feedback |
-- **Evidence**:
-  - DOI: 10.1038/s41398-021-01562-w — Paper describes PRBP task with probabilistic reward/punishment outcomes and identifies feedback-related EEG biomarkers (delta for reward learning).
-- **Kernel Notes**: The most frequent events (65396: 22281, 65397: 14138) likely represent feedback baseline responses. The 65291-65295 range with ~1300-1370 counts each likely represents specific feedback conditions (high/low reward/punishment). Analysis may use feedback-locked epochs with tmin=+0.25s, tmax=+0.55s as suggested by the paper.
-
-### Classical Task 3: Pavlovian-to-Instrumental Transfer (PST) Cue Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [31 PST, 32 PST, 39 PST equivalents]
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | 65321 | 0 | Pavlovian cue Type A (appetitive) |
-  | 65322 | 1 | Pavlovian cue Type B (aversive) |
-  | 65323 | 2 | Pavlovian cue Type C (neutral) |
-- **Evidence**:
-  - DOI: 10.1038/s41398-021-01562-w — Paper describes PST task with three Pavlovian cue types (codes 31, 32, 39) and theta-band biomarkers for cognitive control.
-- **Kernel Notes**: Low-count events in scan output (65321:90, 65322:37, 65323:54) correspond to PST cue markers. Additional PST markers include 65398-65399 (370 each) and 65401-65402 (322 each). Verify exact mapping in events.tsv. Standard stimulus-locked window covers cue processing and anticipation period.
-
-### Normal Task 1: Response-Locked 5C-CPT Analysis
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 0 s, target_events = [response event codes]
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | 65301-65313 range (response codes) | 0 | Correct responses |
-  | 65311 (highest count response) | 1 | Target responses (hits) |
-- **Evidence**:
-  - DOI: 10.1038/s41398-021-01562-w — Paper specifies response-locked analysis for 5C-CPT with tmin=-0.5s, tmax=0s.
-- **Kernel Notes**: Response codes 65301-65313 with counts ranging from 38 to 8199 likely represent different response outcomes. 65311 (8199) likely represents hit responses following target stimuli. Response-locked epochs capture motor preparation and execution; may complement stimulus-locked analysis for impulsivity assessment.
-
-### Potential Task 1: Cross-Task Biomarker Integration
-- **Task Type**: regression/classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, concatenated across all three paradigms
-- **Label Route**: `Annotation`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | Combined task events | Behavioral dimension score | Attention, impulsivity, or reward sensitivity measures |
-- **Evidence**:
-  - DOI: 10.1038/s41398-021-01562-w — Paper explicitly integrates biomarkers across paradigms to predict behavioral dimensions; identifies alpha for motivation, theta for cognitive control, delta for reward learning.
-- **Kernel Notes**: Requires behavioral scores from task performance metrics; meta-level analysis across paradigms.
-
-### Potential Task 2: Alpha Power Motivation Biomarker
+### Potential Task 1: Age regression from continuous EEG
 - **Task Type**: regression
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0.5 s, tmax = 1.5 s, target_events = [all stimulus events]
-- **Label Route**: `misc`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | Stimulus events | Alpha power | Motivation/intrinsic reward signal |
+  | Info Field | Range (unit) | Notes |
+  |------------|-------------|-------|
+  | age | 18.0–35.0 (years) | Continuous age from participants.tsv; all 57 subjects have complete age data |
 - **Evidence**:
-  - DOI: 10.1038/s41398-021-01562-w — Paper identifies alpha-band activity as biomarker for motivation across paradigms.
-- **Kernel Notes**: Time-frequency analysis recommended for alpha band (8-12 Hz) extraction during post-stimulus window.
+  - participants.tsv — age column contains continuous values 18.0–35.0 for all 57 subjects
+- **Notes**: Standard resting-state segmentation approach for subject-level biomarker regression. Since this is a continuous recording with no discriminating rest-specific events, the full continuous EEG is segmented into 2-second non-overlapping windows (50% overlap) and each window inherits the subject's age label from participants.tsv. Archetype B3 (native info field) requires no kernel derivation.
+
+### Potential Task 2: Sex classification from continuous EEG
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `sex`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | sex | F | 0 | Female |
+  | sex | M | 1 | Male |
+- **Evidence**:
+- **Notes**: Subject-level binary classification using resting-state segmentation. 2-second non-overlapping windows (50% overlap) are extracted from continuous EEG and labeled by the participant's sex from participants.tsv. This is a demographic prediction task rather than a task-evoked paradigm; all task events are ignored and the continuous recording is treated as a source of stable subject-level EEG features.
+
+### Potential Task 3: Subject ID prediction from EEG
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `UH2_ID`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | UH2_ID | 1 | 0 | Subject 001 |
+  | UH2_ID | 2 | 1 | Subject 002 |
+  | UH2_ID | 3 | 2 | Subject 003 |
+  | UH2_ID | ... | ... | ... |
+  | UH2_ID | 57 | 56 | Subject 057 |
+- **Evidence**:
+- **Notes**: 57-class subject identification from continuous resting-state EEG segments. UH2_ID is a native participants.tsv column (1-57). Each subject's continuous EEG is segmented into 2-second windows with 50% overlap, creating multiple samples per subject. This is a common biometric/deep learning benchmark for EEG-based subject identification. The 57 classes are balanced at the subject level (one subject per class), though segment counts may vary slightly by recording duration. Classification targets are 0-based sequential integers mapping directly to UH2_ID values (y = UH2_ID - 1).
+
+## Data Quality Notes
+
+- No known data quality issues.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

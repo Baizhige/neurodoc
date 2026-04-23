@@ -61,12 +61,18 @@ Emit candidates covering all of:
      non-trivial value (age, p_factor, attention, internalizing, externalizing, etc.) —
      these are archetype B3 (Route=info) or archetype C (Route=info + segmentation) when
      no discriminating event exists.
-  4. Native misc regression (archetype B1) for every numeric events.tsv column listed in
-     the grounded catalog (response_time, rt, correct_answer, etc.).
-  5. Derived misc (archetype B2) when a participants.tsv column or events.tsv column can
-     plausibly be transformed by the kernel (accuracy from correct_answer,
-     log-RT from response_time, binned-age from age, etc.). Prefer B3 when the raw column
-     works as-is.
+  4. Native misc regression (archetype B1) — ONLY for CONTINUOUS misc channels that
+     already exist on the raw object (EMG traces, EOG traces, GSR — channels visible in
+     `misc_channel_names` from the grounded catalog). Per-trial scalars from events.tsv
+     do NOT satisfy B1; see (5).
+  5. Derived misc (archetype B2, Meta Level = super) — THE default archetype for every
+     numeric events.tsv column (confidence, response_time, rt, correct_answer, accuracy,
+     etc.) AND for participants.tsv columns requiring a non-trivial transform (accuracy
+     from correct_answer+total, log-RT from response_time, binned-age from age, etc.).
+     The kernel will materialise these as misc channels — exact mechanism (constant
+     broadcast, trial-locked step function, RawArray, etc.) is the kernel's choice.
+     Prefer B3 only when the participants.tsv column is usable as-is (age itself,
+     p_factor, handedness).
 
 For each candidate, decide:
   name              short descriptive task name (e.g. "4-class motor imagery")
@@ -113,15 +119,24 @@ HARD RULES (non-negotiable):
   H1 ONE Label Field per task. Multi-dim labels → N candidates.
   H2 Classification needs ≥2 distinct classes at the *label-value* level. For event route,
      that means ≥2 distinct Event IDs. For info/misc route, ≥2 distinct values of the column.
+  H2b Classification y values MUST be 0-based sequential ints: {0, 1, ..., N-1}. Many-to-one
+     mapping is encouraged when the paradigm justifies it (e.g. merge sleep N3+N4 → y=2
+     keeping `N3` as the label name; merge different distractor positions into y=0). Decide
+     merges by task-context relevance, not convenience. FORBIDDEN: gapped y ({0, 1, 3}),
+     1-based y ({1, 2}), string labels ("class_A"), non-int y ("target"/"distractor").
   H3 misc route is REGRESSION ONLY. Never propose misc+classification.
   H4 Label Field required iff Route ∈ {misc, info}; forbidden for Route=event.
   H6 segmentation ⇒ target_events = [] (don't populate must_have_events).
   G1 Every must_have_event MUST be in the Available event IDs list (or locked meanings).
-  G2 Every must_have_native_misc MUST be in the grounded catalog's native misc list OR
-     events.tsv numeric columns.
+  G2 Every must_have_native_misc MUST correspond to a CONTINUOUS misc channel on the raw
+     object (already in the pre-scan `misc_channel_names` list or typed non-EEG in
+     channels.tsv). Per-trial events.tsv columns do NOT satisfy G2 — route them through
+     must_derive_misc (archetype B2) instead.
   G3 Every must_have_info_field MUST be in the grounded catalog's participants.tsv list.
-  G4 Every must_derive_misc.source_field MUST be in the grounded catalog (participants.tsv
-     or events.tsv numeric columns). Cite the exact name.
+  G4 Every must_derive_misc.source_field MUST be in the grounded catalog. When sourced
+     from events.tsv, write the source_field as `events.tsv:<column>` so the kernel
+     builder knows to read from the sidecar. When sourced from participants.tsv, use the
+     literal column name.
 
 SOFT GUIDELINES (favor inclusion over exclusion):
   - DISTINCT EVENT SETS ⇒ DISTINCT CANDIDATES. seqLearning6target and seqLearning8target
@@ -286,8 +301,12 @@ columns) → Meta Level = raw.
 === Hard invariants (the task block will be rejected by detect.py if violated) ===
   - Label Field present iff route ∈ {misc, info}.
   - misc route is regression only.
-  - classification ⇒ ≥2 distinct y values in Target Definition, AND for event route
-    each class must map to a DISTINCT Event ID (a single event ID cannot split by column).
+  - classification ⇒ ≥2 distinct y values in Target Definition.
+  - classification y MUST be 0-based sequential ints: {0, 1, ..., N-1}. Many-to-one
+    mapping is allowed AND encouraged when the paradigm justifies (merge sleep N3+N4
+    → y=2 keeping `N3` as the label name; merge distractors at different positions
+    → y=0). FORBIDDEN: {0, 1, 3} (gap), {1, 2} (not 0-based), "class_A"/"target" (string).
+    Do NOT write y=target/y=distractor/y=more_symmetric — pick a 0..N-1 integer.
   - segmentation ⇒ target_events = [].
   - Every Event ID used MUST appear in the candidate's kernel_needs.must_have_events
     (for event route) OR be empty (for segmentation) OR be the event anchor (for B1/B2).
@@ -521,6 +540,17 @@ Dropping a task is an irreversible loss of user-visible value. Prefer surgical e
 (d) classification_task_has_multiple_classes (<2 distinct y)
     → If the task has only one class, try to pair with a rest/baseline/phase-marker event
       to form 2-class rest-vs-task. Only drop if no second class is available anywhere.
+
+(d2) classification_y_zero_indexed_sequential (non-int y, gapped y, 1-based y)
+    → Renumber in place, preserving row order. Distinct source labels get 0, 1, 2, ...
+      Example: y={target, distractor} → rewrite rows as y=0 (target) and y=1 (distractor).
+      Example: y={0, 2} → renumber to y={0, 1}.
+      Example: y={1, 2, 3} → renumber to y={0, 1, 2}.
+    → Many-to-one merges are allowed AND encouraged when the paradigm justifies it
+      (e.g. merge sleep N3+N4 → y=2 keeping both rows with N3 as the label name;
+      merge distractors at different positions → y=0 for all distractor rows). Prefer
+      a merge over dropping rows.
+    → Do NOT drop for this rule.
 
 (e) label_field_required_for_nonevent
     → Add the **Label Field** bullet with the channel/column name the Target Definition

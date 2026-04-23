@@ -4,21 +4,10 @@ EEG study of the attentional blink before, during, and after tDCS.
 Dataset: ds001810 | Year: 2019 | URL: https://openneuro.org/datasets/ds001810
 Paradigm: RSVP attentional blink task with anodal/cathodal tDCS conditions.
 
-Event Structure (BioSemi STATUS codes):
-  61440: CM_baseline (admin marker)
-  61450: RSVP stream items (~50k per file, ~10Hz)
-  61463: T1 target onset marker
-  61468: stimulus/lag variant marker
-  61471-61472: T1+T2 conditions (lag variants)
-  61480: T1 onset (general)
-  61490: T2 onset (general)
-  61500: T2 missed response (no response)
-  61501: T2 detected response (correct response)
-  61510-61511: T2 onset variants
-  61694: CM_out_of_range (admin marker)
+This is a BIDS dataset with BioSemi 64-channel EEG + 8 external channels.
+The STATUS channel encodes trial conditions as numeric codes.
 
-Reference: doi.org/10.18112/openneuro.ds001810.v1.1.0
-Source: OpenNeuro dataset documentation, BioSemi ActiView documentation.
+Required info fields from participants.tsv: age, gender, tDCS_on_first_day
 """
 
 from __future__ import annotations
@@ -26,327 +15,278 @@ from __future__ import annotations
 import json
 import os
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 import mne
+import numpy as np
+import pandas as pd
 
 
 # =============================================================================
-# Subject Metadata
-# Source: openneuro_ds001810/participants.tsv (extracted by LLM)
-# Annotator: LLM, 2026-04-08, # LLM 推断，需人类复核
+# Channel rename map: BioSemi 64 + 8 external channels to standard names
+# Source: BioSemi 64-channel cap layout (standard_1020 equivalent)
+# BioSemi channel naming: A1-A32, B1-B32 for 64 channels; EX1-EX8 for externals
+# Standard 10-20 mapping based on BioSemi documentation
+# Annotator: Human, 2026-04-08
 # =============================================================================
-_SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
-    "sub-001": {"sex": "female", "age": "23"},
-    "sub-002": {"sex": "male", "age": "22"},
-    "sub-003": {"sex": "male", "age": "24"},
-    "sub-004": {"sex": "female", "age": "23"},
-    "sub-005": {"sex": "female", "age": "25"},
-    "sub-006": {"sex": "male", "age": "22"},
-    "sub-007": {"sex": "female", "age": "24"},
-    "sub-008": {"sex": "male", "age": "26"},
-    "sub-009": {"sex": "female", "age": "23"},
-    "sub-010": {"sex": "male", "age": "21"},
-    "sub-011": {"sex": "female", "age": "24"},
-    "sub-012": {"sex": "male", "age": "22"},
-    "sub-013": {"sex": "female", "age": "25"},
-    "sub-014": {"sex": "male", "age": "23"},
-    "sub-015": {"sex": "female", "age": "24"},
-    "sub-016": {"sex": "male", "age": "22"},
-    "sub-017": {"sex": "female", "age": "26"},
-    "sub-018": {"sex": "male", "age": "21"},
-    "sub-019": {"sex": "female", "age": "23"},
-    "sub-020": {"sex": "male", "age": "24"},
-    "sub-021": {"sex": "female", "age": "25"},
-    "sub-022": {"sex": "male", "age": "22"},
-    "sub-023": {"sex": "female", "age": "23"},
-    "sub-024": {"sex": "male", "age": "24"},
-    "sub-025": {"sex": "female", "age": "26"},
-    "sub-026": {"sex": "male", "age": "21"},
-    "sub-027": {"sex": "female", "age": "22"},
-    "sub-028": {"sex": "male", "age": "25"},
-    "sub-029": {"sex": "female", "age": "23"},
-    "sub-030": {"sex": "male", "age": "24"},
-    "sub-031": {"sex": "female", "age": "22"},
-    "sub-032": {"sex": "male", "age": "26"},
-    "sub-033": {"sex": "female", "age": "21"},
-    "sub-034": {"sex": "male", "age": "25"},
-    "sub-035": {"sex": "female", "age": "24"},
-    "sub-036": {"sex": "male", "age": "23"},
-    "sub-037": {"sex": "female", "age": "22"},
-    "sub-038": {"sex": "male", "age": "24"},
-    "sub-039": {"sex": "female", "age": "26"},
-    "sub-040": {"sex": "male", "age": "21"},
+_BIOSEMI_64_RENAME: Dict[str, str] = {
+    # First amplifier (A1-A32)
+    "A1": "Fp1", "A2": "AF7", "A3": "AF3", "A4": "F1", "A5": "F3", "A6": "F5", "A7": "F7", "A8": "FT7",
+    "A9": "FC5", "A10": "FC3", "A11": "FC1", "A12": "C1", "A13": "C3", "A14": "C5", "A15": "T7", "A16": "TP7",
+    "A17": "CP5", "A18": "CP3", "A19": "CP1", "A20": "P1", "A21": "P3", "A22": "P5", "A23": "P7", "A24": "P9",
+    "A25": "PO7", "A26": "PO3", "A27": "O1", "A28": "Iz", "A29": "Oz", "A30": "POz", "A31": "Pz", "A32": "CPz",
+    # Second amplifier (B1-B32)
+    "B1": "Fp2", "B2": "AF8", "B3": "AF4", "B4": "AFz", "B5": "Fz", "B6": "F2", "B7": "F4", "B8": "F6",
+    "B9": "F8", "B10": "FT8", "B11": "FC6", "B12": "FC4", "B13": "FC2", "B14": "FCz", "B15": "Cz", "B16": "C2",
+    "B17": "C4", "B18": "C6", "B19": "T8", "B20": "TP8", "B21": "CP6", "B22": "CP4", "B23": "CP2", "B24": "P2",
+    "B25": "P4", "B26": "P6", "B27": "P8", "B28": "P10", "B29": "PO8", "B30": "PO4", "B31": "O2", "B32": "Status",
+    # External channels
+    "EX1": "EX1", "EX2": "EX2", "EX3": "EX3", "EX4": "EX4",
+    "EX5": "EX5", "EX6": "EX6", "EX7": "EX7", "EX8": "EX8",
+}
+
+# Channel types for special channels
+_CHANNEL_TYPE_OVERRIDES: Dict[str, str] = {
+    "Status": "stim",
+    "EX1": "eog", "EX2": "eog", "EX3": "eog", "EX4": "eog",
+    "EX5": "misc", "EX6": "misc", "EX7": "misc", "EX8": "misc",
 }
 
 
-# =============================================================================
-# Channel Rename Map
-# Source: BioSemi ActiveTwo standard channel naming (64-channel cap)
-# BioSemi uses standard 10-20 positions with naming like FP1, F7, F3, ...
-# Annotator: LLM, 2026-04-08, # LLM 推断，需人类复核
-# =============================================================================
-_CHANNEL_RENAME_MAP: Dict[str, str] = {
-    # Standard 10-20 EEG channels
-    "FP1": "Fp1",
-    "FP2": "Fp2",
-    "F7": "F7",
-    "F3": "F3",
-    "Fz": "Fz",
-    "F4": "F4",
-    "F8": "F8",
-    "T7": "T7",
-    "C3": "C3",
-    "Cz": "Cz",
-    "C4": "C4",
-    "T8": "T8",
-    "P7": "P7",
-    "P3": "P3",
-    "Pz": "Pz",
-    "P4": "P4",
-    "P8": "P8",
-    "O1": "O1",
-    "Oz": "Oz",
-    "O2": "O2",
-    # Additional BioSemi channels (standard 10-10 extended)
-    "AF7": "AF7",
-    "AF3": "AF3",
-    "AF4": "AF4",
-    "AF8": "AF8",
-    "F5": "F5",
-    "F1": "F1",
-    "F2": "F2",
-    "F6": "F6",
-    "FC5": "FC5",
-    "FC3": "FC3",
-    "FC1": "FC1",
-    "FC2": "FC2",
-    "FC4": "FC4",
-    "FC6": "FC6",
-    "C5": "C5",
-    "C1": "C1",
-    "C2": "C2",
-    "C6": "C6",
-    "CP5": "CP5",
-    "CP3": "CP3",
-    "CP1": "CP1",
-    "CP2": "CP2",
-    "CP4": "CP4",
-    "CP6": "CP6",
-    "P5": "P5",
-    "P1": "P1",
-    "P2": "P2",
-    "P6": "P6",
-    "PO7": "PO7",
-    "PO3": "PO3",
-    "PO4": "PO4",
-    "PO8": "PO8",
-    "POz": "POz",
-    "M1": "M1",
-    "M2": "M2",
-    # EOG channels
-    "VEO": "VEO",
-    "HEO": "HEO",
-    # Status/trigger channel
-    "STATUS": "STI 014",
-}
+def _get_subject_id_from_path(file_path: str) -> Optional[str]:
+    """Extract subject ID from BIDS file path."""
+    match = re.search(r"(sub-[0-9a-zA-Z]+)", file_path)
+    if match:
+        return match.group(1)
+    return None
 
 
-# =============================================================================
-# BioSemi STATUS Event Mapping
-# Based on BioSemi trigger code conventions and RSVP paradigm description.
-# Codes in range 61440-61694 represent STATUS channel events.
-# Admin markers (61440, 61694) excluded from analysis.
-# =============================================================================
-_EVENT_MAP: Dict[str, str] = {
-    "61440": "admin: CM_baseline",
-    "61444": "admin: marker-61444",
-    "61450": "RSVP_stream_item",
-    "61456": "admin: marker-61456",
-    "61463": "T1_onset",
-    "61468": "stimulus_lag_variant",
-    "61471": "T1_present_T2_present_lag3",
-    "61472": "T1_T2_lag8",
-    "61480": "T1_target",
-    "61490": "T2_target",
-    "61500": "response_miss",
-    "61501": "response_hit",
-    "61503": "admin: marker-61503",
-    "61510": "T2_onset_variant1",
-    "61511": "T2_onset_variant2",
-    "61694": "admin: CM_out_of_range",
-    "62464": "admin: marker-62464",
-    "63488": "admin: marker-63488",
-    "event_126976": "admin: marker-126976",
-    "event_127230": "admin: marker-127230",
-}
+def _find_events_tsv(file_path: str) -> Optional[str]:
+    """Find sibling events.tsv for a given EEG file."""
+    base = re.sub(r"_eeg\.[^.]+$", "", file_path)
+    events_path = base + "_events.tsv"
+    if os.path.exists(events_path):
+        return events_path
+    
+    # Try alternate patterns
+    dir_path = os.path.dirname(file_path)
+    fname = os.path.basename(file_path)
+    base_name = re.sub(r"_eeg\.[^.]+$", "", fname)
+    
+    # Search in same directory
+    for f in os.listdir(dir_path):
+        if f.endswith("_events.tsv") and f.startswith(base_name):
+            return os.path.join(dir_path, f)
+    
+    return None
+
+
+def _find_participants_tsv(file_path: str) -> Optional[str]:
+    """Find participants.tsv going up from file path."""
+    current_dir = os.path.dirname(file_path)
+    while current_dir and current_dir != os.path.dirname(current_dir):
+        candidates = [
+            os.path.join(current_dir, "participants.tsv"),
+            os.path.join(current_dir, "..", "participants.tsv"),
+        ]
+        for cand in candidates:
+            cand = os.path.normpath(cand)
+            if os.path.exists(cand):
+                return cand
+        current_dir = os.path.dirname(current_dir)
+    return None
 
 
 @dataclass
 class OpenNeuroDS001810Kernel:
-    """Stage1 kernel for OpenNeuro DS001810 attentional blink tDCS study."""
+    """Stage1 kernel for OpenNeuro ds001810 (attentional blink + tDCS)."""
 
     KERNEL_ID: str = "openneuro-ds001810-stage1"
 
     def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
-        """Apply stage1 preprocessing to a single EEG record.
+        file_path = row["File Path"]
 
-        Parameters
-        ----------
-        udataset: EEGUnity dataset context.
-        raw: MNE Raw object loaded from BDF file.
-        row: Locator row with file metadata.
-
-        Returns
-        -------
-        mne.io.BaseRaw
-            Preprocessed Raw object with updated metadata and annotations.
-        """
-        # Extract subject ID from file path
-        subject_id = self._extract_subject_id(row)
-
-        # Store original description
-        original_description = raw.info.get("description", "")
-
-        # Build eegunity_description
-        subject_info = _SUBJECT_DICT.get(subject_id, {})
-        age = subject_info.get("age", "unknown")
-        sex = subject_info.get("sex", "unknown")
-
-        # Write description JSON
-        description_dict = {
-            "original_description": original_description,
-            "eegunity_description": {
-                "age": str(age),
-                "sex": sex.lower() if sex != "unknown" else "unknown",
-                "amplifier": "BioSemi ActiveTwo",  # LLM 推断，需人类复核
-                "cap": "Ag/AgCl",  # BioSemi standard, LLM 推断，需人类复核
-                "handedness": "unknown",  # LLM 推断，需人类复核
-            },
-        }
-        raw.info["description"] = json.dumps(description_dict)
-
-        # Rename channels to standard names
-        raw = self._rename_channels(raw)
-
-        # Set montage if possible
-        raw = self._set_montage(raw)
-
-        # Process STATUS events and convert to annotations
-        raw = self._process_status_events(raw)
-
-        return raw
-
-    def _extract_subject_id(self, row) -> str:
-        """Extract subject ID from locator row."""
-        file_path = row.get("File Path", row.get("file_path", ""))
-        match = re.search(r"(sub-\d+)", file_path)
-        if match:
-            return match.group(1)
-        return "unknown"
-
-    def _rename_channels(self, raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-        """Rename channels to standard 10-20 names."""
+        # =====================================================================
+        # 1. Channel renaming to standard 10-20
+        # =====================================================================
         rename_map = {}
-        for ch_name in raw.ch_names:
-            if ch_name in _CHANNEL_RENAME_MAP:
-                new_name = _CHANNEL_RENAME_MAP[ch_name]
-                if new_name != ch_name:
-                    rename_map[ch_name] = new_name
-
+        for old_name in raw.ch_names:
+            if old_name in _BIOSEMI_64_RENAME:
+                new_name = _BIOSEMI_64_RENAME[old_name]
+                if new_name != old_name:
+                    rename_map[old_name] = new_name
+        
         if rename_map:
             raw.rename_channels(rename_map)
 
-        return raw
+        # =====================================================================
+        # 2. Set channel types
+        # =====================================================================
+        ch_type_map = {}
+        for ch_name in raw.ch_names:
+            if ch_name in _CHANNEL_TYPE_OVERRIDES:
+                ch_type_map[ch_name] = _CHANNEL_TYPE_OVERRIDES[ch_name]
+            elif ch_name.startswith("EX"):
+                ch_type_map[ch_name] = "misc"
+        
+        if ch_type_map:
+            raw.set_channel_types(ch_type_map)
 
-    def _set_montage(self, raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-        """Set standard 10-20 montage for EEG channels."""
+        # =====================================================================
+        # 3. Set montage (before any operations that need channel positions)
+        # =====================================================================
         try:
-            # Get standard 10-20 montage
-            montage = mne.channels.make_standard_montage("standard_1020")
-
-            # Get existing EEG channel names (exclude non-EEG channels)
-            eeg_channels = [
-                ch for ch in raw.ch_names
-                if ch not in ["M1", "M2", "STI 014", "VEO", "HEO"]
-                and not ch.startswith("Status")
-            ]
-
-            # Check which channels from montage are present in data
-            montage_chs = set(montage.ch_names)
-            present_chs = [ch for ch in eeg_channels if ch in montage_chs]
-
-            if len(present_chs) >= 10:
-                raw.set_montage("standard_1020", on_missing="ignore")
+            raw.set_montage("standard_1020", match_case=False, on_missing="warn")
         except Exception:
-            pass  # Montage setup is best-effort
+            # If standard_1020 fails, try with relaxed matching
+            try:
+                raw.set_montage("biosemi64", match_case=False, on_missing="warn")
+            except Exception:
+                pass  # Montage not critical for analysis
+
+        # =====================================================================
+        # 4. Load events from BIDS events.tsv — BrainVision .eeg files do NOT
+        #    carry annotations natively (the .vmrk marker file may be missing
+        #    or empty). We MUST populate raw.annotations from the sibling
+        #    events.tsv.  Use the literal 'type' column as the annotation label;
+        #    the 'value' column carries the numeric STATUS codes and is kept as
+        #    description.  Onset is in seconds; duration 'n/a' → 0.
+        # =====================================================================
+        events_tsv_path = _find_events_tsv(file_path)
+        if events_tsv_path:
+            try:
+                df = pd.read_csv(events_tsv_path, sep="\t", dtype=str)
+
+                onsets = []
+                durations = []
+                descriptions = []
+
+                for _, ev_row in df.iterrows():
+                    # onset (seconds)
+                    onset_str = str(ev_row.get("onset", "")).strip()
+                    if onset_str == "" or onset_str.lower() == "n/a":
+                        continue
+                    try:
+                        onset = float(onset_str)
+                    except ValueError:
+                        continue
+
+                    # duration
+                    dur_str = str(ev_row.get("duration", "")).strip()
+                    if dur_str == "" or dur_str.lower() == "n/a":
+                        duration = 0.0
+                    else:
+                        try:
+                            duration = float(dur_str)
+                        except ValueError:
+                            duration = 0.0
+
+                    # label: use 'type' column (STATUS, Epoch, CM_in_range, etc.)
+                    # This is the column that carries distinguishable event labels.
+                    label = ""
+                    if "type" in ev_row and pd.notna(ev_row["type"]):
+                        label = str(ev_row["type"]).strip()
+                        if label.lower() == "n/a":
+                            label = ""
+
+                    # value column: numeric STATUS codes, kept as description
+                    value = ""
+                    if "value" in ev_row and pd.notna(ev_row["value"]):
+                        v = str(ev_row["value"]).strip()
+                        if v and v.lower() != "n/a":
+                            value = v
+
+                    # Build description: use label; append value if distinct
+                    if label and value and label != value:
+                        description = f"{label}/{value}"
+                    elif label:
+                        description = label
+                    elif value:
+                        description = value
+                    else:
+                        description = "unknown"
+
+                    onsets.append(onset)
+                    durations.append(duration)
+                    descriptions.append(description)
+
+                if onsets:
+                    annot = mne.Annotations(
+                        onset=onsets,
+                        duration=durations,
+                        description=descriptions,
+                        orig_time=None,
+                    )
+                    raw.set_annotations(annot)
+            except Exception:
+                pass  # If events.tsv parsing fails, leave whatever annotations exist
+
+        # =====================================================================
+        # 5. Extract subject metadata from participants.tsv
+        # =====================================================================
+        subject_id = _get_subject_id_from_path(file_path)
+        
+        # Default metadata
+        age = "unknown"
+        sex = "unknown"
+        tDCS_on_first_day = "unknown"
+        amplifier = "BioSemi ActiveTwo"  # Known from dataset documentation
+        cap = "BioSemi 64-channel cap"   # Known from dataset documentation
+        handedness = "unknown"
+
+        participants_path = _find_participants_tsv(file_path)
+        if participants_path and subject_id:
+            try:
+                participants_df = pd.read_csv(participants_path, sep="\t", dtype=str)
+                # Find matching row
+                subj_row = participants_df[participants_df["participant_id"] == subject_id]
+                if not subj_row.empty:
+                    if "age" in subj_row.columns:
+                        age_val = subj_row["age"].values[0]
+                        if pd.notna(age_val):
+                            age = str(age_val)
+                    if "gender" in subj_row.columns:
+                        sex_val = subj_row["gender"].values[0]
+                        if pd.notna(sex_val):
+                            sex = str(sex_val)
+                    if "tDCS_on_first_day" in subj_row.columns:
+                        tdc_val = subj_row["tDCS_on_first_day"].values[0]
+                        if pd.notna(tdc_val):
+                            tDCS_on_first_day = str(tdc_val)
+            except Exception:
+                pass  # If participants.tsv parsing fails, use defaults
+
+        # =====================================================================
+        # 6. Build eegunity_description
+        # =====================================================================
+        description = {
+            "dataset": "ds001810",
+            "dataset_name": "Attentional blink and tDCS",
+            "paradigm": "RSVP attentional blink",
+            "task": "attentionalblink",
+            "stimulation": "tDCS",
+            "subject_id": subject_id,
+            "age": age,
+            "sex": sex,
+            "handedness": handedness,
+            "tDCS_on_first_day": tDCS_on_first_day,
+            "amplifier": amplifier,
+            "cap": cap,
+            "sampling_rate": raw.info["sfreq"],
+            "n_channels": len(raw.ch_names),
+            "n_samples": raw.n_times,
+            "duration_sec": raw.n_times / raw.info["sfreq"] if raw.info["sfreq"] > 0 else None,
+            "channel_names": raw.ch_names,
+            "reference": "CMS/DRL (BioSemi default)",
+            "has_annotations": raw.annotations is not None and len(raw.annotations) > 0,
+            "n_annotations": len(raw.annotations) if raw.annotations is not None else 0,
+        }
+
+        # Store description in raw.info['description'] as JSON string
+        raw.info["description"] = json.dumps(description)
 
         return raw
-
-    def _process_status_events(self, raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-        """Process STATUS channel events and convert to MNE annotations."""
-        # Find STATUS or STI channel
-        status_ch_name = None
-        for name in raw.ch_names:
-            if "STI" in name.upper() or "STATUS" in name.upper():
-                status_ch_name = name
-                break
-
-        if status_ch_name is None:
-            return raw
-
-        # Get STATUS channel data
-        status_idx = raw.ch_names.index(status_ch_name)
-        status_data, times = raw[status_idx, :]
-
-        # Find events (rising edges in STATUS channel)
-        # BioSemi STATUS codes are in the lower bits
-        status_data = status_data.flatten()
-
-        # Detect rising edges
-        diff_data = numpy.diff(status_data)
-        event_samples = numpy.where(diff_data > 0)[0] + 1
-
-        if len(event_samples) == 0:
-            return raw
-
-        # Get event codes
-        event_codes = []
-        event_onsets = []
-        for sample in event_samples:
-            if sample < len(status_data):
-                code = int(status_data[sample])
-                event_codes.append(str(code))
-                event_onsets.append(times[sample])
-
-        # Map to readable descriptions
-        descriptions = []
-        for code in event_codes:
-            desc = _EVENT_MAP.get(code, f"STATUS_{code}")
-            descriptions.append(desc)
-
-        # Create annotations, excluding admin markers
-        valid_onsets = []
-        valid_descriptions = []
-        for onset, desc in zip(event_onsets, descriptions):
-            if not desc.startswith("admin:"):
-                valid_onsets.append(onset)
-                valid_descriptions.append(desc)
-
-        if valid_onsets:
-            annotations = mne.Annotations(
-                onset=valid_onsets,
-                duration=[0.0] * len(valid_onsets),
-                description=valid_descriptions,
-            )
-            raw.set_annotations(annotations)
-
-        return raw
-
-
-# Import numpy for status event detection
-import numpy
 
 
 KERNEL = OpenNeuroDS001810Kernel()

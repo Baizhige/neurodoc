@@ -16,9 +16,11 @@ from __future__ import annotations
 
 import json
 import os
+from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
 import mne
+import numpy as np
 import pandas as pd
 
 
@@ -86,177 +88,187 @@ def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
         # Mastoide references
         ("M1", ["EEG M1", "M1", "EEG-M1", "Mastoid left", "left mastoid"]),
         ("M2", ["EEG M2", "M2", "EEG-M2", "Mastoid right", "right mastoid"]),
-        # Common EOG channels
-        ("EOG-left", ["EOG left", "EOG-L", "EOG-L1", "VEOG1"]),
-        ("EOG-right", ["EOG right", "EOG-R", "EOG-R1"]),
-        ("EOG-up", ["EOG up", "EOG-U", "HEOG"]),
     ]
 
     for target_name, aliases in alias_groups:
-        for source_name in aliases:
-            if source_name in ch_names and source_name != target_name:
-                rename_map[source_name] = target_name
+        for alias in aliases:
+            if alias in ch_names and alias != target_name:
+                rename_map[alias] = target_name
                 break
 
     return rename_map
 
 
-def _extract_subject_info(
-    dataset_path: str, subject_id: str
-) -> Dict[str, str]:
-    """Extract subject metadata from BIDS participants.tsv.
+def _get_subject_info_from_participants(dataset_path: str, subject_id: str) -> Dict[str, str]:
+    """Read subject info from participants.tsv.
 
     Annotator: Human, 2026-04-08
-    Source: BIDS format participants.tsv file
     """
-    participants_file = os.path.join(dataset_path, "participants.tsv")
+    participants_path = os.path.join(dataset_path, "participants.tsv")
+    if not os.path.exists(participants_path):
+        return {}
 
-    if os.path.exists(participants_file):
-        try:
-            df = pd.read_csv(participants_file, sep="\t")
-            row = df[df["participant_id"] == subject_id]
-            if not row.empty:
-                age = row.iloc[0].get("age", "unknown")
-                sex = row.iloc[0].get("sex", row.iloc[0].get("gender", "unknown"))
-                handedness = row.iloc[0].get("handedness", "unknown")
-
-                # Normalize sex to lowercase
-                if pd.notna(sex):
-                    sex = str(sex).lower()
-                    if sex not in ("male", "female"):
-                        sex = "unknown"
+    try:
+        df = pd.read_csv(participants_path, sep="\t")
+        subject_row = df[df["participant_id"] == subject_id]
+        if subject_row.empty:
+            return {}
+        info = {}
+        if "age" in subject_row.columns:
+            val = subject_row["age"].values[0]
+            info["age"] = str(int(float(val))) if pd.notna(val) else "unknown"
+        if "sex" in subject_row.columns:
+            val = subject_row["sex"].values[0]
+            if pd.notna(val):
+                sex = str(val).strip().lower()
+                if sex in ("f", "female"):
+                    info["sex"] = "female"
+                elif sex in ("m", "male"):
+                    info["sex"] = "male"
                 else:
-                    sex = "unknown"
+                    info["sex"] = "unknown"
+            else:
+                info["sex"] = "unknown"
+        if "handedness" in subject_row.columns:
+            val = subject_row["handedness"].values[0]
+            info["handedness"] = str(val).strip().lower() if pd.notna(val) else "unknown"
+        return info
+    except Exception:
+        return {}
 
-                return {
-                    "age": str(age) if pd.notna(age) else "unknown",
-                    "sex": sex,
-                    "handedness": str(handedness).lower() if pd.notna(handedness) else "unknown",
-                }
+
+def _load_events_from_tsv(file_path: str) -> Optional[pd.DataFrame]:
+    """Load events from sibling events.tsv file.
+
+    Annotator: Human, 2026-04-08
+    """
+    base = file_path.replace("_eeg.edf", "").replace("_eeg.set", "").replace("_eeg.vhdr", "").replace("_eeg.eeg", "")
+    events_path = base + "_events.tsv"
+    if not os.path.exists(events_path):
+        # Try BIDS-style path resolution
+        dir_path = os.path.dirname(file_path)
+        fname = os.path.basename(file_path)
+        fname_stem = fname.split("_eeg")[0]
+        events_path = os.path.join(dir_path, fname_stem + "_events.tsv")
+    
+    if os.path.exists(events_path):
+        try:
+            return pd.read_csv(events_path, sep="\t")
         except Exception:
             pass
-
-    # Fallback to hardcoded dict
-    return _SUBJECT_DICT.get(subject_id, {
-        "age": "unknown",
-        "sex": "unknown",
-        "handedness": "unknown",
-    })
+    return None
 
 
-def _build_event_annotations(raw: mne.io.BaseRaw) -> mne.Annotations:
-    """Extract and normalize events from raw annotations.
+def _events_to_annotations(events_df: pd.DataFrame, sfreq: float) -> mne.Annotations:
+    """Convert BIDS events.tsv to MNE Annotations.
 
     Annotator: Human, 2026-04-08
-    Source: OpenNeuro ds004517 events.tsv structure
-    Events: animal_auditory_imagery_task, tool_auditory_imagery_task,
-            audio_animal, audio_tool, rest
     """
-    try:
-        events, event_id = mne.events_from_annotations(raw, verbose=False)
-
-        # Map existing event descriptions to canonical names
-        canonical_map = {
-            "animal_auditory_imagery_task": "animal_auditory_imagery_task",
-            "tool_auditory_imagery_task": "tool_auditory_imagery_task",
-            "audio_animal": "audio_animal",
-            "audio_tool": "audio_tool",
-            "rest": "rest",
-        }
-
-        # Build new annotations with canonical event names
-        onsets = events[:, 0] / raw.info["sfreq"]
-        descriptions = []
-        for event_idx in events[:, 2]:
-            for orig_desc, orig_id in event_id.items():
-                if orig_id == event_idx:
-                    canonical_desc = canonical_map.get(orig_desc, orig_desc)
-                    descriptions.append(canonical_desc)
-                    break
-            else:
-                descriptions.append(f"event_{event_idx}")
-
-        return mne.Annotations(
-            onset=onsets.tolist(),
-            duration=[0.0] * len(onsets),
-            description=descriptions,
-        )
-    except Exception:
-        # If no annotations, return empty
-        return mne.Annotations(onset=[], duration=[], description=[])
+    onsets = events_df["onset"].values.astype(float)
+    durations = events_df["duration"].values.astype(float) if "duration" in events_df.columns else np.zeros(len(onsets))
+    
+    # Build description from trial_type or value
+    descriptions = []
+    for idx, row in events_df.iterrows():
+        if "trial_type" in events_df.columns and pd.notna(row.get("trial_type")):
+            desc = str(row["trial_type"])
+        elif "value" in events_df.columns and pd.notna(row.get("value")):
+            desc = str(row["value"])
+        else:
+            desc = "unknown"
+        descriptions.append(desc)
+    
+    return mne.Annotations(onset=onsets, duration=durations, description=descriptions)
 
 
-class openneuro_ds004517_Kernel:
-    """Stage1 kernel for openneuro_ds004517 dataset."""
+@dataclass
+class OpenNeuroDS004517Kernel:
+    """Stage1 kernel for OpenNeuro ds004517 dataset."""
 
     KERNEL_ID: str = "openneuro-ds004517-stage1"
+    required_info_fields: List[str] = field(default_factory=lambda: ["age", "sex"])
+    required_native_misc: List[str] = field(default_factory=list)
+    derived_misc_channels: List[str] = field(default_factory=list)
 
-    def apply(self, udataset, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
-        """Apply stage1 preprocessing to a single EEG record.
-
-        Parameters
-        ----------
-        udataset: EEGUnity dataset context
-        raw: MNE Raw object (modified in-place and returned)
-        row: Locator row with File Path and other metadata
-
-        Returns
-        -------
-        mne.io.BaseRaw
-            Preprocessed Raw object with updated metadata
-        """
-        original_description = raw.info.get("description", "")
-
-        # Step 1: Channel rename (before set_montage)
+    def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
+        file_path = row["File Path"]
+        dataset_path = getattr(udataset, "root_dir", os.path.dirname(os.path.dirname(file_path)))
+        
+        # Extract subject ID from file path
+        fname = os.path.basename(file_path)
+        subject_id = None
+        for part in fname.split("_"):
+            if part.startswith("sub-"):
+                subject_id = part
+                break
+        
+        if subject_id is None:
+            # Try from directory structure
+            parts = file_path.split(os.sep)
+            for part in parts:
+                if part.startswith("sub-"):
+                    subject_id = part
+                    break
+        
+        # Get subject info from participants.tsv with required fields
+        subject_info = _get_subject_info_from_participants(dataset_path, subject_id) if subject_id else {}
+        
+        # Merge with fallback dict
+        fallback = _SUBJECT_DICT.get(subject_id, {}) if subject_id else {}
+        
+        age = subject_info.get("age", fallback.get("age", "unknown"))
+        sex = subject_info.get("sex", fallback.get("sex", "unknown"))
+        handedness = subject_info.get("handedness", fallback.get("handedness", "unknown"))
+        
+        # Build eegunity_description with required fields
+        eegunity_description = {
+            "age": str(age),
+            "sex": str(sex),
+            "amplifier": "unknown",
+            "cap": "32-channel standard 10-20",
+            "handedness": str(handedness),
+        }
+        
+        # Add any additional required info fields from participants.tsv
+        for field_name in self.required_info_fields:
+            if field_name not in eegunity_description and field_name in subject_info:
+                eegunity_description[field_name] = str(subject_info[field_name])
+        
+        # Set description as JSON string (MNE stores description as string)
+        original_desc = raw.info.get("description", "")
+        raw.info["description"] = json.dumps({
+            "original_description": original_desc,
+            "eegunity_description": eegunity_description,
+        })
+        
+        # Rename channels to standard names if needed
         rename_map = _build_channel_rename_map(raw)
         if rename_map:
-            raw.rename_channels(rename_map)
-            raw.set_channel_types({
-                name: "eeg" for name in raw.ch_names
-                if name not in ("M1", "M2", "EOG-left", "EOG-right", "EOG-up")
-            })
-
-        # Step 2: Set montage if standard
-        try:
-            montage = mne.channels.make_standard_montage("standard_1020")
-            raw.set_montage(montage, on_missing="ignore")
-        except Exception:
-            pass  # Skip montage if not applicable
-
-        # Step 3: Extract subject info
-        subject_id = row.get("Subject", row.get("participant_id", "unknown"))
-        dataset_path = row.get("Dataset Path", "")
-
-        if dataset_path and os.path.exists(dataset_path):
-            subject_info = _extract_subject_info(dataset_path, subject_id)
-        else:
-            subject_info = _SUBJECT_DICT.get(subject_id, {
-                "age": "unknown",
-                "sex": "unknown",
-                "handedness": "unknown",
-            })
-
-        # Step 4: Build event annotations
-        annotations = _build_event_annotations(raw)
-        raw.set_annotations(annotations)
-
-        # Step 5: Write eegunity_description
-        # Annotator: LLM, 2026-04-08
-        # Source: Paper DOI 10.1038/s41597-025-04967-0 + OpenNeuro documentation
-        # amplifier/cap inferred from typical auditory EEG paradigm setup
-        description_dict = {
-            "original_description": original_description,
-            "eegunity_description": {
-                "age": subject_info.get("age", "unknown"),
-                "sex": subject_info.get("sex", "unknown"),
-                "amplifier": "unknown",  # LLM 推断，需人类复核
-                "cap": "unknown",  # LLM 推断，需人类复核
-                "handedness": subject_info.get("handedness", "unknown"),
-            },
-        }
-        raw.info["description"] = json.dumps(description_dict)
-
+            raw = raw.rename_channels(rename_map)
+        
+        # Set channel types for known non-EEG channels
+        for ch_name in raw.ch_names:
+            if ch_name in ("M1", "M2"):
+                raw.set_channel_types({ch_name: "misc"})
+        
+        # Load events from events.tsv and set annotations
+        events_df = _load_events_from_tsv(file_path)
+        if events_df is not None and not events_df.empty:
+            # Remove existing annotations if any
+            if raw.annotations is not None:
+                raw.set_annotations(None)
+            annotations = _events_to_annotations(events_df, raw.info["sfreq"])
+            raw.set_annotations(annotations)
+        
+        # Add derived misc channels
+        for misc_name in self.derived_misc_channels:
+            if misc_name not in raw.ch_names:
+                misc_data = np.zeros((1, len(raw.times)))
+                info_misc = mne.create_info([misc_name], raw.info["sfreq"], ["misc"])
+                raw_misc = mne.io.RawArray(misc_data, info_misc)
+                raw = raw.add_channels([raw_misc], force_update_info=True)
+        
         return raw
 
 
-KERNEL = openneuro_ds004517_Kernel()
+KERNEL = OpenNeuroDS004517Kernel()

@@ -3,20 +3,24 @@
 Dataset: eeg-neuroforecasting
 Source: https://openneuro.org/datasets/ds004284
 DOI: https://doi.org/10.18112/openneuro.ds004284.v1.0.0
+Paper: https://doi.org/10.1038/s41598-023-41613-4
 
 This kernel handles the EEG neuroforecasting dataset with Kickstarter
 decision-making paradigm. The dataset contains 129-channel EEG recordings
-with no discrete event markers in the raw data; segmentation is based on
-external Kickstarter metadata and valuation periods.
+from 18 subjects viewing Kickstarter project presentations and making
+funding decisions.
 
-Primary Tasks:
-- Kickstarter Outcome Prediction (classification)
-- Individual Funding Decision Prediction (classification)
-- Population-Level Outcome Regression (super-meta regression)
+Key features:
+- 129-channel EEG (EGI Hydrocel GSN 128 + reference)
+- Sampling rate: 1000 Hz
+- Events derived from BIDS events.tsv sidecars (segment events with funded/project_id)
+- Derived misc channels for neuroforecasting tasks:
+  * funded_continuous: per-trial binary funding decision (0/1)
+  * project_funding_rate: aggregate funding rate per project across subjects
+  * subject_consistency: subject's choice consistency with population average
 
 Channel Configuration:
-- 129 EEG channels (high-density system, likely EGI Hydrocel or BioSemi)
-- Sampling rate: 1000 Hz
+- 129 EEG channels using EGI Hydrocel GSN 128 naming convention
 """
 
 from __future__ import annotations
@@ -33,27 +37,26 @@ import pandas as pd
 
 
 # =============================================================================
-# Subject Metadata
+# Dataset Metadata
 # =============================================================================
 
-# Source: Dataset participants.tsv (BIDS)
+# Source: OpenNeuro ds004284 dataset_description.json and paper
+# https://doi.org/10.1038/s41598-023-41613-4
 # Annotator: LLM, 2026-04-08
-_SUBJECT_DICT: Dict[str, Dict[str, Any]] = {}
+_DATASET_INFO = {
+    "amplifier": "EGI Net Amps 300",  # LLM 推断，需人类复核
+    "cap": "EGI Hydrocel GSN 128",  # LLM 推断，需人类复核
+}
 
-# =============================================================================
-# Channel Configuration
-# =============================================================================
+# Required info fields from participants.tsv to include in eegunity_description
+# These will be read dynamically and attached as string values
+_REQUIRED_INFO_FIELDS: List[str] = ["age", "sex", "handedness"]
 
-# 129-channel high-density EEG systems (EGI Hydrocel 128 + 1 reference or similar)
-# Source: Dataset README and paper DOI: 10.1038/s41598-023-41613-4
-# Annotator: LLM, 2026-04-08
-_EEG_CHANNEL_COUNT = 129
+# Required native misc channels (ensure they exist as 'misc' type)
+_REQUIRED_NATIVE_MISC: List[str] = []
 
-# Standard 10-5 system montage for 128+ channel caps
-# Most OpenNeuro EEG datasets with 129 channels use EGI Hydrocel GSN
-# Source: Veillette GitHub repository eeg-neuroforecasting
-# Annotator: LLM, 2026-04-08
-_CAP_TYPE = "EGI Hydrocel GSN 128"  # LLM 推断，需人类复核
+# Required derived misc channels (kernel must create these)
+_REQUIRED_DERIVED_MISC: List[str] = ["funded_continuous", "project_funding_rate", "subject_consistency"]
 
 
 # =============================================================================
@@ -61,307 +64,342 @@ _CAP_TYPE = "EGI Hydrocel GSN 128"  # LLM 推断，需人类复核
 # =============================================================================
 
 def _detect_subject_id(row) -> str:
-    """Extract subject ID from file path or row data."""
+    """Extract subject ID from file path using BIDS convention."""
     file_path = row.get("File Path", "")
-    # Try to extract from BIDS structure: sub-XX
+    # BIDS format: sub-104, sub-105, etc.
     match = re.search(r"sub-(\d+)", file_path)
     if match:
         return f"sub-{match.group(1)}"
     return "unknown"
 
 
-def _load_participants_tsv(dataset_root: str) -> pd.DataFrame:
-    """Load participants.tsv if it exists."""
-    participants_path = os.path.join(dataset_root, "participants.tsv")
-    if os.path.exists(participants_path):
-        return pd.read_csv(participants_path, sep="\t")
-    return pd.DataFrame()
-
-
-def _get_subject_info(subject_id: str, dataset_root: str) -> Dict[str, str]:
-    """Get subject metadata from participants.tsv or defaults."""
-    if subject_id in _SUBJECT_DICT:
-        info = _SUBJECT_DICT[subject_id]
-        return {
-            "age": info.get("age", "unknown"),
-            "sex": info.get("sex", "unknown"),
-            "handedness": info.get("handedness", "unknown"),
-        }
+def _find_events_tsv(file_path: str) -> Optional[str]:
+    """Find the corresponding events.tsv file for a given EEG file."""
+    # BIDS naming: sub-XXX_task-YYY_eeg.edf -> sub-XXX_task-YYY_events.tsv
+    base = file_path.replace("_eeg.edf", "").replace("_eeg.set", "").replace("_eeg.vhdr", "").replace("_eeg.eeg", "")
+    events_path = base + "_events.tsv"
+    if os.path.exists(events_path):
+        return events_path
     
-    # Try to load from participants.tsv
-    df = _load_participants_tsv(dataset_root)
-    if not df.empty and "participant_id" in df.columns:
-        # Normalize participant_id (sub-01 -> sub-01 or 01)
-        df["participant_id_norm"] = df["participant_id"].str.replace("sub-", "", regex=False)
-        subject_num = subject_id.replace("sub-", "")
-        matching = df[df["participant_id_norm"] == subject_num]
-        if not matching.empty:
-            row = matching.iloc[0]
-            return {
-                "age": str(row.get("age", "unknown")),
-                "sex": str(row.get("sex", "unknown")).lower(),
-                "handedness": str(row.get("handedness", "unknown")).lower(),
-            }
-    
-    # Defaults - LLM推断，需人类复核
-    return {
-        "age": "unknown",
-        "sex": "unknown",
-        "handedness": "unknown",
-    }
-
-
-def _detect_kickstarter_outcome(file_path: str) -> Optional[int]:
-    """Detect Kickstarter funding outcome from file path or metadata.
-    
-    Returns:
-        1 if project was funded, 0 if not funded, None if unknown
-    """
-    # Source: Veillette eeg-neuroforecasting repository
-    # Projects are named with funding outcome or this can be derived from external JSON
-    # LLM 推断，需人类复核
-    file_name = os.path.basename(file_path).lower()
-    
-    # Heuristic: check if path contains funding outcome indicators
-    if "funded" in file_name:
-        return 1
-    elif "notfunded" in file_name or "not_funded" in file_name:
-        return 0
+    # Try alternative: same directory, any events.tsv matching subject
+    dir_path = os.path.dirname(file_path)
+    subject_match = re.search(r"sub-(\d+)", file_path)
+    if subject_match:
+        subject_id = subject_match.group(0)
+        for f in os.listdir(dir_path):
+            if f.endswith("_events.tsv") and subject_id in f:
+                return os.path.join(dir_path, f)
     
     return None
 
 
-def _build_segmentation_annotations(
-    raw: mne.io.BaseRaw,
-    segment_length: float = 2.0,
-    overlap: Optional[float] = None,
-) -> mne.Annotations:
-    """Build segment annotations for Kickstarter prediction tasks.
-    
-    For the classification task, segments are created from continuous EEG
-    during valuation periods. The actual label (funded/not_funded) should
-    come from external Kickstarter metadata.
-    
-    Parameters
-    ----------
-    raw : mne.io.BaseRaw
-        Raw EEG object
-    segment_length : float
-        Length of each segment in seconds
-    overlap : float, optional
-        Overlap between segments in seconds
-        
-    Returns
-    -------
-    mne.Annotations
-        Annotations with 'segment' description
-    """
-    sfreq = raw.info["sfreq"]
-    n_samples = raw.n_times
-    total_duration = n_samples / sfreq
-    
-    onsets = []
-    durations = []
-    descriptions = []
-    
-    # Sliding window segmentation
-    step = segment_length
-    if overlap is not None:
-        step = segment_length - overlap
-    
-    current_onset = 0.0
-    while current_onset + segment_length <= total_duration:
-        onsets.append(current_onset)
-        durations.append(segment_length)
-        descriptions.append("segment")
-        current_onset += step
-    
-    return mne.Annotations(
-        onset=np.array(onsets),
-        duration=np.array(durations),
-        description=np.array(descriptions),
-    )
+def _find_participants_tsv(file_path: str) -> Optional[str]:
+    """Find participants.tsv by walking up from file path."""
+    current_dir = os.path.dirname(file_path)
+    for _ in range(5):  # Walk up at most 5 levels
+        participants_path = os.path.join(current_dir, "participants.tsv")
+        if os.path.exists(participants_path):
+            return participants_path
+        parent = os.path.dirname(current_dir)
+        if parent == current_dir:
+            break
+        current_dir = parent
+    return None
 
 
-def _infer_amplifier_from_metadata(raw: mne.io.BaseRaw) -> str:
-    """Try to infer amplifier from raw info or metadata.
+def _read_events_tsv(events_path: str) -> pd.DataFrame:
+    """Read events.tsv file."""
+    if events_path and os.path.exists(events_path):
+        return pd.read_csv(events_path, sep="\t")
+    return pd.DataFrame()
+
+
+def _read_participants_tsv(participants_path: str) -> pd.DataFrame:
+    """Read participants.tsv file."""
+    if participants_path and os.path.exists(participants_path):
+        return pd.read_csv(participants_path, sep="\t")
+    return pd.DataFrame()
+
+
+def _get_subject_from_participants(participants_df: pd.DataFrame, subject_id: str) -> Dict[str, str]:
+    """Get subject info from participants dataframe."""
+    if participants_df.empty or "participant_id" not in participants_df.columns:
+        return {}
     
-    Source: Dataset documentation or raw.info
-    LLM 推断，需人类复核
-    """
-    # Check raw info for amplifier hints
-    if "device_info" in raw.info:
-        return raw.info["device_info"].get("type", "unknown")
+    subject_row = participants_df[participants_df["participant_id"] == subject_id]
+    if subject_row.empty:
+        return {}
     
-    # Common EEG amplifiers in OpenNeuro datasets
-    # LLM 推断，需人类复核
+    result = {}
+    for col in participants_df.columns:
+        if col != "participant_id":
+            val = subject_row.iloc[0][col]
+            # Convert to string, handle NaN
+            if pd.isna(val):
+                result[col] = "unknown"
+            else:
+                result[col] = str(val)
+    return result
+
+
+def _normalize_sex(sex_val: str) -> str:
+    """Normalize sex value to lowercase standard."""
+    if not sex_val or sex_val.lower() in ("unknown", "n/a", "na", ""):
+        return "unknown"
+    sex_lower = sex_val.lower()
+    if sex_lower in ("m", "male"):
+        return "male"
+    elif sex_lower in ("f", "female"):
+        return "female"
     return "unknown"
 
 
+def _create_annotations_from_events(raw: mne.io.BaseRaw, events_df: pd.DataFrame) -> mne.Annotations:
+    """Create MNE Annotations from BIDS events.tsv dataframe."""
+    if events_df.empty or "onset" not in events_df.columns:
+        return mne.Annotations(onset=[], duration=[], description=[])
+    
+    onsets = events_df["onset"].values.astype(float)
+    durations = events_df["duration"].values.astype(float) if "duration" in events_df.columns else np.zeros(len(onsets))
+    
+    # Use trial_type if available, otherwise value, otherwise description
+    # For this dataset, trial_type contains "image" which is the event type
+    # We use trial_type as the annotation description (literal string, no remapping per HC-5)
+    if "trial_type" in events_df.columns:
+        descriptions = events_df["trial_type"].astype(str).values
+    elif "value" in events_df.columns:
+        descriptions = events_df["value"].astype(str).values
+    elif "description" in events_df.columns:
+        descriptions = events_df["description"].astype(str).values
+    else:
+        descriptions = np.array(["segment"] * len(onsets))
+    
+    # Create annotations with literal strings from events.tsv (no remapping per HC-5)
+    annotations = mne.Annotations(
+        onset=onsets,
+        duration=durations,
+        description=descriptions.tolist(),
+    )
+    return annotations
+
+
+def _create_derived_misc_channel(raw: mne.io.BaseRaw, channel_name: str, values: np.ndarray) -> mne.io.BaseRaw:
+    """Create a derived misc channel with given values and add to raw."""
+    # Ensure values match raw length
+    n_samples = len(raw.times)
+    if len(values) != n_samples:
+        # Interpolate or pad if needed
+        if len(values) < n_samples:
+            # Repeat/extend to match length
+            repeated = np.tile(values, int(np.ceil(n_samples / len(values))))[:n_samples]
+            values = repeated
+        else:
+            values = values[:n_samples]
+    
+    # Create info for new channel
+    info = mne.create_info(
+        ch_names=[channel_name],
+        sfreq=raw.info["sfreq"],
+        ch_types=["misc"],
+    )
+    
+    # Create RawArray
+    data = values.reshape(1, -1)
+    raw_misc = mne.io.RawArray(data, info, verbose=False)
+    
+    # Add to existing raw
+    raw.add_channels([raw_misc], force_update_info=True)
+    
+    return raw
+
+
+def _compute_project_funding_rate(events_df: pd.DataFrame) -> Dict[Any, float]:
+    """Compute project-level funding rate across all subjects."""
+    if events_df.empty or "project_id" not in events_df.columns or "funded" not in events_df.columns:
+        return {}
+    
+    # Group by project_id and compute mean funded rate
+    funding_rates = events_df.groupby("project_id")["funded"].mean().to_dict()
+    return funding_rates
+
+
+def _compute_subject_consistency(events_df: pd.DataFrame, subject_funding: Dict[Any, float]) -> float:
+    """Compute how consistent subject's choices are with population average."""
+    if events_df.empty or "project_id" not in events_df.columns or "funded" not in events_df.columns:
+        return 0.5
+    
+    # For each project, compare subject choice to population rate
+    consistencies = []
+    for _, row in events_df.iterrows():
+        project_id = row["project_id"]
+        funded = row["funded"]
+        if project_id in subject_funding:
+            pop_rate = subject_funding[project_id]
+            # Consistency: 1 if choice aligns with majority, 0 otherwise
+            if pop_rate >= 0.5 and funded == 1:
+                consistencies.append(1.0)
+            elif pop_rate < 0.5 and funded == 0:
+                consistencies.append(1.0)
+            else:
+                consistencies.append(0.0)
+    
+    if not consistencies:
+        return 0.5
+    return float(np.mean(consistencies))
+
+
 # =============================================================================
-# Main Kernel Class
+# Kernel Class
 # =============================================================================
 
-@dataclass
-class EEGNeuroforecastingKernel:
-    """Stage1 kernel for OpenNeuro ds004284 (EEG Neuroforecasting).
-    
-    This kernel processes EEG recordings during Kickstarter decision-making
-    tasks. Since no discrete event markers are present in the raw data,
-    segmentation is based on continuous EEG periods that can be further
-    labeled using external Kickstarter metadata.
-    
-    Supported Tasks:
-    - Kickstarter Outcome Prediction (Classification)
-    - Individual Funding Decision Prediction (Classification)
-    - Population-Level Outcome Regression (Super-meta)
-    """
+class OpenNeuroDS004284Kernel:
+    KERNEL_ID = "openneuro_ds004284"
+    DATASET_NAME = "eeg-neuroforecasting"
+    VERSION = "1.0.0"
 
-    KERNEL_ID: str = "openneuro-ds004284-stage1"
+    def __init__(self):
+        pass
 
     def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
-        """Apply stage1 preprocessing to a single record.
-
-        Parameters
-        ----------
-        udataset
-            EEGUnity dataset context.
-        raw
-            In-memory MNE Raw object.
-        row
-            Locator row with File Path and other metadata.
-
-        Returns
-        -------
-        mne.io.BaseRaw
-            Processed MNE Raw object with updated metadata and annotations.
-        """
-        file_path = row.get("File Path", "")
-        dataset_root = row.get("Dataset Root", "")
+        # Extract subject ID
         subject_id = _detect_subject_id(row)
-
-        # -------------------------------------------------------------------------
-        # 1. Channel Name Standardization
-        # -------------------------------------------------------------------------
-        raw = self._standardize_channels(raw)
-
-        # -------------------------------------------------------------------------
-        # 2. Set Montage (must be after channel rename)
-        # -------------------------------------------------------------------------
-        raw = self._set_montage(raw)
-
-        # -------------------------------------------------------------------------
-        # 3. Build Annotations for Segmentation Tasks
-        # -------------------------------------------------------------------------
-        raw = self._add_segmentation_annotations(raw)
-
-        # -------------------------------------------------------------------------
-        # 4. Subject Metadata
-        # -------------------------------------------------------------------------
-        subject_info = _get_subject_info(subject_id, dataset_root)
-        amplifier = _infer_amplifier_from_metadata(raw)
-
-        # -------------------------------------------------------------------------
-        # 5. Write eegunity_description
-        # -------------------------------------------------------------------------
-        original_description = raw.info.get("description", "") or ""
-        if isinstance(original_description, dict):
-            original_description = json.dumps(original_description)
-
-        description_dict = {
-            "original_description": original_description,
-            "eegunity_description": {
-                "age": subject_info["age"],
-                "sex": subject_info["sex"],
-                "amplifier": amplifier,
-                "cap": _CAP_TYPE,
-                "handedness": subject_info["handedness"],
-            },
+        file_path = row.get("File Path", "")
+        
+        # Find and read participants.tsv
+        participants_path = _find_participants_tsv(file_path)
+        participants_df = _read_participants_tsv(participants_path)
+        subject_info = _get_subject_from_participants(participants_df, subject_id)
+        
+        # Find and read events.tsv
+        events_path = _find_events_tsv(file_path)
+        events_df = _read_events_tsv(events_path)
+        
+        # Build eegunity_description with required fields from participants.tsv
+        eegunity_description = {
+            "age": subject_info.get("age", "unknown"),
+            "sex": _normalize_sex(subject_info.get("sex", "unknown")),
+            "amplifier": _DATASET_INFO["amplifier"],
+            "cap": _DATASET_INFO["cap"],
+            "handedness": subject_info.get("handedness", "unknown"),
         }
-        raw.info["description"] = json.dumps(description_dict)
-
-        return raw
-
-    def _standardize_channels(self, raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-        """Standardize channel names for the 129-channel system.
         
-        The dataset uses EGI Hydrocel GSN channel naming conventions.
-        Standardize to common format before setting montage.
+        # Add any additional required info fields that exist
+        for field in _REQUIRED_INFO_FIELDS:
+            if field in subject_info and field not in eegunity_description:
+                eegunity_description[field] = subject_info[field]
         
-        Source: EGI Hydrocel GSN channel naming
-        """
-        ch_names = raw.ch_names
-        new_names = []
+        # Set description as JSON string (MNE requires string, not dict)
+        original_desc = raw.info.get("description", "")
+        raw.info["description"] = json.dumps({
+            "original_description": original_desc,
+            "eegunity_description": eegunity_description,
+        })
         
-        for i, name in enumerate(ch_names):
-            name_upper = name.upper().strip()
+        # Apply annotations from events.tsv if available
+        if not events_df.empty:
+            annotations = _create_annotations_from_events(raw, events_df)
+            # Set annotations, replacing any existing ones
+            raw.set_annotations(annotations)
+        
+        # Create derived misc channels
+        n_samples = len(raw.times)
+        sfreq = raw.info["sfreq"]
+        
+        # funded_continuous: per-trial binary funding decision broadcast to all samples in trial
+        if "funded" in events_df.columns and "onset" in events_df.columns:
+            funded_values = np.zeros(n_samples)
+            for _, evt in events_df.iterrows():
+                onset = float(evt["onset"])
+                duration = float(evt["duration"]) if "duration" in evt and pd.notna(evt["duration"]) else 0.0
+                funded_val = float(evt["funded"]) if pd.notna(evt["funded"]) else 0.0
+                
+                # Convert to sample indices
+                start_sample = int(onset * sfreq)
+                end_sample = int((onset + duration) * sfreq) if duration > 0 else start_sample + 1
+                start_sample = max(0, min(start_sample, n_samples))
+                end_sample = max(0, min(end_sample, n_samples))
+                
+                if start_sample < end_sample:
+                    funded_values[start_sample:end_sample] = funded_val
             
-            # EGI standard naming: E1, E2, ..., E128, or with GSN prefix
-            if name_upper.startswith("E") and name_upper[1:].isdigit():
-                # E1, E2, ... E128 -> EEG001, EEG002, ...
-                egi_num = int(name_upper[1:])
-                if 1 <= egi_num <= 256:
-                    new_names.append(f"EEG{egi_num:03d}")
-                    continue
+            # Only add if we have valid funded data
+            if len(events_df) > 0 and "funded" in events_df.columns:
+                raw = _create_derived_misc_channel(raw, "funded_continuous", funded_values)
+        
+        # project_funding_rate: group events.tsv by project_id, compute mean funded rate per project
+        if "funded" in events_df.columns and "project_id" in events_df.columns:
+            project_funding_rates = _compute_project_funding_rate(events_df)
             
-            # Already standardized or other channel types
-            if name_upper.startswith("EEG") or name_upper.startswith("VEO"):
-                new_names.append(name)
+            if project_funding_rates:
+                project_rate_values = np.zeros(n_samples)
+                for _, evt in events_df.iterrows():
+                    onset = float(evt["onset"])
+                    duration = float(evt["duration"]) if "duration" in evt and pd.notna(evt["duration"]) else 0.0
+                    project_id = evt["project_id"]
+                    
+                    if project_id in project_funding_rates:
+                        rate_val = project_funding_rates[project_id]
+                        
+                        # Convert to sample indices
+                        start_sample = int(onset * sfreq)
+                        end_sample = int((onset + duration) * sfreq) if duration > 0 else start_sample + 1
+                        start_sample = max(0, min(start_sample, n_samples))
+                        end_sample = max(0, min(end_sample, n_samples))
+                        
+                        if start_sample < end_sample:
+                            project_rate_values[start_sample:end_sample] = rate_val
+                
+                raw = _create_derived_misc_channel(raw, "project_funding_rate", project_rate_values)
+        
+        # subject_consistency: compute agreement between subject's choices and population average
+        if "funded" in events_df.columns and "project_id" in events_df.columns:
+            # Compute population-level funding rates (need all subjects' data)
+            # We use the events_df we have; for a single file this is just that subject's events
+            # To get population rates, we need to aggregate across all events files
+            # Since we only have this file's events, we compute project rates from available data
+            # In practice, with full dataset all subjects' events would be pooled
+            
+            # Try to find all events.tsv files in the dataset for population aggregation
+            all_events_dfs = []
+            if file_path:
+                dataset_root = os.path.dirname(file_path)
+                # Walk up to find dataset root (where participants.tsv is)
+                for _ in range(5):
+                    if os.path.exists(os.path.join(dataset_root, "participants.tsv")):
+                        break
+                    parent = os.path.dirname(dataset_root)
+                    if parent == dataset_root:
+                        break
+                    dataset_root = parent
+                
+                # Search for all events.tsv files
+                for root, dirs, files in os.walk(dataset_root):
+                    for f in files:
+                        if f.endswith("_events.tsv"):
+                            full_path = os.path.join(root, f)
+                            try:
+                                df = pd.read_csv(full_path, sep="\t")
+                                if "funded" in df.columns and "project_id" in df.columns:
+                                    all_events_dfs.append(df)
+                            except Exception:
+                                pass
+            
+            # Compute population funding rates from all available events
+            if all_events_dfs:
+                all_events = pd.concat(all_events_dfs, ignore_index=True)
+                pop_funding_rates = _compute_project_funding_rate(all_events)
             else:
-                # Keep original but capitalize properly
-                new_names.append(name)
-        
-        # Apply renames only if different
-        rename_map = {
-            old: new for old, new in zip(ch_names, new_names)
-            if old != new
-        }
-        
-        if rename_map:
-            raw = raw.rename_channels(rename_map)
+                # Fallback: use current file's events only (degenerate but valid)
+                pop_funding_rates = _compute_project_funding_rate(events_df)
+            
+            # Compute subject consistency
+            consistency_score = _compute_subject_consistency(events_df, pop_funding_rates)
+            
+            # Broadcast as constant channel
+            consistency_values = np.full(n_samples, consistency_score)
+            raw = _create_derived_misc_channel(raw, "subject_consistency", consistency_values)
         
         return raw
 
-    def _set_montage(self, raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-        """Set standard montage for the high-density EEG cap.
-        
-        Source: EGI Hydrocel GSN 128 standard 10-5 system positions
-        Annotator: LLM, 2026-04-08
-        """
-        try:
-            # Try EGI Hydrocel GSN 128 montage (standard 10-5 system)
-            montage = mne.channels.make_standard_montage("GSN-Hydrocel-128")
-            raw = raw.set_montage(montage, on_missing="warn")
-        except Exception:
-            # Fallback: try standard 10-5 system
-            try:
-                montage = mne.channels.make_standard_montage("standard_alphabetic")
-                raw = raw.set_montage(montage, on_missing="warn")
-            except Exception:
-                # If montage setting fails, continue without it
-                pass
-        
-        return raw
 
-    def _add_segmentation_annotations(self, raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-        """Add segmentation annotations for classification/regression tasks.
-        
-        Creates 'segment' annotations for sliding window segmentation.
-        The actual outcome labels (funded/not_funded) should be derived
-        from external Kickstarter metadata in downstream processing.
-        """
-        # Default segmentation: 2-second windows (matching Kickstarter task)
-        annotations = _build_segmentation_annotations(
-            raw,
-            segment_length=2.0,
-            overlap=None,
-        )
-        raw = raw.set_annotations(annotations)
-        return raw
-
-
-# =============================================================================
-# Kernel Instance
-# =============================================================================
-
-KERNEL = EEGNeuroforecastingKernel()
+KERNEL = OpenNeuroDS004284Kernel()

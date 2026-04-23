@@ -2,35 +2,37 @@
 
 **Dataset**: `openneuro_ds004951` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004951
 **Category**: Sensory/Response | **Subjects**: 23 | **Files (Completed)**: 23 | **Channels**: 64 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
-Participants identified Braille letters presented via tactile stimulation to left or right index fingers while EEG was recorded. The study investigates cortical plasticity by comparing sighted controls and congenitally blind individuals in processing Braille letter information. Stimulus codes S10-S16 mark individual Braille letter presentations (~3298-3301 each).
+Participants identified Braille letters presented via tactile stimulation to the left or right index fingers while EEG was recorded with a 64-channel system at 1000 Hz. The study investigates cortical plasticity by comparing sighted controls and congenitally blind individuals in Braille letter processing. Stimulus codes S10-S16 mark individual Braille letter presentations to the right hand (~3298-3301 trials each), while S1-S8 correspond to left-hand stimulation.
 
 ## File Scan Result
 
-> **Kernel SHA256**: `bca6bdbc5406855bc363bfa0909ecc190a21615b1a5142b0968e57e49e915b61`
+> **Kernel SHA256**: `2a0d33acc56d02fbe3ab1e2835ffdfa68ff4fdf0b9daddfd0ffaa442ac6bea45`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Stimulus/S 10` | 3299 | event | raw | Braille letter 10 onset |
-| `Stimulus/S 11` | 3300 | event | raw | Braille letter 11 onset |
-| `Stimulus/S 12` | 3298 | event | raw | Braille letter 12 onset |
-| `Stimulus/S 13` | 3298 | event | raw | Braille letter 13 onset |
-| `Stimulus/S 14` | 3299 | event | raw | Braille letter 14 onset |
-| `Stimulus/S 15` | 3301 | event | raw | Braille letter 15 onset |
-| `Stimulus/S 16` | 3301 | event | raw | Braille letter 16 onset |
+| `Stimulus/S 10` | 3299 | event | raw | Letter stimulus onset for right hand (S 10) |
+| `Stimulus/S 11` | 3300 | event | raw | Letter stimulus onset for right hand (S 11) |
+| `Stimulus/S 12` | 3298 | event | raw | Letter stimulus onset for right hand (S 12) |
+| `Stimulus/S 13` | 3298 | event | raw | Letter stimulus onset for right hand (S 13) |
+| `Stimulus/S 14` | 3299 | event | raw | Letter stimulus onset for right hand (S 14) |
+| `Stimulus/S 15` | 3301 | event | raw | Letter stimulus onset for right hand (S 15) |
+| `Stimulus/S 16` | 3301 | event | raw | Letter stimulus onset for right hand (S 16) |
 
 
 ### MISC Label Summary
-- **Route**: `misc`
-- **Role**: Stores continuous or derived channel labels.
+| Channel | Source | Meta | Notes |
+|---|---|---|---|
+| `HEOG` | native (raw misc in EEG file) | raw | Verify channel role and unit |
+| `HEOG` | derived (per Task Notes) | super | Super Meta — kernel derives per-segmentation value |
 - **Candidate Labels**: `HEOG`
-- **Kernel Note**: Verify channel roles and units.
+
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
@@ -40,71 +42,80 @@ Participants identified Braille letters presented via tactile stimulation to lef
 
 ## Tasks
 
-### Classical Task 1: Braille Letter Identity Classification (8-class)
+### Potential Task 1: 8-class Braille letter identity (right hand)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, baseline = (-0.2, 0.0) s
+- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 0.8 s *, target_events = [Stimulus/S 10, Stimulus/S 11, Stimulus/S 12, Stimulus/S 13, Stimulus/S 14, Stimulus/S 15, Stimulus/S 16]`
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `Stimulus/S 1` | 0 | Braille letter B |
-  | `Stimulus/S 2` | 1 | Braille letter C |
-  | `Stimulus/S 3` | 2 | Braille letter D |
-  | `Stimulus/S 4` | 3 | Braille letter L |
-  | `Stimulus/S 5` | 4 | Braille letter M |
-  | `Stimulus/S 6` | 5 | Braille letter N |
-  | `Stimulus/S 7` | 6 | Braille letter V |
-  | `Stimulus/S 8` | 7 | Braille letter Z |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `Stimulus/S 10` | 0 | Letter stimulus onset for right hand (S 10) |
+  | `Stimulus/S 11` | 1 | Letter stimulus onset for right hand (S 11) |
+  | `Stimulus/S 12` | 2 | Letter stimulus onset for right hand (S 12) |
+  | `Stimulus/S 13` | 3 | Letter stimulus onset for right hand (S 13) |
+  | `Stimulus/S 14` | 4 | Letter stimulus onset for right hand (S 14) |
+  | `Stimulus/S 15` | 5 | Letter stimulus onset for right hand (S 15) |
+  | `Stimulus/S 16` | 6 | Letter stimulus onset for right hand (S 16) |
 - **Evidence**:
-  - DOI: 10.7554/eLife.98148 — EEG classification of 8 Braille letters (B, C, D, L, M, N, V, Z) from blind participants using SVM with epochs -100ms to 999ms relative to stimulus onset. Multivariate classification decoding Braille letter identity from EEG patterns. Within-hand vs cross-hand transfer learning to distinguish sensory vs perceptual representations.
-- **Kernel Notes**: Braille letters E and O are vigilance targets (catch trials) - exclude from classification. S101/S222 events (~63k each) are response feedback markers - exclude. S200 block marker (~10k) - exclude. S253/S255 admin markers - exclude. Label mapping assumes S1-S8 correspond to B, C, D, L, M, N, V, Z per publication methodology - verify from dataset documentation. Sampling rate: 1000Hz. Baseline window: -200ms to 0ms for correction.
+  - 10.7554/eLife.98148 — Right-hand analog of the classical left-hand task. Events S10-S16 correspond to the same 8 Braille letters (B, C, D, L, M, N, V, Z) presented to the right index finger. README confirms S9-S16 are right hand stimuli. Same trial counts (~3298-3301 each) as left hand. Enables cross-hand transfer learning analysis.
+- **Notes**: Right-hand counterpart to the classical left-hand Braille letter classification task. Per README, triggers S1-S8 are left hand stimuli and S9-S16 are right hand stimuli. The 8 events S10-S16 (note: S9 appears to be unused or grouped with S10-S16 in the actual data) represent 8 distinct Braille letters presented to the right index finger, forming an 8-class classification problem analogous to the left-hand task.
 
-### Potential Task 1: Braille Letter Identification (16-class extended)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, baseline = (-0.2, 0.0) s
-- **Label Route**: `event`
+### Potential Task 2: Age Regression from Continuous EEG
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 2.0 s *, overlap = 0.5 *, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `Stimulus/S 1` | 0 | Braille letter 1 |
-  | `Stimulus/S 2` | 1 | Braille letter 2 |
-  | `Stimulus/S 3` | 2 | Braille letter 3 |
-  | `Stimulus/S 4` | 3 | Braille letter 4 |
-  | `Stimulus/S 5` | 4 | Braille letter 5 |
-  | `Stimulus/S 6` | 5 | Braille letter 6 |
-  | `Stimulus/S 7` | 6 | Braille letter 7 |
-  | `Stimulus/S 8` | 7 | Braille letter 8 |
-  | `Stimulus/S 9` | 8 | Braille letter 9 |
-  | `Stimulus/S 10` | 9 | Braille letter 10 |
-  | `Stimulus/S 11` | 10 | Braille letter 11 |
-  | `Stimulus/S 12` | 11 | Braille letter 12 |
-  | `Stimulus/S 13` | 12 | Braille letter 13 |
-  | `Stimulus/S 14` | 13 | Braille letter 14 |
-  | `Stimulus/S 15` | 14 | Braille letter 15 |
-  | `Stimulus/S 16` | 15 | Braille letter 16 |
-- **Evidence**: N/A - plausible from paradigm alone
-- **Kernel Notes**: Full 16-class Braille letter classification using all S1-S16 events (~3300 each). Includes catch trials E and O unlike Classical Task 1. Exclude admin markers (S253, S255, New Segment/), S101/S222 feedback markers, and S200 block boundaries. Verify S9 triggers present in raw data (not confirmed in available events list).
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 29–61 (years) | Participant chronological age from participants.tsv; N=11, mean ~45. Each segment inherits the subject's age as regression target. |
+- **Evidence**:
+- **Notes**: Archetype B3: age is a native numeric column in participants.tsv, requiring no kernel derivation. Segmentation produces fixed-length windows from continuous EEG; each segment is labeled with the corresponding subject's age. The 2s segment length and 50% overlap are standard defaults for continuous-data regression tasks when no event structure is needed.
 
-### Potential Task 2: Braille Late Cognitive Processing Classification
+### Potential Task 3: Sex Classification from Continuous EEG
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0.3 s, tmax = 1.0 s, baseline = (0.3, 0.5) s
-- **Label Route**: `event`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5 *, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `Stimulus/S 1` | 0 | Braille letter B |
-  | `Stimulus/S 2` | 1 | Braille letter C |
-  | `Stimulus/S 3` | 2 | Braille letter D |
-  | `Stimulus/S 4` | 3 | Braille letter L |
-  | `Stimulus/S 5` | 4 | Braille letter M |
-  | `Stimulus/S 6` | 5 | Braille letter N |
-  | `Stimulus/S 7` | 6 | Braille letter V |
-  | `Stimulus/S 8` | 7 | Braille letter Z |
-- **Evidence**: N/A - plausible from paradigm and alignment recommendations
-- **Kernel Notes**: Alternative epoch window focusing on late cognitive processing (300-1000ms) capturing decision/response-related components. Excludes early somatosensory evoked potentials for cleaner classification of higher-order perceptual representations. Based on alignment recommendations for Braille_Late_Response paradigm.
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | sex | F | 0 | Female |
+  | sex | M | 1 | Male |
+- **Evidence**:
+- **Notes**: Binary classification of participant sex from segmented continuous EEG. Uses 2-second non-overlapping segments (50% overlap) with subject-level labels from participants.tsv. Highly imbalanced dataset (8F/3M) but valid 2-class problem. No event structure required due to segmentation approach.
+
+### Potential Task 4: HEOG Regression (Native Misc)
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 0.8 s *, target_events = [Stimulus/S 10, Stimulus/S 11, Stimulus/S 12, Stimulus/S 13, Stimulus/S 14, Stimulus/S 15, Stimulus/S 16]`
+- **Label Route**: `misc`
+- **Label Field**: `HEOG`
+- **Meta Level**: super
+- **Target Definition**:
+  | MISC Channel | Value (unit) | Notes |
+  |--------------|--------------|-------|
+  | HEOG | continuous (µV) | Horizontal electrooculogram; native continuous misc channel recorded during Braille letter stimulus presentation |
+- **Evidence**:
+- **Notes**: Native HEOG channel is the only continuous non-EEG channel available in this dataset (EOGChannelCount=1, EMGChannelCount=0, MiscChannelCount=0). The task regresses HEOG amplitude from EEG channels time-locked to right-hand Braille letter stimulus onsets (S 10-S 16), capturing ocular activity/artifact during tactile letter processing. Epoch window [-0.2, 0.8] s covers pre-stimulus baseline and post-stimulus ocular response. All seven right-hand stimulus event IDs are pooled as epoch anchors since they share the same functional role (letter onset for right hand) per the README and events structure.
+
+## Data Quality Notes
+
+- Only right-hand stimulus events (S10-S16) are present in the scanned files; left-hand events (S1-S8) referenced in documentation are not found in this scan, suggesting either incomplete file coverage or data subset.
+- Event counts show near-perfect balance across S10-S16 (~3298-3301 each), indicating well-controlled trial randomization.
+- The `device` field is completely missing from metadata, limiting hardware reproducibility.
+- HEOG is the only available ocular channel; no VEOG or EMG channels are present, which may limit artifact correction options.
+- Task definitions assume S10-S16 map to 8 distinct Braille letters (B, C, D, L, M, N, V, Z) per README and publication, but this mapping is not directly encoded in event labels—requires external documentation for interpretability.
+- Age regression task notes N=11 for age data, but dataset reports 23 subjects total; verify age availability across all participants.
+- Sex classification task notes highly imbalanced distribution (8F/3M), which may affect model training and evaluation.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

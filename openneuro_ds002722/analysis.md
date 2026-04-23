@@ -2,7 +2,7 @@
 
 **Dataset**: `openneuro_ds002722` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002722
 **Category**: High-level Mental | **Subjects**: 19 | **Files (Completed)**: 94 | **Channels**: 37 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
@@ -10,7 +10,7 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 
 ## File Scan Result
 
-> **Kernel SHA256**: `7a06edeb5c3973a647191dafb67dc052c48de334ddb6d6d730109caca0b04194`
+> **Kernel SHA256**: `6f4f4bba50913ffe10cf00b9d8352cbbe0dc7713c9b50d7bb39d4520e89cacec`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
@@ -29,25 +29,56 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 
 ## Tasks
 
-### Classical Task 1: Affective Music Condition Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 40.0 s, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`]
-- **Label Route**: `event`
+### Classical Task 1: Affective Music Listening Segmentation — Age Regression
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.5 *, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|----|--------------------------|
-  | `1` | 0 | Music condition 1 (affective state A) |
-  | `2` | 1 | Music condition 2 (affective state B) |
-  | `3` | 2 | Music condition 3 (affective state C) |
-  | `4` | 3 | Music condition 4 (affective state D) |
-  | `5` | 4 | Music condition 5 (affective state E) |
-  | `6` | 5 | Music condition 6 (affective state F) |
-  | `7` | 6 | Music condition 7 (affective state G) |
-  | `8` | 7 | Music condition 8 (affective state H) |
-  | `9` | 8 | Music condition 9 (affective state I) |
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 19.0 – 30.0 (years) | Subject chronological age from participants.tsv; all segments from a given subject share the same age label |
 - **Evidence**:
-  - DOI: `10.1038/s41597-020-0507-6` — The paper is the official data descriptor for openneuro_ds002722, describing EEG and physiological recordings from 19 participants listening to 40-second synthetic music clips with 9 different affective conditions (codes 1-9), presented during 5 runs of 18 trials each as a BCMI calibration session.
-  - DOI: `10.1038/s41598-022-27361-x` — Demonstrates neural decoding of music from EEG using a similar synthetic music paradigm by the same research group.
-- **Kernel Notes**: Epochs align to the onset of each 40-second music clip. Verify EEG-only channels among the 37-channel setup before pooling across subjects. Codes 100-200 (specific clip identifiers) should be filtered; use only codes 1-9 for condition labels.
+  - 10.1038/s41597-020-0507-6 — Dataset publication describing affective BCMI calibration with music listening; participants.tsv contains age field used for subject-level regression
+- **Notes**: Segmentation-based approach for continuous music listening EEG. Since the paradigm involves 21-second trials of continuous music stimulation with no clear event-boundary rest periods suitable for standard epoching, we use 10-second sliding windows (50% overlap) to capture local neural dynamics during affective music exposure. Age is a native participants.tsv column (B3 archetype), requiring no kernel derivation. The regression target is subject age, enabling exploration of age-related neural signatures during affective processing. This complements event-based classification tasks by leveraging the continuous nature of the stimulation.
+
+### Potential Task 1: Age Regression from EEG
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.5 *, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `age`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 19.0–30.0 (years) | Subject-level age broadcast to all segments per subject. N=19 with complete age data. |
+- **Evidence**:
+- **Notes**: Segmentation-based regression task using 10-second non-overlapping windows (50% overlap) from continuous EEG recordings. No event-based discrimination required; age label is a native participants.tsv column (B3 archetype, raw meta level). The kernel simply reads the `age` field from participants.tsv and broadcasts it to all segments belonging to each subject.
+
+### Potential Task 2: Sex Classification from EEG
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.5 *, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `sex`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | sex | F | 0 | Female |
+  | sex | M | 1 | Male |
+- **Evidence**:
+  - participants.tsv — N=19 subjects with complete sex information: 11 female (F), 8 male (M)
+- **Notes**: Subject-level binary classification using continuous EEG segments. No event-based structure is used; 10-second windows with 50% overlap provide multiple samples per subject. Class balance is reasonable (58% female, 42% male). The sex field is a native participants.tsv column, so Meta Level is raw.
+
+## Data Quality Notes
+
+- No known data quality issues.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

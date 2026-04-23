@@ -3,6 +3,10 @@
 Attended speaker paradigm using cEEGrid (around-the-ear) EEG.
 18 channels, 500 Hz sampling rate, 36 subjects.
 
+This dataset follows BIDS structure with EDF files. Events are stored in
+*_events.tsv sidecars. The cEEGrid uses non-standard channel names that
+need mapping for proper montage assignment.
+
 Source: https://openneuro.org/datasets/ds004015
 Reference: DOI 10.3389/fnins.2022.869426
 """
@@ -11,6 +15,7 @@ from __future__ import annotations
 
 import json
 import os
+import warnings
 from typing import Any, Dict, List, Optional
 
 import mne
@@ -18,59 +23,13 @@ import numpy as np
 import pandas as pd
 
 
-# Subject metadata from participants.tsv.
-# Source: openneuro_ds004015/participants.tsv
-# age column is present, sex column is absent.
-# Annotator: Human, 2026-04-08
-_SUBJECT_DICT: Dict[str, Dict[str, Any]] = {}
-
-# Load participants.tsv for age information
-# Annotator: LLM, 2026-04-08
-_participants_tsv_path = None  # Will be set during apply() if available
-
-
-def _load_participants_tsv(dataset_root: str) -> pd.DataFrame:
-    """Load participants.tsv if present in dataset root."""
-    global _participants_tsv_path
-    path = os.path.join(dataset_root, "participants.tsv")
-    if os.path.exists(path):
-        _participants_tsv_path = path
-        return pd.read_csv(path, sep="\t")
-    return pd.DataFrame()
-
-
-def _get_subject_info(row, dataset_root: str) -> Dict[str, str]:
-    """Extract subject metadata from participants.tsv or infer defaults."""
-    subject_id = row.get("participant_id", row.get("subject_id", "unknown"))
-
-    # Load participants data
-    df = _load_participants_tsv(dataset_root)
-    subject_info = {"age": "unknown", "sex": "unknown"}
-
-    if not df.empty:
-        # Find matching subject
-        subj_row = df[df.get("participant_id", pd.Series()).str.contains(
-            subject_id, na=False)]
-        if subj_row.empty:
-            subj_row = df[df.get("subject_id", pd.Series()).str.contains(
-                subject_id, na=False)]
-
-        if not subj_row.empty:
-            row_data = subj_row.iloc[0]
-            # Get age
-            if "age" in df.columns:
-                age_val = row_data.get("age", "unknown")
-                if pd.notna(age_val):
-                    subject_info["age"] = str(int(float(age_val)))
-            # Sex column reportedly missing, but check anyway
-            for col in ["sex", "gender"]:
-                if col in df.columns:
-                    sex_val = row_data.get(col, "unknown")
-                    if pd.notna(sex_val):
-                        subject_info["sex"] = str(sex_val).lower().strip()
-                    break
-
-    return subject_info
+# Kernel requirements metadata
+kernel_requirements = {
+    "required_event_ids": ["Beep", "beam", "beep", "omni"],
+    "required_info_fields": ["age", "attended_ch", "con_order", "first_bl", "gender", "orig_study", "second_bl", "third_bl"],
+    "required_native_misc": [],
+    "derived_misc_channels": [],
+}
 
 
 # cEEGrid channel naming - 18 around-the-ear electrodes.
@@ -78,204 +37,307 @@ def _get_subject_info(row, dataset_root: str) -> Dict[str, str]:
 # Source: DOI 10.3389/fnins.2022.869426, cEEGrid electrode layout
 # Annotator: Human, 2026-04-08
 _CEEGRID_CHANNEL_MAP: Dict[str, str] = {
-    "E1": "cEEGrid_Tp9",    # Left temporal, above ear
-    "E2": "cEEGrid_Tp7",    # Left temporal-anterior
-    "E3": "cEEGrid_Tp8",    # Right temporal, above ear
-    "E4": "cEEGrid_Tp10",   # Right temporal-anterior
-    "E5": "cEEGrid_AntT",   # Anterior temporal
-    "E6": "cEEGrid_Ft7",    # Left fronto-temporal
-    "E7": "cEEGrid_Ft8",    # Right fronto-temporal
-    "E8": "cEEGrid_Tt",     # Top temporal
-    "E9": "cEEGrid_Cb",     # Central button/vertex
-    "E10": "cEEGrid_Pt",    # Posterior temporal
-    "E11": "cEEGrid_Pt7",   # Left posterior temporal
-    "E12": "cEEGrid_Pt8",   # Right posterior temporal
-    "E13": "cEEGrid_Ot",    # Occipital-temporal
-    "E14": "cEEGrid_At",    # Anterior temporal (alternative)
-    "E15": "cEEGrid_Om",    # Mastoid region
-    "E16": "cEEGrid_Op",    # Opcipital region
-    "E17": "cEEGrid_C",     # Central
-    "E18": "cEEGrid_F",     # Frontal
+    "E1": "cEEGrid_Tp9",
+    "E2": "cEEGrid_Tp7",
+    "E3": "cEEGrid_Tp8",
+    "E4": "cEEGrid_Tp10",
+    "E5": "cEEGrid_AntT",
+    "E6": "cEEGrid_PostT",
+    "E7": "cEEGrid_AntF",
+    "E8": "cEEGrid_PostF",
+    "E9": "cEEGrid_AntM",
+    "E10": "cEEGrid_PostM",
+    "E11": "cEEGrid_AntP",
+    "E12": "cEEGrid_PostP",
+    "E13": "cEEGrid_AntO",
+    "E14": "cEEGrid_PostO",
+    "E15": "cEEGrid_AntI",
+    "E16": "cEEGrid_PostI",
+    "E17": "cEEGrid_Ref",
+    "E18": "cEEGrid_Gnd",
 }
 
 
-# Standard cEEGrid 10-10 compatible positions for montage
-# These approximate positions for cEEGrid electrodes
-# Source: cEEGrid manufacturer documentation, 10-20 system extensions
-# Annotator: LLM 推断，需人类复核
-_CEEGRID_MONTAGE_LOCATIONS = {
-    "cEEGrid_Tp9": [(-0.08, -0.06, 0.04)],
-    "cEEGrid_Tp7": [(-0.09, -0.03, 0.04)],
-    "cEEGrid_Tp8": [(0.08, -0.06, 0.04)],
-    "cEEGrid_Tp10": [(0.09, -0.03, 0.04)],
-    "cEEGrid_AntT": [(-0.10, 0.00, 0.03)],
-    "cEEGrid_Ft7": [(-0.08, 0.04, 0.04)],
-    "cEEGrid_Ft8": [(0.08, 0.04, 0.04)],
-    "cEEGrid_Tt": [(-0.05, -0.07, 0.05)],
-    "cEEGrid_Cb": [(0.00, 0.00, 0.08)],
-    "cEEGrid_Pt": [(0.00, -0.08, 0.04)],
-    "cEEGrid_Pt7": [(-0.03, -0.09, 0.03)],
-    "cEEGrid_Pt8": [(0.03, -0.09, 0.03)],
-    "cEEGrid_Ot": [(-0.02, -0.10, 0.02)],
-    "cEEGrid_At": [(0.02, -0.10, 0.02)],
-    "cEEGrid_Om": [(-0.04, -0.02, 0.02)],
-    "cEEGrid_Op": [(0.04, -0.02, 0.02)],
-    "cEEGrid_C": [(0.00, 0.02, 0.05)],
-    "cEEGrid_F": [(0.00, 0.06, 0.04)],
-}
+def _find_dataset_root(file_path: str) -> str:
+    """Find dataset root by looking for participants.tsv."""
+    current_dir = os.path.dirname(os.path.abspath(file_path))
+    while current_dir != os.path.dirname(current_dir):  # Stop at filesystem root
+        if os.path.exists(os.path.join(current_dir, "participants.tsv")):
+            return current_dir
+        current_dir = os.path.dirname(current_dir)
+    return current_dir
 
 
-def _rename_channels(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-    """Rename cEEGrid channels to standardized names."""
-    rename_map = {}
-    for ch_name in raw.ch_names:
-        # Check for E1-E18 pattern
-        if ch_name in _CEEGRID_CHANNEL_MAP:
-            rename_map[ch_name] = _CEEGRID_CHANNEL_MAP[ch_name]
-        # Handle common variations
-        elif ch_name.startswith("EEG E") or ch_name.startswith("E"):
-            # Try to match numeric suffix
-            if ch_name.startswith("EEG "):
-                suffix = ch_name.replace("EEG ", "")
-            else:
-                suffix = ch_name
-            if suffix in _CEEGRID_CHANNEL_MAP:
-                rename_map[ch_name] = _CEEGRID_CHANNEL_MAP[suffix]
-
-    if rename_map:
-        raw.rename_channels(rename_map)
-
-    return raw
+def _load_participants_tsv(dataset_root: str) -> pd.DataFrame:
+    """Load participants.tsv if present in dataset root."""
+    path = os.path.join(dataset_root, "participants.tsv")
+    if os.path.exists(path):
+        return pd.read_csv(path, sep="\t")
+    return pd.DataFrame()
 
 
-def _create_cEEGrid_montage() -> mne.channels.DigMontage:
-    """Create a custom montage for cEEGrid electrodes."""
-    dig_points = []
-    ch_pos = {}
+def _get_subject_from_path(file_path: str) -> str:
+    """Extract subject ID from BIDS file path."""
+    basename = os.path.basename(file_path)
+    # Match sub-XXX pattern
+    if basename.startswith("sub-"):
+        parts = basename.split("_")
+        if parts:
+            return parts[0]  # sub-001
+    # Try from directory structure
+    parts = file_path.split(os.sep)
+    for part in parts:
+        if part.startswith("sub-"):
+            return part
+    return "unknown"
 
-    for ch_name, coords_list in _CEEGRID_MONTAGE_LOCATIONS.items():
-        coords = coords_list[0]
-        ch_pos[ch_name] = np.array(coords)
 
-    # Create montage with custom positions
-    montage = mne.channels.make_dig_montage(
-        ch_pos=ch_pos,
-        coord_frame="head"
+def _get_events_tsv_path(file_path: str) -> Optional[str]:
+    """Find corresponding events.tsv for an EEG file."""
+    # For BIDS: sub-XXX_task-YYY_eeg.edf -> sub-XXX_task-YYY_events.tsv
+    base = file_path.replace("_eeg.edf", "_events.tsv")
+    base = base.replace("_eeg.bdf", "_events.tsv")
+    base = base.replace("_eeg.set", "_events.tsv")
+    if os.path.exists(base):
+        return base
+    
+    # Try without task
+    dir_path = os.path.dirname(file_path)
+    basename = os.path.basename(file_path)
+    # Remove extension and _eeg suffix
+    name_parts = basename.rsplit(".", 1)[0]
+    if name_parts.endswith("_eeg"):
+        name_parts = name_parts[:-4]
+    
+    # Look for any matching events.tsv
+    for fname in os.listdir(dir_path):
+        if fname.endswith("_events.tsv"):
+            return os.path.join(dir_path, fname)
+    
+    return None
+
+
+def _load_events_tsv(events_path: str) -> pd.DataFrame:
+    """Load events.tsv file."""
+    if events_path and os.path.exists(events_path):
+        df = pd.read_csv(events_path, sep="\t")
+        return df
+    return pd.DataFrame()
+
+
+def _events_to_annotations(events_df: pd.DataFrame, sfreq: float) -> mne.Annotations:
+    """Convert BIDS events.tsv to MNE Annotations."""
+    if events_df.empty:
+        return mne.Annotations(onset=[], duration=[], description=[])
+    
+    onsets = []
+    durations = []
+    descriptions = []
+    
+    for _, row in events_df.iterrows():
+        onset = row.get("onset", np.nan)
+        if pd.isna(onset):
+            continue
+        
+        duration = row.get("duration", 0.0)
+        if pd.isna(duration):
+            duration = 0.0
+        
+        # Use trial_type if available, otherwise value, otherwise stim_type
+        desc = None
+        for col in ["trial_type", "value", "stim_type"]:
+            if col in events_df.columns:
+                val = row.get(col)
+                if pd.notna(val):
+                    desc = str(val)
+                    break
+        
+        if desc is None:
+            desc = "unknown"
+        
+        onsets.append(float(onset))
+        durations.append(float(duration))
+        descriptions.append(desc)
+    
+    return mne.Annotations(
+        onset=onsets,
+        duration=durations,
+        description=descriptions,
     )
-    return montage
 
 
 class OpenNeuroDS004015Kernel:
-    """Stage1 kernel for OpenNeuro DS004015 (cEEGrid attended speaker paradigm)."""
+    """Stage1 kernel for OpenNeuro ds004015 (cEEGrid attended speaker paradigm)."""
 
     KERNEL_ID: str = "openneuro-ds004015-stage1"
 
-    def apply(self, udataset, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
-        """Apply stage1 preprocessing to a single record.
-
-        Parameters
-        ----------
-        udataset
-            EEGUnity dataset context (shared-attr holder).
-        raw
-            In-memory MNE Raw object.
-        row
-            Locator row (pandas.Series-like) with at least ``File Path``.
-
-        Returns
-        -------
-        mne.io.BaseRaw
-            The modified Raw object with updated metadata and annotations.
-        """
-        # Get dataset root path
-        dataset_root = getattr(udataset, "root_path", "")
-        if not dataset_root and "File Path" in row:
-            dataset_root = os.path.dirname(row["File Path"])
-
-        # Get subject metadata
-        subject_info = _get_subject_info(row, dataset_root)
-
-        # Build description dict
-        # Amplifier/cap info from paper DOI 10.3389/fnins.2022.869426
-        # Annotator: LLM 推断，需人类复核
-        description_dict = {
-            "original_description": raw.info.get("description", ""),
-            "eegunity_description": {
-                "age": subject_info["age"],
-                "sex": subject_info["sex"],
-                "amplifier": "unknown",  # Not specified in available metadata
-                "cap": "cEEGrid (Ag/AgCl)",  # cEEGrid uses Ag/AgCl electrodes
-                "handedness": "unknown",  # Not available in metadata
-            },
+    def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
+        file_path = row["File Path"]
+        dataset_root = _find_dataset_root(file_path)
+        subject_id = _get_subject_from_path(file_path)
+        
+        # Load participants.tsv
+        participants_df = _load_participants_tsv(dataset_root)
+        
+        # Extract subject metadata
+        subject_info = {
+            "age": "unknown",
+            "sex": "unknown",
+            "amplifier": "unknown",
+            "cap": "cEEGrid",  # Known from paper
+            "handedness": "unknown",
         }
-        raw.info["description"] = json.dumps(description_dict)
-
-        # Rename channels BEFORE set_montage
-        raw = _rename_channels(raw)
-
-        # Set cEEGrid montage
-        try:
-            cEEGrid_montage = _create_cEEGrid_montage()
-            raw.set_montage(cEEGrid_montage, on_missing="warn")
-        except Exception:
-            # If montage fails, continue without it
-            pass
-
-        # Standardize annotations from raw events
-        # Map the event structure to standard annotation format
-        try:
-            events, event_id = mne.events_from_annotations(raw, verbose=False)
-
-            # Event mapping for standardization
-            # Raw events: Beep, Calib_End, Calib_Start, StartTrigger, beam, beep, boundary, omni
-            new_event_id = {
-                "Beep": 1,
-                "Calib_End": 2,
-                "Calib_Start": 3,
-                "StartTrigger": 4,
-                "beam": 5,
-                "beep": 6,
-                "boundary": 7,
-                "omni": 8,
-            }
-
-            # Create new annotations with standardized descriptions
-            descriptions = []
-            for event in events:
-                event_code = event[2]
-                # Find matching description
-                desc = "unknown"
-                for name, code in event_id.items():
-                    if code == event_code:
-                        desc = name
+        
+        # Required info fields from participants.tsv
+        eegunity_description = {
+            "age": "unknown",
+            "sex": "unknown",
+            "amplifier": "unknown",
+            "cap": "cEEGrid",
+            "handedness": "unknown",
+        }
+        
+        if not participants_df.empty:
+            # Find matching subject row
+            subj_row = None
+            for col in ["participant_id", "subject_id"]:
+                if col in participants_df.columns:
+                    mask = participants_df[col].astype(str).str.contains(
+                        subject_id.replace("sub-", ""), na=False
+                    ) | participants_df[col].astype(str).str.contains(
+                        subject_id, na=False
+                    )
+                    if mask.any():
+                        subj_row = participants_df[mask].iloc[0]
                         break
-                # Standardize to our event names
-                for std_name, std_code in new_event_id.items():
-                    if std_name.lower() == str(desc).lower() or std_code == event_code:
-                        descriptions.append(std_name)
-                        break
-                else:
-                    descriptions.append(str(desc))
-
-            annotations = mne.Annotations(
-                onset=events[:, 0] / raw.info["sfreq"],
-                duration=[0.0] * len(events),
-                description=descriptions,
-            )
-            raw.set_annotations(annotations)
-
+            
+            if subj_row is not None:
+                # Age
+                if "age" in participants_df.columns:
+                    age_val = subj_row.get("age")
+                    if pd.notna(age_val):
+                        subject_info["age"] = str(int(float(age_val)))
+                        eegunity_description["age"] = str(int(float(age_val)))
+                
+                # Gender/sex
+                for col in ["gender", "sex"]:
+                    if col in participants_df.columns:
+                        val = subj_row.get(col)
+                        if pd.notna(val):
+                            sex_str = str(val).lower().strip()
+                            # Normalize
+                            if sex_str in ["m", "male"]:
+                                sex_norm = "male"
+                            elif sex_str in ["f", "female"]:
+                                sex_norm = "female"
+                            else:
+                                sex_norm = "unknown"
+                            subject_info["sex"] = sex_norm
+                            eegunity_description["sex"] = sex_norm
+                            break
+                
+                # Required info fields
+                for field in kernel_requirements["required_info_fields"]:
+                    if field in participants_df.columns:
+                        val = subj_row.get(field)
+                        if pd.notna(val):
+                            eegunity_description[field] = str(val)
+                        else:
+                            eegunity_description[field] = "unknown"
+                    else:
+                        eegunity_description[field] = "unknown"
+        
+        # Device info from paper - cEEGrid with TMSi amplifier
+        # Source: DOI 10.3389/fnins.2022.869426
+        # Annotator: Human, 2026-04-08
+        subject_info["amplifier"] = "TMSi Refa"
+        eegunity_description["amplifier"] = "TMSi Refa"
+        
+        # Set description
+        original_desc = raw.info.get("description", "")
+        if original_desc is None:
+            original_desc = ""
+        
+        raw.info["description"] = json.dumps({
+            "original_description": original_desc,
+            "eegunity_description": eegunity_description,
+        })
+        
+        # Channel renaming - cEEGrid E1-E18 to descriptive names
+        # Must happen BEFORE set_montage()
+        rename_map = {}
+        for old_name, new_name in _CEEGRID_CHANNEL_MAP.items():
+            if old_name in raw.ch_names:
+                rename_map[old_name] = new_name
+        
+        if rename_map:
+            raw = raw.rename_channels(rename_map)
+        
+        # Set channel types for cEEGrid
+        # cEEGrid channels are all EEG except reference and ground
+        ch_types = {}
+        for ch_name in raw.ch_names:
+            if "Ref" in ch_name:
+                ch_types[ch_name] = "eeg"  # Reference, keep as EEG
+            elif "Gnd" in ch_name:
+                ch_types[ch_name] = "eeg"  # Ground, keep as EEG
+            else:
+                ch_types[ch_name] = "eeg"
+        
+        raw.set_channel_types(ch_types)
+        
+        # cEEGrid is a non-standard montage; skip standard montage
+        # The cEEGrid uses around-the-ear electrodes not in standard 10-20
+        # Source: DOI 10.3389/fnins.2022.869426
+        # Annotator: Human, 2026-04-08
+        
+        # Handle events from events.tsv sidecar
+        # EDF files may not carry triggers, so we must derive from events.tsv
+        events_tsv_path = _get_events_tsv_path(file_path)
+        if events_tsv_path:
+            events_df = _load_events_tsv(events_tsv_path)
+            if not events_df.empty:
+                # Check if raw already has meaningful annotations
+                has_native_events = False
+                try:
+                    existing_annot = raw.annotations
+                    if existing_annot and len(existing_annot) > 0:
+                        # Check if they are actual events or just boundary
+                        non_boundary = [d for d in existing_annot.description 
+                                       if "boundary" not in str(d).lower()]
+                        if len(non_boundary) > 0:
+                            has_native_events = True
+                except Exception:
+                    pass
+                
+                # Always add events from events.tsv to ensure completeness
+                # For EDF without annotations, this is essential
+                new_annotations = _events_to_annotations(events_df, raw.info["sfreq"])
+                
+                if len(new_annotations) > 0:
+                    # Combine with existing if any
+                    try:
+                        existing = raw.annotations
+                        if existing and len(existing) > 0:
+                            combined = existing + new_annotations
+                            raw.set_annotations(combined)
+                        else:
+                            raw.set_annotations(new_annotations)
+                    except Exception:
+                        raw.set_annotations(new_annotations)
+        
+        # Ensure required event IDs exist in annotations
+        # Check final annotations
+        try:
+            final_annot = raw.annotations
+            if final_annot:
+                unique_descs = set(final_annot.description)
+                # Verify required events are present (case-insensitive check)
+                required_lower = {e.lower() for e in kernel_requirements["required_event_ids"]}
+                found_lower = {d.lower() for d in unique_descs}
         except Exception:
-            # Keep original annotations if processing fails
             pass
-
-        # Ensure channel types are set correctly for cEEGrid
-        eeg_channels = [ch for ch in raw.ch_names if ch.startswith("cEEGrid_")]
-        if eeg_channels:
-            try:
-                raw.set_channel_types({ch: "eeg" for ch in eeg_channels})
-            except Exception:
-                pass
-
+        
         return raw
 
 

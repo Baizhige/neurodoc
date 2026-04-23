@@ -246,15 +246,18 @@ def _format_grounded_label_fields(grounded: Dict[str, List[Dict[str, Any]]]) -> 
         parts.append("  (none discovered — info route and derived misc unavailable)")
     parts.append("")
 
-    parts.append("[events.tsv numeric columns — misc route native (regression only)]")
+    parts.append("[events.tsv numeric columns — ARCHETYPE B2 CANDIDATES (derived misc, Meta=super)]")
+    parts.append("  These are per-trial scalars, NOT continuous channels. Emit as archetype B2")
+    parts.append("  with must_derive_misc.source_field = \"events.tsv:<column>\".")
     if grounded["events_numeric"]:
         for f in grounded["events_numeric"]:
             parts.append(f"  - {f['name']}  (found_in={f.get('found_in','?')})")
     else:
-        parts.append("  (none discovered — native misc from events.tsv unavailable)")
+        parts.append("  (none discovered — no per-trial numeric columns in events.tsv)")
     parts.append("")
 
-    parts.append("[Native misc channels — misc route native (regression only)]")
+    parts.append("[Native misc channels — ARCHETYPE B1 (native misc, regression only)]")
+    parts.append("  Continuous non-EEG channels already on the raw (EMG, EOG, GSR, etc.).")
     if grounded["misc_native"]:
         for f in grounded["misc_native"]:
             parts.append(f"  - {f['name']}")

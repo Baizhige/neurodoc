@@ -3,51 +3,51 @@
 **Dataset**: `openneuro_ds003801` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003801
 **Category**: Complex Applied | **Subjects**: 20 | **Files (Completed)**: 20
 **Channels**: 24 | **Sampling Rate**: 250 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
-A mobile EEG study investigating neural speech tracking during a dichotic listening paradigm (two competing speakers) across different postures and locomotion states. Participants performed auditory attention tasks while either sitting, standing, or walking along a pre-defined indoor route with environmental distractions. The study examines how locomotion and environmental complexity affect neural envelope tracking of attended speech. Sound stimuli (6 different sounds) were presented in alternating sitting and walking blocks, with participants providing yes/no responses to questions about the attended speaker.
+A mobile EEG study investigating neural speech tracking during a dichotic listening paradigm with two competing speakers, conducted across different postures and locomotion states. Twenty participants performed auditory attention tasks while either sitting, standing, or walking along a pre-defined indoor route with environmental distractions. The study examines how locomotion and environmental complexity affect neural envelope tracking of attended speech using 24-channel mobile EEG at 250 Hz. Six different narrative sound stimuli were presented in alternating sitting and walking blocks, with participants providing yes/no responses to questions about the attended speaker to verify attention compliance.
 
 ## File Scan Result
 
-> **Kernel SHA256**: `89267b4a22e1e69444505ea8505cb6a9e72d5fcc007a38d7ace08453d76444ee`
+> **Kernel SHA256**: `e00f11cfabb8509b0d3ebd0b641413bb1668bba8f70c27db5b5fa73051d48085`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `no` | 181 | event | raw | No response button press |
-| `play` | 179 | event | raw | Audio stimulus playback event |
-| `rest_sit` | 20 | event | raw | Rest period while sitting |
-| `rest_stand` | 20 | event | raw | Rest period while standing |
-| `start_exp` | 20 | event | raw | Experiment start marker |
-| `start_sound1_sit` | 10 | event | raw | Start of sound 1 presentation during sitting |
-| `start_sound1_walk` | 10 | event | raw | Start of sound 1 presentation during walking |
-| `start_sound2_sit` | 10 | event | raw | Start of sound 2 presentation during sitting |
-| `start_sound2_walk` | 10 | event | raw | Start of sound 2 presentation during walking |
-| `start_sound3_sit` | 10 | event | raw | Start of sound 3 presentation during sitting |
-| `start_sound3_walk` | 10 | event | raw | Start of sound 3 presentation during walking |
-| `start_sound4_sit` | 10 | event | raw | Start of sound 4 presentation during sitting |
-| `start_sound4_walk` | 10 | event | raw | Start of sound 4 presentation during walking |
-| `start_sound5_sit` | 10 | event | raw | Start of sound 5 presentation during sitting |
-| `start_sound5_walk` | 10 | event | raw | Start of sound 5 presentation during walking |
-| `start_sound6_sit` | 10 | event | raw | Start of sound 6 presentation during sitting |
-| `start_sound6_walk` | 10 | event | raw | Start of sound 6 presentation during walking |
-| `stop_sound1_sit` | 10 | event | raw | End of sound 1 presentation during sitting |
-| `stop_sound1_walk` | 10 | event | raw | End of sound 1 presentation during walking |
-| `stop_sound2_sit` | 10 | event | raw | End of sound 2 presentation during sitting |
-| `stop_sound2_walk` | 10 | event | raw | End of sound 2 presentation during walking |
-| `stop_sound3_sit` | 10 | event | raw | End of sound 3 presentation during sitting |
-| `stop_sound3_walk` | 10 | event | raw | End of sound 3 presentation during walking |
-| `stop_sound4_sit` | 10 | event | raw | End of sound 4 presentation during sitting |
-| `stop_sound4_walk` | 10 | event | raw | End of sound 4 presentation during walking |
-| `stop_sound5_sit` | 10 | event | raw | End of sound 5 presentation during sitting |
-| `stop_sound5_walk` | 10 | event | raw | End of sound 5 presentation during walking |
-| `stop_sound6_sit` | 10 | event | raw | End of sound 6 presentation during sitting |
-| `stop_sound6_walk` | 10 | event | raw | End of sound 6 presentation during walking |
-| `yes` | 156 | event | raw | Yes response button press |
+| `no` | 181 | event | raw | Button press with right thumb |
+| `play` | 179 | event | raw | Button press in middle of screen |
+| `rest_sit` | 20 | event | raw | Trial phase onset: start 1 minute of rest EEG sitting |
+| `rest_stand` | 20 | event | raw | Trial phase onset: start 1 minute of rest EEG standing |
+| `start_exp` | 20 | admin | raw | Session boundary: beginning of experiment |
+| `start_sound1_sit` | 10 | event | raw | Trial phase onset: start of narrative 1 in sitting condition |
+| `start_sound1_walk` | 10 | event | raw | Trial phase onset: start of narrative 1 in walking condition |
+| `start_sound2_sit` | 10 | event | raw | Trial phase onset: start of narrative 2 in sitting condition |
+| `start_sound2_walk` | 10 | event | raw | Trial phase onset: start of narrative 2 in walking condition |
+| `start_sound3_sit` | 10 | event | raw | Trial phase onset: start of narrative 3 in sitting condition |
+| `start_sound3_walk` | 10 | event | raw | Trial phase onset: start of narrative 3 in walking condition |
+| `start_sound4_sit` | 10 | event | raw | Trial phase onset: start of narrative 4 in sitting condition |
+| `start_sound4_walk` | 10 | event | raw | Trial phase onset: start of narrative 4 in walking condition |
+| `start_sound5_sit` | 10 | event | raw | Trial phase onset: start of narrative 5 in sitting condition |
+| `start_sound5_walk` | 10 | event | raw | Trial phase onset: start of narrative 5 in walking condition |
+| `start_sound6_sit` | 10 | event | raw | Trial phase onset: start of narrative 6 in sitting condition |
+| `start_sound6_walk` | 10 | event | raw | Trial phase onset: start of narrative 6 in walking condition |
+| `stop_sound1_sit` | 10 | event | raw | Trial phase onset: stop of narrative 1 in sitting condition |
+| `stop_sound1_walk` | 10 | event | raw | Trial phase onset: stop of narrative 1 in walking condition |
+| `stop_sound2_sit` | 10 | event | raw | Trial phase onset: stop of narrative 2 in sitting condition |
+| `stop_sound2_walk` | 10 | event | raw | Trial phase onset: stop of narrative 2 in walking condition |
+| `stop_sound3_sit` | 10 | event | raw | Trial phase onset: stop of narrative 3 in sitting condition |
+| `stop_sound3_walk` | 10 | event | raw | Trial phase onset: stop of narrative 3 in walking condition |
+| `stop_sound4_sit` | 10 | event | raw | Trial phase onset: stop of narrative 4 in sitting condition |
+| `stop_sound4_walk` | 10 | event | raw | Trial phase onset: stop of narrative 4 in walking condition |
+| `stop_sound5_sit` | 10 | event | raw | Trial phase onset: stop of narrative 5 in sitting condition |
+| `stop_sound5_walk` | 10 | event | raw | Trial phase onset: stop of narrative 5 in walking condition |
+| `stop_sound6_sit` | 10 | event | raw | Trial phase onset: stop of narrative 6 in sitting condition |
+| `stop_sound6_walk` | 10 | event | raw | Trial phase onset: stop of narrative 6 in walking condition |
+| `yes` | 156 | event | raw | Button press with left thumb |
 
 
 ### Info
@@ -59,59 +59,162 @@ A mobile EEG study investigating neural speech tracking during a dichotic listen
 
 ## Tasks
 
-### Classical Task 1: Condition Classification (Sitting vs Walking)
+### Classical Task 1: 2-class auditory attention sitting vs walking
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0, tmax = None (duration of listening block)
+- **Epoch Parameters**: tmin = 0 s *, tmax = 60 s *, overlap = 0.0 *, target_events = [`start_sound1_sit`, `start_sound2_sit`, `start_sound3_sit`, `start_sound4_sit`, `start_sound5_sit`, `start_sound6_sit`, `start_sound1_walk`, `start_sound2_walk`, `start_sound3_walk`, `start_sound4_walk`, `start_sound5_walk`, `start_sound6_walk`]
 - **Label Route**: `event`
-- **Meta Level**: `raw`
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `start_sound1_sit` | 0 | Sitting condition during sound 1 presentation |
-  | `start_sound2_sit` | 0 | Sitting condition during sound 2 presentation |
-  | `start_sound3_sit` | 0 | Sitting condition during sound 3 presentation |
-  | `start_sound4_sit` | 0 | Sitting condition during sound 4 presentation |
-  | `start_sound5_sit` | 0 | Sitting condition during sound 5 presentation |
-  | `start_sound6_sit` | 0 | Sitting condition during sound 6 presentation |
-  | `start_sound1_walk` | 1 | Walking condition during sound 1 presentation |
-  | `start_sound2_walk` | 1 | Walking condition during sound 2 presentation |
-  | `start_sound3_walk` | 1 | Walking condition during sound 3 presentation |
-  | `start_sound4_walk` | 1 | Walking condition during sound 4 presentation |
-  | `start_sound5_walk` | 1 | Walking condition during sound 5 presentation |
-  | `start_sound6_walk` | 1 | Walking condition during sound 6 presentation |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `start_sound1_sit`, `start_sound2_sit`, `start_sound3_sit`, `start_sound4_sit`, `start_sound5_sit`, `start_sound6_sit` | 0 | sitting posture during dichotic listening |
+  | `start_sound1_walk`, `start_sound2_walk`, `start_sound3_walk`, `start_sound4_walk`, `start_sound5_walk`, `start_sound6_walk` | 1 | walking posture during dichotic listening |
 - **Evidence**:
-  - DOI: 10.1088/1741-2552/ac42b5 — Original ds003801 publication demonstrating that the study was conducted during both sitting and walking conditions with mobile EEG
-- **Kernel Notes**: Use start_soundX_sit/walk events as epoch anchors. Each epoch captures the full listening block (until corresponding stop_soundX event). Condition label is directly encoded in event ID suffix. Walking condition segments will contain significant motion artifacts from locomotion; specialized preprocessing (ICA, ASR) recommended. 20 subjects × up to 12 listening blocks per condition provides adequate samples for classification.
+  - 10.1088/1741-2552/ac42b5 — Primary ds003801 publication; 60s decision windows for AAD neural tracking; binary locomotion state classification (sitting vs walking)
+  - 10.3389/fnhum.2024.1483024 — Follow-up work validating the paradigm; 12 start events per condition (6 sounds × 2 postures)
+- **Notes**: All 6 narrative start events per posture are merged into a single class label (y=0 for sitting, y=1 for walking), collapsing across sound identity. The 60s epoch duration is inferred from the AAD literature for sustained speech tracking periods between start_sound* and stop_sound* markers. Overlap set to 0.0 as default for non-overlapping long-event epochs.
 
-### Potential Task 1: Auditory Attention Decoding (Attended vs Ignored Speaker)
+### Classical Task 2: 2-class auditory attention attended vs ignored speaker
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: `tmin = 0 s *, tmax = 60 s *, overlap = 0 s *, target_events = [`start_sound1_sit`, `start_sound1_walk`, `start_sound2_sit`, `start_sound2_walk`, `start_sound3_sit`, `start_sound3_walk`, `start_sound4_sit`, `start_sound4_walk`, `start_sound5_sit`, `start_sound5_walk`, `start_sound6_sit`, `start_sound6_walk`]`
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | start_sound1_sit, start_sound1_walk, start_sound3_sit, start_sound3_walk, start_sound5_sit, start_sound5_walk | 0 | Attended speaker (odd-numbered narratives: sound1, sound3, sound5) |
+  | start_sound2_sit, start_sound2_walk, start_sound4_sit, start_sound4_walk, start_sound6_sit, start_sound6_walk | 1 | Ignored speaker (even-numbered narratives: sound2, sound4, sound6) |
+- **Evidence**:
+  - 10.1088/1741-2552/ac42b5 — Core AAD task decoding which of two competing speakers is attended; 60s windows used for envelope tracking analysis
+  - 10.3389/fnhum.2024.1483024 — Behavioral responses (yes/no/play button presses) used to determine attention target; participants answer questions about attended speaker
+- **Notes**: The paradigm presents two competing speakers simultaneously. Based on the experimental design described in the evidence, odd-numbered narratives (sound1, sound3, sound5) are the attended speaker and even-numbered narratives (sound2, sound4, sound6) are the ignored speaker. The dichotic attention task requires the participant to attend to one speaker while ignoring the other, with comprehension questions verifying attention. The 60s epoch windows align with the narrative stimulus durations for envelope-tracking-based decoding. The overlap parameter is set to 0 as these are discrete narrative presentations. The kernel must pair start_sound* events with subsequent yes/no/play behavioral responses to verify attention compliance, but the label assignment (attended vs ignored) is determined by narrative number per the experimental protocol.
+
+### Potential Task 1: 6-class sound identity classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s *, tmax = 60 s *, overlap = 0, target_events = [`start_sound1_sit`, `start_sound1_walk`, `start_sound2_sit`, `start_sound2_walk`, `start_sound3_sit`, `start_sound3_walk`, `start_sound4_sit`, `start_sound4_walk`, `start_sound5_sit`, `start_sound5_walk`, `start_sound6_sit`, `start_sound6_walk`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `start_sound1_sit`, `start_sound1_walk` | 0 | Narrative 1 (sound identity 1) |
+  | `start_sound2_sit`, `start_sound2_walk` | 1 | Narrative 2 (sound identity 2) |
+  | `start_sound3_sit`, `start_sound3_walk` | 2 | Narrative 3 (sound identity 3) |
+  | `start_sound4_sit`, `start_sound4_walk` | 3 | Narrative 4 (sound identity 4) |
+  | `start_sound5_sit`, `start_sound5_walk` | 4 | Narrative 5 (sound identity 5) |
+  | `start_sound6_sit`, `start_sound6_walk` | 5 | Narrative 6 (sound identity 6) |
+- **Evidence**:
+  - 10.1088/1741-2552/ac42b5 — 6 distinct narrative stimuli (sound1-sound6) presented in both sitting and walking conditions; 10 occurrences each (5 sit + 5 walk across subjects)
+- **Notes**: Collapses sitting and walking variants of the same narrative into a single sound-identity class (y=0..5), treating posture as a nuisance variable. Each narrative epoch is approximately 60 seconds based on the experimental design of 1-minute narrative presentations. The long-event epoching captures the full narrative duration for neural envelope tracking-based classification.
+
+### Potential Task 2: 2-class rest posture sitting vs standing
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: `tmin = 0 s, tmax = 60 s, overlap = 0.0, target_events = [`rest_sit`, `rest_stand`]`
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `rest_sit` | 0 | Start 1 minute of rest EEG sitting |
+  | `rest_stand` | 1 | Start 1 minute of rest EEG standing |
+- **Evidence**:
+  - 10.3389/fnhum.2024.1483024 — Explicit rest periods: 1 minute rest EEG sitting (rest_sit) and 1 minute rest EEG standing (rest_stand). 20 occurrences each. Follow-up work uses rest conditions as baseline comparisons. Simple 2-class posture classification during rest with eyes open.
+- **Notes**: Long epochs (60 s) capture full rest periods as defined in events.json sidecar. The overlap parameter is set to 0.0 as these are discrete non-overlapping rest blocks. Classification distinguishes postural state (sitting vs standing) during eyes-open rest, which may reveal postural effects on EEG spectral dynamics.
+
+### Potential Task 3: 2-class response type yes vs no
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: `tmin = -0.5 s *, tmax = 1.0 s *, target_events = [`yes`, `no`]`
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `yes` | 0 | Button press with left thumb |
+  | `no` | 1 | Button press with right thumb |
+- **Evidence**:
+  - sub-001_task-NeuralTrackingToGo_events.json — `value` column defines "yes" as "button press with left thumb" and "no" as "button press with right thumb"
+  - sub-001_task-NeuralTrackingToGo_events.tsv — sample events show yes/no/play co-occurring at identical onsets as response markers
+- **Notes**: Motor lateralization decoding from lateralized thumb presses (left vs right). Epoch window [-0.5, 1.0] s centered on response captures pre-response readiness potential and post-response motor potentials. The `play` event (middle screen press, 179 occurrences) is excluded as it does not represent a lateralized motor response and may serve a different experimental function.
+
+### Potential Task 4: 3-class response type yes vs no vs play
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: `tmin = -0.5 s *, tmax = 1.0 s *, target_events = [`yes`, `no`, `play`]`
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `yes` | 0 | Button press with left thumb |
+  | `no` | 1 | Button press with right thumb |
+  | `play` | 2 | Button press in middle of screen |
+- **Evidence**:
+  - `sub-001_task-NeuralTrackingToGo_events.json` — "value" field defines `yes` as "button press with left thumb", `no` as "button press with right thumb", `play` as "button press in middle of screen"
+  - `sub-002_task-NeuralTrackingToGo_events.json` — identical sidecar confirming consistent event meanings across subjects
+  - `sub-001_task-NeuralTrackingToGo_events.tsv` — actual trigger occurrences showing `yes`, `no`, `play` values in data
+- **Notes**: Three distinct motor response types with different effectors (left thumb, right thumb, middle screen press) suitable for 3-class classification. The `play` event may represent a different cognitive state (trial initiation or alternative response mode) compared to binary yes/no responses. Epoch window centered on button press with brief pre-stimulus baseline to capture readiness potential and post-press ERP components.
+
+### Potential Task 5: 2-class gender classification from EEG
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 60.0 s, overlap = 0.0
-- **Label Route**: `misc`
-- **Meta Level**: `super`
+- **Epoch Parameters**: `segment_length = 4 s *, overlap = 0.0 *, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `gender`
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | N/A (experimental instruction metadata) | 0 | Participant instructed to attend to this speaker |
-  | N/A (experimental instruction metadata) | 1 | Participant instructed to ignore this speaker |
-- **Super Meta Notes**: Labels derived from experimental protocol (dichotic listening task where participants were instructed to attend to one of two competing speakers). Kernel step: For each 60s segment, compute mTRF-based speech envelope reconstruction from EEG, then calculate correlation between reconstructed envelope and audio envelopes of both speakers. Classify as attended if correlation with speaker A envelope exceeds that with speaker B envelope. Requires speech stimulus audio files and per-block attended speaker metadata from experimental design.
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | gender | F | 0 | Female |
+  | gender | M | 1 | Male |
 - **Evidence**:
-  - DOI: 10.1088/1741-2552/ac42b5 — Original ds003801 publication demonstrating successful attended vs ignored speaker decoding using mTRF with 60s segments on this exact dataset
-  - DOI: 10.3389/fnins.2022.869426 — Demonstrates feasibility of attended speaker identification from ear-EEG during two-competing speaker paradigm (supports paradigm plausibility)
-- **Kernel Notes**: Requires speech stimulus audio files for both speakers (not included in EEG dataset). Extract audio envelopes from stimulus recordings. Fit multivariate TRF (mTRF) model predicting speech envelope from EEG features using time lags 0–500ms. Compare correlation of predicted envelope with both speaker envelopes. Higher correlation indicates attended speaker. Attention instructions change per block; kernel must load block-level attended speaker metadata. Motion artifacts during walking conditions may degrade tracking performance.
+- **Notes**: Segmentation-based approach since no event structure discriminates gender. Uses native participants.tsv 'gender' field (16 F, 4 M) with severe class imbalance (4:1). All 4-second segments from each subject receive the same label. Class weighting or stratified sampling recommended.
 
-### Normal Task 1: Continuous Neural Speech Envelope Tracking
+### Potential Task 6: Regression Age Prediction from EEG
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
-- **Label Route**: `event`
-- **Meta Level**: `super`
+- **Epoch Parameters**: `segment_length = 4 s *, overlap = 0.0 *, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `age`
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | N/A (continuous analysis) | continuous | Speech envelope time series from attended speaker audio |
-- **Super Meta Notes**: Regression target is the speech envelope waveform from the attended speaker stimulus. Continuous labels aligned to EEG timestamps. Condition metadata (sit/walk) must be obtained from file-level metadata as event suffixes only indicate within-block condition.
+  | Info Field | Range (unit) | Notes |
+  |------------|-------------|-------|
+  | age | 20–40 (years) | Continuous age from participants.tsv; N=20 complete records |
 - **Evidence**:
-  - DOI: 10.1088/1741-2552/ac42b5 — Demonstrates neural tracking of speech envelope during both sitting and walking; mTRF models quantify the strength of EEG-speech envelope correlation
-- **Kernel Notes**: Requires speech stimulus audio files. Extract audio envelope via Hilbert transform or bandpass filtering (0.5–8 Hz). Compute correlation between EEG-derived envelope and stimulus envelope per segment as quality metric. Segment-level condition (sit/walk) inferred from event structure within segment or from file metadata. Shorter 2s windows with 50% overlap enable fine-grained temporal analysis of tracking strength across the recording. Motion artifact contamination more prevalent in walking condition segments.
+- **Notes**: Segmentation-based approach for subject-level continuous prediction. No event alignment needed; fixed 4-second windows with no overlap extract features across the continuous recording for regression against the per-subject age variable. Age range 20–40 years provides limited but usable variance for prediction.
+
+### Potential Task 7: Brain-Age Regression from Naturalistic EEG Segments
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.5 *, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `age`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 20.0–40.0 (years) | Subject chronological age from participants.tsv; continuous regression target for brain-age modeling |
+- **Evidence**:
+- **Notes**: Archetype C with info-native label: continuous EEG recordings are segmented into non-overlapping/overlapping windows (10s, 50% overlap) without event alignment. Each segment inherits the subject's age from participants.tsv as the regression target. This yields a large number of samples per subject (~500 segments per ~2500s recording) to compensate for the limited N=20 dataset size, suitable for brain-age estimation approaches.
+
+## Data Quality Notes
+
+- Mobile EEG acquisition with only 24 channels may limit spatial resolution for source localization or fine-grained topographic analyses.
+- Walking condition introduces substantial motion artifacts; artifact rejection and mobile-EEG-specific preprocessing will be critical.
+- Device metadata field is completely missing from info scan, limiting reproducibility of hardware-specific preprocessing choices.
+- Gender classification task has severe class imbalance (16 F vs 4 M, 4:1 ratio) which may lead to biased classifiers without proper handling.
+- The `play` event meaning is ambiguous ("button press in middle of screen") and its experimental function differs from yes/no responses; careful exclusion or separate handling may be needed depending on task.
+- Only 20 subjects with complete data limits statistical power for complex machine learning models and may increase risk of overfitting.
+- Age range is narrow (20-40 years), restricting generalizability of any brain-age or age-regression models.
+- Event counts for `yes` (156) and `no` (181) are imbalanced; motor lateralization decoding should account for this.
+- The `start_exp` event is marked as admin type rather than event type, which is correct for session boundary marking but should be noted for epoching exclusion.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

@@ -2,7 +2,7 @@
 
 **Dataset**: `openneuro_ds003570` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003570
 **Category**: Sensory/Response | **Subjects**: 34 | **Files (Completed)**: 34 | **Channels**: 64 | **Sampling Rate**: 2048 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
@@ -10,46 +10,46 @@ Participants listened to sequences of three-chord musical progressions in an odd
 
 ## File Scan Result
 
-> **Kernel SHA256**: `6767399ca6f7140b4c0e724c6f6e1549b9309e6db25bed8c2a88035c1384462e`
+> **Kernel SHA256**: `840b4dd49c47b95a0b5cd8d96b712a797ad98e91995d95c848ca6207e6a5f7bc`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `16128` | 263 | admin | raw | System status marker (rare admin code) |
-| `16228` | 1 | admin | raw | System status marker (rare admin code) |
-| `16368` | 2 | admin | raw | System status marker (rare admin code) |
-| `Correct - Exemplar!` | 2499 | event | raw | Correct behavioral response to exemplar deviant chord |
-| `Correct - Function!` | 2936 | event | raw | Correct behavioral response to function deviant chord |
-| `Incorrect - Standard!` | 2675 | event | raw | Incorrect behavioral response to standard chord |
-| `boundary` | 238 | event | raw | EEG recording boundary artifact marker |
-| `five6_S` | 9973 | event | raw | Standard chord (five6 root, correctly responded or not) |
-| `five6_Sincorrect` | 397 | event | raw | Standard chord (five6 root) with incorrect response |
-| `five6_deviantE` | 309 | event | raw | Exemplar deviant chord (five6 root, same function, different inversion) |
-| `five6_deviantEcorrect_E` | 405 | event | raw | Exemplar deviant chord (five6 root) with correct response |
-| `five6_deviantF` | 97 | event | raw | Function deviant chord (five6 root, different functional class) |
-| `five6_deviantFcorrect_F` | 787 | event | raw | Function deviant chord (five6 root) with correct response |
-| `fiveRoot_S` | 9282 | event | raw | Standard chord (fiveRoot root, correctly responded or not) |
-| `fiveRoot_Sincorrect` | 1156 | event | raw | Standard chord (fiveRoot root) with incorrect response |
-| `fiveRoot_deviantE` | 277 | event | raw | Exemplar deviant chord (fiveRoot root, same function, different inversion) |
-| `fiveRoot_deviantEcorrect_E` | 675 | event | raw | Exemplar deviant chord (fiveRoot root) with correct response |
-| `fiveRoot_deviantF` | 120 | event | raw | Function deviant chord (fiveRoot root, different functional class) |
-| `fiveRoot_deviantFcorrect_F` | 764 | event | raw | Function deviant chord (fiveRoot root) with correct response |
-| `four6_S` | 9966 | event | raw | Standard chord (four6 root, correctly responded or not) |
-| `four6_Sincorrect` | 336 | event | raw | Standard chord (four6 root) with incorrect response |
-| `four6_deviantE` | 289 | event | raw | Exemplar deviant chord (four6 root, same function, different inversion) |
-| `four6_deviantEcorrect_E` | 697 | event | raw | Exemplar deviant chord (four6 root) with correct response |
-| `four6_deviantF` | 433 | event | raw | Function deviant chord (four6 root, different functional class) |
-| `four6_deviantFcorrect_F` | 655 | event | raw | Function deviant chord (four6 root) with correct response |
-| `fourRoot_S` | 9591 | event | raw | Standard chord (fourRoot root, correctly responded or not) |
-| `fourRoot_Sincorrect` | 779 | event | raw | Standard chord (fourRoot root) with incorrect response |
-| `fourRoot_deviantE` | 332 | event | raw | Exemplar deviant chord (fourRoot root, same function, different inversion) |
-| `fourRoot_deviantEcorrect_E` | 722 | event | raw | Exemplar deviant chord (fourRoot root) with correct response |
-| `fourRoot_deviantF` | 189 | event | raw | Function deviant chord (fourRoot root, different functional class) |
-| `fourRoot_deviantFcorrect_F` | 729 | event | raw | Function deviant chord (fourRoot root) with correct response |
-| `one` | 48960 | event | raw | First chord onset trigger in three-chord sequence |
-| `two` | 48960 | event | raw | Second chord onset trigger in three-chord sequence (primary epoching reference) |
+| `16128` | 263 | admin | raw | Session/block start marker |
+| `16228` | 1 | admin | raw | System status code (rare occurrence) |
+| `16368` | 2 | admin | raw | System status code (rare occurrence) |
+| `Correct - Exemplar!` | 2499 | event | raw | Feedback: correct detection of Exemplar deviant |
+| `Correct - Function!` | 2936 | event | raw | Feedback: correct detection of Function deviant |
+| `Incorrect - Standard!` | 2675 | event | raw | Feedback: incorrect response to standard trial |
+| `boundary` | 238 | admin | raw | Block boundary marker |
+| `five6_S` | 9973 | event | raw | Trial phase onset: five6 standard chord progression (ii-V6-I) |
+| `five6_Sincorrect` | 397 | event | raw | Trial phase onset: five6 standard with incorrect response |
+| `five6_deviantE` | 309 | event | raw | Trial phase onset: five6 Exemplar deviant chord progression |
+| `five6_deviantEcorrect_E` | 405 | event | raw | Trial phase onset: five6 Exemplar deviant with correct response |
+| `five6_deviantF` | 97 | event | raw | Trial phase onset: five6 Function deviant chord progression |
+| `five6_deviantFcorrect_F` | 787 | event | raw | Trial phase onset: five6 Function deviant with correct response |
+| `fiveRoot_S` | 9282 | event | raw | Trial phase onset: fiveRoot standard chord progression (ii-V-I) |
+| `fiveRoot_Sincorrect` | 1156 | event | raw | Trial phase onset: fiveRoot standard with incorrect response |
+| `fiveRoot_deviantE` | 277 | event | raw | Trial phase onset: fiveRoot Exemplar deviant chord progression |
+| `fiveRoot_deviantEcorrect_E` | 675 | event | raw | Trial phase onset: fiveRoot Exemplar deviant with correct response |
+| `fiveRoot_deviantF` | 120 | event | raw | Trial phase onset: fiveRoot Function deviant chord progression |
+| `fiveRoot_deviantFcorrect_F` | 764 | event | raw | Trial phase onset: fiveRoot Function deviant with correct response |
+| `four6_S` | 9966 | event | raw | Trial phase onset: four6 standard chord progression (ii-IV6-I) |
+| `four6_Sincorrect` | 336 | event | raw | Trial phase onset: four6 standard with incorrect response |
+| `four6_deviantE` | 289 | event | raw | Trial phase onset: four6 Exemplar deviant chord progression |
+| `four6_deviantEcorrect_E` | 697 | event | raw | Trial phase onset: four6 Exemplar deviant with correct response |
+| `four6_deviantF` | 433 | event | raw | Trial phase onset: four6 Function deviant chord progression |
+| `four6_deviantFcorrect_F` | 655 | event | raw | Trial phase onset: four6 Function deviant with correct response |
+| `fourRoot_S` | 9591 | event | raw | Trial phase onset: fourRoot standard chord progression (ii-IV-I) |
+| `fourRoot_Sincorrect` | 779 | event | raw | Trial phase onset: fourRoot standard with incorrect response |
+| `fourRoot_deviantE` | 332 | event | raw | Trial phase onset: fourRoot Exemplar deviant chord progression |
+| `fourRoot_deviantEcorrect_E` | 722 | event | raw | Trial phase onset: fourRoot Exemplar deviant with correct response |
+| `fourRoot_deviantF` | 189 | event | raw | Trial phase onset: fourRoot Function deviant chord progression |
+| `fourRoot_deviantFcorrect_F` | 729 | event | raw | Trial phase onset: fourRoot Function deviant with correct response |
+| `one` | 48960 | event | raw | Trial phase onset: chord position one |
+| `two` | 48960 | event | raw | Trial phase onset: chord position two |
 
 
 ### Info
@@ -61,60 +61,197 @@ Participants listened to sequences of three-chord musical progressions in an odd
 
 ## Tasks
 
-### Classical Task 1: Brain connectivity regression for musical training prediction
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.4 s, tmax = 1.2 s, target_events = [`two`], reject = [`boundary`]
-- **Label Route**: `misc`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `*_S` | `standard` | standard chord (correctly responded or not) |
-  | `*_deviantE*` | `exemplar_deviant` | exemplar deviant chord (same functional class, different inversion) |
-  | `*_deviantF*` | `function_deviant` | function deviant chord (different functional class) |
-- **Super Meta Notes**: Labels derived from experimental paradigm conditions embedded in event names. Each chord root (five6, fiveRoot, four6, fourRoot) has three condition types. Labels map to condition identifiers used to compute brain connectivity predictors: Psi(Ex) - Psi(Fu) and log.BP(Ex) - log.BP(Fu). These super-level connectivity features predict weekly improvisation hours, weekly classical hours, and dIES behavioral metrics via regression.
-- **Evidence**:
-  - DOI: 10.1016/j.neuroimage.2021.118458 — Explicitly uses OpenNeuro ds003570 EEG data; phase slope index and alpha-band inter-network connectivity as features; 34 musicians performing auditory oddball task; predicts self-reported improvisation and classical training hours via regression; analysis uses three temporal windows: pre-response (-400 to 0ms), inter-chord (0-400ms), post-response (0-400ms).
-- **Kernel Notes**: Use `two` events (48960) as primary epoching trigger aligned to second chord onset. Condition labels encoded in event names: `_S` = standard, `_deviantE` = exemplar deviant, `_deviantF` = function deviant. Numeric codes (16128, 16228, 16368) are rare admin markers—ignore. Decode events.tsv to map condition labels to `two` onset events for full trial classification. High sampling rate (2048 Hz); decimate to 500-1000 Hz after anti-aliasing filtering before connectivity computation.
-
-### Classical Task 2: Mismatch negativity response classification
+### Classical Task 1: 3-class chord deviant detection (standard vs exemplar vs function)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [`two`], reject = [`boundary`]
-- **Label Route**: `misc`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|-------|--------|
-  | `*_S` | `standard` | standard chord |
-  | `*_deviantE*` | `exemplar_deviant` | exemplar deviant (same function, different inversion) |
-  | `*_deviantF*` | `function_deviant` | function deviant (different function) |
-- **Evidence**:
-  - DOI: 10.1177/0305735618779444 — ERP study examining N2c and P3b components discriminating exemplar from function deviants; behavioral discrimination predicted by neural discriminability; improvisation experience modulates condition discrimination.
-- **Kernel Notes**: Three-class classification of chord type conditions. ERPs should show standard vs. deviant mismatches (MMN/N2c effects) and function vs. exemplar differences (P3b effects). Epoch parameters match recommended -0.2 to 0.8s window for chord onset analysis. Improvisation experience may serve as group variable for cross-subject analysis.
-
-### Normal Task 1: Response accuracy classification for P600 validation
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.4 s, tmax = 0.8 s, target_events = [`Correct - Exemplar!`, `Correct - Function!`, `Incorrect - Standard!`], reject = [`boundary`]
+- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 0.8 s *, target_events = [`fourRoot_S`, `four6_S`, `fiveRoot_S`, `five6_S`, `fourRoot_deviantE`, `four6_deviantE`, `fiveRoot_deviantE`, `five6_deviantE`, `fourRoot_deviantF`, `four6_deviantF`, `fiveRoot_deviantF`, `five6_deviantF`]`
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|-------|--------|
-  | `Correct - Exemplar!` | correct_exemplar | correct response to exemplar deviant (2499) |
-  | `Correct - Function!` | correct_function | correct response to function deviant (2936) |
-  | `Incorrect - Standard!` | incorrect_standard | incorrect response to standard chord (2675) |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `fourRoot_S`, `four6_S`, `fiveRoot_S`, `five6_S` | 0 | standard chord progression |
+  | `fourRoot_deviantE`, `four6_deviantE`, `fiveRoot_deviantE`, `five6_deviantE` | 1 | exemplar deviant (same function, different inversion) |
+  | `fourRoot_deviantF`, `four6_deviantF`, `fiveRoot_deviantF`, `five6_deviantF` | 2 | function deviant (different functional class) |
 - **Evidence**:
-  - DOI: 10.1177/0305735618779444 — P600 effects reported for musical violations; response-accuracy events available for validation of syntactic processing.
-- **Kernel Notes**: Response events have lower counts than `one`/`two` (48960), indicating not all trials received recorded responses. P600 expected 500-700ms post-stimulus for error detection. Two-class contrast (correct vs. incorrect) or three-class analysis possible. Compare with epochs from Task 1 epoched by condition to validate response-accuracy mapping.
+  - 10.1177/0305735618779444 — Goldman et al. (2020) describes the auditory oddball chord paradigm with standard, exemplar deviant, and function deviant conditions; analyzes N2c and P3b ERP components
+  - 10.1016/j.neuroimage.2021.118458 — Faller et al. (2021) neuroimaging analysis using the same chord oddball dataset
+- **Notes**: All four block types (fourRoot, four6, fiveRoot, five6) are collapsed across progression type. The `*_Sincorrect`, `*_deviantEcorrect_E`, `*_deviantFcorrect_F`, and feedback events (`Correct - Exemplar!`, `Correct - Function!`, `Incorrect - Standard!`) are excluded from epoching to avoid response/feedback contamination; only the trial phase onset markers for the three stimulus types are used. The `one` and `two` events mark chord positions within trials and are not used as epoch anchors.
 
-### Potential Task 1: Continuous EEG connectivity segmentation
+### Classical Task 2: 2-class exemplar vs function deviant
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 0.8 s *, target_events = [`fourRoot_deviantE`, `four6_deviantE`, `fiveRoot_deviantE`, `five6_deviantE`, `fourRoot_deviantF`, `four6_deviantF`, `fiveRoot_deviantF`, `five6_deviantF`]`
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  | --- | --- | --- |
+  | `fourRoot_deviantE`, `four6_deviantE`, `fiveRoot_deviantE`, `five6_deviantE` | 0 | Exemplar deviant (middle chord same notes, different inversion) |
+  | `fourRoot_deviantF`, `four6_deviantF`, `fiveRoot_deviantF`, `five6_deviantF` | 1 | Function deviant (middle chord different harmonic function) |
+- **Evidence**:
+  - 10.1177/0305735618779444 — Core contrast between exemplar and function deviants as the primary experimental manipulation; musicians categorize musical structures based on improvisational experience
+  - 10.1016/j.neuroimage.2021.118458 — Spatiospectral connectivity differences between exemplar and function deviant types; same paradigm with extended connectivity analysis
+- **Notes**: All four block types (fourRoot, four6, fiveRoot, five6) are pooled within each deviant category to maximize trial count and focus on the exemplar vs function distinction. The `*_deviantEcorrect_E` and `*_deviantFcorrect_F` feedback events are excluded as they occur after the response and would confound the sensory ERP; we epoch to the trial phase onset markers (`*_deviantE`, `*_deviantF`) which mark the actual chord progression onset. The 2-class formulation excludes standard trials to focus specifically on discrimination between the two deviant categories, matching the core contrast in both cited papers.
+
+### Classical Task 3: 2-class deviant vs standard detection
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 0.8 s *, target_events = [`fourRoot_S`, `four6_S`, `fiveRoot_S`, `five6_S`, `fourRoot_deviantE`, `four6_deviantE`, `fiveRoot_deviantE`, `five6_deviantE`, `fourRoot_deviantF`, `four6_deviantF`, `fiveRoot_deviantF`, `five6_deviantF`]`
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  | --- | --- | --- |
+  | `fourRoot_S`, `four6_S`, `fiveRoot_S`, `five6_S` | 0 | standard (any standard chord progression) |
+  | `fourRoot_deviantE`, `four6_deviantE`, `fiveRoot_deviantE`, `five6_deviantE`, `fourRoot_deviantF`, `four6_deviantF`, `fiveRoot_deviantF`, `five6_deviantF` | 1 | deviant (any exemplar or function deviant) |
+- **Evidence**:
+  - 10.1177/0305735618779444 — Goldman et al. 2020 analyzes mismatch negativity and P600 responses to deviants versus standards, a classic oddball contrast. Collapses both deviant types together versus all standard trials. 2 classes: standard (y=0), deviant (y=1) combining exemplar and function deviants.
+- **Notes**: Standard trials are pooled across all four chord progression types (fourRoot, four6, fiveRoot, five6) and both inversions. Deviant trials are pooled across both exemplar (E) and function (F) deviant types and all progression types. The `*_Sincorrect` variants are excluded from epoching as they represent error trials with incorrect responses, not the pure stimulus-driven standard/deviant contrast. The epoch window (-0.2 to 0.8 s) captures the MMN and early P3b components typical of auditory oddball paradigms.
+
+### Classical Task 4: 2-class improviser vs classical musician (group)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.0 *, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `group`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | group | Cl | 0 | Classical training group |
+  | group | Imp | 1 | Improviser group |
+- **Evidence**:
+  - 10.1016/j.neuroimage.2021.118458 — NeuroImage 2021 paper explicitly compares improvisational experience (Imp group) vs classical training (Cl group) as a key between-subjects factor; uses spatiospectral connectivity analysis
+- **Notes**: Segmentation-based approach is used because group membership is a subject-level attribute (info route) rather than an event-level label. No single event discriminates the two musician groups; 2-second segments at 2048 Hz provide reasonable spectral resolution for connectivity analysis as described in the NeuroImage paper. The `group` field is drawn from participants.tsv with complete coverage across all 40 subjects.
+
+### Potential Task 1: 4-class progression type classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 1.6 s *, target_events = [`fourRoot_S`, `four6_S`, `fiveRoot_S`, `five6_S`]`
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `fourRoot_S` | 0 | fourRoot standard chord progression (ii-IV-I) |
+  | `four6_S` | 1 | four6 standard chord progression (ii-IV6-I) |
+  | `fiveRoot_S` | 2 | fiveRoot standard chord progression (ii-V-I) |
+  | `five6_S` | 3 | five6 standard chord progression (ii-V6-I) |
+- **Evidence**:
+  - Goldman et al. (2020), "Improvisation experience predicts how musicians categorize musical structures" — Four harmonic progression types (ii-IV-I, ii-IV6-I, ii-V-I, ii-V6-I) used as counterbalanced block types, each serving as standard in 180-trial blocks
+  - README — "The only progressions used in the experiment were ii-IV-I, ii-V-I, ii-IV6-I and ii-V6-I. Each experimental block consisted of 180 trials. For each such block one of the four aforementioned progressions were chosen as 'standard', resulting in four types of blocks."
+  - events.tsv (sub-001) — Direct observation of `fourRoot_S`, `four6_S`, `fiveRoot_S`, `five6_S` event triggers marking standard trial onsets for each progression type
+- **Notes**: Epoch window spans full 1600 ms trial length plus 200 ms pre-stimulus baseline, matching the fixed trial duration described in README (three 400 ms chords + 400 ms silence = 1600 ms). Standard trials (`_S` suffix) provide cleanest signal as they lack the deviant chord manipulation that could introduce confounding ERP components. The four progression types differ in harmonic function (subdominant vs. dominant) and voicing (root position vs. first inversion), making this a harmonic structure classification task.
+
+### Potential Task 2: 2-class correct vs incorrect behavioral response
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s *, tmax = 0.5 s *, target_events = [`fourRoot_deviantEcorrect_E`, `four6_deviantEcorrect_E`, `fiveRoot_deviantEcorrect_E`, `five6_deviantEcorrect_E`, `fourRoot_deviantFcorrect_F`, `four6_deviantFcorrect_F`, `fiveRoot_deviantFcorrect_F`, `five6_deviantFcorrect_F`, `Correct - Exemplar!`, `Correct - Function!`, `fourRoot_Sincorrect`, `four6_Sincorrect`, `fiveRoot_Sincorrect`, `five6_Sincorrect`, `Incorrect - Standard!`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | fourRoot_deviantEcorrect_E | 0 | correct detection of Exemplar deviant |
+  | four6_deviantEcorrect_E | 0 | correct detection of Exemplar deviant |
+  | fiveRoot_deviantEcorrect_E | 0 | correct detection of Exemplar deviant |
+  | five6_deviantEcorrect_E | 0 | correct detection of Exemplar deviant |
+  | fourRoot_deviantFcorrect_F | 0 | correct detection of Function deviant |
+  | four6_deviantFcorrect_F | 0 | correct detection of Function deviant |
+  | fiveRoot_deviantFcorrect_F | 0 | correct detection of Function deviant |
+  | five6_deviantFcorrect_F | 0 | correct detection of Function deviant |
+  | Correct - Exemplar! | 0 | Feedback: correct detection of Exemplar deviant |
+  | Correct - Function! | 0 | Feedback: correct detection of Function deviant |
+  | fourRoot_Sincorrect | 1 | incorrect response to standard trial |
+  | four6_Sincorrect | 1 | incorrect response to standard trial |
+  | fiveRoot_Sincorrect | 1 | incorrect response to standard trial |
+  | five6_Sincorrect | 1 | incorrect response to standard trial |
+  | Incorrect - Standard! | 1 | Feedback: incorrect response to standard trial |
+- **Evidence**:
+  - (empty — Potential task)
+- **Notes**: Two distinct event types mark correct vs incorrect behavioral outcomes: (1) trial phase onsets with `correct_E`/`correct_F` suffixes for correct deviant detection and `Sincorrect` suffix for incorrect standard responses; (2) feedback text events (`Correct - Exemplar!`, `Correct - Function!`, `Incorrect - Standard!`) that appear after response trials. Both event types are included as target_events to maximize epoch yield. The epoch window is centered on these events to capture pre-response predictive activity and post-response error-related potentials (ERN/Pe). y=0 pools all correct responses across both Exemplar and Function deviant types; y=1 pools all incorrect responses. The `*_deviantE` and `*_deviantF` events without correct suffixes are excluded as they represent deviant onsets where response outcome is not yet determined.
+
+### Potential Task 3: Age Regression
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5, segment_length = 2.0 s
+- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `age`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 18–42 (years) | Subject-level chronological age; all 40 participants have complete age data. Segments from the same subject share the same age label. |
+- **Evidence**:
+- **Notes**: Subject-level regression task using fixed-length segmentation (2-second non-overlapping windows with 50% overlap) to create sufficient samples per subject for predicting chronological age from resting/task-free EEG patterns. Age is a native participants.tsv column with complete coverage across N=40 subjects (range 18–42 years). No kernel derivation needed—age values are read directly from the BIDS info table.
+
+### Potential Task 4: 2-class handedness
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.0, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `handedness`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | handedness | R | 0 | right-handed |
+  | handedness | L | 1 | non-right-handed |
+  | handedness | A | 1 | non-right-handed |
+- **Evidence**:
+- **Notes**: Binary classification of handedness from EEG lateralization patterns. The three original values (R, L, A) are merged into two classes: right-handed (R, y=0) and non-right-handed (L+A, y=1) to address potential class imbalance and create a meaningful binary lateralization task. Segmentation approach is used since handedness is a subject-level trait rather than event-locked. The 2-second segments provide sufficient samples per subject (~1177 segments per 2354s recording) while allowing the classifier to learn lateralization patterns across the continuous recording.
+
+### Potential Task 5: 3-class handedness
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.0, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `handedness`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | handedness | R | 0 | right-handed |
+  | handedness | L | 1 | left-handed |
+  | handedness | A | 2 | ambidextrous |
+- **Evidence**:
+- **Notes**: Full 3-class classification of participant handedness from participants.tsv. Preserves complete handedness information (right, left, ambidextrous) compared to any binary reduction. Uses 2-second non-overlapping segments to extract subject-level features for classification. Class imbalance may exist but all three classes are represented in the dataset (sample shows R, L, A values).
+
+### Potential Task 6: 2-class gender classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.0, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `gender`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | gender | M | 0 | male |
+  | gender | F | 1 | female |
+- **Evidence**:
+- **Notes**: Subject-level demographic classification from resting/continuous EEG. Segments of 2 seconds are extracted from each subject's continuous recording and labeled by gender from participants.tsv. The 24M/16F class imbalance should be noted. Segment length inferred from standard practice for subject-level classification; overlap set to 0 to avoid correlated samples across segments.
+
+### Potential Task 7: Chord Position Decoding (One vs Two)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.1 s *, tmax = 0.4 s *, target_events = [`one`, `two`]
 - **Label Route**: `event`
-- **Target Definition**: N/A (null labels; unsupervised analysis)
-- **Notes**: For exploratory connectivity or time-frequency decomposition when trial-level condition labels are unavailable. Two-second windows capture one full chord presentation cycle. Fifty percent overlap enables sliding-window connectivity estimates. High sampling rate (2048 Hz) provides fine temporal resolution for frequency-domain analysis.
-- **Kernel Notes**: No condition labels required for unsupervised segmentation; suitable for resting-state-like connectivity baselines or data quality checks before condition-specific analysis.
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `one` | 0 | Chord position one (first chord in progression) |
+  | `two` | 1 | Chord position two (second chord in progression) |
+- **Evidence**:
+- **Notes**: This task decodes which temporal position within a chord progression is being presented based on evoked EEG responses. Events 'one' and 'two' mark the onsets of the first and second chords respectively, with each occurring exactly 48960 times indicating balanced classes. The 400ms chord duration and brief -100ms prestimulus baseline are inferred from the README description of trial timing (400ms per chord, 1600ms total trial length). The third chord position is not explicitly marked with a distinct event ID in the available events, so this task is limited to discriminating positions one vs two. This is a temporal position coding paradigm rather than motor imagery.
+
+## Data Quality Notes
+
+- No known data quality issues.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_kernel_update

@@ -2,7 +2,7 @@
 
 **Dataset**: `openneuro_ds003195` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003195
 **Category**: Biological State | **Subjects**: 20 | **Files (Completed)**: 20 | **Channels**: 19 | **Sampling Rate**: 200 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
@@ -10,7 +10,7 @@ Resting-state EEG recorded from Parkinson's disease patients who received a plac
 
 ## File Scan Result
 
-> **Kernel SHA256**: `b2040478710b0714b08cde4f0ea0751e94dea4f63870b9db4244efa543c31d62`
+> **Kernel SHA256**: `a8d33d3dabe9077b0653fcc7b6c67408e630b4fb1f108bcda2df57d9c9035899`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
@@ -29,61 +29,41 @@ Resting-state EEG recorded from Parkinson's disease patients who received a plac
 
 ## Tasks
 
-### Potential Task 1: Brain State Classification from Resting-State EEG
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5
-- **Label Route**: `event`
+### Potential Task 1: sex-coded regression from resting-state EEG
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.0 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
-  | `ojos cerrados` | 0 | Eyes-closed resting state |
-  | `ojos abiertos` | 1 | Eyes-open resting state |
-  | `hiperventilacion 1` | 2 | Hyperventilation period 1 |
-  | `hiperventilacion 2` | 3 | Hyperventilation period 2 |
-  | `hiperventilacion 3` | 4 | Hyperventilation period 3 |
-  | `recuperacion` | 5 | Recovery period after hyperventilation |
-  | `hiperventilacion 4` | 6 | Hyperventilation period 4 |
-  | `photic stimulation` | 7 | Photic stimulation (English) |
-  | `fotoestimulacion` | 7 | Photic stimulation (Spanish, merged with label 7) |
-  | `HPVOJOS ABIERTOS` | 8 | Eyes-open during hyperventilation |
-  | `hipervantilacion 4` | 6 | Hyperventilation period 4 (typo variant, merged with label 6) |
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | sex | {0, 1, 6} (coded) | Numeric sex code from participants.tsv; 0 and 1 are standard codes, 6 is an anomalous value present in one subject (sub-PLAC19). Values preserved as-is for continuous regression framing. |
 - **Evidence**:
-  - DOI: `10.3389/fnins.2022.841428` — Resting-state EEG analysis from OpenNeuro ds003195 (placebo group) used in qEEG source activity mediation analysis; derives spectral features from sustained brain states
-- **Kernel Notes**: Exclude `discontinuity` admin markers. Merge `fotoestimulacion`→label 7 and `hipervantilacion 4`→label 6. Use 2.0 s epochs with 50% overlap for frequency-domain feature extraction matching spectral analysis approach. Clinical PD population may exhibit elevated artifact rates.
+- **Notes**: Resting-state EEG segmented into 4-second non-overlapping windows. Subject-level regression target is the raw sex code (0, 1, or 6) from participants.tsv. The anomalous value 6 may represent a data quality issue but is preserved as-is per grounded catalog. This task explores whether EEG features correlate with sex code in a continuous fashion, as an alternative framing to binary classification.
 
-### Normal Task 1: Binary Eyes State Classification
+### Potential Task 2: continuous resting-state EEG segmentation with subject-level sex
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5
-- **Label Route**: `event`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 10 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
-  | `ojos cerrados` | 0 | Eyes-closed resting state |
-  | `ojos abiertos` | 1 | Eyes-open resting state |
-  | `HPVOJOS ABIERTOS` | 1 | Eyes-open during hyperventilation |
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | sex | 0 | 0 | female |
+  | sex | 1 | 1 | male |
+  | sex | 6 | 2 | unknown/unspecified |
 - **Evidence**:
-  - DOI: `10.3389/fnins.2022.841428` — Paradigm includes explicit eyes-open/closed conditions; spectral differences between eyes states are well-established in EEG literature
-- **Kernel Notes**: Simplified binary task with both eyes-open conditions (`ojos abiertos`, `HPVOJOS ABIERTOS`) mapped to y=1. Same epoch parameters as main task for consistency.
+- **Notes**: Archetype C with native info column: continuous resting-state EEG is segmented into 10-second non-overlapping windows (50% overlap), and each segment inherits the subject-level `sex` label from participants.tsv. The three distinct values (0, 1, 6) map to y=0,1,2 respectively. This task provides a subject-grouping variable suitable for self-supervised or contrastive pretraining frameworks where demographic grouping can serve as a pretext task. No event anchors are used; segmentation is purely time-based.
 
-### Normal Task 2: Hyperventilation State Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
-  | `hiperventilacion 1` | 0 | Hyperventilation period 1 |
-  | `hiperventilacion 2` | 1 | Hyperventilation period 2 |
-  | `hiperventilacion 3` | 2 | Hyperventilation period 3 |
-  | `hiperventilacion 4` | 3 | Hyperventilation period 4 |
-  | `hipervantilacion 4` | 3 | Hyperventilation period 4 (typo variant, merged with label 3) |
-  | `recuperacion` | 4 | Recovery period |
-- **Evidence**:
-  - DOI: `10.3389/fnins.2022.841428` — Dataset includes hyperventilation challenge protocol; hyperventilation evokes systematic EEG changes (alkalosis-induced vasoconstriction)
-- **Kernel Notes**: Focuses on hyperventilation protocol states including sequential HV periods and recovery. Merge `hipervantilacion 4` typo into label 3. Exclude discontinuity markers.
+## Data Quality Notes
+
+- No known data quality issues.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

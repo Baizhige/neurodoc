@@ -2,28 +2,28 @@
 
 **Dataset**: `openneuro_ds004015` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004015
 **Category**: High-level Mental | **Subjects**: 36 | **Files (Completed)**: 36 | **Channels**: 18 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
-A two-competing speaker auditory attention paradigm in which participants were instructed to selectively attend to one of two simultaneously presented audiobooks under varying spatial (same location vs. different locations) and loudness conditions. EEG was recorded using a cEEGrid around-the-ear electrode array with 18 channels. The dataset is intended for auditory attention decoding (AAD) research using ear-worn EEG systems.
+A two-competing speaker auditory attention paradigm in which participants were instructed to selectively attend to one of two simultaneously presented audiobooks under varying spatial and loudness conditions. EEG was recorded using a cEEGrid around-the-ear electrode array with 18 channels. The dataset pools data from two studies (Jaeger et al., 2020; Holtze et al., 2021) with slightly different protocols, including variations in calibration procedures and spatial audio conditions (omnidirectional vs. beamforming).
 
 ## File Scan Result
 
-> **Kernel SHA256**: `79c682e2ff72a23474a44ecccfb73cc8d0fa50f5254957ea7af7e1c3ce0dedf1`
+> **Kernel SHA256**: `95bccff97766b74a8a2c1cdb30945199d6fec540a29cc7cbe14814d8571c86b6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Beep` | 756 | event | raw | Auditory cue tone for attention cueing or calibration |
-| `Calib_End` | 102 | event | raw | End of calibration period marker |
-| `Calib_Start` | 21 | event | raw | Start of calibration period marker |
-| `StartTrigger` | 120 | event | raw | Block onset marker for experimental blocks |
-| `beam` | 420 | event | raw | Same spatial location condition (both speakers at same location) |
-| `boundary` | 21 | event | raw | Automated boundary marker (data segment discontinuity) |
-| `omni` | 420 | event | raw | Different spatial location condition (speakers at different locations) |
+| `Beep` | 756 | event | raw | Trial phase onset: start of the beep tone period (20 beeps) |
+| `Calib_End` | 102 | admin | raw | Calibration period end |
+| `Calib_Start` | 21 | admin | raw | Calibration period start: beginning of 1-minute calibration period |
+| `StartTrigger` | 120 | event | raw | Trial phase onset: onset of a 10-minute audio book block |
+| `beam` | 420 | event | raw | Trial phase onset: name onset in beamforming condition |
+| `boundary` | 21 | admin | raw | Data discontinuity marker: indicates a break in continuous data (e.g. where two xdf files were merged) |
+| `omni` | 420 | event | raw | Trial phase onset: name onset in omnidirectional condition |
 
 
 ### Info
@@ -35,47 +35,112 @@ A two-competing speaker auditory attention paradigm in which participants were i
 
 ## Tasks
 
-### Classical Task 1: Auditory Attention Classification (Attended vs Ignored Speaker)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 60.0 s, overlap = 0.0
-- **Label Route**: `event`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
-  | `attended_speaker` | 1 | Participant attended to this audiobook (derived from task metadata) |
-  | `ignored_speaker` | 0 | Participant ignored this audiobook (derived from task metadata) |
-- **Super Meta Notes**: Labels must be derived from experimental instructions—participants were instructed which audiobook to attend per block. The `beam` and `omni` events (420 each) mark spatial condition blocks (same vs different location), but attended/ignored speaker labels are NOT present in raw event markers. Kernel step: Load participant metadata files to determine attended speaker condition per block; assign labels to corresponding EEG segments.
-- **Evidence**:
-  - DOI: 10.3389/fnins.2022.869426
-- **Kernel Notes**: Segment continuous EEG into 60s non-overlapping windows aligned with experimental blocks using `StartTrigger` events for block onset. Use task metadata to determine which speaker (left/right audiobook) was attended during each block. Apply speech envelope tracking features, spectral entropy, or intersubject correlation for classification. cEEGrid provides only 18 channels—limited spatial coverage compared to standard scalp EEG.
-
-### Potential Task 1: Continuous Auditory Attention Decoding (Fine-Grained Segmentation)
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
-  | `StartTrigger` | — | Block onset marker for segment alignment |
-  | `beam` | — | Same-location spatial condition marker |
-  | `omni` | — | Different-location spatial condition marker |
-- **Super Meta Notes**: Labels derived from stimulus envelopes (attended vs ignored speech stream); no discrete trial events marking attended vs ignored speaker—must be computed from continuous speech streams.
-- **Kernel Notes**: Use 2s sliding windows with 50% overlap aligned to `StartTrigger` events for fine-grained AAD. cEEGrid's 18-channel coverage limits spatial filtering; envelope tracking dynamics better captured at finer temporal resolution. Speech envelope features should be correlated against EEG segments to decode attended stream across time.
-
-### Normal Task 1: Spatial Attention Condition Classification
+### Potential Task 1: Spatial Condition Classification (Beamforming vs Omnidirectional)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0, tmax = 60.0, overlap = 0.0
+- **Epoch Parameters**: `tmin = 0 s *, tmax = 10 s *, target_events = [`beam`, `omni`]`
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
-  | `beam` | 1 | Same spatial location condition (both speakers at same location) |
-  | `omni` | 0 | Different spatial location condition (speakers at different locations) |
-- **Evidence**: Paradigm description; 420 `beam` and 420 `omni` events correspond to spatial condition blocks
-- **Kernel Notes**: `beam` and `omni` events (420 each) directly encode spatial attention manipulation. Classify spatial condition from EEG features within each block to assess how spatial separation affects neural signatures of auditory attention. Exclude calibration events (`Beep`, `Calib_Start`, `Calib_End`) from analysis epochs.
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `beam` | 0 | beamforming condition (attended speaker louder) |
+  | `omni` | 1 | omnidirectional condition (both speakers equal loudness) |
+- **Evidence**:
+  - sub-001/sub-002 events.json — explicit 'Levels' field defines 'beam' as "name onset in beamforming condition" and 'omni' as "name onset in omnidirectional condition"
+  - README — describes Holtze et al. 2021 design: 10-minute blocks alternate between omnidirectional and beamforming conditions; first block always omnidirectional, conditions alternate thereafter
+  - participants.tsv — 'con_order' column (values: -, OBOB, BOBO) confirms condition alternation pattern for holtze2021 subjects only; jaeger2020 subjects have '-' indicating no condition markers
+- **Notes**: Epoch parameters marked with * because the epoch_hint indicates these are inferred for demonstration purposes. The actual condition blocks are 10 minutes long; tmax=10s represents a short window choice rather than the full block. The task is only applicable to holtze2021 subjects (n~21) who have alternating beam/omni condition markers. jaeger2020 subjects (n=15) lack these markers entirely. This is a secondary task derived from the event structure, not the primary AAD (auditory attention detection) objective of the dataset. The classification distinguishes between two spatial audio presentation conditions at block onset.
+
+### Potential Task 2: Attended Channel Classification Left vs Right
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 60 s *, overlap = 0.0, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `attended_ch`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | attended_ch | left | 0 | Attended left speaker |
+  | attended_ch | right | 1 | Attended right speaker |
+- **Evidence**:
+- **Notes**: Subject-level classification using native participants.tsv column 'attended_ch'. Since this is a between-subject label (each subject attended either left or right throughout), the task requires segmenting continuous EEG into windows and assigning all windows from a subject the same label. This is a valid but challenging formulation as it tests whether attentional modulation is subject-specific enough to classify across subjects. 60-second windows chosen as standard for AAD-style analysis; overlap set to 0 as no rationale for overlap was provided.
+
+### Potential Task 3: Age Regression from EEG
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 60 s *, overlap = 0.0, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `age`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 18.0–33.0 (years) | Subject chronological age from participants.tsv; continuous demographic target for regression across 36 subjects with complete data |
+- **Evidence**:
+  - participants.tsv — age column: numeric, complete across all 36 subjects, range 18.0–33.0 years (sample values: 22, 24, 30)
+  - dataset_description.json — confirms 36 pooled participants from Jaeger et al. (2020, n=15) and Holtze et al. (2021, n=21)
+  - eeg.json — continuous recording at 500 Hz, ~90 min duration supports 60 s segmentation windows
+- **Notes**: Standard demographic regression task using continuous EEG segments. No event-based alignment needed; segmentation approach with 60-second windows provides sufficient data per subject for age prediction models. Age is a native participants.tsv column (B3 archetype, raw meta level).
+
+### Potential Task 4: Gender Classification from EEG
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 60 s *, overlap = 0.0, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `gender`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | gender | f | 0 | female |
+  | gender | m | 1 | male |
+- **Evidence**:
+  - participants.tsv — Complete gender column with 25 female (f) and 11 male (m) subjects across 36 participants
+- **Notes**: Standard demographic classification task using continuous EEG segments. 60-second windows chosen to provide sufficient data for feature extraction while maintaining reasonable sample count per subject. Gender is a native participants.tsv column (B3 archetype), so Meta Level = raw. Class imbalance (25:11) should be noted for model evaluation.
+
+### Potential Task 5: Study Cohort Classification (Jaeger2020 vs Holtze2021)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 60 s *, overlap = 0.0, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `orig_study`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | orig_study | jaeger2020 | 0 | Data from Jaeger et al. (2020): 6 blocks, no calibration, no beamforming, always omnidirectional |
+  | orig_study | holtze2021 | 1 | Data from Holtze et al. (2021): 5 blocks, with calibration, alternating omni/beam conditions |
+- **Evidence**:
+- **Notes**: Segmentation-based task with 60-second windows to capture protocol-level differences between the two pooled studies. The `orig_study` column in participants.tsv is a native info field (B3 archetype, Meta Level = raw). y=0/1 mapping preserves 0-based sequential integers. Epoch parameters inferred from candidate hint: segment_length=60s for capturing sustained protocol differences, overlap=0.0 for independent windows.
+
+### Potential Task 6: Continuous EEG Segmentation with Attended Speaker Derived Label
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 60 s, overlap = 0.0, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `attended_ch`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | attended_ch | right | 0 | Attend to right speaker |
+  | attended_ch | left | 1 | Attend to left speaker |
+- **Evidence**:
+  - 10.3389/fnins.2022.869426 — Segmentation-based AAD using 60s non-overlapping windows with attended/ignored speaker labels derived from participants.tsv and block structure
+- **Notes**: Archetype C (segmentation + info-native). The kernel segments continuous EEG into 60s non-overlapping windows and assigns labels using the native participants.tsv `attended_ch` column (right/left), which indicates the instructed attended speaker for each subject. Block boundaries are identified via `StartTrigger` events (120 total, marking onset of 10-minute audiobook blocks). For jaeger2020 subjects (n=15), all 6 blocks are omnidirectional with constant attended_ch; for holtze2021 subjects (n=21), 5 blocks alternate omni/beam conditions per `con_order` but attended_ch remains fixed per subject. The `first_bl`, `second_bl`, `third_bl` columns provide block numbering for holtze2021 subjects to map condition order if needed. No derived misc channel is required since `attended_ch` is a native participants.tsv column.
+
+## Data Quality Notes
+
+- Pooled dataset from two studies with different protocols: Jaeger et al. (2020, n=15, 6 blocks, no calibration, always omnidirectional) and Holtze et al. (2021, n=21, 5 blocks, with calibration, alternating omni/beam conditions).
+- `beam`/`omni` spatial condition markers are only present for holtze2021 subjects; jaeger2020 subjects have '-' in `con_order` and lack these event markers entirely.
+- 21 `boundary` events indicate data discontinuities where multiple XDF files were merged, which may affect continuous analysis assumptions.
+- `device` field is completely missing from info metadata, limiting hardware reproducibility documentation.
+- `Calib_Start` count (21) vs `Calib_End` count (102) is imbalanced, suggesting calibration markers may not consistently mark both start and end across all subjects or blocks.
+- cEEGrid's 18-channel around-the-ear montage provides limited spatial coverage compared to standard scalp EEG, which may constrain spatial resolution for certain analyses.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

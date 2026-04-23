@@ -3,7 +3,7 @@
 **Dataset**: `openneuro_ds003846` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds003846
 **Category**: Complex Applied | **Subjects**: 19 | **Files (Completed)**: 50
 **Channels**: 64 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
@@ -11,7 +11,7 @@ A virtual reality haptic interaction study where participants reached out to tou
 
 ## File Scan Result
 
-> **Kernel SHA256**: `5348370cdd070cc93f2f9cd52a2c61c152bc80a6751ccf0cdecbaad9b7debeec`
+> **Kernel SHA256**: `7f74f7e3fbcbc9c441066de0be6e0c963c61370c4444f4fd9b49517aa7134126`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
@@ -30,32 +30,72 @@ A virtual reality haptic interaction study where participants reached out to tou
 
 ## Tasks
 
-### Classical Task 1: Prediction Error Detection (Normal vs Conflict)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.6 s, target_events = [`box`]
-- **Label Route**: `event`
-- **Meta Level**: super
+### Potential Task 1: Age Regression from EEG
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.0, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `age`
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `box` (normal_or_conflict:normal) | 0 | Normal (congruent) trial with expected feedback |
-  | `box` (normal_or_conflict:conflict) | 1 | Conflict (prediction error) trial with incongruent feedback |
+  | Info Field | Range (unit) | Notes |
+  |------------|-------------|-------|
+  | age | 18.0–34.0 (years) | Continuous age of young adult participants; all 19 subjects have complete age data |
 - **Evidence**:
-  - DOI: `10.3389/fnrgo.2024.1411305` — Data descriptor paper describing binary classification of match (congruent/normal) vs mismatch (incongruent/conflict/prediction error) trials from openneuro_ds003846 dataset, using ERP epoch -0.1s to 0.6s relative to tap/box:touched event. Supports 2×3 design with visuo-haptic mismatch conditions.
-- **Kernel Notes**: Extract events matching 'box' pattern; parse embedded annotation strings for `normal_or_conflict:normal` (label 0) vs `normal_or_conflict:conflict` (label 1). The box event serves as both spawn and touch marker; filter for touch events when extracting prediction error labels. Session-specific analysis recommended given three distinct feedback modality conditions (visual-only, vibrotactile-only, EMS). Reaction time available via misc route as optional regression target or covariate.
+- **Notes**: Segmentation-based approach with 4-second non-overlapping windows. No event structure required since age is a subject-level continuous variable. The narrow age range (18-34 years, young adults only) may limit prediction accuracy but provides a valid regression target. Each segment from a given subject receives the same age label, and the model must learn age-related spectral or spatial patterns from resting/task EEG dynamics.
 
-### Normal Task 1: Feedback Modality Comparison
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.6 s, target_events = [`visualFeedback`, `vibroFeedback`]
-- **Label Route**: `event`
-- **Meta Level**: super
+### Potential Task 2: Cap Size Regression from EEG
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.0 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `cap_size`
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `visualFeedback` | 0 | Visual-only feedback modality session |
-  | `vibroFeedback` | 1 | Vibrotactile feedback modality session |
+  | Info Field | Range (unit) | Notes |
+  |------------|-------------|-------|
+  | cap_size | 54–60 (arbitrary cap size units) | Continuous integer cap sizes from participants.tsv; complete data for all 19 participants. Range is limited (7 unique values) but may capture brain size-related EEG variations. |
 - **Evidence**:
-  - DOI: `10.3389/fnrgo.2024.1411305` — Mentions three feedback modality conditions (visual-only, vibrotactile-only, EMS) run in separate sessions; evidence is partial as primary paper focuses on mismatch detection rather than explicit modality classification.
-- **Kernel Notes**: Visual feedback events appear in fewer files (50) vs vibrotactile (198), suggesting uneven session completion. May require session-level stratification or separate modality-specific analysis pipelines. EMS condition events not listed in available event IDs—verify EMS feedback event naming convention in raw data.
+  - participants.tsv — cap_size column with values 54–60, complete for all 19 participants
+  - README — "Cap Size: Varied, with sizes ranging from 54 to 60"
+- **Notes**: Segmentation-based subject-level regression. Each 4s non-overlapping segment from a subject's EEG is labeled with that subject's cap_size. Since cap_size is a between-subjects variable, the model must learn to predict a subject-level property from short EEG segments, making this a challenging methodological benchmark for EEG biomarker research.
+
+### Potential Task 3: 2-class first block stimulation type
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.0 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `block_1`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | block_1 | Visual | 0 | Visual-only stimulation |
+  | block_1 | Visual + Vibro | 1 | Visual plus vibrotactile stimulation |
+- **Evidence**:
+- **Notes**: Subject-level classification task predicting whether the first stimulation block used Visual-only or Visual+Vibro feedback. The block_1 column in participants.tsv contains the stimulation condition for each subject's first block. One subject (sub-04) has block_1=Visual, block_2=Visual + Vibro, block_3=0 (missing/invalid), confirming the two-class structure. The 4-second non-overlapping segmentation treats each subject's EEG recording as a bag of segments for subject-level prediction, with all segments from a subject sharing the same label. This is a simpler alternative to full protocol classification with larger per-class sample sizes (19 subjects total with block_1 data).
+
+### Potential Task 4: continuous EEG segmentation with age labels
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.5, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `age`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 18.0–34.0 (years) | Subject chronological age from participants.tsv; N=19, complete coverage |
+- **Evidence**:
+  - participants.tsv — age column complete for all 19 subjects, range 18–34 years
+  - README — "The study sample consists of 19 participants... with ages ranging from 18 to 34 years"
+- **Notes**: Archetype C framing: continuous EEG segmentation without event-locked epochs, treating the task-embedded EEG as quasi-resting state for age biomarker development. Same age labels as B3 candidate but distinct conceptual framing emphasizing absence of discriminating events — useful for kernel builders developing age-prediction models independent of task structure. 10s segments with 50% overlap chosen to capture sufficient spectral features for continuous neural signal analysis.
+
+## Data Quality Notes
+
+- No known data quality issues.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

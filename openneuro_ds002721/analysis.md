@@ -2,15 +2,15 @@
 
 **Dataset**: `openneuro_ds002721` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002721
 **Category**: High-level Mental | **Subjects**: 31 | **Files (Completed)**: 185 | **Channels**: 19 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
-Participants listened to music clips from film scores while their EEG was recorded, to investigate the neural correlates of music-induced emotional states. Each music clip is marked at onset with a numeric trigger code (800-908 range encode specific music tracks; system markers such as 32768 and 257 are used for synchronization). The study is part of a a research series investigating affective processing in music, with participants reporting felt emotions across multiple affective dimensions. Emotion ratings were collected on a 9-point Likert scale across 8 affective dimensions including pleasantness.
+Participants listened to music clips from film scores while their EEG was recorded, to investigate the neural correlates of music-induced emotional states. Each music clip is marked at onset with a numeric trigger code (800-908 range encode specific music tracks; system markers such as 32768 and 257 are used for synchronization). The study is part of a research series investigating affective processing in music, with participants reporting felt emotions across multiple affective dimensions. Emotion ratings were collected on a 9-point Likert scale across 8 affective dimensions including pleasantness.
 
 ## File Scan Result
 
-> **Kernel SHA256**: `4e0825c4a8111a4fb1fdcf35019ac9de7d376962ac76945cda6b6fbf0f8cb727`
+> **Kernel SHA256**: `6fa63c9ad6f7df97c0442c9b4be7306f09b4c6d7d8cbdbbffc1f73692c43685e`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
@@ -29,55 +29,75 @@ Participants listened to music clips from film scores while their EEG was record
 
 ## Tasks
 
-### Classical Task 1: Music Clip Onset Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`800`, `801`, `802`, `803`, `804`, `805`, `806`, `807`, `808`, `786`, `788`, `833`, `834`, `835`, `836`, `837`, `838`, `839`, `840`, `902`, `903`, `904`, `905`, `906`, `907`, `908`]
-- **Label Route**: `event`
+### Classical Task 1: Age Regression from Resting EEG
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 10 s *, overlap = 5.0 s *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `800` | 0 | Music clip onset (track 800) |
-  | `801` | 1 | Music clip onset (track 801) |
-  | `802` | 2 | Music clip onset (track 802) |
-  | `803` | 3 | Music clip onset (track 803) |
-  | `804` | 4 | Music clip onset (track 804) |
-  | `805` | 5 | Music clip onset (track 805) |
-  | `806` | 6 | Music clip onset (track 806) |
-  | `807` | 7 | Music clip onset (track 807) |
-  | `808` | 8 | Music clip onset (track 808) |
-  | `786` | 9 | Music clip onset (track 786) |
-  | `788` | 10 | Music clip onset (track 788) |
-  | `833` | 11 | Music clip onset (track 833) |
-  | `834` | 12 | Music clip onset (track 834) |
-  | `835` | 13 | Music clip onset (track 835) |
-  | `836` | 14 | Music clip onset (track 836) |
-  | `837` | 15 | Music clip onset (track 837) |
-  | `838` | 16 | Music clip onset (track 838) |
-  | `839` | 17 | Music clip onset (track 839) |
-  | `840` | 18 | Music clip onset (track 840) |
-  | `902` | 19 | Music clip onset (track 902) |
-  | `903` | 20 | Music clip onset (track 903) |
-  | `904` | 21 | Music clip onset (track 904) |
-  | `905` | 22 | Music clip onset (track 905) |
-  | `906` | 23 | Music clip onset (track 906) |
-  | `907` | 24 | Music clip onset (track 907) |
-  | `908` | 25 | Music clip onset (track 908) |
-- **Kernel Notes**: System markers (32768, 1092, 257, 33575) must be excluded from target_events. Clip duration is 12 s per DOI reference. Extract 1.2 s epochs centered on each music clip onset trigger for multi-class track identification (26 unique clips). The 40 s clip duration noted in the dataset description is inconsistent with the published protocol (12 s clips); task parameters follow the DOI reference.
-- **Evidence**: DOI: 10.1038/s41597-020-0507-6 — "Film Clips dataset containing EEG recorded from 31 participants listening to 12-second film music clips while reporting felt emotions across 8 affective dimensions"
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 18–66 (years) | Subject-level chronological age from participants.tsv; all 31 participants have complete age data. Each 10 s segment inherits the same subject age label. |
+- **Evidence**:
+  - participants.tsv — complete age data for N=31 participants (range 18–66 years)
+  - README — confirms task-run1 and task-run6 are 300 s resting state runs with eyes-open/relaxed instruction
+  - eeg.json / EDF header — 19-channel EEG at 1000 Hz, ~304 s duration confirms continuous resting recordings
+- **Notes**: Standard brain-age prediction paradigm. Continuous 300 s resting-state EEG (runs 1 and 6) is segmented into 10 s windows with 5 s overlap, producing ~59 segments per run per subject. Subject-level age from participants.tsv serves as the regression target for each segment. No kernel derivation needed—age is a native participants.tsv column.
 
-### Classical Task 2: Music-Induced Pleasantness Recognition
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 12.0 s, overlap = 0.0, target_events = [`music_onset`]
-- **Label Route**: `event`
-- **Meta Level**: `super`
+### Classical Task 2: Age Regression from Music Listening EEG
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 12 s *, overlap = 2.0, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `age`
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `high_pleasantness` | 0 | Pleasantness rating ≥ 5 on 9-point Likert scale |
-  | `low_pleasantness` | 1 | Pleasantness rating < 5 on 9-point Likert scale |
-- **Super Meta Notes**: Derived from raw event(s) [`800`, `801`, `802`, `803`, `804`, `805`, `806`, `807`, `808`, `786`, `788`, `833`, `834`, `835`, `836`, `837`, `838`, `839`, `840`, `902`, `903`, `904`, `905`, `906`, `907`, `908`]. Each music clip onset timestamp is matched to corresponding self-reported pleasantness rating from behavioral logs. Binary threshold applied at scale midpoint (5) to create balanced classes. Kernel step: Load events.tsv and behavioral rating files, extract pleasantness column, compute binary labels, map to epochs via onset timestamp alignment.
-- **Kernel Notes**: Requires access to behavioral log files containing emotion ratings. The DOI reference confirms 8-dimensional emotion ratings including pleasantness (1-9 scale) were collected. Duration discrepancy (40 s description vs. 12 s DOI reference) should be verified against actual behavioral log timing before epoch extraction. System markers excluded.
-- **Evidence**: DOI: 10.1038/s41597-020-0507-6 — "participants listening to 12-second film music clips while reporting felt emotions across 8 affective dimensions" (includes pleasantness dimension on 1-9 Likert scale)
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 18.0–66.0 (years) | Subject chronological age from participants.tsv; applied as subject-level label to all music-listening segments |
+- **Evidence**:
+- **Notes**: Segments 12-second continuous windows from music listening runs (task-run2–task-run5), matching the 12s music clip duration. Overlap of 2s provides coverage across the continuous recording. Age label is drawn from participants.tsv (native info column, archetype B3). No kernel derivation needed — label is pre-existing in dataset metadata. This task tests whether age-related EEG patterns generalize from resting state to active music listening paradigm.
+
+### Classical Task 3: Sex Classification from Resting EEG
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 10 s *, overlap = 5.0 s *, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `sex`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | sex | F | 0 | Female |
+  | sex | M | 1 | Male |
+- **Evidence**:
+- **Notes**: Subject-level classification using 10-second non-overlapping windows from 300-second resting-state runs (run1 and run6). The kernel should filter to task-run1 and task-run6 (resting state) and segment into 10s windows with 5s overlap. Labels are drawn from participants.tsv sex column (13 M, 18 F). This is a standard demographic prediction paradigm from resting-state EEG.
+
+### Classical Task 4: Sex Classification from Music Listening EEG
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 12 s *, overlap = 2.0 *, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `sex`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | sex | F | 0 | Female |
+  | sex | M | 1 | Male |
+- **Evidence**:
+  - `participants.tsv` — N=31 subjects with sex column (M=13, F=18), complete coverage
+  - `README` — 4 music listening runs with 10 trials each, 40 music clips of 12s duration
+  - `events.json` — Music play onset marked by event 788, fixation cross 786, music stimuli 301-360
+- **Notes**: Segmentation approach uses 12s windows matching music clip duration with 2s overlap for coverage across the active music-listening periods. Binary sex classification tests whether EEG during affective music processing carries sex-differentiable information. All labels drawn from native participants.tsv info field; no kernel derivation required.
+
+## Data Quality Notes
+
+- No known data quality issues.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_kernel_update

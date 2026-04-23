@@ -45,10 +45,26 @@ MANDATORY requirements — violating any will cause rejection:
    attaches every non-canonical key as a source-level HDF5 attr so InfoDataset can reach it.
    If a column is genuinely missing for a subject, use "unknown" (do NOT fabricate).
 9. When `required_native_misc` or `derived_misc_channels` is non-empty, the kernel MUST
-   ensure those channel names exist on the returned raw as misc-type channels (native misc
-   typically already exists; derived ones need to be computed and appended). The epoch
-   method passes these names to the v2.1 HDF5 writer as `misc_channels=[...]` so
-   MISCDataset can read them.
+   ensure those channel names exist on the returned raw as misc-type channels.
+   - Native misc: already a physical channel on the raw; just make sure its ch_type is
+     'misc' (use raw.set_channel_types({name: 'misc'}) if the loader mislabelled it).
+   - Derived misc: the kernel creates the channel. The derivation mechanism is YOUR CHOICE
+     — constant broadcast (one value per file), trial-locked step function from events.tsv,
+     RawArray concatenated via raw.add_channels(), or any other MNE-compatible path. The
+     ONLY invariants are (a) the exact `name` in raw.ch_names, (b) ch_types[name] == 'misc',
+     (c) raw.get_data(picks=[name]) returns shape (1, len(raw.times)) with finite values.
+   - For derived misc sourced from `events.tsv:<column>`, read the sibling events.tsv for
+     the current file and populate the channel samples so that at each annotation onset
+     the channel reflects that row's value. Between trials use 0 / NaN / carry-forward —
+     your call, as long as the per-trial targets are recoverable at epoch-extraction time.
+10. When events.tsv sidecars exist AND the raw file format may not carry its own triggers
+   (EEGLAB .set without populated `event`; EDF without annotations; BrainVision .eeg
+   without its marker file; plain .fif without events baked in), the kernel MUST derive
+   `mne.Annotations` from the sibling events.tsv so `mne.events_from_annotations(raw)`
+   yields ≥ the number of non-empty rows in events.tsv. Do NOT remap or rename event
+   IDs (HC-5) — pass the literal `value` / `trial_type` column through. The exact
+   reading approach (pandas + mne.Annotations, mne.annotations_from_events, etc.) is
+   your call; only the outcome matters.
 """
 
 _KERNEL_FIX_SYSTEM = """\
@@ -70,7 +86,162 @@ MANDATORY — any violation will fail validation again:
 - When the error lists `required_info_fields`, read each one from participants.tsv
   for the current subject and put it (as str) into eegunity_description.
 - When the error lists `derived_misc_channels`, create each one as an MNE misc-type
-  channel on the returned raw (constant value broadcast across the full duration)."""
+  channel on the returned raw. Derivation mechanism is YOUR choice — constant broadcast
+  is fine for participants.tsv sources; events.tsv-sourced columns often warrant a
+  trial-locked step function. Only invariants: exact `name` in raw.ch_names, ch_type
+  'misc', and finite data of shape (1, len(raw.times)).
+- If the failure was annotations/event-count related, fix the event-reading path:
+  decide whether the raw file carries its own triggers, whether events.tsv must be
+  parsed, or whether a STIM channel is available. HC-5 forbids remapping event IDs —
+  pass the literal tsv labels through to raw.annotations."""
+
+_KERNEL_EVENT_DIAGNOSE_SYSTEM = """\
+You are an EEG kernel engineer. The previous kernel loaded sample files without error
+and populated eegunity_description, BUT the resulting raw objects exposed FAR FEWER
+annotations/events than the sibling BIDS events.tsv files contain. Your task: diagnose
+WHY and emit a corrected kernel so `mne.events_from_annotations(raw)` yields at least
+as many events as the non-empty rows in the sibling events.tsv.
+
+Common root causes — pick the one that fits the evidence:
+  1. Raw file format carries no triggers (EEGLAB .set with empty `event` field, EDF
+     without annotations, BrainVision .eeg without its marker file). Events MUST come
+     from events.tsv — use `mne.Annotations` or `mne.annotations_from_events` keyed on
+     the `onset`/`duration`/`trial_type` (or `value`) columns.
+  2. Kernel read events.tsv with the wrong column — e.g. took `trial_type` when the
+     meaningful trigger is in `value`, or vice versa. Look at the events.tsv snippet
+     you are given and pick the column that actually carries distinguishable labels.
+  3. HC-5 violation — kernel remapped/renamed event IDs (e.g. `event_id_map={{...}}`
+     or `mne.rename_events(...)`). Remove the remap; pass literal tsv labels through.
+  4. `mne.find_events()` was called on a file with no STIM channel → silently returned
+     empty. Switch to annotation-based events.
+  5. Onset unit mismatch — events.tsv `onset` is in seconds, but the kernel passed
+     samples to `mne.Annotations(onset=..., sfreq=...)` or forgot to scale.
+  6. The kernel loaded events but assigned them to `raw.info` instead of
+     `raw.set_annotations(...)` → they never reach `raw.annotations`.
+
+You are given:
+  - the prior kernel's full source (truncated if large),
+  - per-file annotation counts it produced vs expected events.tsv row counts,
+  - the matching events.tsv snippet (header + first rows) for each sample file,
+  - the non-canonical numeric columns of events.tsv (from the grounded catalog),
+  - the events.json column definitions if present.
+
+HARD RULES:
+  - Do NOT fabricate event labels. Use the literal strings in the relevant tsv column.
+  - HC-5: do NOT remap or rename event IDs.
+  - Preserve the full kernel signature, eegunity_description (dynamic json.dumps), and
+    the `KERNEL = <ClassName>()` module-level assignment.
+  - All other requirements from the initial `_KERNEL_SYSTEM` still apply.
+
+Output ONLY a Python code block — no explanation, no JSON:
+```python
+<full corrected kernel source code here>
+```"""
+
+
+def _compute_expected_events(sample_files: List[str], ds_dir: Path) -> Dict[str, int]:
+    """For each sample EEG file, count rows in its sibling `*_events.tsv` (if any).
+
+    Returns {abs_path: expected_event_count}. Read-only, no schema imposed.
+    """
+    out: Dict[str, int] = {}
+    for fpath in sample_files:
+        p = Path(fpath)
+        stem = p.stem
+        # Try exact-stem sibling first, then BIDS-style sibling under the same dir.
+        candidates = [
+            p.with_name(stem + "_events.tsv"),
+            p.parent / (stem.rsplit("_", 1)[0] + "_events.tsv") if "_" in stem else None,
+        ]
+        for c in candidates:
+            if c is None or not c.exists():
+                continue
+            try:
+                lines = c.read_text(encoding="utf-8").splitlines()
+            except Exception:
+                continue
+            if len(lines) < 2:
+                continue
+            # Count non-empty data rows (skip the header).
+            n = sum(1 for ln in lines[1:] if ln.strip())
+            out[str(p)] = n
+            break
+    return out
+
+
+def _verify_kernel_events(stdout: str, expected_map: Dict[str, int]) -> Tuple[bool, Dict[str, Any]]:
+    """Parse `[EVENTS] <fpath> annotations=N` lines; compare to expected tsv counts.
+
+    Returns (ok, report). ok=False when a sample file with expected>=5 produced
+    got < 0.5 * expected — a reliable signal the kernel dropped events.tsv on the floor.
+    """
+    got_map: Dict[str, int] = {}
+    for m in re.finditer(r"^\[EVENTS\]\s+(\S+)\s+annotations=(\d+)", stdout, re.MULTILINE):
+        got_map[m.group(1)] = int(m.group(2))
+    per_file: List[Dict[str, Any]] = []
+    any_mismatch = False
+    for fpath, expected in expected_map.items():
+        got = got_map.get(fpath, 0)
+        mismatch = (expected >= 5 and got < 0.5 * expected)
+        any_mismatch = any_mismatch or mismatch
+        per_file.append({"file": fpath, "expected": expected, "got": got, "mismatch": mismatch})
+    summary = (
+        f"files_with_events_tsv={len(expected_map)} "
+        f"mismatches={sum(1 for x in per_file if x['mismatch'])} "
+        f"min_got={min((x['got'] for x in per_file), default=0)}"
+    )
+    return (not any_mismatch), {"per_file": per_file, "summary": summary, "got_map": got_map}
+
+
+def _format_event_mismatch(
+    mismatch: Dict[str, Any],
+    ds_dir: Path,
+    sample_files: List[str],
+    events_numeric_columns: Optional[Dict[str, List[str]]] = None,
+) -> str:
+    """Assemble a compact evidence block for _KERNEL_EVENT_DIAGNOSE_SYSTEM retries."""
+    lines = [f"[event mismatch summary] {mismatch['summary']}", ""]
+    for entry in mismatch["per_file"][:5]:
+        fpath = entry["file"]
+        p = Path(fpath)
+        lines.append(f"[file] {p.name}")
+        lines.append(f"  expected_events_in_tsv={entry['expected']}, kernel_produced_annotations={entry['got']}")
+        # Attach events.tsv head
+        stem = p.stem
+        tsv_candidates = [
+            p.with_name(stem + "_events.tsv"),
+            p.parent / (stem.rsplit("_", 1)[0] + "_events.tsv") if "_" in stem else None,
+        ]
+        for c in tsv_candidates:
+            if c is None or not c.exists():
+                continue
+            try:
+                head = c.read_text(encoding="utf-8").splitlines()[:12]
+            except Exception:
+                head = []
+            if head:
+                lines.append(f"  [events.tsv head: {c.name}]")
+                for ln in head:
+                    lines.append(f"    {ln}")
+                # events.json peer
+                ej = c.with_suffix(".json")
+                if ej.exists():
+                    try:
+                        j = ej.read_text(encoding="utf-8")
+                        if len(j) < 1500:
+                            lines.append(f"  [events.json: {ej.name}]")
+                            lines.append(f"    {j.replace(chr(10), chr(10) + '    ')}")
+                    except Exception:
+                        pass
+            break
+        lines.append("")
+    if events_numeric_columns:
+        lines.append("[events.tsv numeric columns discovered across the dataset]")
+        for fname, cols in list(events_numeric_columns.items())[:10]:
+            lines.append(f"  {fname}: {cols}")
+        lines.append("")
+    return "\n".join(lines)
+
 
 _RULEBOOK_VALIDATION_CHECKS = [
     (r"KERNEL\s*=\s*\w+\(", "KERNEL = ... object missing at module level"),
@@ -309,6 +480,19 @@ for fpath in sample_files:
             errors.append(f"{{fpath}}: eegunity_description missing fields: {{missing}}")
         else:
             print(f"  [OK] age={{eegu['age']!r}} sex={{eegu['sex']!r}} channels={{len(result.ch_names)}}")
+
+        # Report event count so the outer verifier can diff against events.tsv.
+        try:
+            n_ann = len(result.annotations) if getattr(result, "annotations", None) is not None else 0
+        except Exception:
+            n_ann = 0
+        # Also report misc channel names for the outer misc verifier (Change #3).
+        try:
+            misc_names = [ch for ch, ct in zip(result.ch_names, result.get_channel_types()) if ct == "misc"]
+        except Exception:
+            misc_names = []
+        print(f"[EVENTS] {{fpath}} annotations={{n_ann}}")
+        print(f"[MISC] {{fpath}} channels={{_json.dumps(misc_names)}}")
     except Exception as e:
         errors.append(f"{{fpath}}: {{traceback.format_exc()}}")
 
@@ -444,12 +628,17 @@ def build_kernel(
         f"Now write the complete kernel for {dataset_name}."
     )
 
-    MAX_VERSIONS = 5  # max fix iterations before accepting best attempt
+    MAX_VERSIONS = 7  # bumped from 5 → 7 so event-diagnose retries can fire alongside generic fixes
+    MAX_EVENT_DIAGNOSE_RETRIES = 3
 
     kernel_code = ""
     last_error = ""
     version = 0
     success = False
+    event_diagnose_mode = False          # toggled after a successful subprocess but mismatched events
+    event_diagnose_retries = 0
+    expected_events_map = _compute_expected_events(sample_files, ds_dir) if sample_files else {}
+    events_numeric_columns = (context.get("bids_sidecars") or {}).get("events_numeric_columns") or {}
 
     while version < MAX_VERSIONS:
         version += 1
@@ -462,9 +651,23 @@ def build_kernel(
                     {"role": "system", "content": _KERNEL_SYSTEM},
                     {"role": "user", "content": base_user},
                 ])
+            elif event_diagnose_mode:
+                # Dedicated retry for empty/sparse annotations. Surface the evidence.
+                diag_user = (
+                    f"Dataset: {dataset_name}\n\n"
+                    f"=== Event-extraction failure evidence ===\n{last_error[:6000]}\n\n"
+                    f"=== Current kernel ===\n```python\n{kernel_code[:10000]}\n```\n\n"
+                    f"Emit a corrected kernel so that `raw.annotations` is populated from the "
+                    f"relevant source (events.tsv or file-native triggers) — see system prompt."
+                )
+                budget.charge("kernel_loop")
+                raw_response = call_llm([
+                    {"role": "system", "content": _KERNEL_EVENT_DIAGNOSE_SYSTEM},
+                    {"role": "user", "content": diag_user},
+                ])
+                event_diagnose_mode = False  # consume the flag; new kernel will be re-verified
             else:
-                # Keep fix prompt small to avoid content filtering
-                # Send only the error + a brief reminder of required signature
+                # Generic fix retry
                 fix_user = (
                     f"Fix this EEGUnity kernel for dataset '{dataset_name}'.\n\n"
                     f"=== Error ===\n{last_error[:3000]}\n\n"
@@ -545,6 +748,26 @@ def build_kernel(
                 for line in combined.splitlines()[-30:]:
                     log(f"  {line}")
             if result.returncode == 0:
+                # Subprocess passed — now verify annotation counts vs events.tsv.
+                if expected_events_map and event_diagnose_retries < MAX_EVENT_DIAGNOSE_RETRIES:
+                    ok_events, mismatch = _verify_kernel_events(stdout, expected_events_map)
+                    if not ok_events:
+                        event_diagnose_retries += 1
+                        event_diagnose_mode = True
+                        last_error = _format_event_mismatch(
+                            mismatch, ds_dir, sample_files, events_numeric_columns,
+                        )
+                        # Preserve the kernel for offline inspection
+                        fail_path = sandbox_dir / f"kernel_v{version}_EVENTS_EMPTY.py"
+                        fail_path.write_text(kernel_code, encoding="utf-8")
+                        log(
+                            f"[KernelBuilder] v{version}: events mismatch "
+                            f"({mismatch['summary']}); queuing event-diagnose retry "
+                            f"{event_diagnose_retries}/{MAX_EVENT_DIAGNOSE_RETRIES}"
+                        )
+                        continue
+                    elif expected_events_map:
+                        log(f"[KernelBuilder] v{version}: event counts look consistent with events.tsv")
                 log(f"[KernelBuilder] v{version}: PASS")
                 success = True
                 break
@@ -562,6 +785,67 @@ def build_kernel(
     final_path = sandbox_dir / "kernel_final.py"
     final_path.write_text(kernel_code or "# empty — generation failed", encoding="utf-8")
     return kernel_code, final_path, success
+
+
+def patch_kernel_for_events(
+    current_kernel_code: str,
+    dataset_name: str,
+    ds_dir: Path,
+    sample_files: List[str],
+    events_numeric_columns: Optional[Dict[str, List[str]]],
+    required_event_ids: Optional[List[str]],
+    call_llm,
+    budget,
+    log,
+) -> Optional[str]:
+    """Post-scan safety net: scan returned empty event_counts despite required_event_ids.
+
+    Calls the LLM with the event-diagnose system prompt and events.tsv evidence,
+    returns patched kernel source (or None if the LLM gave up / failed).
+    """
+    log(f"[Runner] Post-scan event recovery: scan missing events {required_event_ids or '(any)'}")
+    # Build evidence — expected counts from tsv + empty got counts (all zero per scan)
+    expected_map = _compute_expected_events(sample_files, ds_dir) if sample_files else {}
+    per_file = [
+        {"file": f, "expected": n, "got": 0, "mismatch": True}
+        for f, n in expected_map.items()
+    ]
+    mismatch = {
+        "summary": (
+            f"post_scan_event_counts_empty; expected>=5 rows in {sum(1 for p in per_file if p['expected']>=5)} sample file(s)"
+        ),
+        "per_file": per_file,
+    }
+    evidence_block = _format_event_mismatch(
+        mismatch, ds_dir, sample_files, events_numeric_columns,
+    )
+    required_hint = ""
+    if required_event_ids:
+        required_hint = (
+            f"\nThe downstream tasks require these event IDs to be preserved in raw.annotations:\n"
+            f"{required_event_ids}\n"
+        )
+    user_msg = (
+        f"Dataset: {dataset_name}\n\n"
+        f"The full scan produced an empty event_counts dict, even though events.tsv sidecars\n"
+        f"contain events. Patch the kernel so raw.annotations is populated.{required_hint}\n"
+        f"=== Evidence ===\n{evidence_block}\n\n"
+        f"=== Current kernel ===\n```python\n{current_kernel_code[:12000]}\n```"
+    )
+    try:
+        budget.charge("kernel_loop")
+        raw = call_llm([
+            {"role": "system", "content": _KERNEL_EVENT_DIAGNOSE_SYSTEM},
+            {"role": "user", "content": user_msg},
+        ])
+    except Exception as exc:
+        log(f"[Runner] Post-scan event recovery LLM call failed: {exc}")
+        return None
+    code = _extract_code_block(raw)
+    if not code:
+        log("[Runner] Post-scan event recovery returned no Python code block.")
+        return None
+    return code
 
 
 def install_kernel(kernel_code: str, dataset_name: str, log) -> Path:
