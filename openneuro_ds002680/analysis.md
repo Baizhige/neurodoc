@@ -2,7 +2,7 @@
 
 **Dataset**: `openneuro_ds002680` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002680
 **Category**: Sensory/Response | **Subjects**: 14 | **Files (Completed)**: 350 | **Channels**: 31 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Mr.PJ
+**Manual Review**:
 
 ## Paradigm
 
@@ -10,23 +10,23 @@ Participants performed two alternating visual go/no-go tasks: an animal categori
 
 ## File Scan Result
 
-> **Kernel SHA256**: `e808d4e1376c7b72e30bf2c6b3a5bd6084b4f2329ec9b0b857c77d75209d1376`
+> **Kernel SHA256**: `e60bd9d976550ddd04ba2224e19595e7163bb9c539cc62c489359498c159186c`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `animal_distractor` | 6300 | event | raw | Non-target stimulus in the animal categorization task (withhold response) |
-| `animal_target` | 6298 | event | raw | Target stimulus in the animal categorization task (release button) |
-| `correct` | 16921 | event | raw | Correct behavioral response |
-| `difficult_distractor` | 4200 | event | raw | Difficult distractor stimulus in the recognition task (withhold response) |
-| `difficult_target` | 4198 | event | raw | Difficult target stimulus in the recognition task (release button) |
-| `easy_distractor` | 4200 | event | raw | Easy distractor stimulus in the recognition task (withhold response) |
-| `easy_target` | 4200 | event | raw | Easy target stimulus in the recognition task (release button) |
-| `incorrect` | 745 | event | raw | Incorrect behavioral response |
-| `nonanimal_distractor` | 2800 | event | raw | Non-animal distractor stimulus in the recognition task (withhold response) |
-| `nonanimal_target` | 2800 | event | raw | Non-animal target stimulus in the recognition task (release button) |
+| `animal_distractor` | 6300 | event | raw | Stimulus onset: image not containing an animal, distractor in go-nogo animal categorization task |
+| `animal_target` | 6298 | event | raw | Stimulus onset: image containing an animal, target in go-nogo animal categorization task |
+| `correct` | 16921 | event | raw | Response: correct behavioral response |
+| `difficult_distractor` | 4200 | event | raw | Stimulus onset: image not containing an animal, distractor in single target difficult animal image detection task |
+| `difficult_target` | 4198 | event | raw | Stimulus onset: image containing an animal (hard to detect), target in single target image detection task |
+| `easy_distractor` | 4200 | event | raw | Stimulus onset: image not containing an animal, distractor in single target easy animal image detection task |
+| `easy_target` | 4200 | event | raw | Stimulus onset: image containing an animal (easy to detect), target in single target image detection task |
+| `incorrect` | 745 | event | raw | Response: incorrect behavioral response |
+| `nonanimal_distractor` | 2800 | event | raw | Stimulus onset: image not containing an animal, distractor in single target non-animal image detection task |
+| `nonanimal_target` | 2800 | event | raw | Stimulus onset: image not containing an animal, target in single target non-animal image detection task |
 
 
 ### Info
@@ -38,111 +38,195 @@ Participants performed two alternating visual go/no-go tasks: an animal categori
 
 ## Tasks
 
-### Classical Task 1: Target-vs-Distractor ERP Classification
+### Classical Task 1: 2-class animal categorization target vs distractor
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.3 s, tmax = 0.7 s, target_events = [`animal_target`, `animal_distractor`, `easy_target`, `easy_distractor`, `difficult_target`, `difficult_distractor`, `nonanimal_target`, `nonanimal_distractor`]
+- **Epoch Parameters**: `tmin = -0.3 s *, tmax = 0.7 s *, target_events = [`animal_target`, `animal_distractor`]`
 - **Label Route**: `event`
-- **Meta Level**: super
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
-  | `animal_target` | 1 | Target / go stimulus |
-  | `easy_target` | 1 | Target / go stimulus |
-  | `difficult_target` | 1 | Target / go stimulus |
-  | `nonanimal_target` | 1 | Target / go stimulus |
-  | `animal_distractor` | 0 | Distractor / no-go stimulus |
-  | `easy_distractor` | 0 | Distractor / no-go stimulus |
-  | `difficult_distractor` | 0 | Distractor / no-go stimulus |
-  | `nonanimal_distractor` | 0 | Distractor / no-go stimulus |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `animal_target` | 0 | Image containing an animal, target in go-nogo animal categorization task |
+  | `animal_distractor` | 1 | Image not containing an animal, distractor in go-nogo animal categorization task |
 - **Evidence**:
-  - DOI: 10.1038/s41598-023-27528-0 — Uses this dataset's animal go/no-go condition to compare correct targets and correct distractors with 1 s epochs from -0.3 to 0.7 s, explicitly framing the contrast as go responses on animals versus no-go responses on non-animal images.
-  - DOI: 10.1016/j.cogbrainres.2003.11.010 — Original publication of the dataset paradigm with same 14 subjects, 20ms stimuli, go/no-go response; 50% targets/50% distractors with button release for targets.
-  - DOI: 10.1016/S0925-2312(02)00415-0 — Rapid go/no-go visual categorization task, 20ms stimuli, natural photographs, reports 94% accuracy using ICA/source dynamics on single-trial epochs.
-- **Kernel Notes**: Binary label collapses all *_target events to 1 and all *_distractor events to 0. Target identity is already encoded in the raw event value — no response-pairing inference needed.
+  - doi:10.1016/j.cogbrainres.2003.11.010 — Classical 2-class go/no-go animal categorization with 14 subjects, 20 ms flashes, 25 runs; matches dataset parameters exactly
+  - 10.1038/s41598-023-27528-0 — Describes epochs from -1 to 2 s with effect window 350-450 ms for similar paradigm; ~6300 balanced trials per class
+- **Notes**: Conservative epoch window (-0.3 to 0.7 s) chosen to capture typical visual ERP components (P1, N1, P300) for 20 ms flash paradigm while avoiding post-response contamination. Both target_events are stimulus onset markers from the go-nogo animal categorization task specifically, excluding easy/difficult/nonanimal variants which belong to a different recognition task condition.
 
-### Classical Task 2: Animal Categorization vs Recognition Task Classification
+### Classical Task 2: 8-class stimulus type discrimination
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.3 s, tmax = 0.7 s, target_events = [`animal_target`, `animal_distractor`, `easy_target`, `easy_distractor`, `difficult_target`, `difficult_distractor`, `nonanimal_target`, `nonanimal_distractor`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
-  | `animal_target` | 0 | Animal categorization task |
-  | `animal_distractor` | 0 | Animal categorization task |
-  | `easy_target` | 1 | Easy recognition task |
-  | `easy_distractor` | 1 | Easy recognition task |
-  | `difficult_target` | 2 | Difficult recognition task |
-  | `difficult_distractor` | 2 | Difficult recognition task |
-  | `nonanimal_target` | 3 | Non-animal recognition task |
-  | `nonanimal_distractor` | 3 | Non-animal recognition task |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | animal_target | 0 | Stimulus onset: image containing an animal, target in go-nogo animal categorization task |
+  | animal_distractor | 1 | Stimulus onset: image not containing an animal, distractor in go-nogo animal categorization task |
+  | easy_target | 2 | Stimulus onset: image containing an animal (easy to detect), target in single target image detection task |
+  | easy_distractor | 3 | Stimulus onset: image not containing an animal, distractor in single target easy animal image detection task |
+  | difficult_target | 4 | Stimulus onset: image containing an animal (hard to detect), target in single target image detection task |
+  | difficult_distractor | 5 | Stimulus onset: image not containing an animal, distractor in single target difficult animal image detection task |
+  | nonanimal_target | 6 | Stimulus onset: image not containing an animal, target in single target non-animal image detection task |
+  | nonanimal_distractor | 7 | Stimulus onset: image not containing an animal, distractor in single target non-animal image detection task |
 - **Evidence**:
-  - DOI: 10.1038/s41598-023-27528-0 — Reports the two-task paradigm structure used in the dataset.
-  - DOI: 10.1016/j.cogbrainres.2003.11.010 — Original publication describing animal categorization and single-photograph recognition tasks.
-- **Kernel Notes**: Collapses animal events to class 0 and recognition events (easy/difficult/nonanimal) to classes 1-3, preserving the two major task types for paradigm-level classification.
+  - sub-002_ses-01_task-gonogo_run-10_events.json — BIDS sidecar defining all 8 stimulus event types with their meanings (animal_target/distractor, easy_target/distractor, difficult_target/distractor, nonanimal_target/distractor)
+  - sub-002_ses-01_task-gonogo_run-10_events.tsv — Direct observation of event values in data: animal_target, animal_distractor, correct, etc.
+  - README — Task description: two alternated tasks (categorization and recognition), target and non-target images equally likely, go/nogo paradigm with 20 ms stimulus presentation
+- **Notes**: Most granular event-based task possible with this dataset. Combines 4 task conditions (animal go-nogo categorization, easy/difficult/nonanimal single-target detection) × 2 target/distractor levels = 8 classes. Highly imbalanced across classes: animal (~6300 each), easy/difficult (~4200 each), nonanimal (~2800 each).
 
-### Normal Task 1: Response Accuracy Classification
+### Potential Task 1: 2-class easy detection target vs distractor
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 0.3 s, target_events = [`correct`, `incorrect`]
+- **Epoch Parameters**: `tmin = -0.3 s *, tmax = 0.7 s *, target_events = [`easy_target`, `easy_distractor`]`
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
-  | `correct` | 1 | Correct behavioral response |
-  | `incorrect` | 0 | Incorrect behavioral response |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `easy_target` | 0 | Stimulus onset: image containing an animal (easy to detect), target in single target easy animal image detection task |
+  | `easy_distractor` | 1 | Stimulus onset: image not containing an animal, distractor in single target easy animal image detection task |
 - **Evidence**:
-  - DOI: 10.1038/s41598-023-27528-0 — Uses response accuracy (correct vs incorrect) to filter trials for the go/no-go analysis.
-- **Kernel Notes**: Response-locked epochs aligned to behavioral feedback events. The MISC labels (`reaction_time`, `response_time`) can enable precise response alignment and RT-normalized epoching.
+  - sub-002_ses-01_task-gonogo_run-10_events.json — Defines `easy_target` as "An image containing an animal (easy to detect) that is a target in a single target image detection task" and `easy_distractor` as "An image not containing an animal that is a distractor in a single target easy animal image detection task"
+  - events.tsv sample (sub-002_ses-01_task-gonogo_run-10) — Shows `easy_target` and `easy_distractor` events with stimulus trial_type and response_time values
+  - README — Describes go/nogo paradigm with 20 ms flash presentation, 2000 ms SOA, and 1000 ms response window; same paradigm structure as other detection tasks in dataset
+- **Notes**: Inferred epoch window (-0.3 to 0.7 s) based on 20 ms flash paradigm shared with animal categorization task; post-stimulus window covers typical visual ERP components (P1, N1, P2, N2) and early motor preparation for go responses. ~4200 trials per class estimated from event counts. No direct classical reference for this specific easy detection contrast, but structurally identical to established visual detection paradigms.
 
-### Potential Task 1: Response-Locked Motor Preparation Analysis
+### Potential Task 2: 2-class difficult detection target vs distractor
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 0.3 s, target_events = [`correct`, `incorrect`]
+- **Epoch Parameters**: `tmin = -0.3 s *, tmax = 0.7 s *, target_events = [`difficult_target`, `difficult_distractor`]`
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
-  | `correct` | 1 | Correct response |
-  | `incorrect` | 0 | Error response |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `difficult_target` | 0 | Stimulus onset: image containing an animal (hard to detect), target in single target image detection task |
+  | `difficult_distractor` | 1 | Stimulus onset: image not containing an animal, distractor in single target difficult animal image detection task |
 - **Evidence**:
-  - Paradigm: Go/no-go tasks are well-suited for response-locked analysis to isolate motor preparation (LRP) and error monitoring (ERN) components.
-- **Kernel Notes**: The MISC route contains `reaction_time` and `response_time` labels enabling precise response alignment. Behavioral events exist but are not paired to specific stimuli in the event structure — careful trial matching required.
+  - events.json sidecar (sub-002_ses-01_task-gonogo_run-10_events.json, sub-002_ses-01_task-gonogo_run-11_events.json) — confirms `difficult_target` and `difficult_distractor` as event levels with descriptions matching the difficult detection task condition
+  - events.tsv samples (sub-002_ses-01_task-gonogo_run-11_events.tsv) — direct observation of `difficult_target` and `difficult_distractor` events in actual data
+  - README — describes the recognition/detection task with target and non-target images equally likely, 20 ms flash presentation, go/nogo response paradigm
+- **Notes**: ~4200 trials each of difficult_target and difficult_distractor, balanced classes. Epoch window inferred from classical task defaults for the same 20 ms flash paradigm (tmin=-0.3s, tmax=0.7s). This is the more challenging discrimination condition compared to easy_target/easy_distractor due to hard-to-detect animal images.
 
-### Potential Task 2: Recognition Difficulty Classification
+### Potential Task 3: 2-class nonanimal detection target vs distractor
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.3 s, tmax = 0.7 s, target_events = [`easy_target`, `easy_distractor`, `difficult_target`, `difficult_distractor`]
+- **Epoch Parameters**: `tmin = -0.3 s *, tmax = 0.7 s *, target_events = [`nonanimal_target`, `nonanimal_distractor`]`
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
-  | `easy_target` | 0 | Easy difficulty |
-  | `easy_distractor` | 0 | Easy difficulty |
-  | `difficult_target` | 1 | Difficult difficulty |
-  | `difficult_distractor` | 1 | Difficult difficulty |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `nonanimal_target` | 0 | Stimulus onset: image not containing an animal, target in single target non-animal image detection task |
+  | `nonanimal_distractor` | 1 | Stimulus onset: image not containing an animal, distractor in single target non-animal image detection task |
 - **Evidence**:
-  - Paradigm: The dataset includes explicit difficulty levels (easy/difficult) designed to modulate recognition performance, making difficulty classification a plausible task.
-- **Kernel Notes**: Binary difficulty label within the recognition task only. Collapses target/distractor within each difficulty level.
+  - sub-002_ses-01_task-gonogo_run-10_events.json — events.json sidecar defines `nonanimal_target` as "An image not containing an animal that is a target in a single target image detection task" and `nonanimal_distractor` as "An image not containing an animal that is a distractor in a single target non-animal image detection task"
+  - sub-002_ses-01_task-gonogo_run-10_events.tsv — direct observation of stimulus events with values `nonanimal_target` and `nonanimal_distractor` in actual data
+  - README — describes go/nogo paradigm with 20 ms stimulus presentation, 1000 ms response window, 2000 ms ± 200 ms SOA; epoch window inferred from classical task defaults for this flash paradigm
+- **Notes**: ~2800 trials each of nonanimal_target and nonanimal_distractor, balanced. Control condition without animal content in the single-target non-animal detection variant of the gonogo task.
 
-### Potential Task 3: Target Identity Multi-Class Classification
+### Potential Task 4: 4-class detection difficulty (easy vs difficult vs nonanimal vs animal)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.3 s, tmax = 0.7 s, target_events = [`animal_target`, `easy_target`, `difficult_target`, `nonanimal_target`]
+- **Epoch Parameters**: `tmin = -0.3 s *, tmax = 0.7 s *, target_events = [`animal_target`, `animal_distractor`, `easy_target`, `easy_distractor`, `difficult_target`, `difficult_distractor`, `nonanimal_target`, `nonanimal_distractor`]`
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
-  | `animal_target` | 0 | Animal category |
-  | `easy_target` | 1 | Easy recognition category |
-  | `difficult_target` | 2 | Difficult recognition category |
-  | `nonanimal_target` | 3 | Non-animal recognition category |
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `animal_target`, `animal_distractor` | 0 | Animal categorization (go-nogo task: target or distractor image containing animal) |
+  | `easy_target`, `easy_distractor` | 1 | Easy detection (single-target easy animal image detection task) |
+  | `difficult_target`, `difficult_distractor` | 2 | Difficult detection (single-target difficult animal image detection task) |
+  | `nonanimal_target`, `nonanimal_distractor` | 3 | Non-animal detection (single-target non-animal image detection task) |
 - **Evidence**:
-  - Paradigm: Natural scenes with distinct semantic categories (animals, non-animals, easy/difficult photographs) are processed differently in visual cortex.
-- **Kernel Notes**: 4-class classification using only target events (go responses). Distractor events omitted to focus on target-specific processing patterns.
+- **Notes**: Cross-task comparison collapsing target/distractor within each of four detection conditions. All 8 stimulus event IDs are mapped to 4 classes by task type (animal categorization, easy detection, difficult detection, non-animal detection). This tests EEG discriminability of processing difficulty/complexity across task variants. Target and distractor events within each condition are merged to form condition-level classes, as the task compares detection paradigms rather than target/distractor discrimination.
+
+### Potential Task 5: 2-class response correctness
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: `tmin = -0.3 s *, tmax = 0.7 s *, target_events = [`correct`, `incorrect`]`
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `correct` | 0 | Correct behavioral response |
+  | `incorrect` | 1 | Incorrect behavioral response |
+- **Evidence**:
+  - sub-002_ses-01_task-gonogo_run-10_events.json — `correct` defined as "Correct response", `incorrect` defined as "Incorrect response" in value column Levels
+  - events.tsv samples — Response events with trial_type='response' and values 'correct'/'incorrect' observed across all runs
+- **Notes**: Response-locked epochs for error-related negativity (ERN) and correct-response positivity analysis. Highly imbalanced classes (~16921 correct vs ~745 incorrect). Epoch window -0.3 to 0.7 s centered on response onset to capture ERN (~0-100 ms) and Pe (~200-400 ms) components. Values marked with * inferred from standard ERN/Pe ERP literature.
+
+### Potential Task 6: Gender Classification from EEG
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `gender`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | gender | F | 0 | Female subject |
+  | gender | M | 1 | Male subject |
+- **Evidence**:
+- **Notes**: Segmentation-based biometric classification using 2-second overlapping EEG segments (50% overlap) from continuous recordings. Subject gender labels are drawn from participants.tsv, with balanced classes (7F, 7M across 14 subjects). No event structure required; segments are extracted uniformly across the continuous recording. Epoch parameters inferred from standard segmentation defaults for subject-level biometric tasks.
+
+### Potential Task 7: Go vs No-Go Trial Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: `tmin = -0.3 s *, tmax = 0.7 s *, target_events = [`animal_target`, `animal_distractor`, `easy_target`, `easy_distractor`, `difficult_target`, `difficult_distractor`, `nonanimal_target`, `nonanimal_distractor`]`
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `animal_target` | 0 | Go trial (target stimulus requiring button release) |
+  | `easy_target` | 0 | Go trial (target stimulus requiring button release) |
+  | `difficult_target` | 0 | Go trial (target stimulus requiring button release) |
+  | `nonanimal_target` | 0 | Go trial (target stimulus requiring button release) |
+  | `animal_distractor` | 1 | No-Go trial (distractor stimulus requiring response withholding) |
+  | `easy_distractor` | 1 | No-Go trial (distractor stimulus requiring response withholding) |
+  | `difficult_distractor` | 1 | No-Go trial (distractor stimulus requiring response withholding) |
+  | `nonanimal_distractor` | 1 | No-Go trial (distractor stimulus requiring response withholding) |
+- **Evidence**:
+  - events.json sidecar files (sub-002_ses-01_task-gonogo_run-10_events.json, sub-002_ses-01_task-gonogo_run-11_events.json) — Defines all 8 stimulus event types with explicit target/distractor meanings for go-nogo and single-target detection variants
+  - events.tsv samples (sub-002_ses-01_task-gonogo_run-10_events.tsv) — Confirms event occurrence with trial_type='stimulus' and value column containing target/distractor events
+  - README — Describes go/nogo paradigm: "Participants gave their responses following a go/nogo paradigm. For each target, they had to lift their finger from the button"
+  - dataset_description.json — "Go-nogo categorization and detection task" confirms paradigm
+- **Notes**: Many-to-one mapping of 8 distinct stimulus events to 2 classes (y=0 for all target/go trials, y=1 for all distractor/no-go trials) based on required behavioral response. The four target types (animal, easy, difficult, nonanimal) and four distractor types are collapsed across task variants (categorization vs. detection) since all share the same go/no-go response requirement. Epoch window inferred from related tasks in same dataset.
+
+### Potential Task 8: Target vs Distractor Across All Tasks
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: `tmin = -0.3 s *, tmax = 0.7 s *, target_events = [`animal_target`, `animal_distractor`, `easy_target`, `easy_distractor`, `difficult_target`, `difficult_distractor`, `nonanimal_target`, `nonanimal_distractor`]`
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `animal_target` | 0 | target (animal image, go-nogo categorization) |
+  | `easy_target` | 0 | target (easy animal detection) |
+  | `difficult_target` | 0 | target (difficult animal detection) |
+  | `nonanimal_target` | 0 | target (non-animal image detection) |
+  | `animal_distractor` | 1 | distractor (non-animal image, go-nogo categorization) |
+  | `easy_distractor` | 1 | distractor (non-animal image, easy detection) |
+  | `difficult_distractor` | 1 | distractor (non-animal image, difficult detection) |
+  | `nonanimal_distractor` | 1 | distractor (animal image, non-animal detection) |
+- **Evidence**:
+  - sub-002_ses-01_task-gonogo_run-10_events.json — Event value levels define all 8 stimulus types (4 target + 4 distractor variants) across go-nogo categorization and single-target detection tasks
+  - sub-002_ses-01_task-gonogo_run-10_events.tsv — Direct observation of event sequence: stimulus events with trial_type='stimulus' and value column encoding target/distractor identity
+  - README — Describes paradigm: two alternated tasks (categorization and recognition), target and non-target images equally likely, go/nogo response with 1000 ms response window, 2000 ms SOA
+- **Notes**: Collapses across all 4 task variants (animal categorization, easy detection, difficult detection, non-animal detection) to create a large-sample binary target vs distractor classification. All target events mapped to y=0, all distractor events mapped to y=1. Epoch window matches component tasks (-0.3 to 0.7 s) for stimulus-locked ERP comparison.
+
+## Data Quality Notes
+
+- No known data quality issues.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_kernel_update

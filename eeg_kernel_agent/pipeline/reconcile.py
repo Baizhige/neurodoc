@@ -264,16 +264,20 @@ Constraints on the patch:
 - def apply(self, udataset, raw, row) -> mne.io.BaseRaw:   (exact signature, one line)
 - KERNEL = <ClassName>()  at end of file
 - eegunity_description dict with: age (str), sex, amplifier, cap, handedness
-- The derived misc channels you add MUST be created from the SPECIFIED source_field
-  (a column in participants.tsv). If that column is not actually available at apply()
-  time (e.g. cannot be accessed from `row` or `raw.info`), do NOT fabricate values —
-  leave the channel as raw.info['description']['eegunity_description'] or skip it.
+- The derived misc channels you add MUST be created from the SPECIFIED source_field.
+  source_field formats:
+    * "<column>"              → read from participants.tsv (subject-level scalar).
+    * "events.tsv:<column>"   → read from the sibling events.tsv (per-trial scalar).
+  If the source is not actually available at apply() time, do NOT fabricate values;
+  skip that channel (reconcile will drop the task rather than accept hallucinated data).
 - No os.remove / shutil.rmtree / subprocess / eval / exec / write-mode open.
 
-For each derived channel requested, add the MNE misc channel to the raw object before
-returning it. Typical approach: read the participants.tsv column for the current subject
-(the subject id is available in `row` or inferrable from the file path) and append a
-constant-valued misc channel of the appropriate length.
+Mechanism for materialising the derived channel is YOUR call — constant broadcast is
+fine for participants.tsv sources (one value per file); events.tsv sources typically
+warrant a trial-locked step function (channel value updates at each annotation onset).
+Use MNE idioms: mne.io.RawArray + raw.add_channels([...]), or set_channel_types after
+concatenation. Only invariants: exact `name` in raw.ch_names, ch_type 'misc', data
+shape (1, len(raw.times)), finite values.
 """
 
 

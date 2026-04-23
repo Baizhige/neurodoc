@@ -1,9 +1,9 @@
 # EEG-attention-rsvp-exp2
 
 **Dataset**: `openneuro_ds004817` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004817
-**Category**: Sensory/Response | **Subjects**: 40 | **Files (Completed)**: 40
+**Category**: Sensory/Response | **Subjects**: 20 | **Files (Completed)**: 20
 **Channels**: 63 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
@@ -11,17 +11,17 @@ A Rapid Serial Visual Presentation (RSVP) task (Experiment 2) investigating the 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `4c5a8fa7cbcb7a697d658d23470c52977654ba401b8527c802a370281a7cca44`
+> **Kernel SHA256**: `3a82a14f640b20e68beb91e412e3f7f183abfdb657e0d2a4b15b4857043dc177`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `E 1` | 138274 | event | raw | Task-relevant (attended) stimulus |
-| `E 2` | 138274 | event | raw | Task-irrelevant (unattended) stimulus |
-| `E 3` | 3842 | event | raw | Additional stimulus type |
-| `boundary` | 20 | event | raw | Artifact boundary marker |
+| `E 1` | 138274 | event | raw | Stimulus presentation marker (alternating component of RSVP stimulus stream) |
+| `E 2` | 138274 | event | raw | Stimulus presentation marker (alternating component of RSVP stimulus stream) |
+| `E 3` | 3842 | event | raw | Trial phase onset: stream/block start |
+| `boundary` | 20 | admin | raw | Recording segment boundary (New Segment marker) |
 
 
 ### Info
@@ -33,65 +33,79 @@ A Rapid Serial Visual Presentation (RSVP) task (Experiment 2) investigating the 
 
 ## Tasks
 
-### Classical Task 1: RSVP Stimulus Identity Classification (16 objects + 16 letters)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s, target_events = [`E 1`, `E 2`, `E 3`]
-- **Label Route**: `event`
+### Potential Task 1: Subject age regression
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `E 1` | 0 | Task-relevant (attended) stimulus |
-  | `E 2` | 1 | Task-irrelevant (unattended) stimulus |
-  | `E 3` | 2 | Additional stimulus type |
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 19–36 (years) | Subject chronological age from participants.tsv; all 20 subjects have complete age data |
 - **Evidence**:
-  - DOI: `10.51628/001c.21174` — MVPA decoding classified which of 16 objects or 16 letters was presented from EEG epochs extracted -100ms to 1000ms relative to stimulus onset; 32-class identity problem
-- **Kernel Notes**: Aggregate duplicate event formats (E 1 + Event/E 1, E 2 + Event/E 2, E 3 + Event/E 3) into unified classes. Epochs extracted from -100ms to 1000ms relative to stimulus onset aligns with published MVPA analysis.
+  - Grootswagers et al. (2021) — Dataset README and participants.tsv document age range 19–36 years for all 20 subjects
+- **Notes**: Segmentation-based epochs (2s windows, 50% overlap) are used because age is a subject-level variable with no trial-level event structure. The kernel simply reads the native `age` column from participants.tsv and assigns it to all epochs from that subject. No derivation is needed.
 
-### Classical Task 2: RSVP Category Classification (bird/fish/boat/plane)
+### Potential Task 2: Subject handedness classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s, target_events = [`E 1`, `E 2`, `E 3`]
-- **Label Route**: `event`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `handedness`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `E 1` | 0 | Attended stimulus → decode category (bird/fish/boat/plane) |
-  | `E 2` | 1 | Unattended stimulus → decode category (bird/fish/boat/plane) |
-  | `E 3` | 2 | Additional stimulus type → decode category |
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | handedness | R | 0 | Right-handed |
+  | handedness | L | 1 | Left-handed |
 - **Evidence**:
-  - DOI: `10.51628/001c.21174` — MVPA decoding performed to classify object category (bird/fish/boat/plane); attention modulated category-level decodability
-- **Kernel Notes**: Same epoch window as stimulus identity. Category labels (bird/fish/boat/plane) require mapping event IDs to stimulus metadata from dataset. Filter boundary events (20 total).
+  - participants.tsv — Handedness column complete for all 20 subjects (R=17, L=3)
+- **Notes**: Segmentation-based epochs with 2s windows and 50% overlap used because handedness is a subject-level demographic variable with no event-based structure. All epochs from a given subject receive the same label. Imbalanced 2-class problem (17:3 ratio).
 
-### Classical Task 3: RSVP Animacy Classification (animal/vehicle)
+### Potential Task 3: Subject gender classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s, target_events = [`E 1`, `E 2`, `E 3`]
-- **Label Route**: `event`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `gender`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `E 1` | 0 | Attended stimulus → decode animacy (animal/vehicle) |
-  | `E 2` | 1 | Unattended stimulus → decode animacy (animal/vehicle) |
-  | `E 3` | 2 | Additional stimulus type → decode animacy |
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | gender | F | 0 | Female |
+  | gender | M | 1 | Male |
 - **Evidence**:
-  - DOI: `10.51628/001c.21174` — MVPA decoding performed to classify animacy (animal vs vehicle); animal stimuli = bird/fish, vehicle stimuli = boat/plane
-- **Kernel Notes**: Binary animacy classification using same -100ms to 1000ms window. Animal stimuli map to E 1/E 2 for bird/fish; vehicle stimuli map to E 1/E 2 for boat/plane.
+  - participants.tsv — gender column complete for all 20 subjects (F=17, M=3)
+  - dataset_description.json — confirms dataset is EEG-attention-rsvp-exp2 with 20 subjects
+- **Notes**: Highly imbalanced 2-class problem (17F/3M). Segmentation-based epochs required because gender is a subject-level label with no discriminating event structure. All epochs from a given subject share the same label. SKILL default segmentation parameters used (2s windows, 50% overlap) as no event-based structure exists for this subject-level prediction task.
 
-### Potential Task 1: RSVP Attention Classification (attended vs unattended)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`E 1`, `E 2`]
-- **Label Route**: `event`
+### Potential Task 4: RSVP Continuous EEG Segmentation with Age
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `E 1` | 0 | Attended stimulus (task-relevant) |
-  | `E 2` | 1 | Unattended stimulus (task-irrelevant) |
+  | Info Field | Range (unit) | Notes |
+  |------------|-------------|-------|
+  | age | 19.0–36.0 (years) | Subject chronological age from participants.tsv; predicted from 2-second non-overlapping sliding windows of continuous RSVP EEG |
 - **Evidence**:
-  - DOI: `10.51628/001c.21174` — Study investigates neural dynamics of prioritizing task-relevant information; attended vs unattended distinction is fundamental to the RSVP paradigm
-- **Kernel Notes**: Binary attention classification. Extended baseline window (tmin = -0.2s) captures pre-stimulus attentional state. Aggregate E 1 + Event/E 1 and E 2 + Event/E 2 as unified classes.
+- **Notes**: Archetype C segmentation formulation of age prediction. Uses fixed 2-second windows with 50% overlap across the entire continuous RSVP recording, rather than event-locked epochs. The kernel must segment the raw EEG without event alignment, assigning the same subject-level age label to all windows from a given recording. This provides a segmentation-focused alternative to event-based or trial-averaged approaches for subject-level biomarker prediction.
+
+## Data Quality Notes
+
+- Subject count discrepancy: existing draft lists 40 subjects but File Scan Result and Tasks sections indicate 20 subjects (age range 19–36, 17R/3L handedness, 17F/3M gender).
+- Device metadata is missing for all files.
+- Event counts for E 1 and E 2 are identical (138274 each), consistent with alternating RSVP stimulus components.
+- E 3 events (3842) represent stream/block starts, substantially fewer than stimulus presentation markers.
+- Only 20 boundary events total across all files suggests minimal recording interruptions.
+- The Tasks section contains only segmentation-based subject-level prediction tasks (age, handedness, gender) and no event-based RSVP classification tasks despite the RSVP paradigm description.
+- No known data quality issues.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

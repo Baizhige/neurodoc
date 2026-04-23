@@ -1,9 +1,8 @@
 # Large Spanish EEG
 
 **Dataset**: `openneuro_ds004279` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004279
-**Category**: High-level Mental | **Subjects**: 56 | **Files (Completed)**: 60
-**Channels**: 69 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 56 | **Files (Completed)**: 60 | **Channels**: 69 | **Sampling Rate**: 1000 Hz
+**Manual Review**:
 
 ## Paradigm
 
@@ -11,53 +10,53 @@ Participants performed speech perception and silent speech production tasks invo
 
 ## File Scan Result
 
-> **Kernel SHA256**: `435f347255c93943812ca902e96ec9ee133dc1f5c4b7bc758f0b7a36f7992679`
+> **Kernel SHA256**: `d659db75b998c95432f7d5ce269d3ecd21ea826dbc6fd3871b395d5a8727414a`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `1` | 370 | event | raw | Perception phase for sentence 1 |
-| `10` | 370 | event | raw | Perception phase for sentence 10 |
-| `11` | 370 | event | raw | Perception phase for sentence 11 |
-| `12` | 370 | event | raw | Perception phase for sentence 12 |
-| `13` | 370 | event | raw | Perception phase for sentence 13 |
-| `14` | 370 | event | raw | Perception phase for sentence 14 |
-| `15` | 370 | event | raw | Perception phase for sentence 15 |
-| `16` | 370 | event | raw | Perception phase for sentence 16 |
-| `17` | 370 | event | raw | Perception phase for sentence 17 |
-| `18` | 370 | event | raw | Perception phase for sentence 18 |
-| `19` | 370 | event | raw | Perception phase for sentence 19 |
-| `2` | 370 | event | raw | Perception phase for sentence 2 |
-| `20` | 370 | event | raw | Perception phase for sentence 20 |
-| `21` | 371 | event | raw | Perception phase for sentence 21 |
-| `22` | 370 | event | raw | Perception phase for sentence 22 |
-| `23` | 370 | event | raw | Perception phase for sentence 23 |
-| `24` | 370 | event | raw | Perception phase for sentence 24 |
-| `25` | 370 | event | raw | Perception phase for sentence 25 |
-| `26` | 365 | event | raw | Perception phase for sentence 26 |
-| `27` | 65 | event | raw | Perception phase for sentence 27 |
-| `28` | 60 | event | raw | Perception phase for sentence 28 |
-| `29` | 60 | event | raw | Perception phase for sentence 29 |
-| `3` | 370 | event | raw | Perception phase for sentence 3 |
-| `30` | 10921 | event | raw | Perception phase for sentence 30 |
-| `31` | 11100 | event | raw | Production phase for sentence 1 |
-| `32` | 11100 | event | raw | Production phase for sentence 2 |
-| `33` | 544 | event | raw | Preparation cue for sentence 1 |
-| `34` | 10926 | event | raw | Preparation cue for sentence 2 |
-| `35` | 298 | event | raw | Rest period for sentence 1 |
-| `36` | 366 | event | raw | Rest period for sentence 2 |
-| `37` | 370 | event | raw | Rest period for sentence 3 |
-| `38` | 370 | event | raw | Rest period for sentence 4 |
-| `39` | 125 | event | raw | Admin marker (variable) |
-| `4` | 370 | event | raw | Perception phase for sentence 4 |
-| `40` | 2 | event | raw | Admin marker (variable) |
-| `5` | 370 | event | raw | Perception phase for sentence 5 |
-| `6` | 370 | event | raw | Perception phase for sentence 6 |
-| `7` | 370 | event | raw | Perception phase for sentence 7 |
-| `8` | 370 | event | raw | Perception phase for sentence 8 |
-| `9` | 370 | event | raw | Perception phase for sentence 9 |
+| `1` | 370 | admin | raw | Impedance test onset |
+| `10` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 10) |
+| `11` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 11) |
+| `12` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 12) |
+| `13` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 13) |
+| `14` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 14) |
+| `15` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 15) |
+| `16` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 16) |
+| `17` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 17) |
+| `18` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 18) |
+| `19` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 19) |
+| `2` | 370 | event | raw |  |
+| `20` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 20) |
+| `21` | 371 | event | raw | Trial phase onset: perception (sentence stimulus ID 21) |
+| `22` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 22) |
+| `23` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 23) |
+| `24` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 24) |
+| `25` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 25) |
+| `26` | 365 | event | raw | Trial phase onset: perception (sentence stimulus ID 26) |
+| `27` | 65 | event | raw | Trial phase onset: perception (sentence stimulus ID 27) |
+| `28` | 60 | event | raw | Trial phase onset: perception (sentence stimulus ID 28) |
+| `29` | 60 | event | raw | Trial phase onset: perception (sentence stimulus ID 29) |
+| `3` | 370 | admin | raw | Bad artifact marker onset |
+| `30` | 10921 | event | raw | Trial phase onset: preparation (sentence stimulus ID 0) |
+| `31` | 11100 | event | raw | Trial phase onset: perception (sentence stimulus ID 31) |
+| `32` | 11100 | event | raw | Trial phase onset: perception (sentence stimulus ID 32) |
+| `33` | 544 | event | raw | Trial phase onset: perception (sentence stimulus ID 33) |
+| `34` | 10926 | event | raw | Trial phase onset: preparation (sentence stimulus ID 4) |
+| `35` | 298 | event | raw | Trial phase onset: perception (sentence stimulus ID 35) |
+| `36` | 366 | event | raw | Trial phase onset: preparation (sentence stimulus ID 6) |
+| `37` | 370 | event | raw | Trial phase onset: preparation (sentence stimulus ID 7) |
+| `38` | 370 | event | raw | Trial phase onset: preparation (sentence stimulus ID 8) |
+| `39` | 125 | event | raw | Trial phase onset: perception (sentence stimulus ID 39) |
+| `4` | 370 | admin | raw | Pre-experiment bad period onset |
+| `40` | 2 | event | raw | Trial phase onset: preparation (sentence stimulus ID 10) |
+| `5` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 5) |
+| `6` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 6) |
+| `7` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 7) |
+| `8` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 8) |
+| `9` | 370 | event | raw | Trial phase onset: perception (sentence stimulus ID 9) |
 
 
 ### Info
@@ -69,104 +68,183 @@ Participants performed speech perception and silent speech production tasks invo
 
 ## Tasks
 
-### Classical Task 1: 30-Class Sentence Identity Classification from Perceived Speech
+### Classical Task 1: 30-class sentence perception identification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 3.0 s, target_events = [`perception_1`, `perception_2`, `perception_3`, `perception_4`, `perception_5`, `perception_6`, `perception_7`, `perception_8`, `perception_9`, `perception_10`, `perception_11`, `perception_12`, `perception_13`, `perception_14`, `perception_15`, `perception_16`, `perception_17`, `perception_18`, `perception_19`, `perception_20`, `perception_21`, `perception_22`, `perception_23`, `perception_24`, `perception_25`, `perception_26`, `perception_27`, `perception_28`, `perception_29`, `perception_30`]
+- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 4.0 s *, target_events = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 35, 39]`
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
-  | `perception_1` | 0 | Sentence 1 perception phase |
-  | `perception_2` | 1 | Sentence 2 perception phase |
-  | `perception_3` | 2 | Sentence 3 perception phase |
-  | `perception_4` | 3 | Sentence 4 perception phase |
-  | `perception_5` | 4 | Sentence 5 perception phase |
-  | `perception_6` | 5 | Sentence 6 perception phase |
-  | `perception_7` | 6 | Sentence 7 perception phase |
-  | `perception_8` | 7 | Sentence 8 perception phase |
-  | `perception_9` | 8 | Sentence 9 perception phase |
-  | `perception_10` | 9 | Sentence 10 perception phase |
-  | `perception_11` | 10 | Sentence 11 perception phase |
-  | `perception_12` | 11 | Sentence 12 perception phase |
-  | `perception_13` | 12 | Sentence 13 perception phase |
-  | `perception_14` | 13 | Sentence 14 perception phase |
-  | `perception_15` | 14 | Sentence 15 perception phase |
-  | `perception_16` | 15 | Sentence 16 perception phase |
-  | `perception_17` | 16 | Sentence 17 perception phase |
-  | `perception_18` | 17 | Sentence 18 perception phase |
-  | `perception_19` | 18 | Sentence 19 perception phase |
-  | `perception_20` | 19 | Sentence 20 perception phase |
-  | `perception_21` | 20 | Sentence 21 perception phase |
-  | `perception_22` | 21 | Sentence 22 perception phase |
-  | `perception_23` | 22 | Sentence 23 perception phase |
-  | `perception_24` | 23 | Sentence 24 perception phase |
-  | `perception_25` | 24 | Sentence 25 perception phase |
-  | `perception_26` | 25 | Sentence 26 perception phase |
-  | `perception_27` | 26 | Sentence 27 perception phase |
-  | `perception_28` | 27 | Sentence 28 perception phase |
-  | `perception_29` | 28 | Sentence 29 perception phase |
-  | `perception_30` | 29 | Sentence 30 perception phase |
-- **Kernel Notes**: Verify event ID mapping from events.tsv — event IDs 1-30 correspond to sentences 1-30 perception phases. Downsample data to 250 Hz before epoching. Trim trials to exactly 3 s (750 data points) per paper specifications. Events 27-29 show lower counts (60-65 vs ~370) suggesting incomplete data for those sentences; consider excluding or flagging these. Exclude admin markers (bad_artifact, Impedance_test, bad_before/after_experiment) from epoching.
-- **Evidence**: DOI: 10.1088/1741-2552/ad88a3 — 56 participants, 64 EEG channels, 30-class Spanish sentence identity classification from perceived speech using deep neural networks (EEGNet, DeepConvNet, ShallowConvNet) with 3-second windows aligned to perception onset.
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | 5 | 0 | perception sentence 5 |
+  | 6 | 1 | perception sentence 6 |
+  | 7 | 2 | perception sentence 7 |
+  | 8 | 3 | perception sentence 8 |
+  | 9 | 4 | perception sentence 9 |
+  | 10 | 5 | perception sentence 10 |
+  | 11 | 6 | perception sentence 11 |
+  | 12 | 7 | perception sentence 12 |
+  | 13 | 8 | perception sentence 13 |
+  | 14 | 9 | perception sentence 14 |
+  | 15 | 10 | perception sentence 15 |
+  | 16 | 11 | perception sentence 16 |
+  | 17 | 12 | perception sentence 17 |
+  | 18 | 13 | perception sentence 18 |
+  | 19 | 14 | perception sentence 19 |
+  | 20 | 15 | perception sentence 20 |
+  | 21 | 16 | perception sentence 21 |
+  | 22 | 17 | perception sentence 22 |
+  | 23 | 18 | perception sentence 23 |
+  | 24 | 19 | perception sentence 24 |
+  | 25 | 20 | perception sentence 25 |
+  | 26 | 21 | perception sentence 26 |
+  | 27 | 22 | perception sentence 27 |
+  | 28 | 23 | perception sentence 28 |
+  | 29 | 24 | perception sentence 29 |
+  | 31 | 25 | perception sentence 31 |
+  | 32 | 26 | perception sentence 32 |
+  | 33 | 27 | perception sentence 33 |
+  | 35 | 28 | perception sentence 35 |
+  | 39 | 29 | perception sentence 39 |
+- **Evidence**:
+  - 10.1088/1741-2552/ad88a3 — Primary task from Valle et al. 2024: 30-class classification of perceived Spanish sentences using EEG with deep neural networks (EEGNet, DeepConvNet, ShallowConvNet) achieving subject-independent decoding.
+- **Notes**: The original paper reports 30-class classification using sentences 5-29 (25 classes from the must_have_events list). To reach 30 classes, we include additional confirmed perception events 31, 32, 33, 35, and 39 from the grounded event meanings. Event IDs 1, 3, 4 are admin markers excluded per the paper. IDs 2 and 30-40 (with preparation/production/rest patterns) are non-perception phases and excluded. The epoch window covers the full 4s sentence presentation with -0.2s baseline for ERP analysis.
 
-### Normal Task 1: Perception vs Production Binary Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5 s, target_events = [`perception_1`, `perception_2`, ..., `perception_30`, `production_1`, `production_2`, ..., `production_30`]
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
-  | `perception_1` | 0 | Sentence 1 perception phase |
-  | `perception_2` | 0 | Sentence 2 perception phase |
-  | ... | 0 | ... |
-  | `perception_30` | 0 | Sentence 30 perception phase |
-  | `production_1` | 1 | Sentence 1 silent production phase |
-  | `production_2` | 1 | Sentence 2 silent production phase |
-  | ... | 1 | ... |
-  | `production_30` | 1 | Sentence 30 silent production phase |
-- **Kernel Notes**: Group all 30 perception_N events as class 0 and all 30 production_N events as class 1. Event IDs 31-32 likely encode production phases (counts ~11100 matching 60 files × ~185 per file). Use 0.5 s overlap for sliding window analysis to capture neural signature differences between listening and silent speaking. Exclude admin events from epoching.
-- **Evidence**: DOI: 10.1088/1741-2552/ad88a3 — Same dataset includes both speech perception and silent speech production phases; binary classification between these conditions is a natural extension supported by the paradigm structure.
-
-### Potential Task 1: Preparation Cue Classification (Perception vs Preparation Phase)
+### Potential Task 1: Extended 39-Class Sentence Perception Identification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = [`perception_1`, `perception_2`, ..., `perception_30`, `preparation_1`, `preparation_2`, ..., `preparation_30`]
+- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 4.0 s *, target_events = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 35, 39]`
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
-  | `preparation_1` | 0 | Sentence 1 preparation cue |
-  | `preparation_2` | 0 | Sentence 2 preparation cue |
-  | ... | 0 | ... |
-  | `preparation_30` | 0 | Sentence 30 preparation cue |
-  | `perception_1` | 1 | Sentence 1 perception phase |
-  | `perception_2` | 1 | Sentence 2 perception phase |
-  | ... | 1 | ... |
-  | `perception_30` | 1 | Sentence 30 perception phase |
-- **Kernel Notes**: Classify neural activity during preparation cues vs. speech perception to investigate pre-speech motor planning signatures. Preparation phases precede each perception-production sequence and may show distinct EEG signatures related to speech planning. Exclude admin events.
-- **Evidence**: No direct reference; plausible from paradigm structure where each trial includes a preparation cue phase preceding perception and production.
 
-### Potential Task 2: Rest Period Activity Classification
+| Event ID | y | Meaning |
+|----------|---|---------|
+| 5 | 0 | perception sentence 5 |
+| 6 | 1 | perception sentence 6 |
+| 7 | 2 | perception sentence 7 |
+| 8 | 3 | perception sentence 8 |
+| 9 | 4 | perception sentence 9 |
+| 10 | 5 | perception sentence 10 |
+| 11 | 6 | perception sentence 11 |
+| 12 | 7 | perception sentence 12 |
+| 13 | 8 | perception sentence 13 |
+| 14 | 9 | perception sentence 14 |
+| 15 | 10 | perception sentence 15 |
+| 16 | 11 | perception sentence 16 |
+| 17 | 12 | perception sentence 17 |
+| 18 | 13 | perception sentence 18 |
+| 19 | 14 | perception sentence 19 |
+| 20 | 15 | perception sentence 20 |
+| 21 | 16 | perception sentence 21 |
+| 22 | 17 | perception sentence 22 |
+| 23 | 18 | perception sentence 23 |
+| 24 | 19 | perception sentence 24 |
+| 25 | 20 | perception sentence 25 |
+| 26 | 21 | perception sentence 26 |
+| 27 | 22 | perception sentence 27 |
+| 28 | 23 | perception sentence 28 |
+| 29 | 24 | perception sentence 29 |
+| 31 | 25 | perception sentence 31 |
+| 32 | 26 | perception sentence 32 |
+| 35 | 27 | perception sentence 35 |
+| 39 | 28 | perception sentence 39 |
+
+- **Evidence**:
+  - sub-002_ses-01_task-sentences_events.tsv — events.tsv showing trial_type/value mappings with perception events 5-39 and preparation/rest/production phases
+  - events.json (implicit from events.tsv structure) — value encoding pattern: perception events use sentence stimulus IDs 1-39, preparation = perception + 30
+  - README/publication — dataset described as 30 Spanish sentences for silent and perceived speech; this task extends to all perception events present in data
+- **Notes**: This is a speculative extension beyond the paper's reported 30-class scope. The dataset contains perception events for sentence IDs 5-29, 31-32, 35, and 39 (29 distinct event IDs mapping to 29 unique sentence stimuli with y=0..28). Event 30 is excluded as it is preparation phase, not perception. Low-count events (27-29 with ~60 trials, 39 with 125 trials) have fewer trials due to counterbalancing. Event 33 was excluded from must_have_events despite being a perception event (sentence 33, count=544) — the candidate's kernel_needs specifies only events 5-29, 31-32, 35, 39. The epoch parameters (tmin=-0.2s, tmax=4.0s) are inferred from the 30-class task pattern, matching the 4.0s perception duration with -0.2s baseline.
+
+### Potential Task 2: Rest vs Task State Detection
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = [`rest_1`, `rest_2`, ..., `rest_30`, `perception_1`, `perception_2`, ..., `perception_30`]
+- **Epoch Parameters**: tmin = 0 s *, tmax = 5 s *, target_events = [35, 36, 37, 38, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 35, 39, 40]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
-  | `rest_1` | 0 | Sentence 1 rest period |
-  | `rest_2` | 0 | Sentence 2 rest period |
-  | ... | 0 | ... |
-  | `rest_30` | 0 | Sentence 30 rest period |
-  | `perception_1` | 1 | Sentence 1 perception phase |
-  | `perception_2` | 1 | Sentence 2 perception phase |
-  | ... | 1 | ... |
-  | `perception_30` | 1 | Sentence 30 perception phase |
-- **Kernel Notes**: Compare neural activity during rest periods vs. active speech perception to identify state-dependent EEG changes (e.g., alpha modulation, auditory processing signatures). Exclude bad_* admin events.
-- **Evidence**: No direct reference; rest periods are integral to the trial structure and can serve as baseline comparison for speech perception analysis.
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | 35, 36, 37, 38 | 0 | rest (preparation phase markers serving as rest periods) |
+  | 5-34, 39, 40 | 1 | task (perception/preparation/production phases combined) |
+- **Evidence**:
+  - events.tsv sample — trial structure shows rest_1 (value 95), perception_1 (value 5), preparation_1 (value 35), production_1 (value 65) with 5s rest periods between trials
+  - events.tsv sample — pattern continues: rest_2 (value 106), perception_2 (value 16), preparation_2 (value 46), production_2 (value 76)
+  - Evidence summary — encoding pattern: perception events use sentence stimulus IDs 1-39, preparation = perception + 30, production = perception + 60, rest = perception + 90
+- **Notes**: Event IDs 35-38 are preparation phase onsets that function as rest/ready periods (trial_type=preparation in events.tsv with 1.0s duration, but the 5.0s rest periods are marked with values 95, 106, etc. which are perception+90). However, the must_have_events list only includes 35-38 as rest-like markers, not the actual rest events (95+). Using 35-38 as rest anchors since they are the closest available markers in the kernel_needs list. The task events (5-34, 39, 40) cover all perception and preparation/production onsets. The epoch parameters use 5s windows matching the documented rest period duration, with inferred values marked.
+
+### Potential Task 3: Age Regression from EEG
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.0, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `age`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 19.0 – 29.0 (years) | Continuous age of healthy participants; narrow 10-year span may limit predictive power |
+- **Evidence**:
+- **Notes**: Subject-level biomarker regression using non-overlapping 10-second windows to extract stable EEG features per participant. No event-based structure required; segmentation approach appropriate since age is a static subject-level variable with no temporal discriminative events. All 56 subjects have complete age data in participants.tsv.
+
+### Potential Task 4: Sex Classification from EEG
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.0, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `sex`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | sex | F | 0 | Female |
+  | sex | M | 1 | Male |
+- **Evidence**:
+- **Notes**: Subject-level binary classification using 10-second non-overlapping EEG segments. The sex label is drawn from participants.tsv (native info field), making this a raw meta-level task. Segmentation is appropriate since sex is a subject-level demographic attribute not tied to specific experimental events. The 10-second window length provides sufficient data per sample while allowing multiple segments per subject's ~3200-second recording (~320 segments/subject).
+
+### Potential Task 5: Continuous EEG Segmentation with Age Labels
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 10 s *, overlap = 5 s *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `age`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 19.0–29.0 (years) | Subject chronological age from participants.tsv; all 56 subjects have complete age data |
+- **Evidence**:
+- **Notes**: Segmentation-based regression using sliding windows across entire continuous EEG recording. No event structure is used; the kernel creates 10-second non-overlapping/overlapping segments from the full recording duration (~3200s). Each segment inherits the subject's age from participants.tsv as the regression target. This leverages all continuous data including rest periods, inter-trial intervals, and task-irrelevant periods that are excluded from event-based epoching. The overlap parameter (5s) provides increased sample count for subject-level prediction while maintaining feature stability.
+
+### Potential Task 6: Sex Classification from Continuous EEG Segments
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 10 s *, overlap = 5 s *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `sex`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | sex | F | 0 | Female |
+  | sex | M | 1 | Male |
+- **Evidence**:
+  - participants.tsv — sex column with values {F, M} for all 56 subjects (31 F, 25 M)
+- **Notes**: Segmentation-based approach using all continuous EEG data without event restriction. Each subject contributes multiple 10-second overlapping segments, all labeled with the same sex value. This creates a subject-level classification task where the model must learn sex-related EEG features that generalize across repeated segments from the same individual.
+
+## Data Quality Notes
+
+- Event ID `2` has no documented meaning in the scan result, leaving its trial phase ambiguous.
+- Event ID `30` shows an anomalously high count (10921) compared to other perception events (~370), suggesting it may represent a different trial phase or encoding scheme despite being labeled as "preparation (sentence stimulus ID 0)".
+- Event IDs `31` and `32` also show extremely high counts (11100 each), inconsistent with typical perception event counts, indicating potential miscoding or duplicated entries.
+- Event IDs `27`, `28`, `29`, and `39` have substantially fewer trials (65, 60, 60, 125 respectively) compared to the standard ~370 trials, which may create class imbalance in classification tasks.
+- Event ID `40` has only 2 occurrences, making it statistically unreliable for any task inclusion.
+- The `device` field is completely missing from metadata, limiting hardware reproducibility.
+- The event structure shows overlapping/conflicting interpretations between the original draft and the authoritative scan result (e.g., event 30 was previously labeled "perception phase for sentence 30" but scan result shows "preparation (sentence stimulus ID 0)"), indicating prior documentation errors.
+- Rest period markers referenced in task notes (values 95, 106, etc., corresponding to perception+90) do not appear in the scan result event table, suggesting they may be absent or encoded differently in the actual data files.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

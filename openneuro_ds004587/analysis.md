@@ -69,3 +69,7 @@ No stimulus/response trial events captured in events.tsv. All markers are admini
 ---
 
 > **auto_eeg FAILED**: Although this is a legitimate OpenNeuro dataset with a described paradigm (visual illusion perceptual judgments), it fails feasibility criteria because (1) no reference is rated 'relevant' or 'partial' to support the task, and (2) critically, the events.tsv contains no stimulus/response trial events—only administrative/artifact markers—making it impossible to construct stimulus-locked epochs from the EEG data alone without uncertain behavioral log recovery.
+
+---
+
+> **Pipeline FAILED**: The events.tsv contains only administrative markers (New Segment boundaries, lost samples, motion artifacts, comments) with zero stimulus or response trial events. The README describes a rich 384-trial illusion paradigm with perceptual judgments, but these trial events were not stored in the BIDS events files. Without recoverable event markers linking EEG to trial conditions (illusion type, difficulty, response, correctness), no supervised ML classification or regression task can be constructed from this dataset as currently structured.

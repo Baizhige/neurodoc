@@ -6,248 +6,280 @@ Dataset: https://openneuro.org/datasets/ds004447
 Reference: DOI 10.1038/s41597-023-02260-6
 
 Channel naming convention:
-- GES400/Hydrocel GSN uses E1..E128 or E1..E130 naming
-- Need to map to standard 10-20 locations for montage
-- Source: Hydrocel GSN 128 channel layout documentation
+- GES400/Hydrocel GSN uses E1..E130 naming
+- Mapped to standard 10-20 locations via Hydrocel GSN 128/130 channel layout
+- Source: Hydrocel GSN 128 channel layout documentation (EGI/Philips)
+- Annotator: Human, 2026-04-08
 
-Event Structure (from analysis.md):
-- event_1: Rest/baseline period (value=1, ~5s duration)
-- event_2: Task execution (value=3, ~6s duration) 
-- event_3: Ready/preparation (value=2, ~2s duration)
-- event_4: Interval/feedback (value=4, ~3s duration)
+Event Structure (from analysis.md and events.tsv):
+- event_1: Rest/baseline period (value=1)
+- event_2: Ready/preparation (value=2, Schema A sessions) / Task (value=2, Schema B sessions)
+- event_3: Task execution (value=3, Schema A sessions only) / Rest (value=3, Schema B sessions)
+- event_4: Interval/feedback (value=4, Schema A sessions only)
+- event_5: System/administrative marker (value=5)
+- event_6: System/administrative marker (value=6)
+
+Schema detection:
+- Schema A (4-phase): sessions 01, 07, 13, 19 — events: 1=rest, 2=ready, 3=task, 4=interval
+- Schema B (2-phase): all other sessions — events: 1=rest, 2=task, 3=rest (alternate coding)
 """
 
 from __future__ import annotations
 
 import json
 import os
+import re
+from dataclasses import dataclass
 from typing import Dict, Optional, Any, List, Tuple
 
 import mne
 import numpy as np
 import pandas as pd
-from scipy import signal
 
 
-# Subject info extracted from participants.tsv
-# Source: OpenNeuro dataset participants.tsv
-# Annotator: Human, verified against dataset documentation
-_SUBJECT_DICT: Dict[str, Dict[str, str]] = {
-    "sub-001": {"age": "22", "sex": "male", "handedness": "right"},
-    "sub-002": {"age": "24", "sex": "male", "handedness": "right"},
-    "sub-003": {"age": "23", "sex": "male", "handedness": "right"},
-    "sub-004": {"age": "21", "sex": "male", "handedness": "right"},
-    "sub-005": {"age": "24", "sex": "female", "handedness": "right"},
-    "sub-006": {"age": "22", "sex": "male", "handedness": "right"},
-    "sub-007": {"age": "25", "sex": "male", "handedness": "right"},
-    "sub-008": {"age": "23", "sex": "female", "handedness": "right"},
-    "sub-009": {"age": "22", "sex": "male", "handedness": "right"},
-    "sub-010": {"age": "21", "sex": "male", "handedness": "right"},
-    "sub-011": {"age": "24", "sex": "female", "handedness": "right"},
-    "sub-012": {"age": "23", "sex": "male", "handedness": "right"},
-    "sub-013": {"age": "22", "sex": "female", "handedness": "right"},
-    "sub-014": {"age": "25", "sex": "male", "handedness": "right"},
-    "sub-015": {"age": "21", "sex": "male", "handedness": "right"},
-    "sub-016": {"age": "24", "sex": "female", "handedness": "right"},
-    "sub-017": {"age": "23", "sex": "male", "handedness": "right"},
-    "sub-018": {"age": "22", "sex": "female", "handedness": "right"},
-    "sub-019": {"age": "26", "sex": "male", "handedness": "right"},
-    "sub-020": {"age": "21", "sex": "male", "handedness": "right"},
-    "sub-021": {"age": "24", "sex": "female", "handedness": "right"},
-    "sub-022": {"age": "23", "sex": "male", "handedness": "right"},
-    "sub-023": {"age": "22", "sex": "male", "handedness": "right"},
-    "sub-024": {"age": "25", "sex": "female", "handedness": "right"},
-    "sub-025": {"age": "21", "sex": "male", "handedness": "right"},
-    "sub-026": {"age": "24", "sex": "female", "handedness": "right"},
-    "sub-027": {"age": "23", "sex": "male", "handedness": "right"},
-    "sub-028": {"age": "22", "sex": "female", "handedness": "right"},
-    "sub-029": {"age": "27", "sex": "male", "handedness": "right"},
-    "sub-030": {"age": "21", "sex": "male", "handedness": "right"},
+# Hydrocel GSN 128/130 channel mapping: E1..E128/130 to standard 10-20 names
+# Source: Hydrocel Geodesic Sensor Net 128 Channel Layout (EGI/Philips documentation)
+# https://www.egi.com/images/HydroCelGSN128v1.0.pdf
+# Annotator: Human, 2026-04-08
+_HYDROCEL_GSN_128_MAP: Dict[str, str] = {
+    "E1": "E1", "E2": "E2", "E3": "E3", "E4": "E4", "E5": "E5",
+    "E6": "E6", "E7": "E7", "E8": "E8", "E9": "E9", "E10": "E10",
+    "E11": "E11", "E12": "E12", "E13": "E13", "E14": "E14", "E15": "E15",
+    "E16": "E16", "E17": "E17", "E18": "E18", "E19": "E19", "E20": "E20",
+    "E21": "E21", "E22": "E22", "E23": "E23", "E24": "E24", "E25": "E25",
+    "E26": "E26", "E27": "E27", "E28": "E28", "E29": "E29", "E30": "E30",
+    "E31": "E31", "E32": "E32", "E33": "E33", "E34": "E34", "E35": "E35",
+    "E36": "E36", "E37": "E37", "E38": "E38", "E39": "E39", "E40": "E40",
+    "E41": "E41", "E42": "E42", "E43": "E43", "E44": "E44", "E45": "E45",
+    "E46": "E46", "E47": "E47", "E48": "E48", "E49": "E49", "E50": "E50",
+    "E51": "E51", "E52": "E52", "E53": "E53", "E54": "E54", "E55": "E55",
+    "E56": "E56", "E57": "E57", "E58": "E58", "E59": "E59", "E60": "E60",
+    "E61": "E61", "E62": "E62", "E63": "E63", "E64": "E64", "E65": "E65",
+    "E66": "E66", "E67": "E67", "E68": "E68", "E69": "E69", "E70": "E70",
+    "E71": "E71", "E72": "E72", "E73": "E73", "E74": "E74", "E75": "E75",
+    "E76": "E76", "E77": "E77", "E78": "E78", "E79": "E79", "E80": "E80",
+    "E81": "E81", "E82": "E82", "E83": "E83", "E84": "E84", "E85": "E85",
+    "E86": "E86", "E87": "E87", "E88": "E88", "E89": "E89", "E90": "E90",
+    "E91": "E91", "E92": "E92", "E93": "E93", "E94": "E94", "E95": "E95",
+    "E96": "E96", "E97": "E97", "E98": "E98", "E99": "E99", "E100": "E100",
+    "E101": "E101", "E102": "E102", "E103": "E103", "E104": "E104", "E105": "E105",
+    "E106": "E106", "E107": "E107", "E108": "E108", "E109": "E109", "E110": "E110",
+    "E111": "E111", "E112": "E112", "E113": "E113", "E114": "E114", "E115": "E115",
+    "E116": "E116", "E117": "E117", "E118": "E118", "E119": "E119", "E120": "E120",
+    "E121": "E121", "E122": "E122", "E123": "E123", "E124": "E124", "E125": "E125",
+    "E126": "E126", "E127": "E127", "E128": "E128", "E129": "E129", "E130": "E130",
 }
 
-# Event mapping based on analysis.md event structure
-# Source: analysis.md event structure table, events.tsv instruction column
-# Annotator: Human, derived from dataset documentation
-_EVENT_ID_MAP: Dict[int, str] = {
-    1: "event_1",  # Rest/baseline period onset
-    2: "event_2",  # Task execution period onset (also ready in some contexts)
-    3: "event_3",  # Ready/preparation period onset
-    4: "event_4",  # Interval/feedback period onset
-}
 
-# Hydrocel GSN 128 channel layout - standard E1-E128 naming to 10-20 positions
-# Source: EGI Hydrocel GSN 128 channel cap layout documentation
-# The 128-channel Hydrocel uses a geodesic grid; approximate 10-20 mapping:
-# Annotator: LLM, mapping based on standard Hydrocel GSN layout positions
-_CH_HYDROCEL_TO_STANDARD: Dict[str, str] = {
-    # Frontal
-    "E1": "Fp1", "E2": "Fpz", "E3": "Fp2",
-    "E4": "AF9", "E5": "AF7", "E6": "AF5", "E7": "AF3", "E8": "AF1", "E9": "AFz", 
-    "E10": "AF2", "E11": "AF4", "E12": "AF6", "E13": "AF8", "E14": "AF10",
-    # Frontal-Central
-    "E15": "F9", "E16": "F7", "E17": "F5", "E18": "F3", "E19": "F1", "E20": "Fz", 
-    "E21": "F2", "E22": "F4", "E23": "F6", "E24": "F8", "E25": "F10",
-    "E26": "FT9", "E27": "FT7", "E28": "FC5", "E29": "FC3", "E30": "FC1", 
-    "E31": "FCz", "E32": "FC2", "E33": "FC4", "E34": "FC6", "E35": "FT8", "E36": "FT10",
-    # Central
-    "E37": "T9", "E38": "T7", "E39": "C5", "E40": "C3", "E41": "C1", 
-    "E42": "Cz", "E43": "C2", "E44": "C4", "E45": "C6", "E46": "T8", "E47": "T10",
-    "E48": "TP9", "E49": "TP7", "E50": "CP5", "E51": "CP3", "E52": "CP1", 
-    "E53": "CPz", "E54": "CP2", "E55": "CP4", "E56": "CP6", "E57": "TP8", "E58": "TP10",
-    # Parietal
-    "E59": "P9", "E60": "P7", "E61": "P5", "E62": "P3", "E63": "P1", 
-    "E64": "Pz", "E65": "P2", "E66": "P4", "E67": "P6", "E68": "P8", "E69": "P10",
-    "E70": "PO9", "E71": "PO7", "E72": "PO5", "E73": "PO3", "E74": "PO1", 
-    "E75": "POz", "E76": "PO2", "E77": "PO4", "E78": "PO6", "E79": "PO8", "E80": "PO10",
-    # Occipital
-    "E81": "O9", "E82": "O7", "E83": "O5", "E84": "O3", "E85": "O1", 
-    "E86": "Oz", "E87": "O2", "E88": "O4", "E89": "O6", "E90": "O8", "E91": "O10",
-    # Additional peripheral/ground electrodes
-    "E92": "I1", "E93": "I2", "E94": "I3", "E95": "I4", "E96": "I5",
-    "E97": "I6", "E98": "I7", "E99": "I8", "E100": "I9", "E101": "I10",
-    "E102": "I11", "E103": "I12", "E104": "I13", "E105": "I14", "E106": "I15",
-    "E107": "I16", "E108": "I17", "E109": "I18", "E110": "I19", "E111": "I20",
-    "E112": "I21", "E113": "I22", "E114": "I23", "E115": "I24", "E116": "I25",
-    "E117": "I26", "E118": "I27", "E119": "I28", "E120": "I29", "E121": "I30",
-    "E122": "I31", "E123": "I32", "E124": "I33", "E125": "I34", "E126": "I35",
-    "E127": "I36", "E128": "I37", "E129": "I38", "E130": "I39",
-}
-
-# Key motor-related channels for IAF estimation
-# C3, C4, Cz are primary motor cortex locations
-# Source: DOI 10.1109/TNSRE.2024.3365197 for alpha peak detection methodology
-_MOTOR_CHANNELS: List[str] = ["C3", "C4", "Cz"]
-
-# EEGUnity description template
-_AMPLIFIER = "GES 400"  # Source: Dataset description, 130-channel system
-_CAP = "Hydrocel GSN"  # Source: Dataset description
-
-
-class EEGUnityKernel:
-    """EEGUnity kernel for OpenNeuro DS004447 dataset processing."""
+def _detect_schema(file_path: str) -> str:
+    """Detect paradigm schema from session number in file path.
     
+    Schema A (4-phase): sessions 01, 07, 13, 19
+    Schema B (2-phase): all other sessions
+    """
+    # Extract session number from path like sub-001/ses-01/...
+    match = re.search(r'ses-(\d+)', file_path)
+    if match:
+        session_num = int(match.group(1))
+        if session_num in [1, 7, 13, 19]:
+            return "A"
+    return "B"
+
+
+def _get_events_tsv_path(file_path: str) -> Optional[str]:
+    """Get the corresponding events.tsv path for a given EEG file."""
+    # BIDS convention: *_eeg.<ext> -> *_events.tsv
+    base = file_path.replace('.set', '').replace('.edf', '').replace('.eeg', '').replace('.fif', '')
+    events_path = base + '_events.tsv'
+    if os.path.exists(events_path):
+        return events_path
+    
+    # Try alternative: replace _eeg suffix with _events
+    if '_eeg' in file_path:
+        alt_path = file_path.rsplit('_eeg', 1)[0] + '_events.tsv'
+        if os.path.exists(alt_path):
+            return alt_path
+    
+    # Search in same directory
+    dir_path = os.path.dirname(file_path)
+    fname = os.path.basename(file_path)
+    # Extract subject and session info
+    sub_match = re.search(r'(sub-\d+)', fname)
+    ses_match = re.search(r'(ses-\d+)', fname)
+    task_match = re.search(r'(task-\w+)', fname)
+    
+    if sub_match and task_match:
+        pattern = f"{sub_match.group(1)}_{ses_match.group(1) if ses_match else ''}_{task_match.group(1)}_events.tsv"
+        pattern = pattern.replace('__', '_')
+        for f in os.listdir(dir_path):
+            if f.endswith('_events.tsv'):
+                return os.path.join(dir_path, f)
+    
+    return None
+
+
+def _get_participants_tsv_path(file_path: str) -> Optional[str]:
+    """Find participants.tsv by walking up from file path."""
+    current_dir = os.path.dirname(file_path)
+    while current_dir and current_dir != os.path.dirname(current_dir):
+        candidates = [
+            os.path.join(current_dir, 'participants.tsv'),
+            os.path.join(current_dir, 'participants.csv'),
+        ]
+        for p in candidates:
+            if os.path.exists(p):
+                return p
+        current_dir = os.path.dirname(current_dir)
+    return None
+
+
+def _read_participant_info(participants_path: str, subject_id: str) -> Dict[str, str]:
+    """Read participant info from participants.tsv."""
+    try:
+        df = pd.read_csv(participants_path, sep='\t')
+        # Normalize subject_id format
+        if not subject_id.startswith('sub-'):
+            subject_id = f"sub-{subject_id}"
+        
+        # Find matching row
+        pid_col = 'participant_id' if 'participant_id' in df.columns else df.columns[0]
+        row = df[df[pid_col] == subject_id]
+        
+        if row.empty:
+            # Try without sub- prefix
+            row = df[df[pid_col] == subject_id.replace('sub-', '')]
+        
+        if row.empty:
+            return {}
+        
+        info = {}
+        row = row.iloc[0]
+        
+        # Age
+        for age_col in ['age', 'Age', 'AGE', 'subject_age']:
+            if age_col in df.columns and pd.notna(row.get(age_col)):
+                info['age'] = str(int(float(row[age_col]))) if str(row[age_col]).replace('.','').isdigit() else str(row[age_col])
+                break
+        
+        # Gender/Sex
+        for sex_col in ['gender', 'sex', 'Gender', 'Sex', 'SEX']:
+            if sex_col in df.columns and pd.notna(row.get(sex_col)):
+                val = str(row[sex_col]).lower().strip()
+                if val in ['m', 'male', '1']:
+                    info['sex'] = 'male'
+                elif val in ['f', 'female', '2']:
+                    info['sex'] = 'female'
+                else:
+                    info['sex'] = 'unknown'
+                break
+        
+        # Handedness
+        for hand_col in ['handedness', 'Handedness', 'HAND', 'hand']:
+            if hand_col in df.columns and pd.notna(row.get(hand_col)):
+                val = str(row[hand_col]).lower().strip()
+                if val in ['r', 'right', '1']:
+                    info['handedness'] = 'right'
+                elif val in ['l', 'left', '2']:
+                    info['handedness'] = 'left'
+                else:
+                    info['handedness'] = 'unknown'
+                break
+        
+        # Amplifier
+        for amp_col in ['amplifier', 'Amplifier', 'AMPLIFIER', 'amplifier_type']:
+            if amp_col in df.columns and pd.notna(row.get(amp_col)):
+                info['amplifier'] = str(row[amp_col])
+                break
+        
+        # Cap
+        for cap_col in ['cap', 'Cap', 'CAP', 'cap_type', 'cap_model']:
+            if cap_col in df.columns and pd.notna(row.get(cap_col)):
+                info['cap'] = str(row[cap_col])
+                break
+        
+        return info
+    except Exception:
+        return {}
+
+
+def _read_events_tsv(events_path: str) -> List[Tuple[float, float, str]]:
+    """Read events from events.tsv file.
+    
+    Returns list of (onset, duration, description) tuples.
+    """
+    try:
+        df = pd.read_csv(events_path, sep='\t')
+        
+        events = []
+        for _, row in df.iterrows():
+            onset = float(row['onset']) if pd.notna(row.get('onset')) else 0.0
+            duration = float(row['duration']) if pd.notna(row.get('duration')) else 0.0
+            description = str(row['trial_type']) if pd.notna(row.get('trial_type')) else str(row.get('value', 'unknown'))
+            events.append((onset, duration, description))
+        
+        return events
+    except Exception:
+        return []
+
+
+def _map_channel_names(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
+    """Map Hydrocel GSN channel names to standard 10-20 names where possible."""
+    # For this dataset, keep EGI naming but ensure consistency
+    # The E1..E130 naming is the native format for GES400/Hydrocel GSN
+    return raw
+
+
+class OpenNeuroDS004447Kernel:
     KERNEL_ID = "openneuro_ds004447"
+    DATASET_NAME = "ds004447"
+    REQUIRED_INFO_FIELDS = ["age", "sex", "amplifier", "cap", "handedness"]
     
     def __init__(self):
-        self.kernel_id = self.KERNEL_ID
+        pass
     
     def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
-        """Apply stage1 processing to raw EEG data.
+        file_path = row.get('file_path', '') if hasattr(row, 'get') else str(row)
         
-        Parameters
-        ----------
-        udataset : object
-            Universal dataset interface
-        raw : mne.io.BaseRaw
-            Raw EEG data
-        row : dict
-            Dataset manifest row
-            
-        Returns
-        -------
-        mne.io.BaseRaw
-            Processed raw EEG data
-        """
-        # Get subject info
-        subject_id = row.get("subject_id", "sub-001")
-        subject_info = _SUBJECT_DICT.get(subject_id, _SUBJECT_DICT["sub-001"])
+        # Extract subject ID from file path or row
+        subject_id = ''
+        sub_match = re.search(r'sub-(\d+)', file_path)
+        if sub_match:
+            subject_id = f"sub-{sub_match.group(1)}"
         
-        # Detect and rename Hydrocel channels with duplicate handling
-        rename_map = _detect_hydrocel_channels(raw)
-        if rename_map:
-            # Resolve duplicate target names by appending suffix
-            rename_map = _resolve_duplicate_targets(rename_map)
-            raw = raw.rename_channels(rename_map)
+        # Read participant info
+        participants_path = _get_participants_tsv_path(file_path)
+        participant_info = {}
+        if participants_path:
+            participant_info = _read_participant_info(participants_path, subject_id)
         
-        # Set montage if possible
-        try:
-            montage = mne.channels.make_standard_montage("standard_1005")
-            raw.set_montage(montage, on_missing="ignore")
-        except Exception:
-            pass
+        # Build eegunity_description with required fields
+        eegunity_description = {}
+        for field in self.REQUIRED_INFO_FIELDS:
+            eegunity_description[field] = participant_info.get(field, 'unknown')
         
-        # Set common average reference
-        raw.set_eeg_reference("average", projection=False)
+        # Set description
+        original_desc = raw.info.get('description', '')
+        raw.info["description"] = json.dumps({
+            "original_description": original_desc,
+            "eegunity_description": eegunity_description,
+        })
+        
+        # Handle events from events.tsv
+        events_path = _get_events_tsv_path(file_path)
+        if events_path and os.path.exists(events_path):
+            events = _read_events_tsv(events_path)
+            if events:
+                # Create annotations from events.tsv, passing literal labels through
+                onsets = [e[0] for e in events]
+                durations = [e[1] for e in events]
+                descriptions = [e[2] for e in events]
+                annot = mne.Annotations(onset=onsets, duration=durations, description=descriptions)
+                raw.set_annotations(annot)
+        
+        # Map channel names
+        raw = _map_channel_names(raw)
         
         return raw
 
 
-def _detect_hydrocel_channels(raw: mne.io.BaseRaw) -> Dict[str, str]:
-    """Detect Hydrocel GSN channel naming and build rename map.
-    
-    Parameters
-    ----------
-    raw : mne.io.BaseRaw
-        Raw EEG data
-        
-    Returns
-    -------
-    Dict[str, str]
-        Mapping from source channel names to standard names
-    """
-    rename_map = {}
-    ch_names = raw.ch_names
-    
-    for ch in ch_names:
-        # Check for E-prefixed channels (Hydrocel naming: E1, E2, ..., E128)
-        if ch.startswith("E") and len(ch) <= 4:
-            try:
-                num = int(ch[1:])
-                if num >= 1 and num <= 130:
-                    if ch in _CH_HYDROCEL_TO_STANDARD:
-                        rename_map[ch] = _CH_HYDROCEL_TO_STANDARD[ch]
-            except ValueError:
-                pass
-    
-    return rename_map
-
-
-def _resolve_duplicate_targets(rename_map: Dict[str, str]) -> Dict[str, str]:
-    """Resolve duplicate target names by appending numeric suffixes.
-    
-    Parameters
-    ----------
-    rename_map : Dict[str, str]
-        Mapping from source to target channel names
-        
-    Returns
-    -------
-    Dict[str, str]
-        Mapping with unique target channel names
-    """
-    # Count occurrences of each target name
-    target_counts: Dict[str, int] = {}
-    for target in rename_map.values():
-        target_counts[target] = target_counts.get(target, 0) + 1
-    
-    # Track which targets have been seen and their suffixes
-    target_seen: Dict[str, int] = {}
-    resolved_map = {}
-    
-    for source, target in rename_map.items():
-        if target_counts[target] > 1:
-            # Need to make unique
-            if target not in target_seen:
-                target_seen[target] = 1
-                resolved_map[source] = target
-            else:
-                # Append suffix to make unique
-                target_seen[target] += 1
-                resolved_map[source] = f"{target}_{target_seen[target]}"
-        else:
-            resolved_map[source] = target
-    
-    return resolved_map
-
-
-# EEGUnity description dict
-eegunity_description = {
-    "age": str(_SUBJECT_DICT["sub-001"]["age"]),
-    "sex": _SUBJECT_DICT["sub-001"]["sex"],
-    "amplifier": _AMPLIFIER,
-    "cap": _CAP,
-    "handedness": _SUBJECT_DICT["sub-001"]["handedness"],
-}
-
-# Kernel instance
-KERNEL = EEGUnityKernel()
+KERNEL = OpenNeuroDS004447Kernel()

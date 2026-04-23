@@ -2,7 +2,7 @@
 
 **Dataset**: `openneuro_ds005178` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005178
 **Category**: Biological State | **Subjects**: 10 | **Files (Completed)**: 159 | **Channels**: 5 | **Sampling Rate**: 250 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
@@ -10,19 +10,17 @@ Naturalistic nightly sleep monitoring using ear-EEG (in-ear electrodes) and poly
 
 ## File Scan Result
 
-> **Kernel SHA256**: `3f0177fd208e86ce5f2a0d5f70494b1417bceed402f3b9c884f60b047acceeef`
+> **Kernel SHA256**: `ad6e2962d008d80162dbd7188aa01eb2e42f1f83076e8b2442f5fbffdf3c3259`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `event_2` | 72 | event | raw | Experimental or sleep-related marker events (origin requires BIDS sidecar investigation) |
-| `trigger` | 175 | event | raw | Synchronization trigger between ear-EEG and PSG |
+| `event_2` | 72 | event | raw | Trigger event 2: second synchronization trigger between ear-EEG and PSG devices |
+| `trigger` | 175 | event | raw | Trigger onset marker from ear-EEG CSV data stream (Trigger column) |
 
 
-### MISC Label Summary
-_Not applicable — no MISC channels detected in this dataset._
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
@@ -32,21 +30,28 @@ _Not applicable — no MISC channels detected in this dataset._
 
 ## Tasks
 
-### Classical Task 1: Sleep stage classification
+### Classical Task 1: Sleep vs. Video Sequence Classification (Trigger-Boundary Based)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`sleep_stage_W`, `sleep_stage_N1`, `sleep_stage_N2`, `sleep_stage_N3`, `sleep_stage_REM`]
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 30 s *, overlap = 0.5 *`
 - **Label Route**: `event`
-- **Meta Level**: super
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `sleep_stage_W` | 0 | Wake stage |
-  | `sleep_stage_N1` | 1 | Light sleep stage 1 |
-  | `sleep_stage_N2` | 2 | Light sleep stage 2 |
-  | `sleep_stage_N3` | 3 | Deep sleep (slow wave) |
-  | `sleep_stage_REM` | 4 | Rapid eye movement sleep |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `trigger` | 1 | trigger onset marker — marks boundary between video and sleep sequences |
+  | (no trigger, any segment) | 0 | non-boundary segment (either within video sequence or within sleep sequence) |
 - **Evidence**:
-  - DOI: 10.3389/fnins.2023.987578 — Presents EESM23 dataset with 10 subjects performing at-home sleep monitoring using ear-EEG, training a random forest classifier on 30-second epochs to classify sleep stages (N1, N2, N3, REM, wake) validated against manually scored PSG recordings
-  - DOI: 10.1038/fnins.2023.987578 — Official data descriptor for EESM23 describing ear-EEG sleep recordings with manual PSG sleep stage annotations (W/N1/N2/N3/REM) scored by trained technicians following AASM standard, demonstrating automatic sleep scoring using SeqSleepNet
-- **Kernel Notes**: CRITICAL: Sleep stage labels (sleep_stage_W, sleep_stage_N1, etc.) are NOT present in raw event HDF5 files. They are stored as PSG annotations in BIDS *events.tsv sidecar files. Kernel must: (1) Read sleep stage annotations from BIDS events.tsv files rather than raw trigger events, (2) Map sleep_stage_X events to 30-second epoch windows aligned to annotation onsets using tmin=0, tmax=30, (3) Exclude unscored epochs (~3% of data per dataset descriptor), (4) Verify annotation timing matches EEG start time using BIDS sidecar information. The 175 `trigger` events mark system synchronization between ear-EEG and PSG, not sleep stage boundaries. Class imbalance expected: N3 and REM are underrepresented relative to N2 and W. The 5-channel ear-EEG provides limited spatial resolution compared to full PSG.
+  - `sub-001_ses-001_task-sleep_acq-PSGtrigger_events.tsv` — trigger events with onset timestamps at boundaries between sequences
+  - `README` — "After the video sequence, the subject sent triggers to distinguish between the two sequences"
+  - `events.tsv` samples — confirmed trigger event values with zero duration, marking instantaneous boundaries
+- **Notes**: Reformulated from single-class trigger detection to a proper 2-class classification. Segments containing a trigger event (y=1) mark sequence boundaries. All other segments (y=0) are non-boundary periods within either the video or sleep sequence. The 30s window with 50% overlap is standard for sleep/continuous monitoring paradigms per Category SKILL. This captures the sustained biological state context rather than treating instantaneous triggers as discrete events.
+
+## Data Quality Notes
+
+- No known data quality issues.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

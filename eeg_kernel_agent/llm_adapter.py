@@ -2,10 +2,49 @@
 from __future__ import annotations
 
 import json
+import random
+import time
+from email.utils import parsedate_to_datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Tuple
 
 DEFAULT_ANTHROPIC_MAX_TOKENS = 32768
 _ANTHROPIC_VERSION = "2023-06-01"
+
+# Rate-limit retry policy
+_RETRYABLE_STATUS = {429, 529, 500, 502, 503, 504}
+_MAX_RETRIES = 5
+_BASE_BACKOFF_SEC = 5.0
+_MAX_BACKOFF_SEC = 120.0
+
+
+def _parse_retry_after(raw: Optional[str]) -> Optional[float]:
+    """Return a wait-seconds value from a Retry-After header, or None."""
+    if not raw:
+        return None
+    raw = raw.strip()
+    try:
+        return max(0.0, float(raw))
+    except ValueError:
+        pass
+    try:
+        when = parsedate_to_datetime(raw)
+    except (TypeError, ValueError):
+        return None
+    if when is None:
+        return None
+    if when.tzinfo is None:
+        when = when.replace(tzinfo=timezone.utc)
+    delta = (when - datetime.now(timezone.utc)).total_seconds()
+    return max(0.0, delta)
+
+
+def _compute_backoff(attempt: int, retry_after: Optional[float]) -> float:
+    """Pick a sleep-seconds value: honour Retry-After, else exponential + jitter."""
+    if retry_after is not None:
+        return min(_MAX_BACKOFF_SEC, retry_after + random.uniform(0, 1))
+    expo = _BASE_BACKOFF_SEC * (2 ** (attempt - 1))
+    return min(_MAX_BACKOFF_SEC, expo + random.uniform(0, 1))
 
 
 def _clean_str(value: Any) -> str:
@@ -178,9 +217,39 @@ def post_llm_json(
 
     if requests is not None:
         proxies = {"http": cfg["proxy"], "https": cfg["proxy"]} if cfg["proxy"] else None
-        resp = requests.post(endpoint, headers=headers, json=body, timeout=timeout, proxies=proxies)
-        resp.raise_for_status()
-        return resp.json()
+        last_exc: Optional[BaseException] = None
+        for attempt in range(1, _MAX_RETRIES + 1):
+            try:
+                resp = requests.post(
+                    endpoint, headers=headers, json=body,
+                    timeout=timeout, proxies=proxies,
+                )
+            except (requests.ConnectionError, requests.Timeout) as exc:
+                last_exc = exc
+                if attempt >= _MAX_RETRIES:
+                    raise
+                wait = _compute_backoff(attempt, None)
+                print(
+                    f"[llm_adapter] transient {type(exc).__name__}, "
+                    f"retry {attempt}/{_MAX_RETRIES - 1} after {wait:.1f}s"
+                )
+                time.sleep(wait)
+                continue
+
+            if resp.status_code in _RETRYABLE_STATUS and attempt < _MAX_RETRIES:
+                wait = _compute_backoff(attempt, _parse_retry_after(resp.headers.get("Retry-After")))
+                print(
+                    f"[llm_adapter] HTTP {resp.status_code}, "
+                    f"retry {attempt}/{_MAX_RETRIES - 1} after {wait:.1f}s"
+                )
+                time.sleep(wait)
+                continue
+
+            resp.raise_for_status()
+            return resp.json()
+
+        if last_exc is not None:  # pragma: no cover - all retries exhausted with network error
+            raise last_exc
 
     import urllib.request
 

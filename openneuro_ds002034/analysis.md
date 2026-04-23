@@ -2,32 +2,32 @@
 
 **Dataset**: `openneuro_ds002034` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds002034
 **Category**: Action/Output | **Subjects**: 14 | **Files (Completed)**: 167 | **Channels**: 64 | **Sampling Rate**: 512 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
-Participants performed a covert spatial attention task where they were trained to lateralize their alpha-band EEG power using real-time neurofeedback. The study evaluated whether closed-loop neurofeedback of alpha lateralization improves behavioral performance in a spatial attention paradigm. Subjects attended to left or right hemifields based on visual cue presentations (half-circle cues), with continuous alpha-band lateralization index (LI) computed from posterior electrodes and fed back in real-time. No trial-level event markers are stored in the BIDS EEG files; the task condition is reflected continuously in the EEG signal itself.
+Participants performed a covert spatial attention task where they were trained to lateralize their alpha-band EEG power using real-time neurofeedback. The study evaluated whether closed-loop neurofeedback of alpha lateralization improves behavioral performance in a spatial attention paradigm. Subjects attended to left or right hemifields based on visual cue presentations (half-circle cues for left/right, full circle for center), with continuous alpha-band lateralization index computed from posterior electrodes and fed back in real-time. The paradigm included both offline calibration runs and online neurofeedback runs with trial structures comprising fixation, cue, target, and response phases.
 
 ## File Scan Result
 
-> **Kernel SHA256**: `aaa6fd3f30f8be61248305ae692af61648b1fa5fc573102d8de5f1f2e8b8523c`
+> **Kernel SHA256**: `417360376b6b22993a001da72832486322893c67acabe84693cbc8677c6d17d4`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `event_1` | 16179 | event | raw | Neurofeedback pulse (continuous alpha-LI feedback signal) |
-| `event_11` | 3013 | event | raw | Feedback phase marker (likely block start/end) |
-| `event_12` | 2248 | event | raw | Response or feedback confirmation event |
-| `event_13` | 1129 | event | raw | Secondary response or validation event |
-| `event_15` | 938 | event | raw | Instruction or cue validation event |
-| `event_2` | 5020 | event | raw | Left cue marker (complementary to event_4, 1:1 correspondence) |
-| `event_4` | 5020 | event | raw | Left cue onset (attend left hemifield) |
-| `event_5` | 9333 | event | raw | Right cue marker variant (feedback selection event) |
-| `event_6` | 6720 | event | raw | Right cue onset (attend right hemifield) |
-| `event_8` | 1711 | event | raw | Feedback or response calibration event |
-| `event_9` | 4995 | event | raw | Target presentation or response event |
+| `event_1` | 16179 | event | raw | Trial phase onset: cue left |
+| `event_11` | 3013 | event | raw | Trial phase onset: target left |
+| `event_12` | 2248 | event | raw | Trial phase onset: target right |
+| `event_13` | 1129 | event | raw | Trial phase onset: target center |
+| `event_15` | 938 | event | raw | Button press correct |
+| `event_2` | 5020 | event | raw | Trial phase onset: cue right |
+| `event_4` | 5020 | admin | raw | Run start |
+| `event_5` | 9333 | admin | raw | Run end |
+| `event_6` | 6720 | event | raw | Trial phase onset: trial start |
+| `event_8` | 1711 | event | raw | Trial phase onset: trial start |
+| `event_9` | 4995 | event | raw | Trial phase onset: fixation on |
 
 
 ### Info
@@ -39,42 +39,80 @@ Participants performed a covert spatial attention task where they were trained t
 
 ## Tasks
 
-### Classical Task 1: Covert Visuospatial Attention Decoding (Left vs Right Hemifield)
+### Classical Task 1: 2-class covert visuospatial attention (left vs right target)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 5.0 s, overlap = 0.0, target_events = [`event_4`, `event_6`]
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, target_events = [`event_11`, `event_12`]
 - **Label Route**: `event`
-- **Meta Level**: super
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|
-  | `event_4` | 0 | Attend to left hemifield (left half-circle cue) |
-  | `event_6` | 1 | Attend to right hemifield (right half-circle cue) |
-- **Super Meta Notes**: Event meanings derived from experimental paradigm. Event_4 has 5020 occurrences and event_6 has 6720 occurrences; the count discrepancy suggests some event_6 markers may include additional trial phases or feedback events. Kernel must verify event-to-cue mapping against dataset sidecar JSON if available.
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | event_11 | 0 | target left |
+  | event_12 | 1 | target right |
 - **Evidence**:
-  - DOI: 10.1007/s10548-019-00725-9 — Post-hoc single-trial binary classification to decode attended side (left vs right) from alpha-band EEG lateralization features using LDA classifiers with 10-fold cross-validation. Full paper methods describe offline paradigm with 80 trials/run, cue presentation (left/right half-circle), sustained attention phase.
-- **Kernel Notes**: Compute alpha-band (8-13 Hz) power spectral density using 1s sliding windows with 62.5ms overlap across the epoch. Calculate Lateralization Index (LI = (right - left) / (right + left)) from posterior electrodes (PO7, PO8, O1, O2). Use averaged features across trial for classification. Verify event_4→left_cue and event_6→right_cue mapping before epoching; if unmappable, derive trial onsets from sidecar JSON timing parameters.
+  - 10.1007/s10548-019-00725-9 — Primary paper explicitly describes 2-class CVSA classification using target onset events. Left target (event_11) vs right target (event_12) with tmin=-0.5s, tmax=2.0s. 3013 left targets and 2248 right targets available. BCI decoder calibration was performed on these events as part of the neurofeedback paradigm.
+- **Notes**: Event meanings confirmed by events.json sidecar: x11='target left', x12='target right'. The task uses target onset events (not cue events) to classify covert visuospatial attention direction based on lateralized alpha power modulations during the sustained attention period.
 
-### Classical Task 2: Alpha Lateralization Index Regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 5.0 s, overlap = 0.9375, target_events = [`event_4`, `event_6`]
+### Potential Task 1: 3-class covert visuospatial attention (left vs right vs center)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s *, tmax = 2.0 s *, target_events = [`event_11`, `event_12`, `event_13`]
 - **Label Route**: `event`
-- **Meta Level**: super
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|
-  | `event_4` | continuous | Alpha Lateralization Index per sliding window (negative = left lateralized) |
-  | `event_6` | continuous | Alpha Lateralization Index per sliding window (positive = right lateralized) |
-- **Super Meta Notes**: Regression target is the computed alpha-band lateralization index per sliding window within each epoch. High overlap (0.9375) recommended to capture the continuous alpha-LI feedback signal across 5s epochs, enabling fine-grained lateralization estimation. The 6720 count for event_6 exceeds the expected 5020 left-cue trials; kernel should filter or validate before epoching.
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | event_11 | 0 | target left (covert attention to left hemifield) |
+  | event_12 | 1 | target right (covert attention to right hemifield) |
+  | event_13 | 2 | target center (no covert attention shift, control condition) |
 - **Evidence**:
-  - DOI: 10.1007/s10548-019-00725-9 — Real-time neurofeedback study on alpha-band lateralization; dataset includes continuous alpha-LI values during feedback runs. Supplementary material contains RT and alpha-LI tables by subject pairs, correlation figures showing alpha-lateralization effects.
-- **Kernel Notes**: For each sliding window (62.5ms step), compute PSD in alpha band (8-13 Hz) for left (PO7, O1) and right (PO8, O2) posterior electrodes. Compute LI = (alpha_R - alpha_L) / (alpha_R + alpha_L). Aggregate windows within epoch for regression target. Verify event_4→left_cue and event_6→right_cue mapping before epoching.
+  - events.json — "x11": "target left", "x12": "target right", "x13": "target center" (hardware trigger value levels confirmed across all sessions)
+  - events.tsv samples — event_value 11/12/13 consistently paired with event_name "target_left"/"target_right"/"target_center" in sub-01 ses-01, ses-02 (offlinecatch, onlinesham)
+  - README — "a full circle around the fixation point indicated a central fixation trial (no covert attention shift)"
+- **Notes**: Target events (11/12/13) mark the onset of the sustained attention phase where subjects maintain covert visuospatial attention to the cued location. Center trials serve as an explicit control condition with no lateralized attention demand, enabling 3-way classification of attention state. Epoch window [-0.5, 2.0] s captures pre-target baseline and early sustained attention period; values inferred from analogous 2-class CVSA task structure.
 
-### Potential Task 1: Continuous Alpha-Band Lateralization Segmentation
+### Potential Task 2: Age Regression from Continuous EEG
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
-- **Label Route**: `event`
-- **Target Definition**: N/A (null — no trial-level labels available)
-- **Notes**: Continuous neurofeedback paradigm; task condition is reflected continuously in the EEG signal itself. Alpha lateralization index may be computed from raw EEG as a continuous target. Fallback approach when raw event meanings cannot be verified against sidecar files.
+- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.0 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `age`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 21.0 – 27.0 (years) | Subject chronological age; N=14, mean 23±1.52 years |
+- **Evidence**:
+- **Notes**: Small-sample subject-level regression (N=14). Segmentation-based epoching with 4s non-overlapping windows extracts features from continuous sustained-attention EEG to predict age as a continuous biomarker. The narrow age range (21-27 years) limits predictive utility but demonstrates feasibility of age regression from EEG features.
+
+### Potential Task 3: Sex Classification from Continuous EEG
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.0 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `sex`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | sex | F | 0 | Female |
+  | sex | M | 1 | Male |
+- **Evidence**:
+  - participants.tsv — N=14 subjects with complete sex data: 7 female (F), 7 male (M)
+  - README — "Fourteen healthy subjects (seven female, seven male), age 23±1.52 years"
+- **Notes**: Segmentation-based approach for subject-level biomarker classification. The 4-second segment length is a standard default for continuous EEG analysis when no specific temporal structure is required; overlap=0.0 ensures independent segments. Binary classification with perfectly balanced classes (7 vs 7). Very small sample size (N=14) limits generalizability but the task is technically feasible. All segments from a given subject receive the same label from participants.tsv.
+
+## Data Quality Notes
+
+- `device` field is missing from all files, limiting hardware provenance tracking.
+- Event counts show substantial imbalance between cue events (event_1: 16179, event_2: 5020) suggesting possible data quality issue or multiple event definitions for left cues (event_1 may conflate multiple conditions).
+- Multiple trial start event IDs (event_6, event_8, event_9) with overlapping meanings may indicate inconsistent event coding across runs or sessions.
+- Run end events (9333) exceed run start events (5020) by factor of ~1.86, suggesting possible duplicate or spurious run end markers.
+- Small sample size (N=14) limits statistical power for subject-level biomarker tasks (age regression, sex classification).
+- Age range is extremely narrow (21-27 years), severely limiting generalizability of age regression model.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

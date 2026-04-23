@@ -1,29 +1,29 @@
 # EEG Attention RSVP Experiment 1
 
 **Dataset**: `openneuro_ds004816` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004816
-**Category**: Sensory/Response | **Subjects**: N/A | **Files (Completed)**: 40 | **Channels**: 63 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 15 | **Files (Completed)**: 40 | **Channels**: 63 | **Sampling Rate**: 1000 Hz
+**Manual Review**:
 
 ## Paradigm
 
-A Rapid Serial Visual Presentation (RSVP) task investigating the neural dynamics of prioritizing task-relevant information using stimuli composed of small letters on large objects. The experiment employs a two-back target detection paradigm where participants attend to either letter streams or object streams while EEG is recorded. Event codes mark the two primary attention conditions (E 1 for object-prioritized, E 2 for letter-prioritized), with additional markers for target presence (1) and absence (0). The dataset contains 69,120 epochs per primary condition across 40 completed recording files.
+A Rapid Serial Visual Presentation (RSVP) task investigating the neural dynamics of prioritizing task-relevant information using stimuli composed of small letters on large objects. The experiment employs a two-back target detection paradigm where participants attend to either letter streams or object streams while EEG is recorded. Event codes mark the two primary attention conditions (E 1 for object-prioritized, E 2 for letter-prioritized), with additional markers for target events (E 3). The dataset contains 69,120 epochs per primary condition across 40 completed recording files.
 
 ## File Scan Result
 
-> **Kernel SHA256**: `0f5e918023267688d096a4308751be2f43eb946e2080075df7a39ad2085a8f65`
+> **Kernel SHA256**: `40e5aa1eea3c81ef7bdccba037c83ae12d3578127d0cfd9688ef7787d396cc00`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `E  1` | 69120 | event | raw |  |
-| `E  2` | 69120 | event | raw |  |
-| `E  3` | 1920 | event | raw |  |
-| `Event/E  1` | 69120 | event | raw |  |
-| `Event/E  2` | 69120 | event | raw |  |
-| `Event/E  3` | 1920 | event | raw |  |
-| `boundary` | 20 | event | raw | Data segment boundary marker |
+| `E  1` | 69120 | event | raw | Stimulus presentation marker: object/letter pair onset (stream 1 or primary presentation) |
+| `E  2` | 69120 | event | raw | Stimulus presentation marker: object/letter pair onset (stream 2 or secondary presentation) |
+| `E  3` | 1920 | event | raw | Target or response event marker (2-back target detection or button press) |
+| `Event/E  1` | 69120 | event | raw | Stimulus presentation marker: object/letter pair onset (stream 1 or primary presentation) |
+| `Event/E  2` | 69120 | event | raw | Stimulus presentation marker: object/letter pair onset (stream 2 or secondary presentation) |
+| `Event/E  3` | 1920 | event | raw | Target or response event marker (2-back target detection or button press) |
+| `boundary` | 20 | admin | raw | Data segment boundary marker (file or recording discontinuity) |
 
 
 ### Info
@@ -35,96 +35,119 @@ A Rapid Serial Visual Presentation (RSVP) task investigating the neural dynamics
 
 ## Tasks
 
-### Classical Task 1: RSVP Stimulus Decoding (Object vs Letter Attention Condition)
+### Classical Task 1: RSVP Attention Condition Decoding (Object vs Letter Task)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s, target_events = [`E 1`, `E 2`]
+- **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s, target_events = [`E  1`, `E  2`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
-  | `E 1` | 0 | Object task condition (attend to objects in RSVP stream) |
-  | `E 2` | 1 | Letter task condition (attend to letters in RSVP stream) |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `E  1` | 0 | Object-task condition (report objects, stream 1/primary presentation) |
+  | `E  2` | 1 | Letter-task condition (report letters, stream 2/secondary presentation) |
 - **Evidence**:
-  - DOI: `10.51628/001c.21174` — MVPA decoding of 16 object images and 16 letters from epochs time-locked to stimulus onset (tmin=-0.1s, tmax=1.0s), comparing decoding accuracy between object-task (E 1) and letter-task (E 2) conditions. Paper explicitly describes EEG RSVP experiment with two-back task on overlaid objects/letters; data deposited at OSF matching OpenNeuro ds004816.
-- **Kernel Notes**: The dataset contains 69,120 events each for `E 1` and `E 2`, representing the two primary attention conditions. Stimulus-level labels (16 objects in 4 categories + 16 letters) can be derived for fine-grained MVPA. Merge `Event/E 1`/`Event/E 2` variants with primary codes before epoching. RSVP runs at ~5 Hz (200ms per item); verify stimulus duration from events.tsv.
+  - 10.51628/001c.21174 — Paper explicitly describes EEG RSVP experiment with two-back task on overlaid objects/letters; 2.5Hz RSVP (200ms on, 200ms off), 96 sequences total alternating object/letter task; tmin=-0.1s, tmax=1.0s for stimulus-locked epochs used for MVPA decoding of attention conditions.
+- **Notes**: Both E 1 and E 2 mark stimulus presentation onsets for the two alternating attention conditions (object task vs letter task). The RSVP paradigm presents overlaid small letters on large objects; participants perform a 2-back task on either objects (condition=0) or letters (condition=1) in alternating sequences. E 1 and E 2 serve as the event anchors for epoching, with their event identity directly encoding the attention condition being decoded. The 69,120 epochs per condition provide substantial data for cross-validated classification of neural signatures of attentional prioritization.
 
-### Classical Task 2: RSVP Stimulus Identity Decoding (32-class Multiclass)
+### Potential Task 1: RSVP target detection (2-back target vs non-target)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s, target_events = [`E 1`, `E 2`]
+- **Epoch Parameters**: tmin = -0.1 s *, tmax = 0.8 s *, target_events = [`E  3`, `E  1`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
-  | `E 1` | 0–15 | Object task condition with stimulus identity labels (16 object classes in 4 categories) |
-  | `E 2` | 16–31 | Letter task condition with stimulus identity labels (16 letter classes) |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `E  3` | 0 | Target or response event marker (2-back target detection or button press) |
+  | `E  1` | 1 | Non-target stimulus presentation marker (object/letter pair onset, stream 1) |
 - **Evidence**:
-  - DOI: `10.51628/001c.21174` — Full paper confirms MVPA classification of stimulus identity with 32 classes: 16 objects (4 categories: animals, vehicles, tools, furniture) + 16 letters. Analysis epochs non-target stimuli in RSVP streams at stimulus onset. Superordinate animacy categories (animals vs vehicles) also available as intermediate-level labels.
-- **Kernel Notes**: Requires extraction of stimulus-specific markers from events.tsv to derive individual stimulus identity labels within each condition. Stimulus-level epochs should exclude target trials (marked by `1`/`0` events) to focus on non-target processing. Verify events.tsv contains stimulus-specific markers beyond condition labels.
+  - events.tsv sample and events.json — `is2back` column confirms 2-back target detection component with 1 when subject was supposed to respond; event counts show E 3 (1920) as rare target events vs E 1/E 2 (69120 each) as frequent stimulus presentations
+  - task-rsvp_events.json — `is2back` Description: "1 when subject was supposed to respond (2-back in the right condition)"; `objecttarget` and `lettertarget` columns separately mark 2-back occurrences per stream
+  - EEG file headers — `E  3` and `E  1` appear as annotations in continuous recordings, confirming event marker availability for epoching
+- **Notes**: Target vs non-target classification using rare-target oddball-like structure. E 3 marks target/response events (~2.7% of presentations) while E 1 marks standard stimulus onsets. The rapid RSVP presentation (200ms on/200ms off at 2.5Hz) creates a challenging target detection paradigm. E 2 (stream 2) excluded to avoid mixing streams; using E 1 as representative non-target baseline. Epoch window shortened to 900ms total to accommodate rapid stimulus succession while capturing early ERP components (P300) associated with target detection.
 
-### Potential Task 1: RSVP Target Detection (Target-present vs Target-absent)
+### Potential Task 2: RSVP stream identity decoding (stream 1 vs stream 2)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`1`, `0`]
+- **Epoch Parameters**: tmin = -0.1 s *, tmax = 1.0 s *, target_events = [`E  1`, `E  2`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
-  | `1` | 0 | Target-present trial (target detected in RSVP stream) |
-  | `0` | 1 | Target-absent trial (no target in RSVP stream) |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `E  1` | 0 | Stream 1 / primary presentation |
+  | `E  2` | 1 | Stream 2 / secondary presentation |
 - **Evidence**:
-  - DOI: `10.51628/001c.21174` — Dataset description indicates two-back task requiring target detection; target-present vs target-absent markers present in event stream.
-- **Kernel Notes**: The `1` and `0` markers (31,104 each) indicate target presence status in the RSVP stream. Can be used for P300/oddball ERP analysis to detect neural responses to target stimuli. Extended baseline (tmin=-0.2s) accommodates pre-stimulus baseline correction for P300 analysis. Note: Paper focuses on stimulus decoding from non-target trials; target detection task derives from paradigm description rather than primary analysis approach.
+- **Notes**: This task decodes which physical stimulus stream was presented (stream 1 vs stream 2) based on the event markers E 1 and E 2. The two event types have identical counts (69120 each), indicating balanced presentation of both streams across the RSVP task. The epoch window matches the attention condition decoding task for fair comparison of neural signatures.
 
-### Potential Task 2: RSVP Multiclass Condition Classification (4-class)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`E 1`, `E 2`, `1`, `0`]
-- **Label Route**: `event`
+### Potential Task 3: Age prediction from RSVP EEG
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
-  | `E 1` | 0 | RSVP condition 1 (object task) |
-  | `E 2` | 1 | RSVP condition 2 (letter task) |
-  | `1` | 2 | Target-present within RSVP stream |
-  | `0` | 3 | Target-absent within RSVP stream |
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 19–41 (years) | Subject chronological age from participants.tsv; N=15 subjects with complete data |
 - **Evidence**:
-  - DOI: `10.51628/001c.21174` — RSVP paradigm with two attention conditions (E 1/E 2) and two-back target detection (1/0 markers) enables multiclass classification of both condition and target presence.
-- **Kernel Notes**: Merge `Event/E x` variants with primary `E x` codes before epoching to avoid duplicate events. Exclude rare `E 3` and `Event/E 3` codes (1,920–2,000 total) from primary analyses. Extremely high epoch counts (~69,120 per condition) require careful overlap handling if epoching at stimulus-locked rate. This task combines orthogonal dimensions (attention condition × target presence) into a 4-class problem.
+- **Notes**: Native participants.tsv column 'age' used directly as regression target. Archetype B3 (info-native) with Meta Level = raw. Epoch parameters inferred from RSVP task structure: 2.5Hz presentation rate with 200ms stimuli; 2-second segments capture ~4 stimulus presentations with 50% overlap to maximize sample count for subject-level age prediction.
 
-### Normal Task 1: RSVP Category-Level Decoding (Animacy/Basic-Level)
+### Potential Task 4: Gender classification from RSVP EEG
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s, target_events = [`E 1`, `E 2`]
-- **Label Route**: `event`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `gender`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
-  | `E 1` | 0 | Object task condition (category labels: animal/vehicle/tool/furniture) |
-  | `E 2` | 1 | Letter task condition (no category structure) |
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | gender | F | 0 | Female |
+  | gender | M | 1 | Male |
 - **Evidence**:
-  - DOI: `10.51628/001c.21174` — Paper mentions 4 object categories (animals, vehicles, tools, furniture) and superordinate animacy distinctions (animals vs vehicles) as intermediate classification levels.
-- **Kernel Notes**: Requires extraction of category-level labels from events.tsv stimulus markers. Animacy effects are robust in EEG and typically emerge earlier than exemplar-specific patterns. Category decoding may be more robust than 32-class stimulus decoding for smaller datasets.
+- **Notes**: Subject-level classification using 2-second non-overlapping segments of RSVP EEG data. The 'gender' column is a native participants.tsv field with complete data (F: 9, M: 6), providing two balanced classes for binary classification. Segment length and overlap are inferred from the RSVP paradigm's 2.5Hz presentation rate with 200ms stimuli, where 2-second segments capture approximately 4 stimulus presentations with 50% overlap to increase sample count.
 
-### Normal Task 2: RSVP Condition × Target Interaction Analysis
+### Potential Task 5: Native speaker classification from RSVP EEG
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`E 1`, `E 2`, `1`, `0`]
-- **Label Route**: `event`
-- **Meta Level**: super
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `native_speaker`
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
-  | `E 1` + `1` | 0 | Object task, target-present |
-  | `E 1` + `0` | 1 | Object task, target-absent |
-  | `E 2` + `1` | 2 | Letter task, target-present |
-  | `E 2` + `0` | 3 | Letter task, target-absent |
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | native_speaker | Y | 0 | Native English speaker |
+  | native_speaker | N | 1 | Non-native English speaker |
 - **Evidence**:
-  - DOI: `10.51628/001c.21174` — Paradigm enables investigation of how attention condition modulates target processing; interaction effects expected in P300 amplitude or stimulus decoding accuracy.
-- **Kernel Notes**: Requires creating interaction labels by combining condition and target presence. Super-level meta analysis can test whether target-related neural signals differ between object-task and letter-task contexts. High trial counts provide power for interaction analysis.
+- **Notes**: Subject-level classification using 2-second non-overlapping/overlapping segments of continuous RSVP EEG. The native_speaker column in participants.tsv provides binary labels (Y/N) with complete coverage across all 15 subjects. Segmentation at 2s with 50% overlap yields sufficient samples per subject for subject-level native speaker status prediction. The RSVP task involves rapid serial visual presentation (2.5Hz, 200ms stimuli) with dual streams of objects and letters; 2-second segments capture approximately 4-5 stimulus presentations and associated neural dynamics. Epoch parameters inferred from task structure (2.5Hz presentation rate) and standard segmentation practices for subject-level classification.
+
+### Potential Task 6: RSVP continuous EEG segmentation with age labels
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `age`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 19.0–41.0 (years) | Participant chronological age from participants.tsv; segmentation produces non-overlapping/overlapping 2-second windows of continuous RSVP EEG without event-locking |
+- **Evidence**:
+  - Grootswagers T., Robinson A.K., Shatek S.M., Carlson T.A. (2021) — Dataset description and RSVP paradigm with rapid serial visual presentation at ~2.5Hz stimulus rate
+- **Notes**: Archetype C with info-native label (age). Segmentation-based epoching avoids event-locked alignment, producing fixed-length windows from continuous RSVP recordings. Epoch parameters inferred from stated 2.5Hz presentation rate with 200ms stimuli; 2-second windows capture approximately 5 stimulus presentations with 50% overlap to increase sample density. This is the segmentation variant of the B3 age regression task, suitable for models operating on continuous EEG without event alignment.
+
+## Data Quality Notes
+
+- `device` field is missing from metadata, limiting hardware provenance tracking.
+- Duplicate event code variants exist (`E  1`/`Event/E  1`, `E  2`/`Event/E  2`, `E  3`/`Event/E  3`); these must be merged before epoching to avoid missing events.
+- `boundary` markers (n=20) indicate data segment discontinuities that may affect continuous analyses.
+- Subject count updated from N/A to 15 based on participants.tsv completeness in scan results.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

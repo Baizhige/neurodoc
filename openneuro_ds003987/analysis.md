@@ -1,9 +1,8 @@
 # EEG: Amphetamine trials 5CCPT and Probabilistic Learning
 
 **Dataset**: `openneuro_ds003987` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003987
-**Category**: High-level Mental | **Subjects**: 23 | **Files (Completed)**: 69
-**Channels**: 71 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 23 | **Files (Completed)**: 69 | **Channels**: 71 | **Sampling Rate**: 500 Hz
+**Manual Review**:
 
 ## Paradigm
 
@@ -11,61 +10,61 @@ A double-blind, crossover pharmacological study investigating the effects of d-a
 
 ## File Scan Result
 
-> **Kernel SHA256**: `431be59018ac69425e5d16da6fb48c77bbe35597e3748dd6acad02e01a933ee7`
+> **Kernel SHA256**: `bc63a5f872f1f40b4689a56d0f0ba55ae04ca1a92ffd323d0c337362d7eea0ed`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `21 5CCPT` | 16558 | event | raw | 5CCPT event type 21 (task-specific trial condition) |
-| `22 5CCPT` | 9811 | event | raw | 5CCPT event type 22 (task-specific trial condition) |
-| `23 5CCPT` | 9547 | event | raw | 5CCPT event type 23 (task-specific trial condition) |
-| `25 5CCPT` | 4442 | event | raw | 5CCPT event type 25 (task-specific trial condition) |
-| `unknown_1` | 263 | event | raw | Unidentified event code 1 |
-| `unknown_10` | 4130 | event | raw | Unidentified event code 10 |
-| `unknown_11` | 2388 | event | raw | Unidentified event code 11 |
-| `unknown_12` | 2290 | event | raw | Unidentified event code 12 |
-| `unknown_13` | 2378 | event | raw | Unidentified event code 13 |
-| `unknown_14` | 2369 | event | raw | Unidentified event code 14 |
-| `unknown_15` | 2389 | event | raw | Unidentified event code 15 |
-| `unknown_16` | 3459 | event | raw | Unidentified event code 16 |
-| `unknown_17` | 7445 | event | raw | Unidentified event code 17 |
-| `unknown_18` | 5055 | event | raw | Unidentified event code 18 |
-| `unknown_19` | 3745 | event | raw | Unidentified event code 19 |
-| `unknown_2` | 2482 | event | raw | Unidentified event code 2 |
-| `unknown_20` | 2383 | event | raw | Unidentified event code 20 |
-| `unknown_24` | 4804 | event | raw | Unidentified event code 24 |
-| `unknown_26` | 2094 | event | raw | Unidentified event code 26 |
-| `unknown_27` | 536 | event | raw | Unidentified event code 27 |
-| `unknown_28` | 888 | event | raw | Unidentified event code 28 |
-| `unknown_29` | 1643 | event | raw | Unidentified event code 29 |
-| `unknown_3` | 2481 | event | raw | Unidentified event code 3 |
-| `unknown_30` | 1905 | event | raw | Unidentified event code 30 |
-| `unknown_31` | 1534 | event | raw | Unidentified event code 31 (likely PST feedback condition) |
-| `unknown_32` | 3526 | event | raw | Unidentified event code 32 (likely PST feedback condition) |
-| `unknown_33` | 5216 | event | raw | Unidentified event code 33 |
-| `unknown_34` | 4554 | event | raw | Unidentified event code 34 |
-| `unknown_35` | 8011 | event | raw | Unidentified event code 35 |
-| `unknown_36` | 12776 | event | raw | Unidentified event code 36 |
-| `unknown_37` | 13916 | event | raw | Unidentified event code 37 |
-| `unknown_38` | 9213 | event | raw | Unidentified event code 38 |
-| `unknown_39` | 9749 | event | raw | Unidentified event code 39 (likely PST neutral feedback) |
-| `unknown_4` | 2481 | event | raw | Unidentified event code 4 |
-| `unknown_40` | 12868 | event | raw | Unidentified event code 40 |
-| `unknown_41` | 7943 | event | raw | Unidentified event code 41 |
-| `unknown_42` | 2919 | event | raw | Unidentified event code 42 |
-| `unknown_43` | 1022 | event | raw | Unidentified event code 43 |
-| `unknown_44` | 279 | event | raw | Unidentified event code 44 |
-| `unknown_45` | 199 | event | raw | Unidentified event code 45 |
-| `unknown_46` | 89 | event | raw | Unidentified event code 46 |
-| `unknown_47` | 29 | event | raw | Unidentified event code 47 |
-| `unknown_48` | 7 | event | raw | Unidentified event code 48 |
-| `unknown_5` | 2482 | event | raw | Unidentified event code 5 |
-| `unknown_6` | 2484 | event | raw | Unidentified event code 6 |
-| `unknown_7` | 2484 | event | raw | Unidentified event code 7 |
-| `unknown_8` | 7245 | event | raw | Unidentified event code 8 |
-| `unknown_9` | 4049 | event | raw | Unidentified event code 9 |
+| `21 5CCPT` | 16558 | event | raw | Task event marker: 5CCPT response code 21 |
+| `22 5CCPT` | 9811 | event | raw | Task event marker: 5CCPT response code 22 |
+| `23 5CCPT` | 9547 | event | raw | Task event marker: 5CCPT response code 23 |
+| `25 5CCPT` | 4442 | event | raw | Task event marker: 5CCPT response code 25 |
+| `unknown_1` | 263 | event | raw | Unmapped task event marker |
+| `unknown_10` | 4130 | event | raw | Unmapped task event marker |
+| `unknown_11` | 2388 | event | raw | Unmapped task event marker |
+| `unknown_12` | 2290 | event | raw | Unmapped task event marker |
+| `unknown_13` | 2378 | event | raw | Unmapped task event marker |
+| `unknown_14` | 2369 | event | raw | Unmapped task event marker |
+| `unknown_15` | 2389 | event | raw | Unmapped task event marker |
+| `unknown_16` | 3459 | event | raw | Unmapped task event marker |
+| `unknown_17` | 7445 | event | raw | Unmapped task event marker |
+| `unknown_18` | 5055 | event | raw | Unmapped task event marker |
+| `unknown_19` | 3745 | event | raw | Unmapped task event marker |
+| `unknown_2` | 2482 | event | raw | Unmapped task event marker |
+| `unknown_20` | 2383 | event | raw | Unmapped task event marker |
+| `unknown_24` | 4804 | event | raw | Unmapped task event marker |
+| `unknown_26` | 2094 | event | raw | Unmapped task event marker |
+| `unknown_27` | 536 | event | raw | Unmapped task event marker |
+| `unknown_28` | 888 | event | raw | Unmapped task event marker |
+| `unknown_29` | 1643 | event | raw | Unmapped task event marker |
+| `unknown_3` | 2481 | event | raw | Unmapped task event marker |
+| `unknown_30` | 1905 | event | raw | Unmapped task event marker |
+| `unknown_31` | 1534 | event | raw | Unmapped task event marker |
+| `unknown_32` | 3526 | event | raw | Unmapped task event marker |
+| `unknown_33` | 5216 | event | raw | Unmapped task event marker |
+| `unknown_34` | 4554 | event | raw | Unmapped task event marker |
+| `unknown_35` | 8011 | event | raw | Unmapped task event marker |
+| `unknown_36` | 12776 | event | raw | Unmapped task event marker |
+| `unknown_37` | 13916 | event | raw | Unmapped task event marker |
+| `unknown_38` | 9213 | event | raw | Unmapped task event marker |
+| `unknown_39` | 9749 | event | raw | Unmapped task event marker |
+| `unknown_4` | 2481 | event | raw | Unmapped task event marker |
+| `unknown_40` | 12868 | event | raw | Unmapped task event marker |
+| `unknown_41` | 7943 | event | raw | Unmapped task event marker |
+| `unknown_42` | 2919 | event | raw | Unmapped task event marker |
+| `unknown_43` | 1022 | event | raw | Unmapped task event marker |
+| `unknown_44` | 279 | event | raw | Unmapped task event marker |
+| `unknown_45` | 199 | event | raw | Unmapped task event marker |
+| `unknown_46` | 89 | event | raw | Unmapped task event marker |
+| `unknown_47` | 29 | event | raw | Unmapped task event marker |
+| `unknown_48` | 7 | event | raw | Unmapped task event marker |
+| `unknown_5` | 2482 | event | raw | Unmapped task event marker |
+| `unknown_6` | 2484 | event | raw | Unmapped task event marker |
+| `unknown_7` | 2484 | event | raw | Unmapped task event marker |
+| `unknown_8` | 7245 | event | raw | Unmapped task event marker |
+| `unknown_9` | 4049 | event | raw | Unmapped task event marker |
 
 
 ### Info
@@ -77,48 +76,81 @@ A double-blind, crossover pharmacological study investigating the effects of d-a
 
 ## Tasks
 
-### Classical Task 1: PST Reward vs Punishment Feedback Classification
+### Classical Task 1: 3-class drug dose classification (session-level)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [`31 PST`, `32 PST`, `39 PST`]
-- **Label Route**: `event`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5 *, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `session`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `31 PST` | 0 | Reward feedback (75% reward condition) |
-  | `32 PST` | 1 | Punishment feedback (75% punishment condition) |
-  | `39 PST` | 2 | Neutral feedback (50-50 condition) |
-- **Evidence**: DOI: 10.1007/s00213-022-06082.z — "Amphetamine alters an EEG marker of reward processing in humans and mice." Double-blind crossover study (n=23 humans, all 3 sessions). EEG epochs around feedback onset (-500 to +1000ms) examining reward positivity (RewP) ERP (200-400ms window) and delta-band spectral responses. Explicitly maps event codes 31/32/39 to reward/punishment/neutral feedback conditions in the probabilistic selection task.
-- **Kernel Notes**: RewP is a mid-frontal ERP component sensitive to reward prediction errors. The three-class design (reward vs punishment vs neutral) enables distinguishing between positive and negative feedback processing. Drug condition (placebo/low/high amphetamine) can be added as between-condition variable for pharmacology analysis.
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | session | 1 | 0 | Placebo (Sess1_Drug) |
+  | session | 2 | 1 | 10 mg d-amphetamine (Sess2_Drug) |
+  | session | 3 | 2 | 20 mg d-amphetamine (Sess3_Drug) |
+- **Evidence**:
+  - 10.1038/s41398-021-01562-w — Pharmacological EEG study using counterbalanced amphetamine doses with session-level drug conditions
+  - 10.1007/s00213-022-06082-z — D-amphetamine dose effects on EEG measures in 5CCPT paradigm
+  - participants.tsv — Contains Sess1_Drug, Sess2_Drug, Sess3_Drug columns with counterbalanced Placebo/10 mg/20 mg conditions; session column maps to drug dose per subject
+  - README — "3 drug conditions: placebo, 10mg, 20mg" with counterbalanced design across sessions
+- **Notes**: The session number (1, 2, 3) serves as the info field label, with drug dose determined by cross-referencing the corresponding SessN_Drug column in participants.tsv. Since events.tsv files contain only untranslated trigger codes (65535, 65289) and lack the actual 5CCPT response markers, segmentation is used instead of event-based epoching. The kernel must map session→drug dose using the per-subject Sess1_Drug/Sess2_Drug/Sess3_Drug values.
 
-### Potential Task 1: 5CCPT Sustained Attention Classification
+### Potential Task 1: 2-class sex classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`21 5CCPT`, `22 5CCPT`, `23 5CCPT`, `25 5CCPT`]
-- **Label Route**: `event`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `21 5CCPT` | 0 | 5CCPT condition 21 (e.g., target stimulus) |
-  | `22 5CCPT` | 1 | 5CCPT condition 22 |
-  | `23 5CCPT` | 2 | 5CCPT condition 23 |
-  | `25 5CCPT` | 3 | 5CCPT condition 25 |
-- **Evidence**: DOI: 10.1038/s41398-021-01562-w — "Electrophysiological biomarkers of behavioral dimensions from cross-species paradigms." Foundational methodology paper by same research group (Cavanagh, Young, Light, Swerdlow) describing 5C-CPT paradigm and response-locked theta power for sustained attention/impulsivity assessment.
-- **Kernel Notes**: The 5-Choice Continuous Performance Task assesses sustained attention and impulsivity. Four event codes capture different trial conditions (e.g., correct target, incorrect response, anticipatory response). Pre-stimulus baseline (-200ms) allows for baseline correction. Drug effects on attentional processing can be compared across sessions.
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | sex | female | 0 | Female subject |
+  | sex | male | 1 | Male subject |
+- **Evidence**:
+- **Notes**: Subject-level biometric classification from resting/task EEG using demographic sex labels from participants.tsv. Segmentation creates multiple samples per subject across the continuous recording. Small sample size (N=23, 12 male / 11 female) makes this a challenging few-subject classification problem. All 3 sessions per subject (placebo, 10mg, 20mg amphetamine conditions) are pooled, with drug condition treated as uncontrolled variability.
 
-### Potential Task 2: PST Delta-Band Reward Prediction Error Analysis
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [`31 PST`, `32 PST`, `39 PST`]
-- **Label Route**: `event`
+### Potential Task 2: Age Regression
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `31 PST` | 0 | Reward feedback |
-  | `32 PST` | 1 | Punishment feedback |
-  | `39 PST` | 2 | Neutral feedback |
-- **Evidence**: DOI: 10.1007/s00213-022-06082.z — Same paper describes delta-band (1-4 Hz) spectral responses time-locked to feedback onset that track reward prediction errors in probabilistic learning.
-- **Kernel Notes**: Reuses same feedback-locked epochs as RewP analysis. Delta-band power changes differentiate reward vs punishment conditions and reflect prediction error signaling. Can combine with ERP features for multimodal analysis. Requires frequency-domain preprocessing (e.g., time-frequency decomposition).
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 18.0 – 35.0 (years) | Continuous demographic variable from participants.tsv; N=23 subjects, mean ~24.5 years. Narrow range in young adults may limit predictive power. |
+- **Evidence**:
+- **Notes**: Standard brain-age regression paradigm using sliding-window segmentation. Each 2-second EEG segment is labeled with the subject's chronological age from participants.tsv. Segmentation with 50% overlap maximizes training samples given continuous resting/task-state recordings. The relatively narrow age range (18-35 years) in this young-adult cohort constrains the regression problem compared to lifespan brain-age models.
+
+### Potential Task 3: 3-class session number classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5 *, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `session`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | session | 1 | 0 | First testing session |
+  | session | 2 | 1 | Second testing session |
+  | session | 3 | 2 | Third testing session |
+- **Evidence**:
+- **Notes**: Session values 1, 2, 3 are drawn directly from the native participants.tsv `session` column (sample values: [1, 2, 3]). The three sessions represent counterbalanced drug conditions (Placebo/10mg/20mg amphetamine) administered in different orders per subject. Since drug condition is counterbalanced, session number captures order/habituation effects rather than drug state, making this a control variable for practice and session-dependent EEG changes. Segmentation with 2s windows and 50% overlap provides sufficient samples for session-level classification while respecting the continuous recording structure.
+
+## Data Quality Notes
+
+- The vast majority of event markers (44 of 48 event types) are unmapped/unknown task event codes, severely limiting event-based epoching for task conditions.
+- Only four 5CCPT event codes (21, 22, 23, 25) are identified, with no PST event markers explicitly mapped.
+- The `device` info field is completely missing from metadata, preventing equipment verification.
+- Events.tsv files reportedly contain untranslated trigger codes (65535, 65289) rather than the actual task condition markers, indicating a BIDS conversion or recording issue.
+- Small sample size (N=23) limits statistical power for subject-level classification tasks.
+- Counterbalanced drug design across sessions means session number and drug condition are confounded at the group level but decoupled within subjects.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

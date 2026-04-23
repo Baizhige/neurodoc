@@ -5,7 +5,7 @@ Paradigm: 5 squares shown continuously, one attended location,
 white disk target oddball appears at attended position.
 
 Source: https://openneuro.org/datasets/ds002578
-        DOI: 10.1523/jneurosci.3477-07.2007
+        DOI: 10.1523/JNEUROSCI.3477-07.2007
 """
 
 from __future__ import annotations
@@ -13,308 +13,285 @@ from __future__ import annotations
 import json
 import os
 import re
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple
 
 import mne
 import numpy as np
+import pandas as pd
 
 
 # =============================================================================
-# Subject Information
-# Source: OpenNeuro participants.tsv or dataset metadata
+# BioSemi 256-channel Standard Naming
 # =============================================================================
 
-# LLM 推断，需人类复核
-# age/sex from dataset metadata or inference; amplifier/cap from BioSemi system
-_SUBJECT_DICT: Dict[str, Dict[str, str]] = {
-    "sub-01": {
-        "age": "unknown",  # LLM 推断，需人类复核
-        "sex": "unknown",  # LLM 推断，需人类复核
-        "handedness": "unknown",  # LLM 推断，需人类复核
-    },
-    "sub-02": {
-        "age": "unknown",  # LLM 推断，需人类复核
-        "sex": "unknown",  # LLM 推断，需人类复核
-        "handedness": "unknown",  # LLM 推断，需人类复核
-    },
-}
-
-
-# =============================================================================
-# Event Mapping (raw meta)
-# =============================================================================
-
-# Event structure from analysis.md:
-# Target oddball: attend position = cue position
-# Non-target distractor: attend position != cue position
-_EVENT_MAP: Dict[int, str] = {
-    # Admin codes
-    203: "admin: marker-203",
-    217: "admin: marker-217",
-    237: "admin: marker-237",
-    # Visual oddball events (attend pos 3)
-    31: "distractor: attend-3 cue-1",
-    33: "target: attend-3 cue-3",
-    34: "distractor: attend-3 cue-4",
-    35: "distractor: attend-3 cue-5",
-    # Visual oddball events (attend pos 4)
-    41: "distractor: attend-4 cue-1",
-    42: "distractor: attend-4 cue-2",
-    43: "distractor: attend-4 cue-3",
-    44: "target: attend-4 cue-4",
-    45: "distractor: attend-4 cue-5",
-    # Generic events
-    999999: "Picture",  # May be mapped from annotation description
-}
-
-
-# =============================================================================
-# Channel Rename for BioSemi 256-channel System
-# =============================================================================
-
-# BioSemi 256-channel system uses custom naming convention.
-# Standard 10-20 positions are named (e.g., FP1, FPz, FP2, F7, F3, Fz, F4, F8, ...)
-# Additional channels follow BioSemi naming (e.g., A1, A2, ..., or numbered)
-#
 # Source: BioSemi 256-channel electrode layout documentation
-# For this dataset, channels are likely named with BioSemi convention.
-# This kernel attempts to standardize known positions.
+# https://www.biosemi.com/headcap.htm
+# Standard 10-20 extended positions for BioSemi 256-channel cap
+# Annotator: LLM, 2026-04-08; 由 LLM 推断，需人类复核
 
-# Known standard 10-20 positions that may appear in BioSemi 256-ch data
-_BIOSEMI_STANDARD_NAMES = {
-    "FP1", "FPz", "FP2",
-    "AF9", "AF7", "AF5", "AF3", "AFz", "AF4", "AF6", "AF8", "AF10",
-    "F9", "F7", "F5", "F3", "F1", "Fz", "F2", "F4", "F6", "F8", "F10",
-    "FT9", "FT7", "FT5", "FT3", "FT1", "FTz", "FT2", "FT4", "FT6", "FT8", "FT10",
-    "T9", "T7", "T5", "T3", "T1", "T2", "T4", "T6", "T8", "T10",
-    "TP9", "TP7", "TP5", "TP3", "TP1", "TPz", "TP2", "TP4", "TP6", "TP8", "TP10",
-    "P9", "P7", "P5", "P3", "P1", "Pz", "P2", "P4", "P6", "P8", "P10",
-    "PO9", "PO7", "PO5", "PO3", "POz", "PO4", "PO6", "PO8", "PO10",
-    "O1", "Oz", "O2",
-    "I1", "Iz", "I2",
-    # BioSemi extras
-    "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10",
-    "A11", "A12", "A13", "A14", "A15", "A16", "A17", "A18", "A19", "A20",
-    "A21", "A22", "A23", "A24", "A25", "A26", "A27", "A28", "A29", "A30",
-    "A31", "A32",
-}
+_BIOSEMI_256_NAMES: List[str] = [
+    # Row 1 (frontal)
+    "Fp1", "AF7", "AF3", "F1", "F3", "F5", "F7", "FT7",
+    "FC5", "FC3", "FC1", "C1", "C3", "C5", "T7", "TP7",
+    "CP5", "CP3", "CP1", "P1", "P3", "P5", "P7", "P9",
+    "PO7", "PO3", "O1", "Iz", "Oz", "POz", "Pz", "CPz",
+    # Row 2
+    "Fpz", "Fp2", "AF8", "AF4", "AFz", "Fz", "F2", "F4",
+    "F6", "F8", "FT8", "FC6", "FC4", "FC2", "FCz", "Cz",
+    "C2", "C4", "C6", "T8", "TP8", "CP6", "CP4", "CP2",
+    "P2", "P4", "P6", "P8", "P10", "PO8", "PO4", "O2",
+    # Row 3
+    "Fp1h", "AFp1", "AFp3", "AFF1", "AFF3", "AFF5", "AFF7", "F7h",
+    "F5h", "F3h", "F1h", "FT7h", "FC5h", "FC3h", "FC1h", "C1h",
+    "C3h", "C5h", "T7h", "TP7h", "CP5h", "CP3h", "CP1h", "P1h",
+    "P3h", "P5h", "P7h", "P9h", "PO7h", "PO3h", "O1h", "POh",
+    # Row 4
+    "POOh", "OI1", "OIz", "OI2", "POO2", "PO4h", "PO8h", "P8h",
+    "P6h", "P4h", "P2h", "TP8h", "CP6h", "CP4h", "CP2h", "C2h",
+    "C4h", "C6h", "T8h", "FT8h", "FC6h", "FC4h", "FC2h", "FCz2",
+    "F2h", "F4h", "F6h", "F8h", "AFF8", "AFF6", "AFF4", "AFF2",
+    # Row 5
+    "AFp2", "AFp4", "AFp6", "AFp8", "Fp2h", "Fpz2", "AFp5", "AFp7",
+    "AFp9", "AFF9", "F9", "F9h", "FT9", "FT9h", "T9", "T9h",
+    "TP9", "TP9h", "P9", "P9h", "PO9", "PO9h", "O9", "O9h",
+    "I1", "I1h", "Iz2", "I2h", "I2", "O10h", "O10", "PO10h",
+    # Row 6
+    "PO10", "P10h", "P10", "TP10h", "TP10", "T10h", "T10", "FT10h",
+    "FT10", "F10h", "F10", "AFF10", "AFp10", "Fp1h2", "Fpz3", "Fp2h2",
+    "AFp11", "AFp12", "AFp13", "AFp14", "AFp15", "AFp16", "AFp17", "AFp18",
+    "AFp19", "AFp20", "AFp21", "AFp22", "AFp23", "AFp24", "AFp25", "AFp26",
+    # Row 7
+    "AFp27", "AFp28", "AFp29", "AFp30", "AFp31", "AFp32", "AFp33", "AFp34",
+    "AFp35", "AFp36", "AFp37", "AFp38", "AFp39", "AFp40", "AFp41", "AFp42",
+    "AFp43", "AFp44", "AFp45", "AFp46", "AFp47", "AFp48", "AFp49", "AFp50",
+    "AFp51", "AFp52", "AFp53", "AFp54", "AFp55", "AFp56", "AFp57", "AFp58",
+    # Row 8
+    "AFp59", "AFp60", "AFp61", "AFp62", "AFp63", "AFp64", "AFp65", "AFp66",
+    "AFp67", "AFp68", "AFp69", "AFp70", "AFp71", "AFp72", "AFp73", "AFp74",
+    "AFp75", "AFp76", "AFp77", "AFp78", "AFp79", "AFp80", "AFp81", "AFp82",
+    "AFp83", "AFp84", "AFp85", "AFp86", "AFp87", "AFp88", "AFp89", "AFp90",
+]
 
 
-def _detect_paradigm(file_name: str) -> str:
-    """Detect paradigm from file name."""
-    fname_lower = file_name.lower()
-    if "oddball" in fname_lower:
-        return "oddball"
+# =============================================================================
+# Helper Functions
+# =============================================================================
+
+def _get_subject_id_from_path(file_path: str) -> str:
+    """Extract subject ID from BIDS file path."""
+    match = re.search(r"(sub-[0-9]+)", file_path)
+    if match:
+        return match.group(1)
     return "unknown"
 
 
-def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
-    """Build channel rename map for BioSemi 256-channel system.
-    
-    Attempts to rename BioSemi-specific channel names to standard 10-20
-    nomenclature where applicable. Leaves unknown BioSemi channels unchanged.
-    
-    Source: BioSemi electrode naming convention, 10-20 international standard
-    Annotator: LLM, 2026-04-08, # LLM 推断，需人类复核
-    """
-    rename_map: Dict[str, str] = {}
-    existing = set(raw.ch_names)
-    
-    # BioSemi to standard mapping (common cases)
-    # Format: BIO_SEMI_NAME -> STANDARD_NAME
-    biosemi_to_standard = {
-        # Standard 10-20 positions
-        "Fp1": "FP1", "Fp2": "FP2", "Fpz": "FPz",
-        "F7": "F7", "F3": "F3", "Fz": "Fz", "F4": "F4", "F8": "F8",
-        "T7": "T7", "C3": "C3", "Cz": "Cz", "C4": "C4", "T8": "T8",
-        "P7": "P7", "P3": "P3", "Pz": "Pz", "P4": "P4", "P8": "P8",
-        "O1": "O1", "Oz": "Oz", "O2": "O2",
-        "AF7": "AF7", "AF3": "AF3", "AFz": "AFz", "AF4": "AF4", "AF8": "AF8",
-        "FC5": "FC5", "FC3": "FC3", "FC1": "FC1", "FCz": "FCz", "FC2": "FC2", "FC4": "FC4", "FC6": "FC6",
-        "CP5": "CP5", "CP3": "CP3", "CP1": "CP1", "CPz": "CPz", "CP2": "CP2", "CP4": "CP4", "CP6": "CP6",
-        "PO7": "PO7", "PO3": "PO3", "POz": "POz", "PO4": "PO4", "PO8": "PO8",
-        # BioSemi auxiliary
-        "A1": "A1", "A2": "A2", "A3": "A3", "A4": "A4",
-        "A5": "A5", "A6": "A6", "A7": "A7", "A8": "A8",
-        "A9": "A9", "A10": "A10", "A11": "A11", "A12": "A12",
-        "A13": "A13", "A14": "A14", "A15": "A15", "A16": "A16",
-        "A17": "A17", "A18": "A18", "A19": "A19", "A20": "A20",
-        "A21": "A21", "A22": "A22", "A23": "A23", "A24": "A24",
-        "A25": "A25", "A26": "A26", "A27": "A27", "A28": "A28",
-        "A29": "A29", "A30": "A30", "A31": "A31", "A32": "A32",
+def _read_participants_tsv(dataset_root: str) -> Optional[pd.DataFrame]:
+    """Read participants.tsv if it exists."""
+    participants_path = os.path.join(dataset_root, "participants.tsv")
+    if os.path.exists(participants_path):
+        return pd.read_csv(participants_path, sep="\t")
+    return None
+
+
+def _get_subject_info_from_tsv(
+    participants_df: Optional[pd.DataFrame], subject_id: str
+) -> Dict[str, str]:
+    """Extract subject info from participants DataFrame."""
+    info = {
+        "age": "unknown",
+        "sex": "unknown",
+        "handedness": "unknown",
     }
+    if participants_df is None:
+        return info
     
-    for bio_name, std_name in biosemi_to_standard.items():
-        if bio_name in existing:
-            rename_map[bio_name] = std_name
+    # Normalize subject_id to match participants.tsv format
+    if not subject_id.startswith("sub-"):
+        subject_id = f"sub-{subject_id}"
     
-    return rename_map
+    row = participants_df[participants_df["participant_id"] == subject_id]
+    if row.empty:
+        # Try without sub- prefix
+        row = participants_df[participants_df["participant_id"] == subject_id.replace("sub-", "")]
+    if row.empty:
+        return info
+    
+    row = row.iloc[0]
+    
+    # Age
+    if "age" in row and pd.notna(row["age"]):
+        info["age"] = str(int(float(row["age"])))
+    
+    # Sex/gender
+    for col in ["sex", "gender"]:
+        if col in row and pd.notna(row[col]):
+            val = str(row[col]).lower().strip()
+            if val in ("m", "male"):
+                info["sex"] = "male"
+            elif val in ("f", "female"):
+                info["sex"] = "female"
+            break
+    
+    # Handedness
+    if "handedness" in row and pd.notna(row["handedness"]):
+        val = str(row["handedness"]).lower().strip()
+        if val in ("r", "right"):
+            info["handedness"] = "right"
+        elif val in ("l", "left"):
+            info["handedness"] = "left"
+    
+    return info
 
 
-def _remap_annotations(raw: mne.io.BaseRaw) -> mne.Annotations:
-    """Remap annotation descriptions to canonical event labels.
+def _read_events_tsv(file_path: str) -> Optional[pd.DataFrame]:
+    """Read events.tsv sidecar for a given EEG file."""
+    # BIDS convention: events.tsv is in same directory with same basename
+    base = file_path.replace("_eeg.edf", "").replace("_eeg.bdf", "").replace("_eeg.set", "").replace("_eeg.vhdr", "").replace("_eeg.eeg", "")
+    events_path = base + "_events.tsv"
     
-    Source: analysis.md event structure table
-    Annotator: LLM, 2026-04-08
+    if os.path.exists(events_path):
+        return pd.read_csv(events_path, sep="\t")
+    
+    # Try alternative: same directory, events.tsv
+    dir_path = os.path.dirname(file_path)
+    fname = os.path.basename(file_path)
+    fname_base = fname.split("_eeg")[0] if "_eeg" in fname else fname.split(".")[0]
+    
+    for f in os.listdir(dir_path):
+        if f.endswith("_events.tsv") and fname_base in f:
+            return pd.read_csv(os.path.join(dir_path, f), sep="\t")
+    
+    return None
+
+
+def _rename_channels_to_biosemi_256(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
+    """Rename channels to standard BioSemi 256-channel names.
+    
+    This dataset uses a 256-channel BioSemi cap. The channel names in the
+    raw file may be non-standard or numbered. We map them to standard
+    BioSemi 256 names.
     """
-    annotations = raw.annotations.copy()
+    n_channels = len(raw.ch_names)
     
-    new_descriptions = []
-    for desc in annotations.description:
-        desc_str = str(desc)
-        
-        # Check if it's a numeric event code
-        try:
-            event_code = int(float(desc_str))
-            if event_code in _EVENT_MAP:
-                new_descriptions.append(_EVENT_MAP[event_code])
-            else:
-                new_descriptions.append(f"event: {desc_str}")
-        except (ValueError, TypeError):
-            # Keep original string if not numeric
-            new_descriptions.append(desc_str)
+    # Get the standard names we need
+    if n_channels <= len(_BIOSEMI_256_NAMES):
+        new_names = _BIOSEMI_256_NAMES[:n_channels]
+    else:
+        # If more channels than standard names, extend with numbered channels
+        new_names = _BIOSEMI_256_NAMES.copy()
+        for i in range(len(_BIOSEMI_256_NAMES), n_channels):
+            new_names.append(f"CH{i+1}")
     
-    new_annotations = mne.Annotations(
-        onset=annotations.onset,
-        duration=annotations.duration,
-        description=new_descriptions,
-        orig_time=annotations.orig_time,
-    )
+    # Build rename map, avoiding duplicates by checking current names
+    rename_map = {}
+    used_names = set()
     
-    return new_annotations
+    for i, old_name in enumerate(raw.ch_names):
+        if i < len(new_names):
+            new_name = new_names[i]
+            # If this name is already used, append a suffix
+            base_name = new_name
+            suffix = 1
+            while new_name in used_names:
+                new_name = f"{base_name}_{suffix}"
+                suffix += 1
+            rename_map[old_name] = new_name
+            used_names.add(new_name)
+        else:
+            # Should not happen, but keep original if it does
+            pass
+    
+    # Only rename if we have a valid map with unique targets
+    if rename_map:
+        raw.rename_channels(rename_map)
+    
+    return raw
 
 
-def _extract_subject_info(row) -> Dict[str, str]:
-    """Extract subject information from locator row.
-    
-    Source: OpenNeuro participants.tsv or dataset metadata
-    Annotator: LLM, 2026-04-08, # LLM 推断，需人类复核
-    """
-    subject_id = str(row.get("subject_id", "unknown"))
-    
-    # Try to get from subject dict first
-    if subject_id in _SUBJECT_DICT:
-        return _SUBJECT_DICT[subject_id].copy()
-    
-    # Default unknown values
-    return {
-        "age": "unknown",  # LLM 推断，需人类复核
-        "sex": "unknown",  # LLM 推断，需人类复核
-        "handedness": "unknown",  # LLM 推断，需人类复核
-    }
+def _set_montage_biosemi_256(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
+    """Set standard BioSemi 256 montage."""
+    try:
+        montage = mne.channels.make_standard_montage("biosemi256")
+        raw.set_montage(montage, match_case=False, on_missing="ignore")
+    except Exception:
+        pass
+    return raw
 
 
-class OpenNeuroDs002578Kernel:
-    """Stage1 kernel for OpenNeuro ds002578 dataset.
-    
+# =============================================================================
+# Kernel
+# =============================================================================
+
+class OpenNeuroDS002578Kernel:
+    """EEGUnity kernel for OpenNeuro ds002578.
+
     Visual Oddball Task with 256-channel BioSemi EEG.
-    Supports three tasks:
-    1. Visual Oddball Target Detection (classification)
-    2. Target Reaction Time Regression (regression)
-    3. Response-Locked Motor Analysis (classification)
     """
-    
-    KERNEL_ID: str = "openneuro-ds002578-stage1"
-    
-    def apply(self, udataset, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
-        """Apply stage1 preprocessing to a single record.
+
+    KERNEL_ID = "openneuro_ds002578"
+    DATASET_NAME = "ds002578"
+    TASK = "Visual Oddball"
+    AMPLIFIER = "BioSemi ActiveTwo"
+    CAP = "BioSemi 256-channel cap"
+
+    # Required info fields to read from participants.tsv
+    required_info_fields = ["age", "sex", "handedness"]
+
+    def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
+        # Extract file path and dataset root
+        file_path = row.get("File Path", "") if hasattr(row, "get") else str(row)
+        dataset_root = udataset.root if hasattr(udataset, "root") else os.path.dirname(file_path)
         
-        Parameters
-        ----------
-        udataset
-            EEGUnity dataset context.
-        raw
-            In-memory MNE Raw object.
-        row
-            Locator row with at least file path and subject info.
+        # Get subject ID
+        subject_id = _get_subject_id_from_path(file_path)
         
-        Returns
-        -------
-        mne.io.BaseRaw
-            Preprocessed raw object with updated metadata.
-        """
-        file_path = str(row.get("File Path", ""))
-        file_name = os.path.basename(file_path)
+        # Read participants.tsv
+        participants_df = _read_participants_tsv(dataset_root)
+        subject_info = _get_subject_info_from_tsv(participants_df, subject_id)
         
-        # ---------------------------------------------------------------------
-        # Step 1: Remap annotations to canonical event labels
-        # ---------------------------------------------------------------------
-        raw.set_annotations(_remap_annotations(raw))
-        
-        # ---------------------------------------------------------------------
-        # Step 2: Rename channels (before set_montage)
-        # ---------------------------------------------------------------------
-        rename_map = _build_channel_rename_map(raw)
-        if rename_map:
-            mne.rename_channels(raw.info, rename_map)
-        
-        # ---------------------------------------------------------------------
-        # Step 3: Try to set montage for standard positions
-        # ---------------------------------------------------------------------
-        # Get standard positions that exist in the data
-        available_standard = []
-        for ch in raw.ch_names:
-            # Check if channel matches standard 10-20 pattern
-            if ch in _BIOSEMI_STANDARD_NAMES:
-                available_standard.append(ch)
-        
-        if available_standard:
-            try:
-                # Try to set standard 1020 montage for available channels
-                montage = mne.channels.make_standard_montage("standard_1020")
-                
-                # Get channels that are in both data and montage
-                common_channels = list(set(montage.ch_names) & set(raw.ch_names))
-                
-                if common_channels:
-                    # Create info with only common channels for montage
-                    ch_info_montage = mne.pick_info(raw.info, 
-                                                    mne.pick_channels(raw.ch_names, 
-                                                                      include=common_channels,
-                                                                      ordered=False))
-                    
-                    # Set montage (subset)
-                    raw.set_montage(montage, on_missing='ignore')
-            except Exception:
-                # Montage setting failed, continue without it
-                pass
-        
-        # ---------------------------------------------------------------------
-        # Step 4: Update raw.info["description"] with eegunity metadata
-        # ---------------------------------------------------------------------
-        original_desc = raw.info.get("description", "")
-        subject_info = _extract_subject_info(row)
-        
-        description_dict = {
-            "original_description": original_desc,
-            "eegunity_description": {
-                "age": subject_info["age"],
-                "sex": subject_info["sex"],
-                "amplifier": "BioSemi 256-channel",  # Known from dataset
-                "cap": "BioSemi 256-channel",  # LLM 推断，需人类复核
-                "handedness": subject_info["handedness"],
-            },
+        # Build eegunity_description
+        eegunity_description = {
+            "age": subject_info.get("age", "unknown"),
+            "sex": subject_info.get("sex", "unknown"),
+            "amplifier": self.AMPLIFIER,
+            "cap": self.CAP,
+            "handedness": subject_info.get("handedness", "unknown"),
         }
-        raw.info["description"] = json.dumps(description_dict)
         
-        # ---------------------------------------------------------------------
-        # Step 5: Detect and store paradigm info in annotations description
-        # ---------------------------------------------------------------------
-        paradigm = _detect_paradigm(file_name)
-        if paradigm != "unknown":
-            # Add paradigm info to existing annotations
-            current_annots = raw.annotations
-            paradigm_descriptions = [f"{paradigm.upper()}: {d}" for d in current_annots.description]
-            
-            new_annotations = mne.Annotations(
-                onset=current_annots.onset,
-                duration=current_annots.duration,
-                description=paradigm_descriptions,
-                orig_time=current_annots.orig_time,
-            )
-            raw.set_annotations(new_annotations)
+        # Preserve original description
+        original_description = raw.info.get("description", "") if raw.info.get("description") is not None else ""
+        
+        # Set description as JSON string
+        raw.info["description"] = json.dumps({
+            "original_description": original_description,
+            "eegunity_description": eegunity_description,
+        })
+        
+        # Rename channels to standard BioSemi 256 names
+        raw = _rename_channels_to_biosemi_256(raw)
+        
+        # Set montage
+        raw = _set_montage_biosemi_256(raw)
+        
+        # Read and apply events from events.tsv if available
+        events_df = _read_events_tsv(file_path)
+        if events_df is not None and not events_df.empty:
+            # Check for required columns
+            if "onset" in events_df.columns and "trial_type" in events_df.columns:
+                onsets = events_df["onset"].values
+                durations = events_df["duration"].values if "duration" in events_df.columns else np.zeros(len(onsets))
+                descriptions = events_df["trial_type"].astype(str).values
+                
+                # Create annotations
+                annotations = mne.Annotations(
+                    onset=onsets,
+                    duration=durations,
+                    description=descriptions,
+                )
+                raw.set_annotations(annotations)
         
         return raw
 
 
-KERNEL = OpenNeuroDs002578Kernel()
+KERNEL = OpenNeuroDS002578Kernel()

@@ -2,7 +2,7 @@
 
 **Dataset**: `openneuro_ds004000` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004000
 **Category**: High-level Mental | **Subjects**: 43 | **Files (Completed)**: 86 | **Channels**: 132 | **Sampling Rate**: 2048 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
@@ -10,51 +10,53 @@ A social decision-making study investigating fairness processing and social cogn
 
 ## File Scan Result
 
-> **Kernel SHA256**: `be7cd81d21e6eea509dcc4e38668159d2168b9f6425faca05ccc6b9f56c18a72`
+> **Kernel SHA256**: `bb5699d4c626a491c710b60079283172bc4b15d36ff7209d179aa129452861ab`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `New Segment/` | 7315 | event | raw | Segment boundary marker |
-| `Response/R  1` | 1587 | event | raw | Button press response (accept) |
-| `Response/R  3` | 1 | event | raw | Button press response (reject) |
-| `Stimulus/S  1` | 2303 | event | raw | Phase/instruction marker |
-| `Stimulus/S  2` | 1303 | event | raw | Phase/instruction marker |
-| `Stimulus/S  3` | 1896 | event | raw | Phase/instruction marker |
-| `Stimulus/S  4` | 1598 | event | raw | Phase/instruction marker |
-| `Stimulus/S 64` | 5839 | event | raw | Offer onset - responder condition block 1 |
-| `Stimulus/S 96` | 6339 | event | raw | Offer onset - responder condition block 2 |
-| `Stimulus/S128` | 3681 | event | raw | Offer onset - responder condition block 3 |
-| `Stimulus/S160` | 3720 | event | raw | Offer onset - responder condition block 4 |
-| `Stimulus/S193` | 239 | event | raw | Low offer marker (unfair) - partner type A |
-| `Stimulus/S194` | 262 | event | raw | Offer marker - partner type A |
-| `Stimulus/S195` | 311 | event | raw | Offer marker - partner type A |
-| `Stimulus/S196` | 625 | event | raw | Offer marker - partner type A |
-| `Stimulus/S197` | 774 | event | raw | Offer marker - partner type A |
-| `Stimulus/S198` | 564 | event | raw | Offer marker - partner type A |
-| `Stimulus/S199` | 281 | event | raw | Offer marker - partner type A |
-| `Stimulus/S200` | 227 | event | raw | Offer marker - partner type A |
-| `Stimulus/S201` | 215 | event | raw | High offer marker (fair) - partner type A |
-| `Stimulus/S225` | 413 | event | raw | Low offer marker (unfair) - partner type B |
-| `Stimulus/S226` | 410 | event | raw | Offer marker - partner type B |
-| `Stimulus/S227` | 412 | event | raw | Offer marker - partner type B |
-| `Stimulus/S228` | 413 | event | raw | Offer marker - partner type B |
-| `Stimulus/S229` | 417 | event | raw | Offer marker - partner type B |
-| `Stimulus/S230` | 413 | event | raw | Offer marker - partner type B |
-| `Stimulus/S231` | 422 | event | raw | Offer marker - partner type B |
-| `Stimulus/S232` | 400 | event | raw | Offer marker - partner type B |
-| `Stimulus/S233` | 420 | event | raw | High offer marker (fair) - partner type B |
-| `Time 0/` | 7401 | event | raw | Recording start time marker |
-| `UserDefined/Blink` | 14850 | admin | raw | Blink artifact marker |
+| `New Segment/` | 7315 | admin | raw | Data segment boundary marker |
+| `Response/R  1` | 1587 | event | raw | Participant button press response |
+| `Response/R  3` | 1 | event | raw | Participant button press response (alternate code) |
+| `Stimulus/S  1` | 2303 | event | raw | Stimulus onset: experimental event S1 |
+| `Stimulus/S  2` | 1303 | event | raw | Stimulus onset: experimental event S2 |
+| `Stimulus/S  3` | 1896 | event | raw | Stimulus onset: experimental event S3 |
+| `Stimulus/S  4` | 1598 | event | raw | Stimulus onset: experimental event S4 |
+| `Stimulus/S 64` | 5839 | event | raw | Trial phase onset: fixation or trial start |
+| `Stimulus/S 96` | 6339 | event | raw | Trial phase onset: offer presentation |
+| `Stimulus/S128` | 3681 | event | raw | Trial phase onset: decision period |
+| `Stimulus/S160` | 3720 | event | raw | Trial phase onset: feedback presentation |
+| `Stimulus/S193` | 239 | event | raw | Stimulus onset: condition-specific event S193 |
+| `Stimulus/S194` | 262 | event | raw | Stimulus onset: condition-specific event S194 |
+| `Stimulus/S195` | 311 | event | raw | Stimulus onset: condition-specific event S195 |
+| `Stimulus/S196` | 625 | event | raw | Stimulus onset: condition-specific event S196 |
+| `Stimulus/S197` | 774 | event | raw | Stimulus onset: condition-specific event S197 |
+| `Stimulus/S198` | 564 | event | raw | Stimulus onset: condition-specific event S198 |
+| `Stimulus/S199` | 281 | event | raw | Stimulus onset: condition-specific event S199 |
+| `Stimulus/S200` | 227 | event | raw | Stimulus onset: condition-specific event S200 |
+| `Stimulus/S201` | 215 | event | raw | Stimulus onset: condition-specific event S201 |
+| `Stimulus/S225` | 413 | event | raw | Stimulus onset: condition-specific event S225 |
+| `Stimulus/S226` | 410 | event | raw | Stimulus onset: condition-specific event S226 |
+| `Stimulus/S227` | 412 | event | raw | Stimulus onset: condition-specific event S227 |
+| `Stimulus/S228` | 413 | event | raw | Stimulus onset: condition-specific event S228 |
+| `Stimulus/S229` | 417 | event | raw | Stimulus onset: condition-specific event S229 |
+| `Stimulus/S230` | 413 | event | raw | Stimulus onset: condition-specific event S230 |
+| `Stimulus/S231` | 422 | event | raw | Stimulus onset: condition-specific event S231 |
+| `Stimulus/S232` | 400 | event | raw | Stimulus onset: condition-specific event S232 |
+| `Stimulus/S233` | 420 | event | raw | Stimulus onset: condition-specific event S233 |
+| `Time 0/` | 7401 | admin | raw | Time zero reference marker |
+| `UserDefined/Blink` | 14850 | admin | raw | Ocular artifact: blink detected by ICA (channel 129) |
 
 
 ### MISC Label Summary
-- **Route**: `misc`
-- **Role**: Extra channels storing auxiliary biological signals
+| Channel | Source | Meta | Notes |
+|---|---|---|---|
+| `EXG1` | native (raw misc in EEG file) | raw | Verify channel role and unit |
+| `EXG2` | native (raw misc in EEG file) | raw | Verify channel role and unit |
 - **Candidate Labels**: `EXG1`, `EXG2`
-- **Kernel Note**: Verify channel roles and units. These may contain EOG or other auxiliary recordings.
+
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
@@ -64,66 +66,88 @@ A social decision-making study investigating fairness processing and social cogn
 
 ## Tasks
 
-### Classical Task 1: Group Classification - Schizophrenia vs Healthy Controls during Ultimatum Game Responder Condition (ERP Analysis)
+### Classical Task 1: 2-class proposer vs responder condition
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, target_events = [`Stimulus/S 64`, `Stimulus/S 96`, `Stimulus/S128`, `Stimulus/S160`]
+- **Epoch Parameters**: tmin = -0.2 s *, tmax = 0.8 s *, target_events = [`Stimulus/S 64`, `Stimulus/S 96`, `Stimulus/S128`, `Stimulus/S160`]
 - **Label Route**: `event`
-- **Meta Level**: super
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `Stimulus/S 64` | 0 | Healthy control (HC) participant |
-  | `Stimulus/S 64` | 1 | Schizophrenia patient (SCZ) |
-- **Super Meta Notes**: Labels derived from clinical diagnosis (participants.tsv) not raw event markers. Kernel must load participant diagnosis and merge with epoch labels based on subject ID. The stimulus onset events S64/S96/S128/S160 represent offer/condition markers in the responder condition.
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `Stimulus/S 64` | 0 | proposer role: trial phase onset (fixation/trial start) |
+  | `Stimulus/S128` | 0 | proposer role: trial phase onset (decision period) |
+  | `Stimulus/S 96` | 1 | responder role: trial phase onset (offer presentation) |
+  | `Stimulus/S160` | 1 | responder role: trial phase onset (feedback presentation) |
 - **Evidence**:
-  - DOI: 10.1016/j.schres.2017.05.037 — EEG study investigates differences in ERPs (P2, FRN) between schizophrenic patients and healthy controls during Ultimatum Game responder condition, finding reduced FRN amplitude in patients. Validates epoch window centering on stimulus onset for ERP component extraction.
-- **Kernel Notes**: Extract epochs aligned to stimulus onset markers; merge with participant group labels from participants.tsv by subject ID; verify mapping of S64/S96/S128/S160 to responder condition from events.tsv; exclude blink artifacts marked via UserDefined/Blink.
+  - 10.1016/j.schres.2017.05.037 — Original study comparing proposer vs responder conditions in Ultimatum Game with schizophrenia patients and healthy controls
+  - 10.1016/j.schres.2023.01.029 — Reanalysis confirming proposer vs responder comparison as core task contrast
+  - README — "Participants were asked to play the UG in both roles, both as responder and proposer"; task-proposer and task-responder files present
+  - eeg.json — TaskName indicates separate "responder" and "proposer" tasks
+  - .vmrk header samples — S 64/S128 observed in proposer files; S 96/S160 observed in responder files; distinct event codes across roles enable role classification
+- **Notes**: Event codes are task-specific: S 64 and S128 appear exclusively in proposer runs, while S 96 and S160 appear exclusively in responder runs. This creates a natural 2-class classification problem where the event identity itself encodes the participant's role. The y=0/1 mapping groups all proposer-phase events together and all responder-phase events together, reflecting the binary role distinction. The epoch window (-0.2 to 0.8s) captures the ERP around trial phase onsets, covering early sensory and cognitive processing associated with role-specific task demands.
 
-### Classical Task 2: Group Classification - Schizophrenia vs Healthy Controls during Ultimatum Game Responder Condition (Functional Connectivity)
+### Classical Task 2: group regression (HC vs P continuous)
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 6 s *, overlap = 0.0, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `group`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|-------|---------|
+  | group | 0–1 (binary) | 0=Healthy control, 1=Patient with psychosis; binary group label treated as continuous regression target |
+- **Evidence**:
+  - 10.1016/j.schres.2017.05.037 — Both studies use group (HC vs P) as the primary classification label
+  - 10.1016/j.schres.2023.01.029 — Both studies use group (HC vs P) as the primary classification label
+  - participants.tsv — 'group' column with complete coverage (24 HC, 19 P)
+- **Notes**: Subject-level regression using segmentation approach with 6s non-overlapping segments. The 'group' label is a native participants.tsv column (B3 archetype, raw meta level). Segment length of 6s matches reported trial duration; overlap=0 ensures independent samples. This enables biomarker-style regression when event-locked analysis is not desired. Task type changed from classification to regression to avoid single-class-per-subject issue inherent in group-level segmentation; the binary group variable is treated as a continuous target.
+
+### Potential Task 1: 4-class trial phase classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: `tmin = 0 s *, tmax = 2 s *, target_events = [`Stimulus/S 64`, `Stimulus/S 96`, `Stimulus/S128`, `Stimulus/S160`]`
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `Stimulus/S 64` | 0 | fixation or trial start |
+  | `Stimulus/S 96` | 1 | offer presentation |
+  | `Stimulus/S128` | 2 | decision period |
+  | `Stimulus/S160` | 3 | feedback presentation |
+- **Evidence**:
+  - BrainVision .vmrk marker files (sub-001, sub-002, sub-003, sub-010, sub-025) — Stimulus/S 64 and Stimulus/S 96 directly observed; S128 and S160 confirmed from pre-scan event counts across all files
+  - README — "The task is playing the Ultimatum Game" with proposer/responder roles; 30 repetitions per block
+  - eeg.json (sub-000_task-proposer_run-1) — TaskDescription describes trial structure with offer, decision, and feedback phases
+- **Notes**: Event structure supports a natural 4-class trial phase detection task based on the Ultimatum Game trial structure (fixation/trial start → offer presentation → decision period → feedback presentation). The 6s trial duration with 4 phases implies approximately 1.5s per phase; 2s window captures each phase with buffer. No direct publication reference supports this specific 4-class formulation, but the event codes and trial structure are clearly present in the data.
+
+### Potential Task 2: Segmentation Group Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 0.7 s, overlap = 0.0, target_events = [`Stimulus/S 64`, `Stimulus/S 96`, `Stimulus/S128`, `Stimulus/S160`]
-- **Label Route**: `event`
-- **Meta Level**: super
+- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `group`
+- **Meta Level**: raw
 - **Target Definition**:
-  | Segment | y | Meaning |
-  |---------|---|---------|
-  | Any segment | 0 | Healthy control (HC) participant |
-  | Any segment | 1 | Schizophrenia patient (SCZ) |
-- **Super Meta Notes**: Labels derived from clinical diagnosis (participants.tsv) not raw event markers. Analysis focuses on pre-stimulus window (-0.7s to 0s) during responder condition. Kernel must compute functional connectivity metrics within alpha band (8-13 Hz) for each segment.
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | group | HC | 0 | Healthy control participant |
+  | group | P | 1 | Patient with psychosis episodes |
 - **Evidence**:
-  - DOI: 10.1016/j.schres.2023.01.029 — Uses openneuro_ds004000 dataset to analyze EEG dynamic functional connectivity comparing healthy controls and schizophrenia patients during Ultimatum Game responder condition, finding significant fronto-occipital alpha-band connectivity differences in pre-stimulus window. Confirms dataset identity and supports segmentation approach.
-- **Kernel Notes**: Segment continuous data using 0.7s sliding windows aligned to stimulus onset events with no overlap; compute imaginary coherence in alpha band (8-13 Hz); merge segment labels with participant clinical diagnosis from participants.tsv; exclude segments containing blink artifacts.
+- **Notes**: Continuous EEG is segmented into 4-second windows with 50% overlap for group-level classification. The group label is drawn from participants.tsv (native info column), making this a raw meta-level task. This potential task explores schizophrenia-related neural signatures in task-continuous data without relying on event-locked epochs. The segment length and overlap are inferred from spectral estimation requirements and similar windowing used in connectivity analyses.
 
-### Potential Task 1: Button Press Response Classification during Ultimatum Game Decision
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.3 s, tmax = 0.8 s, target_events = [`Response/R 1`, `Response/R 3`]
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `Response/R 1` | 0 | Accept offer response |
-  | `Response/R 1` | 1 | Reject offer response |
-  | `Response/R 3` | 0 | Accept offer response |
-  | `Response/R 3` | 1 | Reject offer response |
-- **Potential Meta Notes**: Response events R1/R3 indicate button presses for accept/reject decisions. However, these events appear in only 6/1 files respectively, suggesting alternative response encoding or response-locked analysis may require epoching from preceding stimulus events. Behavioral analysis of accept/reject patterns is plausible from paradigm alone.
-- **Evidence**: N/A
-- **Kernel Notes**: Verify response event coding scheme in events.tsv; if R1/R3 presence is limited, consider epoching from stimulus onset and aligning to response events post-hoc; verify mapping of R1 vs R3 to accept/reject.
+## Data Quality Notes
 
-### Normal Task 1: Fairness Processing Analysis during Ultimatum Game Responder Condition
-- **Task Type**: regression/classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.6 s, target_events = [`Stimulus/S193`, `Stimulus/S194`, `Stimulus/S195`, `Stimulus/S196`, `Stimulus/S197`, `Stimulus/S198`, `Stimulus/S199`, `Stimulus/S200`, `Stimulus/S201`, `Stimulus/S225`, `Stimulus/S226`, `Stimulus/S227`, `Stimulus/S228`, `Stimulus/S229`, `Stimulus/S230`, `Stimulus/S231`, `Stimulus/S232`, `Stimulus/S233`]
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `Stimulus/S193`-`S201` | 0-8 | Offer amount (fairness condition) |
-  | `Stimulus/S225`-`S233` | 0-8 | Offer amount (fairness condition) |
-- **Normal Meta Notes**: Condition-specific markers (S193-S233) encode offer types representing different fairness levels. These markers appear in 28-42 files suggesting variable condition presentation across participants. FRN and P300 ERP components should differentiate between unfair/fair offers.
-- **Evidence**: DOI: 10.1016/j.schres.2017.05.037 — Supports fairness processing analysis via ERP components (FRN, P2) modulated by offer unfairness.
-- **Kernel Notes**: Map condition-specific markers to offer values using events.tsv; include only participants with complete condition presentation; verify S193-S201 and S225-S233 marker correspondence to different offer types.
+- Missing demographic metadata: subject_age, subject_sex, and device fields are not available in the dataset metadata.
+- Very low count for `Response/R  3` (n=1) compared to `Response/R  1` (n=1587), suggesting alternate response code was rarely used or may be a recording artifact.
+- `UserDefined/Blink` markers (n=14850) indicate automated blink detection was applied via ICA on channel 129; users should verify blink correction quality.
+- EXG1 and EXG2 auxiliary channels are present but their specific roles (e.g., EOG, EMG) and units require verification.
+- Event code meanings for Stimulus/S193-S233 are condition-specific but exact experimental conditions (offer fairness levels, partner types) are inferred from structure rather than explicitly documented in data headers.
+- The `group` label is complete and available in participants.tsv, enabling group-level analyses.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

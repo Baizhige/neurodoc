@@ -2,7 +2,7 @@
 
 **Dataset**: `openneuro_ds001971` | **Year**: 2019 | **URL**: https://openneuro.org/datasets/ds001971
 **Category**: Complex Applied | **Subjects**: 18 | **Files (Completed)**: 273 | **Channels**: 115 | **Sampling Rate**: 512 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
@@ -10,35 +10,35 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 
 ## File Scan Result
 
-> **Kernel SHA256**: `81bfb772f153e718e8aeaef593be73e7a95425f13a58ce43a6a1411dd56d50c4`
+> **Kernel SHA256**: `59420e30c0a5baa281428b5581da12b1fbc6a0ff364452a955cac2a8f7a012d1`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `AdvanceTempo` | 1154 | event | raw | Step shortening response cue (faster tempo) |
-| `AdvanceTempo_stream2` | 1154 | event | raw | Step shortening response cue (faster tempo, block 2) |
-| `DelayTempo` | 2368 | event | raw | Step lengthening response cue (slower tempo) |
-| `DelayTempo_stream2` | 2368 | event | raw | Step lengthening response cue (slower tempo, block 2) |
-| `PreferredCadence` | 32100 | event | raw | Walking at preferred self-selected cadence |
-| `PreferredCadence_stream2` | 26354 | event | raw | Preferred cadence walking (block 2) |
-| `PreferredCadence_stream3` | 20237 | event | raw | Preferred cadence walking (block 3) |
-| `PreferredCadence_stream4` | 20692 | event | raw | Preferred cadence walking (block 4) |
-| `PreferredCadence_stream5` | 34011 | event | raw | Preferred cadence walking (block 5) |
-| `PreferredCadence_stream6` | 28708 | event | raw | Preferred cadence walking (block 6) |
-| `PreferredCadence_stream7` | 20365 | event | raw | Preferred cadence walking (block 7) |
-| `PreferredCadence_stream8` | 21070 | event | raw | Preferred cadence walking (block 8) |
-| `UncuedWalking` | 1154 | event | raw | Uncued walking without tempo guidance |
-| `UncuedWalking_stream2` | 26402 | event | raw | Uncued walking (block 2) |
-| `UncuedWalking_stream3` | 20441 | event | raw | Uncued walking (block 3) |
-| `UncuedWalking_stream4` | 20635 | event | raw | Uncued walking (block 4) |
-| `UncuedWalking_stream5` | 28730 | event | raw | Uncued walking (block 5) |
-| `UncuedWalking_stream6` | 20482 | event | raw | Uncued walking (block 6) |
-| `UncuedWalking_stream7` | 20683 | event | raw | Uncued walking (block 7) |
-| `Walking_event_171` | 5715 | event | raw | Gait cycle marker (phase A) |
-| `Walking_event_271` | 5678 | event | raw | Gait cycle marker (phase B) |
-| `admin: marker-999` | 1153 | event | raw | BioSemi system status marker |
+| `AdvanceTempo` | 1154 | event | raw | Trial phase onset: AdvanceTempo (step advance pacing tempo condition) |
+| `AdvanceTempo_stream2` | 1154 | event | raw | Trial phase onset: AdvanceTempo stream 2 (step advance pacing tempo condition, auxiliary event stream) |
+| `DelayTempo` | 2368 | event | raw | Trial phase onset: DelayTempo (step delay pacing tempo condition) |
+| `DelayTempo_stream2` | 2368 | event | raw | Trial phase onset: DelayTempo stream 2 (step delay pacing tempo condition, auxiliary event stream) |
+| `PreferredCadence` | 32100 | event | raw | Trial phase onset: PreferredCadence (preferred cadence walking condition) |
+| `PreferredCadence_stream2` | 26354 | event | raw | Trial phase onset: PreferredCadence stream 2 (preferred cadence walking condition, auxiliary event stream) |
+| `PreferredCadence_stream3` | 20237 | event | raw | Trial phase onset: PreferredCadence stream 3 (preferred cadence walking condition, auxiliary event stream) |
+| `PreferredCadence_stream4` | 20692 | event | raw | Trial phase onset: PreferredCadence stream 4 (preferred cadence walking condition, auxiliary event stream) |
+| `PreferredCadence_stream5` | 34011 | event | raw | Trial phase onset: PreferredCadence stream 5 (preferred cadence walking condition, auxiliary event stream) |
+| `PreferredCadence_stream6` | 28708 | event | raw | Trial phase onset: PreferredCadence stream 6 (preferred cadence walking condition, auxiliary event stream) |
+| `PreferredCadence_stream7` | 20365 | event | raw | Trial phase onset: PreferredCadence stream 7 (preferred cadence walking condition, auxiliary event stream) |
+| `PreferredCadence_stream8` | 21070 | event | raw | Trial phase onset: PreferredCadence stream 8 (preferred cadence walking condition, auxiliary event stream) |
+| `UncuedWalking` | 1154 | event | raw | Trial phase onset: UncuedWalking (uncued walking condition with right/left heel strikes) |
+| `UncuedWalking_stream2` | 26402 | event | raw | Trial phase onset: UncuedWalking stream 2 (uncued walking condition, auxiliary event stream) |
+| `UncuedWalking_stream3` | 20441 | event | raw | Trial phase onset: UncuedWalking stream 3 (uncued walking condition, auxiliary event stream) |
+| `UncuedWalking_stream4` | 20635 | event | raw | Trial phase onset: UncuedWalking stream 4 (uncued walking condition, auxiliary event stream) |
+| `UncuedWalking_stream5` | 28730 | event | raw | Trial phase onset: UncuedWalking stream 5 (uncued walking condition, auxiliary event stream) |
+| `UncuedWalking_stream6` | 20482 | event | raw | Trial phase onset: UncuedWalking stream 6 (uncued walking condition, auxiliary event stream) |
+| `UncuedWalking_stream7` | 20683 | event | raw | Trial phase onset: UncuedWalking stream 7 (uncued walking condition, auxiliary event stream) |
+| `Walking_event_171` | 5715 | event | raw | Cue during standing previously associated with right heel strike |
+| `Walking_event_271` | 5678 | event | raw | Cue during standing previously associated with left heel strike |
+| `admin: marker-999` | 1153 | admin | raw | First auditory cue marking step delay tempo shift |
 
 
 ### Info
@@ -50,46 +50,149 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 
 ## Tasks
 
-### Classical Task 1: Tempo-shift gait adaptation (AdvanceTempo vs DelayTempo)
+### Classical Task 1: 3-class gait tempo condition classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -1.0 s, tmax = 3.0 s, target_events = [`AdvanceTempo`, `DelayTempo`]
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: `tmin = 0 s *, tmax = 10 s *, overlap = 0.5 *, target_events = [`AdvanceTempo`, `DelayTempo`, `PreferredCadence`]`
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `AdvanceTempo` | 0 | Step shortening response to faster tempo cue |
-  | `DelayTempo` | 1 | Step lengthening response to slower tempo cue |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `AdvanceTempo` | 0 | Advance tempo shift (step shortening) |
+  | `DelayTempo` | 1 | Delay tempo shift (step lengthening) |
+  | `PreferredCadence` | 2 | Preferred cadence baseline walking |
 - **Evidence**:
-  - DOI: 10.1038/s41597-019-0223-2 — Data descriptor for openneuro_ds001971 confirming step-locked epoching from -1s to 3s around heel strikes for tempo shift analysis
-  - DOI: 10.1523/jneurosci.3543.15.2016 — EEG analysis of tempo shifts comparing beta band oscillatory networks between step-advance and step-delay adaptation in same 18-subject cohort
-- **Kernel Notes**: Extract epochs time-locked to tempo shift onset events. `AdvanceTempo` marks cue shifts to faster tempo (step shortening); `DelayTempo` marks cue shifts to slower tempo (step lengthening). Exclude `STATUS` and `admin` markers from analysis. ICA recommended for motion artifact removal from treadmill walking.
+  - 10.1038/s41597-019-0223-2 — Data descriptor explicitly describes 3-class classification of gait conditions: advance tempo shift, delay tempo shift, and preferred cadence baseline
+  - 10.1523/jneurosci.3543.15.2016 — Primary research paper analyzes β-band modulations during gait adaptation to auditory metronome shifts, with sustained walking conditions lasting multiple seconds
+- **Notes**: All three event IDs (`AdvanceTempo`, `DelayTempo`, `PreferredCadence`) are trial phase onset markers directly from the BIDS events.tsv files. The `_streamN` auxiliary variants are parallel data stream duplicates and are excluded to avoid epoch duplication. The 10s window with 50% overlap is chosen to capture sustained adaptation dynamics while maintaining sufficient epoch count, given that walking conditions span multiple seconds per the data descriptor. Overlap value of 0.5 is inferred from standard practice for sustained-state EEG analysis when exact trial durations are variable.
 
-### Potential Task 1: Four-class gait condition classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -1.0 s, tmax = 3.0 s, target_events = [`PreferredCadence`, `PreferredCadence_stream2`, `PreferredCadence_stream3`, `PreferredCadence_stream4`, `PreferredCadence_stream5`, `PreferredCadence_stream6`, `PreferredCadence_stream7`, `PreferredCadence_stream8`, `UncuedWalking`, `UncuedWalking_stream2`, `UncuedWalking_stream3`, `UncuedWalking_stream4`, `UncuedWalking_stream5`, `UncuedWalking_stream6`, `UncuedWalking_stream7`, `AdvanceTempo`, `AdvanceTempo_stream2`, `DelayTempo`, `DelayTempo_stream2`]
-- **Label Route**: `event`
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `PreferredCadence`, `PreferredCadence_stream2-8` | 0 | Walking at preferred self-selected cadence |
-  | `UncuedWalking`, `UncuedWalking_stream2-7` | 1 | Uncued walking without tempo guidance |
-  | `DelayTempo`, `DelayTempo_stream2` | 2 | Step lengthening response to slower tempo cue |
-  | `AdvanceTempo`, `AdvanceTempo_stream2` | 3 | Step shortening response to faster tempo cue |
-- **Evidence**: Supported by paradigm structure from DOI: 10.1038/s41597-019-0223-2 describing the four walking conditions. The stream variants represent different experimental blocks with matching event counts.
-- **Kernel Notes**: Include all stream variants to maximize data utilization across experimental blocks. Exclude `admin: marker-999` (BioSemi system marker) and `Walking_event_171/271` (gait cycle markers, not primary classification targets). Verify consistent channel selection across 273 files before pooling.
-
-### Potential Task 2: Sustained walking state analysis
+### Classical Task 2: 2-class tempo shift direction classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, segment_length = 4.0 s, overlap = 0.0, target_events = [`PreferredCadence`, `PreferredCadence_stream2`, `PreferredCadence_stream3`, `PreferredCadence_stream4`, `PreferredCadence_stream5`, `PreferredCadence_stream6`, `PreferredCadence_stream7`, `PreferredCadence_stream8`, `UncuedWalking`, `UncuedWalking_stream2`, `UncuedWalking_stream3`, `UncuedWalking_stream4`, `UncuedWalking_stream5`, `UncuedWalking_stream6`, `UncuedWalking_stream7`]
+- **Epoch Parameters**: `tmin = -2 s *, tmax = 8 s *, overlap = 0.0, target_events = [`AdvanceTempo`, `DelayTempo`]`
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `PreferredCadence`, `PreferredCadence_stream2-8` | 0 | Sustained walking at preferred self-selected cadence |
-  | `UncuedWalking`, `UncuedWalking_stream2-7` | 1 | Sustained uncued walking without tempo guidance |
-- **Evidence**: Supported by epoch alignment recommendation for sustained walking analysis. High event counts (20k-34k per condition stream) confirm long-duration walking epochs suitable for 4-second segment extraction.
-- **Kernel Notes**: Use epoch_by_long_event_hdf5 to capture sustained neural dynamics during steady-state locomotion. Focus on baseline walking conditions without tempo modifications to study intrinsic gait-related neural oscillations. ICA recommended for artifact removal from treadmill walking. The misc/response_time label (derived data) should preserve metadata during extraction.
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `AdvanceTempo` | 0 | Step advance pacing tempo condition (faster tempo, step shortening) |
+  | `DelayTempo` | 1 | Step delay pacing tempo condition (slower tempo, step lengthening) |
+- **Evidence**:
+  - 10.1523/jneurosci.3543.15.2016 — Primary research paper specifically contrasts advance vs delay tempo shifts as the core experimental manipulation, analyzing β-band power changes time-locked to these tempo shift events. Step shortening (advance) and step lengthening (delay) represent opposing motor adaptations with different cognitive demands.
+- **Notes**: The task excludes PreferredCadence baseline and UncuedWalking conditions to focus purely on directional adaptation. The _stream2 auxiliary variants of AdvanceTempo and DelayTempo represent parallel event streams from the original EEGLAB format and are not needed since the primary event IDs capture all tempo shift onsets. The epoch window (-2s to +8s) captures the pre-shift baseline and the main adaptation window based on motor learning literature cited in the source paper.
+
+### Potential Task 1: Cued vs Uncued Walking Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: `tmin = 0 s *, tmax = 10 s *, overlap = 0.5, target_events = [`PreferredCadence`, `UncuedWalking`]`
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `PreferredCadence` | 0 | Cued walking at preferred cadence with auditory metronome |
+  | `UncuedWalking` | 1 | Uncued self-paced walking without auditory pacing |
+- **Evidence**:
+  - task-AudioCueWalkingStudy_events.json — Defines value codes: 101/201 = right/left cued heel strikes during preferred cadence walking; 100/200 = right/left heel strikes during uncued walking
+  - events.tsv (sub-001 run-01) — Confirms `PreferredCadence` and `UncuedWalking` as trial_type values marking distinct walking conditions
+  - README — Describes auditory tone sequence pacing paradigm with shifts to faster/slower tempo, confirming externally-paced vs self-paced locomotion contrast
+  - EEG header — Shows annotations including cued (114, 444, 101, 201, 151, 251) and uncued (100, 200) event codes present in raw data
+- **Notes**: The `PreferredCadence` condition represents cued walking with auditory metronome pacing at the participant's preferred cadence, while `UncuedWalking` represents self-paced walking without external auditory cues. This contrast isolates the neural effects of auditory-motor entrainment during locomotion. The 10-second window captures sustained gait dynamics; overlap=0.5 is set to increase usable epochs given the substantial event count imbalance (32100 vs 1154 primary events). The `_streamN` auxiliary variants are inferred parallel data streams from the original EEGLAB format and are not required for this task.
+
+### Potential Task 2: Standing Cue Lateralization Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`Walking_event_171`, `Walking_event_271`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `Walking_event_171` | 0 | Cue during standing previously associated with right heel strike |
+  | `Walking_event_271` | 1 | Cue during standing previously associated with left heel strike |
+- **Evidence**:
+- **Notes**: This task uses discrete auditory cue events (171/271) delivered during standing periods, not during active walking. The lateralized association comes from prior walking experience where these cues were paired with right/left heel strikes. The epoch window captures auditory evoked responses and early post-cue processing. Values marked with * are inferred from standard ERP paradigms for auditory cue processing.
+
+### Potential Task 3: Heel Strike Lateralization During Uncued Walking
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: `tmin = -0.5 s *, tmax = 1.0 s *, target_events = [`UncuedWalking`]`
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `UncuedWalking` (value 100) | 0 | Right heel strike during uncued walking |
+  | `UncuedWalking` (value 200) | 1 | Left heel strike during uncued walking |
+- **Evidence**:
+- **Notes**: The `UncuedWalking` trial_type events contain embedded trigger values 100 and 200 indicating right and left heel strikes respectively during uncued walking. The kernel must extract the `value` column from events.tsv within `UncuedWalking` trial segments to disambiguate the lateralization class. This is an event route (archetype A) with raw meta level since labels originate directly from native event IDs and their associated values.
+
+### Potential Task 4: Sex Classification from Walking EEG
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.0 *, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `sex`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | sex | F | 0 | Female |
+  | sex | M | 1 | Male |
+- **Evidence**:
+  - participants.tsv — 20 subjects with complete sex information (F: 9, M: 11)
+- **Notes**: Binary classification of biological sex from EEG recorded during treadmill walking with auditory pacing. The 10-second non-overlapping segmentation provides multiple samples per subject while capturing locomotor dynamics. This is a B3 archetype using native participants.tsv column; no kernel derivation needed. The MoBI context with real-world movement may reveal sex differences in neural gait control.
+
+### Potential Task 5: Age Regression from Walking EEG
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.0, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `age`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 23–38 (years) | Mixed precision: most subjects encoded as '18-38' (range), explicit values 28 and 32 for some. Effective range 23–38 based on explicit values and dataset summary. Subject-level label applied to all segments from that subject. |
+- **Evidence**:
+- **Notes**: Subject-level continuous regression task using segmentation to create multiple samples per participant. Age is a native participants.tsv column (archetype B3, Meta Level = raw). The 10-second window length is standard for Complex Applied biological state tasks with continuous EEG; overlap is 0 to ensure independent segments. The mixed precision encoding (range vs. specific values) limits granularity but the 23-38 year span provides sufficient variability for regression analysis of neural correlates of gait control across young adulthood.
+
+### Potential Task 6: Segmented Walking State with Sex Label
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `sex`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | sex | F | 0 | Female |
+  | sex | M | 1 | Male |
+- **Evidence**:
+- **Notes**: Archetype C with native info label (sex). The continuous walking recordings contain mixed event structures with multiple condition types and auxiliary streams, making a naturalistic segmentation approach appropriate. Arbitrary 4-second EEG segments are classified by subject-level sex, treating the entire walking session as a continuous brain state. The segment_length and overlap values are inferred from the candidate's epoch_hint as no canonical trial structure exists for this continuous MoBI paradigm.
+
+### Potential Task 7: Segmented Walking State with Age Regression
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `age`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 23.0–38.0 (years) | Continuous age from participants.tsv; some entries are ranges (e.g., '18-38') which may require midpoint imputation or exclusion |
+- **Evidence**:
+  - participants.tsv — N=20, age=23.0–38.0, with some range entries (e.g., '18-38')
+- **Notes**: Archetype C with info-native label (age from participants.tsv). Segmentation is required because the walking protocol produces continuous, mixed-condition recordings without clean trial boundaries suitable for event-based epoching. The 4-second windows with 50% overlap maximize the number of segments per subject for robust age regression from locomotor EEG dynamics. Age serves as a biomarker target: neural signatures of gait adaptability and sensorimotor integration across the complex multi-condition protocol (cued/uncued walking, tempo shifts) may correlate with age-related differences in young adults (23–38 years). The kernel does not need to derive any channels; age is read directly from participants.tsv.
+
+## Data Quality Notes
+
+- No known data quality issues.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review
