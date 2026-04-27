@@ -1,0 +1,1340 @@
+Behavioral/Cognitive
+Distinct /H9252Band Oscillatory Networks Subserving Motor and
+Cognitive Control during Gait Adaptation
+Johanna Wagner,1,2 X
+ Scott Makeig,2 Mateusz Gola,2,3 Christa Neuper,1,4 and Gernot Mu¨ller-Putz1
+1Laboratory of Brain-Computer Interfaces, Institute for Knowledge Discovery, Graz University of Technology, 8010 Graz, Austria,2Swartz Center for
+Computational Neuroscience, Institute for Neural Computation, University of California–San Diego, La Jolla, California 92093-0559,3Institute of
+Psychology, Polish Academy of Science, Warsaw 00-378, Poland, and4Department of Psychology, University of Graz, 8010 Graz, Austria
+Everyday locomotion and obstacle avoidance requires effective gait adaptation in response to sensory cues. Many studies have shown that
+efficient motor actions are associated with /H9262rhythm (8 –13 Hz) and /H9252band (13–35 Hz) local field desynchronizations in sensorimotor
+and parietal cortex, whereas a number of cognitive task studies have reported higher behavioral accuracy to be associated with increases
+in
+/H9252band power in prefrontal and sensory cortex. How these two distinct patterns of/H9252band oscillations interplay during gait adaptation,
+however, has not been established. Here we recorded 108 channel EEG activity from 18 participants (10 males, 22–35 years old) attempt-
+ing to walk on a treadmill in synchrony with a series of pacing cue tones, and quickly adapting their step rate and length to sudden shifts
+in pacing cue tempo. Independent component analysis parsed each participant’s EEG data into maximally independent component (IC)
+source processes, which were then grouped across participants into distinct spatial/spectral clusters. Following cue tempo shifts, mean
+/H9252
+band power was suppressed for IC sources in central midline and parietal regions, whereas mean/H9252band power increased in IC sources
+in or near medial prefrontal and dorsolateral prefrontal cortex. In the right dorsolateral prefrontal cortex IC cluster, the /H9252band power
+increase was stronger during (more effortful) step shortening than during step lengthening. These results thus show that two distinct
+patterns of
+/H9252band activity modulation accompany gait adaptations: one likely serving movement initiation and execution; and the other,
+motor control and inhibition.
+Key words: /H9252band oscillations; EEG; gait adaptation; independent component analysis; motor inhibition; rhythmic auditory cueing
+Introduction
+Impaired gait adaptability (i.e., a reduced ability to change walking
+speed or direction as required) (Den Otter et al., 2005; Hofstad et al.,
+2006) produces a reduced ability to avoid obstacles and an increased
+risk of falling in affected individuals, including many stroke and
+Parkinson’s patients (Weerdesteyn et al., 2006). Rhythmic auditory
+cues have been widely used in gait rehabilitation (Thaut and Abiru,
+2010). Use of an auditory pacing stimulus stream, including infre-
+quent tempo shifts, has been recommended to identify deficits and
+train improvements in gait adaptation in stroke patients (
+Roerdink
+et al., 2009, 2007). Unfortunately, because of the ill effects of body
+movements on brain imaging data, the precise temporal brain dy-
+Received Sept. 23, 2015; revised Dec. 26, 2015; accepted Jan. 11, 2016.
+Author contributions: J.W. designed research; J.W., M.G., C.N, and G.M.-P. performed research; J.W. and S.M.,
+analyzed data; J.W., S.M, and M.G. wrote the paper.
+This work was supported by Future Labs Reloaded 2013 of the Faculty of Computer Science at the Graz University
+of Technology, Austria, OeAD (Austrian Agency for International Mobility) Marietta Blau Grant to J.W., the BMWF
+(Austrian Federal Ministry of Science and Research), Polish Ministry of Science Mobility Plus Grant 1057/MOB/
+2013/0 to M.G., and a gift to University of California–San Diego by the Swartz Foundation (Old Field, NY). We thank
+Dr. Teodoro Solis-Escalante for programming the auditory paradigm; and Daniel Hackhofer and Laura Schulz for
+assistance during the experiments.
+The authors declare no competing financial interests.
+Correspondence should be addressed to Dr. Johanna Wagner, Laboratory of Brain-Computer Interfaces, Institute
+for Knowledge Discovery, Graz University of Technology, Stremayrgasse 16, 8010 Graz, Austria. E-mail:
+<email-redacted>.
+DOI:10.1523/JNEUROSCI.3543-15.2016
+Copyright © 2016 the authors 0270-6474/16/362212-15$15.00/0
+Significance Statement
+Understanding brain dynamics supporting gait adaptation is crucial for understanding motor deficits in walking, such as those
+associated with aging, stroke, and Parkinson’s. Only a few electromagnetic brain imaging studies have examined neural correlates
+of human upright walking. Here, application of independent component analysis to EEG data recorded during treadmill walking
+allowed us to uncover two distinct
+/H9252band oscillatory cortical networks that are active during gait adaptation to shifts in the tempo
+of an auditory pacing cue: (8 –13 Hz)/H9262rhythm and (13–35 Hz)/H9252band power decreases in central and parietal cortex and (14 –20
+Hz) /H9252band power increases in frontal brain areas. These results provide a fuller framework for electrophysiological studies of
+cortical gait control and its disorders.
+2212 • The Journal of Neuroscience, February 17, 2016• 36(7):2212–2226
+namics of step adaptation remain largely unexplored by neuroimag-
+ing studies. Recent signal processing advances, however, allow study
+of source-resolved EEG dynamics during walking (
+Gwin et al., 2010,
+2011; Gramann et al., 2011; Seeber et al., 2015) and other actions, an
+approach termed Mobile Brain/Body Imaging by Makeig et al.
+(2009). Adopting this approach, in several previous studies, we
+showed that specific gait phases are represented in power amplitude
+modulations in the lower (24 – 40 Hz) (
+Wagner et al., 2012, 2014;
+Seeber et al., 2014) and upper (70 –90 Hz) (Seeber et al., 2015) /H9253
+band in central midline areas. Other studies have shown lateralized
+modulations at scalp electrode channels C3 and C4 (
+Cheron et al.,
+2012) and in source-resolved (Gwin et al., 2011) power relative to the
+gait cycle.
+We have also reported /H9262rhythm and /H9252-band power decreases
+(desynchronizations) over central sensorimotor and parietal ar-
+eas during active walking relative to standing or passive walking
+(i.e., when participants’ legs are moved by a robot) (
+Wagner et al.,
+2012; Seeber et al., 2014 ) and during step adaptation to interac-
+tive visual feedback in a virtual environment ( Wagner et al.,
+2014). /H9262and /H9252band power in the motor system decrease during
+the preparation and voluntary execution of movements ( Jasper
+and Penfield, 1949 ; Pfurtscheller and Berghold, 1989 ; Pfurt-
+scheller and Lopes da Silva, 1999 ), whereas /H9252band power in-
+creases in scalp EEG data have been related to movement
+suppression (
+Gilbertson et al., 2005 ; Androulidakis et al., 2007 ;
+Zhang et al., 2008 ; Pogosyan et al., 2009 ; Joundi et al., 2012 ;
+Solis-Escalante et al., 2012).
+Electrophysiological studies suggest that /H9252band oscilla-
+tions may also index top-down signaling. For example, visual
+top-down attention and behavioral rule switching are related
+to oscillatory synchronization of
+/H9252-band local field potentials
+in monkeys’ prefrontal cortex (PFC) and parietal cortex
+(
+Buschman et al., 2007 , 2012). PFC affects top-down control
+by sending information about goals and appropriate actions to
+other brain areas (
+Miller and Cohen, 2001 ). Swann et al.
+(2009 ) reported that an electrocortical /H9252band power increase
+in PFC during motor inhibition preceded /H9262and /H9252band power
+decreases in motor cortex, whereas in older subjects /H9252band
+activity increases may have a compensatory effect ( Geerligs et
+al., 2012 ; Gola et al., 2012 , 2013).
+Recent studies of gait adaptation using EEG showed in-
+creased event-related potential (ERP) ( Haefeli et al., 2011 )
+and hemodynamic responses ( Suzuki et al., 2004 ) during
+preparation for, and performance of, stepping over obstacles,
+as well as during adaptive walking and precision stepping
+(
+Koenraadt et al., 2014 ). A recent study demonstrated that,
+during gait adaptation, stroke patients prefer step lengthening
+over step shortening (
+Roerdink et al., 2009 ), suggesting that
+brain mechanisms controlling voluntary gait deceleration and
+acceleration differ (
+Varraine et al., 2000 ). Recent studies have
+reported that performing a secondary task during walking in-
+duces participants to take longer strides (
+Lovden et al., 2008 ;
+Li et al., 2012 ; De Sanctis et al., 2014 ), suggesting that step
+lengthening requires fewer attentional resources.
+To examine whether difficulty in gait adaptation is related
+to PFC /H9252band activity, we designed a high-density EEG study
+in which participants walking on a treadmill moving at a
+steady rate had to adapt their step length and rate to shifts in
+the tempo of a pacing tone (e.g., shifts requiring both longer
+and shorter step adaptation). We expected three different pro-
+cesses to accompany step rate and length adaptations to audi-
+tory tempo shifts: (1)
+/H9262and /H9252band desynchronization in
+sensorimotor and parietal cortex, reflecting increased motor
+flexibility and adaptation; (2) increased /H9252band power within
+the PFC, reflecting additional cognitive control; and (3) scal-
+ing of PCF
+/H9252band power changes with task difficulty, produc-
+ing a stronger increase in /H9252band power during step shortening
+than during step lengthening.
+Materials and Methods
+Participants. Twenty healthy volunteers with no neurological or motor
+deficits participated in this study. The data of two subjects were excluded
+because of heavy EEG artifact. The remaining data of 18 subjects (10
+males and 8 females, 22–35 years of age; mean 29.1 years, SD 2.7 years)
+were used in the analysis. All participants were right handed. Prior stud-
+ies show that footedness follows handedness in right handers, although
+not consistently so in left handers (
+Peters and Durding, 1979 ). The ex-
+perimental procedures were approved by the human use committee of
+the Medical University Graz. Each subject gave informed consent before
+the experiment.
+Experimental design and procedure.
+Figures 1 and 2 show the experi-
+mental setup and a schematic of the task paradigm, which was adapted
+from
+Bank et al. (2011).
+Training. Before the experimental procedure, participants practiced
+walking on the treadmill for 2–3 min. While walking on the treadmill,
+participants adapted the belt speed to their most comfortable walking
+speed; this ranged from 3.0 to 3.7 km/h across participants. Belt speed
+was then fixed at the participant’s comfortable walking speed and there-
+after remained constant throughout the experiment. Next, participants
+practiced the gait adaptation task with auditory pacing so as to become
+familiar with the task until they reached acceptable performance, mean-
+ing that they correctly responded to step-advance and step-delay pacing
+signal tempo shifts by shortening or lengthening their steps so as to
+synchronize their gait to the new pacing tempo.
+Figure 1. Experimental setup. Participant walking on the treadmill with auditory pacing
+cues delivered through in-ear headphones. During the initial training period, treadmill speed
+(3–3.5 km/h) was adjusted to the most comfortable pace for each participant and thereafter
+remained constant.
+Wagner et al.• Distinct /H9252Band Networks during Gait Adaptation J. Neurosci., February 17, 2016 • 36(7):2212–2226 • 2213
+Trial structure. During each approximately
+minute-long trial period, participants first
+walked without pacing cues for /H1101110 s. During
+the next 8 –12 s, they heard a stream of auditory
+cue tones delivered via in-ear headphones at a
+tempo matching to their current step tempo
+(the mean of the step intervals between their six
+most recent uncued steps). The cue sequence
+was an alternating series of high and low tones
+presented so as to match the participant’s right
+and left (or left and right) heel strikes, respec-
+tively; this high/low assignment was random-
+ized over subjects. Participants were asked to
+attempt to synchronize their heel strikes to the
+cue tones.
+Next, relative to a randomly selected right
+heel strike (after 8 –12 s of cued steady-state
+walking), the tempo of the cue sequence was
+suddenly increased or decreased by one-sixth
+of a cycle (60 deg) (as in
+Roerdink et al., 2009),
+and this new cue tempo was maintained for
+30 –70 steps. Participants were instructed to adjust their heel strikes so as
+to synchronize with the new cue sequence as quickly as possible. The gait
+adjustments required to restore synchronization with the metronome
+were as follows: a one-sixth longer step interval and step length in (60°
+phase shift) step-delay trials, and a one-sixth shorter step interval and
+step length in (/H1100260° phase shift) step-advance trials. After 30 –70 steps at
+the new step rate, the next trial began immediately with, again, uncued
+walking, during which participants were instructed to return to their
+most comfortable step rate.
+A total of 60 step-advance and 60 step-delay trials were conducted in
+10 blocks of 12 trials, each comprised of 6 step-advance and 6 step-delay
+trials presented in random order. Between blocks, when asked for by
+participants, short breaks of 5 min were given during which participants
+were standing on the treadmill.
+Data acquisition. Seven 16-channel amplifiers (g.tec) were combined
+so as to record EEG data from 108 electrode channels in the 5% Interna-
+tional 10/20 System (EasyCap) (
+Oostenveld and Praamstra, 2002). Elec-
+trode locations that extended below the conventional 10 –20 spherical
+layout included PO9, POO9, OI1, OI2, POO10, PO10, I1, Iz, and I2.
+Reference and ground electrodes were placed on the left and right mas-
+toids, respectively. All electrode impedances were reduced to /H110215k /H9024
+before the recording. Electromyographic (EMG) signals were recorded
+from the skin over the tibialis anterior muscles of both legs using stan-
+dard adhesive-fixed disposable Ag/AgCl surface electrodes. These EMG
+channels were also recorded using left and right mastoids as reference
+and ground, respectively. The EEG and EMG data were sampled at 512
+Hz, high pass filtered /H110220.1 Hz, and low pass filtered /H11021256 Hz. Foot
+contacts were measured by mechanical foot switches placed over the
+calcaneus bone in the heel of each foot. These switches produced event
+markers for gait cycle heel strike and heel off events. To record the exact
+timing of the auditory cues, we recorded the auditory stimulation via
+digital inputs to one of the amplifiers.
+Behavioral analysis. Two participant timing error correction processes
+have been distinguished: (1) period correction to bring the motor acts
+(here, heel strikes) into the same tempo as the stimulus sequence
+(
+Michon, 1967); and (2) phase correction to make the motor acts coin-
+cident with pacing stimulus onsets by compensating for any phase dif-
+ference (
+Repp, 2001a ,b). To assess sensorimotor synchronization, we
+thus analyzed phase correction and period correction separately. Phase
+correction was assessed by computing asynchronies between heel strikes
+and pacing tone onsets (for an overview, see
+Repp, 2005; Repp and Su,
+2013), whereas period correction was assessed by computing temporal
+differences between cue intervals (time intervals between consecutive cue
+onsets) and step intervals (or step onset asynchronies, intervals between
+consecutive heel strikes).
+Phase correction. For each trial, the relative phase angle difference be-
+tween each heel onset and the corresponding auditory cue was calculated.
+Phase was defined as phase /H11005360° /H11003(tcue /H11002tHS)/Tcue, with tcue (in
+milliseconds) denoting the time of cue onset, tHS denoting the time of
+the nearest heel strike, and Tcue denoting the time interval between
+consecutive ipsilateral step cues (
+Roerdink et al., 2007 ). For each trial,
+preshift coordination between steps and cues was quantified by comput-
+ing the mean and SD phase angle difference in the five steps immediately
+preceding the tempo shift. The time course of gait adjustments made by
+the participant to restore coordination following cue tempo shifts was
+quantified by calculating the phase difference from baseline for the 14
+steps following the shift and dividing by/H1100660 so that step phase at S0 (the
+first time-perturbed stimulus) was 60° (
+Roerdink et al., 2009 ; Pelton et
+al., 2010). Trials were excluded from analysis if any of the steps exceeded
+normalized phase of 180°, which corresponds to a 180° difference from
+premanipulation performance. Based on these criteria, on average 5 (SD
+/H110066) shift trials were excluded (6% of all trials).
+A2 /H1100314 repeated-measures ANOVA with factors “tempo shift” (long
+vs short) and “step number” (step numbers 1–14 following the shift) was
+used to assess significant differences in fidelity of adaptation between
+step-advance and step-delay shifts. Post hoc tests were corrected for mul-
+tiple comparisons a priori to a significance level of p /H110210.05 using false
+discovery rate (
+Benjamini and Yekutieli, 2001).
+EEG analysis. EEG data analysis was performed using custom scripts
+written in MATLAB2014a (The MathWorks) incorporating EEGLAB
+14.0b functions (
+Delorme and Makeig, 2004 ). In Wagner et al. (2012 ,
+2014), we showed that artifact contamination of the EEG during upright
+walking can be separated from the brain source data using Infomax In-
+dependent Component Analysis (ICA) (compare
+Onton et al., 2006 ;
+Gwin et al., 2010).
+The EEG data were high-pass filtered at 1 Hz (zero phase FIR filter,
+order 7500) to minimize slow drifts, and low pass filtered/H11021200 Hz (zero
+phase FIR filter, order 36). EEG channels with prominent artifacts were
+identified by visual inspection and removed. On average, 106 channels
+per participant (SD /H110062.2; range 102–108) remained for analysis. The
+EEG data were then rereferenced to a common average reference. After
+visually rejecting artifacts in the continuous EEG, the data were parti-
+tioned into epochs of 0.5 s and those epochs containing values exceeding
+the average of the probability distribution of values across the data seg-
+ments by /H110065 SD were rejected. On average, 45 postshift steps per condi-
+tion (80% of each participant’s EEG data) remained in the analysis (SD
+/H1100611%; range 71%– 89%).
+Next, the preprocessed EEG data were decomposed using adaptive
+mixture ICA (AMICA) (
+Palmer et al., 2006, 2008). AMICA is a general-
+ization of the Infomax ICA ( Bell and Sejnowski, 1995 ; Makeig et al.,
+1996) and multiple-mixture ( Lee et al., 1999 ; Lewicki and Sejnowski,
+2000) ICA approaches. AMICA performed blind source separation of all
+concatenated preprocessed data trials for each subject individually, based
+on the assumed temporal near-independence of the effective EEG
+sources (
+Makeig et al., 2002, 2004a).
+Using a standardized three-shell boundary element head model imple-
+mented in the DIPFIT toolbox within EEGLAB ( sccn.ucsd.edu/eeglab),
+Figure 2. Experimental paradigm. Throughout the session, treadmill speed remained fixed at a rate comfortable to the partic-
+ipant. During each approximately minute-long trial, participants first walked for/H1101110 s without auditory cues, then walked for
+10 –18 s synchronous with cue tones delivered at their then-prevailing step rate and phase. Thereafter, beginning at a right heel
+strike, a sudden (accelerated or decelerated) tempo shift occurred in the pacing cue sequence. In response, participants were
+instructed to adapt their step length, rate, and phase as quickly as possible so as to again synchronize their steps with the cue tones
+at the new tempo. After 30 –70 steps, the next trial began immediately, returning again to 10 s of uncued walking during which
+participants were instructed to return to their most comfortable step rate.
+2214 • J. Neurosci., February 17, 2016• 36(7):2212–2226 Wagner et al. • Distinct /H9252Band Networks during Gait Adaptation
+we calculated a best-fitting single equivalent current dipole matched to
+the scalp projection of each independent component (IC) source (Oost-
+enveld and Oostendorp, 2002; Delorme et al., 2012). Standard electrode
+locations corresponding to the Extended 10 –20 System were aligned
+with a standard brain model (MNI). We retained ICs for further analysis
+for which the equivalent dipole model was located within the brain and
+explained /H1102290% of variance of the IC scalp map.
+We visually inspected the remaining IC scalp maps, event-locked time
+courses, and mean power spectra to identify ICs related to nonbrain
+source artifacts (eye movement and scalp/neck muscle artifacts). Nonar-
+tifactual ICs were retained for further analysis. For these, feature vectors
+were constructed coding IC differences in dipole locations, scalp projec-
+tion maps, and power spectral densities (3– 45 Hz) (
+Makeig et al., 2002).
+Using principal component analysis, these feature vectors were reduced
+to 10 principal components and clustered using k-means (k /H1100518). ICs
+were identified as outliers if their locations in the clustering vector space
+were /H110225 SDs from the obtained cluster centers. Only clusters including
+ICs from more than half of the participants are reported here.
+Cortical IC clusters. Clustering gave three IC source clusters in frontal
+brain, one cluster in left temporal cortex, one in central midline cortex, and
+two in parietal areas. None of the obtained clusters included sources from all
+participants. Therefore, we inspected more closely the ICs included and ex-
+cluded from each cluster. For the frontal clusters, all ICs with an equivalent
+dipole in these brain areas exhibited event-related spectral perturbations
+(ERSPs) consistent with nearby ICs and were therefore included in a frontal
+source cluster. These clusters “missed” ICs from 5, 3, and 1 subjects, respec-
+tively. Parietal ICs omitted from parietal clusters were located either more
+anterior or more occipital relative to cluster ICs. The one temporal cluster
+included ICs from three participants whose ERSPs contained broadband
+spectral perturbation features possibly related to muscle artifact. These ICs
+were therefore removed from the cluster. ICs in central brain regions were
+somewhat more heterogeneous. Eleven of the 18 subjects contributed an IC
+to the central midline cluster. Components from the other 7 participants did
+not show a similar spectral pattern (4 ICs) or (3 ICs) had scalp maps that
+looked noisy, such that the associated dipoles explained/H1102190% of variance of
+the IC scalp map and were thus excluded or were oriented differently than
+other cluster ICs.
+There are several possible explanations for failures of some subjects’
+data to contribute an IC to an IC cluster. Possibly because of subject
+differences in channel noise, signal variability, or data quantity, ICA
+decomposition and/or IC clustering might not have been able to resolve
+or properly group these brain sources. Possibly, the presence of more
+spatially variegated artifacts in some subjects reduced the number of
+degrees of freedom in the data available for isolating brain source pro-
+cesses. Finally, the possibility that ICs “missing” from a cluster index
+actual differences in brain processing across subjects should not be re-
+jected out of hand (
+Onton et al., 2005).
+ERSPs. The data were segmented into time epochs relative to onsets of
+cue tempo shifts (i.e., from /H110024 to 10 s around the first right shift related
+heel strike). ERSPs ( Makeig, 1993) were computed for each IC. Single-
+trial spectrograms were computed and time warped to the median step
+latency (across subjects) using linear interpolation. This procedure
+aligned time points of right and left heel strikes over trials for the 7 heel
+strikes preceding and the 15 heel strikes following each tempo shift.
+Relative changes in spectral power were obtained by computing the mean
+difference between each single-trial log spectrogram and the mean base-
+line spectrum (the average log spectrum between /H110024 s and /H110020.5 s pre-
+ceding tempo shifts). Significant deviations from the baseline were
+detected using a nonparametric bootstrap approach (
+Delorme and
+Makeig, 2004). Figure 3 gives an overview of the analysis pipeline.
+To compute significant differences between step-advance and step-
+delay shifts, individual frequency bands were selected per subject by
+determining ranges from 8 –13 Hz (
+/H9251), 14 –20 Hz (lower /H9252), and
+21–35 Hz (upper /H9252) and choosing the frequency band with maximally
+varying power modulation over time. For statistical analysis, ERSPs
+relative to step-advance and step-delay shifts were computed by time
+warping single trial spectrograms to the same (group median) step
+latencies and subtracting the overall mean log spectrum for both
+conditions computed from /H110024st o /H110020.5 s before the tempo shift. For
+statistical analysis, we selected four time windows centered on the
+first left (L1) and second right (R2) steps following tempo shifts.
+A2 /H110034 repeated-measures within-subject ANOVA with factors
+“tempo shift” (long vs short) and “step number” (4 time windows) was
+computed for each IC cluster and each frequency range (
+/H9251, lower /H9252,
+upper /H9252) in the (individually subject-selected) dominant frequency
+range. Multiple comparisons were addressed by controlling for false dis-
+covery rate (
+Benjamini and Yekutieli, 2001) with an a priori significance
+level of p /H110210.05. In cases in which the assumption of sphericity was
+violated, significance values were corrected using Greenhouse-Geisser.
+ERPs. To understand better the origin of ERSPs relative to the
+tempo shifts in the auditory cue sequence (cue tempo shift) (e.g.,
+whether the tempo shift ERSP features were more related to the au-
+ditory perception of the cue tempo shifts or to the behavioral modi-
+fication of step timing), we analyzed averaged ERPs time-locked to
+the presentation of the first tempo-adjusted cue tones. In particular,
+this analysis revealed the latency following cue onset at which partic-
+ipants’ EEG signals first showed a reaction to the cue tempo shift,
+suggestive of the time point at which participants perceived the cue
+tempo shift. Comparing this latency to the latencies of the step-locked
+ERSP features of interest might indicate whether these ERSP features
+were related to the perception of the cue tempo shift itself or to the
+implementation of the responsive behavioral adaptation. Accord-
+ingly, ERPs were computed relative to (1) the first cue tone indicating
+a tempo shift (Rcue) and (2) the step (Rstep) nearest in time to the
+Rcue. We also assessed ERPs relative to cues and steps in a control
+condition consisting of steady-state walking to an auditory cue se-
+quence without tempo shift (cue no shift). We computed cluster
+mean ERPs and their 90% confidence intervals for IC processes in
+frontal, temporal, and central midline clusters, respectively. Next, to
+assess differences between cue- and step-locked ERPs, we shifted step-
+locked ERPs by the median latency between Rstep and Rcue, so that
+latency 0 in step-locked ERP plots corresponded to the median Rcue
+latency.
+On the cortical origin of ERSPs during walking. Two recent studies
+(
+Castermans et al., 2014 ; Kline et al., 2015 ) investigated movement-
+related artifacts in the EEG during upright walking and found con-
+tamination of the EEG data at frequencies from 1 to 150 Hz.
+Castermans et al. (2014 ) found similar time/frequency properties in
+accelerometer signals recorded from the head during walking and in
+EEG for frequency bands extending up to 150 Hz. To record pure
+movement artifacts from EEG electrodes on the human head,
+Kline et
+al. (2015 ) blocked electrophysiological signals by wearing a silicone
+swim cap as a nonconductive layer under a standard EEG cap. They
+observed movement artifacts, depending on walking speed and elec-
+trode location, from 1 to 150 Hz. In a follow-up analysis (
+Snyder et al.,
+2015), the same authors applied ICA to this pure artifact data. They
+showed that 99% of the obtained sources lacked dipolar characteris-
+tics and were located outside the head, whereas only 1% of the sources
+were localized inside the brain with residual variance /H1102115%. These
+component processes, however, had scalp maps, time courses, power
+spectra, and time-frequency changes much more typical of movement
+artifacts rather than brain source processes. Thus, movement artifacts
+do induce broadband frequency changes in signals recorded at scalp
+electrodes, but these nonbrain artifacts can be reliably identified and
+separated from brain source signals using ICA.
+Scalp and neck muscle activities can also contaminate EEG signals
+during movement (
+Gramann et al., 2010; Gwin et al., 2010, 2011; Seeber
+et al., 2014 ). Scalp EMG artifacts appear across frequencies /H1102220 Hz
+(Muthukumaraswamy et al., 2013; Castermans et al., 2014). By contrast,
+many EEG and electrocorticography studies show that electrocortical
+oscillations relative to motor or cognitive processing synchronize or de-
+crease in narrow frequency bands, including
+/H9262(7–12 Hz) and /H9252(15–30
+Hz) during restricted lower limb movements ( Pfurtscheller et al., 1997 ;
+Crone et al., 1998 ; Miller, 2007 ; Mu¨ller-Putz et al., 2007 ) and walking
+(Wagner et al., 2012 , 2014; Severens et al., 2012 ; Seeber et al., 2014 ).
+Broadband high-frequency power changes (within and beyond the /H9253
+band) have been suggested to play a distinct role in cortical processing
+(
+Onton and Makeig, 2009 ; Miller et al., 2014 ). Because cortical signals,
+Wagner et al.• Distinct /H9252Band Networks during Gait Adaptation J. Neurosci., February 17, 2016 • 36(7):2212–2226 • 2215
+biological noise, and mechanical artifacts possess distinct properties in
+waveform, frequency range, and spatial distribution, proper application
+of signal processing methods allows separation of these sources (
+Makeig
+et al., 1996 ; Gwin et al., 2010 ; Wagner et al., 2012 ; Seeber et al., 2014 ,
+2015; Snyder et al., 2015).
+In two previous studies ( Wagner et al., 2012 , 2014), we showed that
+considering carefully the location, time course, and the frequency
+spectra of the single independent components separated by ICA de-
+composition allows identification of sources related to brain activity.
+For a more detailed report on the artifacts during walking, see
+Wagner
+et al. (2012 ). Our previous results ( Wagner et al., 2012 , 2014; Seeber et
+al., 2014 , 2015)o n /H9252band suppression and high /H9253increases related to
+walking are in line with findings in the literature on the functional
+role of these rhythms in motor execution (
+Pfurtscheller et al., 1997 ;
+Crone et al., 1998 ; Miller, 2007 ; Mu¨ller-Putz et al., 2007 ). Addition-
+ally, the relatively slow walking speeds used in our studies have been
+found in previous studies not be heavily affected by artifacts (
+Gwin et
+al., 2010 ). This accumulated evidence indicates that the observed
+frequency-specific power modulations in the EEG presented in our
+current and previous studies are of cortical origin.
+Figure 3. Schematic overview of the EEG data-processing pipeline. (1) Single-subject data are decomposed by AMICA into maximally IC time courses (traces) with spatially fixed projections (scalp
+maps). (2) Single equivalent current dipole locations are estimated. (3) Nonbrain artifact sources are identified and removed from further processing. (4) Brain source ICs are clustered across subjects
+based on their scalp maps, dipole locations, and log power spectra. (5) Single trial spectrograms and mean, base spectrum-removed ERSP for one IC. (6)Single-IC ERSPs and IC cluster-mean ERSP
+relative to step-advance time shifts for the right frontal cluster.
+2216 • J. Neurosci., February 17, 2016• 36(7):2212–2226 Wagner et al. • Distinct /H9252Band Networks during Gait Adaptation
+Figure 4. ERSP image and behavioral adaptation following tempo shifts.A, Cluster mean scalp projection map and equivalent dipole locations of cluster ICs (blue spheres) and their centroid (red
+sphere) visualized in the MNI template brain and centered in r-dlPFC.B, Cue latency histograms (above) and cluster mean ERSP image (below) for the r-dlPFC IC source cluster in step-advance (step
+shortening) trials. Single-trial spectrograms were computed between /H110024 and 10 s around the first time-shifted cue (0 s indicates the target right heel strike). ( Figure legend continues. )
+Wagner et al.• Distinct /H9252Band Networks during Gait Adaptation J. Neurosci., February 17, 2016 • 36(7):2212–2226 • 2217
+Results
+Behavioral analysis
+The step onset asynchrony (StOA) before tempo shifts was on
+average 641 ms (SD /H110065.3 ms). Following tempo shifts, a new
+stable StOA was generally achieved within 3 /H110061 steps, as shown
+in
+Figure 4C. Step-delay shifts (60°) produced increases in both
+StOA (754 ms, calculated for the first 15 steps following shifts;
+SD /H1100614 ms) and step length, whereas step-advance shift ( /H1100260°)
+produced decreases in StOA (mean time between steps, 523 ms;
+SD /H1100613 ms) and step length. These changes were fairly large, on
+average 18% relative to baseline, slightly larger than the expected
+one-sixth (16.7%), although not significantly so.
+Period correction
+The evolution of adjustments in step rate to the two new pacing
+tempi for all participants are depicted in
+Figure 4D, which also
+shows the mean difference between StOA and cue onset asyn-
+chrony (COA). On average, step period adaptation was achieved
+within the first two steps (between L1 and R2). During the four
+following steps, an overcorrection (R2) occurred, after which
+participants stepped in near-exact synchrony to the new pacing
+sequence.
+Phase correction
+Negative StOA /H11002COA differences indicate that, during steady
+state, cue-synchronous walking step onsets slightly preceded
+stimulus onsets. During walking at the preferred cadence (e.g.,
+steps /H110027t o /H110021 before the shift), we observed that heel strikes
+were consistently ahead of the cues (mean difference, /H1100259 ms;
+SD /H1100643 ms) as shown by comparing the cue latency histograms
+with the median step latencies in the ERSP plot in
+Figure 4B and
+as evidenced by the negative pre-shift heel strike minus cue dif-
+ference in
+Figure 4E. This difference matches a well-known phe-
+nomenon called “phase lead” in finger tap synchronization
+studies. It has been suggested that this difference approximates
+the difference between the times of delivery of the sensory infor-
+mation from the tip of the finger and the auditory information
+from cue onset to the cortical areas in which their timing is
+compared. Thus, to establish synchrony at the level of central
+representations, finger taps should precede the auditory signals
+(
+Aschersleben and Prinz, 1995, 1997). Adjustment of steps relative
+to cues was achieved within 6 steps following tempo shifts. As shown
+in
+Figure 4E, the phase lead between steps and cues (measured from
+steps 7–15 following the shift) became larger in step-delay (step
+lengthening) trials (mean,/H11002122 ms; SD/H1100661 ms) and became pos-
+itive in step-advance (step shortening) trials (mean, 19 ms; SD/H1100636
+ms).
+Calculation of the normalized relative phase revealed differ-
+ences in adaptation relative to positive and negative step rate
+changes, respectively. The direction of the tempo shift signifi-
+cantly affected synchronization accuracy (significant interaction,
+F
+(13,221) /H110055.2, p /H110050.00025). Post hoc tests revealed a significantly
+larger initial phase deviation at steps L1 and R2 in step-advance
+compared with step-delay trials. Also, as shown in Figure 4 F,
+when participants reached stable postshift cue synchronization,
+asynchronies between steps and cues were significantly larger in
+step-advance than in step-delay trials. This suggests that partici-
+pants had fewer difficulties in adapting to step-delay compared
+with step-advance shifts.
+Cortical IC source clusters
+Together, three IC source clusters in frontal brain, one cluster in
+left temporal cortex, one in central midline cortex, and two in
+parietal areas showed event-related changes in
+/H9251and /H9252band
+power following cue tempo shifts. The numbers of subjects and
+sources contained in each cluster as well as Tailarach coordinates
+of the cluster centroids are given in
+Table 1.
+ERP features
+Cue-locked ERPs in the left temporal and in the right frontal
+clusters (
+Fig. 5A) clearly show an “N100-like” negative deflection
+near 100 ms (right frontal cluster) or 150 ms (left temporal clus-
+ter) during all three conditions (cue advance, cue delay, and cue
+no shift) (
+Fig. 5 A). An early negative (N100) peak in anterior
+scalp electrode channels has been related to auditory processing
+(
+Parasuraman, 1980; Makeig et al., 1997 ). Cluster ERPs for the
+frontal central and right frontal cluster include positive deflec-
+tions near 250 ms in cue delay and at 300 – 400 ms in cue advance
+tempo shifts, although not in the cue no shift condition. A frontal
+positive deflection near 300 ms after a target stimulus onset [P300
+or late positive component (LPC)] typically follows the detection
+of novel, rare, or unpredicted sounds (
+Makeig et al., 2004 ; De-
+bener et al., 2005 ; Luck and Kappenman, 2011 ). In the central
+midline cluster, we observed a negative peak in the ERP near 250
+ms following cue delay tempo shifts. A small but significant neg-
+ative deflection 100 ms later occurred following cue advance
+shifts (in
+Fig. 5 , the 90% confidence interval does not include
+zero). This peak approximates the location and timing of the
+feedback related negativity (FRN) following presentation of feed-
+back indicating that the participant has committed a response
+error (
+Holroyd and Coles, 2002; Hajcak et al., 2006).
+Compared with cue-locked ERPs, step-locked ERPs lacked
+N100-like ERP peaks and exhibited smaller negative and positive
+peaks in the 250 –300 ms interval (
+Fig. 5 B). Cue-locked ERP
+peaks following cue delay tempo shifts were significantly larger
+than step-locked ERP features, suggesting that the observed
+P300- and FRN-like ERP peaks are related to the detection of the
+4
+(Figure legend continued.) To construct the group-mean ERSP for each subject, the single-
+trial EEG spectrograms were first time warped to the group-median latencies of the heel strikes
+during the imaged interval (red vertical lines in the cue latency histograms). Relative changes in
+spectral power were obtained by subtracting the mean log spectrum in the interval /H110024st o
+/H110020.5 s before the shifts. Nonsignificant changes from baseline are masked in gray. Vertical lines
+indicate right and left heel strikes. R’s and L’s indicate right and left foot placements, respec-
+tively. Dashed horizontal lines indicate
+/H9251(8 –13 Hz), lower/H9252(13–20 Hz), and upper/H9252(20 –35
+Hz) bands. The ERSP plot shows, first, a synchronization in the/H9252band between the second and
+third heel strikes following the tempo shift, and then later a desynchronization with respect to
+baseline. C, Behavioral record: Median step onset asynchronies (StOAs) (blue and red traces) for
+each subject in the two conditions (step advance and delay), and cue onset asynchronies (COAs)
+(gray traces) in milliseconds. D, Difference between StOA and COA at each step; this reflects
+adaptation of step frequency to the perturbed pacing cue tempo.E, Time intervals (in millisec-
+onds) between heel strikes and nearest cue onsets reflect sensorimotor synchronization perfor-
+mance (e.g., step adaptation to the tempo-shifted cue sequence).F, Absolute step-cue phase
+difference (in degrees of the baseline cue cycle).
+Table 1. IC clusters and cluster centroid locations
+Cluster
+No. of subjects/
+sources (ICs)
+Tailarach
+coordinates
+Brodmann
+area Cortical location
+Left temporal 13/14 ICs /H1100242, /H1100210, /H110025 BA21 Temporal lobe
+Frontal central 15/15 ICs /H110021, 39, 31 BA9 Medial prefrontal cortex
+Left frontal 13/15 ICs /H1100228, 20, 25 BA9 Dorsolateral prefrontal cortex
+Right frontal 17/19 ICs 28, 20, 29 BA9 Dorsolateral prefrontal cortex
+Central midline 11/11 ICs 3, /H110022, 47 BA6 Supplementary motor area
+Left parietal 14/16 ICs /H1100234,/H1100229, 42 BA40 Parietal cortex
+Right parietal 13/16 ICs 35, /H1100244, 37 BA40 Parietal cortex
+2218 • J. Neurosci., February 17, 2016• 36(7):2212–2226 Wagner et al. • Distinct /H9252Band Networks during Gait Adaptation
+Figure 5. ERPs time-locked to cues and steps at tempo shifts in cue advance, cue delay, and control cue no tempo shift conditions for frontal, temporal, and central midline clusters. Zero marks
+(A) the first cue indicating a tempo shift (Rcue), (B) the step (Rstep) related to Rcue,o r(A, B) simply the cue/step during steady-state walking (control condition). Dashed vertical lines mark right (Rstep)
+and left (Lstep) heel strikes. Continuous vertical lines mark cues (Rcue,L cue) related to Rstep and Lstep, and the expected occurrence of cues (expcue) at tempo shifts. Event-locked time courses indicate
+averaged cluster ERPs relative to cue/step -advance (pink), -delay (blue), and -no tempo shift (black). Envelopes represent 90% confidence intervals around means.A, During all three conditions (cue
+advance, cue delay, and cue no shift), cue-locked ERPs feature a prominent negative deflection near 100 ms (right frontal cluster) or 150 ms (left temporal cluster). Frontal central and right frontal
+cluster ERPs include a positive peak near 250 ms after tempo shifts for cue delay and 300 – 400 ms for cue advance but are absent for the cue no shift condition. In the central midline cluster, following
+cue delay tempo shifts, a negative peak appears near 250 ms. Following cue advance tempo shifts, a small but significant negative deflection occurs 100 ms later.B, Step-locked ERPs exhibit similar
+but smaller ERP peaks 250 –300 ms after Rstep.
+Wagner et al.• Distinct /H9252Band Networks during Gait Adaptation J. Neurosci., February 17, 2016 • 36(7):2212–2226 • 2219
+cue tempo shift. Following cue advance tempo shifts, significant
+differences between cue-locked and step-locked ERPs appeared
+only for N100-like ERP components but not for P300- and FRN-
+like ERP components. One possible explanation would be that,
+during cue advance tempo shifts, the premature cue tone as well
+as the step about to be taken are perceived as deviant. Thus,
+processing of cue advance tempo shifts is possibly related to both
+the steps and the cues.
+Figure 6. Equivalent dipole source locations and cluster-mean scalp projections and ERSP images for IC source clusters centered in temporal and frontal cortex. From left to right in each row, Mean
+scalp projection; equivalent dipole locations of cluster ICs; cue onset histogram and cluster-mean ERSP images time-locked to (left) step lengthen ing (step delay) and (right) shortening (step
+advance) tempo shifts as marked by the onset of the first time-shifted cue (the nearest cue to the right heel strike at 0 s). Single-trial log spectrograms were time warped to median step latencies
+before averaging. Mean log power at each frequency from/H110024st o /H110020.5 s before the tempo shift was subtracted to obtain relative changes in log spectral power. Nonsignificant changes from
+baseline are masked in gray. All three IC clusters show increases in mean/H9252band power between the second and fourth heel strikes following the shift.
+2220 • J. Neurosci., February 17, 2016• 36(7):2212–2226 Wagner et al. • Distinct /H9252Band Networks during Gait Adaptation
+The N100-like negative deflections in cue-locked ERPs in the
+left temporal and right frontal cluster for all conditions (cue ad-
+vance, cue delay, and cue no shift) indicate that processing of the
+auditory cue events was ongoing at 100 ms after Rcue. The P300-
+and FRN-like ERP peaks following cue advance and cue delay
+tempo shifts, not present in the no shift cue condition, indicate
+that participants perceived the cue tempo shifts by 250 –300 ms
+after Rcue onsets.
+ERSPs
+Figure 4 A, B shows cluster location and mean cluster spectral
+shifts time-locked to step-advance shifts for the right frontal cor-
+tex cluster. Comparing spectral shifts (
+Fig. 4 B) and behavioral
+data (Fig. 4C–F ), a right frontal /H9252band increase coincides with
+the main adaptation period during steps 2– 4 following the shift.
+While, as shown in Figures 4B, 6, and 7, during the first four steps
+after the shift frontal and temporal clusters exhibited significant
+transient increases in
+/H9251and/or /H9252power (13–20 Hz in frontal
+clusters, 7–20 Hz in the left temporal cluster), /H9262and /H9252band
+power in central midline and parietal clusters decreased during
+this time period (
+Figs. 8, 9). Interestingly, for the left and right
+parietal clusters (Fig. 9), this desynchronization lasted at least 15
+steps following tempo shifts and was most pronounced just be-
+fore contralateral heel strikes. The parietal cluster desynchroni-
+zation was prominent and long lasting in two frequency bands:
+/H9262
+(7–12 Hz) and high /H9252(18 –30 Hz).
+In central medial sources ( Fig. 8), however, the desynchroni-
+zation was not as strong but included higher frequencies (up to 35
+Hz) and began immediately following tempo shifts. Only the
+right frontal cluster showed a significant ERSP difference be-
+Figure 7. Significant ERSP differences between adaptations to step-advance and step-delay tempo shifts for an IC cluster centered in right dorsolateral frontal cortex. Top, Mean scalp projection
+and equivalent dipole locations of cluster ICs. Bottom (above), Cue tone onset histograms and (below left, center) cluster-mean ERSP images for step-delay and step-advance trials, respectively,
+time-locked (0 s) to the right heel strike nearest to the first tempo-shifted cue tone, and (right) the difference between these two adaptation responses. Significance of condition differences was
+estimated using a bootstrap approach corrected for multiple comparisons using false discovery rate. Nonsignificant differences are masked in gray. The difference ERSP shows a stronger/H9252band
+power increase near the second and third post-shift steps in the step-advance condition than in (subjectively easier) step-delay adaptations.
+Figure 8. Equivalent dipole source locations and cluster-mean scalp projections and ERSP images for an IC source cluster centered in the supplementary motor area. Cluster-mean ERSP images
+time-locked to step lengthening and step shortening tempo shifts include desynchronization in the upper/H9252band (25–35 Hz).
+Wagner et al.• Distinct /H9252Band Networks during Gait Adaptation J. Neurosci., February 17, 2016 • 36(7):2212–2226 • 2221
+Figure 9. Equivalent dipole source locations and cluster-mean scalp projections and ERSP images for IC source clusters in left and right parietal cortex. Cluster-mean ERSP images for step-delay
+and step-advance conditions were computed and visualized as inFigure 4. Single-trial spectrograms were time warped to median step latencies for heel strikes/H110027 to 15 before and after tempo shift
+onsets. ERSP images show long-lasting, shift-induced decreases in/H9251and /H9252band power maximal just before heel strikes of the foot contralateral to the cortical location.
+Figure 10. /H9252-band spectral perturbations in frontal clusters. Individual/H9252frequency bands were selected for each individual subject as the frequency within the range 14 –20 Hz having maximal
+ERSP power variance. For statistical analysis, mean/H9252-band ERSP time courses time-locked to step-advance and step-delay tempo shifts were computed. Heel strike events were time warped to the
+same (median) latencies in step-delay and step-advance shift trials. Blue and pink lines and areas represent mean/H9252band power as a function of trial latency and its 95% confidence interval. Only
+the right frontal cluster shows a significant difference between step advances and step delays (note the nonoverlapping confidence intervals).
+2222 • J. Neurosci., February 17, 2016• 36(7):2212–2226 Wagner et al. • Distinct /H9252Band Networks during Gait Adaptation
+tween step-delay and step-advance trials; this was in the lower /H9252
+band (14 –20 Hz) ( F(1,18) /H110059.67, p /H110050.006). This significant
+difference is highlighted in Figure 10 , showing median /H9252band
+ERSP time course and its confidence intervals in step-advance
+and step-delay shift conditions for each frontal cluster. The
+difference-ERSP map for the right dorsolateral prefrontal cortex
+(r-dlPFC) cluster (
+Fig. 7 ) also showed a significantly larger in-
+crease in /H9252band power in step-advance compared with step-
+delay trials during the first left and second right foot steps
+following tempo shifts.
+Discussion
+Use of a novel sensorimotor gait synchronization task, coupled
+with advanced EEG source signal processing methods, revealed
+two different
+/H9252band oscillatory networks involved in orchestrat-
+ing motor adjustments during gait adaptation. Our results com-
+bined
+/H9262and /H9252band power desynchronization (blocking) in
+motor and parietal cortex (PPC) with a concurrent/H9252band power
+increase in PFC. This indicates two distinct patterns of /H9252band
+activity during gait control: (1) a motor cortical /H9262and /H9252band
+decrease expressing motor execution and motor readiness related
+to gait movements (as in
+Pfurtscheller and Lopes da Silva, 1999 ;
+Neuper et al., 2006; Wagner et al., 2012, 2014; Seeber et al., 2014);
+and (2) a frontal /H9252band increase related to cognitive top-down
+control (Swann et al., 2009;a si n Buschman et al., 2012).
+Observed /H9262(7–13 Hz) and /H9252band desynchronization (13–30
+Hz) (Figs. 8, 9) in the motor system after a shift in tempo of the
+pacing cue sequence may reflect an increased disposition for mo-
+tor adjustments, as suggested by
+Engel and Fries (2010), possibly
+guided by the PFC as proposed byMiller and Cohen (2001; Siegel
+et al., 2012 ). The fact that we observed temporary increase in a
+frontal /H9252band oscillatory network (13–20 Hz; Figs. 6 , 7, 10)
+during step tempo adaptation may reflect action monitoring and
+top-down signaling from PFC to sensorimotor cortex. Our re-
+sults also show that
+/H9252band power in r-dlPFC was modulated by
+task difficulty. This lateralized frontal /H9252band power increase
+during step shortening may represent neurocognitive response
+inhibition processes that actively involve or are accompanied by
+locally synchronous cortical
+/H9252band oscillations.
+Frontal /H9252band oscillations in motor control
+Near the second and third heel strikes following shift onsets (Figs.
+6, 7, 10), we observed an increase in/H9252band power in EEG sources
+localized to left, central, and right frontal cortex ( Table 1 ). As
+proposed by Miller and Cohen (2001), these regions may play an
+important role in the top-down signaling of current behavioral
+goals to guide adjustment of motor plans. In our task, the partic-
+ipant’s goal was to adapt their gait to cue-induced shifts in step
+tempo involving either a (more difficult) step cue phase advance
+or an (easier) phase delay. Comparison between decelerations
+and accelerations revealed significantly higher
+/H9252power in the
+r-dlPFC during step-advance trials ( Figs. 7, 10). This result is in
+line with our hypothesis and results of the study by Swann et al.
+(2009) showing a relationship between /H9252band (/H1101116 Hz) power
+increase in the right inferior frontal gyrus and successful response
+inhibition in a stop signal task. Because in our task step shorten-
+ing (in step-advance trials) required inhibiting execution of the
+accustomed full stride action, it is probable that this process re-
+quires more explicit motor inhibition than step lengthening.
+Indeed, our behavioral results show that participants per-
+formed significantly more accurate step delay (step lengthening)
+than step advance (step shortening) performance (i.e., they
+stepped closer in time to the step-delay cues). This is in line with
+finger tapping studies showing that motor adaptation is some-
+what faster to decelerations than to accelerations (
+Michon, 1967).
+Our results are the first neurophysiological evidence for previous
+hypotheses that behavioral preference for longer step adaptation
+responses in stroke patients (
+Roerdink et al., 2009) and dual task
+paradigms (Lovden et al., 2008 ; Li et al., 2012 ; De Sanctis et al.,
+2014) is associated with the higher demands of cognitive control
+and inhibition involved in step shortening.
+Studies have shown that, whereas r-dlPFC is associated with
+response inhibition (Swann et al., 2009; Aron et al., 2014), medial
+and left PFC may relate to error detection ( Rubia et al., 2003 ;
+Ridderinkhof et al., 2004 ) and to motor adjustment ( Miller and
+Cohen, 2001 ; Ku¨bler et al., 2006 ; Cavanagh et al., 2009 , 2010;
+Wittfoth et al., 2009 ), respectively. This lateral dissociation is in
+line with our results as only the r-dlPFC source cluster showed a
+difference between step-advance and step-delay trials, whereas
+medial and left PFC showed
+/H9252band power increased during both
+gait accelerations and decelerations.
+It has been proposed that frontal cortex interacts with basal
+ganglia structures during motor suppression and that this inter-
+action occurs via
+/H9252band oscillations (Ku¨hn et al., 2004; Lalo et al.,
+2008). /H9252band synchrony within the basal ganglia-cortical loop
+promotes tonic activity that is detrimental to voluntary move-
+ment, thus providing further evidence for the role of
+/H9252band
+oscillations in motor inhibition ( Jenkinson and Brown, 2011).
+The results of our ERP analysis indicate that participants per-
+ceived the cue tempo shift after 100 ms (Fig. 5) and responded to
+it as early as 250 ms following the Rcue. In contrast, the /H9252band
+changes we observed began as late as 500 ms following Rcue and
+were maintained up to 2000 ms, too late to be related to the pure
+perception of the cue tempo shift and corresponding to the pe-
+riod when most of the behavioral step adaptation was taking
+place.
+Fujioka et al. (2009), for example, showed a /H9252band power
+rebound much earlier (100 ms and lasting up to 450 ms) follow-
+ing the omission of a sound from a steady rhythmic sequence.
+Thus, the frontal
+/H9252band synchronization following Rcue events
+we observed was not likely related to the simple detection or
+processing of the cue tempo shift, but likely reflects top-down
+application of the perceived cue tempo shift to behavioral step
+adaptation.
+Feedback motor control in parietal and central-midline
+cortices
+The parietal source cluster ERSPs showed a prominent and long-
+lasting decrease in two frequency bands,
+/H9262(7–12 Hz) and /H9252
+(18 –30 Hz) in (Fig. 9), whereas /H9252band power decrease in medial
+central regions was brief and also involved higher frequencies (up
+to 35 Hz) (
+Fig. 8 ). This may suggest that these clusters index
+different perceptual processes and/or different aspects of gait ad-
+aptation.
+/H9262and /H9252band power desynchronization in left and right
+PPC was strongest close in time to contralateral heel strikes dur-
+ing the first up to 17 steps after cue tempo shifts. This may index
+brain activity involved in the process of matching of heel strikes
+to auditory cue onsets. Because auditory, visual, and tactile infor-
+mation converges in parietal regions, PPC has been proposed as
+sensorimotor interface responsible for multisensory integration
+with ongoing movements (
+Buneo et al., 2002; Buneo and Ander-
+sen, 2006). Thus, PPC may play a key role for anticipatory motor
+control by sensorimotor feedback matching ( Thaut et al., 2008 ;
+Krause et al., 2012, 2014).
+Krause et al. (2014 ) have shown that inhibition of the PPC
+interrupts a matching process of anticipated and real sensorimo-
+tor feedback during synchronization but not during continua-
+Wagner et al.• Distinct /H9252Band Networks during Gait Adaptation J. Neurosci., February 17, 2016 • 36(7):2212–2226 • 2223
+tion tapping. In a previous study, we showed a decrease in /H9262and
+/H9252band power in PPC during visually guided gait adaptation in a
+virtual environment, suggesting that the PPC is involved in
+matching steps to visual input (
+Wagner et al., 2014). Taking into
+account our current results, the known role of the PPC in map-
+ping visual representations with motor output in space (
+Buneo
+and Andersen, 2006 ) may extend to matching times of occur-
+rence of (expected) auditory and motor events.
+Participants performed most adaptation within the first three
+steps following cue tempo shifts, including a rapid adaptation of
+step period and beginning a gradual reduction in the phase dif-
+ference between steps and cues. Finger tapping studies have also
+shown that a small sudden tempo change in the pacing sequence
+tends to be followed by rapid adaptation of the tapping period
+accompanied by slow adaptation of tapping phase (
+Thaut et al.,
+1998). Thus, the transient frontal /H9252band power increase we ob-
+serve may index step period adaptation, whereas the longer-
+lasting parietal
+/H9262and /H9252band decreases may relate to step phase
+correction.
+/H9252band oscillations in temporal prediction
+Interestingly, /H9252band activity in both sensory and motor systems
+seems to reflect anticipatory processes. In the motor system, an
+upcoming action is reflected in decreased motor cortical
+/H9252band
+activity that may begin several seconds before execution (Donner
+et al., 2009 ), and /H9252band corticospinal coherence increases with
+decreasing likelihood of an upcoming action ( Schoffelen et al.,
+2005). In auditory cortex, violation of top-down expectation
+(e.g., the omission of a sound from a regular beat sequence)
+induces a
+/H9252band power increase ( Fujioka et al., 2009 ) that may
+represent an expectation mismatch response.
+Similar to these findings, our results also revealed an /H9251and
+lower /H9252band power (7–20 Hz) increase in a temporal cortex
+source cluster following tempo shifts ( Fig. 6). Synchronization-
+continuation tapping studies indicate that/H9252band power is linked
+to the development of subjective time and to the guidance of
+internally driven motor sequences (
+Bartolo et al., 2014 ; Bartolo
+and Merchant, 2015). Precise sensorimotor timing and anticipa-
+tion of subsequent events are essential to quick adjustment of
+movements with respect to external changes. Thus, the
+/H9252band
+activity we observed could point to wider roles of /H9252band oscilla-
+tions in the updating of internal representations for upcoming
+actions and events (
+Engel and Fries, 2010 ; Arnal and Giraud,
+2012) to prepare corrective motor adjustments.
+Summary and future directions
+In conclusion, our results show two distinct patterns of /H9252band
+oscillatory activity changes following step pacing cue tempo per-
+turbations and suggest that these accompany or subserve motor
+and cognitive control processes, respectively. To our knowledge,
+this is the first study to show neural correlates of these two dis-
+tinct mechanisms acting concurrently in the service of gait adap-
+tation. The size of the
+/H9252band power increase in or near r-dlPFC
+was modulated according to adaptation difficulty, possibly re-
+flecting engagement of additional movement control resources
+and providing the first evidence that gait adaptation strategies
+involving step shortening require more cortical inhibition/con-
+trol compared with step lengthening. Taking into account our
+results, deficits in gait adaptation are most probably due to an
+impairment of prefrontal control guiding motor inhibition. This
+idea has been previously tested in two TMS studies (
+del Olmo et
+al., 2007 ; Lee et al., 2014 ). Authors stimulated r-dlPFC using
+repetitive TMS at 10 Hz (no other frequencies were tested). Both
+studies showed improvement in the temporal regularity and pace
+of gait and tapping, but not of Parkinson symptoms. Our results
+(along with those of
+Swann et al., 2009) suggest that stimulation
+at a higher frequency (16 –17 Hz) might prove more effective.
+Such interventions might be used for voluntary motor suppres-
+sion training with real-time feedback of motor cortical
+/H9252oscilla-
+tions and motor-evoked potentials (as proposed by Majid et al.,
+2015).
+References
+Androulidakis AG, Doyle LM, Yarrow K, Litvak V, Gilbertson TP, Brown P
+(2007) Anticipatory changes in beta synchrony in the human corticospi-
+nal system and associated improvements in task performance. Eur J Neu-
+rosci 25:3758 –3765.
+CrossRef Medline
+Arnal LH, Giraud AL (2012) Cortical oscillations and sensory predictions.
+Trends Cogn Sci 16:390 –398. CrossRef Medline
+Aron AR, Robbins TW, Poldrack RA (2014) Inhibition and the right infe-
+rior frontal cortex: one decade on. Trends Cogn Sci 18:177–185.CrossRef
+Medline
+Aschersleben G, Prinz W (1995) Synchronizing actions with events: the role
+of sensory information. Percept Psychophys 57:305–317. CrossRef
+Medline
+Aschersleben G, Prinz W (1997) Delayed auditory feedback in synchroniza-
+tion. J Mot Behav 29:35– 46. CrossRef Medline
+Bank PJ, Roerdink M, Peper CE (2011) Comparing the efficacy of metro-
+nome beeps and stepping stones to adjust gait: steps to follow! Exp Brain
+Res 209:159 –169.
+CrossRef Medline
+Bartolo R, Prado L, Merchant H (2014) Information processing in the pri-
+mate basal ganglia during sensory-guided and internally driven rhythmic
+tapping. J Neurosci 34:3910 –3923.
+CrossRef Medline
+Bartolo R, Merchant H (2015) /H9252oscillations are linked to the initiation of
+sensory-cued movement sequences and the internal guidance of regular
+tapping in the monkey. J Neurosci 35:4635– 4640.
+CrossRef Medline
+Bell AJ, Sejnowski TJ (1995) An information-maximization approach to
+blind separation and blind deconvolution. Neural Comput 7:1129 –1159.
+CrossRef Medline
+Benjamini Y, Yekutieli D (2001) The control of the false discovery rate in
+multiple testing under dependency. Ann Stat 29:1165–1188. CrossRef
+Buneo CA, Jarvis MR, Batista AP, Andersen RA (2002) Direct visuomotor
+transformations for reaching. Nature 416:632– 636. CrossRef Medline
+Buneo CA, Andersen RA (2006) The posterior parietal cortex: sensorimotor
+interface for the planning and online control of visually guided move-
+ments. Neuropsychologia 44:2594 –2606.
+CrossRef Medline
+Buschman TJ, Miller EK (2007) Top-down versus bottom-up control of
+attention in the prefrontal and posterior parietal cortices. Science 315:
+1860 –1862.
+CrossRef Medline
+Buschman TJ, Denovellis EL, Diogo C, Bullock D, Miller EK (2012) Syn-
+chronous oscillatory neural ensembles for rules in the prefrontal cortex.
+Neuron 76:838 – 846.
+CrossRef Medline
+Castermans T, Duvinage M, Cheron G, Dutoit T (2014) About the cortical
+origin of the low-delta and high-gamma rhythms observed in EEG signals
+during treadmill walking. Neurosci Lett 561:166 –170.
+CrossRef Medline
+Cavanagh JF, Cohen MX, Allen JJ (2009) Prelude to and resolution of an
+error: EEG phase synchrony reveals cognitive control dynamics during
+action monitoring. J Neurosci 29:98 –105.
+CrossRef Medline
+Cavanagh JF, Frank MJ, Klein TJ, Allen JJ (2010) Frontal theta links predic-
+tion errors to behavioral adaptation in reinforcement learning. Neuroim-
+age 49:3198 –3209.
+CrossRef Medline
+Cheron G, Duvinage M, De Saedeleer C, Castermans T, Bengoetxea A,
+Petieau M, Seetharaman K, Hoellinger T, Dan B, Dutoit T, Sylos Labini F,
+Lacquaniti F, Ivanenko Y (2012) From spinal central pattern generators
+to cortical network: integrated BCI for walking rehabilitation. Neural
+Plast 2012:375148.
+CrossRef Medline
+Crone NE, Miglioretti DL, Gordon B, Sieracki JM, Wilson MT, Uematsu S,
+Lesser RP (1998) Functional mapping of human sensorimotor cortex
+with electro-corticographic spectral analysis. Brain 121:2271–2299.
+CrossRef Medline
+Debener S, Makeig S, Delorme A, Engel AK (2005) What is novel in the
+novelty oddball paradigm? Functional significance of the novelty P3
+event-related potential as revealed by independent component analysis.
+Cogn Brain Res 22:309 –321.
+CrossRef Medline
+2224 • J. Neurosci., February 17, 2016• 36(7):2212–2226 Wagner et al. • Distinct /H9252Band Networks during Gait Adaptation
+del Olmo MF, Bello O, Cudeiro J (2007) Transcranial magnetic stimulation
+over dorsolateral prefrontal cortex in Parkinson’s disease. Clin Neuro-
+physiol 118:131–139.
+CrossRef Medline
+Delorme A, Makeig S (2004) EEGLAB: an open source toolbox for analysis
+of single-trial EEG dynamics including independent component analysis.
+J Neurosci Methods 134:9 –21.
+CrossRef Medline
+Delorme A, Palmer J, Onton J, Oostenveld R, Makeig S (2012) Independent
+EEG sources are dipolar. PLoS One 7:e30135. CrossRef Medline
+Den Otter AR, Geurts AC, de Haart M, Mulder T, Duysens J (2005) Step
+characteristics during obstacle avoidance in hemiplegic stroke. Exp Brain
+Res 161:180 –192.
+CrossRef Medline
+De Sanctis P, Butler JS, Malcolm BR, Foxe JJ (2014) Recalibration of inhib-
+itory control systems during walking-related dual-task interference: a
+mobile brain-body imaging (MOBI) study. Neuroimage 94:55– 64.
+CrossRef Medline
+Donner TH, Siegel M, Fries P, Engel AK (2009) Build-up of choice predic-
+tive activity in human motor cortex during perceptual decision making.
+Curr Biol 19:1581–1585.
+CrossRef Medline
+Engel AK, Fries P (2010) Beta-band oscillations: signaling the status quo?
+Curr Opin Neurobiol 20:156 –165. CrossRef Medline
+Fujioka T, Trainor LJ, Large EW, Ross B (2009) Beta and gamma rhythms in
+human auditory cortex during musical beat processing. Ann N Y Acad Sci
+1169:89 –92.
+CrossRef Medline
+Geerligs L, Saliasi E, Maurits NM, Lorist MM (2012) Compensation
+through increased functional connectivity: neural correlates of inhibition
+in old and young. J Cogn Neurosci 24:2057–2069.
+CrossRef Medline
+Gilbertson T, Lalo E, Doyle L, Di Lazzaro V, Cioni B, Brown P (2005) Ex-
+isting motor state is favored at the expense of new movement during
+13–35 Hz oscillatory synchrony in the human corticospinal system.
+J Neurosci 25:7771–7779.
+CrossRef Medline
+Gola M, Kamin˜ski J, Brzezicka A, Wro´ bel A (2012) Beta band oscillations as
+a correlate of alertness: changes in aging. Int J Psychophysiol 85:62– 67.
+CrossRef Medline
+Gola M, Magnuski M, Szumska I, Wro´ bel A (2013) EEG beta band activity is
+related to attention and attentional deficits in the visual performance of
+elderly subjects. Int J Psychophysiol 89:334 –341.
+CrossRef Medline
+Gramann K, Gwin JT, Bigdely-Shamlo N, Ferris DP, Makeig S (2010) Visual
+evoked responses during standing and walking. Front Hum Neurosci
+4:202.
+CrossRef Medline
+Gwin JT, Gramann K, Makeig S, Ferris DP (2010) Removal of movement
+artifact from high-density EEG recorded during walking and running.
+J Neurophysiol 103:3526 –3534.
+CrossRef Medline
+Gwin JT, Gramann K, Makeig S, Ferris DP (2011) Electrocortical activity is
+coupled to gait cycle phase during treadmill walking. Neuroimage 54:
+1289 –1296.
+CrossRef Medline
+Haefeli J, Vo¨geli S, Michel J, Dietz V (2011) Preparation and performance of
+obstacle steps: interaction between brain and spinal neuronal activity. Eur
+J Neurosci 33:338 –348.
+CrossRef Medline
+Hajcak G, Moser JS, Holroyd CB, Simons RF (2006) The feedback-related
+negativity reflects the binary evaluation of good versus bad outcomes. Biol
+Psychol 71:148 –154.
+CrossRef Medline
+Hofstad CJ, van der Linde H, Nienhuis B, Weerdesteyn V, Duysens J, Geurts
+AC (2006) High failure rates when avoiding obstacles during treadmill
+walking in patients with a transtibial amputation. Arch Phys Med Rehabil
+87:1115–1122.
+CrossRef Medline
+Holroyd CB, Coles MG (2002) The neural basis of human error processing:
+reinforcement learning, dopamine, and the error-related negativity. Psy-
+chol Rev 109:679 –709.
+CrossRef Medline
+Jasper H, Penfield W (1949) Electrocorticograms in man: effect of voluntary
+movement upon the electrical activity of the precentral gyrus. Arch Psy-
+chiatr Nervenkrankheiten 183:163–174.
+CrossRef
+Jenkinson N, Brown P (2011) New insights into the relationship between
+dopamine, beta oscillations and motor function. Trends Neurosci 34:
+611– 618.
+CrossRef Medline
+Joundi RA, Jenkinson N, Brittain JS, Aziz TZ, Brown P (2012) Driving os-
+cillatory activity in the human cortex enhances motor performance. Curr
+Biol 22:403– 407.
+CrossRef Medline
+Kline JE, Huang HJ, Snyder KL, Ferris DP (2015) Isolating gait-related
+movement artifacts in electroencephalography during human walking.
+J Neural Eng 12:46022.
+CrossRef Medline
+Koenraadt KL, Roelofsen EG, Duysens J, Keijsers NL (2014) Cortical con-
+trol of normal gait and precision stepping: an fNIRS study. Neuroimage
+85:415– 422. CrossRef Medline
+Krause V, Bashir S, Pollok B, Caipa A, Schnitzler A, Pascual-Leone A (2012)
+1 Hz rTMS of the left posterior parietal cortex (PPC) modifies sensori-
+motor timing. Neuropsychologia 50:3729 –3735.
+CrossRef Medline
+Krause V, Weber J, Pollok B (2014) The posterior parietal cortex (PPC)
+mediates anticipatory motor control. Brain Stimul 7:800 – 806. CrossRef
+Medline
+Ku¨bler A, Dixon V, Garavan H (2006) Automaticity and reestablishment of
+executive control: an fMRI study. J Cogn Neurosci 18:1331–1342.
+CrossRef Medline
+Ku¨hn AA, Williams D, Kupsch A, Limousin P, Hariz M, Schneider GH,
+Yarrow K, Brown P (2004) Event-related beta desynchronization in hu-
+man subthalamic nucleus correlates with motor performance. Brain 127:
+735–746.
+CrossRef Medline
+Lalo E, Thobois S, Sharott A, Polo G, Mertens P, Pogosyan A, Brown P (2008)
+Patterns of bidirectional communication between cortex and basal gan-
+glia during movement in patients with Parkinson disease. J Neurosci 28:
+3008 –3016.
+CrossRef Medline
+Lee TW, Lewicki MS, Girolami M, Sejnowski TJ (1999) Blindsource separa-
+tion of more sources than mixtures using overcomplete representations.
+IEEE Signal Processing Lett 6:87–90.
+CrossRef
+Lee SY, Kim MS, Chang WH, Cho JW, Youn JY, Kim YH (2014) Effects of
+repetitive transcranial magnetic stimulation on freezing of gait in patients
+with Parkinsonism. Restor Neurol Neurosci 32:743–753.
+CrossRef
+Medline
+Lewicki MS, Sejnowski TJ (2000) Learning overcomplete representations.
+Neural Comput 12:337–365. CrossRef Medline
+Li KZ, Abbud GA, Fraser SA, DeMont RG (2012) Successful adaptation of
+gait in healthy older adults during dual-task treadmill walking. Aging
+Neuropsychol Cogn 19:150 –167.
+CrossRef Medline
+Lo¨vde´n M, Schaefer S, Pohlmeyer AE, Lindenberger U (2008) Walking vari-
+ability and working-memory load in aging: a dual-process account relat-
+ing cognitive control to motor control performance. J Gerontol B Psychol
+Sci Soc Sci 63:P121–P128.
+CrossRef Medline
+Luck SJ, Kappenman ES (eds) (2011) The Oxford handbook of event-
+related potential components. Oxford: Oxford UP.
+Majid DS, Lewis C, Aron AR (2015) Training voluntary motor suppression
+with real-time feedback of motor evoked potentials. J Neurophysiol 113:
+3446 –3452.
+CrossRef Medline
+Makeig S (1993) Auditory event-related dynamics of the EEG spectrum and
+effects of exposure to tones. Electroencephalogr Clin Neurophysiol 86:
+283–293.
+CrossRef Medline
+Makeig S, Bell AJ, Jung TP, Sejnowski TJ (1996) Independent component
+analysis of electroencephalographic data. In: Advances in neural informa-
+tion processing systems (Touretzky D, Mozer M, Hasselmo M, eds), pp
+145–151. Cambridge, MA: Massachusetts Institute of Technology.
+Makeig S, Jung TP, Bell AJ, Ghahremani D, Sejnowski TJ (1997) Blind sep-
+aration of auditory event-related brain responses into independent com-
+ponents. Proc Natl Acad Sci U S A 94:10979 –10984.
+CrossRef Medline
+Makeig S, Westerfield M, Jung TP, Enghoff S, Townsend J, Courchesne E,
+Sejnowski TJ (2002) Dynamic brain sources of visual evoked responses.
+Science 295:690 – 694.
+CrossRef Medline
+Makeig S, Debener S, Onton J, Delorme A (2004) Mining event-related
+brain dynamics. Trends Cogn Sci 8:204 –210. CrossRef Medline
+Makeig S, Gramann K, Jung TP, Sejnowski TJ, Poizner H (2009) Linking
+brain, mind and behavior. Int J Psychophysiol 73:95–100. CrossRef
+Medline
+Michon JA (1967) Timing in temporal tracking. Soesterberg, The Nether-
+lands: Institute for Perception RVO-TNO.
+Miller KJ, Honey CJ, Hermes D, Rao RP, denNijs M,Ojemann JG (2014)
+Broadband changes in the cortical surface potential track activation of
+functionally diverse neuronal populations. Neuroimage 85:711–720.
+CrossRef Medline
+Miller R (2007) Theory of the normal waking EEG: from single neurons to
+waveforms in the alpha, beta and gamma frequency ranges. Int J Psycho-
+physiol 64:18 –23.
+CrossRef Medline
+Miller EK, Cohen JD (2001) An integrative theory of prefrontal cortex func-
+tion. Annu Rev Neurosci 24:167–202. CrossRef Medline
+Mu¨ller-Putz GR, Zimmermann D, Graimann B, Nestinger K, Korisek G,
+Pfurtscheller G (2007) Event-related beta EEG-changes during passive
+Wagner et al.• Distinct /H9252Band Networks during Gait Adaptation J. Neurosci., February 17, 2016 • 36(7):2212–2226 • 2225
+and attempted foot movements in paraplegic patients. Brain Res 1137:
+84 –91. CrossRef Medline
+Muthukumaraswamy SD (2013) High-frequency brain activity and muscle
+artifacts in MEG/EEG: a review and recommendations. Front Hum Neu-
+rosci 7:138.
+CrossRef Medline
+Neuper C, Wo¨rtz M, Pfurtscheller G (2006) ERD/ERS patterns reflecting
+sensorimotor activation and deactivation. Prog Brain Res 159:211–222.
+CrossRef Medline
+Onton J, Delorme A, Makeig S (2005) Early visual event-related potential
+activity in extra-striate cortex. Society for Psychophysiological Research,
+Lisbon, Sept. 22–25, 2005.
+Onton J, Westerfield M, Townsend J, Makeig S (2006) Imaging human EEG
+dynamics using independent component analysis. Neurosci Biobehav
+Rev 30:808 – 822.
+CrossRef Medline
+Onton J, Makeig S (2009) High-frequency broadband modulations of elec-
+troencephalographic spectra. Front Hum Neurosci 3:61. CrossRef
+Medline
+Oostenveld R, Oostendorp TF (2002) Validating the boundary element
+method for forward and inverse EEG computations in the presence of a
+hole in the skull. Hum Brain Mapp 17:179 –192.
+CrossRef Medline
+Palmer JA, Kreutz-Delgado K, Makeig S (2006) Super-Gaussian mixture
+source model for ICA. In: Lecture notes in computer science (Rosca J,
+Erdogmus D, Príncipe JC, Haykin S, eds), pp 854 – 861. Berlin: Springer.
+Palmer JA, Makeig S, Kreutz-Delgado K, Rao BD (2008) Newton method
+for the ICA mixture model. In: IEEE International Conference on Acous-
+tics and Signal Processing, Las Vegas, pp 1805–1808.
+Parasuraman R (1980) Effects of information processing demands on slow
+negative shift latencies and N100 amplitude in selective and divided at-
+tention. Biol Psychol 11:217–233.
+CrossRef Medline
+Pelton TA, Johannsen L, Huiya C, Wing AM (2010) Hemiparetic stepping
+to the beat: asymmetric response to metronome phase shift during tread-
+mill gait. Neurorehabil Neural Repair 24:428 – 434. CrossRef Medline
+Peters M, Durding BM (1979) Footedness of left-and right-handers. Am J
+Psychol 133–142.
+Pfurtscheller G, Berghold A (1989) Patterns of cortical activation during
+planning of voluntary movement. Electroencephalogr Clin Neurophysiol
+72:250 –258.
+CrossRef Medline
+Pfurtscheller G, Lopes da Silva FL (1999) Event-related EEG/MEG synchro-
+nization and desynchronization: basic principles. Clin Neurophysiol 110:
+1842–1857.
+CrossRef Medline
+Pfurtscheller G, Neuper C, Andrew C, Edlinger G (1997) Foot and hand area
+mu rhythms. Int J Psychophysiol 26:121–135. CrossRef Medline
+Pogosyan A, Gaynor LD, Eusebio A, Brown P (2009) Boosting cortical ac-
+tivity at beta-band frequencies slows movement in humans. Curr Biol
+19:1637–1641.
+CrossRef Medline
+Repp BH (2001a) Phase correction, phase resetting, and phase shifts after
+subliminal timing perturbations in sensorimotor synchronization. J Exp
+Psychol 27:600.
+CrossRef Medline
+Repp BH (2001b) Processes underlying adaptation to tempo changes in sen-
+sorimotor synchronization. Hum Mov Sci 20:277–312.CrossRef Medline
+Repp BH (2005) Sensorimotor synchronization: a review of the tapping lit-
+erature. Psychonom Bull Rev 12:969 –992. CrossRef Medline
+Repp BH, Su YH (2013) Sensorimotor synchronization: a review of recent
+research (2006 –2012). Psychonom Bull Rev 20:403– 452. CrossRef
+Medline
+Ridderinkhof KR, Ullsperger M, Crone EA, Nieuwenhuis S (2004) The role
+of the medial frontal cortex in cognitive control. Science 306:443– 447.
+CrossRef Medline
+Roerdink M, Lamoth CJ, Kwakkel G, van Wieringen PC, Beek PJ (2007)
+Gait coordination after stroke: benefits of acoustically paced treadmill
+walking. Phys Ther 87:1009 –1022.
+CrossRef Medline
+Roerdink M, Lamoth CJ, van Kordelaar J, Elich P, Konijnenbelt M, Kwakkel
+G, Beek PJ (2009) Rhythm perturbations in acoustically paced treadmill
+walking after stroke. Neurorehabil Neural Repair 23:668 – 678. CrossRef
+Medline
+Rubia K, Smith AB, Brammer MJ, Taylor E (2003) Right inferior prefrontal
+cortex mediates response inhibition while mesial prefrontal cortex is re-
+sponsible for error detection. Neuroimage 20:351–358.
+CrossRef Medline
+Schoffelen JM, Oostenveld R, Fries P (2005) Neuronal coherence as a mech-
+anism of effective corticospinal interaction. Science 308:111–113.
+CrossRef Medline
+Seeber M, Scherer R, Wagner J, Solis-Escalante T, Mu ¨ller-Putz GR (2014)
+EEG beta suppression and low gamma modulation are different elements
+of human upright walking. Front Hum Neurosci 8:485.
+CrossRef Medline
+Seeber M, Scherer R, Wagner J, Solis-Escalante T, Mu ¨ller-Putz GR (2015)
+High and low gamma EEG oscillations in central sensorimotor areas are
+conversely modulated during the human gait cycle. Neuroimage 112:
+318 –326.
+CrossRef Medline
+Severens M, Nienhuis B, Desain P, Duysens J (2012) Feasibility of measur-
+ing event related desynchronization with electroencephalography during
+walking. In: IEEE International Conference of Engineering in Medicine
+and Biology Society, pp 2764 –2767. San Diego, CA.
+Siegel M, Donner TH, Engel AK (2012) Spectral fingerprints of large-scale
+neuronal interactions. Nat Rev Neurosci 13:121–134.
+CrossRef Medline
+Snyder KL, Kline JE, Huang HJ, Ferris DP (2015) Independent component
+analysis of gait-related movement artifact recorded using EEG electrodes
+during treadmill walking. Front Hum Neurosci 9:639.
+CrossRef Medline
+Solis-Escalante T, Mu¨ller-Putz GR, Pfurtscheller G, Neuper C (2012) Cue-
+induced beta rebound during withholding of overt and covert foot move-
+ment. Clin Neurophysiol 123:1182–1190.
+CrossRef Medline
+Suzuki M, Miyai I, Ono T, Oda I, Konishi I, Kochiyama T, Kubota K (2004)
+Prefrontal and premotor cortices are involved in adapting walking and
+running speed on the treadmill: an optical imaging study. Neuroimage
+23:1020 –1026.
+CrossRef Medline
+Swann N, Tandon N, Canolty R, Ellmore TM, McEvoy LK, Dreyer S, DiSano
+M, Aron AR (2009) Intracranial EEG reveals a time-and frequency-
+specific role for the right inferior frontal gyrus and primary motor cortex
+in stopping initiated responses. J Neurosci 29:12675–12685.
+CrossRef
+Medline
+Thaut MH, Miller RA, Schauer LM (1998) Multiple synchronization strat-
+egies in rhythmic sensorimotor tasks: phase vs period correction. Biol
+Cybern 79:241–250.
+CrossRef Medline
+Thaut MH, Demartin M, Sanes JN (2008) Brain networks for integrative
+rhythm formation. PLoS One 3:e2312. CrossRef Medline
+Thaut MH, Abiru M (2010) Rhythmic auditory stimulation in rehabilita-
+tion of movement disorders: a review of current research. Music Percept
+27:263–269.
+CrossRef
+Varraine E, Bonnard M, Pailhous J (2000) Intentional on-line adaptation of
+stride length in human walking. Exp Brain Res 130:248 –257. CrossRef
+Medline
+Wagner J, Solis-Escalante T, Grieshofer P, Neuper C, Mu¨ller-Putz G, Scherer
+R (2012) Level of participation in robotic-assisted treadmill walking
+modulates midline sensorimotor EEG rhythms in able-bodied subjects.
+Neuroimage 63:1203–1211.
+CrossRef Medline
+Wagner J, Solis-Escalante T, Scherer R, Neuper C, Mu¨ller-Putz G (2014) It’s
+how you get there: walking down a virtual alley activates premotor and
+parietal areas. Front Hum Neurosci 8:93.
+CrossRef Medline
+Weerdesteyn V, Rijken H, Geurts AC, Smits-Engelsman BC, Mulder T,
+Duysens J (2006) A five-week exercise program can reduce falls and im-
+prove obstacle avoidance in the elderly. Gerontology 52:131–141.
+CrossRef Medline
+Wittfoth M, Schardt DM, Fahle M, Herrmann M (2009) How the brain
+resolves high conflict situations: double conflict involvement of dorsolat-
+eral prefrontal cortex. Neuroimage 44:1201–1209.
+CrossRef Medline
+Zhang Y, Chen Y, Bressler SL, Ding M (2008) Response preparation and
+inhibition: the role of the cortical sensorimotor beta rhythm. Neurosci-
+ence 156:238 –246.
+CrossRef Medline
+2226 • J. Neurosci., February 17, 2016• 36(7):2212–2226 Wagner et al. • Distinct /H9252Band Networks during Gait Adaptation

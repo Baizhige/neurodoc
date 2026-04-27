@@ -1,12 +1,8 @@
-# Project-specific exclusions
+﻿# Project-specific exclusions
 /Script/
 /.pdf_archive/
 /_archive/
-# app_kernel — per-machine data (locator caches and machine configs are local only)
-/app_kernel/locator_cache/**
-!/app_kernel/locator_cache/.gitkeep
-/app_kernel/machine_config/**
-!/app_kernel/machine_config/.gitkeep
+# Script/ stores per-machine runtime data and archives that should not sync via Git.
 **/references/
 **/references/**
 
@@ -23,6 +19,7 @@ Desktop.ini
 
 # Python cache
 __pycache__/
+.venv/
 *.pyc
 *.pyo
 *.pyd
