@@ -1,137 +1,118 @@
 # TUH EEG Artifact Corpus
 
-**Dataset**: `tuh_eeg_artifact` | **Year**: 2022 | **URL**: https://isip.piconepress.com/projects/tuh_eeg/downloads/tuh_eeg_artifact/v3.0.1/
-**Category**: Others | **Subjects**: ~310 | **Files (Completed)**: 310 | **Channels**: 27-128 | **Sampling Rate**: 250-1000 Hz
+**Dataset**: `tuh_eeg_artifact` | **Year**: 2021-2020/2024 | **URL**: https://isip.piconepress.com/projects/nedc/html/tuh_eeg/
+**Category**: Others | **Subjects**: 213 | **Files (Completed)**: 310 | **Channels**: 27-41 | **Sampling Rate**: 250/256/400/512 Hz
+**Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
-The TUH EEG Artifact Corpus (v3.0.1) provides time-stamped, channel-level artifact annotations on 310 clinical EEG recordings selected from the TUH EEG Corpus. Expert annotators labeled artifact segments with type and temporal boundaries, stored in companion CSV sidecar files. Each annotation includes: channel name, start time, stop time, label, and confidence score. Multiple artifact types may co-occur within a recording.
+The TUH EEG Artifact Corpus (TUAR) is a comprehensive dataset designed for the identification and evaluation of various artifacts in electroencephalogram (EEG) signals. This dataset includes EEG recordings annotated for multiple types of artifacts such as eye movements, muscle artifacts, and electrode issues, among others. The corpus has been developed to assist in the training and evaluation of artifact detection models, with its latest release (v3.0.1) offering detailed annotations for all relevant events across different channel configurations. The data is divided into files containing EEG signals, with annotations provided in CSV format to mark the start and stop times of specific artifact events. It consists of over 160,000 events from 310 EEG files, covering 213 patients and a total of nearly 100 hours of data. This dataset is particularly useful for research involving artifact detection and seizure classification in clinical EEG data. Notably, it includes specific seizure annotations alongside standard artifact labels, facilitating the analysis of co-occurring events. Researchers are encouraged to cite the corresponding publications for more details on the dataset's creation and annotation methodology.
 
 ## File Scan Result
-
 
 > **Kernel SHA256**: `ea71b385fd265312a7bce9d712214ded6de63091c53c5d85dbdb592f50061155`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
-| `chew` | 6482 | event | raw | Chewing artifact |
-| `chew_elec` | 152 | event | raw |  |
-| `chew_musc` | 243 | event | raw |  |
-| `elec` | 33130 | event | raw | Electrode artifact (pop, movement) |
-| `elpp` | 172 | event | raw | Electrode pop |
-| `eyem` | 38569 | event | raw | Eye movement artifact |
-| `eyem_chew` | 864 | event | raw |  |
-| `eyem_elec` | 2422 | event | raw |  |
-| `eyem_musc` | 18677 | event | raw |  |
-| `eyem_shiv` | 45 | event | raw |  |
-| `musc` | 51052 | event | raw | Muscle (EMG) artifact |
-| `musc_elec` | 7651 | event | raw |  |
-| `shiv` | 613 | event | raw | Shivering artifact |
-| `shiv_elec` | 1 | event | raw |  |
+|---|---|---|---|---|
+| `chew` | 6482 | event | raw | Chewing artifact period in EEG signal |
+| `chew_elec` | 152 | event | raw | Concurrent chewing and electrode artifact in EEG |
+| `chew_musc` | 243 | event | raw | Concurrent chewing and muscle artifact in EEG |
+| `elec` | 33130 | event | raw | Electrode artifact period in EEG signal |
+| `elpp` | 172 | event | raw | Electrode/potential artifact period in EEG signal |
+| `eyem` | 38569 | event | raw | Eye movement artifact period in EEG signal |
+| `eyem_chew` | 864 | event | raw | Concurrent eye movement and chewing artifact in EEG |
+| `eyem_elec` | 2422 | event | raw | Concurrent eye movement and electrode artifact in EEG |
+| `eyem_musc` | 18677 | event | raw | Concurrent eye movement and muscle artifact in EEG |
+| `eyem_shiv` | 45 | event | raw | Concurrent eye movement and shivering artifact in EEG |
+| `musc` | 51052 | event | raw | Muscle artifact period in EEG signal |
+| `musc_elec` | 7651 | event | raw | Concurrent muscle and electrode artifact in EEG |
+| `shiv` | 613 | event | raw | Shivering artifact period in EEG signal |
+| `shiv_elec` | 1 | event | raw | Concurrent shivering and electrode artifact in EEG |
 
+
+> [to_agent: Please check if there exist more artifact label and add background annotation for normal period?]
 
 ### MISC Label Summary
+
 - **Route**: `misc`
 - **Role**: Stores derived/continuous labels that are not native raw event IDs.
 - **Candidate Labels**: `confidence`
 - **Kernel Note**: Keep derivation source, unit, and version metadata.
+
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
 
+
 ## Tasks
 
-### Classical Task 1: Artifact Type Classification (Multiclass)
+### Classical Task 1: Artifact Type Classification (13-class, Event-based)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 1.0 s, overlap = 0.5, target_events = [`eyem`, `musc`, `elec`, `chew`, `shiv`, `elpp`, `null`, `eyem_musc`, `other_combined`]
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, overlap = 0, target_events = [`chew`, `chew_elec`, `chew_musc`, `elec`, `elpp`, `eyem`, `eyem_chew`, `eyem_elec`, `eyem_musc`, `eyem_shiv`, `musc`, `musc_elec`, `shiv`, `shiv_elec`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `null` | 0 | Clean EEG (no artifact) |
-  | `eyem` | 1 | Eye movement artifact |
-  | `musc` | 2 | Muscle (EMG) artifact |
-  | `elec` | 3 | Electrode artifact |
-  | `chew` | 4 | Chewing artifact |
-  | `shiv` | 5 | Shivering artifact |
-  | `elpp` | 6 | Electrode pop |
-  | `eyem_musc` | 7 | Combined eye movement + muscle artifact |
-  | `other_combined` | 8 | Other combined artifact types |
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `eyem` | 0 | Eye movement artifact |
+  | `musc` | 1 | Muscle (EMG) artifact |
+  | `elec` | 2 | Electrode artifact |
+  | `chew` | 3 | Chewing artifact |
+  | `shiv` | 4 | Shivering artifact |
+  | `elpp` | 5 | Electrode pop |
+  | `eyem_musc` | 6 | Combined eye movement + muscle |
+  | `eyem_elec` | 7 | Combined eye movement + electrode |
+  | `eyem_chew` | 8 | Combined eye movement + chewing |
+  | `musc_elec` | 9 | Combined muscle + electrode |
+  | `chew_elec` | 10 | Combined chewing + electrode |
+  | `chew_musc` | 11 | Combined chewing + muscle |
+  | `eyem_shiv` | 12 | Combined eye movement + shivering |
 - **Evidence**:
-  - DOI: `10.1038/s41598-024-52551-0` — Uses TUH EEG Artifact Corpus (TUAR) at 250 Hz with gradient boosted tree classifiers for artifact detection; achieves 93.95% accuracy with Binary Classification (BC), Multilabel Classification (MC), and Multiclass-Multioutput Classification (MMC) approaches on 1-second windows
-  - DOI: `10.1109/embc48229.2022.9871413` — Uses TUAR with three classification approaches (binary, multi-label, multi-output) on 1-second windows with FFT and DWT features
-- **Kernel Notes**: Segment raw EEG into 1-second windows with 50% overlap. Extract artifact label for each segment from CSV sidecar annotations (channel-level annotations aggregated to segment level). Handle combined labels (e.g., `eyem_musc`) by assigning to combined class or primary artifact type. Exclude combined artifacts if only single-label classification needed. (replaces Classical Task 1 from original analysis.md)
+  - 10.1109/EMBC48229.2022.9871413 — Achieves 93.95% accuracy with MMC on 1-second windows from artifact onset; uses FFT and DWT features on 4 temporal channels at 250 Hz
+- **Notes**: the paper use 13 classes, but I think 6 classes more reasonable.
 
-### Classical Task 2: Binary Artifact Detection (Artifact vs. Clean)
+### Potential Task 1: Artifact Type Classification (13-class, Event-based)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 1.0 s, overlap = 0.5, target_events = [`eyem`, `musc`, `elec`, `chew`, `shiv`, `elpp`, `null`, `combined_artifacts`]
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, overlap = 0, target_events = [`chew`, `chew_elec`, `chew_musc`, `elec`, `elpp`, `eyem`, `eyem_chew`, `eyem_elec`, `eyem_musc`, `eyem_shiv`, `musc`, `musc_elec`, `shiv`, `shiv_elec`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `null` | 0 | Clean EEG segment |
-  | `eyem` | 1 | Any artifact present |
-  | `musc` | 1 | Any artifact present |
-  | `elec` | 1 | Any artifact present |
-  | `chew` | 1 | Any artifact present |
-  | `shiv` | 1 | Any artifact present |
-  | `elpp` | 1 | Any artifact present |
-  | `combined_artifacts` | 1 | Any combined artifact |
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `eyem` | 0 | Eye movement artifact |
+  | `musc` | 1 | Muscle (EMG) artifact |
+  | `elec` | 2 | Electrode artifact |
+  | `chew` | 3 | Chewing artifact |
+  | `shiv` | 4 | Shivering artifact |
+  | `elpp` | 5 | Electrode pop |
+  | `eyem_musc` | 0,1 | Combined eye movement + muscle |
+  | `eyem_elec` | 0,2 | Combined eye movement + electrode |
+  | `eyem_chew` | 0,3 | Combined eye movement + chewing |
+  | `musc_elec` | 1,2 | Combined muscle + electrode |
+  | `chew_elec` | 3,1 | Combined chewing + electrode |
+  | `chew_musc` | 3,1 | Combined chewing + muscle |
+  | `eyem_shiv` | 0,4 | Combined eye movement + shivering |
 - **Evidence**:
-  - DOI: `10.1038/s41598-024-52551-0` — Achieves 93.95% accuracy for Binary Classification (BC) where artifact→1 and null→0
-  - DOI: `10.1109/embc48229.2022.9871413` — Achieves 93.95% accuracy for binary classification on 4 temporal channels using 1-second windows
-- **Kernel Notes**: Segment raw EEG into 1-second windows with 50% overlap. For each segment, check if any artifact annotation exists (from CSV sidecar). Collapse all artifact types to y=1, null to y=0. Handle multi-channel recordings by aggregating per-segment (e.g., any-channel-has-artifact or majority-vote).
-
-### Potential Task 1: Artifact Type Classification (epoch_by_event)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = see Target Definition
-- **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Exclude `null` segments. Combined labels (e.g., `musc_elec`) require a decision: either assign to the primary artifact type or treat as a separate class. CSV sidecars must be present alongside EDF files.
-
-| Event | y | Meaning |
-|-------|---|---------|
-| `eyem` | 0 | Eye movement |
-| `musc` | 1 | Muscle (EMG) |
-| `elec` | 2 | Electrode artifact |
-| `chew` | 3 | Chewing |
-| `shiv` | 4 | Shivering |
-| `elpp` | 5 | Electrode pop |
-
-### Potential Task 2: Artifact vs. Clean EEG Detection (epoch_by_event)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = see Target Definition
-- **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
-
-| Event | y | Meaning |
-|-------|---|---------|
-| `null` | 0 | Clean EEG segment |
-| `eyem` | 1 | Any artifact |
-| `musc` | 1 | Any artifact |
-| `elec` | 1 | Any artifact |
-| `chew` | 1 | Any artifact |
+  - 10.1109/EMBC48229.2022.9871413 — Achieves 93.95% accuracy with MMC on 1-second windows from artifact onset; uses FFT and DWT features on 4 temporal channels at 250 Hz
+- **Notes**: Review supplement 6 classes task based on the evidence.
 
 ## Data Quality Notes
 
 - Annotations are at the channel level; aggregate to recording level or use channel-specific labels depending on the task.
-- Combined label types (e.g., `eyem_musc`) create label ambiguity; standardize before training.
 - Variable channel count and sampling rate; normalize before cross-recording analysis.
 - Sex is not reliably available.
 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: completed

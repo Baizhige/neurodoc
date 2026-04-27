@@ -40,14 +40,14 @@ Fifty-four healthy subjects (24–35 years old; 25 females) participated in the 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `left hand MI` | 0 | Left-hand motor imagery |
   | `right hand MI` | 1 | Right-hand motor imagery |
 - **Evidence**:
   - DOI: 10.1093/gigascience/giz002 — OpenBMI dataset with 54 subjects performing binary motor imagery (left vs right hand) across two sessions, using EEG epochs for CSP+LDA classification
   - DOI: 10.1016/j.neunet.2020.12.013 — Uses OpenBMI dataset for deep CNN-based transfer learning achieving 84.19% average accuracy
-- **Kernel Notes**: 
+- **Notes**: 
 
 ## Data Quality Notes
 

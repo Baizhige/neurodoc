@@ -47,15 +47,15 @@ Nine subjects (B01-B09) performed two-class cued motor imagery of the left and r
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `Cue onset left (class 1)` | 0 | Left-hand motor imagery |
   | `Cue onset right (class 2)` | 1 | Right-hand motor imagery |
 - **Evidence**:
   - DOI: 10.1109/tnsre.2022.3156076 — Segmented BCI IV-2b data into four overlapping 2-second time windows for MI classification (−0.5s to 1.5s  , 0s to 2s, 0.5 sto 2.5s , and 1 to 3s)
   - DOI: 10.1109/tnsre.2023.3241846 — Used epoched data from 3rd to 7th second relative to cue onset for left vs right hand MI (3s to  7s, start from ”Start of a trial“ event)
   - DOI: 10.3389/fnins.2020.00918 — Trained CNN classifiers on sessions 1-3 for inter-subject continuous decoding of left vs right hand MI (0.8s ~ 2.8 s, from "Cue onset")
-- **Kernel Notes**: 
+- **Notes**: 
 
 ## Data Quality Notes
 

@@ -42,15 +42,15 @@ The High-Gamma Dataset contains EEG recordings from 14 healthy participants perf
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `left_hand` | 0 | Left-hand motor imagery |
   | `right_hand` | 1 | Right-hand motor imagery |
   | `feet` | 2 | Feet motor imagery |
-  | `tongue` | 3 | Tongue motor imagery |
+  | `rest` | 3 | Rest but same cue |
 - **Evidence**:
-  - DOI: 10.1002/hbm.23730 — Uses the High-Gamma Dataset (HGD) with 14 subjects performing four-class motor imagery (left hand, right hand, feet, tongue) across two sessions per subject, evaluating deep ConvNets against FBCSP baseline for EEG decoding.
-- **Kernel Notes**: 
+  - DOI: 10.1002/hbm.23730 — Uses the High-Gamma Dataset (HGD) with 14 subjects performing four-class motor imagery (left hand, right hand, feet, rest) across two sessions per subject, evaluating deep ConvNets against FBCSP baseline for EEG decoding.
+- **Notes**: 
 
 ### Classical Task 2: Left vs. Right Hand Motor Imagery Binary Classification
 - **Task Type**: classification
@@ -59,13 +59,13 @@ The High-Gamma Dataset contains EEG recordings from 14 healthy participants perf
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `left_hand` | 0 | Left-hand motor imagery |
   | `right_hand` | 1 | Right-hand motor imagery |
 - **Evidence**:
   - DOI: 10.1002/hbm.23730 — Deep learning evaluation on HGD includes left/right hand motor imagery decoding as key binary classification subtask.
-- **Kernel Notes**: 
+- **Notes**: 
 
 ## Data Quality Notes
 

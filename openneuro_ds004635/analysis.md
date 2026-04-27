@@ -2,7 +2,7 @@
 
 **Dataset**: `openneuro_ds004635` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004635
 **Category**: Biological State | **Subjects**: 48 | **Files (Completed)**: 1 | **Channels**: 129 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
@@ -10,15 +10,15 @@ Infants watched a series of engaging and relaxing videos to facilitate recording
 
 ## File Scan Result
 
-> **Kernel SHA256**: `da76bf1dea148211b5bb5f4f4351365f9d418b0d2b8fe7eec9da9ffdeed80e30`
+> **Kernel SHA256**: `579ff38edceb732e54126de9b90c5c74352adca4bc60bd785fcaf2b0cc022ec2`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `TRSP` | 10 | event | raw | Transition / segment boundary marker |
-| `bgin` | 10 | event | raw | Beginning of a recording segment |
+| `TRSP` | 10 | admin | raw | System marker: Ignore (technical marker) |
+| `bgin` | 10 | admin | raw | System marker: Ignore (technical marker) |
 
 
 ### Info
@@ -30,35 +30,62 @@ Infants watched a series of engaging and relaxing videos to facilitate recording
 
 ## Tasks
 
-### Classical Task 1: EEG Microstate Segmentation
+### Potential Task 1: Infant Age Regression
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 4 s *, overlap = 0.0, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `Age`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | Age | ~5.98 – 9.44 (months) | Age in months at time of recording; 48 infants, mean ~7.5 months. Continuous developmental measure for brain maturation prediction. |
+- **Evidence**:
+- **Notes**: Segmentation-based epochs (4-second non-overlapping windows) from continuous resting-state EEG during video-watching. Age is a native participants.tsv column, so Meta Level = raw. No event markers are used for epoching; the segmentation approach treats the continuous recording as a stream of brain state samples, allowing the model to learn age-predictive features from spontaneous EEG dynamics (e.g., spectral power, microstate features) across the full recording duration.
+
+### Potential Task 2: Infant Sex Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 1 s, overlap = 0.0
-- **Label Route**: `event`
-- **Meta Level**: super
+- **Epoch Parameters**: `segment_length = 4 s *, overlap = 0.0, target_events = []`
+- **Label Route**: `info`
+- **Label Field**: `Gender`
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `microstate 1` | 0 | First canonical topographic pattern identified by modified k-means clustering |
-  | `microstate 2` | 1 | Second canonical topographic pattern identified by modified k-means clustering |
-  | `microstate 3` | 2 | Third canonical topographic pattern identified by modified k-means clustering |
-  | `microstate 4` | 3 | Fourth canonical topographic pattern identified by modified k-means clustering |
-  | `microstate 5` | 4 | Fifth canonical topographic pattern identified by modified k-means clustering |
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | Gender | M | 0 | Male |
+  | Gender | F | 1 | Female |
 - **Evidence**:
-  - DOI: 10.1007/s10548-024-01043-5 — Published tutorial in Brain Topography (2024) using the same 48-infant dataset; provides step-by-step microstate analysis workflow with 5 canonical classes, temporal metrics (GEV, duration, coverage, occurrence, transition probabilities), and reliability assessment.
-  - DOI: 10.21203/rs.3.rs-3164735.v1 — Preprint version (July 2023) with identical methodology; identifies 5 microstate classes during video-watching resting-state and assesses test-retest reliability across infants.
-- **Kernel Notes**: Segment continuous EEG into 1-second non-overlapping windows. Compute Global Field Power (GFP) for each segment and identify GFP peaks. Apply modified k-means clustering to identify 5 canonical topographic patterns (labels 0-4). Assign each 1-second segment to its dominant microstate class based on GFP-peak topographic similarity. Extract microstate metrics: Global Explained Variance (GEV), duration, coverage, occurrence, and transition probabilities for downstream reliability analysis. Boundary events (`bgin`, `TRSP`) mark recording segment transitions for quality checks but are not used as classification labels. Note: single aggregated file prevents subject-level separation; class imbalance potential if microstate distribution is uneven.
+  - README — 48 infants (27 male); sex recorded as M/F in participants.tsv
+  - participants.tsv — complete Gender column with values M/F for all 48 subjects
+- **Notes**: Segmentation-based resting-state classification. 4-second segments with no overlap are standard for continuous EEG feature extraction in sex prediction paradigms. The kernel reads Gender directly from participants.tsv (native info field, no derivation needed).
 
-### Potential Task 1: Recording Segment Boundary Classification
+### Potential Task 3: Segment vs Transition Classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5, target_events = [`bgin`, `TRSP`]
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: `tmin = -0.5 s *, tmax = 1.0 s *, target_events = ['bgin', 'TRSP']`
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `bgin` | 0 | Recording segment start marker |
-  | `TRSP` | 1 | Transition segment boundary marker |
-- **Evidence**: None — task is plausible from paradigm but insufficient events for robust supervised learning.
-- **Kernel Notes**: Only 10 events of each type exist—severely limited for supervised classification. Primary scientific value lies in microstate analysis (Classical Task 1). This task remains Potential only for completeness; `bgin` and `TRSP` events serve as quality-check markers rather than discriminative targets.
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `bgin` | 0 | System marker: segment beginning (Ignore) |
+  | `TRSP` | 1 | System marker: transition/boundary (Ignore) |
+- **Evidence**:
+  - task-resting_events.json — 'value' column Levels: 'bgin'='Ignore', 'TRSP'='Ignore'
+  - sub-S1_task-resting_events.tsv — bgin and TRSP alternate throughout recording as technical markers
+- **Notes**: This is a low-level technical marker discrimination task using explicitly designated 'Ignore' admin markers. Both event types are system markers with no expected neural correlate; included for completeness but of limited scientific value. The 0.5s pre- and 1.0s post-onset windows are inferred defaults for brief technical markers.
+
+## Data Quality Notes
+
+- Single aggregated file prevents subject-level separation; all 48 infants' data are combined into one recording with boundary markers.
+- `subject_age` and `subject_sex` fields are missing from info, but `Age` and `Gender` are present and complete as native participants.tsv columns.
+- `device` field is missing; no equipment metadata available in scan.
+- Only 10 events each for `TRSP` and `bgin`, which are admin/technical markers explicitly designated to ignore; very limited event structure for task-based analysis.
+- Event counts differ from original draft (10 vs previously noted 10 for both types, but types reclassified as admin vs event); the authoritative scan shows admin type with "System marker: Ignore" meaning.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_kernel_update

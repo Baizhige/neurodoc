@@ -17,23 +17,20 @@ if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
 
 from app import template_checker
-from eeg_kernel_agent.llm_adapter import (
+from app.llm_adapter import (
     anthropic_to_openai_response,
     call_llm_text,
     post_llm_json,
     resolve_llm_config,
 )
 
-_AGENT_DIR = BASE_DIR / "eeg_kernel_agent"
-if str(_AGENT_DIR) not in sys.path:
-    sys.path.insert(0, str(_AGENT_DIR))
 try:
-    import detect as _detect  # eeg_kernel_agent/detect.py
+    from app import detect as _detect
     _DETECT_RULES = _detect.load_rules()
 except Exception as _detect_err:
     _detect = None
     _DETECT_RULES = []
-    print(f"[server] WARNING: eeg_kernel_agent/detect.py not loadable: {_detect_err}")
+    print(f"[server] WARNING: app/detect.py not loadable: {_detect_err}")
 
 
 def _run_semantic_checks(analysis_text: str, dataset_name: str = "") -> list[dict]:
@@ -51,26 +48,39 @@ def _run_semantic_checks(analysis_text: str, dataset_name: str = "") -> list[dic
         return []
 
 
-def _check_tasks_fragment(tasks_section: str, dataset_name: str = "") -> list[str]:
-    """Stub the synthesized Tasks section into a minimal analysis.md and run
+def _check_tasks_fragment(tasks_section: str, dataset_name: str = "", analysis_md: str = "") -> list[str]:
+    """Inject the synthesized Tasks section into a minimal analysis.md and run
     Task-scoped cross-checks. Returns human-readable strings.
 
-    Only Task-scoped rules (those that inspect ## Tasks content) meaningfully
-    fire here; rules that require other sections are harmless no-ops.
+    If `analysis_md` is supplied its real ## File Scan Result block is reused so
+    that target_events_in_event_structure can validate against actual event IDs.
+    Without it a stub with an empty Event Structure is used (legacy behaviour).
     """
     ts = (tasks_section or "").strip()
     if not ts.startswith("##"):
         ts = "## Tasks\n\n" + ts
+
+    fsr_block = ""
+    if analysis_md:
+        m = re.search(r"(## File Scan Result.*?)(?=\n## |\Z)", analysis_md, re.DOTALL)
+        if m:
+            fsr_block = m.group(1).strip()
+    if not fsr_block:
+        fsr_block = (
+            "## File Scan Result\n\n"
+            "### Event Structure\n\n| Event ID | Count | Type | Meta Level | Meaning |\n|---|---|---|---|---|\n\n"
+            "### MISC Label Summary\n\n| Channel | Source | Meta | Notes |\n|---|---|---|---|\n\n"
+            "### Info\n\n| Field | Value | Completeness | Notes |\n|---|---|---|---|\n"
+        )
+
     shell = (
         "# Analysis\n\n"
         "## Paradigm\n\n(stub)\n\n"
-        "## File Scan Result\n\n"
-        "### Event Structure\n\n| Event ID | Count | Type | Meta Level | Meaning |\n|---|---|---|---|---|\n\n"
-        "### MISC Label Summary\n\n| Channel | Source | Meta | Notes |\n|---|---|---|---|\n\n"
-        "### Info\n\n| Field | Value | Completeness | Notes |\n|---|---|---|---|\n\n"
+        f"{fsr_block}\n\n"
         f"{ts}\n\n"
         "## Data Quality Notes\n\n- (stub)\n\n"
         "## Kernel Responsibilities\n\n> **Status**: wait_manual_review\n"
+        "> **Super Meta Required**: no\n"
     )
     violations = _run_semantic_checks(shell, dataset_name=dataset_name)
     # Only surface rules that point at the Tasks section or derived checks.
@@ -84,6 +94,7 @@ def _check_tasks_fragment(tasks_section: str, dataset_name: str = "") -> list[st
         "misc_classification_forbidden",
         "classification_task_has_multiple_classes",
         "derived_misc_requires_super_meta",
+        "segmentation_requires_nonevent_route",
         "segmentation_requires_empty_target_events",
         "target_events_in_event_structure",
         "classical_task_evidence",
@@ -306,6 +317,10 @@ C  — No event; epoch_by_segmentation_hdf5 with subject-level label (Route=misc
 
 === Target Definition schema matrix (Route × Task Type) ===
   event  classification  | Event ID | y | Meaning |
+                         y = integer class index (e.g. 0, 1, 2) OR comma-separated
+                         integers for multi-label events (e.g. "0,1" when one event
+                         belongs to multiple classes simultaneously).
+                         The union of all y tokens across all rows must be {0,1,…,N-1}.
   event  regression      | Event ID | Value | Meaning |
   misc   regression      | MISC Channel | Value (unit) | Notes |
   misc   classification  FORBIDDEN — use event or info instead
@@ -322,6 +337,8 @@ H5 DERIVED MISC ⇒ Meta Level = super. Notes SHOULD describe the derivation
 H6 GROUND TRUTH only — do not invent fields. If the Label Field is not present in
    events.tsv, participants.tsv, or the native misc list, DROP the task.
 H7 segmentation ⇒ target_events = [].
+H8 segmentation ⇒ Label Route MUST be misc or info. Label Route = event is FORBIDDEN
+   for epoch_by_segmentation_hdf5 because segmentation has no event anchors.
 
 === Other Rules ===
 R1 Event grounding: target_events MUST come from Available Raw Event IDs.
@@ -335,15 +352,24 @@ R5 Use Phase-2-1 alignment recommendations as primary source.
 R6 Evidence desc must cover: task type, n-classes, epoch window, any deviation.
 
 === SELF-CHECK (perform AFTER writing tasks, fix before output) ===
-A: target_events grounded in Available Raw Event IDs (skip when segmentation).
+A: HARD FAIL — every entry in target_events MUST appear verbatim in the Available Raw
+   Event IDs list above. Drop any entry not in that list. If dropping leaves
+   target_events = [] for an event/long-event task, drop the entire task or downgrade
+   it to Potential Task with a note. No invented, approximate, or synonymous IDs.
+   (Skip this check only for epoch_by_segmentation_hdf5, which always uses target_events = [].)
 B: Every Classical Task has at least one ref in Evidence.
 C: Epoch params match Phase-2-1 (or deviation noted).
 D: No duplicate tasks (same epoch+label combination).
-E: H1–H7 all satisfied — Label Field present iff non-event; classification has ≥2 y;
-   misc is regression-only; segmentation has target_events=[]; derived misc is super meta.
+E: H1–H8 all satisfied — Label Field present iff non-event; classification has ≥2 y;
+   misc is regression-only; segmentation has target_events=[] AND Label Route ≠ event
+   (segmentation NEVER uses Label Route=event — use misc or info instead);
+   derived misc is super meta.
 F: Epoch Parameters contain all MINIMUM required keys for the declared Epoch Method
    (see rules table above). Missing a required key (e.g. `overlap` for long-event) is a
    hard error and will be rejected by detect.py. If you lack a value, DROP the task.
+G: Every classification Task's Target Definition must have ≥2 rows with DISTINCT y values
+   (e.g. 0 and 1 for binary). If only one class is present or the table is empty, either
+   add the missing class row or drop the task entirely.
 
 === Output Format ===
 Return ONLY valid JSON (no markdown fences):
@@ -990,7 +1016,7 @@ def api_tasks_phase2(name):
         parsed["p21"] = p21_result
         if isinstance(parsed, dict) and parsed.get("tasks_section"):
             parsed["semantic_errors"] = _check_tasks_fragment(
-                parsed["tasks_section"], name
+                parsed["tasks_section"], name, analysis_md=analysis_md
             )
         return jsonify(parsed)
     except Exception as e:

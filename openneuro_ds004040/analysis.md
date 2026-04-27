@@ -2,7 +2,7 @@
 
 **Dataset**: openneuro_ds004040 | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds004040
 **Category**: Neuroscience | **Subjects**: 13 | **Files (Completed)**: 26 | **Channels**: 64 | **Sampling Rate**: 512 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
@@ -10,25 +10,25 @@ Thirteen experienced trance channelers performed alternating 5-minute blocks of 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `4c4ac885d1933f478f54add7603debc5eb65aafd3b4d0cb549e8a4e1c349dbc3`
+> **Kernel SHA256**: `2dae4eccd153c0f54620bb55ee284ed6ebe47dc306b8abaa5ee6c09a6c3c539e`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `rest1_end` | 26 | event | raw | Rest block 1 offset |
-| `rest1_start` | 26 | event | raw | Rest block 1 onset |
-| `rest2_end` | 26 | event | raw | Rest block 2 offset |
-| `rest2_start` | 26 | event | raw | Rest block 2 onset |
-| `rest3_end` | 26 | event | raw | Rest block 3 offset |
-| `rest3_start` | 26 | event | raw | Rest block 3 onset |
-| `trance1_end` | 26 | event | raw | Trance channeling block 1 offset |
-| `trance1_start` | 26 | event | raw | Trance channeling block 1 onset |
-| `trance2_end` | 26 | event | raw | Trance channeling block 2 offset |
-| `trance2_start` | 26 | event | raw | Trance channeling block 2 onset |
-| `trance3_end` | 26 | event | raw | Trance channeling block 3 offset |
-| `trance3_start` | 26 | event | raw | Trance channeling block 3 onset |
+| `rest1_end` | 26 | event | raw | Trial phase offset: rest period 1 |
+| `rest1_start` | 26 | event | raw | Trial phase onset: rest period 1 |
+| `rest2_end` | 26 | event | raw | Trial phase offset: rest period 2 |
+| `rest2_start` | 26 | event | raw | Trial phase onset: rest period 2 |
+| `rest3_end` | 26 | event | raw | Trial phase offset: rest period 3 |
+| `rest3_start` | 26 | event | raw | Trial phase onset: rest period 3 |
+| `trance1_end` | 26 | event | raw | Trial phase offset: trance period 1 |
+| `trance1_start` | 26 | event | raw | Trial phase onset: trance period 1 |
+| `trance2_end` | 26 | event | raw | Trial phase offset: trance period 2 |
+| `trance2_start` | 26 | event | raw | Trial phase onset: trance period 2 |
+| `trance3_end` | 26 | event | raw | Trial phase offset: trance period 3 |
+| `trance3_start` | 26 | event | raw | Trial phase onset: trance period 3 |
 
 
 ### Info
@@ -40,42 +40,66 @@ Thirteen experienced trance channelers performed alternating 5-minute blocks of 
 
 ## Tasks
 
-### Classical Task 1: Trance vs. Rest Binary Classification
+### Classical Task 1: Trance vs Rest Binary Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0, tmax = 300.0, overlap = null, target_events = [trance1_start, trance2_start, trance3_start, rest1_start, rest2_start, rest3_start]
-- **Label Route**: `event`
-- **Meta Level**: super
-- **Target Definition**:
-
-| Event | y | Meaning |
-|-------|---|--------|
-| trance1_start | 1 | Trance channeling block 1 onset |
-| trance2_start | 1 | Trance channeling block 2 onset |
-| trance3_start | 1 | Trance channeling block 3 onset |
-| rest1_start | 0 | Rest block 1 onset |
-| rest2_start | 0 | Rest block 2 onset |
-| rest3_start | 0 | Rest block 3 onset |
-
-- **Evidence**: Beaver et al. (2021) - DOI: 10.12688/f1000research.17157.2; OpenNeuro ds004040 - DOI: https://doi.org/10.18112/openneuro.ds004040.v1.0.0
-- **Kernel Notes**: Use onset events (trance*_start, rest*_start) as target_events. Block labels derive from event prefix. Within-subject design (13 subjects × 2 sessions = 26 files) provides paired comparison opportunity.
-
-### Normal Task 1: Within-Block Temporal Segmentation
-- **Task Type**: segmentation
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0, overlap = 0.5
+- **Epoch Parameters**: tmin = 0 s, tmax = 300 s, overlap = 0, target_events = [`rest1_start`, `rest2_start`, `rest3_start`, `trance1_start`, `trance2_start`, `trance3_start`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `rest1_start`, `rest2_start`, `rest3_start` | 0 | Rest period onset (resting state) |
+  | `trance1_start`, `trance2_start`, `trance3_start` | 1 | Trance period onset (altered state) |
+- **Evidence**:
+  - 10.12688/f1000research.17157.2 — Beaver et al. (2021) defines 5-minute alternating blocks of trance channeling vs resting state, 3 periods per session per condition
+  - https://doi.org/10.18112/openneuro.ds004040.v1.0.0 — README confirms "alternating (5 minutes) blocs of trance channeling and resting state (3 periods per session for each condition)"; events.tsv files show consistent rest/trance start events across all subjects and sessions
+- **Notes**: Six onset events per session (three rest starts, three trance starts) mapped to binary y labels. All three rest start events collapse to y=0 and all three trance start events collapse to y=1, reflecting the condition-level contrast rather than period-specific differences. tmax=300s corresponds to the explicit 5-minute block duration. Overlap=0 since blocks are contiguous but non-overlapping by design.
 
-| Event | y | Meaning |
-|-------|---|--------|
-| trance1_start | 1 | Trance block 1 epoch segment |
-| trance2_start | 1 | Trance block 2 epoch segment |
-| trance3_start | 1 | Trance block 3 epoch segment |
-| rest1_start | 0 | Rest block 1 epoch segment |
-| rest2_start | 0 | Rest block 2 epoch segment |
-| rest3_start | 0 | Rest block 3 epoch segment |
+### Potential Task 1: trance vs rest 6-class block identity
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s *, tmax = 300 s *, overlap = 0, target_events = [`trance1_start`, `trance2_start`, `trance3_start`, `rest1_start`, `rest2_start`, `rest3_start`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `trance1_start` | 0 | Trial phase onset: trance period 1 |
+  | `trance2_start` | 1 | Trial phase onset: trance period 2 |
+  | `trance3_start` | 2 | Trial phase onset: trance period 3 |
+  | `rest1_start` | 3 | Trial phase onset: rest period 1 |
+  | `rest2_start` | 4 | Trial phase onset: rest period 2 |
+  | `rest3_start` | 5 | Trial phase onset: rest period 3 |
+- **Evidence**:
+- **Notes**: Block identity decoding task treating each of the 6 block onsets as a distinct class. Each block lasts approximately 5 minutes (300 s). The overlap parameter is set to 0 to create non-overlapping epochs spanning the full block duration. All 6 event IDs appear 26 times each across the dataset. Event order varies by session (some start with rest, others with trance), but all 12 event IDs appear consistently. The `epoch_by_long_event_hdf5` method is used because each epoch spans the full 5-minute block duration, which exceeds typical short-epoch lengths.
 
-- **Evidence**: OpenNeuro ds004040 - DOI: https://doi.org/10.18112/openneuro.ds004040.v1.0.0
-- **Kernel Notes**: Sliding 2s windows with 50% overlap generate sufficient samples for classification from limited subject pool. Each 5-minute block yields ~298 segments per epoched reference point. Labels propagate from block-level onset to all derived segments.
+### Potential Task 2: trance vs rest 3-class ordinal
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s *, tmax = 300 s *, overlap = 0.0 *, target_events = [`trance1_start`, `rest1_start`, `trance2_start`, `rest2_start`, `trance3_start`, `rest3_start`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | trance1_start, rest1_start | 0 | First block in session (ordinal position 1) |
+  | trance2_start, rest2_start | 1 | Second block in session (ordinal position 2) |
+  | trance3_start, rest3_start | 2 | Third block in session (ordinal position 3) |
+- **Evidence**:
+  - sub-001_ses-01_task-trance_events.tsv — events.tsv showing alternating rest/trance blocks with numbered phases (rest1_start, trance1_start, etc.)
+  - sub-001_ses-02_task-trance_events.tsv — confirms block order varies by session (ses-02 starts with trance), but all 6 start events present
+  - README — "alternating (5 minutes) blocs of trance channeling and resting state (3 periods per session for each condition)"
+- **Notes**: This task tests whether EEG carries temporal/session structure (practice/fatigue effects) by classifying the ordinal position of each 5-minute block regardless of whether it is trance or rest. All six start events are used as epoch anchors, with y determined by block number (1/2/3). The 300-second epoch length matches the 5-minute block duration described in the README. Overlap set to 0 to avoid duplicate samples from adjacent blocks.
+
+## Data Quality Notes
+
+- Missing demographic metadata: subject_age, subject_sex, and device fields are absent from all files.
+- Small sample size (13 subjects, 26 files) limits generalizability; results should be interpreted with caution.
+- Block order varies across sessions (some begin with rest, others with trance), which is a known design feature but should be accounted for in analyses sensitive to order effects.
+- No known data quality issues.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_kernel_update

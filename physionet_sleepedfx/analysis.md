@@ -46,8 +46,8 @@ The sleep-edf database contains 197 whole-night PolySomnoGraphic sleep recording
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `Sleep stage W` | 0 | Wake |
   | `Sleep stage 1` | 1 | NREM Stage 1 |
   | `Sleep stage 2` | 2 | NREM Stage 2 |
@@ -56,7 +56,7 @@ The sleep-edf database contains 197 whole-night PolySomnoGraphic sleep recording
   | `Sleep stage R` | 4 | REM |
 - **Evidence**:
   - 10.7717/peerjcs.1561_table — 2 — Five-class sleep staging (W, N1, N2, N3, REM) on Sleep-EDF Expanded, 30-second epochs, AASM standard merging S3+S4 into N3
-- **Kernel Notes**: 
+- **Notes**: 
 
 ### Potential Task 1: Wake vs. Sleep Binary Classification (epoch_by_long_event)
 - **Task Type**: classification
@@ -65,8 +65,8 @@ The sleep-edf database contains 197 whole-night PolySomnoGraphic sleep recording
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `Sleep stage W` | 0 | Wake |
   | `Sleep stage 1` | 1 | Any sleep (stages 1-4 and R) |
   | `Sleep stage 2` | 1 | Any sleep |
@@ -74,8 +74,8 @@ The sleep-edf database contains 197 whole-night PolySomnoGraphic sleep recording
   | `Sleep stage 4` | 1 | Any sleep |
   | `Sleep stage R` | 1 | Any sleep |
 - **Evidence**:
-  - **Kernel Notes**:
-- **Kernel Notes**: **Kernel Notes**:
+  - **Notes**:
+- **Notes**: **Kernel Notes**:
 
 ## Data Quality Notes
 

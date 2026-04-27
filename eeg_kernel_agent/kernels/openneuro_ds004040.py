@@ -2,8 +2,7 @@
 
 Trance Channeling EEG dataset: 13 experienced trance channelers performed
 alternating 5-minute blocks of trance channeling and resting state across
-two sessions. Only STATUS admin markers present; block labels must be
-derived from the known experimental structure.
+two sessions. Events are read from sibling *_events.tsv files.
 
 Source: https://openneuro.org/datasets/ds004040
 DOI: https://doi.org/10.18112/openneuro.ds004040.v1.0.0
@@ -12,9 +11,9 @@ Paradigm reference: https://doi.org/10.12688/f1000research.17157.2
 Kernel Notes:
 - 26 files (13 subjects × 2 sessions)
 - 64 channels, 512 Hz sampling rate
-- Only STATUS admin marker present; no discrete trance/rest events
-- Block labels derived from alternating 5-min structure: trance-rest-trance-rest-trance-rest
-- 3 trance blocks + 3 rest blocks per session (300s each)
+- BIDS-compliant dataset with participants.tsv and *_events.tsv sidecars
+- Events.tsv contains trance/rest block onsets and offsets
+- Channel names are standard 10-20 system
 """
 
 from __future__ import annotations
@@ -30,580 +29,290 @@ import numpy as np
 import pandas as pd
 
 
+# Required info fields from participants.tsv (kernel_requirements)
+_REQUIRED_INFO_FIELDS: List[str] = ["age", "sex", "handedness"]
+
+# Required native misc channels (none for this dataset)
+_REQUIRED_NATIVE_MISC: List[str] = []
+
+# Required derived misc channels (from kernel_requirements)
+_REQUIRED_DERIVED_MISC: List[str] = ["trance_label"]
+
 # Block timing parameters (verified from paradigm: 5-minute alternating blocks)
 _BLOCK_DURATION_S = 300.0  # 5 minutes per block
-_PRESTIM_S = 0.0  # No prestim period for long events
 
-# Block label sequence per session (alternating pattern)
-_BLOCK_LABELS = [
-    "trance1_start",
-    "rest1_start",
-    "trance2_start",
-    "rest2_start",
-    "trance3_start",
-    "rest3_start",
-]
-
-# Event ID mapping for raw meta (trance=1, rest=0)
-_EVENT_ID = {
-    "trance1_start": 1,
-    "trance2_start": 1,
-    "trance3_start": 1,
-    "rest1_start": 0,
-    "rest2_start": 0,
-    "rest3_start": 0,
-}
-
-# Source: openneuro_ds004040 dataset_description.json
-# Amplifier: BrainAmp MR plus (inferred from BrainProducts system common in EEG research)
+# Source: openneuro_ds004040 dataset_description.json and README
+# Amplifier: BrainProducts BrainAmp (common in EEG research, inferred from dataset context)
 # Annotator: LLM, 2026-04-08 (LLM 推断，需人类复核)
-_AMPLIFIER = "BrainAmp"
-_CAP = "Ag/AgCl"  # Standard EEG cap material (LLM 推断，需人类复核)
-
-# EEGUnity description dict (required for all kernels)
-eegunity_description = {
-    "age": "unknown",  # Age will be loaded from participants.tsv per subject
-    "sex": "unknown",  # Sex will be loaded from participants.tsv per subject
-    "amplifier": _AMPLIFIER,
-    "cap": _CAP,
-    "handedness": "unknown",  # Handedness will be loaded from participants.tsv per subject
-}
-
-
-@dataclass
-class SubjectInfo:
-    """Container for subject metadata."""
-    subject_id: str
-    age: str
-    sex: str
-    handedness: str
+_AMPLIFIER = "BrainAmp"  # LLM 推断，需人类复核
+_CAP = "Ag/AgCl"  # Standard EEG cap material; LLM 推断，需人类复核
 
 
 def _parse_subject_id(file_path: str) -> Optional[str]:
-    """Extract subject ID from BIDS file path.
-
-    Parameters
-    ----------
-    file_path : str
-        BIDS-style file path containing 'sub-XX' pattern.
-
-    Returns
-    -------
-    str or None
-        Subject identifier (e.g., '01', '02') or None if not found.
-    """
+    """Extract subject ID from BIDS file path."""
     match = re.search(r"sub-(\d+)", file_path)
     if match:
         return match.group(1)
     return None
 
 
-def _parse_session_id(file_path: str) -> Optional[str]:
-    """Extract session ID from BIDS file path.
-
-    Parameters
-    ----------
-    file_path : str
-        BIDS-style file path containing 'ses-XX' pattern.
-
-    Returns
-    -------
-    str or None
-        Session identifier (e.g., '01', '02') or None if not found.
-    """
-    match = re.search(r"ses-(\d+)", file_path)
-    if match:
-        return match.group(1)
+def _find_events_tsv(file_path: str) -> Optional[str]:
+    """Find sibling events.tsv file for a given EEG file."""
+    base = file_path.replace("_eeg.edf", "").replace("_eeg.set", "").replace("_eeg.vhdr", "").replace("_eeg", "")
+    events_path = base + "_events.tsv"
+    if os.path.exists(events_path):
+        return events_path
+    
+    # Try alternative: same directory, same basename prefix
+    dirname = os.path.dirname(file_path)
+    basename = os.path.basename(file_path)
+    # Remove extension
+    base_no_ext = basename.split(".")[0]
+    # Remove _eeg suffix if present
+    if base_no_ext.endswith("_eeg"):
+        base_no_ext = base_no_ext[:-4]
+    
+    alt_events = os.path.join(dirname, base_no_ext + "_events.tsv")
+    if os.path.exists(alt_events):
+        return alt_events
+    
+    # Try with _eeg kept
+    alt_events2 = os.path.join(dirname, basename.split(".")[0] + "_events.tsv")
+    if os.path.exists(alt_events2):
+        return alt_events2
+    
     return None
 
 
-def _detect_paradigm(file_path: str) -> str:
-    """Detect BIDS task name from file path.
-
-    Parameters
-    ----------
-    file_path : str
-        BIDS-style file path containing 'task-XXX' pattern.
-
-    Returns
-    -------
-    str
-        Task name (e.g., 'trance', 'rest') or 'unknown'.
-    """
-    match = re.search(r"task-(\w+)", file_path)
-    if match:
-        return match.group(1)
-    return "unknown"
+def _find_participants_tsv(file_path: str) -> Optional[str]:
+    """Find participants.tsv file walking up from the EEG file."""
+    current_dir = os.path.dirname(file_path)
+    while current_dir and current_dir != os.path.dirname(current_dir):
+        participants_path = os.path.join(current_dir, "participants.tsv")
+        if os.path.exists(participants_path):
+            return participants_path
+        current_dir = os.path.dirname(current_dir)
+    return None
 
 
-def _load_participants_tsv(dataset_root: str) -> Dict[str, Dict[str, str]]:
-    """Load subject metadata from participants.tsv.
-
-    Parameters
-    ----------
-    dataset_root : str
-        Root directory of the BIDS dataset.
-
-    Returns
-    -------
-    dict
-        Mapping from subject_id to metadata dict with age, sex, handedness.
-    """
-    participants_path = os.path.join(dataset_root, "participants.tsv")
-    if not os.path.exists(participants_path):
-        return {}
-
+def _load_subject_info(participants_path: str, subject_id: str) -> Dict[str, str]:
+    """Load subject metadata from participants.tsv."""
     try:
         df = pd.read_csv(participants_path, sep="\t")
-        if "participant_id" not in df.columns:
+        
+        # Find participant_id column (could be 'participant_id' or 'subject_id')
+        id_col = None
+        for col in df.columns:
+            if col.lower() in ("participant_id", "subject_id"):
+                id_col = col
+                break
+        
+        if id_col is None:
             return {}
-
-        subject_dict = {}
-        for _, row in df.iterrows():
-            pid = row["participant_id"]
-            # Extract numeric part (e.g., 'sub-01' -> '01')
-            subj_id = re.sub(r"^sub-", "", str(pid))
-
-            # Map columns to standard fields
-            age = "unknown"
-            sex = "unknown"
-            handedness = "unknown"
-
-            # Check for age column variants
-            for col in df.columns:
-                col_lower = col.lower()
-                if "age" in col_lower and "hand" not in col_lower:
-                    val = row.get(col)
-                    if pd.notna(val):
-                        age = str(int(float(val)))
-                elif col_lower in ("sex", "gender"):
-                    val = row.get(col)
-                    if pd.notna(val):
-                        sex = str(val).strip().lower()
-                        if sex not in ("male", "female", "m", "f"):
-                            sex = "unknown"
-                        elif sex in ("m", "f"):
-                            sex = "male" if sex == "m" else "female"
-                elif "hand" in col_lower:
-                    val = row.get(col)
-                    if pd.notna(val):
-                        handedness = str(val).strip().lower()
-                        if handedness not in ("right", "left", "r", "l"):
-                            handedness = "unknown"
-                        elif handedness in ("r", "l"):
-                            handedness = "right" if handedness == "r" else "left"
-
-            subject_dict[subj_id] = {
-                "age": age,
-                "sex": sex,
-                "handedness": handedness,
-            }
-
-        return subject_dict
+        
+        # Match subject ID (handle 'sub-01' vs '01' formats)
+        search_id = f"sub-{subject_id}" if not subject_id.startswith("sub-") else subject_id
+        # Also try without prefix
+        search_id_no_prefix = subject_id.replace("sub-", "")
+        
+        row = None
+        for idx, pid in enumerate(df[id_col]):
+            pid_str = str(pid)
+            if pid_str == search_id or pid_str == search_id_no_prefix or pid_str == f"sub-{search_id_no_prefix}":
+                row = df.iloc[idx]
+                break
+        
+        if row is None:
+            return {}
+        
+        info = {}
+        # Map common column names
+        col_map = {
+            "age": ["age", "Age", "AGE"],
+            "sex": ["sex", "Sex", "SEX", "gender", "Gender", "GENDER"],
+            "handedness": ["handedness", "Handedness", "HANDEDNESS", "hand", "Hand", "HAND"],
+        }
+        
+        for target, candidates in col_map.items():
+            for col in candidates:
+                if col in df.columns:
+                    val = str(row[col]) if pd.notna(row[col]) else "unknown"
+                    info[target] = val.lower() if target == "sex" and val != "unknown" else val
+                    break
+        
+        return info
     except Exception:
         return {}
 
 
-def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
-    """Build channel rename map for standard_1020 montage.
-
-    Handles common non-standard channel name patterns found in EEG datasets:
-    - EEG-0, EEG-1, ... numbered channels
-    - Channels with 'EEG' prefix but standard names
-    - Channels with leading zeros or spacing variations
-
-    Parameters
-    ----------
-    raw : mne.io.BaseRaw
-        Raw object with current channel names.
-
-    Returns
-    -------
-    dict
-        Mapping from source channel names to standard 10-20 names.
-    """
-    rename_map = {}
-    existing = set(raw.ch_names)
-
-    # Standard 10-20 EEG channels (excluding EOG, reference, ground)
-    standard_eeg = {
-        "Fp1", "Fp2", "Fz", "F3", "F4", "F7", "F8",
-        "Cz", "C3", "C4", "T7", "T8",
-        "Pz", "P3", "P4", "P7", "P8",
-        "O1", "O2", "Oz",
-        "F1", "F2", "F5", "F6",
-        "FC1", "FC2", "FC5", "FC6",
-        "CP1", "CP2", "CP5", "CP6",
-        "PO3", "PO4", "PO7", "PO8",
-    }
-
-    # Common 64-channel extended layouts
-    extended_channels = {
-        "AF3", "AF4", "AF7", "AF8",
-        "FCz", "FC3", "FC4", "FC1", "FC2",
-        "FT7", "FT8",
-        "C1", "C2", "C5", "C6",
-        "TP7", "TP8",
-        "CPz", "CP3", "CP4",
-        "P1", "P2", "P5", "P6",
-        "POz",
-        "O9", "O10",
-    }
-    standard_eeg.update(extended_channels)
-
-    for ch_name in existing:
-        # Skip non-EEG channels
-        if any(skip in ch_name.upper() for skip in ["EOG", "ECG", "EMG", "REF", "GND", "GRND", "STIM", "MISC", "STATUS", "AUDIO"]):
-            continue
-
-        # Pattern: EEG-0, EEG-1, ... (numbered with prefix)
-        match = re.match(r"^(?:EEG[-_\s]?)?(\d+)$", ch_name, re.IGNORECASE)
-        if match:
-            continue  # Keep as-is; MNE will handle with standard montage
-
-        # Pattern: EEG-Fz, EEG-Cz, etc. (standard names with EEG prefix)
-        match = re.match(r"^EEG[-_\s]?([A-Z][a-z]?\d*)$", ch_name, re.IGNORECASE)
-        if match:
-            std_name = match.group(1)
-            if std_name in standard_eeg:
-                rename_map[ch_name] = std_name
-                continue
-
-        # Already standard name
-        base_name = re.sub(r"[-_\s]", "", ch_name)
-        if base_name in standard_eeg or ch_name in standard_eeg:
-            continue
-
-    return rename_map
+def _read_events_tsv(events_path: str) -> pd.DataFrame:
+    """Read events.tsv file."""
+    try:
+        df = pd.read_csv(events_path, sep="\t")
+        return df
+    except Exception:
+        return pd.DataFrame()
 
 
-def _derive_block_annotations(raw: mne.io.BaseRaw, n_blocks: int = 6) -> mne.Annotations:
-    """Derive trance/rest block annotations from known experimental timing.
-
-    Parameters
-    ----------
-    raw : mne.io.BaseRaw
-        Raw object with measurement info.
-    n_blocks : int
-        Number of blocks per session (default 6: 3 trance + 3 rest).
-
-    Returns
-    -------
-    mne.Annotations
-        Annotations with onset, duration, and description for each block.
-    """
+def _events_to_annotations(events_df: pd.DataFrame, raw: mne.io.BaseRaw) -> mne.Annotations:
+    """Convert events.tsv DataFrame to MNE Annotations."""
+    if events_df.empty or "onset" not in events_df.columns:
+        return mne.Annotations(onset=[], duration=[], description=[])
+    
+    onsets = events_df["onset"].values.astype(float)
+    
+    # Duration column
+    if "duration" in events_df.columns:
+        durations = events_df["duration"].values.astype(float)
+    else:
+        durations = np.zeros(len(onsets))
+    
+    # Description column: prefer 'trial_type', then 'value', then 'stim_type'
+    if "trial_type" in events_df.columns:
+        descriptions = events_df["trial_type"].astype(str).values
+    elif "value" in events_df.columns:
+        descriptions = events_df["value"].astype(str).values
+    elif "stim_type" in events_df.columns:
+        descriptions = events_df["stim_type"].astype(str).values
+    else:
+        descriptions = np.array(["unknown"] * len(onsets))
+    
+    # Filter out empty descriptions
+    valid_mask = descriptions != "" if len(descriptions) > 0 else slice(None)
+    if not isinstance(valid_mask, slice):
+        onsets = onsets[valid_mask]
+        durations = durations[valid_mask]
+        descriptions = descriptions[valid_mask]
+    
+    # Ensure onsets are within valid range
     sfreq = raw.info["sfreq"]
-    n_samp = raw.n_times
-    total_dur = n_samp / sfreq
-
-    # Check if total duration matches expected block structure
-    expected_dur = n_blocks * _BLOCK_DURATION_S
-    if abs(total_dur - expected_dur) > 10.0:  # Allow 10s tolerance
-        # Adjust n_blocks based on actual duration
-        n_blocks = max(1, int(round(total_dur / _BLOCK_DURATION_S)))
-
-    annotations = []
-    for i in range(n_blocks):
-        onset_s = i * _BLOCK_DURATION_S
-        # Alternate: odd indices = trance, even = rest (1-indexed)
-        if (i + 1) % 2 == 1:
-            desc = "trance"
-        else:
-            desc = "rest"
-        annotations.append((onset_s, _BLOCK_DURATION_S, desc))
-
+    max_time = raw.n_times / sfreq
+    valid_time_mask = (onsets >= 0) & (onsets <= max_time)
+    onsets = onsets[valid_time_mask]
+    durations = durations[valid_time_mask]
+    descriptions = descriptions[valid_time_mask]
+    
+    if len(onsets) == 0:
+        return mne.Annotations(onset=[], duration=[], description=[])
+    
     return mne.Annotations(
-        onset=[a[0] for a in annotations],
-        duration=[a[1] for a in annotations],
-        description=[a[2] for a in annotations],
-        ch_names=[None] * len(annotations),
-        orig_time=raw.info["meas_date"],
+        onset=onsets,
+        duration=durations,
+        description=descriptions,
     )
 
 
-class EEGUnityKernel:
-    """Kernel for OpenNeuro DS004040 (Trance Channeling EEG dataset).
-
-    This kernel handles the Stage 1 processing for the Trance Channeling
-    dataset, which contains EEG recordings from 13 subjects performing
-    alternating trance channeling and resting state blocks.
-
-    Parameters
-    ----------
-    dataset_root : str
-        Root directory of the OpenNeuro ds004040 dataset.
+def _create_trance_label_misc(raw: mne.io.BaseRaw, events_df: pd.DataFrame) -> mne.io.BaseRaw:
+    """Create misc channel named 'trance_label' based on events.tsv trial_type.
+    
+    Creates a step function: 1.0 during trance blocks, 0.0 during rest blocks.
     """
+    # Ensure data is loaded before adding channels
+    if not raw.preload:
+        raw.load_data()
+    
+    sfreq = raw.info["sfreq"]
+    n_times = raw.n_times
+    times = np.arange(n_times) / sfreq
+    
+    # Initialize with zeros (rest)
+    data = np.zeros((1, n_times))
+    
+    # If we have events, create step function based on trial_type
+    if not events_df.empty and "onset" in events_df.columns:
+        onsets = events_df["onset"].values.astype(float)
+        
+        if "duration" in events_df.columns:
+            durations = events_df["duration"].values.astype(float)
+        else:
+            durations = np.full(len(onsets), _BLOCK_DURATION_S)
+        
+        # Determine which descriptions indicate trance
+        if "trial_type" in events_df.columns:
+            trial_types = events_df["trial_type"].astype(str).values
+        elif "value" in events_df.columns:
+            trial_types = events_df["value"].astype(str).values
+        else:
+            trial_types = np.array(["unknown"] * len(onsets))
+        
+        for onset, duration, trial_type in zip(onsets, durations, trial_types):
+            # Determine if this is a trance block
+            is_trance = "trance" in trial_type.lower()
+            start_sample = int(onset * sfreq)
+            end_sample = int((onset + duration) * sfreq)
+            start_sample = max(0, min(start_sample, n_times))
+            end_sample = max(0, min(end_sample, n_times))
+            if start_sample < end_sample:
+                data[0, start_sample:end_sample] = 1.0 if is_trance else 0.0
+    
+    # Add as misc channel
+    info = mne.create_info(ch_names=["trance_label"], sfreq=sfreq, ch_types=["misc"])
+    raw_misc = mne.io.RawArray(data, info)
+    raw.add_channels([raw_misc], force_update_info=True)
+    
+    return raw
 
-    def __init__(self, dataset_root: str = "<LOCAL_HOME>/eeg_dataset/openneuro_raw/ds004040"):
-        self.dataset_root = dataset_root
-        self.participants_data = _load_participants_tsv(dataset_root)
 
-    def _set_montage(self, raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-        """Apply standard 10-20 montage to raw data.
-
-        Parameters
-        ----------
-        raw : mne.io.BaseRaw
-            Raw object with EEG channels.
-
-        Returns
-        -------
-        mne.io.BaseRaw
-            Raw object with montage applied.
-        """
-        # Build rename map for non-standard channel names
-        rename_map = _build_channel_rename_map(raw)
-
-        if rename_map:
-            print(f"[DEBUG] Renaming channels: {rename_map}")
-            raw.rename_channels(rename_map)
-
-        # Get EEG channels (exclude non-EEG)
-        eeg_chs = mne.pick_types(raw.info, eeg=True, meg=False, eog=False, ecg=False, emg=False)
-
-        if len(eeg_chs) == 0:
-            print("[WARNING] No EEG channels found after filtering")
-            return raw
-
-        # Try to set standard 1020 montage
-        try:
-            montage = mne.channels.make_standard_montage("standard_1020")
-            raw.set_montage(montage, on_missing="warn")
-        except Exception as e:
-            print(f"[WARNING] Could not set standard montage: {e}")
-
-        return raw
-
-    def _set_reference(self, raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-        """Set reference to average.
-
-        Parameters
-        ----------
-        raw : mne.io.BaseRaw
-            Raw object with EEG channels.
-
-        Returns
-        -------
-        mne.io.BaseRaw
-            Raw object with average reference.
-        """
-        try:
-            # First, ensure we have EEG channels
-            eeg_picks = mne.pick_types(raw.info, eeg=True, meg=False, eog=False, ecg=False, emg=False)
-            if len(eeg_picks) == 0:
-                print("[WARNING] No EEG channels found for re-referencing")
-                return raw
-
-            # Set average reference
-            raw.set_eeg_reference(ref_channels="average")
-        except Exception as e:
-            print(f"[WARNING] Could not set average reference: {e}")
-
-        return raw
-
-    def _set_subject_info(self, raw: mne.io.BaseRaw, subject_info: SubjectInfo) -> mne.io.BaseRaw:
-        """Set subject information in raw info.
-
-        Parameters
-        ----------
-        raw : mne.io.BaseRaw
-            Raw object.
-        subject_info : SubjectInfo
-            Subject information container.
-
-        Returns
-        -------
-        mne.io.BaseRaw
-            Raw object with subject info set.
-        """
-        # Map sex to MNE-compatible format
-        sex = subject_info.sex.lower() if subject_info.sex else "unknown"
-        if sex not in ("male", "female"):
-            sex = "unknown"
-
-        # Map handedness to MNE-compatible format (use 'hand' key)
-        hand = subject_info.handedness.lower() if subject_info.handedness else "unknown"
-        if hand not in ("right", "left", "ambidextrous"):
-            hand = "unknown"
-
-        # Build subject_info dict with ONLY MNE-supported fields
-        # MNE SubjectInfo only supports: id, sex, hand, and a few others - NOT 'age'
-        subject_info_dict = {
-            "id": subject_info.subject_id,
-            "sex": sex,
-            "hand": hand,
-        }
-
-        raw.info["subject_info"] = subject_info_dict
-        return raw
-
-    def _load_raw_file(self, file_path: str, row: pd.Series) -> mne.io.BaseRaw:
-        """Load raw EEG file.
-
-        Parameters
-        ----------
-        file_path : str
-            Path to EEG file (.set format).
-        row : pd.Series
-            Row from dataset dataframe.
-
-        Returns
-        -------
-        mne.io.BaseRaw
-            Loaded raw object.
-        """
-        # Load .set file using MNE
-        raw = mne.io.read_raw_eeglab(file_path, preload=True, verbose=False)
-
-        return raw
-
-    def _infer_admin_channels(self, raw: mne.io.BaseRaw) -> List[str]:
-        """Infer admin/status channel names from raw data.
-
-        Parameters
-        ----------
-        raw : mne.io.BaseRaw
-            Raw object.
-
-        Returns
-        -------
-        list of str
-            List of inferred admin channel names.
-        """
-        admin_channels = []
-
-        # Common status/admin channel patterns
-        patterns = ["STATUS", "Status", "status", "Trigger", "TRIGGER", "MkRange", "MRK", "Event"]
-
-        for ch in raw.ch_names:
-            for pattern in patterns:
-                if pattern in ch:
-                    admin_channels.append(ch)
-                    break
-
-        return admin_channels
-
-    def _extract_status_events(self, raw: mne.io.BaseRaw) -> pd.DataFrame:
-        """Extract events from STATUS channel.
-
-        Parameters
-        ----------
-        raw : mne.io.BaseRaw
-            Raw object with STATUS channel.
-
-        Returns
-        -------
-        pd.DataFrame
-            DataFrame with columns: onset, duration, description.
-        """
-        # Find STATUS channel
-        status_ch = None
-        for ch in raw.ch_names:
-            if "STATUS" in ch.upper():
-                status_ch = ch
-                break
-
-        if status_ch is None:
-            return pd.DataFrame(columns=["onset", "duration", "description"])
-
-        # Get STATUS channel data
-        status_data = raw.get_data(picks=[status_ch])[0]
-
-        # Find transitions (events)
-        diff = np.diff(status_data)
-        onsets = np.where(diff != 0)[0] / raw.info["sfreq"]
-        values = status_data[np.where(diff != 0)[0] + 1]
-
-        events = []
-        for onset, val in zip(onsets, values):
-            events.append({
-                "onset": onset,
-                "duration": 0.0,
-                "description": f"status_{int(val)}",
-                "value": int(val),
-            })
-
-        return pd.DataFrame(events)
-
-    def apply(self, udataset, raw: mne.io.BaseRaw, row: pd.Series) -> mne.io.BaseRaw:
-        """Apply Stage 1 kernel processing to raw EEG data.
-
-        Parameters
-        ----------
-        udataset : object
-            Dataset object (unused, for compatibility).
-        raw : mne.io.BaseRaw
-            Raw EEG object to process.
-        row : pd.Series
-            Row from dataset dataframe with file_path and metadata.
-
-        Returns
-        -------
-        mne.io.BaseRaw
-            Processed raw object.
-        """
-        # Extract file path
-        file_path = row.get("file_path", "")
-        if not os.path.exists(file_path):
-            raise FileNotFoundError(f"EEG file not found: {file_path}")
-
-        # Reload raw to ensure clean state
-        raw = self._load_raw_file(file_path, row)
-
-        # Get subject info
+@dataclass
+class OpenNeuroDS004040Kernel:
+    """Kernel for OpenNeuro ds004040 Trance Channeling EEG dataset."""
+    
+    KERNEL_ID: str = "openneuro_ds004040"
+    DATASET_NAME: str = "ds004040"
+    REQUIRED_INFO_FIELDS: List[str] = None
+    REQUIRED_NATIVE_MISC: List[str] = None
+    REQUIRED_DERIVED_MISC: List[str] = None
+    
+    def __post_init__(self):
+        self.REQUIRED_INFO_FIELDS = _REQUIRED_INFO_FIELDS.copy()
+        self.REQUIRED_NATIVE_MISC = _REQUIRED_NATIVE_MISC.copy()
+        self.REQUIRED_DERIVED_MISC = _REQUIRED_DERIVED_MISC.copy()
+    
+    def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
+        file_path = row.get("File Path", "") if hasattr(row, "get") else str(row)
+        
+        # Find participants.tsv and load subject info
+        participants_path = _find_participants_tsv(file_path)
         subject_id = _parse_subject_id(file_path)
-        session_id = _parse_session_id(file_path)
-        task = _detect_paradigm(file_path)
-
-        # Load subject metadata from participants.tsv
-        age = "unknown"
-        sex = "unknown"
-        handedness = "unknown"
-
-        if subject_id and subject_id in self.participants_data:
-            meta = self.participants_data[subject_id]
-            age = meta.get("age", "unknown")
-            sex = meta.get("sex", "unknown")
-            handedness = meta.get("handedness", "unknown")
-
-        subject_info = SubjectInfo(
-            subject_id=subject_id or "unknown",
-            age=age,
-            sex=sex,
-            handedness=handedness,
-        )
-
-        # Set subject info
-        raw = self._set_subject_info(raw, subject_info)
-
-        # Set measurement info
-        raw.info["experimenter"] = "unknown"
-        raw.info["device_info"] = _AMPLIFIER
-        raw.info["coil_transformation_time"] = None
-        raw.info["utc_offset"] = None
-
-        # Set standard 1020 montage
-        raw = self._set_montage(raw)
-
-        # Set average reference
-        raw = self._set_reference(raw)
-
-        # Infer and keep admin channels but don't process them
-        admin_channels = self._infer_admin_channels(raw)
-        if admin_channels:
-            print(f"[DEBUG] Found admin channels: {admin_channels}")
-
-        # Derive block annotations from known experimental timing
-        annotations = _derive_block_annotations(raw)
-        raw.set_annotations(annotations)
-
-        # Handle annotations description normalization
-        if raw.annotations:
-            descrips = set(raw.annotations.description)
-            print(f"[DEBUG] Annotations descriptions: {descrips}")
-
+        
+        subject_info = {}
+        if participants_path and subject_id:
+            subject_info = _load_subject_info(participants_path, subject_id)
+        
+        # Find and read events.tsv
+        events_path = _find_events_tsv(file_path)
+        events_df = pd.DataFrame()
+        if events_path:
+            events_df = _read_events_tsv(events_path)
+        
+        # Add events as annotations
+        if not events_df.empty:
+            annotations = _events_to_annotations(events_df, raw)
+            if len(annotations) > 0:
+                # Set annotations, replacing any existing ones
+                raw.set_annotations(annotations)
+        
+        # Create derived misc channel: trance_label
+        if "trance_label" in _REQUIRED_DERIVED_MISC:
+            raw = _create_trance_label_misc(raw, events_df)
+        
+        # Build eegunity_description
+        eegunity_description = {
+            "age": str(subject_info.get("age", "unknown")),
+            "sex": subject_info.get("sex", "unknown"),
+            "amplifier": _AMPLIFIER,
+            "cap": _CAP,
+            "handedness": str(subject_info.get("handedness", "unknown")),
+        }
+        
+        # Set description as JSON string
+        original_desc = raw.info.get("description", "")
+        raw.info["description"] = json.dumps({
+            "original_description": original_desc,
+            "eegunity_description": eegunity_description,
+        })
+        
         return raw
 
 
-# Kernel instance for EEGUnity
-KERNEL = EEGUnityKernel()
+KERNEL = OpenNeuroDS004040Kernel()

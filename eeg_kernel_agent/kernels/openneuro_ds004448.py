@@ -14,6 +14,7 @@ from __future__ import annotations
 import json
 import math
 import os
+import re
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
@@ -23,7 +24,7 @@ import pandas as pd
 
 
 # Required info fields from participants.tsv
-_REQUIRED_INFO_FIELDS = ["age", "sex", "handedness", "amplifier", "cap"]
+_REQUIRED_INFO_FIELDS = ["age", "sex", "handedness", "amplifier", "cap", "gender"]
 
 # Required native misc channels (already in raw data)
 _REQUIRED_NATIVE_MISC = []
@@ -87,70 +88,61 @@ def _standardize_channel_name(ch_name: str) -> str:
     elif ch_clean.upper().startswith("EEG"):
         ch_clean = ch_clean[3:]
     
-    # Remove leading zeros from numeric channel names
-    if ch_clean.isdigit():
-        ch_clean = str(int(ch_clean))
+    # Direct lookup in map
+    upper_clean = ch_clean.upper()
+    if upper_clean in _CHANNEL_STANDARD_MAP:
+        return _CHANNEL_STANDARD_MAP[upper_clean]
     
-    # Direct lookup in standard map
-    upper_name = ch_clean.upper()
-    if upper_name in _CHANNEL_STANDARD_MAP:
-        return _CHANNEL_STANDARD_MAP[upper_name]
-    
-    # Try case-insensitive match
-    for key, val in _CHANNEL_STANDARD_MAP.items():
-        if key.upper() == upper_name:
-            return val
-    
+    # Already standard case
     return ch_clean
-
-
-def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
-    """Build rename map for standardizing channel names."""
-    rename_map = {}
-    for ch_name in raw.ch_names:
-        std_name = _standardize_channel_name(ch_name)
-        if std_name != ch_name and std_name not in raw.ch_names:
-            rename_map[ch_name] = std_name
-    return rename_map
 
 
 def _find_events_tsv(file_path: str) -> Optional[str]:
     """Find sibling events.tsv for a given EEG file."""
-    base = file_path.replace(".edf", "").replace(".bdf", "").replace(".set", "").replace(".eeg", "")
-    # Try BIDS naming patterns
-    candidates = [
-        base + "_events.tsv",
-        base.replace("_eeg", "_events.tsv"),
-    ]
-    # Also check parent directory for session-level events
-    dir_path = os.path.dirname(file_path)
-    for fname in os.listdir(dir_path) if os.path.isdir(dir_path) else []:
-        if fname.endswith("_events.tsv"):
-            candidates.append(os.path.join(dir_path, fname))
+    # BIDS naming: sub-XXX_ses-YY_task-ZZ[_run-WW]_eeg.edf -> sub-XXX_ses-YY_task-ZZ[_run-WW]_events.tsv
+    base = file_path.replace("_eeg.edf", "").replace("_eeg.bdf", "").replace("_eeg.set", "").replace("_eeg.vhdr", "")
+    events_path = base + "_events.tsv"
+    if os.path.exists(events_path):
+        return events_path
     
-    for cand in candidates:
-        if os.path.exists(cand):
-            return cand
+    # Try without run entity
+    dir_name = os.path.dirname(file_path)
+    file_name = os.path.basename(file_path)
+    # Pattern match for BIDS files
+    parts = file_name.replace("_eeg.edf", "").split("_")
+    for i in range(len(parts), 0, -1):
+        candidate_base = "_".join(parts[:i])
+        candidate = os.path.join(dir_name, candidate_base + "_events.tsv")
+        if os.path.exists(candidate):
+            return candidate
+    
+    # Search directory for matching events.tsv
+    if os.path.isdir(dir_name):
+        for f in os.listdir(dir_name):
+            if f.endswith("_events.tsv"):
+                return os.path.join(dir_name, f)
+    
     return None
 
 
 def _find_participants_tsv(file_path: str) -> Optional[str]:
-    """Find participants.tsv by walking up from file path."""
-    current_dir = os.path.dirname(file_path)
-    while current_dir and current_dir != os.path.dirname(current_dir):
-        ptp = os.path.join(current_dir, "participants.tsv")
-        if os.path.exists(ptp):
-            return ptp
+    """Find participants.tsv going up from file directory."""
+    current_dir = os.path.dirname(os.path.abspath(file_path))
+    while current_dir != os.path.dirname(current_dir):  # stop at root
+        candidate = os.path.join(current_dir, "participants.tsv")
+        if os.path.exists(candidate):
+            return candidate
         current_dir = os.path.dirname(current_dir)
     return None
 
 
-def _extract_subject_id_from_path(file_path: str) -> Optional[str]:
+def _extract_subject_id(file_path: str) -> Optional[str]:
     """Extract BIDS subject ID from file path."""
-    import re
-    match = re.search(r'sub-([a-zA-Z0-9]+)', file_path)
+    file_name = os.path.basename(file_path)
+    # Match sub-XXX pattern
+    match = re.search(r'(sub-[a-zA-Z0-9]+)', file_name)
     if match:
-        return "sub-" + match.group(1)
+        return match.group(1)
     return None
 
 
@@ -163,23 +155,49 @@ class OpenNeuroDS004448Kernel:
     def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
         file_path = row["File Path"]
 
-        # Preload raw data before any operations that require it
+        # Preload raw data to allow adding channels
         if not raw.preload:
             raw.load_data()
 
-        # --- 1. Channel renaming (before set_montage) ---
-        rename_map = _build_channel_rename_map(raw)
+        # --- 1. Channel renaming to standard 10-20 ---
+        rename_map = {}
+        for ch_name in raw.ch_names:
+            std_name = _standardize_channel_name(ch_name)
+            if std_name != ch_name:
+                rename_map[ch_name] = std_name
+        
         if rename_map:
-            raw.rename_channels(rename_map)
+            raw = raw.rename_channels(rename_map)
 
-        # Set montage for standard 10-20 channels if possible
+        # --- 2. Set channel types ---
+        # Mark EOG channels
+        eog_names = [ch for ch in raw.ch_names if ch.upper() in ["EOG1", "EOG2", "VEOG", "HEOG", "EOG"]]
+        ch_types = {}
+        for ch in eog_names:
+            ch_types[ch] = "eog"
+        
+        # Mark any non-EEG, non-EOG as misc if needed
+        for ch in raw.ch_names:
+            if ch not in ch_types:
+                # Default to EEG; format_channel_name in EEGUnity will handle standard types
+                pass
+        
+        if ch_types:
+            raw.set_channel_types(ch_types)
+
+        # --- 3. Set montage ---
+        # 128-channel extended 10-20 layout
+        # LLM 推断，需人类复核
         try:
-            raw.set_montage("standard_1020", match_case=False, on_missing="ignore")
+            raw.set_montage("standard_1020", match_case=False, on_missing="warn")
         except Exception:
-            pass  # Non-standard channels will be ignored
+            try:
+                raw.set_montage("standard_1005", match_case=False, on_missing="warn")
+            except Exception:
+                pass  # Non-standard cap or missing positions
 
-        # --- 2. Read participants.tsv for subject metadata ---
-        subject_id = _extract_subject_id_from_path(file_path)
+        # --- 4. Read participants.tsv for subject info ---
+        subject_id = _extract_subject_id(file_path)
         participants_path = _find_participants_tsv(file_path)
         
         age = "unknown"
@@ -187,168 +205,102 @@ class OpenNeuroDS004448Kernel:
         handedness = "unknown"
         amplifier = "unknown"
         cap = "unknown"
-        extra_info: Dict[str, str] = {}
+        gender = "unknown"
 
         if participants_path and subject_id:
             try:
-                df = pd.read_csv(participants_path, sep="\t")
-                sub_row = df[df["participant_id"] == subject_id]
+                participants_df = pd.read_csv(participants_path, sep="\t")
+                # Find matching row
+                sub_row = participants_df[participants_df["participant_id"] == subject_id]
+                if sub_row.empty:
+                    # Try without "sub-" prefix
+                    sub_id_num = subject_id.replace("sub-", "")
+                    sub_row = participants_df[participants_df["participant_id"] == sub_id_num]
+                if sub_row.empty:
+                    # Try with "sub-" prefix
+                    sub_row = participants_df[participants_df["participant_id"] == "sub-" + sub_id_num]
+                
                 if not sub_row.empty:
-                    # Get the first row as a Series
-                    ev_row = sub_row.iloc[0]
+                    row_data = sub_row.iloc[0]
                     
-                    # age
-                    if "age" in ev_row.index:
-                        val = ev_row["age"]
-                        if pd.notna(val):
-                            age = str(int(float(val)))
-                    
-                    # sex (check both sex and gender columns)
-                    for col in ["sex", "gender"]:
-                        if col in ev_row.index:
-                            val = ev_row[col]
-                            if pd.notna(val):
-                                sex = str(val).lower().strip()
-                                break
-                    
-                    # handedness
-                    if "handedness" in ev_row.index:
-                        val = ev_row["handedness"]
-                        if pd.notna(val):
-                            handedness = str(val).lower().strip()
-                    
-                    # amplifier
-                    if "amplifier" in ev_row.index:
-                        val = ev_row["amplifier"]
-                        if pd.notna(val):
-                            amplifier = str(val).lower().strip()
-                    
-                    # cap
-                    if "cap" in ev_row.index:
-                        val = ev_row["cap"]
-                        if pd.notna(val):
-                            cap = str(val).lower().strip()
-                    
-                    # Collect any other columns as extra info
-                    for col in df.columns:
-                        if col not in ["participant_id", "age", "sex", "gender", "handedness", "amplifier", "cap"]:
-                            if col in ev_row.index:
-                                val = ev_row[col]
-                                if pd.notna(val):
-                                    extra_info[col] = str(val)
+                    # Map participants.tsv columns to required fields
+                    if "age" in row_data:
+                        age = str(row_data["age"])
+                    if "sex" in row_data:
+                        sex = str(row_data["sex"])
+                    if "handedness" in row_data:
+                        handedness = str(row_data["handedness"])
+                    if "amplifier" in row_data:
+                        amplifier = str(row_data["amplifier"])
+                    if "cap" in row_data:
+                        cap = str(row_data["cap"])
+                    if "gender" in row_data:
+                        gender = str(row_data["gender"])
             except Exception:
-                pass  # Keep defaults if participants.tsv can't be read
+                pass  # Keep defaults if file can't be read
 
-        # --- 3. Read events.tsv and add as annotations ---
+        # --- 5. Read events.tsv and create annotations ---
         events_path = _find_events_tsv(file_path)
-        if events_path:
+        event_onsets = []
+        event_durations = []
+        event_descriptions = []
+        
+        if events_path and os.path.exists(events_path):
             try:
                 events_df = pd.read_csv(events_path, sep="\t")
-                # BIDS events.tsv columns: onset, duration, trial_type, [optional]
-                if "onset" in events_df.columns and "duration" in events_df.columns:
-                    # The onset column in this dataset is in samples, not seconds!
-                    # Need to convert to seconds for MNE Annotations
-                    sfreq = raw.info["sfreq"]
-                    onsets = events_df["onset"].values.astype(float) / sfreq
-                    durations = events_df["duration"].values.astype(float) / sfreq
-                    
-                    # Use 'value' column as the description to preserve event IDs
-                    # The 'value' column contains the trigger values (e.g., '1')
-                    # HC-5: do NOT remap or rename event IDs - pass literal tsv labels through
-                    if "value" in events_df.columns:
-                        descriptions = events_df["value"].astype(str).values
-                    elif "trial_type" in events_df.columns:
-                        descriptions = events_df["trial_type"].astype(str).values
-                    else:
-                        descriptions = np.array([""] * len(events_df))
-                    
-                    # Create annotations, filtering out any invalid rows
-                    valid_mask = ~(np.isnan(onsets) | np.isnan(durations))
-                    if valid_mask.any():
-                        # Remove existing annotations to avoid duplicates
-                        raw.set_annotations(None)
-                        annot = mne.Annotations(
-                            onset=onsets[valid_mask],
-                            duration=durations[valid_mask],
-                            description=descriptions[valid_mask],
-                        )
-                        raw.set_annotations(annot)
+                # BIDS events.tsv columns: onset, duration, trial_type, etc.
+                for _, ev_row in events_df.iterrows():
+                    onset = float(ev_row["onset"])
+                    duration = float(ev_row.get("duration", 0))
+                    trial_type = str(ev_row.get("trial_type", "unknown"))
+                    event_onsets.append(onset)
+                    event_durations.append(duration)
+                    event_descriptions.append(trial_type)
             except Exception:
-                pass  # Keep existing annotations if events.tsv can't be parsed
-
-        # --- 4. Create derived misc channels ---
-        # trial_index: create a step function based on trial onsets from events
-        sfreq = raw.info["sfreq"]
-        n_times = raw.n_times
-        trial_index_data = np.zeros((1, n_times))
-
-        if events_path:
-            try:
-                events_df = pd.read_csv(events_path, sep="\t")
-                if "onset" in events_df.columns:
-                    # Sort by onset to assign trial indices
-                    # Onsets are in samples, convert to seconds for time-based indexing
-                    onsets = events_df["onset"].values.astype(float) / sfreq
-                    valid_mask = ~np.isnan(onsets)
-                    onsets = onsets[valid_mask]
-                    sorted_indices = np.argsort(onsets)
-                    
-                    for trial_idx, event_idx in enumerate(sorted_indices, start=1):
-                        onset = onsets[event_idx]
-                        # Determine end of trial: next onset or end of recording
-                        sorted_onsets = onsets[sorted_indices]
-                        pos = np.searchsorted(sorted_onsets, onset)
-                        if pos + 1 < len(sorted_onsets):
-                            next_onset = sorted_onsets[pos + 1]
-                        else:
-                            next_onset = raw.times[-1] + 1.0  # beyond end
-                        
-                        start_sample = max(0, int(onset * sfreq))
-                        end_sample = min(n_times, int(next_onset * sfreq))
-                        if start_sample < end_sample:
-                            trial_index_data[0, start_sample:end_sample] = trial_idx
-            except Exception:
-                pass  # trial_index stays zeros if events can't be parsed
-
-        # Add trial_index as a misc channel
-        if "trial_index" not in raw.ch_names:
-            info_trial = mne.create_info(
-                ch_names=["trial_index"],
-                sfreq=sfreq,
-                ch_types=["misc"]
+                pass  # Keep empty if file can't be read
+        
+        # Create annotations from events
+        if event_onsets:
+            # Remove any existing annotations first to avoid duplicates
+            raw.set_annotations(None)
+            annotations = mne.Annotations(
+                onset=event_onsets,
+                duration=event_durations,
+                description=event_descriptions,
+                orig_time=raw.info["meas_date"]
             )
-            raw_trial = mne.io.RawArray(trial_index_data, info_trial)
-            raw.add_channels([raw_trial], force_update_info=True)
+            raw.set_annotations(annotations)
 
-        # --- 5. Build eegunity_description ---
-        description = {
-            "dataset_name": "openneuro-ds004448",
-            "dataset_alias": "BMI-HDEEG-motor-imagery",
-            "task": "smrbmi",
-            "sampling_rate_hz": int(raw.info["sfreq"]),
-            "n_channels": len(raw.ch_names),
-            "n_eeg_channels": len(mne.pick_types(raw.info, eeg=True, exclude=[])),
-            "n_eog_channels": len(mne.pick_types(raw.info, eog=True, exclude=[])),
-            "n_misc_channels": len(mne.pick_types(raw.info, misc=True, exclude=[])),
-            "channel_names": raw.ch_names,
-            "subject_id": subject_id or "unknown",
-            "age": age,
-            "sex": sex,
-            "handedness": handedness,
-            "amplifier": amplifier,
-            "cap": cap,
-            "duration_sec": raw.times[-1] if len(raw.times) > 0 else 0,
-            "n_trials": int(trial_index_data.max()) if trial_index_data.max() > 0 else 0,
-            "event_codes_present": list(set(raw.annotations.description)) if raw.annotations else [],
-            "has_annotations": raw.annotations is not None and len(raw.annotations) > 0,
-            "notes": "Sensorimotor rhythm-based BCI with motor imagery. Events loaded from events.tsv with sample-based onsets converted to seconds.",
-        }
+        # --- 6. Create derived misc channels ---
+        # trial_index: constant broadcast of 0 for participants.tsv sources
+        # (no trial-level info in participants.tsv, so use constant)
+        trial_index_data = np.zeros((1, len(raw.times)))
         
-        # Add extra participant info
-        description.update(extra_info)
+        # Create info for new misc channel
+        ch_info = mne.create_info(
+            ch_names=["trial_index"],
+            sfreq=raw.info["sfreq"],
+            ch_types=["misc"]
+        )
+        trial_index_raw = mne.io.RawArray(trial_index_data, ch_info, verbose=False)
+        raw.add_channels([trial_index_raw], force_update_info=True)
+
+        # --- 7. Set description with eegunity metadata ---
+        original_description = raw.info.get("description", "")
+        if original_description is None:
+            original_description = ""
         
-        # Store description in raw.info
-        raw.info["description"] = json.dumps(description)
+        raw.info["description"] = json.dumps({
+            "original_description": original_description,
+            "eegunity_description": {
+                "age": age,
+                "sex": sex,
+                "handedness": handedness,
+                "amplifier": amplifier,
+                "cap": cap,
+                "gender": gender,
+            },
+        })
 
         return raw
 

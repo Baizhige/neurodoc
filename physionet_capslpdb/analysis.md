@@ -49,8 +49,8 @@ The CAP Sleep Database comprises 108 overnight polysomnographic (PSG) recordings
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `SLEEP-S0` | 0 | Wake (S0) |
   | `SLEEP-S1` | 1 | NREM Stage 1 |
   | `SLEEP-S2` | 2 | NREM Stage 2 |
@@ -58,9 +58,9 @@ The CAP Sleep Database comprises 108 overnight polysomnographic (PSG) recordings
   | `SLEEP-S4` | 4 | NREM Stage 4 |
   | `SLEEP-REM` | 5 | REM sleep |
 - **Evidence**:
-  - DOI: 10.13026/C2VC79 — Dataset documentation confirming PSG/EEG sleep scoring with R&K stages
-  - DOI: 10.1109/tnsre.2019.2934828 — The classification is typically performed on thirty-seconds windows of the electroencephalography (EEG) recording.
-- **Kernel Notes**: 
+  - 10.13026/C2VC79 — Dataset documentation confirming PSG/EEG sleep scoring with R&K stages
+  - 10.1109/tnsre.2019.2934828 — The classification is typically performed on thirty-seconds windows of the electroencephalography (EEG) recording.
+- **Notes**: 
 
 ### Classical Task 2: CAP A-phase detection
 - **Task Type**: classification
@@ -69,14 +69,14 @@ The CAP Sleep Database comprises 108 overnight polysomnographic (PSG) recordings
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `A1` | 1 | CAP A-phase (subtype A1) |
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `A1` | 0 | CAP A-phase (subtype A1) |
   | `A2` | 1 | CAP A-phase (subtype A2) |
-  | `A3` | 1 | CAP A-phase (subtype A3) |
+  | `A3` | 2 | CAP A-phase (subtype A3) |
 - **Evidence**:
-  - DOI: 10.1109/tnsre.2019.2934828 — CAP A-phase detection is performed at 1 Hz resolution using feature vectors extracted from short overlapping windows, with an LSTM operating on 14-second temporal contexts centered at each time step.
-- **Kernel Notes**: 
+  - 10.1109/tnsre.2019.2934828 — CAP A-phase detection is performed at 1 Hz resolution using feature vectors extracted from short overlapping windows, with an LSTM operating on 14-second temporal contexts centered at each time step.
+- **Notes**: 
 
 ### Potential Task 1: CAP A-phase subtype classification (4 seconds)
 - **Task Type**: classification
@@ -85,14 +85,14 @@ The CAP Sleep Database comprises 108 overnight polysomnographic (PSG) recordings
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `A1` | 0 | CAP Phase A1 (synchronized EEG) |
   | `A2` | 1 | CAP Phase A2 (mixed pattern) |
   | `A3` | 2 | CAP Phase A3 (desynchronized EEG) |
 - **Evidence**:
-  - DOI: **Kernel Notes**: — 
-- **Kernel Notes**: 
+
+- **Notes**: 
 
 ### Potential Task 2: NREM classification (4-second)
 - **Task Type**: classification
@@ -101,8 +101,8 @@ The CAP Sleep Database comprises 108 overnight polysomnographic (PSG) recordings
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `SLEEP-S0` | 0 | Wake (S0) |
   | `SLEEP-S1` | 1 | NREM Stage 1 |
   | `SLEEP-S2` | 2 | NREM Stage 2 |
@@ -110,8 +110,8 @@ The CAP Sleep Database comprises 108 overnight polysomnographic (PSG) recordings
   | `SLEEP-S4` | 4 | NREM Stage 4 |
   | `SLEEP-REM` | 5 | REM sleep |
 - **Evidence**:
-  - DOI: **Kernel Notes**: — 
-- **Kernel Notes**: 
+
+- **Notes**: 
 
 ## Data Quality Notes
 
