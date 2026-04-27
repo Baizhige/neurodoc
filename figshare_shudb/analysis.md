@@ -37,15 +37,15 @@ The MI experiment was divided into three stages. In the first stage, 0-2s was th
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `left` | 0 | Left-hand motor imagery |
   | `right` | 1 | Right-hand motor imagery |
 - **Evidence**:
   - DOI: 10.1016/j.heliyon.2024.e37343 — Validates multi-session left vs right hand motor imagery classification using CNN-based feature extraction with 3s MI window (offset is 0.5)
   - DOI: 10.1016/j.jneumeth.2025.110483 — Validates on SHU dataset achieving 87.2% within-session and 67.2% cross-session accuracy for left/right hand MI
   - DOI: 10.1109/jbhi.2024.3467090 — Evaluates binary motor imagery classification on SHU dataset achieving 69.3% accuracy
-- **Kernel Notes**: 
+- **Notes**: 
 
 ## Data Quality Notes
 

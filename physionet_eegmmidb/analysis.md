@@ -46,19 +46,19 @@ One hundred and nine volunteers performed a series of motor movement and motor i
 ### Classical Task 1: 4-Class Motor Imagery Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 3 s, target_events = [`Imagine Opening Left Fist Movement`, `Imagine Opening Right Fist Movement`, `Imagine Opening Both Fists Movement`, `Imagine Opening Both Feet Movement`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 3 s, target_events = [`Imagine Opening Left Fist Movement`, `Imagine Opening Right Fist Movement`, `Imagine Opening Fists Movement`, `Imagine Opening Feet Movement`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `Imagine Opening Left Fist Movement` | 0 | Left-fist motor imagery |
   | `Imagine Opening Right Fist Movement` | 1 | Right-fist motor imagery |
   | `Imagine Opening Both Fists Movement` | 2 | Both-fists motor imagery |
-  | `Imagine Opening Both Feet Movement` | 3 | Both-feet motor imagery |
+  | `Imagine Opening Feet Movement` | 3 | Both-feet motor imagery |
 - **Evidence**:
   - DOI: 10.1109/TNSRE.2022.3186442 — 4-class motor imagery classification (left/right fist, both fists, both feet) using the PhysioNet EEG Motor Imagery Database with tmin=0.0s and tmax=3.0s
-- **Kernel Notes**: 
+- **Notes**: 
 
 ### Potential Task 1: 4-Class Motor Movement Classification
 - **Task Type**: classification
@@ -67,36 +67,36 @@ One hundred and nine volunteers performed a series of motor movement and motor i
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `Open Left Fist Movement` | 0 | Left-fist movement |
   | `Open Right Fist Movement` | 1 | Right-fist movement |
   | `Open Both Fists Movement` | 2 | Both-fists movement |
   | `Open Both Feet Movement` | 3 | Both-feet movement |
 - **Evidence**:
 
-- **Kernel Notes**: 
+- **Notes**: 
 
 ### Potential Task 2: 4-Class Motor Movement Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 3 s, target_events = [`Imagine Opening Left Fist Movement`, `Open Left Fist Movement`, `Imagine Opening Right Fist Movement`, `Open Right Fist Movement`, `Imagine Opening Both Fists Movement`, `Open Both Fists Movement`, `Imagine Opening Both Feet Movement`, `Open Both Feet Movement`]
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 3 s, target_events = [`Imagine Opening Left Fist Movement`, `Open Left Fist Movement`, `Imagine Opening Right Fist Movement`, `Open Right Fist Movement`, `Imagine Opening Both Fists Movement`, `Open Both Fists Movement`, `Imagine Opening Feet Movement`, `Open Both Feet Movement`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `Imagine Opening Left Fist Movement` | 0 | Left-fist motor imagery (R04/08/12) |
   | `Open Left Fist Movement` | 0 | Left-fist real movement (R03/07/11) |
   | `Imagine Opening Right Fist Movement` | 1 | Right-fist motor imagery (R04/08/12) |
   | `Open Right Fist Movement` | 1 | Right-fist real movement (R03/07/11) |
   | `Imagine Opening Both Fists Movement` | 2 | Both-fists motor imagery (R06/10/14) |
   | `Open Both Fists Movement` | 2 | Both-fists real movement (R05/09/13) |
-  | `Imagine Opening Both Feet Movement` | 3 | Both-feet motor imagery (R06/10/14) |
+  | `Imagine Opening Feet Movement` | 3 | Both-feet motor imagery (R06/10/14) |
   | `Open Both Feet Movement` | 3 | Both-feet real movement (R05/09/13) |
 - **Evidence**:
 
-- **Kernel Notes**: 
+- **Notes**: 
 
 ### Potential Task 3: Binary Left vs. Right Fist Motor Imagery
 - **Task Type**: classification
@@ -105,28 +105,28 @@ One hundred and nine volunteers performed a series of motor movement and motor i
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `Imagine Opening Left Fist Movement` | 0 | Left-fist motor imagery |
   | `Imagine Opening Right Fist Movement` | 1 | Right-fist motor imagery |
 - **Evidence**:
 
-- **Kernel Notes**: 
+- **Notes**: 
 
 ### Potential Task 4: Both Fists vs. Both Feet Motor Imagery
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 3 s, target_events = [`Imagine Opening Both Fists Movement`, `Imagine Opening Both Feet Movement`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 3 s, target_events = [`Imagine Opening Both Fists Movement`, `Imagine Opening Feet Movement`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `Imagine Opening Both Fists Movement` | 0 | Both-fists motor imagery (R06/10/14) |
-  | `Imagine Opening Both Feet Movement` | 1 | Both-feet motor imagery (R06/10/14) |
+  | `Imagine Opening Feet Movement` | 1 | Both-feet motor imagery (R06/10/14) |
 - **Evidence**:
 
-- **Kernel Notes**: 
+- **Notes**: 
 
 ## Data Quality Notes
 

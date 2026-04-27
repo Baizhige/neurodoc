@@ -23,10 +23,11 @@ For the synchronous paradigms, each recording session began with an initial rela
 > **Kernel SHA256**: `a8832789924f840bc44bd3b38edc6fc29bb5dfedf3c46c596f9f27524bc69c51`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|---|---|---|---|---|
 | `5F: index finger MI` | 3308 | event | raw | Index finger motor imagery cue (5F paradigm) |
 | `5F: middle finger MI` | 3716 | event | raw | Middle finger motor imagery cue (5F paradigm) |
 | `5F: pinkie MI` | 3561 | event | raw | Pinky finger motor imagery cue (5F paradigm) |
@@ -55,39 +56,41 @@ For the synchronous paradigms, each recording session began with an initial rela
 
 
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
 
+
 ## Tasks
 
 ### Classical Task 1: CLA-Motor Imagery Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: , target_events = [`CLA: left hand MI`, `CLA: right hand MI`, `CLA: passive state`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 1 s, target_events = [`CLA: left hand MI`, `CLA: right hand MI`, `CLA: passive state`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `CLA: left hand MI` | 0 | Left-hand motor imagery (CLA paradigm, marker 1) |
   | `CLA: right hand MI` | 1 | Right-hand motor imagery (CLA paradigm, marker 2) |
   | `CLA: passive state` | 2 | Passive/idle state (CLA paradigm, marker 3) |
 - **Evidence**:
-  - DOI: 10.1038/sdata.2018.211 — Validates dataset with SVM classification using 0.85s epochs from stimulus onset, demonstrating multi-class MI across CLA (3-class), HaLT (6-class), and 5F (5-class finger) paradigms
-- **Kernel Notes**: 
+  - 10.1038/sdata.2018.211 — Validates dataset with SVM classification using 0.85s epochs from stimulus onset, demonstrating multi-class MI across CLA (3-class), HaLT (6-class), and 5F (5-class finger) paradigms
+- **Notes**: 
 
 ### Classical Task 2: Halt-Paradigm Motor Imagery Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: , target_events = [`HaLT: left hand MI`, `HaLT: right hand MI`, `HaLT: passive state`, `HaLT: left leg MI`, `HaLT: right leg MI`, `HaLT: tongue MI`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 1 s, target_events = [`HaLT: left hand MI`, `HaLT: right hand MI`, `HaLT: passive state`, `HaLT: left leg MI`, `HaLT: right leg MI`, `HaLT: tongue MI`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `HaLT: left hand MI` | 0 | Left-hand motor imagery (HaLT paradigm, marker 1) |
   | `HaLT: right hand MI` | 1 | Right-hand motor imagery (HaLT paradigm, marker 2) |
   | `HaLT: passive state` | 2 | Passive/idle state (HaLT paradigm, marker 3) |
@@ -95,41 +98,41 @@ For the synchronous paradigms, each recording session began with an initial rela
   | `HaLT: right leg MI` | 4 | Right-leg motor imagery (HaLT paradigm, marker 6) |
   | `HaLT: tongue MI` | 5 | Tongue motor imagery (HaLT paradigm, marker 5) |
 - **Evidence**:
-  - DOI: 10.1038/sdata.2018.211 — Validates dataset with SVM classification using 0.85s epochs from stimulus onset, demonstrating multi-class MI across CLA (3-class), HaLT (6-class), and 5F (5-class finger) paradigms
-- **Kernel Notes**: 
+  - 10.1038/sdata.2018.211 — Validates dataset with SVM classification using 0.85s epochs from stimulus onset, demonstrating multi-class MI across CLA (3-class), HaLT (6-class), and 5F (5-class finger) paradigms
+- **Notes**: 
 
 ### Classical Task 3: 5F-Paradigm Motor Imagery Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: , target_events = [`5F: thumb MI`, `5F: index finger MI`, `5F: middle finger MI`, `5F: ring finger MI`, `5F: pinkie MI`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 1 s, target_events = [`5F: thumb MI`, `5F: index finger MI`, `5F: middle finger MI`, `5F: ring finger MI`, `5F: pinkie MI`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `5F: thumb MI` | 0 | Thumb finger imagery (5F paradigm, marker 1) |
   | `5F: index finger MI` | 1 | Index finger imagery (5F paradigm, marker 2) |
   | `5F: middle finger MI` | 2 | Middle finger imagery (5F paradigm, marker 3) |
   | `5F: ring finger MI` | 3 | Ring finger imagery (5F paradigm, marker 4) |
   | `5F: pinkie MI` | 4 | Pinkie finger imagery (5F paradigm, marker 5) |
 - **Evidence**:
-  - DOI: 10.1038/sdata.2018.211 — Validates dataset with SVM classification using 0.85s epochs from stimulus onset, demonstrating multi-class MI across CLA (3-class), HaLT (6-class), and 5F (5-class finger) paradigms
-- **Kernel Notes**: 
+  - 10.1038/sdata.2018.211 — Validates dataset with SVM classification using 0.85s epochs from stimulus onset, demonstrating multi-class MI across CLA (3-class), HaLT (6-class), and 5F (5-class finger) paradigms
+- **Notes**: 
 
 ### Classical Task 4: Binary Left vs. Right Hand Motor Imagery
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: , target_events = [`FREEFORM: left hand MI`, `FREEFORM: right hand MI`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 1 s, target_events = [`FREEFORM: left hand MI`, `FREEFORM: right hand MI`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `FREEFORM: left hand MI` | 0 | Left-hand motor imagery (FREEFORM paradigm) |
   | `FREEFORM: right hand MI` | 1 | Right-hand motor imagery (FREEFORM paradigm) |
 - **Evidence**:
-  - DOI: 10.1109/tnsre.2022.3186442 — Binary classification of left vs right hand motor imagery from the figshare_largemi dataset (unknown paradigm, this task is for FREEFORM)
-- **Kernel Notes**: 
+  - 10.1109/tnsre.2022.3186442 — Binary classification of left vs right hand motor imagery from the figshare_largemi dataset (unknown paradigm, this task is for FREEFORM)
+- **Notes**: 
 
 ## Data Quality Notes
 

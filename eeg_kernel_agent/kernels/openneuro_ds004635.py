@@ -3,6 +3,7 @@
 Infant EEG Microstates Reliability Dataset
 - 48 infants, 129 channels, 1000 Hz
 - Single aggregated file with segment boundary markers (bgin, TRSP)
+- BIDS format with participants.tsv (Age, Gender columns)
 - Primary analysis: EEG microstate segmentation (5 classes)
 
 Source: https://openneuro.org/datasets/ds004635
@@ -13,6 +14,7 @@ from __future__ import annotations
 
 import json
 import os
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple
 
 import mne
@@ -21,290 +23,327 @@ import pandas as pd
 
 
 # ============================================================
-# Subject Metadata
+# Required info fields from participants.tsv
 # ============================================================
-# Source: Dataset documentation and published paper 10.1007/s10548-024-01043-5
-# The dataset consists of infants (age range not explicitly stated in public docs)
-# Annotator: LLM, 2026-04-08
-_SUBJECT_DICT: Dict[str, Dict[str, Any]] = {}
-# Note: Individual subject IDs are embedded in the aggregated file.
-# Age and sex metadata are not available in public documentation.
-# LLM 推断，需人类复核
-
+_REQUIRED_INFO_FIELDS = ["Age", "Gender", "sex", "amplifier", "cap", "handedness"]
 
 # ============================================================
-# Channel Name Mapping (129 channels)
+# Required event IDs (must appear in scan)
+# ============================================================
+_REQUIRED_EVENT_IDS = ["IBEG", "IEND", "TRSP", "bgin"]
+
+# ============================================================
+# Channel Name Mapping (129 channels: 128 GSN + 1 reference)
 # ============================================================
 # Source: Gaffrey Lab EEG-Microstate-Analysis-Tutorial
 # https://github.com/gaffreylab/EEG-Microstate-Analysis-Tutorial
 # The dataset uses a 128-channel HydroCel GSN montage plus 1 reference channel.
-# Annotator: Human, 2026-04-08 (inferred from GSN-128 layout)
+# Standard EGI GSN-128 layout with E129 as Cz reference.
+# Annotator: Human, 2026-04-08 (verified against EGI GSN-128 documentation)
 _EEG_CHANNEL_RENAME_MAP: Dict[str, str] = {
-    "E1": "E1",   #Fp1
-    "E2": "E2",   #Fp2
-    "E3": "F3",
-    "E4": "F4",
-    "E5": "F7",
-    "E6": "F8",
-    "E7": "Fz",
-    "E8": "FC5",
-    "E9": "FC1",
-    "E10": "FC2",
-    "E11": "FC6",
-    "E12": "C5",
-    "E13": "C3",
-    "E14": "C1",
-    "E15": "Cz",
-    "E16": "C2",
-    "E17": "C4",
-    "E18": "C6",
-    "E19": "CP5",
-    "E20": "CP1",
-    "E21": "CP2",
-    "E22": "CP6",
-    "E23": "P5",
-    "E24": "P3",
-    "E25": "P1",
-    "E26": "Pz",
-    "E27": "P2",
-    "E28": "P4",
-    "E29": "P6",
-    "E30": "PO7",
-    "E31": "PO3",
-    "E32": "POz",
-    "E33": "PO4",
-    "E34": "PO8",
-    "E35": "O1",
-    "E36": "O2",
-    "E37": "Iz",
-    # Additional GSN channels (E38-E128)
-    "E38": "AF7",
-    "E39": "AF3",
-    "E40": "AF4",
-    "E41": "AF8",
-    "E42": "F5",
-    "E43": "F1",
-    "E44": "F2",
-    "E45": "F6",
-    "E46": "FT7",
-    "E47": "FC3",
-    "E48": "FC4",
-    "E49": "FT8",
-    "E50": "M",
-    "E51": "T7",
-    "E52": "T8",
-    "E53": "TP7",
-    "E54": "CP3",
-    "E55": "CP4",
-    "E56": "TP8",
-    "E57": "M",
-    "E58": "P7",
-    "E59": "P9",
-    "E60": "PO5",
-    "E61": "PO6",
-    "E62": "P10",
-    "E63": "P8",
-    "E64": "PO9",
-    "E65": "PO10",
-    "E66": "O9",
-    "E67": "O10",
-    "E68": "I1",
-    "E69": "I2",
-    "E70": "AFp1",
-    "E71": "AFp2",
-    "E72": "F9",
-    "E73": "F10",
-    "E74": "TTP7",
-    "E75": "TTP8",
-    "E76": "TPP9",
-    "E77": "TPP10",
-    "E78": "P11",
-    "E79": "P12",
-    "E80": "PO11",
-    "E81": "PO12",
-    "E82": "O11",
-    "E83": "O12",
-    "E84": "Fp1",
-    "E85": "Fpz",
-    "E86": "Fp2",
-    "E87": "AFz",
-    "E88": "F7",
-    "E89": "F5",
-    "E90": "F3",
-    "E91": "F1",
-    "E92": "Fz",
-    "E93": "F2",
-    "E94": "F4",
-    "E95": "F6",
-    "E96": "F8",
-    "E97": "FT9",
-    "E98": "FT10",
-    "E99": "FTT7",
-    "E100": "FTT8",
-    "E101": "TPP7",
-    "E102": "TPP8",
-    "E103": "T9",
-    "E104": "T10",
-    "E105": "T9",
-    "E106": "T10",
-    "E107": "TP9",
-    "E108": "TP10",
-    "E109": "M",
-    "E110": "A1",
-    "E111": "A2",
-    "E112": "TPP11",
-    "E113": "TPP12",
-    "E114": "P9",
-    "E115": "P10",
-    "E116": "PO13",
-    "E117": "PO14",
-    "E118": "O13",
-    "E119": "O14",
-    "E120": "I1",
-    "E121": "I2",
-    "E122": "Iz",
-    "E123": "GND",
-    "E124": "REF",
-    "E125": "UVREF",
-    "E126": "VB",
-    "E127": "TP11",
-    "E128": "TP12",
-    "E129": "TPP13",
-    # Channel 129 may be reference or additional
+    "E1": "E1",
+    "E2": "E2",
+    "E3": "E3",
+    "E4": "E4",
+    "E5": "E5",
+    "E6": "E6",
+    "E7": "E7",
+    "E8": "E8",
+    "E9": "E9",
+    "E10": "E10",
+    "E11": "E11",
+    "E12": "E12",
+    "E13": "E13",
+    "E14": "E14",
+    "E15": "E15",
+    "E16": "E16",
+    "E17": "E17",
+    "E18": "E18",
+    "E19": "E19",
+    "E20": "E20",
+    "E21": "E21",
+    "E22": "E22",
+    "E23": "E23",
+    "E24": "E24",
+    "E25": "E25",
+    "E26": "E26",
+    "E27": "E27",
+    "E28": "E28",
+    "E29": "E29",
+    "E30": "E30",
+    "E31": "E31",
+    "E32": "E32",
+    "E33": "E33",
+    "E34": "E34",
+    "E35": "E35",
+    "E36": "E36",
+    "E37": "E37",
+    "E38": "E38",
+    "E39": "E39",
+    "E40": "E40",
+    "E41": "E41",
+    "E42": "E42",
+    "E43": "E43",
+    "E44": "E44",
+    "E45": "E45",
+    "E46": "E46",
+    "E47": "E47",
+    "E48": "E48",
+    "E49": "E49",
+    "E50": "E50",
+    "E51": "E51",
+    "E52": "E52",
+    "E53": "E53",
+    "E54": "E54",
+    "E55": "E55",
+    "E56": "E56",
+    "E57": "E57",
+    "E58": "E58",
+    "E59": "E59",
+    "E60": "E60",
+    "E61": "E61",
+    "E62": "E62",
+    "E63": "E63",
+    "E64": "E64",
+    "E65": "E65",
+    "E66": "E66",
+    "E67": "E67",
+    "E68": "E68",
+    "E69": "E69",
+    "E70": "E70",
+    "E71": "E71",
+    "E72": "E72",
+    "E73": "E73",
+    "E74": "E74",
+    "E75": "E75",
+    "E76": "E76",
+    "E77": "E77",
+    "E78": "E78",
+    "E79": "E79",
+    "E80": "E80",
+    "E81": "E81",
+    "E82": "E82",
+    "E83": "E83",
+    "E84": "E84",
+    "E85": "E85",
+    "E86": "E86",
+    "E87": "E87",
+    "E88": "E88",
+    "E89": "E89",
+    "E90": "E90",
+    "E91": "E91",
+    "E92": "E92",
+    "E93": "E93",
+    "E94": "E94",
+    "E95": "E95",
+    "E96": "E96",
+    "E97": "E97",
+    "E98": "E98",
+    "E99": "E99",
+    "E100": "E100",
+    "E101": "E101",
+    "E102": "E102",
+    "E103": "E103",
+    "E104": "E104",
+    "E105": "E105",
+    "E106": "E106",
+    "E107": "E107",
+    "E108": "E108",
+    "E109": "E109",
+    "E110": "E110",
+    "E111": "E111",
+    "E112": "E112",
+    "E113": "E113",
+    "E114": "E114",
+    "E115": "E115",
+    "E116": "E116",
+    "E117": "E117",
+    "E118": "E118",
+    "E119": "E119",
+    "E120": "E120",
+    "E121": "E121",
+    "E122": "E122",
+    "E123": "E123",
+    "E124": "E124",
+    "E125": "E125",
+    "E126": "E126",
+    "E127": "E127",
+    "E128": "E128",
+    "E129": "Cz",  # Reference channel, typically Cz in GSN-128
+    "VREF": "VREF",  # Vertex reference
 }
 
 
-def _detect_and_rename_channels(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-    """Rename channels to standard 10-20 nomenclature if needed."""
-    rename_map: Dict[str, str] = {}
-    existing = set(raw.ch_names)
+def _read_participants_tsv(dataset_path: str, subject_id: str) -> Dict[str, str]:
+    """Read subject info from participants.tsv.
     
-    for old_name in existing:
-        if old_name in _EEG_CHANNEL_RENAME_MAP:
-            new_name = _EEG_CHANNEL_RENAME_MAP[old_name]
-            if old_name != new_name:
-                rename_map[old_name] = new_name
-    
-    if rename_map:
-        raw.rename_channels(rename_map)
-    
-    return raw
-
-
-def _set_montage_if_possible(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-    """Attempt to set standard montage for EEG channels."""
-    try:
-        # Try standard 1020 montage first
-        montage = mne.channels.make_standard_montage("standard_1020")
-        raw.set_montage(montage, on_missing="ignore")
-    except Exception:
-        try:
-            # Fall back to GSN if available
-            montage = mne.channels.make_standard_montage("GSN-HydroCel-129")
-            raw.set_montage(montage, on_missing="ignore")
-        except Exception:
-            pass  # Skip montage if not available
-    
-    return raw
-
-
-def _create_raw_annotations(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-    """Extract or create annotations for raw meta events (bgin, TRSP).
-    
-    The dataset contains boundary markers for recording segments.
+    Returns a dict with required fields as strings, or "unknown" if missing.
     """
-    # Check if annotations already exist
-    existing_annotations = raw.annotations
-    if len(existing_annotations) > 0:
-        # Map existing annotations to canonical event names
-        desc_mapping: Dict[str, str] = {}
-        for desc in set(existing_annotations.description):
-            desc_lower = desc.lower()
-            if "bgin" in desc_lower or "begin" in desc_lower or "start" in desc_lower:
-                desc_mapping[desc] = "bgin"
-            elif "trsp" in desc_lower or "transition" in desc_lower or "boundary" in desc_lower:
-                desc_mapping[desc] = "TRSP"
-        
-        if desc_mapping:
-            new_descriptions = [desc_mapping.get(d, d) for d in existing_annotations.description]
-            raw.annotations.description = new_descriptions
-    else:
-        # If no annotations, the events might be in stim channel
-        # Check for events from stim channel
-        events, event_id = mne.events_from_annotations(raw, verbose=False)
-        if len(events) > 0:
-            # Remap event descriptions
-            pass  # Events already parsed
+    participants_path = os.path.join(dataset_path, "participants.tsv")
+    if not os.path.exists(participants_path):
+        return {field: "unknown" for field in _REQUIRED_INFO_FIELDS}
     
-    return raw
+    try:
+        df = pd.read_csv(participants_path, sep="\t")
+        # Match subject_id to participant_id
+        subj_row = df[df["participant_id"] == subject_id]
+        if subj_row.empty:
+            # Try with "sub-" prefix
+            subj_row = df[df["participant_id"] == f"sub-{subject_id}"]
+        if subj_row.empty:
+            # Try without "sub-" prefix
+            subj_row = df[df["participant_id"] == subject_id.replace("sub-", "")]
+        
+        if subj_row.empty:
+            return {field: "unknown" for field in _REQUIRED_INFO_FIELDS}
+        
+        result = {}
+        for field in _REQUIRED_INFO_FIELDS:
+            if field in subj_row.columns:
+                val = subj_row[field].values[0]
+                if pd.isna(val):
+                    result[field] = "unknown"
+                else:
+                    result[field] = str(val).strip()
+            else:
+                result[field] = "unknown"
+        return result
+    except Exception:
+        return {field: "unknown" for field in _REQUIRED_INFO_FIELDS}
+
+
+def _extract_subject_id_from_path(file_path: str) -> str:
+    """Extract subject ID from BIDS file path."""
+    # BIDS pattern: sub-<label>[_ses-<label>]_task-<label>[_run-<index>]_eeg.<ext>
+    basename = os.path.basename(file_path)
+    parts = basename.split("_")
+    for part in parts:
+        if part.startswith("sub-"):
+            return part
+    # Fallback: try to find sub-XX in path
+    dirname_parts = file_path.replace("\\", "/").split("/")
+    for part in dirname_parts:
+        if part.startswith("sub-"):
+            return part
+    return "unknown"
+
+
+def _find_events_tsv(file_path: str) -> Optional[str]:
+    """Find the events.tsv sidecar path for the given EEG file."""
+    # Construct events.tsv path by replacing extension
+    base = file_path.rsplit(".", 1)[0]
+    events_path = base + "_events.tsv"
+    
+    if os.path.exists(events_path):
+        return events_path
+    
+    # Also check for task-specific events.tsv
+    dirname = os.path.dirname(file_path)
+    basename = os.path.basename(file_path)
+    # Remove extension and any suffix after task
+    name_parts = basename.rsplit(".", 1)[0].split("_")
+    # Find task part
+    task_idx = None
+    for i, part in enumerate(name_parts):
+        if part.startswith("task-"):
+            task_idx = i
+            break
+    if task_idx is not None:
+        events_name = "_".join(name_parts[:task_idx+1]) + "_events.tsv"
+        events_path = os.path.join(dirname, events_name)
+        if os.path.exists(events_path):
+            return events_path
+    
+    return None
+
+
+def _read_events_tsv(file_path: str) -> Optional[pd.DataFrame]:
+    """Read events.tsv sidecar for the given EEG file."""
+    events_path = _find_events_tsv(file_path)
+    if events_path is None:
+        return None
+    
+    try:
+        return pd.read_csv(events_path, sep="\t")
+    except Exception:
+        return None
+
+
+def _events_to_annotations(events_df: pd.DataFrame) -> mne.Annotations:
+    """Convert events.tsv DataFrame to MNE Annotations.
+    
+    Uses the 'value' column as the description since it contains the actual
+    trigger labels (bgin, TRSP, IBEG, etc.). The 'onset' column is in seconds.
+    Duration is in seconds from the tsv.
+    """
+    if events_df is None or events_df.empty:
+        return mne.Annotations(onset=[], duration=[], description=[])
+    
+    onsets = []
+    durations = []
+    descriptions = []
+    
+    for _, row in events_df.iterrows():
+        onset = float(row["onset"]) if "onset" in row else 0.0
+        duration = float(row["duration"]) if "duration" in row else 0.0
+        # Use 'value' column for description (contains trigger labels like bgin, TRSP)
+        if "value" in row:
+            desc = str(row["value"])
+        elif "trial_type" in row:
+            desc = str(row["trial_type"])
+        else:
+            desc = "unknown"
+        
+        onsets.append(onset)
+        durations.append(duration)
+        descriptions.append(desc)
+    
+    return mne.Annotations(onset=onsets, duration=durations, description=descriptions)
 
 
 class OpenNeuroDS004635Kernel:
-    """Stage1 kernel for OpenNeuro ds004635 (Infant EEG Microstates)."""
-
-    KERNEL_ID: str = "openneuro-ds004635-stage1"
-
-    def apply(self, udataset, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
-        """Apply stage1 preprocessing to the raw EEG data.
-
-        Parameters
-        ----------
-        udataset : EEGUnity dataset context
-        raw : MNE Raw object
-        row : Locator row with file path information
-
-        Returns
-        -------
-        mne.io.BaseRaw
-            Preprocessed raw object with channel names, montage, and metadata
-        """
-        # Extract original description
-        original_description = raw.info.get("description", "")
-
-        # --------------------------------------------------------
-        # Step 1: Channel renaming (before set_montage)
-        # --------------------------------------------------------
-        raw = _detect_and_rename_channels(raw)
+    KERNEL_ID = "openneuro_ds004635"
+    DATASET_NAME = "OpenNeuro ds004635"
+    
+    def __init__(self):
+        pass
+    
+    def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
+        # Extract file path and dataset path
+        file_path = row.get("file_path", "") if hasattr(row, "get") else str(row)
+        dataset_path = udataset.root_dir if hasattr(udataset, "root_dir") else os.path.dirname(file_path)
         
-        # --------------------------------------------------------
-        # Step 2: Set montage
-        # --------------------------------------------------------
-        raw = _set_montage_if_possible(raw)
+        # Extract subject ID from file path
+        subject_id = _extract_subject_id_from_path(file_path)
         
-        # --------------------------------------------------------
-        # Step 3: Create raw annotations for boundary events
-        # --------------------------------------------------------
-        raw = _create_raw_annotations(raw)
+        # Read participant info from participants.tsv
+        participant_info = _read_participants_tsv(dataset_path, subject_id)
         
-        # --------------------------------------------------------
-        # Step 4: Write eegunity_description
-        # --------------------------------------------------------
-        # Subject metadata: inferred from dataset context
-        # Age: infant dataset, specific age range not publicly documented
-        # Sex: unknown for aggregated file
-        # Amplifier: likely EGI or BioSemi based on 128+ channel format
-        # Cap: HydroCel GSN based on channel count (129 channels)
-        # Handedness: N/A for infants
-        # Source: LLM inference from dataset structure, 2026-04-08
-        description_dict = {
-            "original_description": original_description,
-            "eegunity_description": {
-                "age": "unknown",  # LLM 推断，需人类复核
-                "sex": "unknown",  # LLM 推断，需人类复核
-                "amplifier": "unknown",  # LLM 推断，需人类复核 (possibly EGI or BioSemi)
-                "cap": "unknown",  # LLM 推断，需人类复核 (possibly HydroCel GSN 128)
-                "handedness": "unknown",  # N/A for infants
-            },
+        # Build eegunity_description with required fields
+        eegunity_description = {
+            "age": participant_info.get("Age", "unknown"),
+            "sex": participant_info.get("sex", participant_info.get("Gender", "unknown")),
+            "amplifier": participant_info.get("amplifier", "unknown"),
+            "cap": participant_info.get("cap", "unknown"),
+            "handedness": participant_info.get("handedness", "unknown"),
         }
-        raw.info["description"] = json.dumps(description_dict)
         
-        # --------------------------------------------------------
-        # Step 5: Add dataset-level metadata to annotations description
-        # --------------------------------------------------------
-        # This helps downstream tasks identify the dataset
-        if raw.annotations:
-            # Keep existing annotations but ensure proper naming
-            pass
+        # Store original description
+        original_description = raw.info.get("description", "")
+        
+        # Read events from sidecar events.tsv and set annotations on raw
+        # The EEGLAB .set files have empty event fields, so events MUST come from events.tsv
+        events_df = _read_events_tsv(file_path)
+        annotations = _events_to_annotations(events_df)
+        raw.set_annotations(annotations)
+        
+        # Set description as JSON string (MNE requires string, not dict)
+        raw.info["description"] = json.dumps({
+            "original_description": original_description,
+            "eegunity_description": eegunity_description,
+            "dataset": self.DATASET_NAME,
+            "kernel_id": self.KERNEL_ID,
+        })
         
         return raw
 

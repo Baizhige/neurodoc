@@ -41,13 +41,13 @@ Participants performed a one-dimensional cursor BCI task using mental imagery in
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `target cursor plus` | 1 | Left-hand motor imagery (cursor moves up/+) |
   | `target cursor minus` | 0 | Right-hand motor imagery (cursor moves down/-) |
 - **Evidence**:
   - DOI: 10.3389/fnhum.2019.00128 — This paper analyzes the same figshare dataset from 42 subjects performing left/right hand motor imagery to control a cursor BCI, evaluating behavioral performance and ERD/ERS patterns.
-- **Kernel Notes**: 
+- **Notes**: 
 
 ## Data Quality Notes
 

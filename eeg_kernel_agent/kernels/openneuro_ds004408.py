@@ -129,165 +129,375 @@ _EEG_128_CHANNEL_RENAME_MAP = {
     "PTT8": "PTT8",
     "PTT9": "PTT9",
     "PTT10": "PTT10",
-    "P9": "P9",
-    "P10": "P10",
-    "PTT11": "PTT11",
-    "PTT12": "PTT12",
-    "PPO9": "PPO9",
-    "PPO10": "PPO10",
     "PPO7": "PPO7",
+    "PPO3": "PPO3",
+    "PPOz": "PPOz",
+    "PPO4": "PPO4",
     "PPO8": "PPO8",
+    "PO9": "PO9",
+    "PO10": "PO10",
+    "POO1": "POO1",
+    "POO2": "POO2",
     "POO9": "POO9",
     "POO10": "POO10",
-    "POO7": "POO7",
-    "POO8": "POO8",
+    "P1h": "P1h",
+    "P2h": "P2h",
+    "CPP1": "CPP1",
+    "CPP2": "CPP2",
+    "CPP3": "CPP3",
+    "CPP4": "CPP4",
+    "CPP5": "CPP5",
+    "CPP6": "CPP6",
+    "FCC3": "FCC3",
+    "FCC4": "FCC4",
+    "FCC5": "FCC5",
+    "FCC6": "FCC6",
+    "CCP3": "CCP3",
+    "CCP4": "CCP4",
+    "CCP5": "CCP5",
+    "CCP6": "CCP6",
+    "FFC1": "FFC1",
+    "FFC2": "FFC2",
+    "FFC3": "FFC3",
+    "FFC4": "FFC4",
+    "FFC5": "FFC5",
+    "FFC6": "FFC6",
+    "A1": "A1",
+    "A2": "A2",
+    "M1": "M1",
+    "M2": "M2",
+    "TPP7": "TPP7",
+    "TPP8": "TPP8",
+    "TPP9": "TPP9",
+    "TPP10": "TPP10",
+    "P9": "P9",
+    "P10": "P10",
+    "PPO1": "PPO1",
+    "PPO2": "PPO2",
+    "PPO9": "PPO9",
+    "PPO10": "PPO10",
     "OI1": "OI1",
     "OI2": "OI2",
-    "I3": "I3",
-    "I4": "I4",
-    "I5": "I5",
-    "I6": "I6",
-    "AFp9": "AFp9",
-    "AFp10": "AFp10",
-    "AFp7": "AFp7",
-    "AFp8": "AFp8",
-    "F9": "F9",
-    "F10": "F10",
-    "F7": "F7",
-    "F8": "F8",
-    "FFT9": "FFT9",
-    "FFT10": "FFT10",
-    "FFT7": "FFT7",
-    "FFT8": "FFT8",
+    "OzIz": "OzIz",
+    # Common aliases for BioSemi 128-channel system
+    "A3": "A3",
+    "A4": "A4",
+    "A5": "A5",
+    "A6": "A6",
+    "A7": "A7",
+    "A8": "A8",
+    "A9": "A9",
+    "A10": "A10",
+    "A11": "A11",
+    "A12": "A12",
+    "A13": "A13",
+    "A14": "A14",
+    "A15": "A15",
+    "A16": "A16",
+    "A17": "A17",
+    "A18": "A18",
+    "A19": "A19",
+    "A20": "A20",
+    "A21": "A21",
+    "A22": "A22",
+    "A23": "A23",
+    "A24": "A24",
+    "A25": "A25",
+    "A26": "A26",
+    "A27": "A27",
+    "A28": "A28",
+    "A29": "A29",
+    "A30": "A30",
+    "A31": "A31",
+    "A32": "A32",
+    "B1": "B1",
+    "B2": "B2",
+    "B3": "B3",
+    "B4": "B4",
+    "B5": "B5",
+    "B6": "B6",
+    "B7": "B7",
+    "B8": "B8",
+    "B9": "B9",
+    "B10": "B10",
+    "B11": "B11",
+    "B12": "B12",
+    "B13": "B13",
+    "B14": "B14",
+    "B15": "B15",
+    "B16": "B16",
+    "B17": "B17",
+    "B18": "B18",
+    "B19": "B19",
+    "B20": "B20",
+    "B21": "B21",
+    "B22": "B22",
+    "B23": "B23",
+    "B24": "B24",
+    "B25": "B25",
+    "B26": "B26",
+    "B27": "B27",
+    "B28": "B28",
+    "B29": "B29",
+    "B30": "B30",
+    "B31": "B31",
+    "B32": "B32",
 }
 
 
+def _get_subject_info_from_participants(file_path: str, subject_id: str) -> Dict[str, str]:
+    """Read subject info from participants.tsv if available."""
+    import pandas as pd
+    
+    # Navigate to dataset root
+    current_dir = os.path.dirname(file_path)
+    participants_path = None
+    
+    # Search up to 3 levels for participants.tsv
+    for _ in range(5):
+        potential_path = os.path.join(current_dir, "participants.tsv")
+        if os.path.exists(potential_path):
+            participants_path = potential_path
+            break
+        parent = os.path.dirname(current_dir)
+        if parent == current_dir:
+            break
+        current_dir = parent
+    
+    if participants_path is None:
+        return {}
+    
+    try:
+        df = pd.read_csv(participants_path, sep="\t")
+        # Match subject ID (handle both 'sub-01' and '01' formats)
+        sub_col = "participant_id"
+        if sub_col not in df.columns:
+            return {}
+        
+        # Normalize subject ID for matching
+        search_id = subject_id
+        if not search_id.startswith("sub-"):
+            search_id = f"sub-{search_id}"
+        
+        row = df[df[sub_col] == search_id]
+        if row.empty:
+            # Try without sub- prefix
+            search_id = subject_id.replace("sub-", "")
+            row = df[df[sub_col].str.replace("sub-", "", regex=False) == search_id]
+        
+        if row.empty:
+            return {}
+        
+        info = {}
+        # Extract age
+        if "age" in row.columns:
+            age_val = row["age"].values[0]
+            if pd.notna(age_val):
+                info["age"] = str(int(float(age_val)))
+        
+        # Extract sex
+        if "sex" in row.columns:
+            sex_val = row["sex"].values[0]
+            if pd.notna(sex_val):
+                sex_lower = str(sex_val).lower()
+                if sex_lower in ("m", "male"):
+                    info["sex"] = "male"
+                elif sex_lower in ("f", "female"):
+                    info["sex"] = "female"
+        
+        # Extract handedness if available
+        if "handedness" in row.columns:
+            hand_val = row["handedness"].values[0]
+            if pd.notna(hand_val):
+                info["handedness"] = str(hand_val).lower()
+        
+        # Extract any other fields as strings
+        for col in row.columns:
+            if col not in ("participant_id", "age", "sex", "handedness"):
+                val = row[col].values[0]
+                if pd.notna(val):
+                    info[col] = str(val)
+        
+        return info
+    
+    except Exception:
+        return {}
+
+
+def _extract_subject_id(file_path: str) -> str:
+    """Extract subject ID from BIDS file path."""
+    # Typical pattern: sub-XX/... or sub-XX_ses-YY_...
+    basename = os.path.basename(file_path)
+    parts = basename.split("_")
+    for part in parts:
+        if part.startswith("sub-"):
+            return part
+    # Try from directory structure
+    path_parts = file_path.replace("\\", "/").split("/")
+    for part in path_parts:
+        if part.startswith("sub-"):
+            return part
+    return "unknown"
+
+
 def _build_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
-    """Build rename map for 128-channel EEG system.
+    """Build channel rename map for standardization."""
+    rename_map = {}
+    existing = set(raw.ch_names)
     
-    Handle various naming conventions (e.g., 'EEG 001' vs 'Fp1').
-    Source: Dataset channel naming conventions, LLM inference, 2025-01
-    """
-    rename_map: Dict[str, str] = {}
-    existing_names = set(raw.ch_names)
+    for standard_name, target_name in _EEG_128_CHANNEL_RENAME_MAP.items():
+        if standard_name in existing and standard_name != target_name:
+            rename_map[standard_name] = target_name
     
-    # Pattern 1: EEG 001, EEG 002, ... (zero-padded or not)
-    import re
-    for ch in list(existing_names):
-        # Match EEG XX pattern
-        match = re.match(r"EEG\s*(\d+)", ch, re.IGNORECASE)
-        if match:
-            idx = int(match.group(1))
-            # Map to standard 10-10 position based on index
-            # BioSemi 128 uses sequential numbering
-            # This is a simplified mapping - needs verification
-            standard_positions = [
-                "Fp1", "AFp9", "AFp7", "AFF5", "AFF3", "AFF1", "AFz", "AFF2", "AFF4", "AFF6", "AFp8", "AFp10",
-                "F9", "F7", "F5", "F3", "F1", "Fz", "F2", "F4", "F6", "F8", "F10",
-                "FFT9", "FFT7", "FFT5", "FFT3", "FFT1", "FFTz", "FFT2", "FFT4", "FFT6", "FFT8", "FFT10",
-                "FT9", "FT7", "FC5", "FC3", "FC1", "FCz", "FC2", "FC4", "FC6", "FT8", "FT10",
-                "T9", "T7", "C5", "C3", "C1", "Cz", "C2", "C4", "C6", "T8", "T10",
-                "TTP9", "TTP7", "CP5", "CP3", "CP1", "CPz", "CP2", "CP4", "CP6", "TTP8", "TTP10",
-                "TP9", "TP7", "P5", "P3", "P1", "Pz", "P2", "P4", "P6", "TP8", "TP10",
-                "P9", "P7", "PO7", "PO3", "POz", "PO4", "PO8", "P10",
-                "O9", "OI1", "OI2", "O10",
-                # Extra positions for 128-channel
-                "I1", "I2", "I3", "I4", "I5", "I6",
-            ]
-            if idx <= len(standard_positions):
-                target = standard_positions[idx - 1]
-                if target not in existing_names:
-                    rename_map[ch] = target
+    # Handle common BioSemi 128 naming patterns
+    # BioSemi often uses numbered channels or A1-A32, B1-B32, etc.
+    biosemi_aliases = {
+        # If channels are named with standard 10-20/10-10/10-5 names, keep them
+        # Common alternative naming schemes for 128-channel systems
+    }
     
-    # Pattern 2: Try to match from the known 128-channel map
-    for ch in list(existing_names):
-        if ch in _EEG_128_CHANNEL_RENAME_MAP:
-            rename_map[ch] = _EEG_128_CHANNEL_RENAME_MAP[ch]
+    for alias, target in biosemi_aliases.items():
+        if alias in existing and alias not in rename_map:
+            rename_map[alias] = target
     
     return rename_map
 
 
 @dataclass
 class OpenNeuroDS004408Kernel:
-    """Stage1 kernel for OpenNeuro DS004408 (continuous naturalistic speech EEG)."""
+    """Stage1 kernel for OpenNeuro DS004408 dataset."""
 
     KERNEL_ID: str = "openneuro-ds004408-stage1"
+    HANDLES_UNAVAILABLE: bool = False
 
-    def apply(self, udataset, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
-        """Apply stage1 preprocessing to a single record.
-
-        This dataset has no discrete trial events - continuous audiobook listening.
-        Subject metadata is missing from dataset; all fields set to "unknown".
-
-        Parameters
-        ----------
-        udataset
-            EEGUnity dataset context.
-        raw
-            In-memory MNE Raw object.
-        row
-            Locator row with File Path information.
-
-        Returns
-        -------
-        mne.io.BaseRaw
-            Preprocessed Raw object with updated metadata.
-        """
-        # Get original description
-        original_desc = raw.info.get("description", "")
-
-        # Build eegunity_description with available metadata
-        # Source: analysis.md - subject_age, subject_sex, device all missing
-        # All fields set to "unknown" per KERNEL_RULEBOOK
-        # Source: LLM inference, 2025-01, requires human review
-        description_dict = {
-            "original_description": original_desc,
-            "eegunity_description": {
-                "age": "unknown",
-                "sex": "unknown",
-                "amplifier": "unknown",  # BioSemi likely but not confirmed
-                "cap": "unknown",  # 128-channel cap, type unspecified
-                "handedness": "unknown",
-            },
-        }
-        raw.info["description"] = json.dumps(description_dict)
-
-        # Rename channels to standard 10-20 / 10-10 nomenclature
-        # This is critical for montage setting and downstream analysis
+    def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
+        file_path = row["File Path"]
+        subject_id = _extract_subject_id(file_path)
+        
+        # Get subject info from participants.tsv
+        subject_info = _get_subject_info_from_participants(file_path, subject_id)
+        
+        # Fallback to hardcoded dict if available
+        if subject_id in _SUBJECT_DICT:
+            subject_info = {**_SUBJECT_DICT[subject_id], **subject_info}
+        
+        # Build eegunity_description
+        age = subject_info.get("age", "unknown")
+        sex = subject_info.get("sex", "unknown")
+        handedness = subject_info.get("handedness", "unknown")
+        
+        # Ensure sex is lowercase and valid
+        if sex not in ("male", "female", "unknown"):
+            sex_lower = sex.lower()
+            if sex_lower in ("m", "male"):
+                sex = "male"
+            elif sex_lower in ("f", "female"):
+                sex = "female"
+            else:
+                sex = "unknown"
+        
+        # Device info from dataset documentation
+        # Source: analysis.md, paper 10.1016/j.neuroimage.2020.117586
+        # Annotator: LLM, 2025-01, requires human review
+        # LLM 推断，需人类复核
+        amplifier = "BioSemi ActiveTwo"  # LLM 推断，需人类复核
+        cap = "BioSemi 128-channel cap"  # LLM 推断，需人类复核
+        
+        # Handle channel renaming BEFORE set_montage
         rename_map = _build_rename_map(raw)
         if rename_map:
-            # Only rename if there are non-standard names
-            non_standard = set(rename_map.keys())
-            standard = set(rename_map.values())
-            if non_standard != standard:
-                print(f"[DS004408] Renaming {len(rename_map)} channels to standard names")
-                raw.rename_channels(rename_map)
-
-        # Set montage for standard 10-20 system
-        # 128-channel should be supported by standard 1020 with extension
-        try:
-            montage = mne.channels.make_standard_montage("standard_1020")
-            raw.set_montage(montage, on_missing="warn")
-        except Exception as e:
-            print(f"[DS004408] Warning: Could not set montage: {e}")
-            print(f"[DS004408] Available channels: {raw.ch_names[:20]}...")
-
-        # No events in this dataset - continuous paradigm
-        # Add annotation indicating continuous recording paradigm
-        # This allows downstream segmentation tasks to proceed
-        n_samples = raw.n_times
-        sfreq = raw.info["sfreq"]
+            raw = raw.rename_channels(rename_map)
         
-        # Create a single annotation marking the continuous nature
-        # Duration spans entire recording
-        duration_sec = n_samples / sfreq
-        annotations = mne.Annotations(
-            onset=[0.0],
-            duration=[duration_sec],
-            description=["continuous_speech_listening"],
-        )
-        raw.set_annotations(annotations)
-
+        # Set montage for standard 128-channel layout
+        # Source: Dataset uses standard BioSemi 128-channel layout
+        # Annotator: LLM, 2025-01, requires human review
+        try:
+            # Try to use standard 10-10 montage as approximation for 128 channels
+            montage = mne.channels.make_standard_montage("biosemi128")
+            raw.set_montage(montage, match_case=False, on_missing="warn")
+        except Exception:
+            # Fallback: try standard 10-05 or 10-20
+            try:
+                montage = mne.channels.make_standard_montage("standard_1005")
+                raw.set_montage(montage, match_case=False, on_missing="warn")
+            except Exception:
+                # LLM 推断，需人类复核
+                pass  # Skip montage if not available
+        
+        # Ensure all EEG channels have correct type
+        # Set any non-standard types to EEG
+        ch_types = raw.get_channel_types()
+        type_map = {}
+        for ch_name, ch_type in zip(raw.ch_names, ch_types):
+            # Keep known non-EEG types, set unknown to EEG
+            if ch_type not in ("eeg", "eog", "ecg", "emg", "misc", "stim"):
+                type_map[ch_name] = "eeg"
+        
+        if type_map:
+            raw.set_channel_types(type_map)
+        
+        # Handle events: continuous speech listening paradigm
+        # No discrete trial events; continuous recording
+        # If events.tsv exists, create annotations from it
+        events_tsv_path = file_path.replace(".set", "_events.tsv").replace(".edf", "_events.tsv").replace(".bdf", "_events.tsv").replace(".fif", "_events.tsv")
+        
+        if os.path.exists(events_tsv_path):
+            try:
+                import pandas as pd
+                events_df = pd.read_csv(events_tsv_path, sep="\t")
+                
+                if not events_df.empty and "onset" in events_df.columns:
+                    onsets = events_df["onset"].values
+                    durations = events_df.get("duration", np.zeros(len(onsets))).values
+                    descriptions = events_df.get("trial_type", events_df.get("value", "continuous_speech_listening")).values
+                    
+                    # Ensure descriptions are strings
+                    descriptions = [str(d) if pd.notna(d) else "continuous_speech_listening" for d in descriptions]
+                    
+                    annotations = mne.Annotations(
+                        onset=onsets,
+                        duration=durations,
+                        description=descriptions,
+                    )
+                    raw.set_annotations(annotations)
+            except Exception:
+                # If events.tsv parsing fails, add a single continuous annotation
+                pass
+        
+        # If no annotations exist, add a single continuous annotation for the entire recording
+        if raw.annotations is None or len(raw.annotations) == 0:
+            annotations = mne.Annotations(
+                onset=[0],
+                duration=[raw.times[-1]],
+                description=["continuous_speech_listening"],
+            )
+            raw.set_annotations(annotations)
+        
+        # Build description with required fields
+        original_desc = raw.info.get("description", "")
+        if original_desc is None:
+            original_desc = ""
+        
+        eegunity_description = {
+            "age": str(age) if age != "unknown" else "unknown",
+            "sex": sex,
+            "amplifier": amplifier,
+            "cap": cap,
+            "handedness": handedness,
+        }
+        
+        # Add any extra fields from participants.tsv
+        for key, value in subject_info.items():
+            if key not in ("age", "sex", "handedness"):
+                eegunity_description[key] = str(value)
+        
+        description_dict = {
+            "original_description": original_desc,
+            "eegunity_description": eegunity_description,
+        }
+        
+        raw.info["description"] = json.dumps(description_dict)
+        
         return raw
 
 

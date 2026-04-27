@@ -301,6 +301,28 @@ table.event-table td textarea.meaning-cell:focus { outline: 1px solid var(--acce
 .epoch-custom-key { width: 110px; }
 .epoch-custom-val { flex: 1; }
 .epoch-hint { font-size: 11px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+/* Task lock banner */
+.task-lock-banner { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
+.task-lock-header { font-weight: 700; color: #b91c1c; font-size: 13px; margin-bottom: 6px; }
+.task-lock-desc { font-size: 12px; color: #7f1d1d; margin: 0 0 10px; line-height: 1.5; }
+.task-lock-item { border-left: 3px solid #fca5a5; padding: 3px 0 3px 10px; margin-bottom: 6px; }
+.task-lock-title { font-weight: 600; font-size: 12px; color: #991b1b; margin-bottom: 2px; }
+.task-lock-msg { font-size: 11px; color: #b91c1c; line-height: 1.5; }
+.task-lock-preview { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; font-size: 13px; line-height: 1.6; }
+.task-raw-editor { width: 100%; min-height: 320px; font-family: monospace; font-size: 12px; border: 1px solid var(--border); border-radius: 5px; padding: 8px 10px; resize: vertical; box-sizing: border-box; line-height: 1.6; }
+.task-raw-editor:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+.task-lock-edit-label { font-size: 11px; color: var(--muted); margin-bottom: 5px; }
+/* TD Event ID select */
+.td-table td select.td-event-id-sel { width: 100%; border: none; background: transparent; font-size: 12px; padding: 2px 3px; font-family: monospace; cursor: pointer; }
+.td-table td select.td-event-id-sel:focus { outline: 1px solid var(--accent); border-radius: 3px; }
+/* target_events checkbox picker */
+.te-picker { max-height: 140px; overflow-y: auto; border: 1px solid var(--border); border-radius: 5px; padding: 4px 6px; background: #fff; display: flex; flex-direction: column; gap: 2px; }
+.te-picker-empty { color: var(--muted); font-size: 11px; font-style: italic; padding: 6px 4px; }
+.te-item { display: flex; align-items: baseline; gap: 5px; font-size: 12px; cursor: pointer; padding: 1px 2px; border-radius: 3px; }
+.te-item:hover { background: #f0f4ff; }
+.te-item input[type=checkbox] { cursor: pointer; margin: 0; flex-shrink: 0; position: relative; top: 1px; }
+.te-item code { font-size: 11px; font-family: monospace; background: #f3f4f6; padding: 0 3px; border-radius: 3px; white-space: nowrap; }
+.te-meaning { font-size: 10px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
 
 /* Target definition */
 .task-td-section { margin-bottom: 10px; }
@@ -404,7 +426,6 @@ table.event-table td textarea.meaning-cell:focus { outline: 1px solid var(--acce
       <button class="btn btn-secondary" id="btn-prev" onclick="prevStep()" disabled>&#8592; Prev</button>
       <button class="btn btn-secondary" id="btn-next" onclick="nextStep()">Next &#8594;</button>
       <button class="btn btn-warning" id="btn-preview" onclick="confirmAndPreview()" style="display:none">&#128065; Confirm &amp; Preview</button>
-      <button class="btn btn-success" id="btn-save" onclick="saveFile()" style="display:none">&#128190; Save File</button>
     </div>
   </div>
 
@@ -1149,10 +1170,16 @@ function parseEvidence(text) {
   text.split('\n').forEach(line => {
     const l = line.replace(/^\s*-\s*/,'').trim();
     if (!l) return;
-    // Match "DOI: ref — desc" or "ref — desc"
-    const m = l.match(/^(?:DOI:\s*)?([^\s—–-][^—–]*?)\s*[—–-]{1,2}\s*(.+)$/);
-    if (m) items.push({ ref: m[1].trim(), desc: m[2].trim() });
-    else items.push({ ref: l, desc: '' });
+    const normalized = l.replace(/^DOI:\s*/, '').trim();
+    const sep = normalized.indexOf(' — ');
+    if (sep >= 0) {
+      items.push({
+        ref: normalized.slice(0, sep).trim(),
+        desc: normalized.slice(sep + 3).trim(),
+      });
+    } else {
+      items.push({ ref: normalized, desc: '' });
+    }
   });
   return items;
 }
@@ -1216,9 +1243,51 @@ function collectEvidence(id) {
   list.querySelectorAll('.evidence-row').forEach(row => {
     const ref = row.querySelector('.evidence-ref')?.value.trim() || '';
     const desc = row.querySelector('.evidence-desc')?.value.trim() || '';
-    if (ref || desc) lines.push(`  - DOI: ${ref} — ${desc}`);
+    if (ref && desc) lines.push(`  - ${ref} — ${desc}`);
+    else if (ref) lines.push(`  - ${ref}`);
+    else if (desc) lines.push(`  - ${desc}`);
   });
   return lines.join('\n');
+}
+
+function getTaskBlockField(part, fields) {
+  const names = Array.isArray(fields) ? fields : [fields];
+  const lines = part.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    for (const field of names) {
+      const m = lines[i].match(new RegExp(`^-\\s*\\*\\*${escRe(field)}\\*\\*:[ \\t]*(.*)$`));
+      if (!m) continue;
+      const body = [];
+      if (m[1].trim()) body.push(m[1].trimEnd());
+      for (let j = i + 1; j < lines.length; j++) {
+        if (/^-\s*\*\*[^*]+\*\*:[ \t]*/.test(lines[j])) break;
+        body.push(lines[j]);
+      }
+      return body.join('\n').trim();
+    }
+  }
+  return null;
+}
+
+// ─── Event Structure helpers ──────────────────────────────────────────────────
+function getEventStructureFromRawContent() {
+  // Returns [{id, meaning}] for all rows in ### Event Structure.
+  const fsrM = rawContent.match(/## File Scan Result([\s\S]*?)(?=\n## |\n# |\Z)/);
+  if (!fsrM) return [];
+  const esM = fsrM[1].match(/### Event Structure([\s\S]*?)(?=\n### |\n## |\Z)/);
+  if (!esM) return [];
+  const result = [];
+  const seen = new Set();
+  for (const row of (esM[1].match(/^\|[^|\n]+\|[^\n]*/gm) || [])) {
+    const cols = row.split('|').slice(1).map(c => c.trim());
+    // cols: Event ID, Count, Type, Meta Level, Meaning  (5 columns)
+    const id = cols[0]?.replace(/^`|`$/g, '') || '';
+    if (!id || id.toLowerCase() === 'event id' || /^-+$/.test(id)) continue;
+    if (seen.has(id)) continue;
+    seen.add(id);
+    result.push({ id, meaning: cols[4] || '' });
+  }
+  return result;
 }
 
 // ─── Epoch Params Helpers ─────────────────────────────────────────────────────
@@ -1265,18 +1334,43 @@ function buildEpochParamsEditor(ep, method, idx) {
   ).join('');
 
   const teArr = Array.isArray(ep.target_events) ? ep.target_events : [];
-  const teStr = teArr.join(', ');
-  const teDisabled = isSeg ? 'disabled' : '';
-  const tePlaceholder = isSeg ? 'must be [] for segmentation' : 'e.g. left_target, right_target';
-  const teHint = isSeg
-    ? 'Segmentation has no event anchors — locked to [].'
-    : 'Event IDs that anchor each epoch (v3: decoupled from Target Definition).';
-  const teFieldHtml = `
+  const selectedSet = new Set(teArr);
+  const availableEvents = getEventStructureFromRawContent();
+
+  let teFieldHtml;
+  if (isSeg) {
+    teFieldHtml = `
       <div class="epoch-field" style="flex:2;min-width:240px">
-        <label>target_events ${isSeg ? '' : '<span class="req-mark">*</span>'} <span class="unit">(comma-separated)</span></label>
-        <input type="text" class="ep-target-events" value="${esc(teStr)}" placeholder="${tePlaceholder}" ${teDisabled}>
-        <div class="epoch-hint" style="font-size:10px;margin-top:2px">${teHint}</div>
+        <label>target_events <span class="unit">(segmentation)</span></label>
+        <div class="epoch-hint" style="font-size:10px;margin-top:2px">Segmentation has no event anchors — locked to [].</div>
       </div>`;
+  } else if (availableEvents.length === 0) {
+    const fallbackJson = JSON.stringify(teArr).replace(/"/g, '&quot;');
+    const teDisplay = teArr.length
+      ? teArr.map(id => `<code style="background:#f3f4f6;padding:1px 4px;border-radius:3px;font-size:11px">${esc(id)}</code>`).join(' ')
+      : '<span style="color:var(--muted);font-size:11px">none</span>';
+    teFieldHtml = `
+      <div class="epoch-field" style="flex:2;min-width:240px">
+        <label>target_events</label>
+        <input type="hidden" class="ep-te-fallback" value="${fallbackJson}">
+        <div class="te-picker te-picker-empty" style="padding:6px 8px">
+          <div style="margin-bottom:4px">${teDisplay}</div>
+          <div style="font-size:10px;color:var(--muted)">Event Structure not yet populated — existing values preserved. Complete File Scan to edit.</div>
+        </div>
+      </div>`;
+  } else {
+    const items = availableEvents.map(ev => {
+      const checked = selectedSet.has(ev.id) ? 'checked' : '';
+      const mHint = ev.meaning ? ` — <span class="te-meaning">${esc(ev.meaning)}</span>` : '';
+      return `<label class="te-item"><input type="checkbox" class="ep-te-check" value="${esc(ev.id)}" ${checked}><code>${esc(ev.id)}</code>${mHint}</label>`;
+    }).join('');
+    teFieldHtml = `
+      <div class="epoch-field" style="flex:2;min-width:240px">
+        <label>target_events <span class="req-mark">*</span></label>
+        <div class="te-picker" id="te-picker-${idx}">${items}</div>
+        <div class="epoch-hint" style="font-size:10px;margin-top:2px">Select event IDs from Event Structure that anchor each epoch.</div>
+      </div>`;
+  }
 
   let requiredHtml = '';
   if (isEvent || isLong) {
@@ -1333,39 +1427,52 @@ function addEpochCustom(idx) {
 
 function collectEpochParams(card, idx, method) {
   const block = card.querySelector(`#ep-block-${idx}`);
-  if (!block) return { str: '', target_events: [] };
+  if (!block) return { str: '', target_events: [], tmin: '', tmax: '', overlap: '', segment_length: '', custom: [] };
   const isEvent = method === 'epoch_by_event_hdf5';
   const isLong = method === 'epoch_by_long_event_hdf5';
   const isSeg = method === 'epoch_by_segmentation_hdf5';
   const parts = [];
+  let tmin = '', tmax = '', overlap = '', segment_length = '';
   if (isEvent || isLong) {
-    const tmin = block.querySelector('.ep-tmin')?.value.trim() || '';
-    const tmax = block.querySelector('.ep-tmax')?.value.trim() || '';
+    tmin = block.querySelector('.ep-tmin')?.value.trim() || '';
+    tmax = block.querySelector('.ep-tmax')?.value.trim() || '';
     if (tmin) parts.push(`tmin = ${tmin} s`);
     if (tmax) parts.push(`tmax = ${tmax} s`);
     if (isLong) {
-      const overlap = block.querySelector('.ep-overlap')?.value.trim() || '';
+      overlap = block.querySelector('.ep-overlap')?.value.trim() || '';
       if (overlap) parts.push(`overlap = ${overlap}`);
     }
   } else if (isSeg) {
-    const sl = block.querySelector('.ep-seg-len')?.value.trim() || '';
-    const ov = block.querySelector('.ep-overlap')?.value.trim() || '';
-    if (sl) parts.push(`segment_length = ${sl} s`);
-    if (ov) parts.push(`overlap = ${ov}`);
+    segment_length = block.querySelector('.ep-seg-len')?.value.trim() || '';
+    overlap = block.querySelector('.ep-overlap')?.value.trim() || '';
+    if (segment_length) parts.push(`segment_length = ${segment_length} s`);
+    if (overlap) parts.push(`overlap = ${overlap}`);
   }
+  const custom = [];
   block.querySelectorAll(`#ep-custom-${idx} .epoch-custom-row`).forEach(row => {
     const k = row.querySelector('.epoch-custom-key')?.value.trim();
     const v = row.querySelector('.epoch-custom-val')?.value.trim();
-    if (k && v) parts.push(`${k} = ${v}`);
+    if (k && v) { parts.push(`${k} = ${v}`); custom.push({ key: k, val: v }); }
   });
-  // target_events: locked to [] for segmentation; otherwise parse comma list.
-  const teRaw = isSeg ? '' : (block.querySelector('.ep-target-events')?.value.trim() || '');
-  const teArr = teRaw ? teRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+  // target_events: locked to [] for segmentation.
+  // When Event Structure is empty, no checkboxes exist — read from hidden fallback input.
+  let teArr = [];
+  if (!isSeg) {
+    const checkboxes = block.querySelectorAll('.ep-te-check:checked');
+    if (checkboxes.length > 0) {
+      teArr = Array.from(checkboxes).map(cb => cb.value);
+    } else {
+      const fallbackInput = block.querySelector('.ep-te-fallback');
+      if (fallbackInput) {
+        try { teArr = JSON.parse(fallbackInput.value || '[]'); } catch (_) { teArr = []; }
+      }
+    }
+  }
   const teStr = teArr.length
     ? `target_events = [${teArr.map(e => `\`${e}\``).join(', ')}]`
     : `target_events = []`;
   parts.push(teStr);
-  return { str: parts.join(', '), target_events: teArr };
+  return { str: parts.join(', '), target_events: teArr, tmin, tmax, overlap, segment_length, custom };
 }
 
 // ─── Step Dispatch ────────────────────────────────────────────────────────────
@@ -1668,7 +1775,7 @@ function tdMode(task) {
   return 'ev_cls';
 }
 const _TD_SCHEMA = {
-  ev_cls:   { headers: ['Event ID','y','Meaning'],            placeholders: ['event id','0/1','meaning'] },
+  ev_cls:   { headers: ['Event ID','y','Meaning'],            placeholders: ['event id','0 or 0,1','meaning'] },
   ev_reg:   { headers: ['Event ID','Value','Meaning'],        placeholders: ['event id','value','meaning'] },
   misc_reg: { headers: ['MISC Channel','Value','Notes'],      placeholders: ['channel','value (unit)','notes'] },
   info_cls: { headers: ['Info Field','Value','y','Meaning'],  placeholders: ['info field','value','0/1','meaning'] },
@@ -1705,7 +1812,15 @@ function parseTasks(body) {
       epochParams:{ tmin:'', tmax:'', overlap:'', segment_length:'', target_events:[], custom:[] },
       labelRoute:'event', labelField:'', metaLevel:'raw', targetRows:[], miscChannel:'', evidence:[], kernelNotes:'' };
 
-    const fv = (field) => { const re=new RegExp(`\\*\\*${escRe(field)}\\*\\*:\\s*\`?([^\`\n]+)\`?`); const m=part.match(re); return m?m[1].trim():''; };
+    const fv = (field) => {
+      const re = new RegExp(`^\\s*-\\s*\\*\\*${escRe(field)}\\*\\*:\\s*(.+)$`, 'm');
+      const m = part.match(re);
+      if (!m) return '';
+      const value = m[1].trim();
+      // Only strip a single outer pair of backticks; keep any inner backticks
+      // such as target_events = [`event_a`, `event_b`] intact.
+      return /^`[^`\n]*`$/.test(value) ? value.slice(1, -1).trim() : value;
+    };
     task.taskType = fv('Task Type') || 'classification';
     task.epochMethod = fv('Epoch Method') || 'epoch_by_event_hdf5';
     task.metaLevel = fv('Meta Level') || 'raw';
@@ -1713,9 +1828,8 @@ function parseTasks(body) {
     task.labelField = fv('Label Field') || '';
     task.epochParams = parseEpochParams(fv('Epoch Parameters'), task.epochMethod);
 
-    const tdm = part.match(/\*\*Target Definition\*\*:\s*([\s\S]*?)(?=\n- \*\*\w|$)/);
-    if (tdm) {
-      const tdb = tdm[1].trim();
+    const tdb = getTaskBlockField(part, 'Target Definition');
+    if (tdb !== null) {
       if (tdb.includes('|')) {
         const { rows } = parseMarkdownTable(tdb);
         const mode = tdMode(task);
@@ -1735,13 +1849,12 @@ function parseTasks(body) {
       }
     }
 
-    const evm = part.match(/\*\*Evidence\*\*:\s*([\s\S]*?)(?=\n- \*\*\w|$)/);
-    if (evm) task.evidence = parseEvidence(evm[1].trim());
+    const evb = getTaskBlockField(part, 'Evidence');
+    if (evb !== null) task.evidence = parseEvidence(evb);
 
     // v3 uses `**Notes**:`; legacy docs use `**Kernel Notes**:`. Accept either.
-    const knm = part.match(/\*\*Notes\*\*:\s*([\s\S]*?)(?=\n- \*\*\w|$)/)
-             || part.match(/\*\*Kernel Notes\*\*:\s*([\s\S]*?)(?=\n- \*\*\w|$)/);
-    if (knm) task.kernelNotes = knm[1].trim();
+    const knb = getTaskBlockField(part, ['Notes', 'Kernel Notes']);
+    if (knb !== null) task.kernelNotes = knb;
 
     tasks.push(task);
   }
@@ -1833,8 +1946,109 @@ ${kernelNotesBlock}`;
 }
 
 // ─── Task Card Rendering ──────────────────────────────────────────────────────
+// ─── Task Consistency Check ───────────────────────────────────────────────────
+function checkTaskViolations(tasks) {
+  // Returns [{idx, title, violations:[string]}] for each task that has issues.
+  const eventIds = new Set(getEventStructureFromRawContent().map(e => e.id));
+  const hasEventStructure = eventIds.size > 0;
+  const result = [];
+  tasks.forEach((task, idx) => {
+    const violations = [];
+    const isSeg  = task.epochMethod === 'epoch_by_segmentation_hdf5';
+    const isEvt  = task.epochMethod === 'epoch_by_event_hdf5';
+    const isLong = task.epochMethod === 'epoch_by_long_event_hdf5';
+    const te     = Array.isArray(task.epochParams?.target_events) ? task.epochParams.target_events : [];
+    const teSet  = new Set(te);
+    const mode   = tdMode(task);
+
+    // 1. Segmentation + event route
+    if (isSeg && task.labelRoute === 'event') {
+      violations.push('Epoch Method = segmentation cannot use Label Route = event.');
+    }
+    // 2. target_events empty for event / long-event (only flag when Event Structure has IDs to choose from)
+    if ((isEvt || isLong) && hasEventStructure && te.length === 0) {
+      violations.push('target_events must not be empty for event-based epoch methods.');
+    }
+    // 3. target_events entries not in Event Structure
+    if ((isEvt || isLong) && hasEventStructure && te.length > 0) {
+      const invalid = te.filter(id => !eventIds.has(id));
+      if (invalid.length) violations.push(`target_events contains IDs not in Event Structure: ${invalid.map(id => `"${id}"`).join(', ')}.`);
+    }
+    // 4. Target Definition Event IDs not in task's target_events (ev_cls / ev_reg)
+    if ((mode === 'ev_cls' || mode === 'ev_reg') && te.length > 0) {
+      const badTd = (task.targetRows || []).map(r => (r.label || '').trim()).filter(id => id && !teSet.has(id));
+      if (badTd.length) violations.push(`Target Definition has Event IDs not in target_events: ${badTd.map(id => `"${id}"`).join(', ')}.`);
+    }
+    // 5. Missing required epoch param keys (excluding target_events, covered above)
+    const ep = task.epochParams || {};
+    const hasVal = v => v !== undefined && v !== null && String(v).trim() !== '';
+    const reqByMethod = {
+      epoch_by_event_hdf5:        ['tmin', 'tmax'],
+      epoch_by_long_event_hdf5:   ['tmin', 'tmax', 'overlap'],
+      epoch_by_segmentation_hdf5: ['segment_length', 'overlap'],
+    };
+    const missingKeys = (reqByMethod[task.epochMethod] || []).filter(k => !hasVal(ep[k]));
+    if (missingKeys.length) violations.push(`Epoch Parameters missing required key(s): ${missingKeys.join(', ')}.`);
+    // 6. Classification: union of all class indices must have ≥2 distinct values.
+    // y may be comma-separated integers for multi-label (e.g. "0,1").
+    if (task.taskType === 'classification' && task.labelRoute !== 'misc') {
+      const allYInts = new Set();
+      (task.targetRows || []).forEach(r => {
+        (r.y || '').split(',').forEach(t => {
+          const n = parseInt(t.trim(), 10);
+          if (!isNaN(n)) allYInts.add(n);
+        });
+      });
+      if (allYInts.size < 2) violations.push('Classification requires ≥2 distinct class indices in y (multi-label comma-separated integers allowed, e.g. "0,1").');
+    }
+    // 7. Label Field missing for misc / info
+    if ((task.labelRoute === 'misc' || task.labelRoute === 'info') && !(task.labelField || task.miscChannel || '').trim()) {
+      violations.push('Label Field is required when Label Route ∈ {misc, info}.');
+    }
+
+    if (violations.length) {
+      const title = `${task.kind} Task ${task.num || (idx + 1)}: ${task.name || '(unnamed)'}`;
+      result.push({ idx, title, violations });
+    }
+  });
+  return result;
+}
+
 function renderTaskCards(container) {
   if (!container) return;
+
+  // Number tasks before any check.
+  let classN = 0, potN = 0;
+  currentTasks.forEach(t => { t.num = t.kind === 'Classical' ? ++classN : ++potN; });
+
+  const addRow = document.querySelector('.add-task-row');
+
+  // Violation check: any issue → lock all task cards.
+  const taskViolations = checkTaskViolations(currentTasks);
+  if (taskViolations.length > 0) {
+    if (addRow) addRow.style.display = 'none';
+    const items = taskViolations.map(v =>
+      `<div class="task-lock-item">
+        <div class="task-lock-title">${esc(v.title)}</div>
+        ${v.violations.map(m => `<div class="task-lock-msg">• ${esc(m)}</div>`).join('')}
+      </div>`
+    ).join('');
+    const tasksBody = getSection(rawContent, 'Tasks');
+    container.innerHTML = `
+      <div class="task-lock-banner">
+        <div class="task-lock-header">⚠ Task inconsistencies detected — editing disabled</div>
+        <p class="task-lock-desc">Fix the issues below in the editor, then click <strong>Apply Changes</strong>. Or use <strong>Regenerate All Tasks</strong> to rebuild from references.</p>
+        ${items}
+      </div>
+      <div style="margin-top:10px">
+        <div class="task-lock-edit-label">Tasks section (raw markdown) — edit directly to fix:</div>
+        <textarea id="task-raw-editor" class="task-raw-editor">${esc(tasksBody || '')}</textarea>
+        <button class="btn btn-primary" style="margin-top:8px" onclick="applyTaskEdits()">Apply Changes</button>
+      </div>`;
+    return;
+  }
+  if (addRow) addRow.style.display = '';
+
   if (!currentTasks.length) {
     container.innerHTML = `
       <div style="text-align:center;color:var(--muted);padding:24px 32px 12px;font-size:13px">No tasks defined. Use the buttons above to add one.</div>
@@ -1844,9 +2058,21 @@ function renderTaskCards(container) {
       </div>`;
     return;
   }
-  container.innerHTML = currentTasks.map((t,i) => buildTaskCard(t,i)).join('');
-  // Auto-resize textareas
+  container.innerHTML = currentTasks.map((t, i) => buildTaskCard(t, i)).join('');
   container.querySelectorAll('.bullet-input').forEach(ta => autoResize(ta));
+}
+
+function applyTaskEdits() {
+  const ta = document.getElementById('task-raw-editor');
+  if (!ta) return;
+  const newBody = ta.value;
+  rawContent = replaceSection(rawContent, 'Tasks', newBody);
+  currentTasks = parseTasks(newBody);
+  dirty = true;
+  const container = document.getElementById('task-cards-container');
+  renderTaskCards(container);
+  const tb = document.getElementById('fst-tab-tasks');
+  if (tb) tb.textContent = `Tasks (${currentTasks.length})`;
 }
 
 function buildTargetDefEditor(task, idx) {
@@ -1859,23 +2085,34 @@ function buildTargetDefEditor(task, idx) {
   const rowsArr = (task.targetRows && task.targetRows.length)
     ? task.targetRows
     : [{label:'',y:'',meaning:'',value:''}];
-  // Column widths (4-col vs 3-col).
   const widths = (nCols === 4) ? ['24%','20%','10%','42%'] : ['34%','22%','40%'];
+
+  // For ev_cls/ev_reg: Event ID column is a select limited to this task's target_events.
+  const isEventMode = (mode === 'ev_cls' || mode === 'ev_reg');
+  const teOptions = isEventMode ? (task.epochParams?.target_events || []) : [];
+
   let thead = '<thead><tr>';
-  hdrs.forEach((h,i) => { thead += `<th style="width:${widths[i]}">${h}</th>`; });
+  hdrs.forEach((h, i) => { thead += `<th style="width:${widths[i]}">${h}</th>`; });
   thead += '<th style="width:30px"></th></tr></thead>';
   let tbody = `<tbody id="td-tbody-${idx}">`;
   rowsArr.forEach(row => {
     const cells = tdRowCells(mode, row, fallback);
     tbody += '<tr>';
     cells.forEach((v, ci) => {
-      tbody += `<td><input type="text" value="${esc(v||'')}" placeholder="${esc(phs[ci]||'')}"></td>`;
+      if (isEventMode && ci === 0) {
+        const opts = teOptions.map(id =>
+          `<option value="${esc(id)}" ${v === id ? 'selected' : ''}>${esc(id)}</option>`
+        ).join('') || `<option value="" disabled selected>— select target_events first —</option>`;
+        tbody += `<td><select class="td-event-id-sel">${opts}</select></td>`;
+      } else {
+        tbody += `<td><input type="text" value="${esc(v||'')}" placeholder="${esc(phs[ci]||'')}"></td>`;
+      }
     });
     tbody += `<td><button class="btn-row-del" onclick="this.closest('tr').remove()">×</button></td></tr>`;
   });
   tbody += '</tbody>';
   const addBtn = (mode === 'misc_reg' || mode === 'info_reg')
-    ? ''  // single-row tables for continuous/range routes
+    ? ''
     : `<button class="btn-row-add" onclick="addTdRow(${idx})">+ Add row</button>`;
   return `<table class="td-table" id="td-table-${idx}" data-td-mode="${mode}">${thead}${tbody}</table>${addBtn}`;
 }
@@ -1884,7 +2121,12 @@ function buildTaskCard(task, idx) {
   const classSelClass = task.kind==='Classical' ? 'selected-classical' : '';
   const potSelClass = task.kind==='Potential' ? 'selected-potential' : '';
   const epOpts = EPOCH_METHODS.map(m=>`<option value="${m}" ${task.epochMethod===m?'selected':''}>${m}</option>`).join('');
-  const lrOpts = LABEL_ROUTES.map(lr=>`<option value="${lr}" ${task.labelRoute===lr?'selected':''}>${lr}</option>`).join('');
+  const isSeg = task.epochMethod === 'epoch_by_segmentation_hdf5';
+  const lrOpts = LABEL_ROUTES.map(lr => {
+    const disabled = (isSeg && lr === 'event') ? 'disabled' : '';
+    const selected = task.labelRoute === lr ? 'selected' : '';
+    return `<option value="${lr}" ${selected} ${disabled}>${lr}</option>`;
+  }).join('');
   const mlOpts = ['raw','super'].map(ml=>`<option value="${ml}" ${task.metaLevel===ml?'selected':''}>${ml}</option>`).join('');
   // v3: misc route locks Task Type to regression.
   const isMisc = task.labelRoute === 'misc';
@@ -1917,44 +2159,6 @@ function buildTaskCard(task, idx) {
       <p class="field-hint" style="margin-top:3px">${lfHint}</p>
     </div>`;
 
-  // Task-card-level validation messages (inline; v3 invariants).
-  const validationMsgs = [];
-  if (lfMissing) validationMsgs.push('Label Field is required when Label Route ∈ {misc, info}.');
-  if (task.taskType === 'classification' && task.labelRoute !== 'misc') {
-    const ys = (task.targetRows||[]).map(r => (r.y||'').trim()).filter(Boolean);
-    const unique = new Set(ys);
-    if (unique.size < 2) validationMsgs.push('Classification requires ≥2 distinct y values in Target Definition.');
-  }
-  if (task.epochMethod === 'epoch_by_segmentation_hdf5'
-      && Array.isArray(task.epochParams?.target_events)
-      && task.epochParams.target_events.length) {
-    validationMsgs.push('Segmentation requires target_events = []; the non-empty value will be dropped on save.');
-  }
-  // v3 rule epoch_parameters_complete (rulebook 第69–72条, detect.py severity=error).
-  const ep = task.epochParams || {};
-  const hasVal = (v) => v !== undefined && v !== null && String(v).trim() !== '';
-  const reqByMethod = {
-    epoch_by_event_hdf5:       ['tmin','tmax','target_events'],
-    epoch_by_long_event_hdf5:  ['tmin','tmax','overlap','target_events'],
-    epoch_by_segmentation_hdf5:['segment_length','overlap'],
-  };
-  const reqKeys = reqByMethod[task.epochMethod] || [];
-  const missingKeys = reqKeys.filter(k => {
-    if (k === 'target_events') {
-      // For segmentation, [] counts as present; for event/long-event, at least one id required.
-      const te = Array.isArray(ep.target_events) ? ep.target_events : [];
-      return task.epochMethod === 'epoch_by_segmentation_hdf5' ? false : te.length === 0;
-    }
-    return !hasVal(ep[k]);
-  });
-  if (missingKeys.length) {
-    validationMsgs.push(`Epoch Parameters missing required key(s) for ${task.epochMethod}: ${missingKeys.join(', ')}.`);
-  }
-  const validationHtml = validationMsgs.length
-    ? `<div class="task-validation" style="margin-top:6px;padding:6px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:5px;color:#b91c1c;font-size:11px">
-         ${validationMsgs.map(m => `<div>• ${esc(m)}</div>`).join('')}
-       </div>`
-    : '';
 
   return `<div class="task-card" data-task-idx="${idx}">
     <div class="task-card-header">
@@ -1989,7 +2193,6 @@ function buildTaskCard(task, idx) {
     <div class="task-td-section">
       <label>Target Definition</label>
       <div id="task-td-${idx}">${targetDefHtml}</div>
-      ${validationHtml}
     </div>
     <div class="task-text-field">
       <label>Evidence <span style="font-size:10px;font-weight:400;color:var(--muted)">— DOI: reference — description</span></label>
@@ -2010,10 +2213,19 @@ function addTdRow(taskIdx) {
   const mode = table.getAttribute('data-td-mode') || 'ev_cls';
   const phs = tdPlaceholders(mode);
   const nCols = tdHeaders(mode).length;
+  const isEventMode = (mode === 'ev_cls' || mode === 'ev_reg');
   const tr = document.createElement('tr');
   let html = '';
   for (let i = 0; i < nCols; i++) {
-    html += `<td><input type="text" value="" placeholder="${esc(phs[i]||'')}"></td>`;
+    if (isEventMode && i === 0) {
+      const task = currentTasks[taskIdx];
+      const teOpts = (task?.epochParams?.target_events || []).map(id =>
+        `<option value="${esc(id)}">${esc(id)}</option>`
+      ).join('') || `<option value="" disabled selected>— select target_events first —</option>`;
+      html += `<td><select class="td-event-id-sel">${teOpts}</select></td>`;
+    } else {
+      html += `<td><input type="text" value="" placeholder="${esc(phs[i]||'')}"></td>`;
+    }
   }
   html += `<td><button class="btn-row-del" onclick="this.closest('tr').remove()">×</button></td>`;
   tr.innerHTML = html;
@@ -2050,10 +2262,13 @@ function onEpochMethodChange(idx, sel) {
   collectTaskCards();
   if (!currentTasks[idx]) return;
   currentTasks[idx].epochMethod = sel.value;
-  // Segmentation locks target_events to [].
   if (sel.value === 'epoch_by_segmentation_hdf5') {
     currentTasks[idx].epochParams = currentTasks[idx].epochParams || {tmin:'',tmax:'',overlap:'',segment_length:'',target_events:[],custom:[]};
     currentTasks[idx].epochParams.target_events = [];
+    // event route is forbidden for segmentation — auto-switch to misc.
+    if (currentTasks[idx].labelRoute === 'event') {
+      currentTasks[idx].labelRoute = 'misc';
+    }
   }
   renderTaskCards(document.getElementById('task-cards-container'));
 }
@@ -2123,9 +2338,12 @@ function collectTaskCards() {
       taskType,
       epochMethod: method,
       epochParams: {
-        tmin:'', tmax:'', overlap:'', segment_length:'',
+        tmin: ep.tmin || '',
+        tmax: ep.tmax || '',
+        overlap: ep.overlap || '',
+        segment_length: ep.segment_length || '',
         target_events: ep.target_events || [],
-        custom: [],
+        custom: ep.custom || [],
       },
       labelRoute: lr,
       labelField: card.querySelector('.task-label-field')?.value.trim() || '',
@@ -2140,10 +2358,15 @@ function collectTaskCards() {
     const tdTable = card.querySelector(`#td-table-${i}`);
     const mode = tdTable ? (tdTable.getAttribute('data-td-mode') || tdMode(task)) : tdMode(task);
     card.querySelectorAll(`#td-tbody-${i} tr`).forEach(tr => {
-      const ins = [...tr.querySelectorAll('td input')];
-      const cells = ins.map(x => x.value);
+      // Collect each data cell (skip last td which holds the delete button).
+      const tds = [...tr.querySelectorAll('td:not(:last-child)')];
+      const cells = tds.map(td => {
+        const sel = td.querySelector('select.td-event-id-sel');
+        if (sel) return sel.value;
+        const inp = td.querySelector('input');
+        return inp ? inp.value : '';
+      });
       const row = tdRowFromCells(mode, cells);
-      // Keep row if any cell is non-empty.
       const anyVal = Object.values(row).some(v => (v||'').toString().trim() !== '');
       if (anyVal) task.targetRows.push(row);
     });
@@ -2423,13 +2646,17 @@ async function regenTasksFromRefs() {
       ? p2Data.num_potential_tasks
       : currentTasks.filter(t => t.kind === 'Potential').length;
     const checkNote = p2Data.self_check_notes ? ` | Check: ${esc(p2Data.self_check_notes)}` : '';
+    const semErrors = p2Data.semantic_errors || [];
+    const semNote = semErrors.length > 0
+      ? `<br><span style="color:#b45309">⚠ ${semErrors.length} semantic issue(s) detected in generated tasks — edit mode opened below.</span>`
+      : '';
 
     setProgress(
       `✓ Phase 0 complete (${p0found}/${total} refs)<br>` +
       `✓ Phase 1 complete: ${relevant.length} relevant, ${partial.length} partial<br>` +
       `✓ Phase 2-1 complete: ${p21line}<br>` +
       `<span style="color:#16a34a">✓ Done — ${nC} Classical + ${nP} Potential tasks. ` +
-      `${esc(p2Data.summary||'')}${checkNote}</span>`
+      `${esc(p2Data.summary||'')}${checkNote}</span>${semNote}`
     );
   } catch(e) {
     setProgress(`<span style="color:var(--red)">Error: ${esc(e.message)}</span>`);
@@ -2666,7 +2893,6 @@ function confirmAndPreview() {
   document.getElementById('preview-markdown').innerHTML = marked.parse(rawContent);
   document.getElementById('preview-modal-overlay').classList.add('open');
   previewSeen = true;
-  document.getElementById('btn-save').style.display = '';
 }
 
 function closePreview() { document.getElementById('preview-modal-overlay').classList.remove('open'); }

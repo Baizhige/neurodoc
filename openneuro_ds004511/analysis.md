@@ -54,3 +54,7 @@ _No task event markers detected (`no_events`). Only hardware sync marker `Sync(1
 ---
 
 > **auto_eeg FAILED**: No trial-level event markers exist in this dataset—only hardware sync markers are present, making supervised ML tasks impossible. The references either discuss deception detection but use different datasets (LieWaves vs. this 64-channel dataset) or are methodologically irrelevant. Without identifiable labels or trial structure, epoch-based analysis is not viable.
+
+---
+
+> **Pipeline FAILED**: The events.tsv samples confirm only 'Sync(1)' hardware synchronization markers with value=1 are present across all task runs (CC, GG, Rest). There are no trial-level event markers, no 'instruction' or 'trial_type' values indicating task conditions, and no identifiable labels for deception/truth or cognitive control conditions. The README describes rich paradigms, but the actual BIDS event files contain no extractable task structure for supervised ML.

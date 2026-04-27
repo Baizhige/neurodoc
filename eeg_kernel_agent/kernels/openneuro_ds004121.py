@@ -17,383 +17,238 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import mne
 import numpy as np
+import pandas as pd
 
 
-# All BCIT event codes documented in analysis.md
-# Source: analysis.md - Event Structure table
-_EVENT_MAP = {
-    # Lateral perturbation events (Task 1)
-    "4311": "lateral_perturb_type1",      # type 1 (leftward)
-    "4312": "lateral_perturb_type2",      # type 2 (rightward)
-    "4210": "perturbation_onset",
-    "4220": "perturbation_event",
-    "4230": "perturbation_direction_event",
-    "4730": "special_driving_event",
-    "3111": "perturbation_onset_alt",
-    
-    # Police vehicle / vigilance
-    "4411": "police_vehicle_event",
-    
-    # Audio conditions (Task 3)
-    "4621": "audio_condition_type1",      # silence
-    "4622": "audio_condition_type2",      # music/podcast
-    "2811": "audio_cue_event_type1",
-    "2812": "audio_cue_event_type2",
-    
-    # Speed markers
-    "3200": "speed_marker",
-    
-    # Performance metrics
-    "3310": "performance_metric",
-    
-    # Lane corrections
-    "1211": "lane_correction_type1",
-    "1212": "lane_correction_type2",
-    
-    # Driver responses
-    "1121": "driver_response_type1",
-    "1122": "driver_response_type2",
-    "1111": "driver_response_alt1",
-    "1112": "driver_response_alt2",
-    
-    # Behavioral responses
-    "2621": "behavioral_response_type1",
-    "2622": "behavioral_response_type2",
-    "2631": "behavioral_response_alt1",
-    "2632": "behavioral_response_alt2",
-    
-    # Thought probes (Mind Wandering - Task 2)
-    "2221": "thought_probe_type1",
-    "2222": "thought_probe_type2",
-    "2241": "probe_response_type1_on_task",   # on-task response
-    "2242": "probe_response_type1_off_task",  # off-task response
-    "2251": "probe_response_type2_on_task",
-    "2252": "probe_response_type2_off_task",
-}
-
-# Standard 10-20 electrode names (first 64 for EEG channels)
-# LLM 推断，需人类复核
-_STANDARD_10_20 = [
-    'Fp1', 'Fpz', 'Fp2',
-    'AF7', 'AF3', 'AFz', 'AF4', 'AF8',
-    'F7', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F8',
-    'FT7', 'FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'FT8',
-    'T7', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'T8',
-    'TP7', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'TP8',
-    'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8',
-    'PO7', 'PO3', 'POz', 'PO4', 'PO8',
-    'O1', 'Oz', 'O2',
-]
+# Required info fields from participants.tsv
+_REQUIRED_INFO_FIELDS = ["legacy_labID", "year_of_birth", "age", "sex", "amplifier", "cap", "handedness"]
 
 
-def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
-    """Build rename map for non-standard channel names.
-    
-    LLM 推断，需人类复核 - Channel mapping based on typical OpenNeuro
-    EEG dataset conventions and standard 10-20 positions.
-    """
-    rename_map: Dict[str, str] = {}
-    existing = set(raw.ch_names)
-    
-    # Pattern 1: EEG-001, EEG-002, ... (BrainVision style)
-    eeg_pattern = re.compile(r'^EEG[-_]?(\d+)$', re.IGNORECASE)
-    
-    # Pattern 2: E001, E002, ... (BioSemi style)
-    e_pattern = re.compile(r'^E(\d+)$', re.IGNORECASE)
-    
-    # Pattern 3: Channel_001, Channel_002, ...
-    ch_pattern = re.compile(r'^Channel[-_]?(\d+)$', re.IGNORECASE)
-    
-    for ch in raw.ch_names:
-        match = eeg_pattern.match(ch)
-        if match:
-            idx = int(match.group(1)) - 1
-            if idx < len(_STANDARD_10_20):
-                rename_map[ch] = _STANDARD_10_20[idx]
-            continue
-            
-        match = e_pattern.match(ch)
-        if match:
-            idx = int(match.group(1)) - 1
-            if idx < len(_STANDARD_10_20):
-                rename_map[ch] = _STANDARD_10_20[idx]
-            continue
-            
-        match = ch_pattern.match(ch)
-        if match:
-            idx = int(match.group(1)) - 1
-            if idx < len(_STANDARD_10_20):
-                rename_map[ch] = _STANDARD_10_20[idx]
-            continue
-    
-    return rename_map
+def _find_bids_root(file_path: str) -> Optional[str]:
+    """Find BIDS root directory from a file path."""
+    parts = os.path.normpath(file_path).split(os.sep)
+    for i in range(len(parts)):
+        # Look for participants.tsv
+        candidate = os.sep.join(parts[:i+1])
+        if os.path.isfile(os.path.join(candidate, "participants.tsv")):
+            return candidate
+    return None
 
 
-def _reconstruct_events_from_raw(
-    raw: mne.io.BaseRaw,
-) -> Tuple[np.ndarray, Dict[str, int]]:
-    """Reconstruct events array from raw stim channels using event_map.
+def _get_subject_from_file(file_path: str) -> Optional[str]:
+    """Extract subject ID from BIDS file path."""
+    # Match sub-XX pattern
+    match = re.search(r'sub-([a-zA-Z0-9]+)', file_path)
+    if match:
+        return f"sub-{match.group(1)}"
+    return None
+
+
+def _read_participants_tsv(bids_root: str, subject_id: str) -> Dict[str, str]:
+    """Read participants.tsv and extract subject info."""
+    info = {}
+    try:
+        participants_path = os.path.join(bids_root, "participants.tsv")
+        if not os.path.exists(participants_path):
+            return info
+        
+        df = pd.read_csv(participants_path, sep="\t")
+        
+        # Find row for this subject
+        subj_rows = df[df["participant_id"] == subject_id]
+        if subj_rows.empty:
+            # Try without "sub-" prefix
+            subj_rows = df[df["participant_id"] == subject_id.replace("sub-", "")]
+        
+        if not subj_rows.empty:
+            row_data = subj_rows.iloc[0]
+            for field in _REQUIRED_INFO_FIELDS:
+                if field in row_data.index:
+                    val = row_data[field]
+                    if pd.isna(val):
+                        info[field] = "unknown"
+                    else:
+                        info[field] = str(val)
+                else:
+                    info[field] = "unknown"
+    except Exception:
+        pass
     
-    Reads events from stim channels and maps to human-readable descriptions.
-    """
-    # Get events from stim channels
-    events, event_id = mne.events_from_annotations(raw, verbose=False)
+    # Ensure all required fields exist
+    for field in _REQUIRED_INFO_FIELDS:
+        if field not in info:
+            info[field] = "unknown"
     
-    # Build reverse mapping from numeric values to event descriptions
-    new_event_id: Dict[str, int] = {}
-    new_events = []
+    return info
+
+
+def _find_events_tsv(file_path: str) -> Optional[str]:
+    """Find corresponding events.tsv for an EEG file."""
+    # BIDS naming: sub-XX_ses-YY_task-ZZ_run-W_eeg.<ext> -> sub-XX_ses-YY_task-ZZ_run-W_events.tsv
+    base = file_path
+    for ext in [".edf", ".bdf", ".set", ".eeg", ".vhdr", ".vmrk", ".fif"]:
+        if base.endswith(ext):
+            base = base[:-len(ext)]
+            break
     
-    for desc, code in event_id.items():
-        # Try to match against our event map
-        mapped_desc = _EVENT_MAP.get(str(code), desc)
-        if mapped_desc not in new_event_id:
-            new_event_id[mapped_desc] = len(new_event_id) + 1
-        new_events.append([events[events[:, 2] == code][0, 0], 0, new_event_id[mapped_desc]])
+    events_path = base + "_events.tsv"
+    if os.path.exists(events_path):
+        return events_path
     
-    if new_events:
-        new_events = np.array(new_events)
-        # Sort by time
-        new_events = new_events[np.argsort(new_events[:, 0])]
-        # Reassign IDs sequentially
-        for i, desc in enumerate(sorted(new_event_id.keys(), key=lambda d: new_event_id[d])):
-            new_event_id[desc] = i + 1
-        # Rebuild events with final IDs
-        final_events = []
-        for orig_time, _, _ in new_events:
-            mapped_desc = None
-            for desc, code in _EVENT_MAP.items():
-                if code in new_event_id:
-                    mapped_desc = code
-                    break
-            for ev_desc, ev_code in event_id.items():
-                if int(ev_desc) == int(code) if ev_desc.isdigit() else False:
-                    pass
-        final_events = np.array([[e[0], 0, _EVENT_MAP.get(str(e[2]), str(e[2]))] for e in events])
+    # Try without run number
+    base_no_run = re.sub(r'_run-\d+', '', base)
+    events_path = base_no_run + "_events.tsv"
+    if os.path.exists(events_path):
+        return events_path
+    
+    # Search in same directory
+    dir_path = os.path.dirname(file_path)
+    if os.path.exists(dir_path):
+        for f in os.listdir(dir_path):
+            if f.endswith("_events.tsv"):
+                return os.path.join(dir_path, f)
+    
+    return None
+
+
+def _read_events_tsv(events_path: str) -> Optional[pd.DataFrame]:
+    """Read events.tsv file."""
+    try:
+        df = pd.read_csv(events_path, sep="\t", dtype=str, na_values=["n/a", "N/A", "na", "NA"])
+        return df
+    except Exception:
+        return None
+
+
+def _create_annotations_from_events_tsv(events_df: pd.DataFrame, sfreq: float) -> Optional[mne.Annotations]:
+    """Create MNE Annotations from BIDS events.tsv DataFrame."""
+    if events_df is None or events_df.empty:
+        return None
+    
+    required_cols = ["onset"]
+    if not all(c in events_df.columns for c in required_cols):
+        return None
+    
+    # Parse onsets as float (seconds in BIDS)
+    onsets = pd.to_numeric(events_df["onset"], errors="coerce").values
+    # Drop rows with invalid onsets
+    valid_mask = ~np.isnan(onsets)
+    if not np.any(valid_mask):
+        return None
+    
+    onsets = onsets[valid_mask]
+    
+    # Use 'value' column as description (literal strings, no remapping per HC-5)
+    # The 'value' column contains the actual trigger codes (e.g., 3111, 1211, etc.)
+    if "value" in events_df.columns:
+        descriptions = events_df.loc[valid_mask, "value"].astype(str).values
+    elif "trial_type" in events_df.columns:
+        descriptions = events_df.loc[valid_mask, "trial_type"].astype(str).values
     else:
-        # No events found - create empty events array
-        final_events = np.array([[0, 0, 0]])
+        # Fallback: use empty string descriptions
+        descriptions = np.array([""] * len(onsets))
     
-    return final_events, new_event_id
-
-
-def _build_mind_wandering_labels(
-    raw: mne.io.BaseRaw,
-) -> mne.Annotations:
-    """Build mind wandering state labels by matching probe and response events.
+    # Duration: use duration column if present, else 0.0
+    if "duration" in events_df.columns:
+        durations = pd.to_numeric(events_df.loc[valid_mask, "duration"], errors="coerce").fillna(0.0).values
+    else:
+        durations = np.zeros(len(onsets))
     
-    Merges thought probe events (2221/2222) with response events (2241/2242,
-    2251/2252) to create binary on-task/off-task labels for super meta.
+    # Ensure non-negative durations
+    durations = np.maximum(durations, 0.0)
     
-    LLM 推断，需人类复核 - Label derivation logic based on analysis.md
-    task description.
-    """
-    # Get original annotations
-    orig_annotations = raw.annotations
-    
-    # Parse onset times and descriptions
-    onset_times = orig_annotations.onset
-    descriptions = [str(d) for d in orig_annotations.description]
-    durations = orig_annotations.duration
-    
-    # Find probe events and their responses
-    probe_onsets = []
-    probe_labels = []
-    
-    for i, desc in enumerate(descriptions):
-        if desc in ["thought_probe_type1", "2221"]:
-            probe_onsets.append(onset_times[i])
-            # Look for response in next 5 seconds
-            response_onset = None
-            response_desc = None
-            for j in range(i + 1, min(i + 20, len(descriptions))):
-                if onset_times[j] - onset_times[i] > 5:
-                    break
-                if descriptions[j] in ["probe_response_type1_off_task", "2242"]:
-                    response_onset = onset_times[j]
-                    response_desc = "off_task"
-                    break
-                elif descriptions[j] in ["probe_response_type1_on_task", "2241"]:
-                    response_onset = onset_times[j]
-                    response_desc = "on_task"
-                    break
-            
-            if response_desc == "off_task":
-                probe_labels.append(1)
-            else:
-                probe_labels.append(0)
-                
-        elif desc in ["thought_probe_type2", "2222"]:
-            probe_onsets.append(onset_times[i])
-            # Look for response in next 5 seconds
-            for j in range(i + 1, min(i + 20, len(descriptions))):
-                if onset_times[j] - onset_times[i] > 5:
-                    break
-                if descriptions[j] in ["probe_response_type2_off_task", "2252"]:
-                    probe_labels.append(1)
-                    break
-                elif descriptions[j] in ["probe_response_type2_on_task", "2251"]:
-                    probe_labels.append(0)
-                    break
-    
-    if probe_onsets:
-        return mne.Annotations(
-            onset=np.array(probe_onsets),
-            duration=np.full(len(probe_onsets), 3.5),
-            description=[f"mw_state_{label}" for label in probe_labels],
-        )
-    
-    return mne.Annotations(onset=[], duration=[], description=[])
-
-
-def _get_subject_info(row) -> Dict[str, str]:
-    """Extract subject metadata from row.
-    
-    LLM 推断，需人类复核 - Default values used since participant
-    metadata not directly available in row.
-    """
-    # Try to extract subject ID for lookup
-    subject_id = row.get("Subject", row.get("subject_id", "unknown"))
-    
-    # Check if we have participants.tsv in the dataset directory
-    # This would be populated by EEGUnity's BIDS loader if available
-    if hasattr(row, 'get') and row.get("age"):
-        return {
-            "age": str(row.get("age", "unknown")),
-            "sex": str(row.get("sex", "unknown")).lower(),
-            "handedness": str(row.get("handedness", "unknown")).lower(),
-        }
-    
-    return {
-        "age": "unknown",      # LLM 推断，需人类复核
-        "sex": "unknown",       # LLM 推断，需人类复核
-        "handedness": "unknown", # LLM 推断，需人类复核
-    }
+    annot = mne.Annotations(
+        onset=onsets,
+        duration=durations,
+        description=descriptions,
+    )
+    return annot
 
 
 @dataclass
-class OpenNeuroDS004121Kernel:
-    """Stage1 kernel for OpenNeuro ds004121 (BCIT Mind Wandering).
-    
-    This kernel processes EEG data from the BCIT Mind Wandering study,
-    which investigated neural correlates of mind wandering during
-    simulated driving.
-    
-    Supported tasks:
-    - Task 1: Lateral Perturbation Direction (events 4311/4312)
-    - Task 2: Mind Wandering State (events 2221/2222 with responses)
-    - Task 3: Audio Condition (events 4621/4622)
-    """
-    
-    KERNEL_ID: str = "openneuro-ds004121-stage1"
-    
+class _EEGUnityDescription:
+    """Description object for EEGUnity."""
+    sfreq: float
+    n_channels: int
+    n_times: int
+    duration_sec: float
+    channel_types: Dict[str, str]
+    events: Optional[np.ndarray]
+    event_id: Optional[Dict[str, int]]
+    subject_info: Dict[str, Any]
+    dataset_name: str
+    task_name: Optional[str]
+    montage_kind: Optional[str]
+
+
+class _KERNEL:
+    """Dataset-specific kernel for openneuro ds004121."""
+
+    KERNEL_ID = "openneuro_ds004121"
+    DATASET_NAME = "ds004121"
+    TASK_NAME = "DriveWithTaskAudio"
+
+    def __init__(self):
+        pass
+
+    def _get_task_name(self, file_path: str) -> Optional[str]:
+        """Extract task name from BIDS file path."""
+        match = re.search(r'task-([a-zA-Z0-9]+)', file_path)
+        if match:
+            return match.group(1)
+        return None
+
+    def _load_raw(self, file_path: str) -> mne.io.BaseRaw:
+        """Load EEG file and return raw object."""
+        if file_path.endswith(".edf"):
+            raw = mne.io.read_raw_edf(file_path, preload=False)
+        elif file_path.endswith(".bdf"):
+            raw = mne.io.read_raw_bdf(file_path, preload=False)
+        elif file_path.endswith(".set"):
+            raw = mne.io.read_raw_eeglab(file_path, preload=False)
+        elif file_path.endswith(".vhdr") or file_path.endswith(".eeg"):
+            raw = mne.io.read_raw_brainvision(file_path, preload=False)
+        elif file_path.endswith(".fif"):
+            raw = mne.io.read_raw_fif(file_path, preload=False)
+        else:
+            raise ValueError(f"Unsupported file format: {file_path}")
+        return raw
+
     def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
-        """Apply stage1 preprocessing to a single record.
-        
-        Parameters
-        ----------
-        udataset : EEGUnity dataset context
-        raw : mne.io.BaseRaw
-            Raw EEG object
-        row : pandas.Series
-            Locator row with file path and metadata
-            
-        Returns
-        -------
-        mne.io.BaseRaw
-            Preprocessed raw object with standardized annotations
-        """
-        # Store original description
-        original_desc = raw.info.get("description", "")
-        
-        # === Channel Processing ===
-        # Rename non-standard channels before set_montage
-        rename_map = _build_channel_rename_map(raw)
-        if rename_map:
-            raw.rename_channels(rename_map)
-        
-        # Set channel types (especially important for 74-channel setups)
-        # This helps format_channel_name() in EEGUnity parse correctly
-        try:
-            # Get non-EEG channel types from existing info or set defaults
-            for i, ch in enumerate(raw.ch_names):
-                ch_type = raw.get_channel_types()[i]
-                if ch_type == 'stim':
-                    # Likely a trigger channel - keep as stim
-                    pass
-                elif ch_type == 'eeg':
-                    # Already properly typed
-                    pass
-        except Exception:
-            pass
-        
-        # Try to set standard montage (assumes standard 10-20 system)
-        # LLM 推断，需人类复核 - Standard 1020 assumed for 74-channel cap
-        try:
-            standard_montage = mne.channels.make_standard_montage('standard_1020')
-            raw.set_montage(standard_montage, on_missing='ignore')
-        except Exception:
-            # Montage setting failed - dataset may use non-standard layout
-            pass
-        
-        # === Event/Annotation Processing ===
-        # Reconstruct events from numeric codes to human-readable labels
-        try:
-            events, event_id = mne.events_from_annotations(raw, verbose=False)
-            
-            # Build new annotations with standardized descriptions
-            new_descriptions = []
-            new_onsets = []
-            new_durations = []
-            
-            for i, desc in enumerate(event_id.keys()):
-                desc_str = str(desc)
-                mapped = _EVENT_MAP.get(desc_str, desc_str)
-                new_descriptions.append(mapped)
-                new_onsets.append(events[i, 0] / raw.info['sfreq'])
-                new_durations.append(0.0)
-            
-            if new_descriptions:
-                raw.set_annotations(mne.Annotations(
-                    onset=np.array(new_onsets),
-                    duration=np.array(new_durations),
-                    description=new_descriptions,
-                ))
-        except Exception as e:
-            # If annotation processing fails, keep original annotations
-            pass
-        
-        # === Super Meta: Mind Wandering Labels ===
-        # Create mind wandering state annotations by matching probes and responses
-        try:
-            mw_annotations = _build_mind_wandering_labels(raw)
-            if len(mw_annotations) > 0:
-                # Append super meta annotations to existing
-                existing = raw.annotations
-                combined = mne.Annotations(
-                    onset=np.concatenate([existing.onset, mw_annotations.onset]),
-                    duration=np.concatenate([existing.duration, mw_annotations.duration]),
-                    description=list(existing.description) + list(mw_annotations.description),
-                )
-                raw.set_annotations(combined)
-        except Exception:
-            pass
-        
-        # === Metadata (eegunity_description) ===
-        subject_info = _get_subject_info(row)
-        
-        description_dict = {
-            "original_description": original_desc,
-            "eegunity_description": {
-                "age": subject_info["age"],
-                "sex": subject_info["sex"],
-                "amplifier": "unknown",      # LLM 推断，需人类复核
-                "cap": "Ag/AgCl",            # LLM 推断，需人类复核 - typical for EEG studies
-                "handedness": subject_info["handedness"],
-            },
+        file_path = row["file_path"] if "file_path" in row else str(row.get("path", ""))
+        bids_root = _find_bids_root(file_path)
+        subject_id = _get_subject_from_file(file_path)
+        subject_info = {}
+        if bids_root and subject_id:
+            subject_info = _read_participants_tsv(bids_root, subject_id)
+        eegunity_description = {
+            "legacy_labID": subject_info.get("legacy_labID", "unknown"),
+            "year_of_birth": subject_info.get("year_of_birth", "unknown"),
+            "age": subject_info.get("age", "unknown"),
+            "sex": subject_info.get("sex", "unknown"),
+            "amplifier": subject_info.get("amplifier", "unknown"),
+            "cap": subject_info.get("cap", "unknown"),
+            "handedness": subject_info.get("handedness", "unknown"),
         }
-        raw.info["description"] = json.dumps(description_dict)
+        original_description = raw.info.get("description", "")
+        raw.info["description"] = json.dumps({
+            "original_description": original_description,
+            "eegunity_description": eegunity_description,
+        })
+        
+        # Always load events from events.tsv for this dataset.
+        # The EEGLAB .set files have empty event fields, so file-native triggers are not present.
+        # We must use the sibling events.tsv files which contain the actual event information.
+        events_path = _find_events_tsv(file_path)
+        if events_path:
+            events_df = _read_events_tsv(events_path)
+            if events_df is not None and not events_df.empty:
+                annot = _create_annotations_from_events_tsv(events_df, raw.info["sfreq"])
+                if annot is not None:
+                    # Set annotations on the raw object, replacing any existing annotations
+                    raw.set_annotations(annot)
         
         return raw
 
 
-KERNEL = OpenNeuroDS004121Kernel()
+KERNEL = _KERNEL()

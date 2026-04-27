@@ -1,7 +1,7 @@
 """OpenNeuro DS004350 stage1 kernel for EEGUnity.
 
 Executive Functioning Study for Assessing the Effect of Neurofeedback.
-Contains N-back (NB1/NB3), Local-Global (LG), and SART paradigms.
+Contains N-back (NB1/NB2/NB3), Local-Global (LG), and SART paradigms.
 
 Source: https://openneuro.org/datasets/ds004350
 """
@@ -11,9 +11,11 @@ from __future__ import annotations
 import json
 import os
 import re
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 import mne
+import numpy as np
 import pandas as pd
 
 
@@ -33,8 +35,8 @@ def _load_subject_info(dataset_root: str) -> Dict[str, Dict[str, str]]:
     Returns
     -------
     Dict[str, Dict[str, str]]
-        Mapping from subject_id (e.g., "sub-01") to metadata dict with
-        keys: age, sex, handedness.
+        Mapping from subject_id (e.g., "sub-001") to metadata dict with
+        keys: age, sex, handedness, group.
     """
     participants_tsv = os.path.join(dataset_root, "participants.tsv")
     subject_info: Dict[str, Dict[str, str]] = {}
@@ -54,7 +56,7 @@ def _load_subject_info(dataset_root: str) -> Dict[str, Dict[str, str]]:
 
                 # Age handling
                 raw_age = str(row.get("age", "unknown")).strip()
-                if raw_age in ("nan", "", "NA"):
+                if raw_age in ("nan", "", "NA", "None"):
                     raw_age = "unknown"
 
                 # Handedness
@@ -62,10 +64,16 @@ def _load_subject_info(dataset_root: str) -> Dict[str, Dict[str, str]]:
                 if raw_handed not in ("right", "left", "ambidextrous"):
                     raw_handed = "unknown"
 
+                # Group (required info field)
+                raw_group = str(row.get("group", "unknown")).strip()
+                if raw_group in ("nan", "", "NA", "None"):
+                    raw_group = "unknown"
+
                 subject_info[subj_id] = {
                     "age": raw_age,
                     "sex": raw_sex,
                     "handedness": raw_handed,
+                    "group": raw_group,
                 }
         except Exception:
             pass
@@ -74,15 +82,14 @@ def _load_subject_info(dataset_root: str) -> Dict[str, Dict[str, str]]:
 
 
 def _detect_task_from_filename(file_path: str) -> Optional[str]:
-    """Detect BIDS task from filename (e.g., sub-01_task-NB1_run-01_EEG.vhdr).
+    """Detect BIDS task from filename.
 
     Returns
     -------
     str or None
-        Task name: "NB1", "NB3", "LG", "SART", or None if not detectable.
+        Task name: "NB1", "NB2", "NB3", "LG", "SART", or None.
     """
     basename = os.path.basename(file_path)
-    # Match task-<value> pattern
     match = re.search(r"task-([A-Za-z0-9]+)", basename)
     if match:
         return match.group(1).upper()
@@ -92,253 +99,308 @@ def _detect_task_from_filename(file_path: str) -> Optional[str]:
 def _build_channel_rename_map_64(raw: mne.io.BaseRaw) -> Dict[str, str]:
     """Build rename map for 64-channel EEG caps.
 
-    Common 64-channel layouts (BrainCap 64, EGI 64, etc.) use names like
-    'EEG 001' -> 'Fp1', 'EEG 002' -> 'Fpz', etc.
-
-    Parameters
-    ----------
-    raw : mne.io.BaseRaw
-        Raw object to inspect for existing channel names.
-
-    Returns
-    -------
-    Dict[str, str]
-        Mapping from source names to standard 10-20 names.
+    Common 64-channel layouts use names like EEG-0..EEG-63 or 1..64.
+    Maps to standard 10-20 naming where possible.
     """
-    # Standard 64-channel 10-20 layout (ordered)
-    # Covers all standard positions for 64-channel caps
-    standard_64 = [
-        "Fp1", "Fpz", "Fp2",
-        "AF9", "AF7", "AF5", "AF3", "AF1", "AFz", "AF2", "AF4", "AF6", "AF8", "AF10",
-        "F9", "F7", "F5", "F3", "F1", "Fz", "F2", "F4", "F6", "F8", "F10",
-        "FT9", "FT7", "FT5", "FT3", "FT1", "FTz", "FT2", "FT4", "FT6", "FT8", "FT10",
-        "T9", "T7", "T5", "T3", "T1", "T2", "T4", "T6", "T8", "T10",
-        "TP9", "TP7", "TP5", "TP3", "TP1", "TPz", "TP2", "TP4", "TP6", "TP8", "TP10",
-        "P9", "P7", "P5", "P3", "P1", "Pz", "P2", "P4", "P6", "P8", "P10",
-        "PO9", "PO7", "PO5", "PO3", "PO1", "POz", "PO2", "PO4", "PO6", "PO8", "PO10",
-        "O1", "Oz", "O2",
-        "I1", "Iz", "I2",
-        # Below are common extended 10-10 positions for 64ch
-        "AFp9", "AFp7", "AFp5", "AFp3", "AFp1", "AFp2", "AFp4", "AFp6", "AFp8", "AFp10",
-        "Fp9", "F10",
-        "AFF9", "AFF7", "AFF5", "AFF1", "AFF2", "AFF6", "AFF8", "AFF10",
-        "FTT9", "FTT7", "FTT5", "FTT3", "FTT1", "FTT2", "FTT4", "FTT6", "FTT8", "FTT10",
-        "TTP7", "TTP5", "TTP3", "TTP1", "TTP2", "TTP4", "TTP6", "TTP8",
-        "TPP9", "TPP7", "TPP5", "TPP1", "TPP2", "TPP6", "TPP8", "TPP10",
-        "PPO9", "PPO7", "PPO5", "PPO1", "PPO2", "PPO4", "PPO6", "PPO8", "PPO10",
-        "POO9", "POO7", "POO5", "POO3", "POO1", "POO2", "POO4", "POO6", "POO8",
-        "OI1", "OI2", "OI3",
-        "直播",  # skip unlikely
+    rename_map: Dict[str, str] = {}
+
+    # Standard 64-channel extended 10-20 layout
+    # Source: BrainCap 64 channel layout (common in neurofeedback studies)
+    # Annotator: LLM, 2026-04-08; LLM 推断，需人类复核
+    _STANDARD_64_NAMES = [
+        "Fp1", "Fpz", "Fp2", "AF7", "AF3", "AF4", "AF8", "F7",
+        "F5", "F3", "F1", "Fz", "F2", "F4", "F6", "F8",
+        "FT7", "FC5", "FC3", "FC1", "FCz", "FC2", "FC4", "FC6",
+        "FT8", "T7", "C5", "C3", "C1", "Cz", "C2", "C4",
+        "C6", "T8", "TP7", "CP5", "CP3", "CP1", "CPz", "CP2",
+        "CP4", "CP6", "TP8", "P7", "P5", "P3", "P1", "Pz",
+        "P2", "P4", "P6", "P8", "PO7", "PO3", "POz", "PO4",
+        "PO8", "O1", "Oz", "O2", "Iz"
     ]
 
-    rename_map: Dict[str, str] = {}
     existing = set(raw.ch_names)
 
-    # Pattern 1: 'EEG 001', 'EEG001', 'EEG001-avg' style
-    for i, std_name in enumerate(standard_64):
-        for prefix in ["EEG ", "EEG", "eeg"]:
-            for pad_len in [3, 2]:
-                padded = str(i + 1).zfill(pad_len)
-                source = f"{prefix}{padded}"
-                if source in existing:
-                    rename_map[source] = std_name
-                    break
+    # Try numbered EEG channels (EEG-0..EEG-63 or 0..63)
+    for i in range(64):
+        for prefix in [f"EEG-{i}", str(i), f"Ch{i+1}", f"CH{i+1}"]:
+            if prefix in existing and i < len(_STANDARD_64_NAMES):
+                rename_map[prefix] = _STANDARD_64_NAMES[i]
+                break
 
-    # Pattern 2: Already has standard names but with slight variations
-    # e.g., 'Fp1' already exists - keep it, or 'Fz.' -> 'Fz'
-    standard_lower = {n.lower(): n for n in standard_64 if len(n) <= 4}
-    for ch in existing:
-        ch_lower = ch.lower().strip()
-        if ch in standard_64:
-            continue  # already standard
-        if ch_lower in standard_lower:
-            rename_map[ch] = standard_lower[ch_lower]
+    # Also handle common named patterns
+    name_patterns = {
+        "Fp1": ["Fp1", "FP1"],
+        "Fpz": ["Fpz", "FPz"],
+        "Fp2": ["Fp2", "FP2"],
+        "AF7": ["AF7"],
+        "AF3": ["AF3"],
+        "AF4": ["AF4"],
+        "AF8": ["AF8"],
+        "F7": ["F7"],
+        "F5": ["F5"],
+        "F3": ["F3"],
+        "F1": ["F1"],
+        "Fz": ["Fz", "FZ"],
+        "F2": ["F2"],
+        "F4": ["F4"],
+        "F6": ["F6"],
+        "F8": ["F8"],
+        "FT7": ["FT7"],
+        "FC5": ["FC5"],
+        "FC3": ["FC3"],
+        "FC1": ["FC1"],
+        "FCz": ["FCz", "FCZ"],
+        "FC2": ["FC2"],
+        "FC4": ["FC4"],
+        "FC6": ["FC6"],
+        "FT8": ["FT8"],
+        "T7": ["T7"],
+        "C5": ["C5"],
+        "C3": ["C3"],
+        "C1": ["C1"],
+        "Cz": ["Cz", "CZ"],
+        "C2": ["C2"],
+        "C4": ["C4"],
+        "C6": ["C6"],
+        "T8": ["T8"],
+        "TP7": ["TP7"],
+        "CP5": ["CP5"],
+        "CP3": ["CP3"],
+        "CP1": ["CP1"],
+        "CPz": ["CPz", "CPZ"],
+        "CP2": ["CP2"],
+        "CP4": ["CP4"],
+        "CP6": ["CP6"],
+        "TP8": ["TP8"],
+        "P7": ["P7"],
+        "P5": ["P5"],
+        "P3": ["P3"],
+        "P1": ["P1"],
+        "Pz": ["Pz", "PZ"],
+        "P2": ["P2"],
+        "P4": ["P4"],
+        "P6": ["P6"],
+        "P8": ["P8"],
+        "PO7": ["PO7"],
+        "PO3": ["PO3"],
+        "POz": ["POz", "POZ"],
+        "PO4": ["PO4"],
+        "PO8": ["PO8"],
+        "O1": ["O1"],
+        "Oz": ["Oz", "OZ"],
+        "O2": ["O2"],
+        "Iz": ["Iz", "IZ"],
+    }
+
+    for target, variants in name_patterns.items():
+        for v in variants:
+            if v in existing and v != target and v not in rename_map:
+                rename_map[v] = target
+                break
 
     return rename_map
 
 
-def _extract_events_from_annotations(raw: mne.io.BaseRaw) -> List[Dict[str, Any]]:
-    """Extract event info from MNE annotations for event-based epoching.
+def _find_events_tsv(file_path: str) -> Optional[str]:
+    """Find sibling events.tsv file for a given EEG file."""
+    base = file_path.replace(".vhdr", "").replace(".eeg", "").replace(".edf", "").replace(".set", "").replace(".fif", "")
+    # BIDS naming: sub-XXX[_ses-YYY]_task-ZZZ[_run-RR]_eeg.<ext>
+    # events.tsv: sub-XXX[_ses-YYY]_task-ZZZ[_run-RR]_events.tsv
+    events_tsv = base + "_events.tsv"
+    if os.path.exists(events_tsv):
+        return events_tsv
 
-    Returns
-    -------
-    List[Dict[str, Any]]
-        List of event dicts with keys: onset, duration, description.
+    # Try without run suffix
+    base_no_run = re.sub(r"_run-\d+", "", base)
+    events_tsv = base_no_run + "_events.tsv"
+    if os.path.exists(events_tsv):
+        return events_tsv
+
+    return None
+
+
+def _load_events_tsv(events_tsv: str) -> Optional[pd.DataFrame]:
+    """Load events.tsv file."""
+    try:
+        df = pd.read_csv(events_tsv, sep="\t")
+        return df
+    except Exception:
+        return None
+
+
+def _events_to_annotations(events_df: pd.DataFrame, task: Optional[str]) -> mne.Annotations:
+    """Convert BIDS events.tsv to MNE Annotations.
+
+    Uses paradigm prefix for event descriptions to disambiguate across tasks.
     """
-    events = []
-    if raw.annotations is None:
-        return events
+    onsets = []
+    durations = []
+    descriptions = []
 
-    for onset, duration, desc in zip(
-        raw.annotations.onset,
-        raw.annotations.duration,
-        raw.annotations.description,
-    ):
-        events.append({
-            "onset": float(onset),
-            "duration": float(duration),
-            "description": str(desc),
-        })
-    return events
+    for _, row in events_df.iterrows():
+        onset = float(row.get("onset", 0))
+        duration = float(row.get("duration", 0))
+        if pd.isna(duration):
+            duration = 0.0
+
+        # Build description with paradigm prefix
+        trial_type = str(row.get("trial_type", "")) if "trial_type" in row else ""
+        value = str(row.get("value", "")) if "value" in row else ""
+
+        if task and value:
+            desc = f"{task}: {value}"
+        elif task and trial_type:
+            desc = f"{task}: {trial_type}"
+        elif value:
+            desc = value
+        elif trial_type:
+            desc = trial_type
+        else:
+            desc = "unknown"
+
+        onsets.append(onset)
+        durations.append(duration)
+        descriptions.append(desc)
+
+    return mne.Annotations(onset=onsets, duration=durations, description=descriptions)
 
 
-class OpenNeuroDS004350Kernel:
-    """Stage1 kernel for OpenNeuro DS004350 dataset.
+def _find_response_time_columns(events_df: pd.DataFrame) -> List[str]:
+    """Find response time columns in events dataframe."""
+    rt_cols = []
+    for col in events_df.columns:
+        if "response_time" in col.lower():
+            rt_cols.append(col)
+    return rt_cols
 
-    This kernel handles:
-    - Subject metadata from participants.tsv
-    - Channel renaming for standard 10-20 compatibility
-    - Task detection from filename
-    - Event preservation from annotations
-    - EEGUnity description metadata
+
+def _add_derived_misc_channel(raw: mne.io.BaseRaw, name: str, data: np.ndarray) -> None:
+    """Add a derived misc channel to the raw object."""
+    info = mne.create_info([name], raw.info["sfreq"], ch_types=["misc"])
+    raw_misc = mne.io.RawArray(data, info)
+    raw.add_channels([raw_misc], force_update_info=True)
+
+
+@dataclass
+class OpenNeuroDS004350:
+    """Stage-1 kernel for OpenNeuro ds004350.
+
+    Executive Functioning Study for Assessing the Effect of Neurofeedback.
     """
 
-    KERNEL_ID: str = "openneuro-ds004350-stage1"
+    def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
+        dataset_root = row.get("dataset_root", udataset.dataset_path if hasattr(udataset, "dataset_path") else "")
+        file_path = row.get("file_path", "")
 
-    def apply(self, udataset, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
-        """Apply stage1 preprocessing to a single EEG recording.
+        # Get subject ID from row or file path
+        subject_id = row.get("subject_id", "")
+        if not subject_id and file_path:
+            match = re.search(r"(sub-\d+)", file_path)
+            if match:
+                subject_id = match.group(1)
 
-        Parameters
-        ----------
-        udataset
-            EEGUnity dataset context.
-        raw
-            MNE Raw object loaded by EEGUnity.
-        row
-            Locator row with at least 'File Path' and 'Subject' keys.
-
-        Returns
-        -------
-        mne.io.BaseRaw
-            Preprocessed Raw object with updated metadata.
-        """
-        file_path = str(row.get("File Path", ""))
-        subject_id = str(row.get("Subject", "unknown"))
-
-        # Ensure subject_id has sub- prefix
-        if not subject_id.startswith("sub-"):
-            subject_id = f"sub-{subject_id}"
-
-        # Detect task from filename
-        task_name = _detect_task_from_filename(file_path) or "unknown"
-
-        # Load subject metadata
-        dataset_root = row.get("Dataset Root", "")
+        # Load subject info from participants.tsv
         subject_info = _load_subject_info(dataset_root)
         subj_meta = subject_info.get(subject_id, {})
 
-        # Get subject-specific values or defaults
-        age = subj_meta.get("age", "unknown")
-        sex = subj_meta.get("sex", "unknown")
-        handedness = subj_meta.get("handedness", "unknown")
+        # Detect task
+        task = _detect_task_from_filename(file_path)
 
-        # If not found in participants.tsv, try to infer from other sources
-        # Annotator: LLM, 2026-04-08
-        if age == "unknown":
-            # Paper DOI 10.1038/nn1233 mentions "healthy adults" without specifics
-            age = "unknown"  # LLM 推断，需人类复核
-        if sex == "unknown":
-            sex = "unknown"  # LLM 推断，需人类复核
-        if handedness == "unknown":
-            handedness = "unknown"  # LLM 推断，需人类复核
-
-        # Get original description
-        original_description = raw.info.get("description", "") or ""
-
-        # Build EEGUnity description
-        description_dict = {
-            "original_description": original_description,
-            "eegunity_description": {
-                "age": str(age),
-                "sex": str(sex).lower(),
-                "amplifier": _DEVICE_AMPLIFIER,
-                "cap": _CAP_MATERIAL,
-                "handedness": str(handedness).lower(),
-            },
-        }
-        raw.info["description"] = json.dumps(description_dict)
-
-        # Channel renaming BEFORE set_montage()
+        # Rename channels to standard 10-20 names
         rename_map = _build_channel_rename_map_64(raw)
         if rename_map:
-            print(f"[DS004350] Renaming {len(rename_map)} channels for {subject_id}")
-            try:
-                raw.rename_channels(rename_map)
-            except Exception as e:
-                print(f"[DS004350] Warning: channel rename failed: {e}")
+            raw.rename_channels(rename_map)
 
-        # Set montage if channels are standard 10-20 names
-        # Try to set appropriate montage based on number of channels
-        n_eeg_channels = len([ch for ch in raw.ch_names
-                               if raw.get_channel_types(picks=[ch])[0] == "eeg"])
+        # Set standard 10-20 montage if possible
+        try:
+            montage = mne.channels.make_standard_montage("standard_1020")
+            raw.set_montage(montage, match_case=False, on_missing="ignore")
+        except Exception:
+            pass
 
-        montage = None
-        if n_eeg_channels >= 64:
-            try:
-                montage = mne.channels.make_standard_montage("standard_1020")
-                raw.set_montage(montage, on_missing="ignore")
-            except Exception:
-                pass
-        elif n_eeg_channels >= 32:
-            try:
-                montage = mne.channels.make_standard_montage("standard_1020")
-                raw.set_montage(montage, on_missing="ignore")
-            except Exception:
-                pass
+        # Load events from events.tsv
+        events_tsv_path = _find_events_tsv(file_path)
+        events_df = None
+        if events_tsv_path:
+            events_df = _load_events_tsv(events_tsv_path)
+            if events_df is not None:
+                # Add annotations from events.tsv
+                annotations = _events_to_annotations(events_df, task)
+                raw.set_annotations(annotations)
 
-        # Extract and preserve events from annotations
-        # The raw annotations contain the event markers
-        events = _extract_events_from_annotations(raw)
+                # Create derived misc channels for response times from events.tsv
+                rt_cols = _find_response_time_columns(events_df)
+                for col in rt_cols:
+                    # Create a trial-locked step function for response time
+                    data = np.zeros((1, len(raw.times)))
+                    if "onset" in events_df.columns and col in events_df.columns:
+                        for _, ev_row in events_df.iterrows():
+                            onset = float(ev_row.get("onset", 0))
+                            rt_val = ev_row.get(col, np.nan)
+                            if pd.isna(rt_val):
+                                continue
+                            rt_val = float(rt_val)
+                            # Find sample index for onset
+                            onset_idx = int(onset * raw.info["sfreq"])
+                            if 0 <= onset_idx < len(raw.times):
+                                # Fill from onset to onset + response_time
+                                end_idx = int((onset + rt_val) * raw.info["sfreq"])
+                                end_idx = min(end_idx, len(raw.times))
+                                if end_idx > onset_idx:
+                                    data[0, onset_idx:end_idx] = rt_val
+                                else:
+                                    # If RT is 0 or negative, just mark the onset
+                                    data[0, onset_idx] = rt_val
 
-        # If no annotations exist, try to read events from BIDS *_events.tsv
-        if not events and file_path:
-            events_tsv = file_path.replace("_EEG.vhdr", "_events.tsv")
-            events_tsv = events_tsv.replace("_eeg.vhdr", "_events.tsv")
-            events_tsv = events_tsv.replace(".vhdr", "_events.tsv")
-            events_tsv = events_tsv.replace(".edf", "_events.tsv")
-            events_tsv = events_tsv.replace(".bdf", "_events.tsv")
+                    # Add as misc channel
+                    _add_derived_misc_channel(raw, col, data)
 
-            if os.path.exists(events_tsv):
-                try:
-                    events_df = pd.read_csv(events_tsv, sep="\t")
-                    if "onset" in events_df.columns and "trial_type" in events_df.columns:
-                        onsets = events_df["onset"].values
-                        descriptions = events_df["trial_type"].values
-                        durations = events_df.get("duration", pd.Series([0] * len(onset))).values
+        # Create required derived misc channels based on task
+        # Map task to derived channel name and check for response_time in events.tsv
+        task_to_channel = {
+            "NB1": "response_time_nb1",
+            "NB2": "response_time_nb2",
+            "LG": "response_time_lg",
+        }
 
-                        new_annotations = mne.Annotations(
-                            onset=onsets,
-                            duration=durations,
-                            description=[str(d) for d in descriptions],
-                        )
-                        raw.set_annotations(new_annotations)
-                except Exception as e:
-                    print(f"[DS004350] Warning: failed to load events.tsv: {e}")
+        current_task = task.upper() if task else None
+        if current_task in task_to_channel and events_df is not None and "response_time" in events_df.columns:
+            channel_name = task_to_channel[current_task]
+            
+            # Create trial-locked step function for response_time
+            data = np.zeros((1, len(raw.times)))
+            for _, ev_row in events_df.iterrows():
+                onset = float(ev_row.get("onset", 0))
+                rt_val = ev_row.get("response_time", np.nan)
+                if pd.isna(rt_val):
+                    continue
+                rt_val = float(rt_val)
+                onset_idx = int(onset * raw.info["sfreq"])
+                if 0 <= onset_idx < len(raw.times):
+                    end_idx = int((onset + rt_val) * raw.info["sfreq"])
+                    end_idx = min(end_idx, len(raw.times))
+                    if end_idx > onset_idx:
+                        data[0, onset_idx:end_idx] = rt_val
+                    else:
+                        data[0, onset_idx] = rt_val
+            
+            # Only add if we found valid response time data
+            if np.any(data != 0) or np.any(~np.isnan(events_df["response_time"].values)):
+                _add_derived_misc_channel(raw, channel_name, data)
 
-        # Add task info to raw.annotations.description if available
-        # This helps downstream epoching identify task context
-        if raw.annotations is not None and len(raw.annotations) > 0:
-            # Tag events with task prefix if multi-paradigm
-            task_prefix = f"{task_name}: " if task_name != "unknown" else ""
-            current_descs = list(raw.annotations.description)
-            # Only add prefix if not already present
-            prefixed = []
-            for desc in current_descs:
-                desc_str = str(desc)
-                if task_prefix and not desc_str.startswith(task_prefix):
-                    prefixed.append(f"{task_prefix}{desc_str}")
-                else:
-                    prefixed.append(desc_str)
+        # Set eegunity_description
+        eegunity_description = {
+            "age": subj_meta.get("age", "unknown"),
+            "sex": subj_meta.get("sex", "unknown"),
+            "amplifier": _DEVICE_AMPLIFIER,
+            "cap": _CAP_MATERIAL,
+            "handedness": subj_meta.get("handedness", "unknown"),
+        }
 
-            if prefixed != current_descs:
-                new_ann = mne.Annotations(
-                    onset=raw.annotations.onset,
-                    duration=raw.annotations.duration,
-                    description=prefixed,
-                )
-                raw.set_annotations(new_ann)
+        # Store description in raw.info as a custom field
+        raw.info["eegunity_description"] = eegunity_description
 
         return raw
 
 
-KERNEL = OpenNeuroDS004350Kernel()
+KERNEL = OpenNeuroDS004350()

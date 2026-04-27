@@ -45,8 +45,8 @@ Nine subjects (A01-A09) performed four-class cued motor imagery (BCI Competition
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `Cue onset left (class 1)` | 0 | Left-hand motor imagery |
   | `Cue onset right (class 2)` | 1 | Right-hand motor imagery |
   | `Cue onset foot (class 3)` | 2 | Feet motor imagery |
@@ -55,7 +55,7 @@ Nine subjects (A01-A09) performed four-class cued motor imagery (BCI Competition
   - DOI: (not identified) — Official BCI Competition IV Dataset 2a description defines four-class MI (left hand, right hand, feet, tongue) as benchmark task with 4s imagery window from cue onset.
   - DOI: 10.1109/tnnls.2018.2789927 — CNN trained on 0.5-2.5s MI period after cue onset.
   - DOI: 10.1109/tnsre.2022.3156076 — SincNet hybrid achieves 74.26% accuracy.
-- **Kernel Notes**: 
+- **Notes**: 
 
 ### Potential Task 1: Binary Motor Imagery - Left vs. Right Hand
 - **Task Type**: classification
@@ -64,13 +64,13 @@ Nine subjects (A01-A09) performed four-class cued motor imagery (BCI Competition
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `Cue onset left (class 1)` | 0 | Left-hand motor imagery |
   | `Cue onset right (class 2)` | 1 | Right-hand motor imagery |
 - **Evidence**:
 
-- **Kernel Notes**: 
+- **Notes**: 
 
 ## Data Quality Notes
 

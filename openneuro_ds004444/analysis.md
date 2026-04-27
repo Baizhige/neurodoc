@@ -2,7 +2,7 @@
 
 **Dataset**: `openneuro_ds004444` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004444
 **Category**: Action/Output | **Subjects**: 465 | **Files (Completed)**: 465 | **Channels**: 130 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Manual Review**:
 
 ## Paradigm
 
@@ -10,7 +10,7 @@ Brain-computer interfacing task based on sensorimotor rhythms (SMR) using high-d
 
 ## File Scan Result
 
-> **Kernel SHA256**: `28d939307e70ca3bf3d0c71a9c74138292e505ab4c123b042340e6d4a60d5494`
+> **Kernel SHA256**: `7099a55557381396528266b6d303f832d46976f4878c0906ade12f39be7104ff`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
@@ -29,49 +29,62 @@ Brain-computer interfacing task based on sensorimotor rhythms (SMR) using high-d
 
 ## Tasks
 
-### Classical Task 1: Four-Class Motor Imagery Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s (relative to event onset), baseline = (-0.5, 0.0) s, target_events = ["1", "2", "3", "4"]
-- **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
+### Classical Task 1: Age Regression from EEG
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `age`
 - **Meta Level**: raw
-- **Kernel Notes**: Alignment assumption: event markers indicate cue onset (not offset). Extended epoch window (tmin=-0.5s to tmax=4.0s) captures pre-cue baseline for correction and full motor imagery period. Numerical event codes 1-4 decoded to semantic MI labels at kernel level. **Complication**: Scan shows event_3 (feet MI) with 0 events across dataset; kernel must handle missing class gracefully or filter to 3-class subset.
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|-------------|-------|
+  | age | 18.0–27.0 (years) | Subject age from participants.tsv; complete for all 30 participants |
+- **Evidence**:
+  - participants.tsv — N=30 subjects with ages 18.0–27.0 (sample: 22, 23, 24); complete coverage
+- **Notes**: Segmentation-based regression task using 4-second non-overlapping windows (50% overlap) from continuous EEG. No event structure required. Age is a native participants.tsv column, so Meta Level = raw. The kernel only needs to read the pre-existing `age` field from participants.tsv and assign the same label to all epochs belonging to a given subject.
 
-| Event | y | Meaning |
-|---|---|---|
-| `1` | 0 | Left hand motor imagery |
-| `2` | 1 | Right hand motor imagery |
-| `3` | 2 | Feet motor imagery |
-| `4` | 3 | Tongue motor imagery |
-
-- **Evidence**: DOI 10.1038/s41597-023-02260-6 (data descriptor for BMI-HDEEG Dataset 1; confirms 4-class MI paradigm with events 1-4 mapped to left hand, right hand, feet, tongue respectively; validates tmin=-0.5s, tmax=4.0s epoch parameters; 128-channel high-density EEG at 1000 Hz)
-
-### Potential Task 1: Binary Hand Motor Imagery Classification
+### Classical Task 2: Gender Classification from EEG
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s (relative to event onset), baseline = (-0.5, 0.0) s, target_events = ["1", "2"]
-- **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `gender`
 - **Meta Level**: raw
-- **Kernel Notes**: Binary left vs right hand MI subset. Both classes confirmed present in scan (event_1: 18598, event_2: 9300). Excludes feet and tongue MI for cleaner spatial pattern analysis at motor cortex.
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | gender | female | 0 | Female subject |
+  | gender | male | 1 | Male subject |
+- **Evidence**:
+  - participants.tsv — N=30 subjects with gender column: 5 female, 25 male (complete, categorical)
+- **Notes**: Subject-level demographic classification using 4-second sliding windows with 50% overlap. Class imbalance is severe (1:5 ratio) which should be noted for model training. The label is drawn from participants.tsv native info field, requiring no kernel derivation.
 
-| Event | y | Meaning |
-|---|---|---|
-| `1` | 0 | Left hand motor imagery |
-| `2` | 1 | Right hand motor imagery |
-
-### Potential Task 2: Three-Class Motor Imagery Classification (No Feet)
+### Classical Task 3: Handedness Classification from EEG
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s (relative to event onset), baseline = (-0.5, 0.0) s, target_events = ["1", "2", "4"]
-- **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `handedness`
 - **Meta Level**: raw
-- **Kernel Notes**: Three-class MI using available events (left hand, right hand, tongue). Excludes feet MI due to missing event_3 data. Pragmatic alternative when full 4-class task fails due to data quality.
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | handedness | left | 0 | left-handed |
+  | handedness | right | 1 | right-handed |
+- **Evidence**:
+- **Notes**: Subject-level biomarker classification using 4-second non-overlapping segments of continuous EEG. The handedness label is drawn from participants.tsv, a native BIDS info field. Epoch parameters are inferred from standard continuous EEG segmentation practice (4s windows, 50% overlap) as no trial structure is used. Highly imbalanced classes (1 left-handed vs 29 right-handed subjects) but valid 2-class problem.
 
-| Event | y | Meaning |
-|---|---|---|
-| `1` | 0 | Left hand motor imagery |
-| `2` | 1 | Right hand motor imagery |
-| `4` | 2 | Tongue motor imagery |
+## Data Quality Notes
+
+- No event markers detected in file scan despite motor imagery paradigm requiring cue-based events.
+- Task definitions rely on segmentation-based approaches rather than event-locked epochs, which conflicts with the described SMR-BCI motor imagery paradigm.
+- Subject count discrepancy: metadata claims 465 subjects but task evidence references only 30 participants in participants.tsv.
+- `device` field is completely missing from info scan, limiting equipment provenance tracking.
+- Event structure table is empty; no event counts or IDs available to validate motor imagery class distributions.
+- Severe class imbalance noted in demographic tasks (gender: 1:5 ratio; handedness: 1:29 ratio).
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_kernel_update
