@@ -1,0 +1,457 @@
+﻿# neurodoc - Semantic Rulebook v3.0
+# Used by detect.py for batch checking of analysis.md and kernel files.
+#
+# Check types:
+#   section_exists 鈥?string presence check
+#   pattern        鈥?regex match (violated=found, unless require_match:true 鈫?violated=not found)
+#   field_value    鈥?extract named field, check against allowed_values list
+#   cross_check    鈥?custom Python function registered in detect.py (see function: key)
+#
+# 鈹€鈹€鈹€ HARD CONSTRAINTS (enforced in generate.py, not detectable by detect.py) 鈹€
+#
+# HC-1  File Scan Result 涓殑鏁版嵁鎬у瓧娈碉紙Event ID銆丆ount銆両nfo 琛ㄦ暟鍊笺€?
+#       Kernel SHA256 fingerprint锛夊繀椤绘潵鑷?kernel scan 鐨勭▼搴忚緭鍑猴紝
+#       LLM 涓嶅緱鍙戞槑鎴栫鏀硅繖浜涘瓧娈点€傝涔夋€у瓧娈碉紙Event Type銆丮eaning锛?
+#       鐢?LLM 鍦ㄧ嫭绔嬬殑鎺ㄦ柇姝ラ涓敓鎴愶紝浣嗗繀椤诲熀浜庢暟鎹泦鏂囦欢涓殑瀹為檯
+#       璇佹嵁锛屼笉寰楀嚟绌虹紪閫犮€?
+#
+# HC-2  Event Meaning 鍜?Type 鐨勬帹鏂繀椤诲熀浜庢暟鎹泦涓殑瀹為檯璇佹嵁
+#       锛坋vents.tsv銆乻idecar JSON銆丷EADME 绛夛級銆侺LM 鍙弬鑰冧换鎰忎笂涓嬫枃
+#       淇℃伅锛屼絾涓嶅緱灏嗘棤鍏崇殑鍙傝€冩枃鐚€侀鍩熸儻渚嬫垨 BCI 绔炶禌缂栫爜浣撶郴
+#       浣滀负鎺ㄦ柇渚濇嵁锛堜緥濡備笉寰椾粎鍥?event ID 涓?1-4 灏辨帹鏂负鍥涚被杩愬姩
+#       鎯宠薄锛夈€傛帹鏂粨鏋滀竴鏃︾‘瀹氬嵆涓洪攣瀹氬€硷紝鍚庣画娴佺▼涓嶅緱鍐嶄慨鏀广€?
+#
+# HC-3  Meta Area fields (Channels, Sampling Rate) should be cross-referenced
+#       against the locator cache CSV. LLM may fill narrative gaps but must
+#       not override program-derived values.
+#
+# HC-4  Agent may only set Status to:
+#         wait_manual_review  鈥?pipeline completed, no structural error
+#         wait_kernel_update  鈥?kernel failed or scan incomplete
+#       "completed" and "hallucination" are reserved for human reviewers only.
+#
+# HC-5  Kernel must NOT remap original event IDs. Prefix-based enrichment is
+#       allowed (e.g., subject_attr-event_id, session_attr-event_id).
+#       Original event IDs must pass through unchanged.
+#
+# HC-6  Kernel channel remapping is only allowed when explicit evidence exists
+#       in the dataset directory (companion file, README, sidecar) mapping
+#       ambiguous/numeric channels to named channels. Add a comment in kernel
+#       citing the evidence file.
+#
+# HC-7  瀹屾暣 scan 娆℃暟搴旀渶灏戝寲锛岄伩鍏嶉噸澶嶆壂鎻忓悓涓€鏁版嵁闆嗐€俻ipeline 搴斿湪
+#       鏈€缁堣緭鍑哄墠鎵ц涓€鑷存€ф牎楠岋紝纭繚鏂囨。鍐呭涓?scan 缁撴灉鍚诲悎銆?
+# 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+rules:
+  # 鈹€鈹€ Group A: Document Structure 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+  # Aligns with neuroaudit/template_spec.py. Violations here will also fail
+  # template_checker.py when the document is viewed in NeuroAudit.
+
+  - id: "has_paradigm"
+    desc: "analysis.md must contain ## Paradigm section."
+    target: "analysis_md"
+    check: "section_exists"
+    section: "## Paradigm"
+    severity: "error"
+
+  - id: "has_file_scan_result"
+    desc: "analysis.md must contain ## File Scan Result section."
+    target: "analysis_md"
+    check: "section_exists"
+    section: "## File Scan Result"
+    severity: "error"
+
+  - id: "has_tasks"
+    desc: "analysis.md must contain ## Tasks section."
+    target: "analysis_md"
+    check: "section_exists"
+    section: "## Tasks"
+    severity: "error"
+
+  - id: "has_data_quality_notes"
+    desc: "analysis.md must contain ## Data Quality Notes section."
+    target: "analysis_md"
+    check: "section_exists"
+    section: "## Data Quality Notes"
+    severity: "error"
+
+  - id: "has_kernel_responsibilities"
+    desc: "analysis.md must contain ## Kernel Responsibilities section."
+    target: "analysis_md"
+    check: "section_exists"
+    section: "## Kernel Responsibilities"
+    severity: "error"
+
+  - id: "has_event_structure"
+    desc: "## File Scan Result must contain ### Event Structure subsection."
+    target: "analysis_md"
+    check: "section_exists"
+    section: "### Event Structure"
+    severity: "error"
+
+  - id: "has_info_subsection"
+    desc: "## File Scan Result must contain ### Info subsection (rulebook 绗?7鏉′箣涓€)."
+    target: "analysis_md"
+    check: "section_exists"
+    section: "### Info"
+    severity: "error"
+
+  - id: "no_stim_label_summary"
+    desc: "STIM Label Summary is deprecated (rulebook v0.2+) and must not appear."
+    target: "analysis_md"
+    check: "pattern"
+    pattern: "^##\\s+STIM Label Summary"
+    severity: "error"
+
+  - id: "section_order_correct"
+    desc: "Top-level sections must follow order: Paradigm 鈫?File Scan Result 鈫?Tasks 鈫?Data Quality Notes 鈫?Kernel Responsibilities."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "section_order"
+    severity: "error"
+
+  - id: "no_extra_top_level_sections"
+    desc: "Only the 5 required ## sections are allowed. No extra top-level headings (rulebook 绗?0鏉′箣浜?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "no_extra_sections"
+    severity: "error"
+
+  # 鈹€鈹€ Group B: Field Legal Values 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+  # Aligns with neuroaudit/rulebook.md explicit enumeration rules.
+
+  - id: "status_valid_value"
+    desc: "Status must be one of: wait_kernel_update, wait_manual_review, completed, hallucination (rulebook 绗?2鏉′箣浜?."
+    target: "analysis_md"
+    check: "field_value"
+    field_pattern: ">\\s*\\*\\*Status\\*\\*:\\s*(.+)"
+    allowed_values:
+      - "wait_kernel_update"
+      - "wait_manual_review"
+      - "completed"
+      - "hallucination"
+    severity: "error"
+
+  - id: "super_meta_required_valid_value"
+    desc: "Super Meta Required must be exactly 'Yes' or 'No' (rulebook 绗?7鏉?."
+    target: "analysis_md"
+    check: "field_value"
+    field_pattern: ">\\s*\\*\\*Super Meta Required\\*\\*:\\s*(.+)"
+    allowed_values:
+      - "Yes"
+      - "No"
+    severity: "error"
+
+  - id: "category_valid_value"
+    desc: "Category must be one of 6 valid values (rulebook 绗?5鏉?: Complex Applied / High-level Mental / Action/Output / Sensory/Response / Biological State / Others."
+    target: "analysis_md"
+    check: "field_value"
+    field_pattern: "\\*\\*Category\\*\\*:\\s*([^|\\n]+)"
+    allowed_values:
+      - "Complex Applied"
+      - "High-level Mental"
+      - "Action/Output"
+      - "Sensory/Response"
+      - "Biological State"
+      - "Others"
+    severity: "error"
+
+  - id: "label_route_no_deprecated"
+    desc: "Label Route must not use deprecated values Annotation/STIM/MISC (uppercase). Valid values: event, misc, info (rulebook 绗?鏉? v0.4+)."
+    target: "analysis_md"
+    check: "pattern"
+    pattern: "\\*\\*Label Route\\*\\*[^\\n]*`(Annotation|STIM|MISC)`"
+    case_sensitive: true
+    severity: "error"
+
+  - id: "event_type_no_deprecated"
+    desc: "Event Structure Type column must not use deprecated values short/long/rest. Use event or admin only (rulebook 绗?6鏉? v0.2+)."
+    target: "analysis_md"
+    check: "pattern"
+    pattern: "\\|\\s*(short|long|rest)\\s*\\|"
+    severity: "error"
+
+  - id: "kernel_fingerprint_exists"
+    desc: "## File Scan Result must begin with a kernel fingerprint blockquote containing Kernel SHA256 (rulebook 绗?2鏉′箣浜?."
+    target: "analysis_md"
+    check: "pattern"
+    pattern: ">\\s*\\*\\*Kernel SHA256\\*\\*:"
+    require_match: true
+    severity: "error"
+
+  - id: "no_placeholder_doi"
+    desc: "Evidence DOIs must not be placeholder strings (TODO / N/A / none / unknown / placeholder)."
+    target: "analysis_md"
+    check: "pattern"
+    pattern: "DOI.*`(TODO|N/A|none|unknown|placeholder)`"
+    severity: "warning"
+
+  # 鈹€鈹€ Group C: Semantic Consistency 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+  - id: "super_meta_matches_tasks"
+    desc: "Super Meta Required must match actual Meta Level in Tasks: Yes if any task has Meta Level=super, No if all raw (rulebook 绗?7-38鏉?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "super_meta_consistency"
+    severity: "error"
+
+  - id: "target_events_in_event_structure"
+    desc: "All event IDs referenced in Tasks Target Definition tables must appear in ### Event Structure."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "target_events_exist"
+    severity: "error"
+
+  - id: "misc_route_requires_misc_section"
+    desc: "If any task uses Label Route=misc, ### MISC Label Summary must exist (rulebook 绗?5鏉?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "misc_route_requires_section"
+    severity: "error"
+
+  - id: "classical_task_has_evidence"
+    desc: "Every Classical Task must have a non-empty Evidence field (rulebook 绗?2鏉?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "classical_task_evidence"
+    severity: "error"
+
+  - id: "info_completeness_valid"
+    desc: "### Info table Completeness column must use: complete, partial, incomplete, or missing (rulebook 绗?7鏉′箣涓?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "info_completeness_values"
+    severity: "error"
+
+  - id: "kernel_sha256_matches_file"
+    desc: "Kernel SHA256 in document must match actual SHA256 of neurodoc/kernels/<dataset>.py. Mismatch means doc was not produced by the current kernel."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "kernel_sha256_matches"
+    severity: "error"
+
+  - id: "no_auto_removed_tasks"
+    desc: "Tasks section must not contain [AUTO-REMOVED] blocks. These indicate guard-removed hallucinations; dataset needs regeneration."
+    target: "analysis_md"
+    check: "pattern"
+    pattern: "\\[AUTO-REMOVED\\]"
+    severity: "warning"
+
+  - id: "no_mi_label_on_phase_marker"
+    desc: "Event Structure must not assign MI class labels to events whose Meaning is a trial phase marker (rest/ready/task/interval). See HC-2."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "no_mi_on_phase_markers"
+    severity: "error"
+
+  - id: "no_hallucinated_bcic_classes"
+    desc: "Must not assign BCIC IV 2a class codes (769/770/771/772) as event labels without explicit sidecar evidence."
+    target: "analysis_md"
+    check: "pattern"
+    pattern: "\\b(769|770|771|772)\\b.*class"
+    severity: "warning"
+
+  - id: "kr_has_super_meta"
+    desc: "## Kernel Responsibilities must contain > **Super Meta Required**: blockquote field (rulebook 绗?7鏉? 绗?2鏉′箣鍥?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "kr_has_super_meta"
+    severity: "error"
+
+  - id: "kr_has_status"
+    desc: "## Kernel Responsibilities must contain > **Status**: blockquote field (rulebook 绗?2鏉′箣涓€)."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "kr_has_status"
+    severity: "error"
+
+  - id: "kr_only_blockquote_fields"
+    desc: "## Kernel Responsibilities must contain only the two blockquote fields (Super Meta Required, Status), no extra prose (rulebook 绗?2鏉′箣鍥?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "kr_only_blockquote_fields"
+    severity: "warning"
+
+  - id: "dqn_bullet_format"
+    desc: "## Data Quality Notes content must use '- ' bullet format (rulebook 绗?3鏉?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "dqn_bullet_format"
+    severity: "warning"
+
+  - id: "task_type_no_normal"
+    desc: "Task headings must be 'Classical Task' or 'Potential Task' only. 'Normal Task' is not a valid type."
+    target: "analysis_md"
+    check: "pattern"
+    pattern: "###\\s+Normal\\s+Task"
+    severity: "error"
+
+  - id: "task_order_classical_first"
+    desc: "All Classical Tasks must appear before all Potential Tasks in ## Tasks section."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "task_order_classical_first"
+    severity: "error"
+
+  - id: "task_numbering_from_one"
+    desc: "Task numbering must start from 1 within each type and increase consecutively."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "task_numbering_from_one"
+    severity: "error"
+
+  # 鈹€鈹€ Group C+: v3 Task Taxonomy (Epoch/Label Separation) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+  - id: "label_field_required_for_nonevent"
+    desc: "Tasks with Label Route 鈭?{misc, info} must declare **Label Field** (rulebook 绗?7鏉′箣涓?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "label_field_required_for_nonevent"
+    severity: "error"
+
+  - id: "label_field_absent_for_event"
+    desc: "Tasks with Label Route = event must NOT declare **Label Field** (rulebook 绗?7鏉′箣涓?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "label_field_absent_for_event"
+    severity: "error"
+
+  - id: "info_label_field_in_info_section"
+    desc: "For Label Route = info tasks, the Label Field should be registered in ### Info. Downgraded to warning in favour of `info_label_field_in_participants` which reads participants.tsv directly (rulebook 绗?7鏉′箣浜?绗?娆? 绗?7鏉′箣涓?绗?娆?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "info_label_field_in_info_section"
+    severity: "warning"
+
+  - id: "info_label_field_in_participants"
+    desc: "For Label Route = info tasks, the Label Field must correspond to a column in participants.tsv (authoritative source; rulebook v3.1)."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "info_label_field_in_participants"
+    severity: "error"
+
+  - id: "misc_label_field_has_misc_channel"
+    desc: "For Label Route = misc tasks, the Label Field must be a native MISC channel or a derived misc channel declared in kernel_requirements (rulebook v3.1)."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "misc_label_field_has_misc_channel"
+    severity: "error"
+
+  - id: "task_dataset_dispatchable"
+    desc: "Every Task block must be statically dispatchable by dataset_api.build_dataset_from_task(dry_run=True) (rulebook v3.1)."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "task_dataset_dispatchable"
+    severity: "error"
+
+  - id: "misc_label_field_in_misc_section"
+    desc: "For Label Route = misc tasks, the Label Field must be registered in ### MISC Label Summary (rulebook 绗?7鏉′箣涓?绗?娆?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "misc_label_field_in_misc_section"
+    severity: "error"
+
+  - id: "target_def_schema_matches_route"
+    desc: "Target Definition table header must match the Route 脳 Task Type matrix (rulebook 绗?7鏉′箣鍥?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "target_def_schema_matches_route"
+    severity: "error"
+
+  - id: "single_target_per_task"
+    desc: "Target Definition first column (Label Field) must have exactly one unique value per task (rulebook 绗?7鏉′箣浜?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "single_target_per_task"
+    severity: "error"
+
+  - id: "misc_classification_forbidden"
+    desc: "Label Route = misc requires Task Type = regression; classification on misc is forbidden (rulebook 绗?7鏉′箣鍏?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "misc_classification_forbidden"
+    severity: "error"
+
+  - id: "classification_task_has_multiple_classes"
+    desc: "Classification tasks must have 鈮? distinct y values in Target Definition (rulebook 绗?7鏉′箣涓?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "classification_task_has_multiple_classes"
+    severity: "error"
+
+  - id: "classification_y_zero_indexed_sequential"
+    desc: "Classification tasks y values must be 0-based sequential ints: distinct y set == set(range(N)). Many-to-one mapping allowed (e.g. A鈫?, B鈫?, C鈫? is valid; {0,1,3} or {1,2} are not). Applies to both event and info route TD tables."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "classification_y_zero_indexed_sequential"
+    severity: "error"
+
+  - id: "derived_misc_requires_super_meta"
+    desc: "Tasks referencing a derived misc Label Field must have Meta Level = super (rulebook 绗?7鏉′箣鍏?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "derived_misc_requires_super_meta"
+    severity: "error"
+
+  - id: "segmentation_requires_empty_target_events"
+    desc: "Epoch Method = epoch_by_segmentation_hdf5 鈬?target_events must be empty (rulebook 绗?2鏉?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "segmentation_requires_empty_target_events"
+    severity: "error"
+
+  - id: "epoch_parameters_complete"
+    desc: "Epoch Parameters must list the minimum required keys for the declared Epoch Method (rulebook 绗?9鈥?2鏉?."
+    target: "analysis_md"
+    check: "cross_check"
+    function: "epoch_parameters_complete"
+    severity: "error"
+
+  - id: "manual_review_blank"
+    desc: "Manual Review field must be blank in generated documents (rulebook 绗?0鏉′箣涓?."
+    target: "analysis_md"
+    check: "pattern"
+    pattern: "\\*\\*Manual Review\\*\\*:\\s*\\S"
+    severity: "warning"
+
+  # 鈹€鈹€ Group D: Kernel Code Constraints 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+  # HC-5 reference: no event remapping; prefix enrichment allowed.
+  # Kernel safety: no destructive file operations, no shell calls.
+
+  - id: "kernel_has_kernel_id"
+    desc: "Every kernel file must define KERNEL_ID."
+    target: "kernel"
+    check: "pattern"
+    pattern: "KERNEL_ID[^=]*="
+    require_match: true
+    severity: "error"
+
+  - id: "kernel_has_apply"
+    desc: "Every kernel file must implement apply()."
+    target: "kernel"
+    check: "pattern"
+    pattern: "def apply"
+    require_match: true
+    severity: "error"
+
+  - id: "kernel_no_shell_commands"
+    desc: "Kernel must not use os.system, subprocess.call, or shell=True."
+    target: "kernel"
+    check: "pattern"
+    pattern: "(os\\.system|subprocess\\.call|shell\\s*=\\s*True)"
+    severity: "error"
+
+  - id: "kernel_no_file_writes"
+    desc: "Kernel must not write or delete files."
+    target: "kernel"
+    check: "pattern"
+    pattern: "(open\\(.*['\"]w['\"]|os\\.remove|shutil\\.rmtree|Path.*\\.write_text)"
+    severity: "error"
+
+  - id: "kernel_no_event_remapping"
+    desc: "Kernel must not hard-remap original event IDs. Prefix enrichment (attr-event_id) is allowed; replacing/renaming event IDs is not (HC-5)."
+    target: "kernel"
+    check: "pattern"
+    pattern: "(event_id_map\\s*=|rename_events\\s*=|replace_events\\s*=|\\.rename\\s*\\(.*[\"']event)"
+    severity: "warning"
