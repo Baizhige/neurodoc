@@ -12,298 +12,230 @@ from __future__ import annotations
 import json
 import os
 import re
-from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
 
 import mne
 import numpy as np
+import pandas as pd
 
 
-# Standard 10-20 64-channel layout (extended)
-# Source: standard 10-20 system extended for 64-channel caps
-# Annotator: LLM 推断，需人类复核
-_EEG_CHANNEL_ORDER = [
-    "Fp1", "Fp2", "Fpz", "F7", "F3", "Fz", "F4", "F8",
-    "FT9", "FT7", "FC5", "FC3", "FC1", "FCz", "FC2", "FC4", "FC6", "FT8", "FT10",
-    "T7", "C5", "C3", "C1", "Cz", "C2", "C4", "C6", "T8",
-    "TP9", "TP7", "CP5", "CP3", "CP1", "CPz", "CP2", "CP4", "CP6", "TP8", "TP10",
-    "P7", "P5", "P3", "P1", "Pz", "P2", "P4", "P6", "P8",
-    "PO9", "PO7", "PO3", "POz", "PO4", "PO8", "PO10",
-    "O1", "Oz", "O2",
-    "AF7", "AF3", "AF4", "AF8",
-    "F9", "F10",
-    "M1", "M2"
+# Standard 10-20 64-channel layout for this dataset
+_EEG_CHANNEL_MAP = {
+    "EEG01": "Fp1", "EEG02": "Fp2", "EEG03": "F7", "EEG04": "F3",
+    "EEG05": "Fz", "EEG06": "F4", "EEG07": "F8", "EEG08": "FC5",
+    "EEG09": "FC1", "EEG10": "FC2", "EEG11": "FC6", "EEG12": "C5",
+    "EEG13": "C3", "EEG14": "C1", "EEG15": "Cz", "EEG16": "C2",
+    "EEG17": "C4", "EEG18": "C6", "EEG19": "CP5", "EEG20": "CP1",
+    "EEG21": "CP2", "EEG22": "CP6", "EEG23": "P7", "EEG24": "P3",
+    "EEG25": "Pz", "EEG26": "P4", "EEG27": "P8", "EEG28": "PO7",
+    "EEG29": "PO3", "EEG30": "POz", "EEG31": "PO4", "EEG32": "PO8",
+    "EEG33": "O1", "EEG34": "Oz", "EEG35": "O2", "EEG36": "AF7",
+    "EEG37": "AF3", "EEG38": "AF4", "EEG39": "AF8", "EEG40": "F9",
+    "EEG41": "F10", "EEG42": "FT9", "EEG43": "FT7", "EEG44": "FT8",
+    "EEG45": "FT10", "EEG46": "TP9", "EEG47": "TP7", "EEG48": "TP8",
+    "EEG49": "TP10", "EEG50": "P9", "EEG51": "P10", "EEG52": "PO9",
+    "EEG53": "PO10", "EEG54": "ECG", "EEG55": "Fpz", "EEG56": "FC3",
+    "EEG57": "FC4", "EEG58": "CP3", "EEG59": "CP4", "EEG60": "CPz",
+    "EEG61": "P1", "EEG62": "P2", "EEG63": "P5", "EEG64": "P6",
+}
+
+_CHANNEL_PATTERNS = [
+    (re.compile(r'^EEG\s*(\d+)$', re.IGNORECASE), lambda m: f"EEG{m.group(1).zfill(2)}"),
+    (re.compile(r'^EEG(\d+)$', re.IGNORECASE), lambda m: f"EEG{m.group(1).zfill(2)}"),
+    (re.compile(r'^(\d+)$'), lambda m: f"EEG{m.group(1).zfill(2)}"),
 ]
 
 
-# Events to exclude (MRI artifacts and admin markers)
-_MRI_ARTIFACT_KEYWORDS = [
-    "TPULSE", "Pulse Artifact", "Time 0", "R128", "admin"
-]
+def _normalize_channel_name(ch_name):
+    for pattern, formatter in _CHANNEL_PATTERNS:
+        match = pattern.match(ch_name.strip())
+        if match:
+            return formatter(match)
+    return None
 
 
-@dataclass
+def _find_events_tsv(file_path):
+    base = file_path
+    for ext in [".eeg", ".vhdr", ".vmrk", ".edf", ".set", ".fif"]:
+        if base.lower().endswith(ext):
+            base = base[:-len(ext)]
+            break
+    
+    dir_path = os.path.dirname(file_path)
+    
+    candidates = []
+    if base:
+        candidates.append(base + "_events.tsv")
+        base_no_run = re.sub(r'_run-\d+', '', base)
+        if base_no_run != base:
+            candidates.append(base_no_run + "_events.tsv")
+    
+    sub_match = re.search(r'(sub-\d+)', os.path.basename(file_path))
+    if sub_match:
+        sub_id = sub_match.group(1)
+        for f in os.listdir(dir_path) if os.path.isdir(dir_path) else []:
+            if f.endswith("_events.tsv") and sub_id in f:
+                candidates.append(os.path.join(dir_path, f))
+    
+    for candidate in candidates:
+        if os.path.exists(candidate):
+            return candidate
+    
+    for f in sorted(os.listdir(dir_path)) if os.path.isdir(dir_path) else []:
+        if f.endswith("_events.tsv"):
+            return os.path.join(dir_path, f)
+    
+    return None
+
+
+def _find_participants_tsv(file_path):
+    current_dir = os.path.dirname(os.path.abspath(file_path))
+    while current_dir != os.path.dirname(current_dir):
+        candidate = os.path.join(current_dir, "participants.tsv")
+        if os.path.exists(candidate):
+            return candidate
+        current_dir = os.path.dirname(current_dir)
+    return None
+
+
 class OpenNeuroDS002336Kernel:
-    """Stage1 kernel for OpenNeuro DS002336 dataset."""
+    KERNEL_ID = "openneuro-ds002336-stage1"
 
-    KERNEL_ID: str = "openneuro-ds002336-stage1"
-
-    def apply(self, udataset, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
-        """Apply stage1 preprocessing to a single record.
-
-        Parameters
-        ----------
-        udataset
-            EEGUnity dataset context.
-        raw
-            In-memory MNE Raw object (BrainVision format).
-        row
-            Locator row with file metadata.
-
-        Returns
-        -------
-        mne.io.BaseRaw
-            Preprocessed raw object with standardized channels and annotations.
-        """
+    def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
         file_path = row.get("File Path", "")
+        original_description = raw.info.get("description", "")
 
-        # Phase 1: Rename channels to standard 10-20 names BEFORE set_montage()
         raw = self._rename_channels(raw)
-
-        # Phase 2: Set standard 10-20 montage
+        raw = self._ensure_misc_channels(raw)
         raw = self._set_montage(raw)
+        raw = self._process_events(raw, file_path)
+        raw = self._add_derived_misc_channels(raw, file_path)
 
-        # Phase 3: Process events (annotations)
-        raw = self._process_annotations(raw)
+        participants_tsv = _find_participants_tsv(file_path)
+        eegunity_description = {
+            "age": "",
+            "sex": "",
+            "amplifier": "",
+            "cap": "",
+            "handedness": "",
+        }
+        if participants_tsv:
+            df = pd.read_csv(participants_tsv, sep="\t")
+            sub_match = re.search(r'(sub-\d+)', os.path.basename(file_path))
+            if sub_match:
+                sub_id = sub_match.group(1)
+                sub_row = df[df["participant_id"] == sub_id]
+                if not sub_row.empty:
+                    eegunity_description["age"] = str(sub_row["age"].values[0]) if "age" in sub_row.columns else ""
+                    eegunity_description["sex"] = str(sub_row["sex"].values[0]) if "sex" in sub_row.columns else ""
+                    eegunity_description["amplifier"] = str(sub_row["amplifier"].values[0]) if "amplifier" in sub_row.columns else ""
+                    eegunity_description["cap"] = str(sub_row["cap"].values[0]) if "cap" in sub_row.columns else ""
+                    eegunity_description["handedness"] = str(sub_row["handedness"].values[0]) if "handedness" in sub_row.columns else ""
 
-        # Phase 4: Update description with metadata
-        raw = self._update_description(raw)
+        raw.info["description"] = json.dumps({
+            "original_description": original_description,
+            "eegunity_description": eegunity_description,
+        })
 
         return raw
 
-    def _rename_channels(self, raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-        """Rename channels to standard 10-20 nomenclature."""
+    def _rename_channels(self, raw):
         original_ch_names = raw.ch_names.copy()
+        rename_map = {}
 
-        # Try to detect channel naming pattern and map accordingly
-        rename_map: Dict[str, str] = {}
-
-        # Detect if channels are numbered (EEG001, EEG002, ...) or use other patterns
-        numbered_pattern = re.compile(r'^EEG-?\d+$', re.IGNORECASE)
-        has_numbers = any(
-            numbered_pattern.match(ch) for ch in original_ch_names
-        )
-
-        if has_numbers:
-            # Extract and sort channel numbers
-            channel_pairs: Dict[int, str] = {}
-            for ch in original_ch_names:
-                match = numbered_pattern.match(ch)
-                if match:
-                    # Extract number
-                    num_str = re.search(r'\d+', ch).group()
-                    channel_pairs[int(num_str)] = ch
-
-            sorted_channels = sorted(channel_pairs.items())
-            n_eeg = len(sorted_channels)
-
-            # Map to standard 10-20 names
-            if n_eeg <= len(_EEG_CHANNEL_ORDER):
-                for idx, (_, original_name) in enumerate(sorted_channels):
-                    if original_name != _EEG_CHANNEL_ORDER[idx]:
-                        rename_map[original_name] = _EEG_CHANNEL_ORDER[idx]
-            else:
-                # If more channels than standard order, keep original names
-                pass
-        else:
-            # Try to match based on common alias patterns
-            alias_groups = [
-                ("Fp1", ["Fp1", "EEG-Fp1", "FP1"]),
-                ("Fp2", ["Fp2", "EEG-Fp2", "FP2"]),
-                ("Fpz", ["Fpz", "EEG-Fpz", "FPz"]),
-                ("F7", ["F7", "F3'", "F5'"]),
-                ("F3", ["F3", "F1'"]),
-                ("Fz", ["Fz", "F2'"]),
-                ("F4", ["F4", "F2'"]),
-                ("F8", ["F8", "F4'"]),
-                ("T7", ["T7", "T3", "TA1"]),
-                ("C3", ["C3", "C1'"]),
-                ("Cz", ["Cz", "C2'"]),
-                ("C4", ["C4", "C2'"]),
-                ("T8", ["T8", "T4", "TA2"]),
-                ("P7", ["P7", "P3'"]),
-                ("P3", ["P3", "P1'"]),
-                ("Pz", ["Pz", "P2'"]),
-                ("P4", ["P4", "P2'"]),
-                ("P8", ["P8", "P4'"]),
-                ("O1", ["O1", "O9"]),
-                ("Oz", ["Oz"]),
-                ("O2", ["O2", "O10"]),
-                ("M1", ["M1", "A1", "LeftMastoid", "LM"]),
-                ("M2", ["M2", "A2", "RightMastoid", "RM"]),
-            ]
-
-            for target, aliases in alias_groups:
-                for original in aliases:
-                    if original in original_ch_names and original != target:
-                        rename_map[original] = target
-                        break
-
-        # Apply renames
-        if rename_map:
-            mne.rename_channels(raw.info, rename_map)
-
-        return raw
-
-    def _set_montage(self, raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-        """Set standard 10-20 montage for EEG channels."""
-        try:
-            # Use standard 10-20 montage
-            montage = mne.channels.make_standard_montage("standard_1020")
-            raw.set_montage(montage, on_missing="warn")
-        except Exception:
-            # If montage fails (e.g., channels not in standard set), skip
-            pass
-
-        return raw
-
-    def _process_annotations(self, raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-        """Process annotations: standardize names and exclude MRI artifacts."""
-        if raw.annotations is None or len(raw.annotations) == 0:
-            return raw
-
-        # Get current annotations
-        descriptions = np.array(raw.annotations.description)
-        onsets = raw.annotations.onset.copy()
-        durations = raw.annotations.duration.copy()
-
-        # Standardize event names and filter out MRI artifacts
-        new_descriptions: List[str] = []
-
-        for desc in descriptions:
-            desc_upper = desc.upper()
-
-            # Check if this is an MRI artifact marker to exclude
-            is_artifact = any(
-                keyword.upper() in desc_upper
-                for keyword in _MRI_ARTIFACT_KEYWORDS
-            )
-
-            if is_artifact:
-                # Skip MRI artifact markers
+        for ch_name in original_ch_names:
+            if ch_name in _EEG_CHANNEL_MAP:
+                rename_map[ch_name] = _EEG_CHANNEL_MAP[ch_name]
                 continue
+            
+            normalized = _normalize_channel_name(ch_name)
+            if normalized and normalized in _EEG_CHANNEL_MAP:
+                rename_map[ch_name] = _EEG_CHANNEL_MAP[normalized]
+                continue
+            
+            for key, value in _EEG_CHANNEL_MAP.items():
+                if ch_name.upper() == key.upper():
+                    rename_map[ch_name] = value
+                    break
 
-            # Standardize BrainVision event names
-            standardized = self._standardize_event_name(desc)
-            new_descriptions.append(standardized)
-
-        # Filter annotations
-        valid_mask = [
-            not any(
-                kw.upper() in desc.upper()
-                for kw in _MRI_ARTIFACT_KEYWORDS
-            )
-            for desc in descriptions
-        ]
-
-        filtered_onsets = onsets[valid_mask]
-        filtered_durations = durations[valid_mask]
-        filtered_descriptions = [
-            self._standardize_event_name(desc)
-            for desc in descriptions[valid_mask]
-        ]
-
-        if len(filtered_descriptions) > 0:
-            new_annotations = mne.Annotations(
-                onset=filtered_onsets,
-                duration=filtered_durations,
-                description=filtered_descriptions,
-            )
-            raw.set_annotations(new_annotations)
-        else:
-            raw.set_annotations(mne.Annotations(
-                onset=[], duration=[], description=[]
-            ))
+        if rename_map:
+            raw = raw.rename_channels(rename_map)
 
         return raw
 
-    def _standardize_event_name(self, original: str) -> str:
-        """Convert BrainVision event names to canonical names."""
-        original_stripped = original.strip()
+    def _ensure_misc_channels(self, raw):
+        ch_types = raw.get_channel_types()
+        misc_to_set = {}
 
-        # BrainVision format mapping
-        event_map = {
-            "Rest": "Rest",
-            "Task-NF": "Task-NF",
-            "Task-ME": "Task-ME",
-            "Task-MI": "Task-MI",
-            "S 99": "Rest",
-            "S 2": "Task-NF",
-            "S  2": "Task-NF",
-            "S 99": "Rest",
-        }
+        for ch_name in raw.ch_names:
+            if ch_name.upper() == "ECG" and ch_types.get(ch_name) != "misc":
+                misc_to_set[ch_name] = "misc"
 
-        # Check direct mapping
-        if original_stripped in event_map:
-            return event_map[original_stripped]
+        if misc_to_set:
+            raw.set_channel_types(misc_to_set)
 
-        # Check case-insensitive
-        for key, value in event_map.items():
-            if key.lower() == original_stripped.lower():
-                return value
+        return raw
 
-        # Extract numeric code from "Stimulus/S xx" format
-        stimulus_match = re.match(r'[Ss]timulus[/ ]?[Ss]? ?(\d+)', original_stripped)
-        if stimulus_match:
-            code = int(stimulus_match.group(1))
-            if code == 99:
-                return "Rest"
-            elif code == 2:
-                return "Task-NF"
-            else:
-                return f"Stimulus/S {code}"
+    def _set_montage(self, raw):
+        try:
+            montage = mne.channels.make_standard_montage("standard_1020")
+            montage_ch_names = set(montage.ch_names)
+            raw_eeg_ch_names = [ch for ch in raw.ch_names if ch in montage_ch_names]
+            if raw_eeg_ch_names:
+                raw.set_montage(montage, on_missing="ignore")
+        except Exception:
+            pass
+        return raw
 
-        # Extract numeric code from "Response/R xxx" format
-        response_match = re.match(r'[Rr]esponse[/ ]?[Rr]? ?(\d+)', original_stripped)
-        if response_match:
-            code = int(response_match.group(1))
-            if code == 128:
-                return "admin: marker-128"
-            else:
-                return f"Response/R {code}"
+    def _process_events(self, raw, file_path):
+        events_tsv = _find_events_tsv(file_path)
+        if events_tsv:
+            try:
+                events_df = pd.read_csv(events_tsv, sep="\t")
+                if "onset" in events_df.columns and "trial_type" in events_df.columns:
+                    onsets = events_df["onset"].values
+                    durations = events_df["duration"].values if "duration" in events_df.columns else np.zeros(len(onsets))
+                    descriptions = events_df["trial_type"].astype(str).values
+                    annotations = mne.Annotations(onset=onsets, duration=durations, description=descriptions)
+                    raw.set_annotations(annotations)
+            except Exception:
+                pass
+        return raw
 
-        # Keep original if no mapping found
-        return original_stripped
-
-    def _update_description(self, raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-        """Update raw.info['description'] with standardized metadata."""
-        # Extract subject info from row if available
-        subject_id = str(row.get("Subject", "unknown"))
-        session_id = str(row.get("Session", "unknown"))
-
-        # Get device info from data if available
-        original_desc = raw.info.get("description", "")
-
-        # Try to infer device from channel info or data
-        # Based on paper: BrainAmp MR plus (EEG-fMRI compatible amplifier)
-        # Source: 10.1038/s41597-020-0498-3
-        # Annotator: LLM 推断，需人类复核
-        amplifier = "BrainAmp MR plus"
-
-        # Build description dict
-        description_dict = {
-            "original_description": str(original_desc) if original_desc else "",
-            "eegunity_description": {
-                "age": "unknown",  # LLM 推断，需人类复核 - dataset documentation does not specify age
-                "sex": "unknown",  # LLM 推断，需人类复核 - dataset documentation does not specify sex
-                "amplifier": amplifier,
-                "cap": "unknown",  # LLM 推断，需人类复核 - cap type not specified in available documentation
-                "handedness": "unknown",  # LLM 推断，需人类复核 - handedness not specified in available documentation
-            },
-        }
-
-        raw.info["description"] = json.dumps(description_dict)
-
+    def _add_derived_misc_channels(self, raw, file_path):
+        participants_tsv = _find_participants_tsv(file_path)
+        if not participants_tsv:
+            return raw
+        
+        try:
+            df = pd.read_csv(participants_tsv, sep="\t")
+            sub_match = re.search(r'(sub-\d+)', os.path.basename(file_path))
+            if not sub_match:
+                return raw
+            sub_id = sub_match.group(1)
+            sub_row = df[df["participant_id"] == sub_id]
+            if sub_row.empty:
+                return raw
+            
+            derived_misc_channels = []
+            for col in sub_row.columns:
+                if col not in ["participant_id", "age", "sex", "handedness", "amplifier", "cap"]:
+                    derived_misc_channels.append(col)
+            
+            for ch_name in derived_misc_channels:
+                if ch_name in raw.ch_names:
+                    continue
+                val = sub_row[ch_name].values[0]
+                try:
+                    float_val = float(val)
+                except (ValueError, TypeError):
+                    float_val = 0.0
+                data = np.full((1, len(raw.times)), float_val)
+                info = mne.create_info([ch_name], raw.info["sfreq"], ["misc"])
+                raw_misc = mne.io.RawArray(data, info)
+                raw.add_channels([raw_misc], force_update_info=True)
+        except Exception:
+            pass
+        
         return raw
 
 

@@ -5,7 +5,7 @@ Ear-EEG Sleep Monitoring 2019 dataset.
 - BIDS-compliant with participants.tsv, events.tsv sidecars, and JSON descriptors
 - Sleep stage labels from PSG scoring sidecars (Scoring1/Scoring2 columns)
 - Danish protocol markers + sync triggers in raw events
-- Derived misc channels from diary events.tsv: writtenTime, pressedTrigger
+- Derived misc channels: writtenTime_numeric, pressedTrigger_numeric (from diary events.tsv)
 
 Source: https://openneuro.org/datasets/ds005185
        DOI: 10.1038/s41598-019-53115-3
@@ -26,9 +26,9 @@ import pandas as pd
 
 
 # =============================================================================
-# Required info fields from participants.tsv (canonical keys for eegunity_description)
+# Required info fields from participants.tsv
 # =============================================================================
-_REQUIRED_INFO_FIELDS = ["age", "sex"]
+_REQUIRED_INFO_FIELDS = ["age", "sex", "amplifier", "cap", "handedness"]
 
 # =============================================================================
 # Required native misc channels (already in raw data, ensure type is 'misc')
@@ -38,11 +38,25 @@ _REQUIRED_NATIVE_MISC: List[str] = []
 # =============================================================================
 # Derived misc channels to create
 # =============================================================================
-_DERIVED_MISC_CHANNELS = ["writtenTime", "pressedTrigger"]
+_DERIVED_MISC_CHANNELS = ["writtenTime_numeric", "pressedTrigger_numeric"]
 
 # =============================================================================
-# Event name standardization mapping
-# Raw event names -> canonical names for EEGUnity scan compatibility
+# Sleep stage mapping from scoring files (Scoring1/Scoring2 columns)
+# s1=Wake, s2=REM, s3=N1, s4=N2, s5=N3, s6=A, s7=Artefact, s8=Unscored
+# =============================================================================
+_SCORING_STAGE_MAP = {
+    "s1": "Sleep stage W",
+    "s2": "Sleep stage REM",
+    "s3": "Sleep stage N1",
+    "s4": "Sleep stage N2",
+    "s5": "Sleep stage N3",
+    "s6": "Sleep stage A",
+    "s7": "Artefact",
+    "s8": "Unscored",
+}
+
+# =============================================================================
+# Event name standardization mapping for raw events from events.tsv
 # =============================================================================
 _EVENT_RENAME_MAP = {
     # Admin events
@@ -50,444 +64,545 @@ _EVENT_RENAME_MAP = {
     "Biocalibrations": "Biocalibrations",
     "Biocalibrations start": "Biocalibrations start",
     "Sync": "Sync",
-    "Start af maling": "Start_of_recording",
+    "Start af maling": "Start af måling",
     # Protocol event markers (raw meta)
-    "Lights Out": "Lights_Out",
-    "Gik i seng": "Went_to_Bed",
-    "Stod op": "Got_up",
-    "Vagen": "Awake",
-    "vagen": "Awake",
-    # Sleep stage events from PSG scoring (raw meta, canonical IDs)
-    "Sleep stage W": "s1",
-    "Sleep stage N1": "s3",
-    "Sleep stage N2": "s4",
-    "Sleep stage N3": "s5",
-    "Sleep stage REM": "s2",
-    "Sleep stage ?": "s8",
-    "Sleep stage A": "s6",
-    "Sleep stage M": "s6",
-    "Movement": "s6",
-    "Artefact": "s7",
-    "Unscored": "s8",
-    "Electrodetest": "Electrodetest",
+    "Lights Out": "Lights Out",
+    "Gik i seng": "Gik i seng",
+    "Stod op": "Stod op",
+    "Vagen": "Vagen",
+    "vagen": "Vagen",
 }
 
 # =============================================================================
-# Channel rename map: non-standard names -> standard_1020 names
-# EESM19 ear-EEG channels are non-standard; keep as-is but ensure consistent naming
-# Source: dataset documentation, DOI: 10.1038/s41597-025-04579-8
-# Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
+# Numeric event codes for events without string descriptions
+# These appear in some BIDS events.tsv files as numeric codes
 # =============================================================================
-_CHANNEL_RENAME_MAP = {
-    # Ear-EEG channels use E* naming (e.g., E1, E2, ... E25)
-    # These are kept as-is since they are non-standard ear-specific placements
-    # PSG reference channels may appear with alternate names
-}
-
-# =============================================================================
-# Standard 10-20 channel positions for PSG reference channels if present
-# =============================================================================
-_STANDARD_1020_CHANNELS = {
-    "Fp1", "Fp2", "F7", "F3", "Fz", "F4", "F8", "T7", "C3", "Cz",
-    "C4", "T8", "P7", "P3", "Pz", "P4", "P8", "O1", "O2", "A1",
-    "A2", "M1", "M2", "T3", "T4", "T5", "T6", "F9", "F10", "P9",
-    "P10", "POz", "Oz", "Iz", "AF7", "AF3", "AFz", "AF4", "AF8",
-    "F5", "F1", "F2", "F6", "FT7", "FC5", "FC3", "FC1", "FCz",
-    "FC2", "FC4", "FC6", "FT8", "C5", "C1", "C2", "C6", "TP7",
-    "CP5", "CP3", "CP1", "CPz", "CP2", "CP4", "CP6", "TP8",
-    "P5", "P1", "P2", "P6", "PO7", "PO3", "PO4", "PO8", "O9", "O10",
+_NUMERIC_EVENT_MAP = {
+    "4": "event_4",
+    "5": "event_5",
+    "6": "event_6",
+    "7": "event_7",
+    "8": "event_8",
+    "9": "event_9",
 }
 
 
-def _find_sidecar_path(file_path: str, suffix: str) -> Optional[str]:
-    """Find BIDS sidecar file for a given data file."""
-    base = re.sub(r"(_eeg\.(edf|bdf|set|vhdr|fif))$", "", file_path, flags=re.IGNORECASE)
-    # Try direct sibling
-    direct = base + suffix
-    if os.path.isfile(direct):
-        return direct
-    # Try in parent directory (some BIDS layouts)
-    parent = os.path.join(os.path.dirname(file_path), os.path.basename(base) + suffix)
-    if os.path.isfile(parent):
-        return parent
-    # Try pattern match in same directory
-    dirname = os.path.dirname(file_path)
-    if os.path.isdir(dirname):
-        for f in os.listdir(dirname):
-            if f.endswith(suffix) and base.split(os.sep)[-1] in f:
-                return os.path.join(dirname, f)
+def _get_subject_id_from_path(file_path: str) -> Optional[str]:
+    """Extract BIDS subject ID from file path."""
+    match = re.search(r'sub-([0-9a-zA-Z]+)', file_path)
+    if match:
+        return match.group(1)
     return None
 
 
-def _read_participants_info(dataset_path: str, subject_id: str) -> Dict[str, str]:
-    """Read subject info from participants.tsv."""
-    participants_path = os.path.join(dataset_path, "participants.tsv")
-    if not os.path.isfile(participants_path):
-        return {}
+def _get_session_id_from_path(file_path: str) -> Optional[str]:
+    """Extract BIDS session ID from file path."""
+    match = re.search(r'ses-([0-9a-zA-Z]+)', file_path)
+    if match:
+        return match.group(1)
+    return None
 
+
+def _find_bids_root(file_path: str) -> str:
+    """Find BIDS root directory from file path."""
+    # Walk up until we find participants.tsv or dataset_description.json
+    current_dir = os.path.dirname(os.path.abspath(file_path))
+    while current_dir != os.path.dirname(current_dir):  # stop at root
+        if os.path.exists(os.path.join(current_dir, "participants.tsv")) or \
+           os.path.exists(os.path.join(current_dir, "dataset_description.json")):
+            return current_dir
+        current_dir = os.path.dirname(current_dir)
+    # Fallback: go up 4 levels from typical BIDS path sub-XX/ses-XX/eeg/
+    current_dir = os.path.dirname(os.path.abspath(file_path))
+    for _ in range(4):
+        current_dir = os.path.dirname(current_dir)
+        if os.path.exists(os.path.join(current_dir, "participants.tsv")):
+            return current_dir
+    return os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(file_path)))))
+
+
+def _read_participants_tsv(bids_root: str, subject_id: str) -> Dict[str, str]:
+    """Read subject info from participants.tsv."""
+    participants_path = os.path.join(bids_root, "participants.tsv")
+    result = {}
+    
+    if not os.path.exists(participants_path):
+        return result
+    
     try:
         df = pd.read_csv(participants_path, sep="\t")
+        # Find row for this subject
+        subj_col = "participant_id"
+        if subj_col not in df.columns:
+            return result
+        
+        # Handle subject ID format (with or without "sub-" prefix)
+        search_ids = [f"sub-{subject_id}", subject_id]
+        for search_id in search_ids:
+            mask = df[subj_col] == search_id
+            if mask.any():
+                row = df[mask].iloc[0]
+                for field in _REQUIRED_INFO_FIELDS:
+                    if field in row:
+                        val = row[field]
+                        if pd.isna(val):
+                            result[field] = "unknown"
+                        else:
+                            result[field] = str(val).strip()
+                    else:
+                        result[field] = "unknown"
+                # Include any extra fields present in participants.tsv
+                for col in df.columns:
+                    if col not in [subj_col] + _REQUIRED_INFO_FIELDS:
+                        val = row.get(col, "unknown")
+                        if pd.isna(val):
+                            result[col] = "unknown"
+                        else:
+                            result[col] = str(val).strip()
+                break
     except Exception:
-        return {}
-
-    # Match subject_id (handle both "sub-001" and "001" formats)
-    sub_match = subject_id if subject_id.startswith("sub-") else f"sub-{subject_id}"
-    # Also try without prefix
-    sub_alt = subject_id.replace("sub-", "")
-
-    for _, row in df.iterrows():
-        pid = str(row.get("participant_id", ""))
-        if pid in (sub_match, sub_alt, subject_id):
-            info = {}
-            for col in df.columns:
-                if col == "participant_id":
-                    continue
-                val = row.get(col)
-                if pd.isna(val):
-                    info[col] = "unknown"
-                else:
-                    info[col] = str(val)
-            return info
-    return {}
+        pass
+    
+    # Ensure required fields exist
+    for field in _REQUIRED_INFO_FIELDS:
+        if field not in result:
+            result[field] = "unknown"
+    
+    return result
 
 
-def _standardize_sex(sex_val: Optional[str]) -> str:
-    """Standardize sex to canonical values."""
-    if sex_val is None or str(sex_val).lower() in ("unknown", "nan", "", "n/a"):
-        return "unknown"
-    s = str(sex_val).lower().strip()
-    if s in ("f", "female", "w", "woman"):
+def _normalize_sex(sex_val: str) -> str:
+    """Normalize sex value to canonical form."""
+    sex_lower = sex_val.lower().strip()
+    if sex_lower in ("f", "female"):
         return "female"
-    if s in ("m", "male", "man"):
+    elif sex_lower in ("m", "male"):
         return "male"
-    return "unknown"
-
-
-def _standardize_age(age_val: Any) -> str:
-    """Standardize age to string format."""
-    if age_val is None or str(age_val).lower() in ("unknown", "nan", "", "n/a"):
+    else:
         return "unknown"
+
+
+def _normalize_age(age_val: str) -> str:
+    """Normalize age value to string."""
     try:
-        # Handle both integer and float ages
-        age_float = float(age_val)
-        if age_float == int(age_float):
-            return str(int(age_float))
-        return str(age_float)
+        # Try to parse as number and return as string
+        float_age = float(age_val)
+        return str(int(float_age))
     except (ValueError, TypeError):
         return "unknown"
 
 
-def _parse_events_tsv(events_path: Optional[str]) -> Optional[pd.DataFrame]:
-    """Read and parse a BIDS events.tsv file."""
-    if events_path is None or not os.path.isfile(events_path):
-        return None
+def _parse_written_time(time_str: str) -> float:
+    """Parse Danish time string like '23.05' to decimal hours."""
+    try:
+        time_str = str(time_str).strip().replace(",", ".")
+        if ":" in time_str:
+            parts = time_str.split(":")
+            hours = float(parts[0])
+            minutes = float(parts[1]) if len(parts) > 1 else 0
+            return hours + minutes / 60.0
+        elif "." in time_str:
+            parts = time_str.split(".")
+            hours = float(parts[0])
+            # Check if it's already decimal hours or hours.minutes
+            if len(parts[1]) <= 2:
+                # Could be hours.minutes format
+                minutes = float(parts[1])
+                if minutes < 60:
+                    return hours + minutes / 60.0
+                else:
+                    # It's decimal hours
+                    return float(time_str)
+            else:
+                return float(time_str)
+        else:
+            return float(time_str)
+    except (ValueError, TypeError):
+        return np.nan
+
+
+def _find_events_tsv(file_path: str, subject_id: str, session_id: Optional[str] = None) -> Optional[str]:
+    """Find events.tsv file for the given recording."""
+    bids_root = _find_bids_root(file_path)
+    eeg_dir = os.path.dirname(os.path.abspath(file_path))
+    
+    # Search order: same directory, then subject/session hierarchy
+    search_paths = []
+    
+    # Same directory as the .set file
+    base_name = os.path.splitext(os.path.basename(file_path))[0]
+    search_paths.append(os.path.join(eeg_dir, f"{base_name}_events.tsv"))
+    search_paths.append(os.path.join(eeg_dir, "events.tsv"))
+    
+    # Subject-specific events in eeg directory
+    if session_id:
+        search_paths.append(os.path.join(bids_root, f"sub-{subject_id}", f"ses-{session_id}", "eeg", f"sub-{subject_id}_ses-{session_id}_events.tsv"))
+        search_paths.append(os.path.join(bids_root, f"sub-{subject_id}", f"ses-{session_id}", "eeg", "events.tsv"))
+    search_paths.append(os.path.join(bids_root, f"sub-{subject_id}", "eeg", f"sub-{subject_id}_events.tsv"))
+    search_paths.append(os.path.join(bids_root, f"sub-{subject_id}", "eeg", "events.tsv"))
+    
+    # Diary events (for writtenTime_numeric, pressedTrigger_numeric)
+    if session_id:
+        search_paths.append(os.path.join(bids_root, f"sub-{subject_id}", f"ses-{session_id}", "eeg", f"sub-{subject_id}_ses-{session_id}_diary_events.tsv"))
+        search_paths.append(os.path.join(bids_root, f"sub-{subject_id}", f"ses-{session_id}", "eeg", "diary_events.tsv"))
+    search_paths.append(os.path.join(bids_root, f"sub-{subject_id}", "eeg", f"sub-{subject_id}_diary_events.tsv"))
+    search_paths.append(os.path.join(bids_root, f"sub-{subject_id}", "eeg", "diary_events.tsv"))
+    
+    for path in search_paths:
+        if os.path.exists(path):
+            return path
+    
+    return None
+
+
+def _find_diary_events_tsv(file_path: str, subject_id: str, session_id: Optional[str] = None) -> Optional[str]:
+    """Find diary events.tsv file for derived misc channels."""
+    bids_root = _find_bids_root(file_path)
+    eeg_dir = os.path.dirname(os.path.abspath(file_path))
+    
+    search_paths = []
+    
+    # Diary events in same directory
+    base_name = os.path.splitext(os.path.basename(file_path))[0]
+    search_paths.append(os.path.join(eeg_dir, f"{base_name}_diary_events.tsv"))
+    search_paths.append(os.path.join(eeg_dir, "diary_events.tsv"))
+    
+    # Subject/session hierarchy
+    if session_id:
+        search_paths.append(os.path.join(bids_root, f"sub-{subject_id}", f"ses-{session_id}", "eeg", f"sub-{subject_id}_ses-{session_id}_diary_events.tsv"))
+        search_paths.append(os.path.join(bids_root, f"sub-{subject_id}", f"ses-{session_id}", "eeg", "diary_events.tsv"))
+    search_paths.append(os.path.join(bids_root, f"sub-{subject_id}", "eeg", f"sub-{subject_id}_diary_events.tsv"))
+    search_paths.append(os.path.join(bids_root, f"sub-{subject_id}", "eeg", "diary_events.tsv"))
+    
+    for path in search_paths:
+        if os.path.exists(path):
+            return path
+    
+    return None
+
+
+def _read_events_tsv(events_path: str) -> pd.DataFrame:
+    """Read events.tsv file."""
     try:
         df = pd.read_csv(events_path, sep="\t")
         return df
     except Exception:
-        return None
+        return pd.DataFrame()
 
 
-def _create_step_function_channel(
-    raw: mne.io.BaseRaw,
-    event_onsets: np.ndarray,
-    event_values: np.ndarray,
-    channel_name: str,
-    fill_value: float = 0.0,
-) -> mne.io.RawArray:
-    """Create a misc channel with step-function values aligned to event onsets.
-
-    Parameters
-    ----------
-    raw : mne.io.BaseRaw
-        Reference raw for times and sampling rate.
-    event_onsets : np.ndarray
-        Event onset times in seconds.
-    event_values : np.ndarray
-        Values to assign at each onset (one per onset).
-    channel_name : str
-        Name for the new channel.
-    fill_value : float
-        Value for samples before first event and between events.
-
-    Returns
-    -------
-    mne.io.RawArray
-        Single-channel RawArray with ch_type='misc'.
-    """
-    sfreq = raw.info["sfreq"]
-    n_samples = len(raw.times)
-    data = np.full((1, n_samples), fill_value, dtype=np.float64)
+def _read_scoring_file(bids_root: str, subject_id: str, session_id: Optional[str] = None) -> pd.DataFrame:
+    """Read sleep scoring file for subject."""
+    search_paths = []
     
-    # Sort by onset
-    if len(event_onsets) > 0:
-        sort_idx = np.argsort(event_onsets)
-        event_onsets = event_onsets[sort_idx]
-        event_values = event_values[sort_idx]
-        
-        # Convert onsets to sample indices
-        onset_samples = (event_onsets * sfreq).astype(int)
-        onset_samples = np.clip(onset_samples, 0, n_samples - 1)
-        
-        # Fill step function
-        for i, s in enumerate(onset_samples):
-            data[0, s:] = event_values[i]
+    if session_id:
+        search_paths.extend([
+            os.path.join(bids_root, f"sub-{subject_id}", f"ses-{session_id}", "eeg", f"sub-{subject_id}_ses-{session_id}_scoring.tsv"),
+            os.path.join(bids_root, f"sub-{subject_id}", f"ses-{session_id}", "eeg", "scoring.tsv"),
+        ])
     
-    info = mne.create_info([channel_name], sfreq, ch_types=["misc"])
-    raw_array = mne.io.RawArray(data, info, first_samp=raw.first_samp)
-    return raw_array
+    search_paths.extend([
+        os.path.join(bids_root, f"sub-{subject_id}", "eeg", f"sub-{subject_id}_scoring.tsv"),
+        os.path.join(bids_root, f"sub-{subject_id}", "eeg", "scoring.tsv"),
+        os.path.join(bids_root, "scoring", f"sub-{subject_id}_scoring.tsv"),
+    ])
+    
+    for path in search_paths:
+        if os.path.exists(path):
+            try:
+                df = pd.read_csv(path, sep="\t")
+                return df
+            except Exception:
+                continue
+    
+    return pd.DataFrame()
 
 
-def _create_constant_channel(
-    raw: mne.io.BaseRaw,
-    channel_name: str,
-    constant_value: float,
-) -> mne.io.RawArray:
-    """Create a misc channel with a constant value."""
-    sfreq = raw.info["sfreq"]
-    n_samples = len(raw.times)
-    data = np.full((1, n_samples), constant_value, dtype=np.float64)
-    info = mne.create_info([channel_name], sfreq, ch_types=["misc"])
-    raw_array = mne.io.RawArray(data, info, first_samp=raw.first_samp)
-    return raw_array
+def _load_diary_data(diary_path: str) -> Dict[str, Any]:
+    """Load diary events and extract writtenTime_numeric and pressedTrigger_numeric values."""
+    result = {
+        "writtenTime_numeric": np.nan,
+        "pressedTrigger_numeric": np.nan,
+    }
+    
+    try:
+        df = pd.read_csv(diary_path, sep="\t")
+        
+        # Look for writtenTime column
+        for col in df.columns:
+            col_lower = col.lower().replace(" ", "_")
+            if "writtentime" in col_lower or "written_time" in col_lower:
+                # Get the first non-null value
+                for val in df[col]:
+                    if pd.notna(val):
+                        parsed = _parse_written_time(str(val))
+                        if not np.isnan(parsed):
+                            result["writtenTime_numeric"] = parsed
+                            break
+            
+            if "pressedtrigger" in col_lower or "pressed_trigger" in col_lower or "trigger" in col_lower:
+                for val in df[col]:
+                    if pd.notna(val):
+                        try:
+                            result["pressedTrigger_numeric"] = float(str(val).strip())
+                            break
+                        except (ValueError, TypeError):
+                            continue
+        
+        # Also check standard BIDS event columns
+        if "trial_type" in df.columns:
+            for _, row in df.iterrows():
+                trial_type = str(row.get("trial_type", "")).lower()
+                if "writtentime" in trial_type or "written_time" in trial_type:
+                    for resp_col in ["response_time", "value", "writtenTime", "written_time"]:
+                        if resp_col in row and pd.notna(row[resp_col]):
+                            parsed = _parse_written_time(str(row[resp_col]))
+                            if not np.isnan(parsed):
+                                result["writtenTime_numeric"] = parsed
+                                break
+                elif "pressedtrigger" in trial_type or "pressed_trigger" in trial_type:
+                    for resp_col in ["response_time", "value", "pressedTrigger", "pressed_trigger"]:
+                        if resp_col in row and pd.notna(row[resp_col]):
+                            try:
+                                result["pressedTrigger_numeric"] = float(str(row[resp_col]).strip())
+                                break
+                            except (ValueError, TypeError):
+                                continue
+    except Exception:
+        pass
+    
+    return result
 
 
-def _add_misc_channels(raw: mne.io.BaseRaw, channels_to_add: List[mne.io.RawArray]) -> mne.io.BaseRaw:
-    """Add misc channels to raw object."""
-    if not channels_to_add:
+def _add_annotations_from_events_tsv(raw: mne.io.BaseRaw, events_df: pd.DataFrame) -> mne.io.BaseRaw:
+    """Add annotations from events.tsv DataFrame to raw object."""
+    if events_df.empty:
         return raw
-    raw = raw.add_channels(channels_to_add, force_update_info=True)
+    
+    onsets = []
+    durations = []
+    descriptions = []
+    
+    # Required columns for BIDS events.tsv
+    if "onset" not in events_df.columns:
+        return raw
+    
+    for _, row in events_df.iterrows():
+        onset = row.get("onset")
+        if pd.isna(onset):
+            continue
+        
+        try:
+            onset = float(onset)
+        except (ValueError, TypeError):
+            continue
+        
+        # Duration (default to 0 if not present)
+        duration = row.get("duration", 0)
+        try:
+            duration = float(duration) if pd.notna(duration) else 0.0
+        except (ValueError, TypeError):
+            duration = 0.0
+        
+        # Description from trial_type or value column
+        description = None
+        if "trial_type" in row and pd.notna(row["trial_type"]):
+            description = str(row["trial_type"]).strip()
+        elif "value" in row and pd.notna(row["value"]):
+            description = str(row["value"]).strip()
+        
+        # Map numeric events and standardize names
+        if description:
+            # Check numeric map first
+            if description in _NUMERIC_EVENT_MAP:
+                description = _NUMERIC_EVENT_MAP[description]
+            # Check rename map
+            elif description in _EVENT_RENAME_MAP:
+                description = _EVENT_RENAME_MAP[description]
+            # Keep original if no mapping
+            
+            onsets.append(onset)
+            durations.append(duration)
+            descriptions.append(description)
+    
+    if onsets:
+        # Create annotations, filtering out any that exceed recording length
+        sfreq = raw.info["sfreq"]
+        n_times = raw.n_times
+        valid_mask = [(o < n_times / sfreq) for o in onsets]
+        
+        onsets = [o for o, m in zip(onsets, valid_mask) if m]
+        durations = [d for d, m in zip(durations, valid_mask) if m]
+        descriptions = [d for d, m in zip(descriptions, valid_mask) if m]
+        
+        if onsets:
+            new_annot = mne.Annotations(
+                onset=onsets,
+                duration=durations,
+                description=descriptions,
+            )
+            
+            # Combine with existing annotations
+            if raw.annotations:
+                raw.set_annotations(raw.annotations + new_annot)
+            else:
+                raw.set_annotations(new_annot)
+    
     return raw
 
 
-def _read_json_sidecar(file_path: str) -> Dict[str, Any]:
-    """Read BIDS JSON sidecar for EEG data file."""
-    json_path = _find_sidecar_path(file_path, ".json")
-    if json_path is None or not os.path.isfile(json_path):
-        return {}
-    try:
-        with open(json_path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception:
-        return {}
+def _add_sleep_stage_annotations(raw: mne.io.BaseRaw, scoring_df: pd.DataFrame) -> mne.io.BaseRaw:
+    """Add sleep stage annotations from scoring DataFrame."""
+    if scoring_df.empty:
+        return raw
+    
+    onsets = []
+    durations = []
+    descriptions = []
+    
+    # Determine column names for scoring
+    onset_col = None
+    for col in ["onset", "time", "start"]:
+        if col in scoring_df.columns:
+            onset_col = col
+            break
+    
+    duration_col = None
+    for col in ["duration", "dur", "length"]:
+        if col in scoring_df.columns:
+            duration_col = col
+            break
+    
+    stage_col = None
+    for col in ["Scoring1", "Scoring2", "stage", "label", "trial_type", "value"]:
+        if col in scoring_df.columns:
+            stage_col = col
+            break
+    
+    if onset_col is None or stage_col is None:
+        return raw
+    
+    for _, row in scoring_df.iterrows():
+        onset = row.get(onset_col)
+        if pd.isna(onset):
+            continue
+        
+        try:
+            onset = float(onset)
+        except (ValueError, TypeError):
+            continue
+        
+        duration = row.get(duration_col, 30.0)  # Default 30s epoch
+        try:
+            duration = float(duration) if pd.notna(duration) else 30.0
+        except (ValueError, TypeError):
+            duration = 30.0
+        
+        stage = str(row.get(stage_col, "")).strip().lower()
+        
+        # Map stage
+        stage_mapped = _SCORING_STAGE_MAP.get(stage, f"Sleep stage {stage.upper()}" if stage else "Unknown")
+        
+        onsets.append(onset)
+        durations.append(duration)
+        descriptions.append(stage_mapped)
+    
+    if onsets:
+        sfreq = raw.info["sfreq"]
+        n_times = raw.n_times
+        valid_mask = [(o < n_times / sfreq) for o in onsets]
+        
+        onsets = [o for o, m in zip(onsets, valid_mask) if m]
+        durations = [d for d, m in zip(durations, valid_mask) if m]
+        descriptions = [d for d, m in zip(descriptions, valid_mask) if m]
+        
+        if onsets:
+            new_annot = mne.Annotations(
+                onset=onsets,
+                duration=durations,
+                description=descriptions,
+            )
+            
+            if raw.annotations:
+                raw.set_annotations(raw.annotations + new_annot)
+            else:
+                raw.set_annotations(new_annot)
+    
+    return raw
+
+
+def _create_misc_channel(raw: mne.io.BaseRaw, name: str, value: float) -> mne.io.BaseRaw:
+    """Create a misc-type channel with constant broadcast value."""
+    data = np.full((1, len(raw.times)), value, dtype=np.float64)
+    
+    # Create info for new channel
+    new_info = mne.create_info(
+        ch_names=[name],
+        sfreq=raw.info["sfreq"],
+        ch_types=["misc"],
+    )
+    
+    # Create RawArray
+    new_raw = mne.io.RawArray(data, new_info, verbose=False)
+    
+    # Add to existing raw
+    raw.add_channels([new_raw], force_update_info=True)
+    
+    return raw
+
+
+def _ensure_native_misc_channels(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
+    """Ensure required native channels are marked as 'misc' type."""
+    if not _REQUIRED_NATIVE_MISC:
+        return raw
+    
+    # Get current channel types
+    current_types = raw.get_channel_types()
+    
+    # Map channel names to their desired types
+    channel_type_map = {}
+    for ch_name in _REQUIRED_NATIVE_MISC:
+        if ch_name in raw.ch_names:
+            channel_type_map[ch_name] = "misc"
+    
+    if channel_type_map:
+        raw.set_channel_types(channel_type_map)
+    
+    return raw
 
 
 class OpenNeuroDS005185Kernel:
-    """Kernel for OpenNeuro DS005185 (EESM19) ear-EEG sleep monitoring dataset."""
+    KERNEL_ID = "openneuro_ds005185"
+    DATASET_NAME = "OpenNeuro DS005185 (EESM19)"
+    DATASET_DESCRIPTION = "Ear-EEG Sleep Monitoring 2019 dataset with sleep stage scoring"
 
-    # -------------------------------------------------------------------------
-    # Metadata
-    # -------------------------------------------------------------------------
-    dataset_name = "openneuro_ds005185"
-    dataset_alias = "EESM19"
-    modality = "eeg"
-    task = "sleep"
-    reference = (
-        "https://openneuro.org/datasets/ds005185; "
-        "DOI: 10.1038/s41598-019-53115-3; "
-        "DOI: 10.1038/s41597-025-04579-8"
-    )
+    def __init__(self):
+        pass
 
-    # -------------------------------------------------------------------------
-    # BIDS layout helpers
-    # -------------------------------------------------------------------------
-    @staticmethod
-    def _get_dataset_path(row: pd.Series) -> str:
-        """Extract dataset root path from row."""
-        file_path = str(row.get("file_path", ""))
-        # Navigate up to dataset root (openneuro_raw/ds005185)
-        parts = file_path.split(os.sep)
-        for i, part in enumerate(parts):
-            if part == "ds005185":
-                return os.sep.join(parts[: i + 1])
-        # Fallback: go up from file to find participants.tsv
-        d = os.path.dirname(file_path)
-        for _ in range(6):
-            if os.path.isfile(os.path.join(d, "participants.tsv")):
-                return d
-            parent = os.path.dirname(d)
-            if parent == d:
-                break
-            d = parent
-        return os.path.dirname(file_path)
-
-    @staticmethod
-    def _get_subject_id(row: pd.Series) -> str:
-        """Extract subject ID from row or file path."""
-        subj = str(row.get("subject", ""))
-        if subj:
-            return subj
-        file_path = str(row.get("file_path", ""))
-        m = re.search(r"sub-([a-zA-Z0-9]+)", file_path)
-        if m:
-            return m.group(0)  # includes "sub-" prefix
-        return "unknown"
-
-    # -------------------------------------------------------------------------
-    # Public API
-    # -------------------------------------------------------------------------
     def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
-        # Determine paths and IDs
-        file_path = str(row.get("file_path", ""))
-        dataset_path = self._get_dataset_path(row)
-        subject_id = self._get_subject_id(row)
-
-        # --- 1. Read participants.tsv info ----------------------------------
-        participants_info = _read_participants_info(dataset_path, subject_id)
-
-        # Standardize required fields
-        age = _standardize_age(participants_info.get("age"))
-        sex = _standardize_sex(participants_info.get("sex"))
-
-        # Additional fields with fallbacks
-        amplifier = participants_info.get("amplifier", "unknown")
-        cap = participants_info.get("cap", "unknown")
-        handedness = participants_info.get("handedness", participants_info.get("hand", "unknown"))
-
-        # --- 2. Read JSON sidecar for technical metadata --------------------
-        json_meta = _read_json_sidecar(file_path)
-
-        # --- 3. Handle events/annotations ----------------------------------
-        # Check if raw already has annotations (e.g., from .set file)
-        has_raw_annotations = len(raw.annotations) > 0
-
-        # Find events.tsv sidecar
-        events_path = _find_sidecar_path(file_path, "_events.tsv")
-        events_df = _parse_events_tsv(events_path)
-
-        # Build annotations from events.tsv if available and raw has no annotations
-        if events_df is not None and not has_raw_annotations:
-            # BIDS events.tsv columns: onset, duration, trial_type, [optional]
-            onsets = []
-            durations = []
-            descriptions = []
-            
-            for _, ev_row in events_df.iterrows():
-                onset = ev_row.get("onset")
-                if pd.isna(onset):
-                    continue
-                try:
-                    onset = float(onset)
-                except (ValueError, TypeError):
-                    continue
-                
-                duration = ev_row.get("duration", 0.0)
-                try:
-                    duration = float(duration) if not pd.isna(duration) else 0.0
-                except (ValueError, TypeError):
-                    duration = 0.0
-                
-                # Use trial_type if available, else use any available label column
-                trial_type = ev_row.get("trial_type", "")
-                if pd.isna(trial_type) or str(trial_type).strip() == "":
-                    # Try other common BIDS event columns
-                    for col in ["value", "stim_type", "event_type", "event"]:
-                        if col in ev_row and not pd.isna(ev_row[col]):
-                            trial_type = str(ev_row[col])
-                            break
-                    else:
-                        trial_type = "unknown"
-                else:
-                    trial_type = str(trial_type)
-                
-                # Apply rename map (pass through if not in map)
-                description = _EVENT_RENAME_MAP.get(trial_type, trial_type)
-                
-                onsets.append(onset)
-                durations.append(duration)
-                descriptions.append(description)
-            
-            if onsets:
-                # Create annotations and add to raw
-                annotations = mne.Annotations(
-                    onset=onsets,
-                    duration=durations,
-                    description=descriptions,
-                    orig_time=raw.annotations.orig_time if hasattr(raw.annotations, "orig_time") else None,
-                )
-                raw = raw.set_annotations(annotations)
-
-        # --- 4. Create derived misc channels -------------------------------
-        misc_channels_to_add = []
-
-        # For events.tsv-sourced columns: use step function from events
-        if events_df is not None:
-            # writtenTime: look for column with that name or similar
-            for target_col in _DERIVED_MISC_CHANNELS:
-                col_name = None
-                if target_col in events_df.columns:
-                    col_name = target_col
-                else:
-                    # Try case-insensitive match
-                    for c in events_df.columns:
-                        if c.lower() == target_col.lower():
-                            col_name = c
-                            break
-                
-                if col_name is not None:
-                    # Build step function from event onsets
-                    valid_mask = ~events_df["onset"].isna()
-                    if valid_mask.any():
-                        onsets_arr = events_df.loc[valid_mask, "onset"].values.astype(float)
-                        values_arr = events_df.loc[valid_mask, col_name].values
-                        
-                        # Convert values to numeric where possible
-                        numeric_values = []
-                        for v in values_arr:
-                            try:
-                                numeric_values.append(float(v))
-                            except (ValueError, TypeError):
-                                # Use hash-based numeric encoding for strings
-                                numeric_values.append(float(hash(str(v)) % 1000000))
-                        
-                        values_arr = np.array(numeric_values)
-                        
-                        step_raw = _create_step_function_channel(
-                            raw, onsets_arr, values_arr, target_col, fill_value=0.0
-                        )
-                        misc_channels_to_add.append(step_raw)
-                else:
-                    # Column not found in events.tsv: create constant channel from participants info if available
-                    if target_col in participants_info:
-                        try:
-                            val = float(participants_info[target_col])
-                        except (ValueError, TypeError):
-                            val = float(hash(str(participants_info[target_col])) % 1000000)
-                        const_raw = _create_constant_channel(raw, target_col, val)
-                        misc_channels_to_add.append(const_raw)
-                    else:
-                        # Create zero-filled channel as placeholder
-                        zero_raw = _create_constant_channel(raw, target_col, 0.0)
-                        misc_channels_to_add.append(zero_raw)
-        else:
-            # No events.tsv: create constant channels from participants info or zeros
-            for target_col in _DERIVED_MISC_CHANNELS:
-                if target_col in participants_info:
-                    try:
-                        val = float(participants_info[target_col])
-                    except (ValueError, TypeError):
-                        val = float(hash(str(participants_info[target_col])) % 1000000)
-                    const_raw = _create_constant_channel(raw, target_col, val)
-                    misc_channels_to_add.append(const_raw)
-                else:
-                    zero_raw = _create_constant_channel(raw, target_col, 0.0)
-                    misc_channels_to_add.append(zero_raw)
-
-        # Add all derived misc channels
-        if misc_channels_to_add:
-            raw = _add_misc_channels(raw, misc_channels_to_add)
-
-        # --- 5. Ensure native misc channels are typed correctly -------------
-        # (none required for this dataset, but keep for consistency)
-        for ch_name in _REQUIRED_NATIVE_MISC:
-            if ch_name in raw.ch_names:
-                raw.set_channel_types({ch_name: "misc"})
-
-        # --- 6. Set description with eegunity metadata ----------------------
-        original_desc = raw.info.get("description", "")
-        if original_desc is None:
-            original_desc = ""
-
+        # Extract file path and subject info
+        file_path = str(row.get("file_path", row.get("path", "")))
+        subject_id = _get_subject_id_from_path(file_path)
+        
+        if subject_id is None:
+            # Fallback: try to get from row
+            subject_id = str(row.get("subject", "unknown")).replace("sub-", "")
+        
+        session_id = _get_session_id_from_path(file_path)
+        
+        # Find BIDS root
+        bids_root = _find_bids_root(file_path)
+        
+        # Read participants.tsv for subject info
+        participant_info = _read_participants_tsv(bids_root, subject_id)
+        
+        # Normalize fields
+        age = _normalize_age(participant_info.get("age", "unknown"))
+        sex = _normalize_sex(participant_info.get("sex", "unknown"))
+        amplifier = participant_info.get("amplifier", "unknown")
+        cap = participant_info.get("cap", "unknown")
+        handedness = participant_info.get("handedness", "unknown")
+        
+        # Build eegunity_description
         eegunity_description = {
             "age": age,
             "sex": sex,
@@ -495,21 +610,53 @@ class OpenNeuroDS005185Kernel:
             "cap": cap,
             "handedness": handedness,
         }
-
-        # Add any additional participants.tsv fields
-        for key, val in participants_info.items():
-            if key not in eegunity_description and key not in ("participant_id",):
+        
+        # Add any extra participant fields
+        for key, val in participant_info.items():
+            if key not in eegunity_description:
                 eegunity_description[key] = val
-
+        
+        # Store original description
+        original_description = raw.info.get("description", "")
+        
+        # Set description as JSON string
         raw.info["description"] = json.dumps({
-            "original_description": original_desc,
+            "original_description": original_description,
             "eegunity_description": eegunity_description,
         })
-
+        
+        # Ensure native misc channels
+        raw = _ensure_native_misc_channels(raw)
+        
+        # Find and process events.tsv
+        events_path = _find_events_tsv(file_path, subject_id, session_id)
+        if events_path:
+            events_df = _read_events_tsv(events_path)
+            raw = _add_annotations_from_events_tsv(raw, events_df)
+        
+        # Find and process scoring file for sleep stages
+        scoring_df = _read_scoring_file(bids_root, subject_id, session_id)
+        if not scoring_df.empty:
+            raw = _add_sleep_stage_annotations(raw, scoring_df)
+        
+        # Create derived misc channels from diary events
+        diary_data = {
+            "writtenTime_numeric": np.nan,
+            "pressedTrigger_numeric": np.nan,
+        }
+        
+        diary_path = _find_diary_events_tsv(file_path, subject_id, session_id)
+        if diary_path:
+            diary_data = _load_diary_data(diary_path)
+        
+        # Add derived misc channels
+        for ch_name in _DERIVED_MISC_CHANNELS:
+            value = diary_data.get(ch_name, np.nan)
+            if np.isnan(value):
+                value = 0.0  # Default for missing diary data
+            raw = _create_misc_channel(raw, ch_name, value)
+        
         return raw
 
 
-# =============================================================================
-# Module export
-# =============================================================================
 KERNEL = OpenNeuroDS005185Kernel()
