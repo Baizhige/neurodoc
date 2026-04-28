@@ -13,10 +13,11 @@ Fifty stroke patients (sub-01 to sub-50) performed a cued left/right hand motor 
 > **Kernel SHA256**: `fb851de3e4dbb6b9db1391ae068830a750d9dcec09ea21d253d9bcad876d6f4d`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|---|---|---|---|---|
 | `Break beginning - Left hand` | 1000 | admin | raw | Rest/break period following a left-hand trial |
 | `Break beginning - Right hand` | 1000 | admin | raw | Rest/break period following a right-hand trial |
 | `Instruction beginning - Left hand` | 1000 | admin | raw | Instruction cue onset for left-hand trial |
@@ -26,11 +27,13 @@ Fifty stroke patients (sub-01 to sub-50) performed a cued left/right hand motor 
 
 
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
-| `device` | missing | N/A |
+| `device` | missing | [to_agent: Showed in task-motor-imagery_eeg.json] |
+
 
 ## Tasks
 
@@ -41,23 +44,14 @@ Fifty stroke patients (sub-01 to sub-50) performed a cued left/right hand motor 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `Motor imagery beginning - Left hand` | 0 | Left-hand motor imagery |
   | `Motor imagery beginning - Right hand` | 1 | Right-hand motor imagery |
 - **Evidence**:
-  - DOI: 10.1016/j.compbiomed.2025.111285 — Uses figshare stroke dataset (50 subjects) for left/right hand motor imagery classification, segmenting EEG trials from 1 to 4 seconds post-cue with multi-domain features and SCSO-optimized BLS classifier achieving 96.41% accuracy.
-  - DOI: 10.1109/JBHI.2025.3646871 — Proposes mutual generation framework for stroke patients' motor imagery classification using the Stroke MI 50 dataset to classify left vs. right hand motor imagery and predict functional recovery.
-  - DOI: 10.48084/etasr.15300 — Uses figshare stroke motor imagery dataset (50 patients, 40 trials each) to classify left-hand vs right-hand motor imagery EEG signals using CNN, LSTM, and hybrid CNN-LSTM models.
-- **Kernel Notes**: tmin=0.0s marks MI onset precisely per event markers. Some papers use tmin=0.5s or 1.0s to avoid residual Visual Evoked Potentials (VEPs) from the preceding instruction cue.
-
-### Potential Task 2: Stroke Patient Subgroup Classification (epoch_by_event)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, target_events = see Target Definition
-- **Label Route**: `event`
-- **Target Definition**: Same as Task 1 (MI events); group labels (age, lesion side, etc.) from `participants.tsv`.
-- **Notes**: Clinical metadata (age, sex, stroke side, handedness) is embedded in the kernel's `_SUBJECT_DICT`. Cross-subject analysis with clinical covariates is the primary use case.
+  - 10.1016/j.compbiomed.2025.111285 — Uses figshare stroke dataset (50 subjects) for left/right hand motor imagery classification, segmenting EEG trials from 1 to 4 seconds post-cue with multi-domain features and SCSO-optimized BLS classifier achieving 96.41% accuracy. Deviation: tmin=1.0s used to avoid residual VEPs (kernel default tmin=0.0s).
+  - 10.48084/etasr.15300 — Uses figshare stroke motor imagery dataset (50 patients, 40 trials each) to classify left-hand vs right-hand motor imagery EEG signals using CNN, LSTM, and hybrid CNN-LSTM models.
+- **Notes**: tmin=0.0s marks MI onset precisely per event markers. Paper DOI: 10.1016/j.compbiomed.2025.111285 uses tmin=1.0s to exclude early VEP components from the preceding instruction cue — mark deviation. Standard paradigm window is 0–4 s per the dataset design (instruction → motor imagery → break).
 
 ## Data Quality Notes
 
@@ -70,4 +64,4 @@ Fifty stroke patients (sub-01 to sub-50) performed a cued left/right hand motor 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: completed
