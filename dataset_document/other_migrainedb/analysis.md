@@ -1,100 +1,133 @@
 # Ultra High-Density EEG - Interictal Migraine and Controls
 
 **Dataset**: `other_migrainedb` | **Year**: 2020 | **URL**: https://kilthub.cmu.edu/articles/dataset/Ultra_high-density_EEG_recording_of_interictal_migraine_and_controls_sensory_and_rest/12636731
-**Category**: Biological State | **Subjects**: 36 | **Files (Completed)**: 117 | **Channels**: 128 | **Sampling Rate**: 512 Hz
+**Category**: Biological State | **Subjects**: 35 | **Files (Completed)**: 117 | **Channels**: 128 | **Sampling Rate**: 512 Hz
 **Manual Review**: Jiping Cui
 
 ## Paradigm
 
-Thirty-six subjects (18 interictal migraine patients: M1-M18; 18 healthy controls: C1-C21, with C2, C6, C12 missing data) underwent high-density EEG recording (BioSemi ActiveTwo, 128 channels, 512 Hz) in three task conditions (Chiang et al., 2020): (1) **SSVEP** - steady-state visual evoked potential, flickering stimuli at 4 Hz and 6 Hz; (2) **SSAEP** - steady-state auditory evoked potential, tone sequences at 4 Hz and 6 Hz; (3) **resting state**. The dataset enables comparison of sensory processing in migraine patients vs. healthy controls in the interictal (between-attack) period.
+The dataset contains high-density EEG recordings from interictal migraine patients and healthy controls during three conditions: (1) **SSVEP** - steady-state visual evoked potentials elicited by visual stimuli flickering at 4 Hz and 6 Hz; (2) **SSAEP** - steady-state auditory evoked potentials elicited by amplitude-modulated tones at 4 Hz and 6 Hz; and (3) **resting state**. EEG was recorded using a BioSemi ActiveTwo system with a customized 128-channel high-density EEG montage, sampled at 512 Hz (Chamanzar et al., 2020).
 
-*Note: Subject M13 is missing data for the SSAEP task, which accounts for some literature citing only 17 migraine patients.*
+According to the dataset documentation, the main study reports 17 interictal migraine patients and 18 age- and gender-matched healthy controls. The demographic table lists migraine participants M1-M18, but M13 lacks the SSAEP recording and was excluded from the main study dataset; M2, M6, and M18 were also excluded from some analyses because of medication. The matched control group consists of 18 controls, while C2, C6, and C12 are additional healthy control subjects available in the dataset rather than missing-data subjects.
+
+The dataset enables comparison of sensory processing and resting-state EEG activity between migraine patients in the interictal period and healthy controls.
 
 ## File Scan Result
-
 
 > **Kernel SHA256**: `544fe6fad1eb26fcf2b990ee48fcaf4bfecaad1ae0564a4eb2d9cfa0fd06fb2b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
-| `4Hz auditory feedback end for Health` | 221 | event | raw |  |
-| `4Hz auditory feedback end for migraine` | 181 | event | raw |  |
-| `4Hz auditory stimulation start for Health` | 2100 | event | raw |  |
-| `4Hz auditory stimulation start for migraine` | 1706 | event | raw |  |
-| `4Hz vision feedback end for Health` | 226 | event | raw |  |
-| `4Hz vision feedback end for migraine` | 200 | event | raw |  |
-| `4Hz vision stimulation start for Health` | 2016 | event | raw |  |
-| `4Hz vision stimulation start for migraine` | 1787 | event | raw |  |
-| `6Hz auditory feedback end for Health` | 176 | event | raw |  |
-| `6Hz auditory feedback end for migraine` | 137 | event | raw |  |
-| `6Hz auditory stimulation start for Health` | 2099 | event | raw |  |
-| `6Hz auditory stimulation start for migraine` | 1705 | event | raw |  |
-| `6Hz vision feedback end for Health` | 165 | event | raw |  |
-| `6Hz vision feedback end for migraine` | 150 | event | raw |  |
-| `6Hz vision stimulation start for Health` | 2016 | event | raw |  |
-| `6Hz vision stimulation start for migraine` | 1779 | event | raw |  |
-| `resting Health` | 21 | event | raw |  |
-| `resting migraine` | 18 | event | raw |  |
+|---|---|---|---|---|
+| `4Hz auditory feedback end for Health` | 221 | event | raw | 4 Hz auditory steady-state stimulus end (healthy controls) |
+| `4Hz auditory feedback end for migraine` | 181 | event | raw | 4 Hz auditory steady-state stimulus end (migraine patients) |
+| `4Hz auditory stimulation start for Health` | 2100 | event | raw | 4 Hz auditory steady-state stimulus onset (healthy controls) |
+| `4Hz auditory stimulation start for migraine` | 1706 | event | raw | 4 Hz auditory steady-state stimulus onset (migraine patients) |
+| `4Hz vision feedback end for Health` | 226 | event | raw | 4 Hz visual steady-state stimulus end (healthy controls) |
+| `4Hz vision feedback end for migraine` | 200 | event | raw | 4 Hz visual steady-state stimulus end (migraine patients) |
+| `4Hz vision stimulation start for Health` | 2016 | event | raw | 4 Hz visual steady-state stimulus onset (healthy controls) |
+| `4Hz vision stimulation start for migraine` | 1787 | event | raw | 4 Hz visual steady-state stimulus onset (migraine patients) |
+| `6Hz auditory feedback end for Health` | 176 | event | raw | 6 Hz auditory steady-state stimulus end (healthy controls) |
+| `6Hz auditory feedback end for migraine` | 137 | event | raw | 6 Hz auditory steady-state stimulus end (migraine patients) |
+| `6Hz auditory stimulation start for Health` | 2099 | event | raw | 6 Hz auditory steady-state stimulus onset (healthy controls) |
+| `6Hz auditory stimulation start for migraine` | 1705 | event | raw | 6 Hz auditory steady-state stimulus onset (migraine patients) |
+| `6Hz vision feedback end for Health` | 165 | event | raw | 6 Hz visual steady-state stimulus end (healthy controls) |
+| `6Hz vision feedback end for migraine` | 150 | event | raw | 6 Hz visual steady-state stimulus end (migraine patients) |
+| `6Hz vision stimulation start for Health` | 2016 | event | raw | 6 Hz visual steady-state stimulus onset (healthy controls) |
+| `6Hz vision stimulation start for migraine` | 1779 | event | raw | 6 Hz visual steady-state stimulus onset (migraine patients) |
+| `resting Health` | 21 | event | raw | Resting-state EEG recording (healthy controls) |
+| `resting migraine` | 18 | event | raw | Resting-state EEG recording (migraine patients) |
 
+
+> The task events are encoded as numeric trigger values in the BioSemi Status channel. For sensory tasks, the main epoch labels described in the protocol are 1 and 2 for the onset of 4 Hz and 6 Hz stimulation, respectively, and 11 and 22 for response/feedback-related markers following 4 Hz and 6 Hz trials. The stimulus-onset markers correspond to the start of the 2 s visual or auditory stimulation. The 11/22 markers are not generic trial-end markers; they are emitted only for feedback/response trials in which a response was detected. In addition to these epoch labels, the stimulus scripts also send task-level markers such as 30 near the start of the task and 20 near the end.
+> 
+> For resting state, the protocol defines label 1 as the start of a resting block and label 2 as the end of a resting block. The available BDF files do contain such 1/2 resting-state block markers, although the markers visible in the current subset may not fully cover all six 2 min blocks described in the protocol.
+> 
+> Any scanned event names that include group suffixes such as healthy/control or migraine should be treated as interpreted labels rather than raw trigger codes. These group labels should be removed or normalized before constructing modality- or frequency-classification tasks to avoid label leakage.
 
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | partial (108/117) | N/A |
 | `subject_sex` | partial (108/117) | N/A |
 | `device` | missing | N/A |
 
+
 ## Tasks
 
-### Classical Task 1: Migraine Patient vs Healthy Control Classification
+### Classical Task 1: Migraine Patient vs Healthy Control Classification (SSVEP/SSAEP)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5` | `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: 
-  - Stimulus epochs: tmin = 0.0 s, tmax = 2.0 s, target_events = [`4Hz vision stimulation start`, `6Hz vision stimulation start`, `4Hz auditory stimulation start`, `6Hz auditory stimulation start`]
-  - Resting state: segment_length = 2.0 s, overlap = 0.0 s, target_events = [`resting state block start`]
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, target_events = [`4Hz auditory stimulation start for Health`, `4Hz auditory stimulation start for migraine`, `4Hz vision stimulation start for Health`, `4Hz vision stimulation start for migraine`, `6Hz auditory stimulation start for Health`, `6Hz auditory stimulation start for migraine`, `6Hz vision stimulation start for Health`, `6Hz vision stimulation start for migraine`]
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | M-series subjects (M1-M18) | 1 | Migraine patient |
-  | C-series subjects (C1-C21) | 0 | Healthy control |
-- **Super Meta Notes**: Derived from subject ID prefix: 'M' prefix indicates migraine patient, 'C' prefix indicates healthy control. This is a super-label derived from metadata, not from raw event markers. Kernel step: Parse subject filename to extract prefix (M/C), map to binary label (1/0), apply uniformly to all epochs from that subject.
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `4Hz vision stimulation start for Health` | 0 | Healthy control |
+  | `6Hz vision stimulation start for Health` | 0 | Healthy control |
+  | `4Hz auditory stimulation start for Health` | 0 | Healthy control |
+  | `6Hz auditory stimulation start for Health` | 0 | Healthy control |
+  | `4Hz vision stimulation start for migraine` | 1 | Interictal migraine patient |
+  | `6Hz vision stimulation start for migraine` | 1 | Interictal migraine patient |
+  | `4Hz auditory stimulation start for migraine` | 1 | Interictal migraine patient |
+  | `6Hz auditory stimulation start for migraine` | 1 | Interictal migraine patient |
 - **Evidence**:
-  - DOI: 10.1093/braincomms.fcab061 — This paper analyzes EEG coherence patterns to compare 14 interictal migraine patients with 18 healthy controls during visual/auditory stimulation (4Hz and 6Hz, 2s epochs) and resting state (2-s non-overlapping intervals), finding significantly lower alpha-band coherence in frontal clusters for migraineurs.
-- **Kernel Notes**: For stimulus epochs: extract epochs time-locked to any stimulation onset event (4Hz/6Hz vision/auditory), apply subject's group label. For resting state: segment within resting state block boundaries using 2-s non-overlapping windows, apply subject's group label. Combine both modalities for full group classification pipeline.
+  - Protocol: sensory-task labels `1` and `2` mark the onset of 4 Hz and 6 Hz stimulation, respectively; each visual or auditory stimulus lasts 2 s. Labels `11` and `22` are response/feedback-related markers and should not be treated as generic trial-end markers.
+  - 10.1093/braincomms/fcab061 — Chamanzar et al. compare high-density EEG responses between interictal migraine participants and healthy controls during 4 Hz / 6 Hz visual and auditory stimulation and resting state.
+- **Notes**: Uses Event Structure labels that encode group membership (`for Health` vs `for migraine`). M13 lacks SSAEP/auditory data and should be excluded from SSAEP-specific analyses. C2, C6, and C12 are additional available healthy controls rather than missing-data controls. Use subject-level train/test splitting to avoid leakage across epochs from the same participant.
 
-### Potential Task 1: SSVEP Frequency Classification - 4 Hz vs. 6 Hz (epoch_by_event)
+### Potential Task 1: SSVEP Frequency Classification - 4 Hz vs. 6 Hz
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, target_events = see Target Definition
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, target_events = [`4Hz vision stimulation start for Health`, `4Hz vision stimulation start for migraine`, `6Hz vision stimulation start for Health`, `6Hz vision stimulation start for migraine`]
 - **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `4Hz vision stimulation start for Health` | 0 | 4 Hz visual flicker stimulus |
+  | `4Hz vision stimulation start for migraine` | 0 | 4 Hz visual flicker stimulus |
+  | `6Hz vision stimulation start for Health` | 1 | 6 Hz visual flicker stimulus |
+  | `6Hz vision stimulation start for migraine` | 1 | 6 Hz visual flicker stimulus |
+- **Evidence**:
+  - Protocol: SSVEP trials used Gaussian-filtered vertical sine-wave gratings alternating contrast sinusoidally at 4 Hz or 6 Hz for 2 s. Labels `1` and `2` indicate 4 Hz and 6 Hz stimulus onset, respectively.
+  - 10.1093/braincomms/fcab061 — The visual stimulation condition includes 4 Hz and 6 Hz steady-state visual stimulation, enabling frequency-specific SSVEP analysis.
+- **Notes**: Restrict this task to SSVEP/visual recordings. The group suffixes are included only because they are part of the available Event Structure IDs; the classification target should be frequency, not subject group.
 
-| Event | y | Meaning |
-|-------|---|---------|
-| `4Hz vision stimulation start` | 0 | 4 Hz flicker stimulus |
-| `6Hz vision stimulation start` | 1 | 6 Hz flicker stimulus |
-
-### Potential Task 2: Migraine Patient vs. Control - Resting State (epoch_by_segmentation)
+### Potential Task 2: Migraine Patient vs Healthy Control Classification - Resting State
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: length = 5.0 s, overlap = 2.5 s (within `resting state block start` / end boundaries)
-- **Label Route**: `event`
-- **Target Definition**: N/A (group label from subject ID: M-series = migraine, C-series = healthy)
-- **Notes**: Group labels (migraine vs. control) are encoded in the subject ID (M/C prefix in filename). Apply the group label post-hoc after segmentation. (replaces Potential Task 2 from original analysis.md)
+- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.0, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `subject group derived from participant metadata / subject ID prefix`
+- **Meta Level**: super
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |---|---|---|---|
+  | `Subject group` | Healthy control / C-series subject | 0 | Healthy control |
+  | `Subject group` | Migraine / M-series subject | 1 | Interictal migraine patient |
+- **Evidence**:
+  - Protocol: resting state consists of six 2 min fixation blocks; label `1` marks block start and label `2` marks block end.
+  - 10.1093/braincomms/fcab061 — Resting-state EEG was analyzed using 2 s non-overlapping intervals for group-level comparison.
+- **Notes**: Restrict this task to resting-state recordings. Prefer segmenting within valid resting blocks when block markers are available, then assign labels from subject metadata or subject ID prefix. Use subject-level train/test splitting to avoid leakage across segments from the same participant.
 
 ## Data Quality Notes
 
-- Group labels must be derived from the subject ID prefix (M for migraine, C for control).
-- Age range: 19-54 years; sex: mixed male/female.
-- High channel count (128); spatial filtering / source localization may be useful.
-- Sensory task and resting state recordings provide complementary views of migraine-related cortical changes.
+- Group labels are subject-level metadata derived from the subject ID prefix (`M` = migraine, `C` = control), not native task labels. Raw scanned event names may also contain group-specific suffixes and should be normalized before task construction to avoid label leakage.
+- Subject age/sex metadata are available for the 36 matched-analysis participants in `Migraine_Control_Demographics.csv`, but not for the extra released controls (`C2`, `C6`, `C12`).
+- Subject `M13` lacks the SSAEP recording, so auditory-task availability differs from the nominal participant count.
+- The released dataset and the publication analysis subset are not identical: `M2`, `M6`, and `M18` were excluded from the main paper analysis because of medication, and `C2`, `C6`, `C12` are extra released controls not included in the matched-analysis metadata file.
+- The protocol defines numeric trigger codes for stimulus onset/feedback and six 2 min resting blocks, whereas the scanned event table contains interpreted text labels; event semantics should be checked carefully before epoching.
+- `feedback end` markers correspond to the end of the post-stimulus feedback/response interval and are not generic trial-end markers; they occur only in feedback trials.
+- Recordings use a 128-channel high-density montage, which increases spatial detail but also makes channel handling and interpolation choices more consequential.
+- The associated publication analyzed both sensory and resting EEG in 2 s windows; resting-state analyses used non-overlapping 2 s intervals.
 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: Yes
-> **Status**: wait_manual_review
+> **Status**: completed
