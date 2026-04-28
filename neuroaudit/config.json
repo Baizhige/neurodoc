@@ -1,6 +1,7 @@
 {
-  "url": "https://api.minimax.io/v1",
-  "key": "sk-cp-Jd80movHGOZz2m_2BKwQn-Sz5oOI1Q5wNqOqu-khgfEoqyJEX1Hu7LyxOwTwFs50zkUye1KCNYA_9KcyYTrggM-xJgTSHi8KMDdbhudsnV5-h2l9sRko81E",
-  "model": "MiniMax-M2.7",
+  "BASE_URL": "",
+  "ANTHROPIC_BASE_URL": "https://api.kimi.com/coding",
+  "key": "sk-kimi-wXbd5ZHZs6bmfxphpsr3ZXS1NQCYTUplwMyLLBglgONeAd5yFPcvW1wf38tb5aMr",
+  "model": "kimi-for-coding",
   "proxy": ""
 }
