@@ -6,32 +6,32 @@
 
 ## Paradigm
 
-Participants performed kinesthetic motor imagery of grasping movements with the dominant hand during EEG recording using a low-cost consumer-grade EEG system. Sessions included a preliminary run of actual hand movements followed by motor imagery blocks alternating with resting-state baselines. OpenViBE (OVTK) event triggers mark trial onset, cue type, feedback, and session boundaries. The study evaluates BCI performance using motor imagery and demonstrates applicability of affordable EEG hardware.
+Participants performed kinesthetic motor imagery of grasping movements with the dominant hand during EEG recording using a low-cost consumer-grade EEG system. Sessions included a preliminary run of actual hand movements (RUN0) followed by motor imagery blocks alternating with resting-state baselines (RUN1-RUN4). OpenViBE (OVTK) event triggers mark trial onset, cue type, feedback, and session boundaries. The study evaluates BCI performance using motor imagery and demonstrates applicability of affordable EEG hardware.
 
 ## File Scan Result
 
-> **Kernel SHA256**: `241a47b9b12f941e8d556583cd5a833918f0d288d0c8e6ec817b61cb30ed92fb`
+> **Kernel SHA256**: `1c1ce2b498db2c62a25bae192b266f958d71e5bfc606f104f1c535ac01bbd383`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `OVTK_GDF_Correct` | 697 | event | raw | Trial phase onset: correct feedback |
-| `OVTK_GDF_Cross_On_Screen` | 1691 | event | raw | Trial phase onset: fixation cross displayed |
-| `OVTK_GDF_End_Of_Session` | 48 | admin | raw | Session boundary: end of session marker |
-| `OVTK_GDF_End_Of_Trial` | 1689 | event | raw | Trial phase onset: trial end |
-| `OVTK_GDF_Feedback_Continuous` | 1689 | event | raw | Trial phase onset: continuous feedback period |
-| `OVTK_GDF_Incorrect` | 697 | event | raw | Trial phase onset: incorrect feedback |
-| `OVTK_GDF_Right` | 845 | event | raw | Trial phase onset: right hand cue |
-| `OVTK_GDF_Start_Of_Trial` | 1691 | event | raw | Trial phase onset: trial start |
-| `OVTK_GDF_Tongue` | 845 | event | raw | Trial phase onset: tongue cue |
-| `OVTK_StimulationId_BaselineStart` | 50 | event | raw | Trial phase onset: baseline period start |
-| `OVTK_StimulationId_BaselineStop` | 50 | event | raw | Trial phase onset: baseline period end |
-| `OVTK_StimulationId_Beep` | 1790 | event | raw | Trial phase onset: auditory beep cue |
+| `OVTK_GDF_Correct` | 697 | event | raw | Correct classification feedback |
+| `OVTK_GDF_Cross_On_Screen` | 1691 | event | raw | Trial phase onset: fixation cross |
+| `OVTK_GDF_End_Of_Session` | 48 | admin | raw | Session boundary: end of session |
+| `OVTK_GDF_End_Of_Trial` | 1689 | event | raw | Trial phase onset: end of trial |
+| `OVTK_GDF_Feedback_Continuous` | 1689 | event | raw | Trial phase onset: continuous feedback |
+| `OVTK_GDF_Incorrect` | 697 | event | raw | Incorrect classification feedback |
+| `OVTK_GDF_Right` | 845 | event | raw | Trial phase onset: right hand condition |
+| `OVTK_GDF_Start_Of_Trial` | 1691 | event | raw | Trial phase onset: start of trial |
+| `OVTK_GDF_Tongue` | 845 | event | raw | Trial phase onset: tongue condition |
+| `OVTK_StimulationId_BaselineStart` | 50 | event | raw | Trial phase onset: baseline start |
+| `OVTK_StimulationId_BaselineStop` | 50 | event | raw | Trial phase onset: baseline stop |
+| `OVTK_StimulationId_Beep` | 1790 | event | raw | Auditory cue onset |
 | `OVTK_StimulationId_ExperimentStart` | 46 | admin | raw | Session boundary: experiment start |
 | `OVTK_StimulationId_ExperimentStop` | 48 | admin | raw | Session boundary: experiment stop |
-| `OVTK_StimulationId_Train` | 48 | admin | raw | Session boundary: training/calibration marker |
+| `OVTK_StimulationId_Train` | 48 | admin | raw | System marker: training/calibration |
 
 
 ### Info
@@ -46,98 +46,93 @@ Participants performed kinesthetic motor imagery of grasping movements with the 
 ### Classical Task 1: 2-class motor imagery vs rest
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0.5 s, tmax = 2.5 s, target_events = [`OVTK_GDF_Right`, `OVTK_GDF_Tongue`]
+- **Epoch Parameters**: `tmin = 0.5 s, tmax = 2.5 s, target_events = [`OVTK_GDF_Right`, `OVTK_GDF_Tongue`]`
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event ID | y | Meaning |
-  |----------|---|---------|
-  | `OVTK_GDF_Right` | 0 | right hand motor imagery cue |
-  | `OVTK_GDF_Tongue` | 1 | rest/idle condition cue (tongue cue used as rest proxy) |
-- **Evidence**:
-  - 10.1016/j.dib.2022.108225 — Data in Brief companion paper explicitly states tmin=0.5s, tmax=2.5s for motor imagery vs rest classification; 845 balanced trials per class using right hand MI and rest conditions
-  - 10.1016/j.heliyon.2020.e03425 — Original Heliyon feasibility study describing the low-cost 15-channel EEG BCI system with MI vs Rest paradigm using filter-bank CSP
-- **Notes**: The task uses OVTK_GDF_Right as motor imagery class and OVTK_GDF_Tongue as the rest/idle class. The README confirms the protocol consists of "kinesthetic imagination of grasping movement (MI) of the dominant hand and rest/idle condition." The task-MIvsRest_events.json indicates value 770='MI' and 772='Rest', but the actual embedded EDF annotations use OVTK_GDF_Right (845 occurrences) and OVTK_GDF_Tongue (845 occurrences) as the class cues, which are perfectly balanced. The OVTK_GDF_Tongue event serves as the rest condition marker in this annotation scheme, consistent with the experimental design where participants alternate between MI and rest periods.
 
-### Classical Task 2: 2-class motor imagery vs rest (alternative: Right=MI, Tongue=rest with standard BCI window)
+| Event ID | y | Meaning |
+|----------|---|---------|
+| `OVTK_GDF_Right` | 0 | Motor imagery (dominant hand grasping) |
+| `OVTK_GDF_Tongue` | 1 | Rest/idle condition |
+
+- **Evidence**:
+  - 10.1016/j.dib.2022.108225 — Data in Brief descriptor paper explicitly describes 2-class MI vs rest paradigm with 80 trials per class per subject; tmin=0.5s, tmax=2.5s with baseline correction; RUN0 contains real movement, RUN1-RUN4 contain MI vs rest
+  - 10.1016/j.heliyon.2020.e03425 — Original Heliyon paper describes BCI protocol with kinesthetic imagination of grasping movement of dominant hand vs rest/idle condition; EMG acquired for protocol control
+  - task-MIvsRest_events.json — BIDS sidecar defines value levels: 770='MI', 772='Rest', confirming two-condition paradigm structure
+  - README — States RUN1-RUN4 consist of MI vs Rest conditions; RUN0 involves real grasping movement for familiarization
+- **Notes**: Event IDs `OVTK_GDF_Right` and `OVTK_GDF_Tongue` serve as condition markers for the two-class MI vs rest paradigm. The label 'Tongue' is repurposed from standard GDF nomenclature in this dataset to mark the rest/idle condition rather than actual tongue motor imagery. The exact numeric code mapping (770/772) referenced in events.json is embedded in EDF annotation values and not directly visible in annotation description strings, but the paired structure (845 occurrences each) and paradigm description confirm these as the two class labels.
+
+### Potential Task 1: Motor Imagery vs Rest with Baseline
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s *, tmax = 3 s *, target_events = [`OVTK_GDF_Right`, `OVTK_GDF_Tongue`]`
+- **Epoch Parameters**: tmin = -0.5 s *, tmax = 3.0 s *, target_events = [`OVTK_GDF_Right`, `OVTK_GDF_Tongue`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
   |----------|---|---------|
-  | OVTK_GDF_Right | 0 | Motor imagery: right hand grasping |
-  | OVTK_GDF_Tongue | 1 | Rest/idle condition (tongue cue used as rest proxy) |
+  | OVTK_GDF_Right | 0 | Motor imagery (dominant hand grasping) |
+  | OVTK_GDF_Tongue | 1 | Rest/idle condition |
 - **Evidence**:
-  - 10.1016/j.heliyon.2020.e03425 — Same task as classical MI vs rest but with standard BCI Competition epoch window (tmin=0, tmax=3-4s) since original Heliyon paper did not specify exact timing. Uses OVTK_GDF_Right as motor imagery and OVTK_GDF_Tongue as rest. Filter-bank CSP approach mentioned.
-- **Notes**: The original task-MIvsRest_events.json specifies value levels 770='MI'/772='Rest' which do not match the actual OVTK_GDF annotation scheme found in EDF files. Based on the README description of two conditions (kinesthetic imagination of grasping movement of dominant hand and rest/idle condition), OVTK_GDF_Right (right hand cue) is mapped to motor imagery (y=0) and OVTK_GDF_Tongue is used as the rest/idle proxy (y=1). Both events occur 845 times each, perfectly balanced. The epoch window (tmin=0, tmax=3s) is inferred from standard BCI Competition MI protocols as the original paper lacks explicit timing. Run-0 is excluded as it involves real movement, not motor imagery.
+  - task-MIvsRest_events.json — value column defines 770='MI' and 772='Rest' as condition codes
+  - README — RUN1-RUN4 consist of MI vs. Rest conditions with kinesthetic imagination of dominant hand grasping vs. rest/idle
+  - eeg.json — TaskName='MIvsRestRUN1' for motor imagery runs
+  - EEG header sample (sub-02 run-1) — confirms OVTK_GDF_Right and OVTK_GDF_Tongue as the two condition markers present in MI runs
+- **Notes**: Alternative epoching strategy extending tmin to -0.5s to capture pre-cue fixation cross period (OVTK_GDF_Cross_On_Screen precedes condition cue by ~1s), enabling baseline correction prior to motor imagery onset. Same event IDs as classical task but different temporal window for enhanced signal-to-noise via baseline normalization. The mapping of OVTK_GDF_Right→MI and OVTK_GDF_Tongue→Rest follows the paradigm structure where two conditions alternate; 'Tongue' is repurposed from standard GDF nomenclature for the rest condition in this two-class protocol.
 
-### Potential Task 1: 3-class MI vs rest vs feedback state
+### Potential Task 2: Feedback Correctness Prediction
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s *, tmax = 2.5 s *, target_events = [`OVTK_GDF_Right`, `OVTK_GDF_Tongue`, `OVTK_GDF_Feedback_Continuous`]
+- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`OVTK_GDF_Correct`, `OVTK_GDF_Incorrect`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
   |----------|---|---------|
-  | `OVTK_GDF_Right` | 0 | Motor imagery: right hand cue |
-  | `OVTK_GDF_Tongue` | 1 | Rest/idle: tongue cue (used as rest condition in MI vs Rest protocol) |
-  | `OVTK_GDF_Feedback_Continuous` | 2 | Online BCI feedback period |
+  | OVTK_GDF_Correct | 0 | Correct classification feedback |
+  | OVTK_GDF_Incorrect | 1 | Incorrect classification feedback |
 - **Evidence**:
-  - `sub-02_task-MIvsRest_run-1_eeg.edf` header annotations — confirms co-occurrence of `OVTK_GDF_Tongue`, `OVTK_GDF_Feedback_Continuous`, and `OVTK_GDF_Correct`/`OVTK_GDF_Incorrect` in actual runs; `OVTK_GDF_Right` and `OVTK_GDF_Tongue` are balanced task cues (845 occurrences each); `OVTK_GDF_Feedback_Continuous` marks continuous feedback with 1689 occurrences
-  - README — describes MI vs Rest protocol with kinesthetic imagination of grasping movement of dominant hand and rest/idle condition; RUN1-RUN4 are equal, consisting of MI vs. Rest conditions
-  - `task-MIvsRest_events.json` — specifies value levels 770='MI'/772='Rest' confirming the two-condition protocol structure, though actual annotation stream uses OVTK_GDF codes
-- **Notes**: The tongue cue (`OVTK_GDF_Tongue`) serves as the rest/idle condition in this MI vs Rest protocol, as confirmed by the balanced 845/845 occurrence counts with right hand MI cue and the dataset's stated two-condition design. The feedback continuous event captures the online BCI operation state, creating a novel 3-class formulation not explicitly proposed in source literature. Epoch window inferred from midpoint between classical 0.5-2.5s and standard 0-3s approaches.
-
-### Potential Task 2: Feedback Correctness Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s *, tmax = 1.0 s *, target_events = [`OVTK_GDF_Correct`, `OVTK_GDF_Incorrect`]
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event ID | y | Meaning |
-  |----------|---|---------|
-  | `OVTK_GDF_Correct` | 0 | Correct feedback (BCI decoded intention correctly) |
-  | `OVTK_GDF_Incorrect` | 1 | Incorrect feedback (BCI decoded intention incorrectly) |
-- **Evidence**:
-- **Notes**: Balanced binary classification (697 each) of BCI feedback outcomes. Epoch window centered on feedback onset with negative tmin to capture pre-feedback anticipatory activity and positive tmax for post-feedback ERP. Not classical due to lack of published task using these specific markers; represents a derived performance-monitoring paradigm from the MI task structure.
+  - Event counts — OVTK_GDF_Correct (n=697) and OVTK_GDF_Incorrect (n=697) appear in equal numbers as paired feedback markers in runs 1-4
+  - EEG header sample (sub-02 run-1) — confirms both events present in MI vs Rest runs with feedback
+  - task-MIvsRest_events.json — value 770='MI', 772='Rest' contextualizes the BCI feedback paradigm
+  - README — RUN1-RUN4 involve MI vs Rest conditions with online BCI feedback enabling correctness prediction
+- **Notes**: Feedback events mark the BCI system's classification decision (correct/incorrect), enabling prediction of feedback correctness from EEG. Epoch window (-0.2 to 1.0s) centered on feedback onset captures error-related negativity (ERN) ~100ms and positive error potential (Pe) ~200-400ms post-feedback. Both tmin and tmax are inferred from canonical ERN/Pe component timing.
 
 ### Potential Task 3: Trial Phase Detection
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s *, tmax = 1 s *, target_events = [`OVTK_GDF_Start_Of_Trial`, `OVTK_GDF_Cross_On_Screen`, `OVTK_GDF_Feedback_Continuous`, `OVTK_GDF_End_Of_Trial`]`
+- **Epoch Parameters**: tmin = 0 s *, tmax = 2 s *, target_events = [`OVTK_GDF_Cross_On_Screen`, `OVTK_GDF_Feedback_Continuous`, `OVTK_GDF_End_Of_Trial`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
   |----------|---|---------|
-  | `OVTK_GDF_Start_Of_Trial` | 0 | Trial phase onset: trial start |
-  | `OVTK_GDF_Cross_On_Screen` | 1 | Trial phase onset: fixation cross displayed |
-  | `OVTK_GDF_Feedback_Continuous` | 2 | Trial phase onset: continuous feedback period |
-  | `OVTK_GDF_End_Of_Trial` | 3 | Trial phase onset: trial end |
+  | `OVTK_GDF_Cross_On_Screen` | 0 | fixation cross onset |
+  | `OVTK_GDF_Feedback_Continuous` | 1 | continuous feedback phase onset |
+  | `OVTK_GDF_End_Of_Trial` | 2 | trial end phase onset |
 - **Evidence**:
-- **Notes**: Four distinct trial phase markers form a multi-class classification of BCI trial structure. Phase markers indicate instantaneous state transitions; short 1-second epochs capture the neural signature at each trial phase onset. The 0.5-second tmin/tmax values are inferred from the paradigm structure (phase transitions) and are marked with *. Note: OVTK_GDF_Right and OVTK_GDF_Tongue (845 occurrences each, perfectly balanced) are motor imagery cue events, not trial phase markers, and are excluded from this phase-detection task per binding rules. OVTK_GDF_Correct/Incorrect are feedback outcome markers with different occurrence counts (697 each) and are also excluded as they represent performance feedback rather than trial phase structure.
+  - events.tsv / events.json — trial structure markers with counts: Cross_On_Screen (1691), Feedback_Continuous (1689), End_Of_Trial (1689); README confirms RUN1-RUN4 MI vs Rest paradigm with sequential trial phases
+- **Notes**: Three-class classification of cognitive/attentional state based on trial phase markers. The 2-second window captures sustained phase-specific activity. The sequential non-overlapping nature of trial phases (fixation → cue/imagery → feedback → end) ensures no within-window contamination. Note that `OVTK_GDF_Right` and `OVTK_GDF_Tongue` are condition markers (MI vs Rest) and are excluded here in favor of pure phase markers that index cognitive state independently of motor imagery content.
 
 ### Potential Task 4: Baseline vs Task State
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s *, tmax = 3 s *, target_events = [`OVTK_StimulationId_BaselineStart`, `OVTK_GDF_Right`, `OVTK_GDF_Tongue`]
+- **Epoch Parameters**: `tmin = 0 s *, tmax = 3 s *, target_events = [`OVTK_StimulationId_BaselineStart`, `OVTK_GDF_Right`]`
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
   |----------|---|---------|
-  | `OVTK_StimulationId_BaselineStart` | 0 | rest baseline period |
-  | `OVTK_GDF_Right` | 1 | active task period (motor imagery cue) |
-  | `OVTK_GDF_Tongue` | 1 | active task period (motor imagery cue) |
+  | `OVTK_StimulationId_BaselineStart` | 0 | Rest/baseline period onset |
+  | `OVTK_GDF_Right` | 1 | Active task period onset (right hand motor imagery) |
 - **Evidence**:
-- **Notes**: Both motor imagery cues (Right, Tongue) are merged into a single active task class (y=1) to form a binary rest-vs-task discrimination. The OVTK_StimulationId_BaselineStart marks inter-run rest periods (50 occurrences), while OVTK_GDF_Right and OVTK_GDF_Tongue mark active motor imagery task periods (845 each, 1690 total). This creates a severely imbalanced but fundamentally valid neural state classification. Epoch window length of 3s matches standard motor imagery analysis windows for comparability; values are inferred from task context.
+  - README — "RUN1-RUN4 were equal, consisting of MI vs.Rest conditions" with baseline periods bracketed by OVTK_StimulationId_BaselineStart/Stop markers
+  - task-MIvsRest_events.json — value 770='MI', 772='Rest' confirms two-condition paradigm
+  - EEG header sample — OVTK_StimulationId_BaselineStart and OVTK_GDF_Right both present as event annotations
+- **Notes**: This task contrasts rest/idle periods (marked by BaselineStart) with active motor imagery periods (marked by Right cue onset). The 3-second epoch window matches standard MI epoch lengths for fair comparison between conditions. OVTK_GDF_Tongue is excluded as a target event to maintain clear class separation: baseline markers unambiguously indicate rest, while Right cues indicate active task engagement. The pairing of Right/Tongue as condition markers (845 occurrences each) suggests they alternate as MI conditions; using only Right provides a clean binary rest-vs-active discrimination without needing to resolve the exact MI/Rest mapping ambiguity noted in evidence.
 
-### Potential Task 5: Age Regression from Continuous EEG
+### Potential Task 5: Age Regression from EEG
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
@@ -147,13 +142,11 @@ Participants performed kinesthetic motor imagery of grasping movements with the 
 - **Target Definition**:
   | Info Field | Range (unit) | Notes |
   |------------|--------------|-------|
-  | age | 20.0–30.0 (years) | Narrow 10-year span; all subjects right-handed; N=10 limits statistical power |
+  | age | 20–30 (years) | Continuous age from participants.tsv; narrow range with non-trivial variance (SD~3.5 years, N=10) |
 - **Evidence**:
-  - participants.tsv — age column: complete numeric data for N=10 subjects, range 20–30 years
-  - dataset_description.json — "A feasibility study of a complete low-cost consumer-grade brain-computer interface system" (Peterson et al., 2020, Heliyon)
-- **Notes**: Segmentation-based approach for subject-level trait prediction. No event structure is leveraged; 4-second windows with 50% overlap provide sufficient samples per subject for regression while preserving spectral content relevant to age-related EEG markers. The narrow age range (20–30 years) in this young-adult cohort limits predictive power but serves as proof-of-concept for biomarker extraction from low-cost EEG hardware.
+- **Notes**: Segmentation-based subject-level regression task. No event structure needed; sliding 4-second windows with 50% overlap applied across continuous 125Hz recordings to maximize data usage. Age values are native to participants.tsv (B3 archetype, raw meta level).
 
-### Potential Task 6: Gender Classification from Continuous EEG Segments
+### Potential Task 6: sex classification from EEG
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
@@ -163,34 +156,32 @@ Participants performed kinesthetic motor imagery of grasping movements with the 
 - **Target Definition**:
   | Info Field | Value | y | Meaning |
   |------------|-------|---|---------|
-  | gender | M | 0 | Male |
-  | gender | F | 1 | Female |
+  | gender | M | 0 | male |
+  | gender | F | 1 | female |
 - **Evidence**:
-- **Notes**: Binary demographic classification from 4-second non-overlapping sliding windows of continuous EEG. Small imbalanced sample (N=10, 6M/4F) with 15-channel low-cost device. Standard segmentation approach for subject-level trait prediction; 50% overlap increases effective sample size for training. Gender values derived from participants.tsv native info column.
+- **Notes**: Subject-level biomarker task using 4-second non-overlapping segments of continuous EEG. The `gender` field in participants.tsv provides binary labels (6 male, 4 female). Segmentation allows pooling many samples per subject to train a classifier that generalizes across subjects. Small sample size (N=10) limits generalizability but enables proof-of-concept sex decoding from low-cost EEG features.
 
-### Potential Task 7: Continuous EEG Segmentation with Age Label
+### Potential Task 7: continuous EEG segmentation with age label
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.0, target_events = []
+- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `info`
 - **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
   | Info Field | Range (unit) | Notes |
   |------------|--------------|-------|
-  | age | 20.0 – 30.0 (years) | Subject-level chronological age; continuous segmentation treats each 2s window as a sample with shared subject-level label. N=10 subjects with age range 20–30 years. |
+  | age | 20.0 – 30.0 (years) | Subject-level continuous age from participants.tsv; all 10 subjects right-handed |
 - **Evidence**:
-- **Notes**: Archetype C with info-native label: continuous 2-second non-overlapping segmentation of the full EEG recording (including rest baseline periods, inter-trial intervals, and task periods) without event-locked structure. The kernel does not need to compute any derived channels; age is read directly from participants.tsv. This formulation maximizes sample count from the limited 10-subject dataset for age-prediction biomarker evaluation using trait-relevant spectral features in non-task and task-contaminated periods alike. segment_length=2s and overlap=0.0 are inferred from the epoch_hint to increase sample count given small N.
+- **Notes**: Archetype C with native info field. Sliding window segmentation (4s windows, 50% overlap) applied to continuous EEG recordings across all runs (RUN0 real grasping, RUN1-RUN4 MI vs Rest). No event-based epoching required. Age is a native participants.tsv column, so Meta Level = raw. The kernel simply reads the pre-existing `age` column and assigns it to all segments from the corresponding subject.
 
 ## Data Quality Notes
 
-- `device` field is missing across all files; equipment metadata must be inferred from dataset documentation (low-cost consumer-grade 15-channel EEG system).
-- Event annotation scheme uses OVTK_GDF codes rather than the numeric value levels (770/772) specified in `task-MIvsRest_events.json`, creating a documentation-annotation mismatch that requires manual reconciliation.
-- `OVTK_GDF_Tongue` is used as the rest/idle condition marker despite its label suggesting tongue motor imagery; this semantic mismatch is confirmed by balanced trial counts (845/845) and README protocol description but may confuse users expecting standard BCI tongue motor imagery.
-- Run-0 involves actual hand movement rather than motor imagery and must be excluded from MI analyses per original study design.
-- Small sample size (N=10 subjects, 50 files) limits statistical power and generalizability of findings.
-- Narrow age range (20–30 years) restricts demographic diversity and age-related biomarker detection sensitivity.
-- Dominant hand information is complete but all subjects are right-handed, eliminating handedness as a variable of interest.
+- `device` field is missing from metadata, limiting hardware traceability for reproducibility analyses.
+- The `OVTK_GDF_Tongue` event label is repurposed from standard GDF nomenclature to indicate rest/idle condition rather than actual tongue motor imagery, which may cause confusion if interpreted literally.
+- Small sample size (N=10 subjects, 50 files) limits statistical power and cross-subject generalizability.
+- Event counts show slight imbalance between `OVTK_GDF_Start_Of_Trial` (1691) and `OVTK_GDF_End_Of_Trial` (1689), suggesting potential dropped trials or annotation edge cases.
+- The numeric code mapping (770='MI', 772='Rest') referenced in task-MIvsRest_events.json is embedded in EDF annotation values and not directly visible in annotation description strings.
 
 ## Kernel Responsibilities
 

@@ -1,39 +1,36 @@
 # A multi-modal human neuroimaging dataset for data integration: simultaneous EEG and fMRI acquisition during a motor imagery neurofeedback task: XP1
 
 **Dataset**: `openneuro_ds002336` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002336
-**Category**: Action/Output | **Subjects**: 10 | **Files (Completed)**: 107
-**Channels**: 64 | **Sampling Rate**: 5000 Hz
+**Category**: Action/Output | **Subjects**: 10 | **Files (Completed)**: 107 | **Channels**: 64 | **Sampling Rate**: 5000 Hz
+**Manual Review**:
 
 ## Paradigm
 
 Simultaneous EEG-fMRI acquisition during a kinesthetic motor imagery neurofeedback task. Subjects performed right-hand motor imagery or motor execution during sustained task blocks alternating with rest blocks, while receiving unimodal (EEG or fMRI) or bimodal neurofeedback. Each task block (Task-NF: neurofeedback, Task-ME: motor execution, Task-MI: motor imagery) is a sustained mental state lasting several seconds. BrainVision format with MRI artifact markers (TPULSE, R128) that must be excluded.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
-
+> **Kernel SHA256**: `473b878007298e99017272ff1692ffc0a62d4c34df8ef9b124a4757608ef8452`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `Rest` | 93 (files) | event | raw | Rest / baseline block |
-| `Task-NF` | 60 (files) | event | raw | Neurofeedback task block |
-| `Task-ME` | 19 (files) | event | raw | Motor execution task block |
-| `Task-MI` | 14 (files) | event | raw | Motor imagery task block |
-| `Response/R128` | 14 | admin | raw | BrainVision response trigger / MRI sync - exclude |
-| `Stimulus/S 99` | 14 | admin | raw | BrainVision stimulus code 99 - likely admin/sync |
-| `Stimulus/S 2` | 14 | admin | raw | BrainVision stimulus code 2 - likely admin/sync |
-| `Pulse Artifact/R` | 7 | admin | raw | MRI gradient pulse artifact marker - exclude |
-| `Time 0/` | 7 | admin | raw | MRI timing reference marker - exclude |
-| `TPULSE/TSTART` | 7 | admin | raw | MRI T-pulse start - exclude |
-| `TPULSE/TPEAK` | 7 | admin | raw | MRI T-pulse peak - exclude |
-| `TPULSE/TEND` | 7 | admin | raw | MRI T-pulse end - exclude |
+| `New Segment/` | 41 | admin | raw | Session/data segment start boundary marker |
+| `Rest` | 880 | event | raw | Trial phase onset: rest/baseline period |
+| `Stimulus/S  1` | 152 | event | raw | Stimulus marker S 1 (condition code 1) |
+| `Stimulus/S  2` | 740 | event | raw | Stimulus marker S 2 (condition code 2) |
 
+
+### MISC Label Summary
+| Channel | Source | Meta | Notes |
+|---|---|---|---|
+| `ECG` | native (raw misc in EEG file) | raw | Verify channel role and unit |
+| `ECG` | derived (per Task Notes) | super | Super Meta — kernel derives per-segmentation value |
+- **Candidate Labels**: `ECG`
 
 ### Info
-
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | complete | N/A |
@@ -42,23 +39,51 @@ Simultaneous EEG-fMRI acquisition during a kinesthetic motor imagery neurofeedba
 
 ## Tasks
 
-### Classical Task 1: Motor Imagery Neurofeedback Block Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 20 s, overlap = 0.0 *, target_events = [`Rest`, `Task-NF`, `Task-ME`, `Task-MI`]
-- **Label Route**: `event`
+### Potential Task 1: Age Regression from Resting-State EEG Segments
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `Rest` | 0 | Rest / baseline block |
-  | `Task-NF` | 1 | Neurofeedback task block (includes EEG-NF, fMRI-NF, EEG-fMRI-NF conditions) |
-  | `Task-ME` | 2 | Motor execution block |
-  | `Task-MI` | 3 | Motor imagery block |
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 19.0–39.0 (years) | Continuous age from participants.tsv; N=10 subjects |
 - **Evidence**:
-  - DOI: 10.1038/s41597-020-0498-3 — Describes openneuro_ds002336 dataset with 20s rest and 20s task block design, marker codes S 99 for rest and S 2 for task; classifies rest vs motor imagery/motor execution/neurofeedback blocks.
-  - DOI: 10.1101/862375 — Describes dataset containing right-hand motor imagery neurofeedback task with block design (20s rest, 20s task), classifies Rest vs Task-ME/MI/NF.
-- **Kernel Notes**: Use long-event epoching to extract 20s blocks centered on each annotation. MRI artifact markers (TPULSE/*, Pulse Artifact/R, Time 0/, Response/R128) should be excluded from analysis. Downsample from 5000 Hz to 250-1000 Hz before epoching. (replaces Classical Tasks 1-3 and Potential Task 1 from original analysis.md)
+- **Notes**: Segmentation-based task (archetype C) using native info field `age`. The kernel segments continuous EEG into 4-second windows with 50% overlap during sustained Rest periods (20s blocks yield ~7 segments per block after edge handling). Each segment inherits the subject's age as the regression target. Limited sample size (N=10) is noted as a practical constraint for this neurodevelopmental benchmarking paradigm.
+
+### Potential Task 2: sex classification from resting-state EEG segments
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `sex`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | sex | M | 0 | male |
+  | sex | F | 1 | female |
+- **Evidence**:
+  - participants.tsv — N=10 subjects with sex column (M=8, F=2), complete demographic data
+  - events.tsv (task-MIpre, task-MIpost) — Rest trial phase onset with 20s duration, providing resting-state EEG segments for feature extraction
+- **Notes**: Segmentation-based task using 4s non-overlapping windows from resting-state EEG blocks. The 'Rest' trial phase markers (20s duration) provide the source data segments. Classification is highly imbalanced (8:2 male:female ratio) with small sample size; this is noted as a limitation. Archetype C with native info field (sex) → Meta Level = raw.
+
+### Potential Task 3: ECG amplitude regression from resting-state segments
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: `segment_length = 4 s *, overlap = 0.5, target_events = []`
+- **Label Route**: `misc`
+- **Label Field**: `ECG`
+- **Meta Level**: super
+- **Target Definition**:
+  | MISC Channel | Value (unit) | Notes |
+  |---|---|---|
+  | ECG | ECG amplitude (mV or arbitrary units) | Continuous ECG signal amplitude from native ECG channel; regression target extracted per 4 s segment during resting-state periods |
+- **Evidence**:
+  - (none — Potential task)
+- **Notes**: Native ECG channel is available as a continuous misc channel in the preprocessed EEG recordings. This task segments the resting-state portions of the recording (20 s Rest blocks from MIpre/MIpost tasks, or continuous rest from NF runs) into 4-second overlapping windows and uses the ECG amplitude as a regression target. The segment_length and overlap values are inferred from the epoch hint (inferred=true) to maximize sample yield from limited rest periods. Useful for autonomic state characterization and physiological artifact modeling in simultaneous EEG-fMRI contexts. Meta Level changed to `super` because the regression target (amplitude per segment) is a derived quantity from the native ECG channel, not raw values.
 
 ## Data Quality Notes
 
@@ -67,8 +92,7 @@ Simultaneous EEG-fMRI acquisition during a kinesthetic motor imagery neurofeedba
 - Task-ME and Task-MI blocks are sparsely present (subset of sessions only).
 - Verify channel count consistency across subjects before pooling.
 
-
 ## Kernel Responsibilities
 
-> **Super Meta Required**: No
+> **Super Meta Required**: Yes
 > **Status**: wait_manual_review
