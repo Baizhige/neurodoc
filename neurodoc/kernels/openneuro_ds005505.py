@@ -1,22 +1,16 @@
-"""OpenNeuro DS005505 (HBN EEG Release 1) stage1 kernel for EEGUnity.
+"""OpenNeuro DS005505 (HBN EEG Release 1) stage-1 kernel for EEGUnity.
 
-This kernel processes the Healthy Brain Network (HBN) EEG Release 1 dataset,
-a large-scale developmental battery with 129-channel EEG recordings at 500 Hz
-collected from children and adolescents (ages 5.2–21.7).
+This kernel keeps the raw event stream intact and adds only two derived labels
+needed by the current benchmark draft:
 
-The dataset contains six experimental paradigms: naturalistic movie watching,
-eyes-open/closed resting state, sensory contrast detection, surrounding
-suppression, sequence learning, and symbol search tasks.
+1. `response_time` misc channel for contrast change detection, computed as the
+   latency between a target onset and the first subsequent button press in the
+   same trial window.
+2. `contrast_response_correct` / `contrast_response_incorrect` response-locked
+   annotations, derived from whether the button side matches the target side.
 
-Source: https://openneuro.org/datasets/ds005505
-Reference: https://doi.org/10.1101/2024.10.03.615261
-
-Channel naming: The HBN dataset uses standard 10-20 extended montage with
-129 channels. Original channel names may have prefixes like "EEG" that need
-standardization.
-
-Required info fields: age, sex, amplifier, cap, handedness, attention, ehq_total, externalizing, full_pheno, internalizing, p_factor, seqLearning6target
-Required derived misc: accuracy (from user_answer vs correct_answer), response_time
+The sequence-learning and resting-state tasks rely on native events only.
+The p-factor target is exposed as a participant-level description field.
 """
 
 from __future__ import annotations
@@ -24,19 +18,14 @@ from __future__ import annotations
 import json
 import os
 import re
-from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Dict, Optional
 
 import mne
 import numpy as np
 import pandas as pd
 
 
-# HBN 129-channel standard montage channel names (10-20 extended system)
-# Source: HBN dataset documentation and BrainVision channel files
-# Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
 _HBN_129_CHANNELS = [
-    # Standard 10-20 channels
     "Fp1", "Fpz", "Fp2",
     "AF7", "AF3", "AFz", "AF4", "AF8",
     "F7", "F5", "F3", "F1", "Fz", "F2", "F4", "F6", "F8",
@@ -47,14 +36,12 @@ _HBN_129_CHANNELS = [
     "PO7", "PO3", "POz", "PO4", "PO8",
     "O1", "Oz", "O2",
     "I1", "Iz", "I2",
-    # Extra channels for 129-channel system
     "F9", "F10",
     "FT9", "FT10",
     "TP9", "TP10",
     "P9", "P10",
     "PO9", "PO10",
     "PO1", "PO2",
-    # Reference and EOG channels commonly present
     "M1", "M2",
     "VEO", "HEO", "VEOG", "HEOG",
     "CB1", "CB2",
@@ -63,77 +50,78 @@ _HBN_129_CHANNELS = [
     "Status", "Trigger",
 ]
 
+_TARGET_TO_CORRECT_PRESS = {
+    "left_target": "left_buttonPress",
+    "right_target": "right_buttonPress",
+}
+_PRESS_LABELS = set(_TARGET_TO_CORRECT_PRESS.values())
+_DERIVED_CORRECT_EVENT = "contrast_response_correct"
+_DERIVED_INCORRECT_EVENT = "contrast_response_incorrect"
+_MAX_CONTRAST_RESPONSE_SEC = 2.5
+KERNEL_ID = "openneuro_ds005505"
+_DERIVED_EVENT_HINTS = {
+    _DERIVED_CORRECT_EVENT: {
+        "type": "event",
+        "meta_level": "super",
+        "meaning": "Response side matched the preceding contrast target",
+    },
+    _DERIVED_INCORRECT_EVENT: {
+        "type": "event",
+        "meta_level": "super",
+        "meaning": "Response side did not match the preceding contrast target",
+    },
+}
+_DERIVED_MISC_HINTS = {
+    "response_time": {
+        "source": "derived (kernel)",
+        "meta_level": "super",
+        "notes": "Latency from target onset to the first subsequent button press in the same contrast trial",
+    }
+}
+
 
 def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
-    """Build channel rename map for HBN 129-channel standard montage.
-    
-    The HBN EEG data may have channel names with various prefixes
-    (e.g., 'EEG 001', 'CH01', 'Fp1') that need standardization.
-    
-    Returns
-    -------
-    Dict[str, str]
-        Dictionary mapping original names to standard names.
-    """
-    rename_map = {}
-    existing_names = list(raw.ch_names)
+    """Build a conservative rename map for recognizable HBN channel labels."""
+    rename_map: Dict[str, str] = {}
     used_targets = set()
-    
-    for ch in existing_names:
+
+    for ch in raw.ch_names:
         cleaned = ch.strip()
-        original_cleaned = cleaned
-        
-        # Strip common prefixes: "EEG ", "EEG-", "eeg_", "CH", "Ch ", "Ch"
-        for prefix in ["EEG ", "EEG-", "eeg_", "Ch ", "CH", "Ch"]:
+        for prefix in ("EEG ", "EEG-", "eeg_", "Ch ", "CH", "Ch"):
             if cleaned.startswith(prefix):
                 cleaned = cleaned[len(prefix):].strip()
                 break
-        
-        # Handle "X1" format where X is a letter (common in some systems)
-        # e.g., "E1", "E2" -> keep number part if it maps
-        
-        # Try to match cleaned name to standard channel list
+
         target = None
-        
-        # Direct match
         if cleaned in _HBN_129_CHANNELS and cleaned not in used_targets:
             target = cleaned
-        # Case-insensitive match
-        elif cleaned.upper() in [c.upper() for c in _HBN_129_CHANNELS]:
+        elif cleaned.upper() in {c.upper() for c in _HBN_129_CHANNELS}:
             for std_ch in _HBN_129_CHANNELS:
                 if std_ch.upper() == cleaned.upper() and std_ch not in used_targets:
                     target = std_ch
                     break
-        # Handle "001", "002" -> try to map by position if we have a position map
-        # For HBN 129, numeric channels typically map to specific positions
-        # Source: HBN documentation; Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
-        
+
         if target is not None:
             rename_map[ch] = target
             used_targets.add(target)
-    
+
     return rename_map
 
 
 def _get_subject_id_from_path(file_path: str) -> Optional[str]:
-    """Extract BIDS subject ID from file path."""
-    # Match patterns like sub-NDARAB123ABC or sub-01
-    match = re.search(r'sub-([A-Za-z0-9]+)', file_path)
+    match = re.search(r"sub-([A-Za-z0-9]+)", file_path)
     if match:
         return f"sub-{match.group(1)}"
     return None
 
 
 def _find_participants_tsv(file_path: str) -> Optional[str]:
-    """Find participants.tsv file relative to the data file."""
-    # Walk up directory tree looking for participants.tsv
     current_dir = os.path.dirname(os.path.abspath(file_path))
-    for _ in range(10):  # Limit search depth
-        candidates = [
+    for _ in range(10):
+        for cand in (
             os.path.join(current_dir, "participants.tsv"),
             os.path.join(current_dir, "..", "participants.tsv"),
-        ]
-        for cand in candidates:
+        ):
             cand = os.path.normpath(cand)
             if os.path.exists(cand):
                 return cand
@@ -145,184 +133,213 @@ def _find_participants_tsv(file_path: str) -> Optional[str]:
 
 
 def _find_events_tsv(file_path: str) -> Optional[str]:
-    """Find corresponding events.tsv file for a given EEG file."""
-    # BIDS naming: sub-X_task-Y_eeg.edf -> sub-X_task-Y_events.tsv
     base = file_path.replace("_eeg.edf", "_events.tsv")
     base = base.replace("_eeg.set", "_events.tsv")
     base = base.replace("_eeg.vhdr", "_events.tsv")
     base = base.replace("_eeg.eeg", "_events.tsv")
     base = base.replace("_eeg.fif", "_events.tsv")
-    
-    # Also check in eeg/ subdirectory
+
     dir_name = os.path.dirname(file_path)
     parent_dir = os.path.dirname(dir_name)
-    
-    candidates = [
+    candidates = (
         base,
         os.path.join(dir_name, os.path.basename(base)),
         os.path.join(parent_dir, "eeg", os.path.basename(base)),
-    ]
-    
+    )
     for cand in candidates:
         cand = os.path.normpath(cand)
         if os.path.exists(cand):
             return cand
-    
-    # Try pattern matching in same directory
+
     try:
-        files_in_dir = os.listdir(dir_name)
-        for f in files_in_dir:
-            if f.endswith("_events.tsv"):
-                return os.path.join(dir_name, f)
+        for name in os.listdir(dir_name):
+            if name.endswith("_events.tsv"):
+                return os.path.join(dir_name, name)
     except OSError:
         pass
-    
     return None
 
 
 def _read_events_tsv(events_path: str) -> Optional[pd.DataFrame]:
-    """Read events.tsv file."""
     try:
-        df = pd.read_csv(events_path, sep='\t')
-        return df
-    except Exception:
-        return None
-
-
-def _events_to_annotations(events_df: pd.DataFrame, sfreq: float) -> Optional[mne.Annotations]:
-    """Convert BIDS events.tsv to MNE Annotations."""
-    if events_df is None or len(events_df) == 0:
-        return None
-    
-    # Required columns: onset, (duration), trial_type or value
-    if 'onset' not in events_df.columns:
-        return None
-    
-    onsets = events_df['onset'].values
-    
-    # Duration
-    if 'duration' in events_df.columns:
-        durations = events_df['duration'].values
-        # Handle n/a or missing
-        durations = [0.0 if pd.isna(d) or str(d).lower() in ('n/a', 'na', '') else float(d) for d in durations]
-    else:
-        durations = [0.0] * len(onsets)
-    
-    # Description: prefer trial_type, then value, then stim_type
-    if 'trial_type' in events_df.columns:
-        descriptions = events_df['trial_type'].astype(str).values
-    elif 'value' in events_df.columns:
-        # Convert to string, handling numeric values
-        descriptions = []
-        for v in events_df['value'].values:
-            if pd.isna(v):
-                descriptions.append('unknown')
-            else:
-                descriptions.append(str(v))
-    elif 'stim_type' in events_df.columns:
-        descriptions = events_df['stim_type'].astype(str).values
-    else:
-        descriptions = ['event'] * len(onsets)
-    
-    # Filter out empty descriptions
-    valid_idx = [i for i, d in enumerate(descriptions) if d and str(d).lower() not in ('nan', 'n/a', 'na', '')]
-    if len(valid_idx) == 0:
-        return None
-    
-    onsets = [onsets[i] for i in valid_idx]
-    durations = [durations[i] for i in valid_idx]
-    descriptions = [descriptions[i] for i in valid_idx]
-    
-    # Convert onsets from seconds to the format MNE expects (already in seconds for BIDS)
-    # MNE Annotations expects onsets in seconds relative to the recording start
-    try:
-        annot = mne.Annotations(
-            onset=[float(o) for o in onsets],
-            duration=[float(d) for d in durations],
-            description=descriptions,
-        )
-        return annot
+        return pd.read_csv(events_path, sep="\t")
     except Exception:
         return None
 
 
 def _read_participants_tsv(participants_path: str) -> Optional[pd.DataFrame]:
-    """Read participants.tsv file."""
     try:
-        df = pd.read_csv(participants_path, sep='\t')
-        return df
+        return pd.read_csv(participants_path, sep="\t")
     except Exception:
         return None
 
 
-def _get_subject_info_from_participants(participants_df: pd.DataFrame, subject_id: str) -> Dict[str, str]:
-    """Extract subject information from participants dataframe."""
+def _get_subject_info_from_participants(
+    participants_df: pd.DataFrame, subject_id: str
+) -> Dict[str, str]:
     if participants_df is None or len(participants_df) == 0:
         return {}
-    
-    # Find row matching subject_id
-    # BIDS participant_id column typically has format "sub-NDARAB123ABC"
-    participant_id_col = 'participant_id'
+
+    participant_id_col = "participant_id"
     if participant_id_col not in participants_df.columns:
-        # Try alternatives
         for col in participants_df.columns:
-            if col.lower() in ('participant_id', 'subject_id', 'sub_id'):
+            if col.lower() in ("participant_id", "subject_id", "sub_id"):
                 participant_id_col = col
                 break
-    
     if participant_id_col not in participants_df.columns:
         return {}
-    
-    # Match subject_id - handle both "sub-NDARAB123ABC" and "NDARAB123ABC" formats
-    search_id = subject_id if subject_id.startswith('sub-') else f"sub-{subject_id}"
-    search_id_short = subject_id.replace('sub-', '') if subject_id.startswith('sub-') else subject_id
-    
+
+    search_id = subject_id if subject_id.startswith("sub-") else f"sub-{subject_id}"
+    search_id_short = search_id.replace("sub-", "")
     mask = (
-        (participants_df[participant_id_col].astype(str) == search_id) |
-        (participants_df[participant_id_col].astype(str) == search_id_short)
+        (participants_df[participant_id_col].astype(str) == search_id)
+        | (participants_df[participant_id_col].astype(str) == search_id_short)
     )
-    
-    matching_rows = participants_df[mask]
-    if len(matching_rows) == 0:
+    if not mask.any():
         return {}
-    
-    row = matching_rows.iloc[0]
-    info = {}
+
+    row = participants_df[mask].iloc[0]
+    info: Dict[str, str] = {}
     for col in participants_df.columns:
         val = row[col]
-        if pd.isna(val):
-            info[col] = ""
-        else:
-            info[col] = str(val)
-    
+        info[col] = "" if pd.isna(val) else str(val)
     return info
 
 
-def _find_task_from_path(file_path: str) -> Optional[str]:
-    """Extract BIDS task name from file path."""
-    match = re.search(r'task-([a-zA-Z0-9]+)', file_path)
-    if match:
-        return match.group(1)
-    return None
+def _normalize_event_label(value: object) -> str:
+    if value is None or pd.isna(value):
+        return ""
+    text = str(value).strip()
+    if text.lower() in ("", "nan", "n/a", "na", "none"):
+        return ""
+    return text
+
+
+def _prepare_events(events_df: Optional[pd.DataFrame]) -> Optional[pd.DataFrame]:
+    if events_df is None or len(events_df) == 0 or "onset" not in events_df.columns:
+        return None
+
+    df = events_df.copy()
+    label_col = None
+    for cand in ("trial_type", "value", "stim_type"):
+        if cand in df.columns:
+            label_col = cand
+            break
+    if label_col is None:
+        df["_label"] = ""
+    else:
+        df["_label"] = df[label_col].map(_normalize_event_label)
+
+    df["_onset_sec"] = pd.to_numeric(df["onset"], errors="coerce")
+    if "duration" in df.columns:
+        df["_duration_sec"] = pd.to_numeric(df["duration"], errors="coerce").fillna(0.0)
+    else:
+        df["_duration_sec"] = 0.0
+
+    df = df.dropna(subset=["_onset_sec"]).copy()
+    df = df[df["_label"] != ""].sort_values("_onset_sec").reset_index(drop=True)
+    return df
+
+
+def _events_to_annotations(events_df: Optional[pd.DataFrame]) -> Optional[mne.Annotations]:
+    if events_df is None or len(events_df) == 0:
+        return None
+    try:
+        return mne.Annotations(
+            onset=events_df["_onset_sec"].astype(float).tolist(),
+            duration=events_df["_duration_sec"].astype(float).tolist(),
+            description=events_df["_label"].astype(str).tolist(),
+        )
+    except Exception:
+        return None
+
+
+def _build_contrast_derivatives(
+    events_df: Optional[pd.DataFrame], sfreq: float, n_times: int
+) -> tuple[np.ndarray, Optional[mne.Annotations]]:
+    response_time = np.full((1, n_times), np.nan, dtype=float)
+    if events_df is None or len(events_df) == 0:
+        return response_time, None
+
+    records = events_df[["_label", "_onset_sec"]].to_dict("records")
+    derived_onsets = []
+    derived_durations = []
+    derived_descriptions = []
+
+    for idx, record in enumerate(records):
+        target_label = record["_label"]
+        if target_label not in _TARGET_TO_CORRECT_PRESS:
+            continue
+
+        target_onset = float(record["_onset_sec"])
+        next_target_onset = None
+        press_record = None
+
+        for future in records[idx + 1:]:
+            future_label = future["_label"]
+            future_onset = float(future["_onset_sec"])
+
+            if future_label in _TARGET_TO_CORRECT_PRESS:
+                next_target_onset = future_onset
+                break
+
+            if future_label in _PRESS_LABELS:
+                if future_onset - target_onset > _MAX_CONTRAST_RESPONSE_SEC:
+                    break
+                press_record = future
+                break
+
+        if press_record is None:
+            continue
+
+        press_onset = float(press_record["_onset_sec"])
+        if next_target_onset is not None and press_onset >= next_target_onset:
+            continue
+
+        rt = press_onset - target_onset
+        if rt <= 0:
+            continue
+
+        start_sample = max(0, min(int(round(target_onset * sfreq)), n_times - 1))
+        end_sample = max(start_sample + 1, min(int(round(press_onset * sfreq)), n_times))
+        response_time[0, start_sample:end_sample] = rt
+
+        derived_onsets.append(press_onset)
+        derived_durations.append(0.0)
+        if press_record["_label"] == _TARGET_TO_CORRECT_PRESS[target_label]:
+            derived_descriptions.append(_DERIVED_CORRECT_EVENT)
+        else:
+            derived_descriptions.append(_DERIVED_INCORRECT_EVENT)
+
+    if not derived_onsets:
+        return response_time, None
+
+    derived_annotations = mne.Annotations(
+        onset=derived_onsets,
+        duration=derived_durations,
+        description=derived_descriptions,
+    )
+    return response_time, derived_annotations
 
 
 class OpenNeuroDS005505Kernel:
     """Stage-1 kernel for OpenNeuro DS005505 (HBN EEG Release 1)."""
-    
+
     DATASET_NAME = "openneuro_ds005505"
     DATASET_PATH = "openneuro/ds005505"
-    
+
     def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
-        file_path = str(row.get("file_path", "")) if hasattr(row, "get") else str(getattr(row, "file_path", ""))
-        subject_id = _get_subject_id_from_path(file_path)
-        task_name = _find_task_from_path(file_path)
-        
-        # Read participants.tsv for subject info
+        file_path = str(row["File Path"])
+        subject_id = _get_subject_id_from_path(file_path) or ""
+
         participants_path = _find_participants_tsv(file_path)
         participants_df = _read_participants_tsv(participants_path) if participants_path else None
-        subject_info = _get_subject_info_from_participants(participants_df, subject_id) if participants_df else {}
-        
-        # Build eegunity_description with required fields from participants.tsv
+        subject_info = (
+            _get_subject_info_from_participants(participants_df, subject_id)
+            if participants_df is not None and subject_id
+            else {}
+        )
+
         eegunity_description = {
             "age": subject_info.get("age", ""),
             "sex": subject_info.get("sex", ""),
@@ -337,20 +354,13 @@ class OpenNeuroDS005505Kernel:
             "p_factor": subject_info.get("p_factor", ""),
             "seqLearning6target": subject_info.get("seqLearning6target", ""),
         }
-        
-        # Set description as JSON string (MNE requires string, not dict)
-        original_desc = raw.info.get("description", "")
-        raw.info["description"] = json.dumps({
-            "original_description": original_desc,
-            "eegunity_description": eegunity_description,
-        })
-        
-        # Standardize channel names
+
+        original_description = raw.info.get("description", "")
+
         rename_map = _build_channel_rename_map(raw)
         if rename_map:
             raw = raw.rename_channels(rename_map)
-        
-        # Set standard 10-20 extended montage if possible
+
         try:
             montage = mne.channels.make_standard_montage("GSN-HydroCel-129")
             raw.set_montage(montage, match_case=False, match_alias=True, on_missing="ignore")
@@ -360,84 +370,52 @@ class OpenNeuroDS005505Kernel:
                 raw.set_montage(montage, match_case=False, match_alias=True, on_missing="ignore")
             except Exception:
                 pass
-        
-        # Process events from events.tsv
+
         events_path = _find_events_tsv(file_path)
-        events_df = _read_events_tsv(events_path) if events_path else None
-        
+        events_df = _prepare_events(_read_events_tsv(events_path) if events_path else None)
         if events_df is not None and len(events_df) > 0:
-            # Convert events to annotations and add to raw
-            annot = _events_to_annotations(events_df, raw.info["sfreq"])
-            if annot is not None:
-                # Check if raw already has annotations
+            native_annotations = _events_to_annotations(events_df)
+            if native_annotations is not None:
                 if raw.annotations is not None and len(raw.annotations) > 0:
-                    # Combine existing with new
-                    raw.set_annotations(raw.annotations + annot)
+                    raw.set_annotations(raw.annotations + native_annotations)
                 else:
-                    raw.set_annotations(annot)
-        
-        # Create derived misc channels: accuracy and response_time
-        # These are derived from events.tsv columns if available
-        n_times = len(raw.times)
-        sfreq = raw.info["sfreq"]
-        
-        # accuracy: from user_answer vs correct_answer in events.tsv
-        accuracy_data = None
-        if events_df is not None:
-            if "user_answer" in events_df.columns and "correct_answer" in events_df.columns:
-                # Create trial-locked step function
-                if "onset" in events_df.columns:
-                    accuracy_data = np.zeros((1, n_times))
-                    for _, ev_row in events_df.iterrows():
-                        onset_sample = int(float(ev_row["onset"]) * sfreq)
-                        if onset_sample < n_times:
-                            user_ans = str(ev_row.get("user_answer", "")).strip().lower()
-                            correct_ans = str(ev_row.get("correct_answer", "")).strip().lower()
-                            if user_ans and correct_ans and user_ans not in ("n/a", "na", "", "nan"):
-                                acc = 1.0 if user_ans == correct_ans else 0.0
-                            else:
-                                acc = np.nan
-                            end_sample = min(onset_sample + int(sfreq), n_times)  # 1 second duration or to end
-                            accuracy_data[0, onset_sample:end_sample] = acc
-                    # Fill NaN with 0 for finite requirement, or use np.nan_to_num
-                    accuracy_data = np.nan_to_num(accuracy_data, nan=0.0)
-        
-        if accuracy_data is None:
-            # Constant broadcast from participants.tsv if available, else zeros
-            accuracy_val = float(subject_info.get("accuracy", 0.0)) if "accuracy" in subject_info else 0.0
-            accuracy_data = np.full((1, n_times), accuracy_val)
-        
-        # response_time: from events.tsv
-        response_time_data = None
-        if events_df is not None:
-            if "response_time" in events_df.columns:
-                if "onset" in events_df.columns:
-                    response_time_data = np.zeros((1, n_times))
-                    for _, ev_row in events_df.iterrows():
-                        onset_sample = int(float(ev_row["onset"]) * sfreq)
-                        if onset_sample < n_times:
-                            rt = ev_row.get("response_time", 0.0)
-                            try:
-                                rt_val = float(rt) if not pd.isna(rt) else 0.0
-                            except (ValueError, TypeError):
-                                rt_val = 0.0
-                            end_sample = min(onset_sample + int(sfreq), n_times)
-                            response_time_data[0, onset_sample:end_sample] = rt_val
-        
-        if response_time_data is None:
-            # Constant broadcast from participants.tsv if available, else zeros
-            rt_val = float(subject_info.get("response_time", 0.0)) if "response_time" in subject_info else 0.0
-            response_time_data = np.full((1, n_times), rt_val)
-        
-        # Add misc channels using add_channels
-        info_acc = mne.create_info(ch_names=["accuracy"], sfreq=sfreq, ch_types=["misc"])
-        raw_acc = mne.io.RawArray(accuracy_data, info_acc, first_samp=raw.first_samp)
-        
-        info_rt = mne.create_info(ch_names=["response_time"], sfreq=sfreq, ch_types=["misc"])
-        raw_rt = mne.io.RawArray(response_time_data, info_rt, first_samp=raw.first_samp)
-        
-        raw = raw.add_channels([raw_acc, raw_rt], force_update_info=True)
-        
+                    raw.set_annotations(native_annotations)
+
+        response_time_data, contrast_annotations = _build_contrast_derivatives(
+            events_df, raw.info["sfreq"], len(raw.times)
+        )
+
+        derived_event_hints = {}
+        if contrast_annotations is not None:
+            if raw.annotations is not None and len(raw.annotations) > 0:
+                raw.set_annotations(raw.annotations + contrast_annotations)
+            else:
+                raw.set_annotations(contrast_annotations)
+            derived_event_hints = _DERIVED_EVENT_HINTS
+
+        derived_misc_hints = {}
+        if np.isfinite(response_time_data).any() and "response_time" not in raw.ch_names:
+            info_rt = mne.create_info(
+                ch_names=["response_time"],
+                sfreq=raw.info["sfreq"],
+                ch_types=["misc"],
+            )
+            raw_rt = mne.io.RawArray(response_time_data, info_rt, first_samp=raw.first_samp)
+            raw = raw.add_channels([raw_rt], force_update_info=True)
+            derived_misc_hints = _DERIVED_MISC_HINTS
+
+        raw.info["description"] = json.dumps(
+            {
+                "original_description": original_description,
+                "eegunity_description": eegunity_description,
+                "eegunity_scan_hints": {
+                    "events": derived_event_hints,
+                    "misc_channels": derived_misc_hints,
+                },
+            },
+            ensure_ascii=False,
+        )
+
         return raw
 
 

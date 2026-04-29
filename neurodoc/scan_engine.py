@@ -635,22 +635,37 @@ def _normalize_sampled_indices(sampled_indices: Optional[List[int]], n_files: in
 
 
 def _extract_misc_channels(udataset, stdout_lines: List[str]) -> List[str]:
-    """Return sorted unique misc channel names by reading the first locator entry.
+    """Return sorted unique misc channel names by probing multiple scan rows.
 
-    Misc channel names are typically uniform across a dataset (all files share the
-    same channel layout after the kernel runs), so sampling the first file is enough.
+    Some kernels add task-specific misc channels that only appear on a subset of
+    recordings, so reading only the first file can miss valid derived channels.
+    This helper scans forward until it has seen a stable misc-channel set.
     """
     locator = udataset.get_shared_attr()["locator"]
     if locator.empty:
         return []
+    misc_names: set[str] = set()
+    stable_without_new = 0
     try:
-        raw = udataset.eeg_parser.get_data(0, preload=False)
-        misc_names = sorted(
-            n for n, t in zip(raw.ch_names, raw.get_channel_types()) if t == "misc"
-        )
-        if misc_names:
-            stdout_lines.append(f"  Misc channels detected: {misc_names}")
-        return misc_names
+        for idx in range(len(locator)):
+            raw = udataset.eeg_parser.get_data(idx, preload=False)
+            current = {
+                n for n, t in zip(raw.ch_names, raw.get_channel_types()) if t == "misc"
+            }
+            prev_len = len(misc_names)
+            misc_names.update(current)
+            if len(misc_names) > prev_len:
+                stable_without_new = 0
+            elif misc_names:
+                stable_without_new += 1
+
+            if misc_names and stable_without_new >= 32:
+                break
+
+        misc_names_sorted = sorted(misc_names)
+        if misc_names_sorted:
+            stdout_lines.append(f"  Misc channels detected: {misc_names_sorted}")
+        return misc_names_sorted
     except Exception as exc:
         stdout_lines.append(f"  [WARN] Could not extract misc channels: {exc}")
         return []
