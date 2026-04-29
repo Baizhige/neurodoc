@@ -12,6 +12,7 @@ from flask import Flask, jsonify, request, send_from_directory, abort
 
 APP_DIR = Path(__file__).parent
 from . import template_checker
+from .strict_tasks import generate_tasks_phase2_strict
 from neurodoc.api import (
     anthropic_to_openai_response,
     call_llm_text,
@@ -954,71 +955,40 @@ def api_refs_phase1(name):
 
 @app.route("/api/tasks/phase2/<name>", methods=["POST"])
 def api_tasks_phase2(name):
-    """Phase-2: epoch alignment (2-1) then task synthesis + self-check (2-2)."""
+    """Strict Phase-2 task regeneration using the doc-only/reference-only synthesis pipeline."""
     if name in EXCLUDE_DIRS or ".." in name:
         abort(400)
     data = request.get_json(silent=True) or {}
-    # Accept both supporting (old) and extractions (new)
     extractions = data.get("extractions", data.get("supporting", []))
 
-    analysis_md = ""
     analysis_path = DATASET_DIR / name / "analysis.md"
-    if analysis_path.exists():
-        analysis_md = analysis_path.read_text(encoding="utf-8", errors="replace")
+    if not analysis_path.exists():
+        abort(404)
+    analysis_md = analysis_path.read_text(encoding="utf-8", errors="replace")
 
-    category  = _category_from_md(analysis_md)
+    category = _category_from_md(analysis_md)
     skill_text = _load_skill(category)
 
-    # ── Phase-2-1: epoch alignment ────────────────────────────────────────────
-    p21_result = None
     try:
-        p21_msg = _build_p21_user_msg(name, analysis_md, skill_text, extractions)
-        p21_raw = _call_llm([
-            {"role": "system", "content": _P21_SYSTEM},
-            {"role": "user",   "content": p21_msg},
-        ], timeout=120)
-        p21_result, _ = _parse_llm_json(p21_raw)
-    except Exception:
-        pass  # Non-fatal: Phase-2-2 will proceed without alignment hint
-
-    # ── Phase-2-2: synthesis + self-check ────────────────────────────────────
-    p22_msg = _build_p22_user_msg(name, analysis_md, extractions, p21_result, skill_text)
-    try:
-        p22_raw = _call_llm([
-            {"role": "system", "content": _P22_SYSTEM},
-            {"role": "user",   "content": p22_msg},
-        ], timeout=300)
-        parsed, err = _parse_llm_json(p22_raw)
-        if parsed is None:
-            # Fallback: extract tasks_section from raw markdown
-            stripped = re.sub(r"<think>[\s\S]*?</think>", "", p22_raw,
-                              flags=re.IGNORECASE).strip()
-            m = re.search(r"(##\s*Tasks[\s\S]+)", stripped)
-            if m:
-                ts = m.group(1).strip()
-                return jsonify({"tasks_section": ts,
-                                "num_classical_tasks": -1, "num_potential_tasks": -1,
-                                "p21": p21_result, "summary": "",
-                                "semantic_errors": _check_tasks_fragment(ts, name)})
-            m2 = re.search(r"(###\s+(?:Classical|Potential)\s+Task[\s\S]+)", stripped)
-            if m2:
-                ts = "## Tasks\n\n" + m2.group(1).strip()
-                return jsonify({"tasks_section": ts,
-                                "num_classical_tasks": -1, "num_potential_tasks": -1,
-                                "p21": p21_result, "summary": "",
-                                "semantic_errors": _check_tasks_fragment(ts, name)})
-            return jsonify({"error": f"Phase-2-2 parse failed: {err}",
-                            "p21": p21_result}), 502
-
-        parsed["p21"] = p21_result
-        if isinstance(parsed, dict) and parsed.get("tasks_section"):
-            parsed["semantic_errors"] = _check_tasks_fragment(
-                parsed["tasks_section"], name, analysis_md=analysis_md
-            )
-        return jsonify(parsed)
+        result = generate_tasks_phase2_strict(
+            dataset_name=name,
+            extractions=extractions,
+            analysis_md=analysis_md,
+            skill_text=skill_text,
+            llm_config_path=CONFIG_FILE,
+        )
+        return jsonify(result)
     except Exception as e:
-        return jsonify({"error": str(e), "p21": p21_result}), 500
-
+        return jsonify({
+            "ok": False,
+            "tasks_section": "",
+            "summary": "",
+            "semantic_errors": [],
+            "hard_fail_reason": str(e),
+            "grounding_summary": {"logs": []},
+            "generation_mode": "doc_only_v2_strict",
+            "error": str(e),
+        }), 500
 
 if __name__ == "__main__":
     print("EEG Audit Tool running at http://127.0.0.1:5000")
