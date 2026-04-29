@@ -2,6 +2,7 @@
 
 **Dataset**: `other_seed` | **Year**: 2015 | **URL**: https://bcmi.sjtu.edu.cn<LOCAL_HOME>/
 **Category**: High-level Mental | **Subjects**: 15 | **Files (Completed)**: 81 | **Channels**: 62 | **Sampling Rate**: 1000 Hz
+**Manual Review**:
 
 ## Paradigm
 
@@ -9,16 +10,28 @@ The SEED (SJTU Emotion EEG Dataset) was collected from 15 subjects who watched 1
 
 ## File Scan Result
 
-
-> **Kernel SHA256**: `b0fb53a13b65ddd627a459885811c0110078172e3fe0af22802920a04880cb10`
+> **Kernel SHA256**: `b007ef59fd365c24a093fcb83b5f9c9f5884c598254eb434790690005d69d31b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
+| `0` | 2 | admin | raw | System trigger code |
+| `255` | 4 | admin | raw | System trigger code |
+| `KeyPad Response 1` | 4 | event | raw | Trial phase onset: KeyPad Response 1 |
+| `KeyPad Response 13` | 2 | event | raw | Trial phase onset: KeyPad Response 13 |
+| `KeyPad Response 15` | 8 | event | raw | Trial phase onset: KeyPad Response 15 |
+| `KeyPad Response 4` | 2 | event | raw | Trial phase onset: KeyPad Response 4 |
+| `KeyPad Response 7` | 2 | event | raw | Trial phase onset: KeyPad Response 7 |
 
 
+### MISC Label Summary
+| Channel | Source | Meta | Notes |
+|---|---|---|---|
+| `M1` | native (raw misc in EEG file) | raw | Verify channel role and unit |
+| `M2` | native (raw misc in EEG file) | raw | Verify channel role and unit |
+- **Candidate Labels**: `M1`, `M2`
 
 ### Info
 | Field | Completeness | Notes |
@@ -29,69 +42,63 @@ The SEED (SJTU Emotion EEG Dataset) was collected from 15 subjects who watched 1
 
 ## Tasks
 
-### Classical Task 1: Three-class Emotion Valence Classification (Positive/Neutral/Negative)
+### Classical Task 1: binary positive vs negative emotion classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4.0 s, overlap = 2.0 s *
+- **Epoch Parameters**: segment_length = 4 s *, overlap = 2.0 *, target_events = []
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Label | y | Meaning |
-  |-------|---|---------|
-  | `positive` | 0 | Positive emotion (valence +1) |
-  | `neutral` | 1 | Neutral emotion (valence 0) |
-  | `negative` | 2 | Negative emotion (valence -1) |
-- **Super Meta Notes**: Derived from experimental stimulus protocol (film clips designed to elicit specific emotions). Labels stored in companion `*_label.mat` files (+1 positive, 0 neutral, -1 negative). Kernel must align EEG epochs with label files by subject ID and session ID (trial order within each session).
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `emotion_valence_binary` | `+1` | 0 | positive emotion |
+  | `emotion_valence_binary` | `-1` | 1 | negative emotion |
 - **Evidence**:
-  - DOI: 10.1007/s12559-025-10516-z — Fuzzy linguistic summarization with Russell's circumplex model achieved 80% accuracy classifying SEED EEG into three valence categories using frontal alpha/beta bands.
-  - DOI: 10.3389/fnins.2018.00162 — Used 4-s sliding window with 2-s overlap from middle 1-minute of each 4-min trial for 3-class emotion recognition.
-- **Kernel Notes**: Segment continuous EEG into 4-s windows with 2-s overlap. For each window, record subject ID and session ID. Load valence labels from corresponding `*_label.mat` file and map: +1→positive (y=0), 0→neutral (y=1), -1→negative (y=2). (replaces Classical Task 1 from original analysis.md)
+  - https://bcmi.sjtu.edu.cn<LOCAL_HOME>/ — SEED dataset homepage describing emotion induction via film clips with positive/neutral/negative labels
+  - 10.3389/fnins.2018.00162 — SEED paper establishing 3-class valence paradigm; binary positive/negative reduction is standard derivative analysis
+- **Notes**: Kernel must derive `emotion_valence_binary` from `events.tsv:label` (sourced from *_label.mat files). Load label file, filter to +1 and -1 trials excluding 0/neutral, then broadcast binary labels to 4-second sliding windows with 2-second overlap. Same segmentation approach as 3-class task but with cleaner binary discrimination boundary. Reduces from 15 to ~10 trials per session depending on label distribution.
 
-### Classical Task 2: Binary Emotion Classification (Positive vs Negative)
+### Potential Task 1: binary high vs low arousal emotion classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4.0 s, overlap = 2.0 s *
+- **Epoch Parameters**: segment_length = 4 s *, overlap = 2.0 *, target_events = []
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Label | y | Meaning |
-  |-------|---|---------|
-  | `positive` | 0 | Positive emotion (valence +1) |
-  | `negative` | 1 | Negative emotion (valence -1) |
-- **Super Meta Notes**: Derived from SEED label files (+1 positive, -1 negative). Neutral trials (valence 0) discarded. Kernel aligns EEG epochs with external label files by subject and session.
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `emotion_arousal_binary` | 0 | 0 | low arousal (neutral valence) |
+  | `emotion_arousal_binary` | 1 | 1 | high arousal (positive or negative valence) |
 - **Evidence**:
-  - DOI: 10.3389/fnins.2018.00162 — Binary cross-subject emotion classification (positive vs negative) using 4-s sliding window with 2-s overlap from middle 1-minute segment of each 4-minute trial, achieving cross-subject generalization.
-- **Kernel Notes**: Same segmentation as Classical Task 1, but filter to only positive (y=0) and negative (y=1) classes. Neutral labels are excluded.
+  - 10.1007/s12559-025-10516-z — Russell's circumplex model cited as theoretical framework for SEED emotion analysis
+  - Preprocessed_EEG/readme.txt — confirms three valence labels: 1=positive, 0=neutral, -1=negative
+- **Notes**: Derived misc channel implementing Russell's circumplex model: valence labels {+1, -1} (positive/negative emotions) both imply higher arousal than neutral (0), collapsed to binary arousal. Kernel must load *_label.mat files, map valence to arousal, and broadcast per-trial labels to all segments within each trial.
 
-### Potential Task 1: Emotion Valence Classification - 3-Class (epoch_by_segmentation + external labels)
+### Potential Task 2: Keypad Response Detection
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4.0 s, overlap = 2.0 s
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s *, tmax = 1.0 s *, target_events = [`KeyPad Response 1`, `KeyPad Response 4`, `KeyPad Response 7`, `KeyPad Response 13`, `KeyPad Response 15`]
 - **Label Route**: `event`
-- **Target Definition**: N/A from EEG annotations - apply labels post-hoc from `*_label.mat`:
-- **Notes**: Segment the EEG into fixed windows during each video clip period. Map each epoch to the clip's valence label from the corresponding `*_label.mat` file. The kernel records subject ID and session ID in the description field to help align with label files.
-
-| Label | y | Meaning |
-|-------|---|---------|
-| `+1` | 0 | Positive emotion |
-| `0` | 1 | Neutral emotion |
-| `-1` | 2 | Negative emotion |
-
-### Potential Task 2: Binary Emotion Classification - Positive vs. Negative (epoch_by_segmentation)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation`
-- **Epoch Parameters**: segment_length = 4.0 s, overlap = 2.0 s
-- **Label Route**: `event`
-- **Target Definition**: Needs verification.
-- **Notes**: Use positive (y=0) and negative (y=2) labels only; discard neutral trials.
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `KeyPad Response 1` | 0 | Trial phase onset: KeyPad Response 1 |
+  | `KeyPad Response 4` | 1 | Trial phase onset: KeyPad Response 4 |
+  | `KeyPad Response 7` | 2 | Trial phase onset: KeyPad Response 7 |
+  | `KeyPad Response 13` | 3 | Trial phase onset: KeyPad Response 13 |
+  | `KeyPad Response 15` | 4 | Trial phase onset: KeyPad Response 15 |
+- **Evidence**:
+- **Notes**: Five-class classification of distinct keypad button press responses during emotion viewing task. Highly imbalanced class distribution (Response 15: 8 occurrences; others: 2-4 each). No semantic mapping of keypad numbers to response meanings was found in dataset documentation. The epoch window (-0.5 to 1.0s) targets motor/response-related ERP components including readiness potential and post-response processing. Consider merging classes or treating as binary response vs. non-response if sample size proves insufficient.
 
 ## Data Quality Notes
 
-- **Emotion labels are not embedded in EEG files**; they must be loaded from companion `*_label.mat` files and aligned with EEG epochs by trial order.
-- EEG events `0` and `255` are file-format markers; exclude from all analyses.
-- 3 sessions per subject on different days; within-session and cross-session analyses are common.
-- 15 video clips per session x 3 sessions x 15 subjects = 675 trials total.
-- NeuroScan `.cnt` format; 62-channel standard 10-20 EEG montage.
+- Emotion valence labels (+1, 0, -1) are stored in external `*_label.mat` files and are **not embedded** in raw `.cnt` EEG recordings; kernel must implement external label loading and alignment by subject/session ID.
+- Event structure in raw files contains only sparse keypad response markers (`KeyPad Response 1/4/7/13/15`) and system trigger codes (`0`, `255`); no trial onset or emotion condition markers are present in the EEG event stream.
+- Keypad response events are highly imbalanced (Response 15: 8 occurrences; others: 2-4 each), limiting statistical power for response classification tasks.
+- No semantic mapping of keypad numbers to actual response meanings was found in dataset documentation.
+- `subject_age`, `subject_sex`, and `device` fields are missing from file metadata; demographic and equipment information must be inferred from the original SEED publication.
+- MISC channels `M1` and `M2` are present in raw files but their roles (reference, EOG, or other) and units require verification.
 
 ## Kernel Responsibilities
 

@@ -1281,7 +1281,7 @@ function getEventStructureFromRawContent() {
   for (const row of (esM[1].match(/^\|[^|\n]+\|[^\n]*/gm) || [])) {
     const cols = row.split('|').slice(1).map(c => c.trim());
     // cols: Event ID, Count, Type, Meta Level, Meaning  (5 columns)
-    const id = cols[0]?.replace(/^`|`$/g, '') || '';
+    const id = cleanQuotedToken(cols[0] || '');
     if (!id || id.toLowerCase() === 'event id' || /^-+$/.test(id)) continue;
     if (seen.has(id)) continue;
     seen.add(id);
@@ -1290,7 +1290,62 @@ function getEventStructureFromRawContent() {
   return result;
 }
 
+function getMiscFieldsFromRawContent() {
+  const fsrM = rawContent.match(/## File Scan Result([\s\S]*?)(?=\n## |\n# |\Z)/);
+  if (!fsrM) return [];
+  const miscM = fsrM[1].match(/### MISC Label Summary([\s\S]*?)(?=\n### |\n## |\Z)/);
+  if (!miscM) return [];
+  const seen = new Set();
+  const result = [];
+  for (const row of (miscM[1].match(/^\|[^|\n]+\|[^\n]*/gm) || [])) {
+    const cols = row.split('|').slice(1).map(c => c.trim());
+    const field = cleanQuotedToken(cols[0] || '');
+    if (!field || field.toLowerCase() === 'channel' || /^-+$/.test(field) || seen.has(field)) continue;
+    seen.add(field);
+    result.push(field);
+  }
+  return result;
+}
+
+function getInfoFieldsFromRawContent() {
+  const fsrM = rawContent.match(/## File Scan Result([\s\S]*?)(?=\n## |\n# |\Z)/);
+  if (!fsrM) return [];
+  const infoM = fsrM[1].match(/### Info([\s\S]*?)(?=\n### |\n## |\Z)/);
+  if (!infoM) return [];
+  const seen = new Set();
+  const result = [];
+  for (const row of (infoM[1].match(/^\|[^|\n]+\|[^\n]*/gm) || [])) {
+    const cols = row.split('|').slice(1).map(c => c.trim());
+    const field = cleanQuotedToken(cols[0] || '');
+    if (!field || field.toLowerCase() === 'field' || /^-+$/.test(field) || seen.has(field)) continue;
+    seen.add(field);
+    result.push(field);
+  }
+  return result;
+}
+
 // ─── Epoch Params Helpers ─────────────────────────────────────────────────────
+function cleanQuotedToken(value) {
+  let out = (value || '').trim();
+  let changed = true;
+  while (out && changed) {
+    changed = false;
+    if ((out.startsWith('`') && out.endsWith('`')) ||
+        (out.startsWith('"') && out.endsWith('"')) ||
+        (out.startsWith("'") && out.endsWith("'"))) {
+      out = out.slice(1, -1).trim();
+      changed = true;
+    }
+  }
+  return out;
+}
+
+function normalizeLabelRouteValue(value) {
+  const cleaned = cleanQuotedToken(value).toLowerCase();
+  if (cleaned === 'annotation' || cleaned === 'stim') return 'event';
+  return cleaned;
+}
+
 function parseEpochParams(epLine, method) {
   const get = (key) => {
     const m = epLine.match(new RegExp(`${escRe(key)}\\s*=\\s*([^,*\\]\\n]+)`));
@@ -1308,7 +1363,7 @@ function parseEpochParams(epLine, method) {
     const backticked = [...inner.matchAll(/`([^`]+)`/g)].map(m=>m[1]);
     result.target_events = backticked.length
       ? backticked
-      : inner.split(',').map(s=>s.trim().replace(/^`|`$/g,'')).filter(Boolean);
+      : inner.split(',').map(s => cleanQuotedToken(s)).filter(Boolean);
   }
   // Extract custom params: any key=value not in required set
   const required = new Set(['tmin','tmax','overlap','segment_length','target_events']);
@@ -1823,9 +1878,9 @@ function parseTasks(body) {
     };
     task.taskType = fv('Task Type') || 'classification';
     task.epochMethod = fv('Epoch Method') || 'epoch_by_event_hdf5';
-    task.metaLevel = fv('Meta Level') || 'raw';
-    task.labelRoute = fv('Label Route') || 'event';
-    task.labelField = fv('Label Field') || '';
+    task.metaLevel = cleanQuotedToken(fv('Meta Level') || 'raw') || 'raw';
+    task.labelRoute = normalizeLabelRouteValue(fv('Label Route') || 'event') || 'event';
+    task.labelField = cleanQuotedToken(fv('Label Field') || '');
     task.epochParams = parseEpochParams(fv('Epoch Parameters'), task.epochMethod);
 
     const tdb = getTaskBlockField(part, 'Target Definition');
@@ -1833,18 +1888,18 @@ function parseTasks(body) {
       if (tdb.includes('|')) {
         const { rows } = parseMarkdownTable(tdb);
         const mode = tdMode(task);
-        task.targetRows = rows.map(r => tdRowFromCells(mode, r.map(c => (c||'').replace(/^`|`$/g,''))));
+        task.targetRows = rows.map(r => tdRowFromCells(mode, r.map(c => cleanQuotedToken(c || ''))));
         // misc: labelField = channel from first row (or existing).
         if (task.labelRoute === 'misc') {
-          const first = task.targetRows[0]?.label || '';
+          const first = cleanQuotedToken(task.targetRows[0]?.label || '');
           task.miscChannel = first;
           if (!task.labelField) task.labelField = first;
         } else if (task.labelRoute === 'info' && !task.labelField && task.targetRows.length) {
-          task.labelField = task.targetRows[0].label;
+          task.labelField = cleanQuotedToken(task.targetRows[0].label);
         }
       } else {
         const mm = tdb.match(/`([^`]+)`/);
-        task.miscChannel = mm ? mm[1] : tdb.replace(/MISC\s+channel:?\s*/i,'').trim();
+        task.miscChannel = cleanQuotedToken(mm ? mm[1] : tdb.replace(/MISC\s+channel:?\s*/i,'').trim());
         if (!task.labelField) task.labelField = task.miscChannel;
       }
     }
@@ -1876,7 +1931,7 @@ function serializeTasks(tasks) {
     if (!/target_events\s*=/.test(epStr)) {
       const teArr = (task.epochMethod === 'epoch_by_segmentation_hdf5')
         ? []
-        : (task.epochParams?.target_events || []);
+        : (task.epochParams?.target_events || []).map(e => cleanQuotedToken(e)).filter(Boolean);
       const teStr = teArr.length
         ? `target_events = [${teArr.map(e => `\`${e}\``).join(', ')}]`
         : `target_events = []`;
@@ -1884,10 +1939,10 @@ function serializeTasks(tasks) {
     }
 
     // Label Field (required iff route ∈ {misc, info}).
-    let labelField = (task.labelField || '').trim();
-    if (!labelField && task.labelRoute === 'misc') labelField = (task.miscChannel || '').trim();
+    let labelField = cleanQuotedToken(task.labelField || '');
+    if (!labelField && task.labelRoute === 'misc') labelField = cleanQuotedToken(task.miscChannel || '');
     if (!labelField && task.labelRoute === 'info' && task.targetRows?.length) {
-      labelField = (task.targetRows[0].label || '').trim();
+      labelField = cleanQuotedToken(task.targetRows[0].label || '');
     }
     const labelFieldLine = (task.labelRoute === 'misc' || task.labelRoute === 'info')
       ? `\n- **Label Field**: \`${labelField}\``
@@ -1906,7 +1961,7 @@ function serializeTasks(tasks) {
     const rowLines = rowsArr.map(r => {
       const cells = tdRowCells(mode, r, fallback);
       const wrap = (c, i) => {
-        const v = (c || '').toString().trim();
+        const v = cleanQuotedToken((c || '').toString().trim());
         // Backtick the first column (ID column) when non-empty.
         if (i === 0 && v) return `\`${v}\``;
         return v;
@@ -1935,7 +1990,7 @@ function serializeTasks(tasks) {
 - **Task Type**: ${taskType}
 - **Epoch Method**: \`${task.epochMethod}\`
 - **Epoch Parameters**: ${epStr}
-- **Label Route**: \`${task.labelRoute}\`${labelFieldLine}
+- **Label Route**: \`${normalizeLabelRouteValue(task.labelRoute)}\`${labelFieldLine}
 - **Meta Level**: ${task.metaLevel}
 - **Target Definition**:
   ${targetDef}
@@ -1950,6 +2005,8 @@ ${kernelNotesBlock}`;
 function checkTaskViolations(tasks) {
   // Returns [{idx, title, violations:[string]}] for each task that has issues.
   const eventIds = new Set(getEventStructureFromRawContent().map(e => e.id));
+  const miscFields = new Set(getMiscFieldsFromRawContent());
+  const infoFields = new Set(getInfoFieldsFromRawContent());
   const hasEventStructure = eventIds.size > 0;
   const result = [];
   tasks.forEach((task, idx) => {
@@ -1960,10 +2017,19 @@ function checkTaskViolations(tasks) {
     const te     = Array.isArray(task.epochParams?.target_events) ? task.epochParams.target_events : [];
     const teSet  = new Set(te);
     const mode   = tdMode(task);
+    const route  = normalizeLabelRouteValue(task.labelRoute || '');
+    const labelField = cleanQuotedToken(task.labelField || task.miscChannel || '');
+
+    if (!['event', 'misc', 'info'].includes(route)) {
+      violations.push(`Label Route must be one of event/misc/info, got "${task.labelRoute || ''}".`);
+    }
 
     // 1. Segmentation + event route
-    if (isSeg && task.labelRoute === 'event') {
+    if (isSeg && route === 'event') {
       violations.push('Epoch Method = segmentation cannot use Label Route = event.');
+    }
+    if (isSeg && te.length > 0) {
+      violations.push('Segmentation tasks must use target_events = [].');
     }
     // 2. target_events empty for event / long-event (only flag when Event Structure has IDs to choose from)
     if ((isEvt || isLong) && hasEventStructure && te.length === 0) {
@@ -2002,8 +2068,34 @@ function checkTaskViolations(tasks) {
       if (allYInts.size < 2) violations.push('Classification requires ≥2 distinct class indices in y (multi-label comma-separated integers allowed, e.g. "0,1").');
     }
     // 7. Label Field missing for misc / info
-    if ((task.labelRoute === 'misc' || task.labelRoute === 'info') && !(task.labelField || task.miscChannel || '').trim()) {
+    if ((route === 'misc' || route === 'info') && !labelField) {
       violations.push('Label Field is required when Label Route ∈ {misc, info}.');
+    }
+    if (route === 'misc' && miscFields.size > 0 && labelField && !miscFields.has(labelField)) {
+      violations.push(`misc Label Field "${labelField}" is not listed in MISC Label Summary.`);
+    }
+    if (route === 'info' && infoFields.size > 0 && labelField && !infoFields.has(labelField)) {
+      violations.push(`info Label Field "${labelField}" is not listed in Info.`);
+    }
+    if (task.taskType === 'classification' && route !== 'misc') {
+      const tokens = [];
+      let sawInvalidY = false;
+      (task.targetRows || []).forEach(r => {
+        (r.y || '').split(',').forEach(t => {
+          const token = t.trim();
+          if (!token) return;
+          if (!/^-?\d+$/.test(token)) {
+            sawInvalidY = true;
+            return;
+          }
+          tokens.push(parseInt(token, 10));
+        });
+      });
+      const uniq = [...new Set(tokens)].sort((a, b) => a - b);
+      const sequential = uniq.every((n, i) => n === i);
+      if (sawInvalidY || !sequential) {
+        violations.push('Classification y values must be 0-based sequential integers.');
+      }
     }
 
     if (violations.length) {
@@ -2517,8 +2609,7 @@ async function regenTasksFromRefs() {
     'This will overwrite ALL existing tasks by:\n' +
     '  Phase 0: Extract DOI/URL per reference\n' +
     '  Phase 1: Analyse each reference for task evidence\n' +
-    '  Phase 2-1: Determine epoch alignment\n' +
-    '  Phase 2-2: Synthesise tasks + self-check\n\n' +
+    '  Phase 2: Run strict v2 task synthesis + repair + rule gate\n\n' +
     'This may take several minutes. Proceed?'
   )) return;
 
@@ -2604,7 +2695,7 @@ async function regenTasksFromRefs() {
       `✓ Phase 0 complete (${p0found}/${total} refs)<br>` +
       `✓ Phase 1 complete: ${relevant.length} relevant, ${partial.length} partial, ` +
       `${extractions.length - relevant.length - partial.length} irrelevant/junk<br>` +
-      `Running Phase 2-1: epoch alignment analysis…`
+      `Running Phase 2: strict task synthesis…`
     );
 
     // ── Phase 2 (2-1 + 2-2 in server): synthesis ─────────────────────────────
@@ -2613,21 +2704,18 @@ async function regenTasksFromRefs() {
       body: JSON.stringify({ extractions: allUseful })
     });
     const p2Data = await p2Resp.json();
-    if (p2Data.error) throw new Error(p2Data.error);
-
-    const p21 = p2Data.p21 || {};
-    const p21line = p21.alignment
-      ? `alignment=${p21.alignment}, ` +
-        (p21.recommendations||[]).map(r =>
-          `[${r.paradigm_label}] tmin=${r.tmin} tmax=${r.tmax}`).join('; ')
-      : 'alignment unclear';
-
-    setProgress(
-      `✓ Phase 0 complete (${p0found}/${total} refs)<br>` +
-      `✓ Phase 1 complete: ${relevant.length} relevant, ${partial.length} partial<br>` +
-      `✓ Phase 2-1 complete: ${p21line}<br>` +
-      `Running Phase 2-2: task synthesis + self-check…`
-    );
+    if (!p2Resp.ok || p2Data.error) throw new Error(p2Data.error || `HTTP ${p2Resp.status}`);
+    if (!p2Data.ok) {
+      const errs = (p2Data.semantic_errors || []).slice(0, 6).map(e => esc(e)).join('<br>');
+      const reason = esc(p2Data.hard_fail_reason || 'Strict regeneration failed.');
+      setProgress(
+        `✓ Phase 0 complete (${p0found}/${total} refs)<br>` +
+        `✓ Phase 1 complete: ${relevant.length} relevant, ${partial.length} partial<br>` +
+        `<span style="color:var(--red)">Phase 2 failed. Existing Tasks were kept unchanged.<br>${reason}</span>` +
+        (errs ? `<br><div style="color:#b45309">${errs}</div>` : '')
+      );
+      return;
+    }
 
     const tasksSection = p2Data.tasks_section || '';
     const tasksBody = tasksSection.replace(/^##\s*Tasks\s*\n+/, '');
@@ -2645,18 +2733,17 @@ async function regenTasksFromRefs() {
     const nP = p2Data.num_potential_tasks >= 0
       ? p2Data.num_potential_tasks
       : currentTasks.filter(t => t.kind === 'Potential').length;
-    const checkNote = p2Data.self_check_notes ? ` | Check: ${esc(p2Data.self_check_notes)}` : '';
+    const modeNote = p2Data.generation_mode ? ` | Mode: ${esc(p2Data.generation_mode)}` : '';
     const semErrors = p2Data.semantic_errors || [];
     const semNote = semErrors.length > 0
-      ? `<br><span style="color:#b45309">⚠ ${semErrors.length} semantic issue(s) detected in generated tasks — edit mode opened below.</span>`
+      ? `<br><span style="color:#b45309">⚠ ${semErrors.length} issue(s) remain after strict generation — edit mode opened below.</span>`
       : '';
 
     setProgress(
       `✓ Phase 0 complete (${p0found}/${total} refs)<br>` +
       `✓ Phase 1 complete: ${relevant.length} relevant, ${partial.length} partial<br>` +
-      `✓ Phase 2-1 complete: ${p21line}<br>` +
       `<span style="color:#16a34a">✓ Done — ${nC} Classical + ${nP} Potential tasks. ` +
-      `${esc(p2Data.summary||'')}${checkNote}</span>${semNote}`
+      `${esc(p2Data.summary||'')}${modeNote}</span>${semNote}`
     );
   } catch(e) {
     setProgress(`<span style="color:var(--red)">Error: ${esc(e.message)}</span>`);
