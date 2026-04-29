@@ -10,7 +10,7 @@ Participants listened to music clips from film scores while their EEG was record
 
 ## File Scan Result
 
-> **Kernel SHA256**: `6fa63c9ad6f7df97c0442c9b4be7306f09b4c6d7d8cbdbbffc1f73692c43685e`
+> **Kernel SHA256**: `6bf8e6a13c940930c57917267c033a33bf77684c9aeef5788912caf77ee28cd1`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
@@ -29,69 +29,71 @@ Participants listened to music clips from film scores while their EEG was record
 
 ## Tasks
 
-### Classical Task 1: Age Regression from Resting EEG
+### Classical Task 1: age regression from resting EEG
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 10 s *, overlap = 5.0 s *, target_events = []
+- **Epoch Parameters**: segment_length = 10 s *, overlap = 5 s *, target_events = []
 - **Label Route**: `info`
 - **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
   | Info Field | Range (unit) | Notes |
   |------------|--------------|-------|
-  | age | 18–66 (years) | Subject-level chronological age from participants.tsv; all 31 participants have complete age data. Each 10 s segment inherits the same subject age label. |
+  | age | 18.0–66.0 (years) | Subject-level age from participants.tsv; each segment inherits the same age value for that participant. 31 participants with complete age data. |
 - **Evidence**:
-  - participants.tsv — complete age data for N=31 participants (range 18–66 years)
-  - README — confirms task-run1 and task-run6 are 300 s resting state runs with eyes-open/relaxed instruction
-  - eeg.json / EDF header — 19-channel EEG at 1000 Hz, ~304 s duration confirms continuous resting recordings
-- **Notes**: Standard brain-age prediction paradigm. Continuous 300 s resting-state EEG (runs 1 and 6) is segmented into 10 s windows with 5 s overlap, producing ~59 segments per run per subject. Subject-level age from participants.tsv serves as the regression target for each segment. No kernel derivation needed—age is a native participants.tsv column.
+  - 10.1038/s41597-020-0507-6 — Dataset publication describing 31 participants (age 18-66) with 6-run paradigm including 300-second eyes-open resting state recordings in runs 1 and 6; standard brain-age prediction paradigm using continuous resting EEG.
+- **Notes**: Standard resting-state brain-age regression. The 300-second resting runs (1 and 6) are segmented into 10-second non-overlapping windows with 5-second overlap, producing ~59 segments per run. Each segment is labeled with the participant's age from participants.tsv. No kernel derivation needed — age is a native info field.
 
 ### Classical Task 2: Age Regression from Music Listening EEG
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 12 s *, overlap = 2.0, target_events = []`
+- **Epoch Parameters**: segment_length = 12 s *, overlap = 2.0 s *, target_events = []
 - **Label Route**: `info`
 - **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
   | Info Field | Range (unit) | Notes |
   |------------|--------------|-------|
-  | age | 18.0–66.0 (years) | Subject chronological age from participants.tsv; applied as subject-level label to all music-listening segments |
+  | age | 18.0–66.0 (years) | Subject chronological age from participants.tsv; N=31 complete |
 - **Evidence**:
-- **Notes**: Segments 12-second continuous windows from music listening runs (task-run2–task-run5), matching the 12s music clip duration. Overlap of 2s provides coverage across the continuous recording. Age label is drawn from participants.tsv (native info column, archetype B3). No kernel derivation needed — label is pre-existing in dataset metadata. This task tests whether age-related EEG patterns generalize from resting state to active music listening paradigm.
+  - 10.1038/s41597-020-0507-6 — Dataset descriptor confirming 31 participants age 18–66 with 40 music clips of 12s duration in runs 2–5; resting-state runs 1 and 6
+  - README — "31 healthy adult participants listened to 40 music clips of 12 s duration each"; age range 18-66, 18 female; 6 runs with first/last resting state and 4 music listening runs
+  - participants.tsv — Complete age data for all 31 subjects (sample: 31, 29, 39, 49, 23, 63, 34)
+- **Notes**: Segmentation-based brain age prediction from continuous music-listening EEG. 12s segments match individual music clip duration; 2s overlap allows denser sampling of the 40 clips × 4 runs = 160 trials per subject. No kernel derivation needed—age is a native participants.tsv column.
 
-### Classical Task 3: Sex Classification from Resting EEG
+### Potential Task 1: Sex Classification from Resting EEG
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 10 s *, overlap = 5.0 s *, target_events = []`
+- **Epoch Parameters**: segment_length = 10 s *, overlap = 5.0 *, target_events = []
 - **Label Route**: `info`
 - **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
   | Info Field | Value | y | Meaning |
   |------------|-------|---|---------|
-  | sex | F | 0 | Female |
-  | sex | M | 1 | Male |
+  | sex | M | 0 | Male |
+  | sex | F | 1 | Female |
 - **Evidence**:
-- **Notes**: Subject-level classification using 10-second non-overlapping windows from 300-second resting-state runs (run1 and run6). The kernel should filter to task-run1 and task-run6 (resting state) and segment into 10s windows with 5s overlap. Labels are drawn from participants.tsv sex column (13 M, 18 F). This is a standard demographic prediction paradigm from resting-state EEG.
+  - participants.tsv — 31 participants with sex column (13 M, 18 F), complete demographic data
+  - README — resting-state runs 1 and 6 are 300 s continuous EEG recordings per subject
+  - eeg.json — 19 EEG channels, 1000 Hz sampling rate
+- **Notes**: Segmentation-based classification using 10-second non-overlapping windows from resting-state runs (runs 1 and 6). The sex label is drawn from participants.tsv, a native info field. Epoch parameters inferred from standard resting-state demographic classification practice.
 
-### Classical Task 4: Sex Classification from Music Listening EEG
+### Potential Task 2: Sex Classification from Music Listening EEG
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 12 s *, overlap = 2.0 *, target_events = []`
+- **Epoch Parameters**: segment_length = 12 s *, overlap = 2 s *, target_events = []
 - **Label Route**: `info`
 - **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
   | Info Field | Value | y | Meaning |
   |------------|-------|---|---------|
-  | sex | F | 0 | Female |
-  | sex | M | 1 | Male |
+  | sex | M | 0 | Male |
+  | sex | F | 1 | Female |
 - **Evidence**:
-  - `participants.tsv` — N=31 subjects with sex column (M=13, F=18), complete coverage
-  - `README` — 4 music listening runs with 10 trials each, 40 music clips of 12s duration
-  - `events.json` — Music play onset marked by event 788, fixation cross 786, music stimuli 301-360
-- **Notes**: Segmentation approach uses 12s windows matching music clip duration with 2s overlap for coverage across the active music-listening periods. Binary sex classification tests whether EEG during affective music processing carries sex-differentiable information. All labels drawn from native participants.tsv info field; no kernel derivation required.
+  - participants.tsv — 31 participants with complete sex labels (13 male, 18 female)
+- **Notes**: Segmentation-based task using 12-second windows with 2-second overlap to match music clip duration. Labels drawn from participants.tsv demographic info. Binary classification of sex from EEG recorded during emotional music listening (runs 2-5).
 
 ## Data Quality Notes
 
@@ -100,4 +102,4 @@ Participants listened to music clips from film scores while their EEG was record
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_kernel_update
+> **Status**: wait_manual_review
