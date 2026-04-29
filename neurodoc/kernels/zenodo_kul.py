@@ -20,8 +20,8 @@ Annotation labels produced (matching analysis.md Event Structure):
   'attended_right' — Subject attends to the right-ear speaker (trial onset)
 
 Annotation duration = trial duration in seconds (n_samples / sfreq).
-Channel names are preserved as numeric strings "1" … "64" to match EEGUnity's
-default naming for this dataset (no standard montage available in the file).
+Channel names are set to standard 10-20 names for 64-channel BioSemi layout,
+then montage is applied.
 
 Source: Biesmans et al. (2017), DOI 10.1109/TBME.2019.2911728
 Kernel added: 2026-04-09 — LLM-assisted, requires human review.
@@ -46,6 +46,20 @@ _ATTEND_FIELD_CANDIDATES = ["attended_ear", "attend", "attended_speaker", "trial
 
 _LABEL_MAP = {1: "attended_left", 2: "attended_right"}
 
+# Standard BioSemi ActiveTwo 64-channel 10-20 layout names.
+# Source: BioSemi 64-channel cap documentation, standard 10-20 system.
+# Annotator: LLM, 2026-04-09 — 由 LLM 推断，需人类复核
+_BIOSEMI_64_CH_NAMES = [
+    "Fp1", "AF7", "AF3", "F1", "F3", "F5", "F7", "FT7",
+    "FC5", "FC3", "FC1", "C1", "C3", "C5", "T7", "TP7",
+    "CP5", "CP3", "CP1", "P1", "P3", "P5", "P7", "P9",
+    "PO7", "PO3", "O1", "Iz", "Oz", "POz", "Pz", "CPz",
+    "Fpz", "Fp2", "AF8", "AF4", "AFz", "Fz", "F2", "F4",
+    "F6", "F8", "FT8", "FC6", "FC4", "FC2", "FCz", "Cz",
+    "C2", "C4", "C6", "T8", "TP8", "CP6", "CP4", "CP2",
+    "P2", "P4", "P6", "P8", "P10", "PO8", "PO4", "O2",
+]
+
 
 def _get_attended_ear(trial: dict) -> int | None:
     """Try common field names to extract the attended ear (1=left, 2=right)."""
@@ -68,7 +82,7 @@ class ZenodoKulKernel:
 
     KERNEL_ID: str = "zenodo-kul-stage1"
 
-    def apply(self, udataset, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
+    def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
         file_path = row["File Path"]
 
         if not file_path.lower().endswith(".mat"):
@@ -89,71 +103,111 @@ class ZenodoKulKernel:
         durations: list[float] = []
         descriptions: list[str] = []
 
-        sample_offset = 0.0
+        current_offset = 0.0
 
         for trial in trials:
-            try:
-                raw_data = trial["RawData"]["EegData"]  # (n_samples, 64)
-            except (KeyError, TypeError):
+            # Extract EEG data
+            raw_data = trial.get("RawData", {})
+            if isinstance(raw_data, dict):
+                eeg = raw_data.get("EegData")
+            else:
+                # Some versions may store RawData directly as array
+                eeg = None
+
+            if eeg is None:
+                # Try alternative field names
+                for key in trial.keys():
+                    if "eeg" in key.lower() or "data" in key.lower():
+                        val = trial[key]
+                        if isinstance(val, np.ndarray) and val.ndim == 2:
+                            eeg = val
+                            break
+
+            if eeg is None or not isinstance(eeg, np.ndarray):
                 continue
 
-            eeg = np.asarray(raw_data, dtype=np.float64)
-            if eeg.ndim != 2 or eeg.shape[1] != _N_CHANNELS:
-                # Transpose if shape is (64, n_samples)
-                if eeg.ndim == 2 and eeg.shape[0] == _N_CHANNELS:
-                    eeg = eeg.T
-                else:
+            # Ensure shape is (n_channels, n_samples)
+            if eeg.shape[0] < eeg.shape[1]:
+                # Likely (n_samples, n_channels), transpose
+                eeg = eeg.T
+
+            n_samples = eeg.shape[1]
+            trial_duration = n_samples / _SFREQ
+
+            # Determine attended ear
+            attended = _get_attended_ear(trial)
+            if attended is None:
+                # Try nested in RawData
+                if isinstance(raw_data, dict):
+                    attended = _get_attended_ear(raw_data)
+                if attended is None:
+                    # Default to unknown, skip annotation
                     continue
 
-            n_samples = eeg.shape[0]
-            trial_dur = n_samples / _SFREQ
-
-            attended = _get_attended_ear(trial)
-            label = _LABEL_MAP.get(attended, "attended_unknown")
-
-            onsets.append(sample_offset)
-            durations.append(trial_dur)
+            label = _LABEL_MAP.get(attended, "unknown")
             descriptions.append(label)
+            onsets.append(current_offset)
+            durations.append(trial_duration)
 
             eeg_blocks.append(eeg)
-            sample_offset += trial_dur
+            current_offset += trial_duration
 
-        if not eeg_blocks:
+        if len(eeg_blocks) == 0:
             return raw
 
-        # Build new continuous raw from all trials concatenated.
-        eeg_concat = np.concatenate(eeg_blocks, axis=0)  # (total_samples, 64)
-        eeg_T = eeg_concat.T  # (64, total_samples) — MNE convention
+        # Concatenate all trials
+        all_data = np.hstack(eeg_blocks)  # shape: (n_channels, total_samples)
 
-        # Preserve channel names from EEGUnity's existing raw if available,
-        # otherwise fall back to "1" … "64".
-        existing_names = raw.ch_names if len(raw.ch_names) == _N_CHANNELS else [
-            str(i + 1) for i in range(_N_CHANNELS)
-        ]
-        ch_types = ["eeg"] * _N_CHANNELS
-        info = mne.create_info(ch_names=existing_names, sfreq=_SFREQ, ch_types=ch_types)
+        # Create info
+        n_ch = all_data.shape[0]
+        ch_names = [f"EEG-{i}" for i in range(n_ch)]  # Temporary names
 
-        # Copy subject description metadata.
-        description_dict = {
-            "original_description": raw.info.get("description", ""),
-            "eegunity_description": {
-                "amplifier": "BioSemi ActiveTwo",
-                "cap":       "64-channel, 10-20 system",
-                "age":       "unknown",
-                "sex":       "unknown",
-                "handedness": "unknown",
-            },
-        }
-        info["description"] = json.dumps(description_dict)
+        info = mne.create_info(
+            ch_names=ch_names,
+            sfreq=_SFREQ,
+            ch_types="eeg",
+        )
 
-        new_raw = mne.io.RawArray(eeg_T, info, verbose=False)
+        new_raw = mne.io.RawArray(all_data, info, verbose=False)
 
-        ann = mne.Annotations(
+        # Set standard channel names for 64-channel BioSemi
+        if n_ch == 64:
+            rename_map = {f"EEG-{i}": _BIOSEMI_64_CH_NAMES[i] for i in range(64)}
+            new_raw.rename_channels(rename_map)
+
+            # Set montage (channel rename BEFORE set_montage per requirement)
+            try:
+                montage = mne.channels.make_standard_montage("biosemi64")
+                new_raw.set_montage(montage, match_case=False, on_missing="warn")
+            except Exception:
+                pass  # Montage not critical for processing
+
+        # Add annotations
+        annotations = mne.Annotations(
             onset=onsets,
             duration=durations,
             description=descriptions,
         )
-        new_raw.set_annotations(ann)
+        new_raw.set_annotations(annotations)
+
+        # Build eegunity_description
+        # No participants.tsv for this dataset; all demographic info unknown
+        # Device info from paper: BioSemi ActiveTwo, standard 10-20 layout
+        # Source: Biesmans et al. (2017), DOI 10.1109/TBME.2019.2911728
+        # Annotator: LLM, 2026-04-09 — 由 LLM 推断，需人类复核
+        original_desc = raw.info.get("description", "") if hasattr(raw, "info") else ""
+
+        description_dict = {
+            "original_description": original_desc,
+            "eegunity_description": {
+                "age": "unknown",
+                "sex": "unknown",
+                "amplifier": "BioSemi ActiveTwo",  # LLM 推断，需人类复核
+                "cap": "BioSemi 64-channel cap",   # LLM 推断，需人类复核
+                "handedness": "unknown",
+            },
+        }
+        new_raw.info["description"] = json.dumps(description_dict)
 
         return new_raw
 
