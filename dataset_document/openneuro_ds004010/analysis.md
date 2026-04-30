@@ -107,44 +107,26 @@ A multisensory detection task (MAVIS) in which participants identified auditory 
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `Age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|-------------|-------|
-  | Age | 18–27 (years) | Subject chronological age from participants.tsv; complete for all N=24 subjects. All segments from a given subject share the same age label. |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | no mapping |
 - **Evidence**:
-- **Notes**: Native info field regression task using continuous EEG segmentation. No kernel derivation required—Age is directly available in participants.tsv with complete coverage. Segmentation parameters default to 2s windows with 50% overlap for subject-level prediction; all values inferred from task category defaults.
+- **Notes**: Native info field regression task using continuous EEG segmentation. No kernel derivation required—subject_age is directly available in participants.tsv with complete coverage for all N=24 subjects (range 18–27 years). All segments from a given subject share the same age label. Segmentation parameters default to 2s windows with 50% overlap for subject-level prediction; all values inferred from task category defaults.
 
 ### Potential Task 3: Gender Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5, target_events = []`
 - **Label Route**: `info`
-- **Label Field**: `Gender`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | Gender | M | 0 | Male |
-  | Gender | F | 1 | Female |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_sex | M → 0; F → 1 |
 - **Evidence**:
-- **Notes**: Binary subject-level classification from continuous EEG segments. Participants.tsv provides complete Gender column with M/F values for all 24 subjects. Segmentation with 2s windows and 50% overlap yields multiple samples per subject; the model must learn to aggregate or classify from segment-level features. No kernel derivation needed — Gender is a native participants.tsv column.
-
-### Potential Task 4: Handedness Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5, target_events = []`
-- **Label Route**: `info`
-- **Label Field**: `Handedness`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | Handedness | R | 0 | right-handed |
-  | Handedness | L | 1 | left-handed |
-- **Evidence**:
-- **Notes**: Subject-level binary classification from continuous EEG segments. Uses 2-second non-overlapping segments (50% overlap) with subject handedness as label. The participants.tsv shows complete Handedness data with values R/L. Sample shows mostly R subjects; check class balance before training.
+- **Notes**: Binary subject-level classification from continuous EEG segments. participants.tsv provides complete subject_sex column with M/F values for all 24 subjects. Segmentation with 2s windows and 50% overlap yields multiple samples per subject; the model must learn to aggregate or classify from segment-level features. No kernel derivation needed — subject_sex is a native participants.tsv column.
 
 ## Data Quality Notes
 

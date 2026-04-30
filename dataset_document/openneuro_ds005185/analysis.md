@@ -83,12 +83,11 @@ Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 30 s *, overlap = 0.0 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 22.0–36.0 (years) | Continuous chronological age from participants.tsv; N=20 subjects with mean ~26 years. Each 30-second segment inherits the subject's age as regression target. |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | no mapping |
 - **Evidence**:
 - **Notes**: Segmentation-based regression task using standard 30-second sleep epoch length. No event structure required since target (age) is subject-level continuous variable. Independent segments (0 overlap) treated as samples for age prediction model.
 
@@ -97,13 +96,11 @@ Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 30 s *, overlap = 0.0 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | f | 0 | female |
-  | sex | m | 1 | male |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_sex | f -> 0; m -> 1 |
 - **Evidence**:
   - participants.tsv — 20 subjects with complete sex labels (13 female, 7 male); confirmed f/m encoding
 - **Notes**: 30-second segments match standard sleep epoch length used in clinical sleep staging. Sex is a subject-level constant label broadcast to all segments from the same subject. Classification is binary with y ∈ {0, 1}.
@@ -113,12 +110,11 @@ Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 30 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 22.0–36.0 (years) | Subject chronological age from participants.tsv; predicted from 30-s unannotated ear-EEG segments |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | no mapping |
 - **Evidence**:
   - participants.tsv — age column complete for all 20 subjects (range 22–36 years)
   - README — describes 16-night subjects (sessions 1–4 with PSG, sessions 5–16 ear-EEG only without scoring), enabling continuous monitoring without stage labels

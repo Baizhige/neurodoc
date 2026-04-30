@@ -36,12 +36,11 @@ Participants performed a sensorimotor rhythm-based brain-computer interface task
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2 s *, overlap = 1.0 s *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 19.0–58.0 (years) | Subject chronological age from participants.tsv; all 56 subjects have complete age data |
+  | Info Field | Y Mapping Notes |
+  |---|---|
+  | subject_age | 19.0–58.0 (years); no mapping (y = age value directly) |
 - **Evidence**:
   - participants.tsv — N=56 subjects, age range 19.0–58.0 years, complete data for all subjects
   - dataset_description.json — BMI-HDEEG dataset with demographic metadata
@@ -52,15 +51,13 @@ Participants performed a sensorimotor rhythm-based brain-computer interface task
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2 s *, overlap = 1.0 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `gender`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | gender | male | 0 | male subject |
-  | gender | female | 1 | female subject |
+  | Info Field | Y Mapping Notes |
+  |---|---|
+  | subject_sex | male -> 0; female -> 1 |
 - **Evidence**:
-- **Notes**: Standard 2-second segmentation with 50% overlap (overlap=1.0) for subject-level demographic prediction. Highly imbalanced class distribution (49 male vs 7 female, ~87.5% vs 12.5%); stratified sampling or class weighting recommended. Label drawn directly from participants.tsv 'gender' column (native info field, no kernel derivation needed).
+- **Notes**: Standard 2-second segmentation with 50% overlap (overlap=1.0) for subject-level demographic prediction. Highly imbalanced class distribution (49 male vs 7 female, ~87.5% vs 12.5%); stratified sampling or class weighting recommended. Label drawn directly from participants.tsv 'subject_sex' column (native info field, no kernel derivation needed).
 
 ## Data Quality Notes
 

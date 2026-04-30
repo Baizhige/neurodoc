@@ -29,19 +29,7 @@ Subjects performed a 60-minute simulated driving task involving manual steering 
 
 ## Tasks
 
-### Potential Task 1: Subject Age Regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.0, target_events = []`
-- **Label Route**: `info`
-- **Label Field**: `year_of_birth`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | year_of_birth | 1960–1995 (years) | Convert to approximate age at study time (~2012–2014); 91/109 subjects have valid values (83.5% complete) |
-- **Evidence**:
-- **Notes**: Continuous driving EEG with no discrete event structure suitable for age prediction. Segmentation with 10s windows enables spectral biomarker extraction for fatigue-related age regression. year_of_birth from participants.tsv is the native info field; approximate age computed as study_year - year_of_birth where study_year inferred from README site dates (2012–2014). Partial completeness (91/109) is acceptable for regression; missing subjects will be excluded during kernel processing.
+
 
 ## Data Quality Notes
 

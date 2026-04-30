@@ -71,12 +71,11 @@ A high-density EEG dataset focused on sensorimotor rhythm-based brain-computer i
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|-------------|-------|
-  | age | 18–27 (years) | Subject chronological age from participants.tsv; N=30, sample values 22–26 |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | no mapping |
 - **Evidence**:
 - **Notes**: Segmentation-based epoching extracts fixed-length 4-second windows with 50% overlap from continuous EEG recordings. No event alignment is required for this subject-level regression task. The age label is a native participants.tsv column (B3 archetype, Meta Level = raw).
 
@@ -85,43 +84,24 @@ A high-density EEG dataset focused on sensorimotor rhythm-based brain-computer i
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `gender`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | gender | female | 0 | female |
-  | gender | male | 1 | male |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_sex | female -> 0; male -> 1 |
 - **Evidence**:
 - **Notes**: Subject-level binary classification using 4-second non-overlapping segments of continuous EEG. All segments from a given subject share the same gender label from participants.tsv. Class imbalance (5 female, 25 male) is noted; appropriate stratification or class weighting is recommended during model training.
 
-### Classical Task 5: Handedness Classification from EEG
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `handedness`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | handedness | left | 0 | left-handed |
-  | handedness | right | 1 | right-handed |
-- **Evidence**:
-  - participants.tsv — complete handedness column with values {left, right} across all 30 subjects (1 left, 29 right)
-- **Notes**: Subject-level classification task using 4-second non-overlapping/overlapping segments of continuous EEG to predict handedness. Class imbalance is severe (1:29) but the task is technically groundable with ≥2 distinct classes. Segmentation-based epoching is appropriate since handedness is a static subject-level attribute with no event-aligned temporal structure. The kernel does not need to compute any derived features; handedness is read directly from participants.tsv.
-
-### Classical Task 6: continuous EEG segmentation with age labels
+### Classical Task 5: continuous EEG segmentation with age labels
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2 s *, overlap = 0.0 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 18.0–27.0 (years) | Continuous age from participants.tsv; segmentation extracts 2-second non-overlapping windows from continuous recordings |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | no mapping |
 - **Evidence**:
 - **Notes**: Archetype C (segmentation + info-native). Uses pure segmentation without event anchoring to extract representative 2-second samples from continuous 424-541 second recordings. Same age regression target as B3 variant but explicitly structured as segmentation paradigm for pipeline flexibility. Meta Level is raw because age is a native participants.tsv column with no kernel derivation required. Shorter 2-second segments with no overlap increase sample density for regression modeling.
 

@@ -203,14 +203,13 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.0 *, target_events = []`
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|-------------|-------|
-  | age | 23.0–31.0 (years) | Subject chronological age; 13/18 subjects have valid age data (5 missing) |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | `subject_age` | no mapping |
 - **Evidence**:
-  - participants.tsv — age column with values 23–31 years, partial completeness (13/18 subjects)
+  - participants.tsv — `subject_age` column with values 23–31 years, partial completeness (13/18 subjects)
 - **Notes**: Segmentation-based subject-level trait prediction. Non-overlapping 2-second windows from continuous EEG are used to predict subject age. No event alignment needed; the full continuous recording is segmented. Age is a native participants.tsv column (B3 archetype, raw meta level). Subjects with missing age data will be excluded by the kernel.
 
 ### Potential Task 9: Gender Classification from EEG
@@ -218,14 +217,13 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2 s *, overlap = 0.0 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `gender`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | gender | M | 0 | Male |
-  | gender | F | 1 | Female |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | `subject_sex` | M -> 0; F -> 1 |
 - **Evidence**:
+  - participants.tsv — 13 subjects with gender data (7 M, 6 F), 5 subjects with n/a excluded
 - **Notes**: Subject-level binary classification using 2-second non-overlapping windows of continuous EEG. Gender is a native participants.tsv column with partial coverage (13/18 subjects: 7 M, 6 F). The kernel does not need to derive any new channels; labels are read directly from the BIDS participants sidecar.
 
 ### Potential Task 10: continuous face viewing with age labels
@@ -233,27 +231,25 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5 *, target_events = []`
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 23.0–31.0 (years) | Subject chronological age; 5/18 subjects missing age data (sub-004, sub-006, sub-007, sub-008, sub-019) — exclude from training |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | `subject_age` | no mapping |
 - **Evidence**:
-- **Notes**: Segmentation-based regression task using sliding 2-second windows with 50% overlap over continuous EEG recordings during naturalistic face viewing. No event-locked epochs; each window inherits the subject-level age label from participants.tsv. The kernel must read the `age` column from participants.tsv and assign it to all epochs extracted from that subject's recording. Subjects with missing age data (n/a in participants.tsv) must be excluded from training.
+  - participants.tsv — `subject_age` values 23–31 years; 5/18 subjects missing age data (sub-004, sub-006, sub-007, sub-008, sub-019)
+- **Notes**: Segmentation-based regression task using sliding 2-second windows with 50% overlap over continuous EEG recordings during naturalistic face viewing. No event-locked epochs; each window inherits the subject-level age label from participants.tsv. The kernel must read the `subject_age` column from participants.tsv and assign it to all epochs extracted from that subject's recording. Subjects with missing age data (n/a in participants.tsv) must be excluded from training.
 
 ### Potential Task 11: continuous face viewing with gender labels
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `gender`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | gender | M | 0 | Male subject |
-  | gender | F | 1 | Female subject |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | `subject_sex` | M -> 0; F -> 1 |
 - **Evidence**:
   - participants.tsv — 13 subjects with gender data (7 M, 6 F), 5 subjects with n/a excluded
 - **Notes**: Segmentation-based classification using 2-second sliding windows with 50% overlap. Each window is labeled by the subject's gender from participants.tsv. This is a subject-level trait prediction task from continuous EEG during naturalistic face viewing. Archetype C with native info field; no kernel derivation needed.

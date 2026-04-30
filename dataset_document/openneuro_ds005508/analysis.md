@@ -74,55 +74,6 @@ The Healthy Brain Network (HBN) EEG Release 4 is a large-scale, multi-task devel
 
 ## Tasks
 
-### Classical Task 1: Resting-State Psychiatric Disorder Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 20.0 s (eyes-open) * or 40.0 s (eyes-closed) *, overlap = 0.0, target_events = [`instructed_toOpenEyes`, `instructed_toCloseEyes`]
-- **Label Route**: `misc`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `instructed_toOpenEyes` | DSM-V diagnosis from subject metadata | Resting EEG during eyes-open; label from clinical assessment |
-  | `instructed_toCloseEyes` | DSM-V diagnosis from subject metadata | Resting EEG during eyes-closed; label from clinical assessment |
-- **Super Meta Notes**: Labels derived from subject-level psychiatric diagnoses (ADHD, ODD, CD, Anxiety, Mood, ASD, Psychosis spectrum) and continuous symptom severity measures from companion HBN clinical assessment files. Kernel step: Load per-subject diagnosis vector from metadata; assign same label to all resting-state epochs from that subject. Multi-label formulation possible (subjects may have comorbid diagnoses).
-- **Evidence**:
-  - DOI: `10.1016/j.neuroimage.2022.119348` — Explicit ML benchmark defining 7-class psychiatric multimorbidity classification from HBN resting EEG; uses eyes-open/closed epochs with tmax=20s/40s respectively; reports multi-label formulation for comorbid diagnoses
-  - DOI: `10.1016/j.neuroimage.2020.117001` — Validates HBN resting EEG for predicting phenotypic measures including ADHD, anxiety, and CBCL scores; supports regression and classification of continuous symptom severity
-- **Kernel Notes**: Use long-event epochs to capture sustained resting-state neural dynamics. Labels are subject-level (not trial-level)—ensure all epochs from same subject share the same diagnosis label. For multi-label classification, binarize each diagnosis independently. Validate using stratified subject-wise splits to prevent data leakage.
-
-### Normal Task 1: Motor Response Lateralization Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [`left_buttonPress`, `right_buttonPress`]
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `left_buttonPress` | 0 | Left-hand button press response |
-  | `right_buttonPress` | 1 | Right-hand button press response |
-- **Evidence**:
-  - DOI: `10.1016/j.neuroimage.2022.119348` — Supports lateralized motor responses as features in psychiatric prediction; motor asymmetry patterns differ across disorders
-  - Paradigm: Event structure explicitly distinguishes left (11,751 trials) and right (10,656 trials) hand responses with sufficient trial counts for classification
-- **Kernel Notes**: Epoch around motor response events to capture pre-movement planning (LRP) and post-response processing. Filter by block membership (`contrastTrial_start`) for task-related responses vs. spontaneous presses. Use cue-aligned epochs from corresponding stimulus events for stimulus-locked analysis.
-
-### Normal Task 2: Target vs. Non-Target Contrast Detection ERP
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [`left_target`, `right_target`]
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `left_target` | 0 | Left-side target stimulus in contrast detection task |
-  | `right_target` | 1 | Right-side target stimulus in contrast detection task |
-- **Evidence**:
-  - DOI: `10.1038/sdata.2017.40` — Original HBN paradigm description includes contrast detection as core information processing task
-  - Paradigm: Clear event structure with 9,806 left-target and 9,909 right-target trials; block markers (`contrastTrial_start`: 20,646) confirm experimental context
-- **Kernel Notes**: Epoch around target stimulus onsets to capture visual ERP components (N100, P200, P300). Pre-stimulus window (-0.5 to 0 s) provides baseline. Filter epochs to ensure they fall within `contrastTrial_start` blocks. Consider side-agnostic target vs. non-target classification by adding `stim_ON` as non-target events.
-
 ### Potential Task 1: Sequence Learning State Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -154,22 +105,6 @@ The Healthy Brain Network (HBN) EEG Release 4 is a large-scale, multi-task devel
   - Paradigm: Surrounding suppression blocks (`surroundSuppB1_start`: 278, `surroundSuppB2_start`: 270) with 8 dot pattern types (~10,000 combined onset events). Dot_no8 has fewer trials (867) suggesting it may be the deviant/singleton condition.
   - DOI: `10.1038/sdata.2017.40` — Lists surround suppression as core paradigm
 - **Kernel Notes**: Longer tmax=1.5s captures sustained suppression effects. Condition labels (standard vs. deviant) require verification from paradigm documentation. Alternative: binary classification of dot patterns by surround configuration if stimulus parameters are known.
-
-### Potential Task 3: Naturalistic Movie Viewing Time-Frequency Analysis
-- **Task Type**: regression / classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 300.0 s, overlap = 0.5, segment_length = 10.0 s, target_events = [`video_start`, `video_stop`]
-- **Label Route**: `misc`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `video_start` | Movie content label from annotation | Continuous naturalistic stimulus epoch |
-- **Super Meta Notes**: Labels derived from movie annotation files (scene boundaries, emotional content, narrative events). Kernel step: Load frame-accurate movie annotations; map segment timestamps to EEG epochs. Without annotations, treat as unsupervised time-frequency decomposition task.
-- **Evidence**:
-  - DOI: `10.1101/089060` — Discusses neural responses to naturalistic videos in HBN context (partial evidence; sample size and dataset version differ)
-  - Paradigm: Movie watching segments (`video_start`: 1,368, `video_stop`: 1,342) provide continuous naturalistic stimulus periods
-- **Kernel Notes**: Use overlapping short segments (10 s) for time-frequency analysis. Without external annotations, perform exploratory TF decomposition without supervised labels. Frame-rate sync may enable stimulus-locked analysis if movie ID and timestamp alignment are available.
 
 ## Data Quality Notes
 

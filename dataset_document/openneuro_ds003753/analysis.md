@@ -117,38 +117,6 @@ A reinforcement learning task involving probabilistic affective feedback to inve
   - dataset_description.json — "EEG: Probabilistic Learning with Affective Feedback: Exp #2"
 - **Notes**: Binary classification collapsing across stimulus valence (puppy vs cow) and merging easy cues (S 1 + S 3, both 90% reinforcement) vs hard cues (S 2 + S 4, both 70% reinforcement). Tests neural sensitivity to reinforcement probability independent of affective content. Epoch parameters inferred from typical cue-locked decision period duration.
 
-### Potential Task 1: Subject Age Regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5, target_events = []`
-- **Label Route**: `info`
-- **Label Field**: `age`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 18.0–27.0 (years) | Subject chronological age from participants.tsv; N=25, continuous predictor of EEG patterns |
-- **Evidence**:
-  - participants.tsv — age column present and complete for all 25 subjects, range 18–27 years
-  - dataset_description.json — confirms N=25 college-age participants for probabilistic learning with affective feedback study
-  - README — describes "N=25 college age participants" collected circa 2019 at UNM
-- **Notes**: Archetype B3 (native info field). Age is directly available from participants.tsv without any kernel derivation. Segmentation approach used since no discriminating event structure is required for this continuous regression target; 2-second segments with 50% overlap provide sufficient samples for age prediction from resting/continuous EEG dynamics while maintaining statistical power across the ~25-minute recordings.
-
-### Potential Task 2: Subject Sex Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `sex`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---|
-  | sex | F | 0 | Female |
-  | sex | M | 1 | Male |
-- **Evidence**:
-- **Notes**: Continuous EEG segmented into 2-second windows with 50% overlap for subject-level sex classification. Labels drawn from participants.tsv 'sex' column (F=19, M=6). Highly imbalanced class distribution (19:6) but technically valid with two distinct classes. Segmentation parameters inferred from Category SKILL defaults for continuous EEG classification tasks.
-
 ## Data Quality Notes
 
 - Event meanings for S101-S120 are unclear from available evidence; these event IDs appear in recordings but their specific functional roles in the trial structure are not documented in sidecar files or README.

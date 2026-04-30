@@ -38,36 +38,7 @@ A simulated driving task assessing driver fatigue and performance through a spee
 
 ## Tasks
 
-### Potential Task 1: Subject Age Regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.0 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `year_of_birth`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | year_of_birth | 1975–1996 (year) | Continuous numeric; age can be derived as 2022 - year_of_birth if desired. Subject-level label applied to all segments from that subject. |
-- **Evidence**:
-  - participants.tsv — year_of_birth column present for all 32 subjects with values ranging from 1975 to 1996
-- **Notes**: Segmentation-based regression with no event structure required. The label year_of_birth is a native participants.tsv column (archetype B3, Meta Level = raw). Standard 4-second non-overlapping windows are used for resting-state style subject-level prediction. The kernel simply reads the year_of_birth info field and assigns it to all epochs from that subject.
 
-### Potential Task 2: Subject Age Group Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.0 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `year_of_birth`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | year_of_birth | ≤ median age | 0 | Younger group (age ≤ 34) |
-  | year_of_birth | > median age | 1 | Older group (age > 34) |
-- **Evidence**:
-  - participants.tsv — year_of_birth complete for all 32 subjects; values range 1975-1996; median split yields balanced binary classification
-- **Notes**: Kernel derivation step: Compute age = 2022 - year_of_birth (dataset collected ~2022 per curation timeline); apply median split across all subjects (median birth year ≈ 1988, corresponding to age ≈ 34); assign y=0 for below-median (younger), y=1 for above-median (older); broadcast as subject-level label for all EEG segments. Since all subjects have group=Normal, year_of_birth is the only viable demographic discriminator in participants.tsv.
 
 ## Data Quality Notes
 

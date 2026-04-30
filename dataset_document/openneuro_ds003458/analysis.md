@@ -95,22 +95,6 @@ Participants performed a three-armed bandit gambling task with oscillating reinf
 - **Evidence**: Epoch alignment recommendation for Full_Trial segmentation; plausible from paradigm structure (Fixation marks trial onset; 4s window captures stimulus processing, response selection, and outcome processing).
 - **Kernel Notes**: Boundary markers (23 total) indicate continuous recording segments requiring concatenation before epoching. Full trial segmentation enables holistic cognitive sequence analysis but has lower temporal resolution for feedback-specific effects.
 
-### Potential Task 2: Response-Related Analysis
-- **Task Type**: segmentation
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 0.5 s, target_events = [S5, S6]
-- **Label Route**: `misc`
-- **Meta Level**: raw
-- **Target Definition**:
-
-| Event | y | Meaning |
-|-------|----|---|
-| S5 | 0 | Response event A (high count: 8961) |
-| S6 | 1 | Response event B (2055 occurrences) |
-
-- **Evidence**: Event counts suggest S5 is primary response marker (corresponds to "Response" in analysis.md description; ~69 files × ~100 responses); S6 may be alternative response or correction event.
-- **Kernel Notes**: Response-related epochs capture motor preparation and execution signals. Verify button-press mapping to left/right/up choices from events.tsv for choice-locked response analysis.
-
 ## Data Quality Notes
 
 - Pending manual review.

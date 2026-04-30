@@ -138,12 +138,11 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 10 s, overlap = 0.5, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|-------------|-------|
-  | age | 19–30 (years) | Participant chronological age from participants.tsv; complete for all 19 subjects |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | subject_age | no mapping |
 - **Evidence**:
   - 10.1038/s41597-020-0507-6 — Dataset publication describing 19 participants (age 19–30) in BCMI calibration with continuous 21-second music trials; age is a complete native participants.tsv column
 - **Notes**: Segmentation approach (10-second windows, 50% overlap) chosen because music listening is continuous with no clear inter-trial rest boundaries. Each subject contributes multiple overlapping segments, all labeled with the same age value. This is a subject-level regression task with repeated measures structure.
@@ -247,13 +246,11 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.5 *, target_events = []`
 - **Label Route**: `info`
-- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | F | 0 | Female |
-  | sex | M | 1 | Male |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | subject_sex | F -> 0; M -> 1 |
 - **Evidence**:
 - **Notes**: Binary classification using sex from participants.tsv as the label. 11 female (F) and 8 male (M) participants. Segmentation creates 10-second sliding windows with 50% overlap across continuous music listening epochs, matching the approach used for age regression in this dataset. Each window inherits the subject's sex label for subject-level classification.
 
@@ -262,14 +259,13 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 10 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `misc`
-- **Label Field**: `GSR`
 - **Meta Level**: super
 - **Target Definition**:
-  | MISC Channel | Value (unit) | Notes |
-  |--------------|--------------|-------|
-  | GSR | continuous (μS or arbitrary units) | Galvanic skin response measured continuously during music listening; target is the mean or representative GSR value per 10-second EEG segment |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | GSR | no mapping |
 - **Evidence**:
-- **Notes**: Native GSR channel is available as one of 4 misc channels (MiscChannelCount=4 in eeg.json). The GSR signal is recorded continuously alongside EEG during affective music listening trials, enabling regression of peripheral physiological arousal from EEG features. Segmentation parameters follow the continuous analysis approach with 10-second windows and 50% overlap, appropriate for capturing slow-varying GSR dynamics.
+- **Notes**: Native GSR channel is available as one of 4 misc channels (MiscChannelCount=4 in eeg.json). The GSR signal is recorded continuously alongside EEG during affective music listening trials, enabling regression of peripheral physiological arousal from EEG features. Segmentation parameters follow the continuous analysis approach with 10-second windows and 50% overlap, appropriate for capturing slow-varying GSR dynamics. Per-segment GSR target uses the mean value within each 10-second window.
 
 ### Potential Task 8: Music Piece Identification
 - **Task Type**: classification

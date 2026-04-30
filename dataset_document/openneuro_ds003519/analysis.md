@@ -37,23 +37,7 @@ Participants performed a visuospatial working memory task under a double-blind C
 
 ## Tasks
 
-### Classical Task 1: Drug (Cabergoline) vs Placebo Session Classification
-- **Task Type**: classification
-- **Epoch Method**: epoch_by_segmentation_hdf5
-- **Epoch Parameters**: segment_length = 60.0 s, overlap = 0.0
-- **Label Route**: misc
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
-  | `Placebo` | 0 | Placebo session control condition |
-  | `Cabergoline` | 1 | Cabergoline (D2/D3 agonist) drug administration session |
-- **Evidence**:
-  - DOI: 10.20944/preprints202106.0509.v2 — Preprint using ds003519; classifies drug vs placebo sessions using EEG functional connectivity/correlation matrix features
-  - DOI: 10.3390/bdcc5030039 — Published study explicitly citing ds003519; implements ML models (RNN, SVM, RF, LR) on correlation matrices achieving 71-93% accuracy for drug/placebo classification
-- **Kernel Notes**: Extract connectivity features (correlation matrices, coherence) from 60s EEG segments. Read session_type from participants.tsv to assign labels (0=placebo, 1=cabergoline). Apply subject-level cross-validation to prevent data leakage given crossover design (same subject across both conditions). Two sessions per subject (54 files ÷ 27 subjects = 2 sessions).
-
-### Classical Task 2: Visual Working Memory Encoding vs Retrieval Phase Classification
+### Classical Task 1: Visual Working Memory Encoding vs Retrieval Phase Classification
 - **Task Type**: classification
 - **Epoch Method**: epoch_by_event_hdf5
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`S100`, `S101`]
@@ -81,20 +65,6 @@ Participants performed a visuospatial working memory task under a double-blind C
   | `S201` | 1 | High load condition with distractors (e.g., 3+2 distractor trials) |
 - **Evidence**: No direct DOI reference; task is plausible from paradigm description.
 - **Kernel Notes**: Paradigm includes distractor stimuli during retention interval to probe working memory capacity. Original paper (10.3758/s13415-018-0584-6) compares Condition 3 vs Condition 3+2 (distractor effect). S200/S201 event codes may correspond to different load conditions. Requires verification against stimulus presentation logs or behavioral data (response accuracy/RT) to confirm label mapping.
-
-### Potential Task 2: Behavioral Response Classification (Correct vs Error)
-- **Task Type**: classification
-- **Epoch Method**: epoch_by_event_hdf5
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [`Response`]
-- **Label Route**: misc
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
-  | `Correct` | 0 | Correct match/non-match response |
-  | `Error` | 1 | Incorrect response |
-- **Evidence**: No direct DOI reference; task is standard in cognitive neuroscience paradigms.
-- **Kernel Notes**: Behavioral labels must be derived by merging EEG events with behavioral log (response time, accuracy). Participants.tsv or behavioral log files should contain trial-level accuracy data. Session-level super meta (drug vs placebo) may interact with error rates.
 
 ## Data Quality Notes
 

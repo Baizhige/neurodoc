@@ -64,46 +64,29 @@ Participants performed an attentional blink (AB) task using a Rapid Serial Visua
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.0, target_events = []`
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 18–28 (years) | Partial completeness: 41/47 subjects; missing values excluded at kernel level |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | 18–28 (years); no mapping |
 - **Evidence**:
   - participants.tsv — Age column present with values 18–28 years, 41 of 47 subjects have age data
   - dataset_description.json — EEG study with continuous recordings (~20 min blocks) enabling segmentation approach
   - eeg.json — RecordingType: continuous, supporting non-event-based epoching
-- **Notes**: Standard brain-age prediction paradigm using 2-second non-overlapping segments from continuous EEG to extract spectral features for chronological age regression. Segmentation avoids task-locked event dependence, using inter-trial intervals and rest periods as effective "resting-state" data. The epoch length of 2s is inferred from common practice in brain-age literature for power spectral feature extraction.
+- **Notes**: Standard brain-age prediction paradigm using 2-second non-overlapping segments from continuous EEG to extract spectral features for chronological age regression. Segmentation avoids task-locked event dependence, using inter-trial intervals and rest periods as effective "resting-state" data. The epoch length of 2s is inferred from common practice in brain-age literature for power spectral feature extraction. Partial completeness: 41/47 subjects; missing values excluded at kernel level.
 
 ### Potential Task 3: Gender Classification from EEG
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2 s *, overlap = 0.0, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `gender`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | gender | female | 0 | female participant |
-  | gender | male | 1 | male participant |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_sex | female -> 0; male -> 1 |
 - **Evidence**:
 - **Notes**: Binary classification with imbalanced classes (35 female, 12 male). Uses standard 2-second segmentation to capture stable spectral features for demographic prediction. All segments from a given subject share the same gender label.
-
-### Potential Task 4: continuous EEG segmentation with tDCS polarity regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 4 s *, overlap = 0.5, target_events = []`
-- **Label Route**: `info`
-- **Label Field**: `tDCS_on_first_day`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | tDCS_on_first_day | 0–1 (binary) | Categorical encoding: anodal=1, cathodal=0. Session-level label applied to all segments from that participant's sessions. |
-- **Evidence**:
-- **Notes**: Archetype C with info-native label. The tDCS_on_first_day field in participants.tsv is categorical (anodal/cathodal) but is numerically encoded (0/1) for regression formulation. Since this is a session-level variable, all 4-second segments from a given participant's sessions share the same label value. Segmentation with 50% overlap provides denser sampling of the continuous EEG to capture sustained tDCS-induced spectral shifts. The 4-second window length was selected for state analysis of tDCS modulation effects; marked as inferred due to lack of direct literature guidance for this specific segmentation choice.
 
 ## Data Quality Notes
 

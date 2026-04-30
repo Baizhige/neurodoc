@@ -123,51 +123,7 @@ Participants predicted the final height of an animated rising bar based on cues 
   - 10.1111/psyp.14399 — SPN measured during cue period as core neural signature for reward prediction; cue-locked epochs capture SPN ramping amplitude
 - **Notes**: The target is a continuous regression value representing SPN amplitude at each timepoint within the cue-locked epoch. The six cue conditions (S11-S16) serve as event anchors for epoching; the regression target is the EEG amplitude itself (the SPN), not the condition label. The SPN is measured as the slow negative potential developing during the 1500 ms cue period, with -500 ms capturing any pre-cue fixation carryover baseline. This follows the standard SPN analysis approach where the dependent measure is the continuous amplitude of the negative ramp, typically quantified as mean amplitude over the cue window or extracted as single-trial time-series for regression.
 
-### Potential Task 1: Age Regression from Continuous EEG
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `age`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 21.0–41.0 (years) | Subject-level biomarker; all 21 subjects have complete age data in participants.tsv. Each segment from a subject receives the same age label. |
-- **Evidence**:
-- **Notes**: Pure subject-level regression task using segmented continuous EEG to predict chronological age. No event structure is leveraged—instead, the continuous recording is divided into 2-second non-overlapping windows (with 50% overlap) and each window is labeled with the subject's age from participants.tsv. This serves as a brain-age estimation baseline. Epoch parameters inferred from standard segmentation practices for subject-level biomarker tasks.
-
-### Potential Task 2: Sex Classification from Continuous EEG
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `sex`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | F | 0 | Female |
-  | sex | M | 1 | Male |
-- **Evidence**:
-- **Notes**: Subject-level biomarker task using segmented continuous EEG (2s windows, 50% overlap) to classify sex from resting/task-contaminated continuous recordings. Class imbalance is notable (16 F, 5 M). The info field 'sex' is native to participants.tsv with complete coverage across all 21 subjects. Segmentation parameters are inferred from standard practice for subject-level classification with continuous data.
-
-### Potential Task 3: handedness classification from continuous EEG
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `handedness`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | handedness | R | 0 | right-handed |
-  | handedness | L | 1 | left-handed |
-- **Evidence**:
-- **Notes**: Subject-level biomarker task using 2-second non-overlapping windows of continuous EEG to predict handedness from participants.tsv. Severe class imbalance (18 right-handed vs 3 left-handed). segment_length and overlap inferred from standard practice for subject-level classification with continuous EEG; no trial structure is leveraged.
-
-### Potential Task 4: Fixation-Locked Baseline Classification
+### Potential Task 1: Fixation-Locked Baseline Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = 0 s *, tmax = 0.5 s *, target_events = [`Stimulus/S  1`, `Stimulus/S  2`, `Stimulus/S  3`, `Stimulus/S  4`, `Stimulus/S  5`, `Stimulus/S  6`]
@@ -185,7 +141,7 @@ Participants predicted the final height of an animated rising bar based on cues 
 - **Evidence**:
 - **Notes**: This task tests whether preparatory neural activity during the fixation period (400-600ms) differs across the 6 gnome condition types before any cue information is presented. The 6 conditions represent different predictability structures of the upcoming feedback. Epoch parameters marked with * are inferred from the stated fixation duration of 400-600ms; 500ms window captures the full fixation period.
 
-### Potential Task 5: animation-locked feedback processing classification
+### Potential Task 2: animation-locked feedback processing classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0 s *, tmax = 3 s *, overlap = 0 *, target_events = [`Stimulus/S 41`, `Stimulus/S 42`, `Stimulus/S 43`, `Stimulus/S 44`, `Stimulus/S 45`, `Stimulus/S 46`]
@@ -202,20 +158,6 @@ Participants predicted the final height of an animated rising bar based on cues 
   | `Stimulus/S 46` | 5 | Condition 6 animation start (unpredictable - random uniform) |
 - **Evidence**:
 - **Notes**: Long-event epoching from animation onset captures the continuous visual feedback period during which the bar rises. The 6 conditions differ in their temporal dynamics of prediction error based on prior learned expectations. The 3-second window captures the typical rising period (animation speed: 1 degree/second). Overlap=0 for non-overlapping long epochs. This task is distinct from RPE regression by using discrete condition labels rather than continuous reward prediction error values.
-
-### Potential Task 6: Subject-Level Continuous EEG Segmentation with Age
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `age`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|-------------|-------|
-  | age | 21.0–41.0 (years) | Subject chronological age from participants.tsv; each 2-second segment inherits the subject's age label |
-- **Evidence**:
-- **Notes**: Archetype C with info-native label. Continuous EEG recordings are segmented into non-overlapping/overlapping 2-second windows (50% overlap) to create multiple samples per subject. Each segment is labeled with the subject's age from participants.tsv, enabling regression models to learn age-related EEG biomarkers from resting/task-continuous data. This differs from B3 whole-recording regression by explicitly using segmentation to increase sample size. Parameters marked with * are inferred from standard continuous EEG segmentation practices for subject-level prediction tasks.
 
 ## Data Quality Notes
 

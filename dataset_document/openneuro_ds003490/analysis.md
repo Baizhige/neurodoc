@@ -55,66 +55,32 @@ A three-stimulus auditory oddball task (standard tones, target tones requiring b
   - 10.21528/cbic2023.027 — CBIC 2023 replication confirming same paradigm parameters and event coding.
 - **Notes**: Events S200/S201/S202 are present in the EEG file headers and pre-scan counts but do not appear in the available BIDS events.tsv files for task-Rest sessions. The dataset_description.json and README confirm the full study includes '3-Stim Auditory Oddball' alongside Rest, but only task-Rest files were converted to BIDS format in this release. The high pre-scan counts and header annotations confirm these events belong to the oddball task data. For task execution, the kernel must access these events from the raw EEG file annotations (e.g., .set file annotations) rather than BIDS events.tsv.
 
-### Potential Task 1: PD vs Control from resting EEG (Group classification)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `Group`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | Group | PD | 0 | Parkinson's disease |
-  | Group | CTL | 1 | Control (healthy) |
-- **Evidence**:
-- **Notes**: Resting-state EEG segmentation task for subject-level group classification. Continuous 2-second windows with 50% overlap are extracted from the eyes-closed resting state data (marked by S 3/S 4 alternating triggers at 1Hz). Each window inherits the participant's Group label from participants.tsv (PD vs CTL). This is a B3 archetype using native info field with no kernel derivation required. The epoch parameters are inferred from standard resting-state biomarker segmentation practices since the dataset provides continuous resting recordings without trial structure.
-
-### Potential Task 2: PD Medication ON vs OFF Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `sess1_Med`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sess1_Med | ON | 0 | PD patient on dopaminergic medication |
-  | sess1_Med | OFF | 1 | PD patient off dopaminergic medication |
-- **Evidence**:
-  - 10.1016/j.clinph.2017.11.023 — Original paper reports ON vs OFF medication comparison within PD group; participants counterbalanced with ~1 week separation between sessions
-- **Notes**: This task uses session-level medication state from participants.tsv. The sess1_Med column encodes ON/OFF for PD patients (CTL subjects have 'n/a'). For classification, only PD subjects with valid ON/OFF labels are included. The counterbalanced design (sess1=ON/sess2=OFF or sess1=OFF/sess2=ON) enables within-subject medication state classification. Segmentation with 2s windows and 50% overlap is standard for continuous resting-state EEG biomarker extraction. The epoch parameters are inferred from typical biomarker analysis pipelines for Parkinson's disease EEG.
-
-### Potential Task 3: Age regression from resting EEG
+### Potential Task 1: Age regression from resting EEG
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 48–84 (years) | Continuous age from participants.tsv; complete for all 50 subjects (25 PD, 25 CTL) |
+  | Info Field | Y Mapping Notes |
+  |------------|------------------|
+  | subject_age | no mapping |
 - **Evidence**:
   - participants.tsv — age column complete (N=50, range 48–84 years), numeric dtype suitable for regression
   - README — confirms 25 Parkinson patients and 25 matched controls with age-matched design
   - dataset_description.json — confirms resting EEG task ("EEG: 3-Stim Auditory Oddball and Rest in Parkinson's")
 - **Notes**: Standard segmentation approach for age prediction from continuous resting-state EEG. 2-second windows with 50% overlap generate sufficient samples from ~588s recordings while preserving stationarity. Age is a native participants.tsv column requiring no kernel derivation.
 
-### Potential Task 4: Sex classification from resting EEG
+### Potential Task 2: Sex classification from resting EEG
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5 *, target_events = []`
 - **Label Route**: `info`
-- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | Male | 0 | Male participant |
-  | sex | Female | 1 | Female participant |
+  | Info Field | Y Mapping Notes |
+  |------------|------------------|
+  | subject_sex | Male -> 0; Female -> 1 |
 - **Evidence**:
   - participants.tsv — Complete categorical column with 32 Male and 18 Female entries across 50 subjects
   - dataset_description.json — Confirms dataset is "EEG: 3-Stim Auditory Oddball and Rest in Parkinson's" with resting-state data

@@ -65,4 +65,4 @@ A multimodal neuroimaging study (EEG + MEG/MRI) investigating the spatiotemporal
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: failed
+> **Status**: wait_kernel_update

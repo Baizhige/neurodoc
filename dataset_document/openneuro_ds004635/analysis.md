@@ -30,38 +30,7 @@ Infants watched a series of engaging and relaxing videos to facilitate recording
 
 ## Tasks
 
-### Potential Task 1: Infant Age Regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 4 s *, overlap = 0.0, target_events = []`
-- **Label Route**: `info`
-- **Label Field**: `Age`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | Age | ~5.98 – 9.44 (months) | Age in months at time of recording; 48 infants, mean ~7.5 months. Continuous developmental measure for brain maturation prediction. |
-- **Evidence**:
-- **Notes**: Segmentation-based epochs (4-second non-overlapping windows) from continuous resting-state EEG during video-watching. Age is a native participants.tsv column, so Meta Level = raw. No event markers are used for epoching; the segmentation approach treats the continuous recording as a stream of brain state samples, allowing the model to learn age-predictive features from spontaneous EEG dynamics (e.g., spectral power, microstate features) across the full recording duration.
-
-### Potential Task 2: Infant Sex Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 4 s *, overlap = 0.0, target_events = []`
-- **Label Route**: `info`
-- **Label Field**: `Gender`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | Gender | M | 0 | Male |
-  | Gender | F | 1 | Female |
-- **Evidence**:
-  - README — 48 infants (27 male); sex recorded as M/F in participants.tsv
-  - participants.tsv — complete Gender column with values M/F for all 48 subjects
-- **Notes**: Segmentation-based resting-state classification. 4-second segments with no overlap are standard for continuous EEG feature extraction in sex prediction paradigms. The kernel reads Gender directly from participants.tsv (native info field, no derivation needed).
-
-### Potential Task 3: Segment vs Transition Classification
+### Potential Task 1: Segment vs Transition Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: `tmin = -0.5 s *, tmax = 1.0 s *, target_events = ['bgin', 'TRSP']`

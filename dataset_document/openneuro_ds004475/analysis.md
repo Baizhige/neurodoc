@@ -77,7 +77,7 @@ A mobile brain-body imaging experiment investigating brain activity during gait 
   - DOI: `10.1113/jp284505` — This paper analyzes high-density EEG recorded during split-belt treadmill walking from 30 participants (dataset openneuro_ds004475) to examine spectral power changes in alpha, beta, and theta bands across gait adaptation stages, using gait events (heel strikes and toe-offs) detected from force plates as epoching points.
 - **Kernel Notes**: Gait events (LHS/RHS/RTO/LTO) are the fundamental unit of analysis in this locomotor paradigm. High event counts (~77k per type) reflect continuous walking across multiple conditions and are appropriate for event-related epoching. The epoch window (tmin=-0.2s to tmax=1.0s) captures the pre-event baseline and full post-event gait cycle dynamics. Channel filtering to EEG-only subset is required (260 total channels includes non-EEG motion capture markers).
 
-### Potential Task 2: Walking Condition Classification
+### Potential Task 1: Walking Condition Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = segment_length, target_events = [`SB1`, `SB2`], segment_length = 20–60 s
@@ -90,22 +90,6 @@ A mobile brain-body imaging experiment investigating brain activity during gait 
   | `SB2` | 1 | Split-belt block 2 (differential speed, active adaptation) |
 - **Evidence**: Plausible from paradigm — SB1 and SB2 markers explicitly denote distinct walking conditions (tied vs. split belt speeds) within the experimental protocol. Gait patterns differ substantially between conditions, allowing classifier training.
 - **Kernel Notes**: SB1/SB2 blocks capture the core experimental manipulation. Consider excluding transition periods (first 5–10 seconds per block) to focus on steady-state adaptation. Admin markers (End SB1, End SB2) should be excluded.
-
-### Potential Task 3: Adaptation State Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.3 s, tmax = 0.3 s, target_events = [`RHS`, `LHS`], baseline_interval = [-0.3, -0.1]
-- **Label Route**: `misc`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|----------|
-  | `RHS` (early adaptation) | 0 | Right heel strike during early split-belt exposure |
-  | `RHS` (late adaptation) | 1 | Right heel strike during late/proficient split-belt walking |
-  | `LHS` (early adaptation) | 0 | Left heel strike during early split-belt exposure |
-  | `LHS` (late adaptation) | 1 | Left heel strike during late/proficient split-belt walking |
-- **Evidence**: Plausible from paradigm — the reference paper (10.1113/jp284505) explicitly examines "early vs late adaptation" spectral changes, indicating behavioral/electrophysiological state transitions during split-belt learning. Adaptation state can be inferred from gait cycle timing (step length asymmetry) and timing within SB2 block.
-- **Kernel Notes**: Adaptation state requires deriving labels from gait metrics (step length, inter-limb timing) computed from LHS/RHS/RTO/LTO events, not directly from event IDs. Kernel must implement step length asymmetry calculation and split SB2 into early/late adaptation phases. TRIG markers (~48k) may provide additional timing synchronization for block-relative positioning.
 
 ## Data Quality Notes
 

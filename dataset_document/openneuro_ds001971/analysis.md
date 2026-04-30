@@ -133,13 +133,11 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.0 *, target_events = []`
 - **Label Route**: `info`
-- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | F | 0 | Female |
-  | sex | M | 1 | Male |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_sex | F -> 0; M -> 1 |
 - **Evidence**:
   - participants.tsv — 20 subjects with complete sex information (F: 9, M: 11)
 - **Notes**: Binary classification of biological sex from EEG recorded during treadmill walking with auditory pacing. The 10-second non-overlapping segmentation provides multiple samples per subject while capturing locomotor dynamics. This is a B3 archetype using native participants.tsv column; no kernel derivation needed. The MoBI context with real-world movement may reveal sex differences in neural gait control.
@@ -149,27 +147,25 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.0, target_events = []`
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 23–38 (years) | Mixed precision: most subjects encoded as '18-38' (range), explicit values 28 and 32 for some. Effective range 23–38 based on explicit values and dataset summary. Subject-level label applied to all segments from that subject. |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | no mapping |
 - **Evidence**:
-- **Notes**: Subject-level continuous regression task using segmentation to create multiple samples per participant. Age is a native participants.tsv column (archetype B3, Meta Level = raw). The 10-second window length is standard for Complex Applied biological state tasks with continuous EEG; overlap is 0 to ensure independent segments. The mixed precision encoding (range vs. specific values) limits granularity but the 23-38 year span provides sufficient variability for regression analysis of neural correlates of gait control across young adulthood.
+  - participants.tsv — 20 subjects with age values (effective range 23–38 years); some entries are ranges (e.g., '18-38') requiring midpoint imputation or exclusion
+- **Notes**: Subject-level continuous regression task using segmentation to create multiple samples per participant. Age is a native participants.tsv column (archetype B3, Meta Level = raw). The 10-second window length is standard for Complex Applied biological state tasks with continuous EEG; overlap is 0 to ensure independent segments. Some entries encoded as ranges limit granularity but the 23-38 year span provides sufficient variability for regression analysis of neural correlates of gait control across young adulthood.
 
 ### Potential Task 6: Segmented Walking State with Sex Label
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | F | 0 | Female |
-  | sex | M | 1 | Male |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_sex | F -> 0; M -> 1 |
 - **Evidence**:
 - **Notes**: Archetype C with native info label (sex). The continuous walking recordings contain mixed event structures with multiple condition types and auxiliary streams, making a naturalistic segmentation approach appropriate. Arbitrary 4-second EEG segments are classified by subject-level sex, treating the entire walking session as a continuous brain state. The segment_length and overlap values are inferred from the candidate's epoch_hint as no canonical trial structure exists for this continuous MoBI paradigm.
 
@@ -178,12 +174,11 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 23.0–38.0 (years) | Continuous age from participants.tsv; some entries are ranges (e.g., '18-38') which may require midpoint imputation or exclusion |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | no mapping |
 - **Evidence**:
   - participants.tsv — N=20, age=23.0–38.0, with some range entries (e.g., '18-38')
 - **Notes**: Archetype C with info-native label (age from participants.tsv). Segmentation is required because the walking protocol produces continuous, mixed-condition recordings without clean trial boundaries suitable for event-based epoching. The 4-second windows with 50% overlap maximize the number of segments per subject for robust age regression from locomotor EEG dynamics. Age serves as a biomarker target: neural signatures of gait adaptability and sensorimotor integration across the complex multi-condition protocol (cued/uncued walking, tempo shifts) may correlate with age-related differences in young adults (23–38 years). The kernel does not need to derive any channels; age is read directly from participants.tsv.

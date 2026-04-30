@@ -96,12 +96,11 @@ Participants engaged in naturalistic listening to excerpts of "Le Petit Prince" 
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 6 s *, overlap = 0.0, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 20.0–28.0 (years) | Continuous age values from participants.tsv; N=25-26 subjects with complete age data. Mean age 24.04 ± 2.28 years. |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | `subject_age` | Continuous values from participants.tsv; range 20.0–28.0 years, mean 24.04 ± 2.28, N=25-26 subjects with complete age data. |
 - **Evidence**:
   - participants.tsv — Complete age data for all subjects (range 20-28 years, mean 24.04, SD 2.28)
   - README — "25 native Mandarin Chinese speakers (14 females, mean age = 24.04 ± 2.28 years)"
@@ -113,13 +112,11 @@ Participants engaged in naturalistic listening to excerpts of "Le Petit Prince" 
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 6 s *, overlap = 0.0, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | F | 0 | Female |
-  | sex | M | 1 | Male |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | `subject_sex` | F -> 0 (Female); M -> 1 (Male) |
 - **Evidence**:
   - participants.tsv — N=26 subjects with sex labels (F=15, M=11), complete coverage
   - dataset_description.json — "Le Petit Prince (LPP) Multi-talker: Naturalistic 7T fMRI and EEG Dataset"
@@ -131,12 +128,11 @@ Participants engaged in naturalistic listening to excerpts of "Le Petit Prince" 
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 6 s *, overlap = 0.0 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 20.0–28.0 (years) | Per-subject continuous target; all segments from a subject share the same age value. Native participants.tsv column. |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | `subject_age` | Per-subject continuous target; all segments from a subject share the same age value (20.0–28.0 years). Native participants.tsv column. |
 - **Evidence**:
 - **Notes**: Archetype C with info-native label. Segmentation-based task with no event dependency — all continuous EEG data is sliced into non-overlapping 6-second segments. Age is drawn directly from participants.tsv (native info field, Meta Level = raw). The 6-second segment length is inferred from SKILL defaults for naturalistic continuous listening data; overlap is set to 0.0 for non-overlapping segments. This task is identical in label structure to a B3 age regression but explicitly framed as segmentation with empty event dependency.
 

@@ -29,33 +29,7 @@ Subjects performed a simulated driving task with varying levels of visual traffi
 
 ## Tasks
 
-### Potential Task 1: Year of Birth Regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 4 s *, overlap = 0.0 *, target_events = []`
-- **Label Route**: `info`
-- **Label Field**: `year_of_birth`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | year_of_birth | 1976–1995 | Subject year of birth; ~19 year span across 29 subjects. Used as proxy for chronological age in continuous EEG regression. |
-- **Evidence**:
-- **Notes**: Segmentation-based epoching (4s non-overlapping segments) enables subject-level regression without event-locked constraints. The year_of_birth field in participants.tsv provides complete demographic coverage (N=29, range ~1976-1995), supporting age-related EEG pattern learning. No event markers are required for this task architecture.
 
-### Potential Task 2: Continuous Driving Segmentation with Year of Birth Regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 10 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `year_of_birth`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|-------------|-------|
-  | year_of_birth | 1954–1997 (year) | Subject chronological age proxy; all subjects adult (range ~23–69 years at typical study date). Value used as scalar regressor per segment. |
-- **Evidence**:
-- **Notes**: Native info field from participants.tsv; no kernel derivation required. Segmentation treats continuous driving as brain-state prediction problem with subject-level age covariate. 10s windows with 50% overlap chosen to capture slow fluctuations in fatigue-related EEG signatures that may vary with age, per dataset's stated goal of fatigue biomarker discovery.
 
 ## Data Quality Notes
 

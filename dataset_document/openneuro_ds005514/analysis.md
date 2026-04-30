@@ -74,50 +74,6 @@ The Healthy Brain Network (HBN) EEG Release 9 is a large-scale, multi-task devel
 
 ## Tasks
 
-### Classical Task 1: Resting-state EEG classification of psychiatric diagnoses
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
-- **Label Route**: `misc`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
-  | `ADHD` | 0/1 | Attention-Deficit/Hyperactivity Disorder diagnosis |
-  | `ANX (anxiety)` | 0/1 | Anxiety disorder diagnosis |
-  | `SLD` | 0/1 | Specific Learning Disorder diagnosis |
-  | `ASD` | 0/1 | Autism Spectrum Disorder diagnosis |
-  | `DISR` | 0/1 | Disruptive disorders diagnosis |
-  | `COM` | 0/1 | Communication disorders diagnosis |
-  | `DEP` | 0/1 | Depressive disorders diagnosis |
-  | `Other` | 0/1 | Other DSM-V diagnosis |
-- **Super Meta Notes**: Derived from clinical DSM-V diagnoses made by licensed clinicians. Kernel step: Join EEG epoch files with phenotypic diagnosis tables by subject ID; compute binary labels per DSM-V category; use subject-wise splits to prevent data leakage.
-- **Evidence**:
-  - DOI: 10.1016/j.neuroimage.2022.119348 — Multi-label classification of 8 DSM-V psychiatric diagnoses from resting-state EEG in HBN pediatric sample
-- **Kernel Notes**: Requires phenotypic data join; use leave-one-subject-out or subject-wise cross-validation; binary cross-entropy loss per diagnosis; resting blocks identified via `resting_start` (269 events) or `instructed_toOpenEyes`/`instructed_toCloseEyes` (2916 events).
-
-### Classical Task 2: Resting-state EEG regression of dimensional symptom severity
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
-- **Label Route**: `misc`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|-----|--------|
-  | `SCARED GAD` | float | Screen for Child Anxiety Related Disorders – Generalized Anxiety subscale |
-  | `SWAN IN` | float | Sustained Attention (Inattention) subscale score |
-  | `SWAN HY` | float | Sustained Attention (Hyperactivity) subscale score |
-  | `SRS-2 SCI` | float | Social Responsiveness Scale-2 Social Communication Index |
-  | `SRS-2 RRB` | float | Social Responsiveness Scale-2 Restricted Interests/Repetitive Behavior subscale |
-  | `WISC VCI` | float | Wechsler Intelligence Scale for Children Verbal Comprehension Index |
-  | `WMI` | float | Working Memory Index |
-- **Super Meta Notes**: Derived from standardized behavioral/questionnaire measures administered to HBN participants. Kernel step: Join EEG epoch files with behavioral questionnaire score tables by subject ID; segment continuous resting blocks into 2 s epochs; use subject-wise cross-validation to prevent data leakage.
-- **Evidence**:
-  - DOI: 10.1016/j.neuroimage.2022.119348 — Benchmark for prediction of psychiatric multimorbidity (regression of symptom severity scores)
-  - DOI: 10.1016/j.neuroimage.2020.117001 — Functional connectivity of EEG associated with phenotypic measures including IQ, ADHD, age, anxiety, Child Behavior Checklist
-- **Kernel Notes**: Requires phenotypic data join; use subject-wise cross-validation splits; MSE loss per target; resting blocks identified via `resting_start` or instruction events; recommend per-epoch feature extraction then aggregating predictions per subject.
-
 ### Potential Task 1: Contrast detection sensory ERP analysis
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -179,24 +135,6 @@ The Healthy Brain Network (HBN) EEG Release 9 is a large-scale, multi-task devel
 - **Evidence**:
   - DOI: 10.1101/2024.10.03.615261 — HBN-EEG dataset descriptor (surrounding suppression paradigm included)
 - **Kernel Notes**: Three psychophysical blocks examining visual surround suppression; block onset events available (`surroundSuppB1_start`: 234, `surroundSuppB2_start`: 235, `surroundSuppB3_start`: 234); epochs capture VEP changes associated with suppression; alternative: epoch by block duration using block start/stop markers if stop events available; blocks may differ in suppression strength.
-
-### Potential Task 5: Resting-state EEG prediction of psychopathology dimensions
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
-- **Label Route**: `misc`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|-----|--------|
-  | `internalizing` | float | Internalizing factor score (bifactor model) |
-  | `externalizing` | float | Externalizing factor score (bifactor model) |
-  | `attention` | float | Attention factor score (bifactor model) |
-  | `p_factor` | float | General psychopathology factor (p-factor) |
-- **Super Meta Notes**: Four psychopathology dimensions from bifactor model are publicly available as participant metadata. Kernel step: Join segmented EEG epochs with phenotypic files by subject ID; subject-wise cross-validation prevents data leakage.
-- **Evidence**:
-  - DOI: 10.1101/2024.10.03.615261 — HBN-EEG FAIR implementation (bifactor psychopathology dimensions publicly available in participant metadata)
-- **Kernel Notes**: Resting blocks identified via `resting_start` (269 events) or instruction events; same segmentation approach as classical tasks; p-factor represents transdiagnostic liability; dimensional scores available per subject for regression; optional: multi-output regression for all four factors jointly.
 
 ## Data Quality Notes
 

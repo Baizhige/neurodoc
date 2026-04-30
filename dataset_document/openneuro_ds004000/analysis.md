@@ -87,23 +87,6 @@ A social decision-making study investigating fairness processing and social cogn
   - .vmrk header samples — S 64/S128 observed in proposer files; S 96/S160 observed in responder files; distinct event codes across roles enable role classification
 - **Notes**: Event codes are task-specific: S 64 and S128 appear exclusively in proposer runs, while S 96 and S160 appear exclusively in responder runs. This creates a natural 2-class classification problem where the event identity itself encodes the participant's role. The y=0/1 mapping groups all proposer-phase events together and all responder-phase events together, reflecting the binary role distinction. The epoch window (-0.2 to 0.8s) captures the ERP around trial phase onsets, covering early sensory and cognitive processing associated with role-specific task demands.
 
-### Classical Task 2: group regression (HC vs P continuous)
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 6 s *, overlap = 0.0, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `group`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|-------|---------|
-  | group | 0–1 (binary) | 0=Healthy control, 1=Patient with psychosis; binary group label treated as continuous regression target |
-- **Evidence**:
-  - 10.1016/j.schres.2017.05.037 — Both studies use group (HC vs P) as the primary classification label
-  - 10.1016/j.schres.2023.01.029 — Both studies use group (HC vs P) as the primary classification label
-  - participants.tsv — 'group' column with complete coverage (24 HC, 19 P)
-- **Notes**: Subject-level regression using segmentation approach with 6s non-overlapping segments. The 'group' label is a native participants.tsv column (B3 archetype, raw meta level). Segment length of 6s matches reported trial duration; overlap=0 ensures independent samples. This enables biomarker-style regression when event-locked analysis is not desired. Task type changed from classification to regression to avoid single-class-per-subject issue inherent in group-level segmentation; the binary group variable is treated as a continuous target.
-
 ### Potential Task 1: 4-class trial phase classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -122,21 +105,6 @@ A social decision-making study investigating fairness processing and social cogn
   - README — "The task is playing the Ultimatum Game" with proposer/responder roles; 30 repetitions per block
   - eeg.json (sub-000_task-proposer_run-1) — TaskDescription describes trial structure with offer, decision, and feedback phases
 - **Notes**: Event structure supports a natural 4-class trial phase detection task based on the Ultimatum Game trial structure (fixation/trial start → offer presentation → decision period → feedback presentation). The 6s trial duration with 4 phases implies approximately 1.5s per phase; 2s window captures each phase with buffer. No direct publication reference supports this specific 4-class formulation, but the event codes and trial structure are clearly present in the data.
-
-### Potential Task 2: Segmentation Group Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `group`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | group | HC | 0 | Healthy control participant |
-  | group | P | 1 | Patient with psychosis episodes |
-- **Evidence**:
-- **Notes**: Continuous EEG is segmented into 4-second windows with 50% overlap for group-level classification. The group label is drawn from participants.tsv (native info column), making this a raw meta-level task. This potential task explores schizophrenia-related neural signatures in task-continuous data without relying on event-locked epochs. The segment length and overlap are inferred from spectral estimation requirements and similar windowing used in connectivity analyses.
 
 ## Data Quality Notes
 

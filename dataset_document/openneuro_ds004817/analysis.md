@@ -38,60 +38,40 @@ A Rapid Serial Visual Presentation (RSVP) task (Experiment 2) investigating the 
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5, target_events = []`
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 19–36 (years) | Subject chronological age from participants.tsv; all 20 subjects have complete age data |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | no mapping |
 - **Evidence**:
   - Grootswagers et al. (2021) — Dataset README and participants.tsv document age range 19–36 years for all 20 subjects
 - **Notes**: Segmentation-based epochs (2s windows, 50% overlap) are used because age is a subject-level variable with no trial-level event structure. The kernel simply reads the native `age` column from participants.tsv and assigns it to all epochs from that subject. No derivation is needed.
 
-### Potential Task 2: Subject handedness classification
+### Potential Task 2: Subject gender classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `handedness`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | handedness | R | 0 | Right-handed |
-  | handedness | L | 1 | Left-handed |
-- **Evidence**:
-  - participants.tsv — Handedness column complete for all 20 subjects (R=17, L=3)
-- **Notes**: Segmentation-based epochs with 2s windows and 50% overlap used because handedness is a subject-level demographic variable with no event-based structure. All epochs from a given subject receive the same label. Imbalanced 2-class problem (17:3 ratio).
-
-### Potential Task 3: Subject gender classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `gender`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | gender | F | 0 | Female |
-  | gender | M | 1 | Male |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_sex | F -> 0; M -> 1 |
 - **Evidence**:
   - participants.tsv — gender column complete for all 20 subjects (F=17, M=3)
   - dataset_description.json — confirms dataset is EEG-attention-rsvp-exp2 with 20 subjects
 - **Notes**: Highly imbalanced 2-class problem (17F/3M). Segmentation-based epochs required because gender is a subject-level label with no discriminating event structure. All epochs from a given subject share the same label. SKILL default segmentation parameters used (2s windows, 50% overlap) as no event-based structure exists for this subject-level prediction task.
 
-### Potential Task 4: RSVP Continuous EEG Segmentation with Age
+### Potential Task 3: RSVP Continuous EEG Segmentation with Age
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|-------------|-------|
-  | age | 19.0–36.0 (years) | Subject chronological age from participants.tsv; predicted from 2-second non-overlapping sliding windows of continuous RSVP EEG |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | no mapping |
 - **Evidence**:
 - **Notes**: Archetype C segmentation formulation of age prediction. Uses fixed 2-second windows with 50% overlap across the entire continuous RSVP recording, rather than event-locked epochs. The kernel must segment the raw EEG without event alignment, assigning the same subject-level age label to all windows from a given recording. This provides a segmentation-focused alternative to event-based or trial-averaged approaches for subject-level biomarker prediction.
 

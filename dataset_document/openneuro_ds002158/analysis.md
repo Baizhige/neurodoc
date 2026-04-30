@@ -110,53 +110,20 @@ Participants performed speeded perceptual judgments and subsequently reported th
   - README — Dataset involves speeded perceptual judgments with confidence ratings; participants decide which side has more dots
 - **Notes**: The specific mapping between stimulus markers and left/right side is not explicitly documented in the available sidecar files. The events.tsv shows trial_type values (act, act-bad, obs, obs-bad) but does not directly map to the S 40/S 41/S 43/S 27/S 11/S 12/S 17/S 18 trigger codes. Based on the candidate's evidence summary stating these events encode stim_side values, we group markers into two classes (y=0 for left, y=1 for right). The exact left/right assignment per marker ID is inferred from the candidate's kernel_needs grouping. All eight stimulus markers are included as target_events to capture both sides; the kernel must extract stim_side labels from the events.tsv and assign class labels accordingly. The epoch window [-0.1, 1.0] s captures pre-stimulus baseline and early decision-related ERP components including potential contralateral delay activity and lateralized readiness potential.
 
-### Potential Task 2: Age Regression from Resting Segmentation
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `age`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 20–32 (years) | Continuous age from participants.tsv; all 20 subjects have complete age data |
-- **Evidence**:
-  - participants.tsv — 20 participants with complete age data (range 20–32 years, mean ~25.5)
-  - scans.tsv & file system — task-rest has no events.tsv and no EEG .vmrk file, confirming absence of event markers for resting-state EEG
-  - README & dataset_description.json — dataset contains EEG-fMRI multimodal recordings with resting-state sessions
-- **Notes**: Segmentation approach required because task-rest EEG lacks any event markers (no events.tsv, no .vmrk file). 2-second segments with 50% overlap provide sufficient samples per subject for subject-level age regression while preserving spectral content relevant to age-related EEG changes. Age range 20–32 is narrow but provides continuous variance for regression benchmarking of physiological variation across young adults.
-
-### Potential Task 3: Sex Classification from Resting Segmentation
+### Potential Task 2: Sex Classification from Resting Segmentation
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | F | 0 | Female |
-  | sex | M | 1 | Male |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_sex | F → 0; M → 1 |
 - **Evidence**:
-- **Notes**: Segmentation-based task with no events (task-rest has no events.tsv and no .vmrk file). Sex is a native participants.tsv column with complete coverage (F=9, M=11, N=20). Segment length and overlap inferred from Category SKILL defaults for resting-state segmentation tasks.
-
-### Potential Task 4: Age Regression from Task Segmentation
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5 *, target_events = []`
-- **Label Route**: `info`
-- **Label Field**: `age`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 20–32 (years) | Participant chronological age from participants.tsv; all 20 subjects have complete age data. Each 2-second segment from task-main continuous EEG inherits the subject's age as regression target. |
-- **Evidence**:
-  - participants.tsv — age column complete for N=20 subjects, range 20–32 years
-  - epoch_hint — segmentation approach with 2s windows and 50% overlap for continuous task data
-- **Notes**: Segmentation-based alternative to event-locked age prediction. Uses fixed 2-second non-overlapping segments (with 50% overlap) from continuous task-main EEG recordings. Each segment receives the same age label for its subject. This avoids reliance on complex event structure while leveraging the full continuous recording for subject-level demographic prediction.
+  - participants.tsv — subject_sex column complete (F=9, M=11, N=20)
+  - scans.tsv & file system — task-rest has no events.tsv and no EEG .vmrk file, confirming absence of event markers for resting-state EEG
+- **Notes**: Segmentation-based task with no events (task-rest has no events.tsv and no .vmrk file). Sex is a native participants.tsv column with complete coverage. Segment length and overlap inferred from Category SKILL defaults for resting-state segmentation tasks.
 
 ## Data Quality Notes
 

@@ -34,36 +34,7 @@ Participants performed mental imagery tasks involving semantic categories of ani
 
 ## Tasks
 
-### Potential Task 1: Age Regression from EEG
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 3 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `age`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|-------------|-------|
-  | age | 20–57 (years) | Continuous age values from participants.tsv for all 12 subjects; used as regression target for subject-level biomarker prediction |
-- **Evidence**:
-  - participants.tsv — complete age data for all 12 subjects (range 20–57 years)
-- **Notes**: Segmentation-based epoching creates fixed-length EEG segments (3 s, 50% overlap) to build subject-level feature representations. No event structure is required since age is a static subject-level variable. The eeg.json confirms EpochLength=3, consistent with the 3-second segmentation window.
 
-### Potential Task 2: sex classification from EEG
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 3 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `sex`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | F | 0 | female |
-  | sex | M | 1 | male |
-- **Evidence**:
-  - participants.tsv — sex column contains complete categorical data: F (9 subjects) and M (3 subjects)
-- **Notes**: Subject-level biomarker classification using segmentation-based epoching to create 3-second non-overlapping windows (50% overlap) from continuous EEG. The 'sex' field is a native participants.tsv column requiring no kernel derivation. Class imbalance (9:3) should be noted for model evaluation.
 
 ## Data Quality Notes
 

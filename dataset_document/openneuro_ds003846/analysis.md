@@ -35,12 +35,11 @@ A virtual reality haptic interaction study where participants reached out to tou
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s *, overlap = 0.0, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|-------------|-------|
-  | age | 18.0–34.0 (years) | Continuous age of young adult participants; all 19 subjects have complete age data |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | no mapping |
 - **Evidence**:
 - **Notes**: Segmentation-based approach with 4-second non-overlapping windows. No event structure required since age is a subject-level continuous variable. The narrow age range (18-34 years, young adults only) may limit prediction accuracy but provides a valid regression target. Each segment from a given subject receives the same age label, and the model must learn age-related spectral or spatial patterns from resting/task EEG dynamics.
 
@@ -49,12 +48,11 @@ A virtual reality haptic interaction study where participants reached out to tou
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s *, overlap = 0.0 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `cap_size`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|-------------|-------|
-  | cap_size | 54–60 (arbitrary cap size units) | Continuous integer cap sizes from participants.tsv; complete data for all 19 participants. Range is limited (7 unique values) but may capture brain size-related EEG variations. |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | no mapping |
 - **Evidence**:
   - participants.tsv — cap_size column with values 54–60, complete for all 19 participants
   - README — "Cap Size: Varied, with sizes ranging from 54 to 60"
@@ -65,13 +63,11 @@ A virtual reality haptic interaction study where participants reached out to tou
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s *, overlap = 0.0 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `block_1`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | block_1 | Visual | 0 | Visual-only stimulation |
-  | block_1 | Visual + Vibro | 1 | Visual plus vibrotactile stimulation |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | no mapping |
 - **Evidence**:
 - **Notes**: Subject-level classification task predicting whether the first stimulation block used Visual-only or Visual+Vibro feedback. The block_1 column in participants.tsv contains the stimulation condition for each subject's first block. One subject (sub-04) has block_1=Visual, block_2=Visual + Vibro, block_3=0 (missing/invalid), confirming the two-class structure. The 4-second non-overlapping segmentation treats each subject's EEG recording as a bag of segments for subject-level prediction, with all segments from a subject sharing the same label. This is a simpler alternative to full protocol classification with larger per-class sample sizes (19 subjects total with block_1 data).
 
@@ -80,12 +76,11 @@ A virtual reality haptic interaction study where participants reached out to tou
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.5, target_events = []`
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 18.0–34.0 (years) | Subject chronological age from participants.tsv; N=19, complete coverage |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | no mapping |
 - **Evidence**:
   - participants.tsv — age column complete for all 19 subjects, range 18–34 years
   - README — "The study sample consists of 19 participants... with ages ranging from 18 to 34 years"

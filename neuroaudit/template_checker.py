@@ -201,7 +201,6 @@ Each task under ## Tasks uses this bullet format in this order:
   - **Epoch Method**: `epoch_by_event_hdf5` | `epoch_by_long_event_hdf5` | `epoch_by_segmentation_hdf5`
   - **Epoch Parameters**: tmin = X s, tmax = X s, target_events = [`id_a`, ...]  (segmentation ⇒ [])
   - **Label Route**: `event` | `misc` | `info`
-  - **Label Field**: `<name>`  ← REQUIRED iff Label Route ∈ {{misc, info}}; FORBIDDEN when Route = event
   - **Meta Level**: raw | super
   - **Target Definition**:
     <route-specific table>
@@ -212,15 +211,16 @@ Each task under ## Tasks uses this bullet format in this order:
 Target Definition table by Route × Task Type:
   event  classification  | Event ID | y | Meaning |              (≥2 distinct y)
   event  regression      | Event ID | Value | Meaning |
-  misc   regression      | MISC Channel | Value (unit) | Notes | (misc is regression-only)
-  info   classification  | Info Field | Value | y | Meaning |    (≥2 distinct y)
-  info   regression      | Info Field | Range (unit) | Notes |
+  misc   classification  | MISC Channel Name | Y Mapping Notes |
+  misc   regression      | MISC Channel Name | Y Mapping Notes |
+  info   classification  | Info Field | Y Mapping Notes |
+  info   regression      | Info Field | Y Mapping Notes |
 
 Hard invariants to satisfy when fixing v3 semantic errors:
-- H1: one Label Field per task — split multi-target tasks into N tasks.
-- H2: classification tasks need ≥2 distinct y values.
-- H3: Route = misc ⇒ Task Type = regression only.
-- H4: Label Field present iff Route ∈ {{misc, info}}.
+- H1: one label source per task — split multi-target tasks into N tasks.
+- H2: event-route classification tasks need ≥2 distinct y values.
+- H3: Route ∈ {{misc, info}} ⇒ exactly one Target Definition row.
+- H4: `Label Field` is deprecated for Route ∈ {{misc, info}} and must not appear in newly fixed content.
 - H5: Derived misc ⇒ Meta Level = super. Notes SHOULD describe the derivation (recommended, not enforced).
 - H8: Epoch Parameters MUST include the minimum required keys for the declared Epoch Method
       (epoch_by_event_hdf5: tmin/tmax/target_events; epoch_by_long_event_hdf5: tmin/tmax/overlap/target_events;
@@ -229,11 +229,9 @@ Hard invariants to satisfy when fixing v3 semantic errors:
 - H7: `Manual Review` must stay blank and must appear inline on the second meta line
       (after `Sampling Rate`, not as a standalone line).
 
-If an error refers to `label_field_required_for_nonevent` — add a `- **Label Field**: ...` line.
-If `label_field_absent_for_event` — remove the stray Label Field line.
+If an error refers to deprecated `Label Field` usage for misc/info — remove that bullet and move the source into the first column of `Target Definition`.
 If `target_def_schema_matches_route` — rewrite the TD header to match the matrix above.
 If `classification_task_has_multiple_classes` — either add a contrastive class row or switch Task Type to regression (or drop the task if no valid formulation exists).
-If `misc_classification_forbidden` — change Task Type to regression.
 If `segmentation_requires_empty_target_events` — clear target_events to [].
 If `epoch_parameters_complete` — add the missing required key(s) with a grounded value; if no
 value can be grounded, drop the task entirely rather than leaving a placeholder.

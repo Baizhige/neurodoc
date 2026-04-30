@@ -106,24 +106,7 @@
 
 ## Tasks
 
-### Classical Task 1: Animate vs Inanimate Visual Object Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 0.75 s, target_events = [`Stimulus/S 65`, `Stimulus/S 66`, `Stimulus/S 67`, `Stimulus/S 68`, `Stimulus/S 69`]
-- **Label Route**: `misc`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `animate` (MISC) | 0 | Animate objects (faces, animals) |
-  | `inanimate` (MISC) | 1 | Inanimate objects (places, objects) |
-- **Super Meta Notes**: Pre-computed super-level labels exist in MISC channel (`animate`: 8524 trials, `inanimate`: 12505 trials). Alternatively, derive from raw events by grouping animate (S65, S66: faces/animals) as y=0 and inanimate (S67: places; S68, S69: objects) as y=1. Kernel step: extract binary labels directly from MISC channel or apply supra-category grouping to raw stimulus events.
-- **Evidence**:
-  - DOI: 10.1016/j.cub.2025.03.062 — "Healthy aging delays and dedifferentiates high-level visual representations" (Haupt et al., 2025, Current Biology). Uses ORHA dataset with 43 older + 43 younger adults viewing 64 images across 4 categories (faces, animals, places, objects). Performs multivariate EEG pattern classification with animate vs inanimate supra-category grouping. Validates that aging delays and dedifferentiates high-level visual representations.
-  - DOI: 10.1162/IMAG.a.1033 — "What does my network learn?" uses ORHA dataset as control dataset to validate generalizability of deep learning interpretability methods for EEG, performing 2-class animate vs inanimate decoding.
-- **Kernel Notes**: Use pre-computed 'animate'/'inanimate' MISC labels for efficiency. Exclude S99 (fixation/separator marker, 21460 events) and 'admin: fixation_marker' (20476 events) from epoching. Individual exemplar codes S4-S57 excluded from this task.
-
-### Classical Task 2: Visual Category Classification (5-class)
+### Classical Task 1: Visual Category Classification (5-class)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`Stimulus/S 65`, `Stimulus/S 66`, `Stimulus/S 67`, `Stimulus/S 68`, `Stimulus/S 69`]

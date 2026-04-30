@@ -179,12 +179,11 @@ Participants performed speech perception and silent speech production tasks invo
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.0, target_events = []`
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 19.0 – 29.0 (years) | Continuous age of healthy participants; narrow 10-year span may limit predictive power |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | no mapping; range 19.0 – 29.0 (years) |
 - **Evidence**:
 - **Notes**: Subject-level biomarker regression using non-overlapping 10-second windows to extract stable EEG features per participant. No event-based structure required; segmentation approach appropriate since age is a static subject-level variable with no temporal discriminative events. All 56 subjects have complete age data in participants.tsv.
 
@@ -193,13 +192,11 @@ Participants performed speech perception and silent speech production tasks invo
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.0, target_events = []`
 - **Label Route**: `info`
-- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | F | 0 | Female |
-  | sex | M | 1 | Male |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_sex | Female (F) -> 0; Male (M) -> 1 |
 - **Evidence**:
 - **Notes**: Subject-level binary classification using 10-second non-overlapping EEG segments. The sex label is drawn from participants.tsv (native info field), making this a raw meta-level task. Segmentation is appropriate since sex is a subject-level demographic attribute not tied to specific experimental events. The 10-second window length provides sufficient data per sample while allowing multiple segments per subject's ~3200-second recording (~320 segments/subject).
 
@@ -208,12 +205,11 @@ Participants performed speech perception and silent speech production tasks invo
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 10 s *, overlap = 5 s *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 19.0–29.0 (years) | Subject chronological age from participants.tsv; all 56 subjects have complete age data |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | no mapping; range 19.0–29.0 (years) |
 - **Evidence**:
 - **Notes**: Segmentation-based regression using sliding windows across entire continuous EEG recording. No event structure is used; the kernel creates 10-second non-overlapping/overlapping segments from the full recording duration (~3200s). Each segment inherits the subject's age from participants.tsv as the regression target. This leverages all continuous data including rest periods, inter-trial intervals, and task-irrelevant periods that are excluded from event-based epoching. The overlap parameter (5s) provides increased sample count for subject-level prediction while maintaining feature stability.
 
@@ -222,13 +218,11 @@ Participants performed speech perception and silent speech production tasks invo
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 10 s *, overlap = 5 s *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | F | 0 | Female |
-  | sex | M | 1 | Male |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_sex | Female (F) -> 0; Male (M) -> 1 |
 - **Evidence**:
   - participants.tsv — sex column with values {F, M} for all 56 subjects (31 F, 25 M)
 - **Notes**: Segmentation-based approach using all continuous EEG data without event restriction. Each subject contributes multiple 10-second overlapping segments, all labeled with the same sex value. This creates a subject-level classification task where the model must learn sex-related EEG features that generalize across repeated segments from the same individual.

@@ -63,62 +63,42 @@ Participants performed right-hand motor imagery and received neurofeedback (1D o
   - 10.1101/397729 — Original study paper describing the EEG-fMRI neurofeedback paradigm with sustained 20-second rest and motor imagery neurofeedback phases
 - **Notes**: Event IDs `Stimulus/S 99` and `Stimulus/S  2` are trial phase onset markers (not MI class labels per se), but they validly encode the two cognitive states for classification: rest (y=0) versus motor imagery with neurofeedback (y=1). The events.tsv files confirm `trial_type` values of `Rest` and `Task-NF` with duration=20s for both. S 99 appears at recording start marking the initial Rest phase; S  2 marks transitions to Task-NF phases. The 20-second sustained blocks are explicitly validated across all three references.
 
-### Potential Task 1: Feedback Type Stratification Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 20 s, overlap = 0.0, target_events = [`Stimulus/S 99`, `Stimulus/S  2`]
-- **Label Route**: `info`
-- **Label Field**: `feedback_type`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | feedback_type | 1d | 0 | 1-dimensional neurofeedback |
-  | feedback_type | 2d | 1 | 2-dimensional neurofeedback |
-- **Evidence**:
-  - 10.1101/397729 — Original XP2 study explicitly designed with 10 subjects per feedback type (1D vs 2D). participants.tsv contains feedback_type column with values '1d' and '2d'. This enables stratified analysis comparing neurofeedback learning between feedback modalities. Same epoch structure as primary task but with subject-level stratification label.
-- **Notes**: Subject-level stratification task where each subject's entire recording is labeled by their assigned feedback type (1D vs 2D). Epochs are extracted from long event blocks (20s Rest/Task-NF periods marked by Stimulus/S 99 and Stimulus/S  2) and all epochs from a given subject share the same feedback_type label. This allows investigating whether EEG patterns differ between feedback modalities across the motor imagery neurofeedback paradigm.
-
-### Potential Task 2: Age Regression from Neurofeedback Blocks
+### Potential Task 1: Age Regression from Neurofeedback Blocks
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0 s *, tmax = 20 s *, overlap = 0.0 *, target_events = [`Stimulus/S 99`, `Stimulus/S  2`]
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 18.0–66.0 (years) | Subject-level continuous variable; each epoch inherits the participant's age value. N=23 subjects. |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | 18.0–66.0 (years); no mapping |
 - **Evidence**:
-- **Notes**: Uses `Stimulus/S 99` (recording start/baseline onset) and `Stimulus/S  2` (task block transition) as epoch anchors to extract sustained 20-second neurofeedback blocks. Age is a native participants.tsv column with complete coverage (18–66 years), enabling subject-level regression. The epoch window matches the task block duration observed in events.tsv (20 s Rest/20 s Task-NF alternation).
+- **Notes**: Uses `Stimulus/S 99` (recording start/baseline onset) and `Stimulus/S  2` (task block transition) as epoch anchors to extract sustained 20-second neurofeedback blocks. Subject age is a native participants.tsv column with complete coverage (18–66 years), enabling subject-level regression. The epoch window matches the task block duration observed in events.tsv (20 s Rest/20 s Task-NF alternation).
 
-### Potential Task 3: Sex Classification from Neurofeedback Blocks
+### Potential Task 2: Sex Classification from Neurofeedback Blocks
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0 s *, tmax = 20 s *, overlap = 0.0, target_events = [`Stimulus/S 99`, `Stimulus/S  2`]
 - **Label Route**: `info`
-- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | F | 0 | Female |
-  | sex | M | 1 | Male |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_sex | F -> 0; M -> 1 |
 - **Evidence**:
-- **Notes**: This B3 archetype task uses the native `sex` column from participants.tsv, which is pre-existing metadata requiring no kernel derivation. The epoch windows are anchored to neurofeedback block onset markers (S 99 for initial baseline/recording start, S  2 for task block transitions) with 20-second windows matching the Rest/Task-NF block durations observed in events.tsv. All 23 subjects have complete sex labels (F=11, M=12) enabling balanced binary classification. The `*` on epoch parameters indicates these were inferred from the task block structure in events.tsv samples rather than from an explicit task definition.
+- **Notes**: This B3 archetype task uses the native `subject_sex` column from participants.tsv, which is pre-existing metadata requiring no kernel derivation. The epoch windows are anchored to neurofeedback block onset markers (S 99 for initial baseline/recording start, S  2 for task block transitions) with 20-second windows matching the Rest/Task-NF block durations observed in events.tsv. All 23 subjects have complete sex labels (F=11, M=12) enabling balanced binary classification. The `*` on epoch parameters indicates these were inferred from the task block structure in events.tsv samples rather than from an explicit task definition.
 
-### Potential Task 4: ECG Regression from Neurofeedback Blocks
+### Potential Task 3: ECG Regression from Neurofeedback Blocks
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0 s *, tmax = 20 s *, overlap = 0.0 *, target_events = [`Stimulus/S 99`, `Stimulus/S  2`]
 - **Label Route**: `misc`
-- **Label Field**: `ECG`
 - **Meta Level**: super
 - **Target Definition**:
-  | MISC Channel | Value (unit) | Notes |
-  |--------------|--------------|-------|
-  | ECG | continuous (mV) | Native ECG channel recorded simultaneously with EEG during motor imagery neurofeedback; target is the continuous ECG signal time series within each epoch |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|----------------|
+  | ECG | continuous (mV); no mapping |
 - **Evidence**:
   - `d_sub-xp201_task-1dNF_run-01_eeg_pp.vhdr` — ECG channel present in native 64-channel EEG recording alongside standard EEG electrodes (Fp1, Fp2, F3, F4, C3, C4, etc.)
   - `d_sub-xp201_task-1dNF_run-02_eeg_pp.vhdr` — ECG channel confirmed present in second run of same subject
@@ -126,49 +106,31 @@ Participants performed right-hand motor imagery and received neurofeedback (1D o
   - `README` — Dataset involves simultaneous EEG-fMRI during right-hand motor imagery and neurofeedback; ECG provides physiological correlate of autonomic arousal during neurofeedback performance
 - **Notes**: Archetype B1: native misc channel. The ECG channel is directly present on the raw EEG object (not kernel-derived), so Meta Level = super (requires reading from the raw data object, not from pre-extracted metadata). The `epoch_by_long_event_hdf5` method with 20-second epochs matches the block duration of the neurofeedback paradigm (Rest/ Task-NF alternating blocks). Both `Stimulus/S 99` (recording start/baseline onset) and `Stimulus/S  2` (task block transition) serve as epoch anchors to capture complete neurofeedback blocks. The continuous ECG signal within these epochs serves as the regression target, providing a physiological measure of autonomic state during motor imagery neurofeedback.
 
-### Potential Task 5: Segmentation-based Age Regression
+### Potential Task 4: Segmentation-based Age Regression
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 18.0–66.0 (years) | Subject-level continuous target; all segments from a subject share the same age label |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | 18.0–66.0 (years); no mapping |
 - **Evidence**:
-- **Notes**: Archetype C with native info column. Sliding window segmentation (4s windows, 50% overlap) applied to continuous EEG without relying on trial/block boundaries. Age is a native participants.tsv column, so Meta Level = raw. The kernel does not need to derive any channels; it only needs to read the pre-existing `age` field from participants.tsv and assign it to all segments belonging to each subject.
+- **Notes**: Archetype C with native info column. Sliding window segmentation (4s windows, 50% overlap) applied to continuous EEG without relying on trial/block boundaries. Subject age is a native participants.tsv column, so Meta Level = raw. The kernel does not need to derive any channels; it only needs to read the pre-existing `subject_age` field from participants.tsv and assign it to all segments belonging to each subject.
 
-### Potential Task 6: Segmentation-based Sex Classification
+### Potential Task 5: Segmentation-based Sex Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | F | 0 | Female |
-  | sex | M | 1 | Male |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_sex | F -> 0; M -> 1 |
 - **Evidence**:
-- **Notes**: Archetype C with native info field (sex) and segmentation-based epoching. No event structure required; sliding 4-second windows with 50% overlap extract continuous EEG dynamics for subject-level sex classification. Binary classes reasonably balanced (11 F, 12 M out of 23 subjects).
-
-### Potential Task 7: Segment-based Feedback Type Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `feedback_type`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | feedback_type | 1d | 0 | One-dimensional neurofeedback group |
-  | feedback_type | 2d | 1 | Two-dimensional neurofeedback group |
-- **Evidence**:
-- **Notes**: Archetype C with native info column. Uses sliding-window segmentation (4-second windows, 50% overlap) to classify continuous EEG dynamics between 1D and 2D neurofeedback groups at the subject level. No event boundaries required; target_events=[] per segmentation method. The feedback_type column in participants.tsv is complete with values {1d, 2d}, explicitly comparing the two NF paradigms from Perronnet et al. (2018). Epoch parameters inferred from SKILL defaults for motor imagery segmentation analysis.
+- **Notes**: Archetype C with native info field (subject_sex) and segmentation-based epoching. No event structure required; sliding 4-second windows with 50% overlap extract continuous EEG dynamics for subject-level sex classification. Binary classes reasonably balanced (11 F, 12 M out of 23 subjects).
 
 ## Data Quality Notes
 

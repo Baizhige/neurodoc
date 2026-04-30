@@ -677,6 +677,8 @@ let rulebookRaw = '';
 let llmHistory = [];
 let dirty = false;
 let currentTasks = [];
+let taskEditorMode = 'form';
+let currentMiscSummaryBody = '';
 let pendingErrDataset = null;
 let guideChecks = {};   // key → boolean
 let previewSeen = false;
@@ -1044,6 +1046,8 @@ document.getElementById('err-modal-overlay').onclick = function(e) { if (e.targe
 async function selectDataset(name) {
   if (dirty && !confirm('Unsaved changes — discard and switch?')) return;
   currentDataset = name; dirty = false; currentStep = 0; previewSeen = false;
+  taskEditorMode = 'form';
+  currentMiscSummaryBody = '';
   let errors = [];
   let ds = allDatasets.find(d => d.name === name);
   try {
@@ -1272,8 +1276,50 @@ function getTaskBlockField(part, fields) {
   return null;
 }
 
+function getCurrentEventStructureFromDOM() {
+  const table = document.getElementById('event-table');
+  if (!table) return null;
+  const headers = [...table.querySelectorAll('thead th')].map(th => (th.textContent || '').trim().toLowerCase());
+  const idIdx = headers.findIndex(h => h.includes('event id'));
+  const meanIdx = headers.findIndex(h => h.includes('meaning'));
+  if (idIdx < 0) return [];
+  const result = [];
+  const seen = new Set();
+  table.querySelectorAll('tbody tr').forEach(tr => {
+    const cells = [...tr.querySelectorAll('td')];
+    const id = cleanQuotedToken(cells[idIdx]?.querySelector('input, textarea, select')?.value || cells[idIdx]?.textContent || '');
+    if (!id || seen.has(id) || id.toLowerCase() === 'event id' || /^-+$/.test(id)) return;
+    seen.add(id);
+    const meaning = meanIdx >= 0
+      ? ((cells[meanIdx]?.querySelector('input, textarea, select')?.value || cells[meanIdx]?.textContent || '').trim())
+      : '';
+    result.push({ id, meaning });
+  });
+  return result;
+}
+
+function getCurrentInfoFieldsFromDOM() {
+  const table = document.getElementById('info-table');
+  if (!table) return null;
+  const result = [];
+  const seen = new Set();
+  table.querySelectorAll('tbody tr').forEach(tr => {
+    const field = cleanQuotedToken(tr.querySelector('td:first-child input')?.value || '');
+    if (!field || seen.has(field) || field.toLowerCase() === 'field' || /^-+$/.test(field)) return;
+    seen.add(field);
+    result.push(field);
+  });
+  return result;
+}
+
+function getCurrentMiscBody() {
+  return currentMiscSummaryBody || getSubSection(getSection(rawContent, 'File Scan Result'), 'MISC Label Summary');
+}
+
 // ─── Event Structure helpers ──────────────────────────────────────────────────
 function getEventStructureFromRawContent() {
+  const fromDom = getCurrentEventStructureFromDOM();
+  if (fromDom) return fromDom;
   // Returns [{id, meaning}] for all rows in ### Event Structure.
   const fsrM = rawContent.match(/## File Scan Result([\s\S]*?)(?=\n## |\n# |\Z)/);
   if (!fsrM) return [];
@@ -1294,13 +1340,11 @@ function getEventStructureFromRawContent() {
 }
 
 function getMiscFieldsFromRawContent() {
-  const fsrM = rawContent.match(/## File Scan Result([\s\S]*?)(?=\n## |\n# |\Z)/);
-  if (!fsrM) return [];
-  const miscM = fsrM[1].match(/### MISC Label Summary([\s\S]*?)(?=\n### |\n## |\Z)/);
-  if (!miscM) return [];
+  const body = getCurrentMiscBody();
+  if (!body) return [];
   const seen = new Set();
   const result = [];
-  for (const row of (miscM[1].match(/^\|[^|\n]+\|[^\n]*/gm) || [])) {
+  for (const row of (body.match(/^\|[^|\n]+\|[^\n]*/gm) || [])) {
     const cols = row.split('|').slice(1).map(c => c.trim());
     const field = cleanQuotedToken(cols[0] || '');
     if (!field || field.toLowerCase() === 'channel' || /^-+$/.test(field) || seen.has(field)) continue;
@@ -1311,6 +1355,8 @@ function getMiscFieldsFromRawContent() {
 }
 
 function getInfoFieldsFromRawContent() {
+  const fromDom = getCurrentInfoFieldsFromDOM();
+  if (fromDom) return fromDom;
   const fsrM = rawContent.match(/## File Scan Result([\s\S]*?)(?=\n## |\n# |\Z)/);
   if (!fsrM) return [];
   const infoM = fsrM[1].match(/### Info([\s\S]*?)(?=\n### |\n## |\Z)/);
@@ -1675,7 +1721,9 @@ function renderFileScanTasks(content) {
   const miscBody = getSubSection(fsrBody, 'MISC Label Summary');
   const infoBody = getSubSection(fsrBody, 'Info');
   const tasksBody = getSection(rawContent, 'Tasks');
+  currentMiscSummaryBody = miscBody || '';
   currentTasks = parseTasks(tasksBody);
+  taskEditorMode = checkTaskViolations(currentTasks).length ? 'raw' : 'form';
 
   content.innerHTML = `
   <div class="tab-strip" id="fst-tabs">
@@ -1738,6 +1786,7 @@ function switchFSTTab(tab) {
   document.getElementById('fst-tab-tasks').classList.toggle('active', tab==='tasks');
   document.getElementById('fst-pane-scan').style.display = tab==='scan' ? '' : 'none';
   document.getElementById('fst-pane-tasks').style.display = tab==='tasks' ? '' : 'none';
+  if (tab === 'tasks') renderTaskCards(document.getElementById('task-cards-container'));
 }
 
 // ─── Event / Info Tables ──────────────────────────────────────────────────────
@@ -1813,7 +1862,7 @@ function serializeInfoTable() {
 
 // ─── MISC Validation ──────────────────────────────────────────────────────────
 function getMiscChannels() {
-  const body = document.getElementById('misc-body')?.value || getSubSection(getSection(rawContent,'File Scan Result'),'MISC Label Summary');
+  const body = getCurrentMiscBody();
   const ch = new Set();
   for (const m of body.matchAll(/`([^`]+)`/g)) ch.add(m[1]);
   return ch;
@@ -1830,36 +1879,33 @@ function getMiscWarning(channelName) {
 // Modes driven by Label Route × Task Type (see rulebook 第77条之四).
 function tdMode(task) {
   const lr = task.labelRoute || 'event';
-  const tt = (lr === 'misc') ? 'regression' : (task.taskType || 'classification');
+  const tt = task.taskType || 'classification';
   if (lr === 'event'  && tt === 'classification') return 'ev_cls';
   if (lr === 'event'  && tt === 'regression')     return 'ev_reg';
-  if (lr === 'misc')                              return 'misc_reg';
-  if (lr === 'info'   && tt === 'classification') return 'info_cls';
-  if (lr === 'info'   && tt === 'regression')     return 'info_reg';
+  if (lr === 'misc')                              return 'misc_any';
+  if (lr === 'info')                              return 'info_any';
   return 'ev_cls';
 }
 const _TD_SCHEMA = {
   ev_cls:   { headers: ['Event ID','y','Meaning'],            placeholders: ['event id','0 or 0,1','meaning'] },
   ev_reg:   { headers: ['Event ID','Value','Meaning'],        placeholders: ['event id','value','meaning'] },
-  misc_reg: { headers: ['MISC Channel','Value','Notes'],      placeholders: ['channel','value (unit)','notes'] },
-  info_cls: { headers: ['Info Field','Value','y','Meaning'],  placeholders: ['info field','value','0/1','meaning'] },
-  info_reg: { headers: ['Info Field','Range','Notes'],        placeholders: ['info field','range','notes'] },
+  misc_any: { headers: ['MISC Channel Name','Y Mapping Notes'], placeholders: ['channel','no mapping'] },
+  info_any: { headers: ['Info Field','Y Mapping Notes'],       placeholders: ['info field','no mapping'] },
 };
 function tdHeaders(mode) { return (_TD_SCHEMA[mode] || _TD_SCHEMA.ev_cls).headers; }
 function tdPlaceholders(mode) { return (_TD_SCHEMA[mode] || _TD_SCHEMA.ev_cls).placeholders; }
 function tdRowCells(mode, row, fallbackLabel='') {
   const l = (row.label || fallbackLabel || '').trim();
   switch (mode) {
-    case 'info_cls': return [l, (row.value||''), (row.y||''), (row.meaning||'')];
-    case 'misc_reg':
-    case 'info_reg': return [l, (row.y||''), (row.meaning||'')];
+    case 'misc_any':
+    case 'info_any': return [l, (row.meaning || 'no mapping')];
     default:         return [l, (row.y||''), (row.meaning||'')];
   }
 }
 function tdRowFromCells(mode, cells) {
   const get = (i) => (cells[i]||'').trim();
-  if (mode === 'info_cls') {
-    return { label: get(0), value: get(1), y: get(2), meaning: get(3) };
+  if (mode === 'misc_any' || mode === 'info_any') {
+    return { label: get(0), y: '', meaning: get(1) || 'no mapping' };
   }
   return { label: get(0), y: get(1), meaning: get(2) };
 }
@@ -1874,7 +1920,8 @@ function parseTasks(body) {
     const task = { kind:hm[1], num:parseInt(hm[2]), name:hm[3].trim(),
       taskType:'classification', epochMethod:'epoch_by_event_hdf5',
       epochParams:{ tmin:'', tmax:'', overlap:'', segment_length:'', target_events:[], custom:[] },
-      labelRoute:'event', labelField:'', metaLevel:'raw', targetRows:[], miscChannel:'', evidence:[], kernelNotes:'' };
+      labelRoute:'event', labelField:'', metaLevel:'raw', targetRows:[], miscChannel:'', evidence:[], kernelNotes:'',
+      _legacyLabelFieldPresent:false, _parsedTdHeaders:[] };
 
     const fv = (field) => {
       const re = new RegExp(`^\\s*-\\s*\\*\\*${escRe(field)}\\*\\*:\\s*(.+)$`, 'm');
@@ -1890,26 +1937,27 @@ function parseTasks(body) {
     task.metaLevel = cleanQuotedToken(fv('Meta Level') || 'raw') || 'raw';
     task.labelRoute = normalizeLabelRouteValue(fv('Label Route') || 'event') || 'event';
     task.labelField = cleanQuotedToken(fv('Label Field') || '');
+    task._legacyLabelFieldPresent = !!task.labelField;
     task.epochParams = parseEpochParams(fv('Epoch Parameters'), task.epochMethod);
 
     const tdb = getTaskBlockField(part, 'Target Definition');
     if (tdb !== null) {
       if (tdb.includes('|')) {
-        const { rows } = parseMarkdownTable(tdb);
+        const { headers, rows } = parseMarkdownTable(tdb);
+        task._parsedTdHeaders = headers;
         const mode = tdMode(task);
         task.targetRows = rows.map(r => tdRowFromCells(mode, r.map(c => cleanQuotedToken(c || ''))));
-        // misc: labelField = channel from first row (or existing).
         if (task.labelRoute === 'misc') {
           const first = cleanQuotedToken(task.targetRows[0]?.label || '');
           task.miscChannel = first;
-          if (!task.labelField) task.labelField = first;
-        } else if (task.labelRoute === 'info' && !task.labelField && task.targetRows.length) {
-          task.labelField = cleanQuotedToken(task.targetRows[0].label);
+          task.labelField = first || task.labelField;
+        } else if (task.labelRoute === 'info' && task.targetRows.length) {
+          task.labelField = cleanQuotedToken(task.targetRows[0].label || '') || task.labelField;
         }
       } else {
         const mm = tdb.match(/`([^`]+)`/);
         task.miscChannel = cleanQuotedToken(mm ? mm[1] : tdb.replace(/MISC\s+channel:?\s*/i,'').trim());
-        if (!task.labelField) task.labelField = task.miscChannel;
+        task.labelField = task.miscChannel;
       }
     }
 
@@ -1929,8 +1977,7 @@ function serializeTasks(tasks) {
   let classN=0, potN=0;
   return tasks.map(task => {
     const num = task.kind === 'Classical' ? ++classN : ++potN;
-    // v3: misc route is regression-only.
-    const taskType = (task.labelRoute === 'misc') ? 'regression' : (task.taskType || 'classification');
+    const taskType = task.taskType || 'classification';
     const effectiveTask = { ...task, taskType };
     const mode = tdMode(effectiveTask);
 
@@ -1947,26 +1994,19 @@ function serializeTasks(tasks) {
       epStr = epStr ? `${epStr}, ${teStr}` : teStr;
     }
 
-    // Label Field (required iff route ∈ {misc, info}).
-    let labelField = cleanQuotedToken(task.labelField || '');
-    if (!labelField && task.labelRoute === 'misc') labelField = cleanQuotedToken(task.miscChannel || '');
-    if (!labelField && task.labelRoute === 'info' && task.targetRows?.length) {
-      labelField = cleanQuotedToken(task.targetRows[0].label || '');
-    }
-    const labelFieldLine = (task.labelRoute === 'misc' || task.labelRoute === 'info')
-      ? `\n- **Label Field**: \`${labelField}\``
-      : '';
-
     // Target Definition table — schema-aware per Route × Task Type.
     const hdrs = tdHeaders(mode);
     const headerLine = `| ${hdrs.join(' | ')} |`;
     const sepLine = `|${hdrs.map(() => '---').join('|')}|`;
-    const fallback = (mode === 'misc_reg' || mode === 'info_cls' || mode === 'info_reg') ? labelField : '';
+    const fallback = (mode === 'misc_any' || mode === 'info_any')
+      ? cleanQuotedToken(task.labelField || task.miscChannel || task.targetRows?.[0]?.label || '')
+      : '';
     let rowsArr = task.targetRows && task.targetRows.length ? task.targetRows : [];
     if (!rowsArr.length) {
-      // Emit one placeholder row so the table is well-formed (esp. for misc_reg).
-      rowsArr = [{ label: fallback, y: '', meaning: '', value: '' }];
+      // Emit one placeholder row so the table is well-formed.
+      rowsArr = [{ label: fallback, y: '', meaning: (mode === 'misc_any' || mode === 'info_any') ? 'no mapping' : '', value: '' }];
     }
+    if (mode === 'misc_any' || mode === 'info_any') rowsArr = [rowsArr[0]];
     const rowLines = rowsArr.map(r => {
       const cells = tdRowCells(mode, r, fallback);
       const wrap = (c, i) => {
@@ -1999,7 +2039,7 @@ function serializeTasks(tasks) {
 - **Task Type**: ${taskType}
 - **Epoch Method**: \`${task.epochMethod}\`
 - **Epoch Parameters**: ${epStr}
-- **Label Route**: \`${normalizeLabelRouteValue(task.labelRoute)}\`${labelFieldLine}
+- **Label Route**: \`${normalizeLabelRouteValue(task.labelRoute)}\`
 - **Meta Level**: ${task.metaLevel}
 - **Target Definition**:
   ${targetDef}
@@ -2028,6 +2068,8 @@ function checkTaskViolations(tasks) {
     const mode   = tdMode(task);
     const route  = normalizeLabelRouteValue(task.labelRoute || '');
     const labelField = cleanQuotedToken(task.labelField || task.miscChannel || '');
+    const parsedHeaders = Array.isArray(task._parsedTdHeaders) ? task._parsedTdHeaders : [];
+    const normalizedHeaders = parsedHeaders.map(h => cleanQuotedToken(h).toLowerCase());
 
     if (!['event', 'misc', 'info'].includes(route)) {
       violations.push(`Label Route must be one of event/misc/info, got "${task.labelRoute || ''}".`);
@@ -2064,9 +2106,8 @@ function checkTaskViolations(tasks) {
     };
     const missingKeys = (reqByMethod[task.epochMethod] || []).filter(k => !hasVal(ep[k]));
     if (missingKeys.length) violations.push(`Epoch Parameters missing required key(s): ${missingKeys.join(', ')}.`);
-    // 6. Classification: union of all class indices must have ≥2 distinct values.
-    // y may be comma-separated integers for multi-label (e.g. "0,1").
-    if (task.taskType === 'classification' && task.labelRoute !== 'misc') {
+    // 6. Event-route classification: y values must define >=2 classes.
+    if (task.taskType === 'classification' && route === 'event') {
       const allYInts = new Set();
       (task.targetRows || []).forEach(r => {
         (r.y || '').split(',').forEach(t => {
@@ -2076,17 +2117,32 @@ function checkTaskViolations(tasks) {
       });
       if (allYInts.size < 2) violations.push('Classification requires ≥2 distinct class indices in y (multi-label comma-separated integers allowed, e.g. "0,1").');
     }
-    // 7. Label Field missing for misc / info
-    if ((route === 'misc' || route === 'info') && !labelField) {
-      violations.push('Label Field is required when Label Route ∈ {misc, info}.');
+    // 7. info/misc route uses single-source TD schema and must not keep legacy Label Field.
+    if ((route === 'misc' || route === 'info') && task._legacyLabelFieldPresent) {
+      violations.push('Label Field is deprecated for info/misc routes; use Target Definition only.');
     }
-    if (route === 'misc' && miscFields.size > 0 && labelField && !miscFields.has(labelField)) {
-      violations.push(`misc Label Field "${labelField}" is not listed in MISC Label Summary.`);
+    if (route === 'misc' || route === 'info') {
+      if ((task.targetRows || []).length !== 1) {
+        violations.push(`${route} tasks must use exactly one Target Definition row.`);
+      }
+      const source = cleanQuotedToken(task.targetRows?.[0]?.label || labelField || '');
+      const notes = (task.targetRows?.[0]?.meaning || '').trim();
+      if (!source) violations.push(`${route} tasks must select exactly one ${route === 'misc' ? 'MISC channel' : 'Info field'} in Target Definition.`);
+      if (!notes) violations.push('Y Mapping Notes is required (use "no mapping" when y directly follows the source value).');
+      if (route === 'misc' && miscFields.size > 0 && source && !miscFields.has(source)) {
+        violations.push(`MISC Channel Name "${source}" is not listed in MISC Label Summary.`);
+      }
+      if (route === 'info' && infoFields.size > 0 && source && !infoFields.has(source)) {
+        violations.push(`Info Field "${source}" is not listed in Info.`);
+      }
+      const expectedHeaders = route === 'misc'
+        ? ['misc channel name', 'y mapping notes']
+        : ['info field', 'y mapping notes'];
+      if (normalizedHeaders.length && JSON.stringify(normalizedHeaders) !== JSON.stringify(expectedHeaders)) {
+        violations.push(`Target Definition headers must be "${expectedHeaders.join(' | ')}" for ${route} route.`);
+      }
     }
-    if (route === 'info' && infoFields.size > 0 && labelField && !infoFields.has(labelField)) {
-      violations.push(`info Label Field "${labelField}" is not listed in Info.`);
-    }
-    if (task.taskType === 'classification' && route !== 'misc') {
+    if (task.taskType === 'classification' && route === 'event') {
       const tokens = [];
       let sawInvalidY = false;
       (task.targetRows || []).forEach(r => {
@@ -2124,9 +2180,9 @@ function renderTaskCards(container) {
 
   const addRow = document.querySelector('.add-task-row');
 
-  // Violation check: any issue → lock all task cards.
+  // Violations from imported/raw tasks may require raw repair mode.
   const taskViolations = checkTaskViolations(currentTasks);
-  if (taskViolations.length > 0) {
+  if (taskEditorMode === 'raw' && taskViolations.length > 0) {
     if (addRow) addRow.style.display = 'none';
     const items = taskViolations.map(v =>
       `<div class="task-lock-item">
@@ -2149,6 +2205,7 @@ function renderTaskCards(container) {
     return;
   }
   if (addRow) addRow.style.display = '';
+  const violationsByIdx = new Map(taskViolations.map(v => [v.idx, v.violations]));
 
   if (!currentTasks.length) {
     container.innerHTML = `
@@ -2159,7 +2216,7 @@ function renderTaskCards(container) {
       </div>`;
     return;
   }
-  container.innerHTML = currentTasks.map((t, i) => buildTaskCard(t, i)).join('');
+  container.innerHTML = currentTasks.map((t, i) => buildTaskCard(t, i, violationsByIdx.get(i) || [])).join('');
   container.querySelectorAll('.bullet-input').forEach(ta => autoResize(ta));
 }
 
@@ -2169,6 +2226,7 @@ function applyTaskEdits() {
   const newBody = ta.value;
   rawContent = replaceSection(rawContent, 'Tasks', newBody);
   currentTasks = parseTasks(newBody);
+  taskEditorMode = checkTaskViolations(currentTasks).length ? 'raw' : 'form';
   dirty = true;
   const container = document.getElementById('task-cards-container');
   renderTaskCards(container);
@@ -2181,16 +2239,19 @@ function buildTargetDefEditor(task, idx) {
   const hdrs = tdHeaders(mode);
   const phs = tdPlaceholders(mode);
   const nCols = hdrs.length;
-  const labelField = (task.labelField || task.miscChannel || '').trim();
-  const fallback = (mode === 'misc_reg' || mode === 'info_cls' || mode === 'info_reg') ? labelField : '';
-  const rowsArr = (task.targetRows && task.targetRows.length)
-    ? task.targetRows
-    : [{label:'',y:'',meaning:'',value:''}];
-  const widths = (nCols === 4) ? ['24%','20%','10%','42%'] : ['34%','22%','40%'];
-
-  // For ev_cls/ev_reg: Event ID column is a select limited to this task's target_events.
   const isEventMode = (mode === 'ev_cls' || mode === 'ev_reg');
+  const isSourceMode = (mode === 'misc_any' || mode === 'info_any');
+  const fallback = isSourceMode ? cleanQuotedToken(task.labelField || task.miscChannel || '') : '';
+  const rowsArr = isSourceMode
+    ? [task.targetRows?.[0] || {label:'',y:'',meaning:'no mapping',value:''}]
+    : ((task.targetRows && task.targetRows.length) ? task.targetRows : [{label:'',y:'',meaning:'',value:''}]);
+  const widths = (nCols === 2) ? ['42%','50%'] : ['34%','22%','40%'];
+
   const teOptions = isEventMode ? (task.epochParams?.target_events || []) : [];
+  const sourceOptions = mode === 'misc_any'
+    ? getMiscFieldsFromRawContent()
+    : (mode === 'info_any' ? getInfoFieldsFromRawContent() : []);
+  const uniqueSourceOptions = [...new Set(sourceOptions)];
 
   let thead = '<thead><tr>';
   hdrs.forEach((h, i) => { thead += `<th style="width:${widths[i]}">${h}</th>`; });
@@ -2205,60 +2266,67 @@ function buildTargetDefEditor(task, idx) {
           `<option value="${esc(id)}" ${v === id ? 'selected' : ''}>${esc(id)}</option>`
         ).join('') || `<option value="" disabled selected>— select target_events first —</option>`;
         tbody += `<td><select class="td-event-id-sel">${opts}</select></td>`;
+      } else if (isSourceMode && ci === 0) {
+        const hasCurrentValue = !!v && uniqueSourceOptions.includes(v);
+        const placeholderText = uniqueSourceOptions.length ? '— select source —' : '— no sources available —';
+        const invalidOpt = (v && !hasCurrentValue)
+          ? `<option value="${esc(v)}" selected disabled>[missing] ${esc(v)}</option>`
+          : '';
+        const opts = [
+          `<option value="" ${!v ? 'selected' : ''}>${placeholderText}</option>`,
+          invalidOpt,
+          ...uniqueSourceOptions.map(source => `<option value="${esc(source)}" ${v === source ? 'selected' : ''}>${esc(source)}</option>`),
+        ].join('');
+        tbody += `<td><select class="td-source-sel">${opts}</select></td>`;
       } else {
         tbody += `<td><input type="text" value="${esc(v||'')}" placeholder="${esc(phs[ci]||'')}"></td>`;
       }
     });
-    tbody += `<td><button class="btn-row-del" onclick="this.closest('tr').remove()">×</button></td></tr>`;
+    tbody += isSourceMode
+      ? `<td><span style="color:#9ca3af">—</span></td></tr>`
+      : `<td><button class="btn-row-del" onclick="this.closest('tr').remove()">×</button></td></tr>`;
   });
   tbody += '</tbody>';
-  const addBtn = (mode === 'misc_reg' || mode === 'info_reg')
-    ? ''
-    : `<button class="btn-row-add" onclick="addTdRow(${idx})">+ Add row</button>`;
+  const addBtn = isSourceMode ? '' : `<button class="btn-row-add" onclick="addTdRow(${idx})">+ Add row</button>`;
   return `<table class="td-table" id="td-table-${idx}" data-td-mode="${mode}">${thead}${tbody}</table>${addBtn}`;
 }
 
-function buildTaskCard(task, idx) {
+function getSelectableLabelFields(route) {
+  if (route === 'misc') return getMiscFieldsFromRawContent();
+  if (route === 'info') return getInfoFieldsFromRawContent();
+  return [];
+}
+
+function buildTaskCard(task, idx, draftViolations=[]) {
   const classSelClass = task.kind==='Classical' ? 'selected-classical' : '';
   const potSelClass = task.kind==='Potential' ? 'selected-potential' : '';
   const epOpts = EPOCH_METHODS.map(m=>`<option value="${m}" ${task.epochMethod===m?'selected':''}>${m}</option>`).join('');
   const isSeg = task.epochMethod === 'epoch_by_segmentation_hdf5';
+  const isEventRoute = task.labelRoute === 'event';
+  const isInfoRoute = task.labelRoute === 'info';
   const lrOpts = LABEL_ROUTES.map(lr => {
     const disabled = (isSeg && lr === 'event') ? 'disabled' : '';
     const selected = task.labelRoute === lr ? 'selected' : '';
     return `<option value="${lr}" ${selected} ${disabled}>${lr}</option>`;
   }).join('');
   const mlOpts = ['raw','super'].map(ml=>`<option value="${ml}" ${task.metaLevel===ml?'selected':''}>${ml}</option>`).join('');
-  // v3: misc route locks Task Type to regression.
-  const isMisc = task.labelRoute === 'misc';
-  const ttOpts = ['classification','regression'].map(tt => {
-    const disabled = (isMisc && tt === 'classification') ? 'disabled' : '';
-    const selected = (task.taskType === tt) ? 'selected' : '';
-    return `<option value="${tt}" ${selected} ${disabled}>${tt}</option>`;
-  }).join('');
+  const ttOpts = ['classification','regression'].map(tt => `<option value="${tt}" ${task.taskType===tt?'selected':''}>${tt}</option>`).join('');
 
   const targetDefHtml = buildTargetDefEditor(task, idx);
 
   const epHtml = buildEpochParamsEditor(task.epochParams, task.epochMethod, idx);
   const evHtml = buildEvidenceEditor(`ev-${idx}`, task.evidence||[]);
+  const tdHint = isEventRoute
+    ? 'For event route, the first TD column must stay within the current target_events list.'
+    : (isInfoRoute
+        ? 'Choose exactly one field from the current Info table. Use "no mapping" when y directly equals that field value.'
+        : 'Choose exactly one channel from the current MISC Label Summary. Use "no mapping" when y directly equals that channel value.');
 
-  // Label Field input: shown only for non-event routes.
-  const showLF = (task.labelRoute === 'misc' || task.labelRoute === 'info');
-  const lfValue = (task.labelField || task.miscChannel || '').trim();
-  const lfMissing = showLF && !lfValue;
-  const lfBorder = lfMissing ? 'border-color:#dc2626;box-shadow:0 0 0 2px #fee2e2;' : '';
-  const lfHint = isMisc
-    ? 'MISC channel name (must exist in MISC Label Summary).'
-    : (task.labelRoute === 'info' ? 'participants.tsv column name.' : '');
-  const labelFieldFieldHtml = `
-    <div class="task-field task-field-label-field" id="lf-wrap-${idx}" style="${showLF?'':'display:none'}">
-      <label>Label Field ${showLF ? '<span class="req-mark">*</span>' : ''}</label>
-      <input type="text" class="task-label-field" value="${esc(lfValue)}"
-        placeholder="${esc(isMisc ? 'e.g. response_time' : 'e.g. subject_sex')}"
-        oninput="onLabelFieldInput(${idx},this)"
-        style="${lfBorder}">
-      <p class="field-hint" style="margin-top:3px">${lfHint}</p>
-    </div>`;
+  const draftHintHtml = draftViolations.length
+    ? `<div style="margin:8px 0 10px;padding:8px 10px;border:1px solid #fde68a;background:#fffbeb;border-radius:6px;font-size:11px;color:#92400e;line-height:1.5">
+        ${draftViolations.map(v => `• ${esc(v)}`).join('<br>')}
+      </div>`
+    : '';
 
 
   return `<div class="task-card" data-task-idx="${idx}">
@@ -2272,10 +2340,9 @@ function buildTaskCard(task, idx) {
       <button class="btn btn-secondary" style="font-size:10px;padding:1px 8px;white-space:nowrap" onclick="duplicateTask(${idx})" title="Duplicate this task">Duplicate</button>
       <button class="btn-del-task" onclick="deleteTask(${idx})">×</button>
     </div>
+    ${draftHintHtml}
     <div class="task-fields-row">
-      <div class="task-field"><label>Task Type</label><select class="task-type-sel" onchange="onTaskTypeChange(${idx},this)">${ttOpts}</select>
-        ${isMisc ? `<p class="field-hint" style="margin-top:3px;color:#b45309">misc route is regression-only (rulebook 第77条之六).</p>` : ''}
-      </div>
+      <div class="task-field"><label>Task Type</label><select class="task-type-sel" onchange="onTaskTypeChange(${idx},this)">${ttOpts}</select></div>
       <div class="task-field" style="flex:2;min-width:200px"><label>Epoch Method</label>
         <select class="task-epoch-method-sel" onchange="onEpochMethodChange(${idx},this)">${epOpts}</select></div>
       <div class="task-field">
@@ -2283,7 +2350,6 @@ function buildTaskCard(task, idx) {
         <select class="task-lr-sel" onchange="onLabelRouteChange(${idx},this)">${lrOpts}</select>
         <p class="field-hint" style="margin-top:3px"><code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">event</code> = event stream, <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">misc</code> = scalar/continuous channel, <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">info</code> = subject metadata</p>
       </div>
-      ${labelFieldFieldHtml}
       <div class="task-field">
         <label>Meta Level</label>
         <select class="task-ml-sel">${mlOpts}</select>
@@ -2293,6 +2359,7 @@ function buildTaskCard(task, idx) {
     <div id="ep-wrap-${idx}">${epHtml}</div>
     <div class="task-td-section">
       <label>Target Definition</label>
+      <p class="field-hint" style="margin-bottom:6px">${tdHint}</p>
       <div id="task-td-${idx}">${targetDefHtml}</div>
     </div>
     <div class="task-text-field">
@@ -2312,6 +2379,7 @@ function addTdRow(taskIdx) {
   const tbody = document.getElementById(`td-tbody-${taskIdx}`);
   if (!tbody || !table) return;
   const mode = table.getAttribute('data-td-mode') || 'ev_cls';
+  if (mode === 'misc_any' || mode === 'info_any') return;
   const phs = tdPlaceholders(mode);
   const nCols = tdHeaders(mode).length;
   const isEventMode = (mode === 'ev_cls' || mode === 'ev_reg');
@@ -2333,25 +2401,11 @@ function addTdRow(taskIdx) {
   tbody.appendChild(tr);
 }
 
-function onLabelFieldInput(idx, input) {
-  if (!currentTasks[idx]) return;
-  const v = (input.value || '').trim();
-  currentTasks[idx].labelField = v;
-  if (currentTasks[idx].labelRoute === 'misc') currentTasks[idx].miscChannel = v;
-  // Toggle red border based on emptiness.
-  input.style.borderColor = v ? '' : '#dc2626';
-  input.style.boxShadow = v ? '' : '0 0 0 2px #fee2e2';
-}
-
 function onTaskTypeChange(idx, sel) {
   collectTaskCards();
   if (!currentTasks[idx]) return;
-  // v3: misc route is locked to regression; override silently.
-  if (currentTasks[idx].labelRoute === 'misc' && sel.value !== 'regression') {
-    currentTasks[idx].taskType = 'regression';
-  } else {
-    currentTasks[idx].taskType = sel.value;
-  }
+  currentTasks[idx].taskType = sel.value;
+  taskEditorMode = 'form';
   renderTaskCards(document.getElementById('task-cards-container'));
 }
 function selectTaskKind(idx, kind, btn) {
@@ -2369,8 +2423,21 @@ function onEpochMethodChange(idx, sel) {
     // event route is forbidden for segmentation — auto-switch to misc.
     if (currentTasks[idx].labelRoute === 'event') {
       currentTasks[idx].labelRoute = 'misc';
+      const firstRow = currentTasks[idx].targetRows?.[0] || {};
+      const source = cleanQuotedToken(firstRow.label || '');
+      const allowed = getSelectableLabelFields('misc');
+      const nextSource = allowed.includes(source) ? source : '';
+      currentTasks[idx].targetRows = [{
+        label: nextSource,
+        y: '',
+        meaning: (firstRow.meaning || 'no mapping').trim() || 'no mapping',
+        value: '',
+      }];
+      currentTasks[idx].labelField = nextSource;
+      currentTasks[idx].miscChannel = nextSource;
     }
   }
+  taskEditorMode = 'form';
   renderTaskCards(document.getElementById('task-cards-container'));
 }
 function onLabelRouteChange(idx, sel) {
@@ -2379,14 +2446,25 @@ function onLabelRouteChange(idx, sel) {
   if (!currentTasks[idx]) return;
   const task = currentTasks[idx];
   task.labelRoute = newLr;
-  // v3: misc route is regression-only.
-  if (newLr === 'misc') task.taskType = 'regression';
-  // Leaving misc/info → clear labelField; entering misc/info → seed from targetRows[0] if empty.
   if (newLr === 'event') {
     task.labelField = '';
-  } else if (!task.labelField) {
-    task.labelField = task.targetRows?.[0]?.label || task.miscChannel || '';
+    task.miscChannel = '';
+    task.targetRows = [];
+  } else {
+    const allowed = getSelectableLabelFields(newLr);
+    const firstRow = task.targetRows?.[0] || {};
+    const source = cleanQuotedToken(firstRow.label || task.labelField || task.miscChannel || '');
+    const nextSource = allowed.includes(source) ? source : '';
+    task.targetRows = [{
+      label: nextSource,
+      y: '',
+      meaning: (firstRow.meaning || 'no mapping').trim() || 'no mapping',
+      value: '',
+    }];
+    task.labelField = nextSource;
+    task.miscChannel = newLr === 'misc' ? nextSource : '';
   }
+  taskEditorMode = 'form';
   renderTaskCards(document.getElementById('task-cards-container'));
 }
 function updateMiscWarning(idx, input) {
@@ -2400,12 +2478,14 @@ function addTask(kind) {
   currentTasks.push({ kind, num:0, name:'', taskType:'classification', epochMethod:'epoch_by_event_hdf5',
     epochParams:{tmin:'',tmax:'',overlap:'',segment_length:'',target_events:[],custom:[]},
     labelRoute:'event', labelField:'', metaLevel:'raw', targetRows:[], miscChannel:'', evidence:[], kernelNotes:'' });
+  taskEditorMode = 'form';
   renderTaskCards(document.getElementById('task-cards-container'));
   const tb = document.getElementById('fst-tab-tasks'); if(tb) tb.textContent=`Tasks (${currentTasks.length})`;
 }
 function deleteTask(idx) {
   if (!confirm('Remove this task?')) return;
   collectTaskCards(); currentTasks.splice(idx,1);
+  taskEditorMode = 'form';
   renderTaskCards(document.getElementById('task-cards-container'));
   const tb = document.getElementById('fst-tab-tasks'); if(tb) tb.textContent=`Tasks (${currentTasks.length})`;
 }
@@ -2413,6 +2493,7 @@ function duplicateTask(idx) {
   collectTaskCards();
   const clone = JSON.parse(JSON.stringify(currentTasks[idx]));
   currentTasks.splice(idx + 1, 0, clone);
+  taskEditorMode = 'form';
   renderTaskCards(document.getElementById('task-cards-container'));
   const tb = document.getElementById('fst-tab-tasks'); if(tb) tb.textContent=`Tasks (${currentTasks.length})`;
   // Scroll the new card into view
@@ -2429,9 +2510,7 @@ function collectTaskCards() {
     const kind = kindBtn ? kindBtn.dataset.kind : 'Classical';
     const method = card.querySelector('.task-epoch-method-sel')?.value || 'epoch_by_event_hdf5';
     const lr = card.querySelector('.task-lr-sel')?.value || 'event';
-    const rawTaskType = card.querySelector('.task-type-sel')?.value || 'classification';
-    // v3: misc route is regression-only.
-    const taskType = (lr === 'misc') ? 'regression' : rawTaskType;
+    const taskType = card.querySelector('.task-type-sel')?.value || 'classification';
     const ep = collectEpochParams(card, i, method);
     const task = {
       kind, num:0,
@@ -2447,7 +2526,7 @@ function collectTaskCards() {
         custom: ep.custom || [],
       },
       labelRoute: lr,
-      labelField: card.querySelector('.task-label-field')?.value.trim() || '',
+      labelField: '',
       metaLevel: card.querySelector('.task-ml-sel')?.value || 'raw',
       targetRows: [],
       miscChannel: '',
@@ -2462,7 +2541,7 @@ function collectTaskCards() {
       // Collect each data cell (skip last td which holds the delete button).
       const tds = [...tr.querySelectorAll('td:not(:last-child)')];
       const cells = tds.map(td => {
-        const sel = td.querySelector('select.td-event-id-sel');
+        const sel = td.querySelector('select.td-event-id-sel, select.td-source-sel');
         if (sel) return sel.value;
         const inp = td.querySelector('input');
         return inp ? inp.value : '';
@@ -2473,10 +2552,10 @@ function collectTaskCards() {
     });
     if (lr === 'misc') {
       const first = task.targetRows[0]?.label || '';
-      if (!task.labelField) task.labelField = first;
-      task.miscChannel = task.labelField;
-    } else if (lr === 'info' && !task.labelField && task.targetRows.length) {
-      task.labelField = task.targetRows[0].label;
+      task.labelField = first;
+      task.miscChannel = first;
+    } else if (lr === 'info' && task.targetRows.length) {
+      task.labelField = task.targetRows[0].label || '';
     }
     // Collect evidence
     const evList = card.querySelector(`#ev-${i}-list`);
@@ -2505,6 +2584,7 @@ function collectFileScanTasks() {
   const esNoteBlock = esNotes ? '\n\n'+esNotes.split('\n').map(l=>'> '+l).join('\n') : '';
   // MISC is read-only — preserve original content from rawContent
   const miscVal = getSubSection(getSection(rawContent,'File Scan Result'),'MISC Label Summary');
+  currentMiscSummaryBody = miscVal || '';
   const miscSection = miscVal ? `\n\n### MISC Label Summary\n\n${miscVal}` : '';
   const infoTable = serializeInfoTable();
   rawContent = replaceSection(rawContent, 'File Scan Result',
@@ -2731,6 +2811,7 @@ async function regenTasksFromRefs() {
 
     rawContent = replaceSection(rawContent, 'Tasks', tasksBody);
     currentTasks = parseTasks(tasksBody);
+    taskEditorMode = (p2Data.semantic_errors || []).length > 0 || checkTaskViolations(currentTasks).length ? 'raw' : 'form';
     renderTaskCards(document.getElementById('task-cards-container'));
     const tb = document.getElementById('fst-tab-tasks');
     if (tb) tb.textContent = `Tasks (${currentTasks.length})`;
@@ -2858,6 +2939,7 @@ ${instruction}`;
     // Preserve original kind/num to avoid renumbering confusion
     parsedTasks[0].kind = parsedTasks[0].kind || currentTasks[idx].kind;
     currentTasks[idx] = parsedTasks[0];
+    taskEditorMode = checkTaskViolations(currentTasks).length ? 'raw' : 'form';
     renderTaskCards(document.getElementById('task-cards-container'));
     dirty = true;
     closeModifyTaskModal();

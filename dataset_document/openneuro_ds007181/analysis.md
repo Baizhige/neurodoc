@@ -52,32 +52,6 @@ Resting-state EEG (part of a full PSG recording) was collected from patients dia
   - DOI: 10.1109/TNSRE.2021.3076234 — AttnSleep deep learning model for 30-second sleep epoch classification (W/N1/N2/N3/REM)
 - **Kernel Notes**: Sleep stage annotations mark sustained 30-second PSG epochs aligned to onset. Class imbalance expected: N2 (24882) heavily dominates vs rare N3 (6967) and N1 (6647). Verify exact annotation strings from raw hypnogram files — kernel shows `Sleep stage R (REM)` but standard AASM notation uses `Sleep stage R`. Consider weighted loss or stratified sampling to handle the 3.6:1 ratio between N2 and N3.
 
-### Potential Task 1: Resting-State Subject Group Classification (Zoster Neuralgia vs Healthy Control)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 30.0 s, overlap = 0.0
-- **Label Route**: `misc`
-- **Meta Level**: `raw`
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
-  | `healthy_control` | 0 | Healthy control subject |
-  | `zoster_neuralgia` | 1 | Zoster-associated neuralgia patient |
-- **Evidence**:
-  - URL: https://openneuro.org/datasets/ds007181 — Dataset includes both zoster-associated neuralgia patients and healthy controls with resting-state PSG/EEG recordings
-- **Kernel Notes**: Continuous EEG has no discrete event markers; group labels (zoster vs healthy) must be propagated from participants.tsv as epoch metadata. Use 30-second segment length matching the standard PSG epoch to enable consistent cross-subject training. Class balance depends on the subject-level group distribution in participants.tsv — verify before training. 24-channel PSG montage differs from standard research EEG, which may affect model generalizability.
-
-### Normal Task 1: Resting-State EEG Segmentation
-- **Task Type**: segmentation (preprocessing)
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4.0 s, overlap = 0.5
-- **Label Route**: `misc`
-- **Meta Level**: `raw`
-- **Target Definition**: N/A — continuous resting-state EEG without discrete labels; segmentation yields fixed-length windows for downstream analysis (e.g., spectral feature extraction or pre-trained model inference)
-- **Evidence**:
-  - URL: https://openneuro.org/datasets/ds007181 — Resting-state PSG/EEG recordings from zoster-associated neuralgia patients and healthy controls
-- **Kernel Notes**: Sliding window segmentation with 50% overlap provides data augmentation for continuous EEG. Subject group and sleep stage metadata from participants.tsv and PSG annotations must be attached per segment. The 4-second window balances frequency resolution (~0.25 Hz for EEG alpha/beta bands) with sufficient sample count for downstream classification models.
-
 ## Data Quality Notes
 
 - Pending manual review.

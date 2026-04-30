@@ -35,12 +35,11 @@ Participants imagined animals and tools in response to auditory cues while EEG w
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: `segment_length = 5 s *, overlap = 0 s *, target_events = []`
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 25–44 (years) | Subject chronological age from participants.tsv; N=7, complete coverage. Each segment inherits the subject's age label. |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | no mapping |
 - **Evidence**:
   - participants.tsv — age column complete for all 7 subjects (range 25–44 years)
   - README — "This dataset contains electroencephalography (EEG) signals recorded from 7 participants"
@@ -52,13 +51,11 @@ Participants imagined animals and tools in response to auditory cues while EEG w
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 5 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | F | 0 | female |
-  | sex | M | 1 | male |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_sex | Female -> 0; Male -> 1 |
 - **Evidence**:
 - **Notes**: Subject-level binary classification using 5-second non-overlapping/overlapping segments. The eeg.json specifies EpochLength=5, matching the auditory imagery task duration. Segmentation is used because there is no event-based trial structure suitable for subject trait prediction; the kernel assigns the same subject-level label (from participants.tsv) to all segments belonging to that subject. overlap=0.5 is a SKILL default for segmentation-based tasks when not otherwise specified.
 

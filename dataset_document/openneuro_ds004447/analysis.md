@@ -116,63 +116,30 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
 ### Potential Task 4: Age Regression from EEG
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5 *, target_events = []`
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 18.0–27.0 (years) | N=30 subjects; narrow 9-year span may limit predictive signal |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | subject_age | no mapping |
 - **Evidence**:
   - participants.tsv — age column complete for all 30 subjects (range 18–27 years)
-- **Notes**: Segmentation-based subject-level regression. No event structure needed; fixed 2-second windows with 50% overlap provide multiple samples per recording while preserving frequency resolution at 1000 Hz sampling rate. Age is a native participants.tsv column (B3 archetype, Meta Level = raw).
+- **Notes**: Segmentation-based subject-level regression. No event structure needed; fixed 2-second windows with 50% overlap provide multiple samples per recording while preserving frequency resolution at 1000 Hz sampling rate. Age is a native participants.tsv column (B3 archetype, Meta Level = raw). Note: narrow 9-year span (18–27 years) may limit predictive signal.
 
 ### Potential Task 5: Gender Classification from EEG
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5, target_events = []`
 - **Label Route**: `info`
-- **Label Field**: `gender`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | gender | female | 0 | female |
-  | gender | male | 1 | male |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | subject_sex | Female -> 0; Male -> 1 |
 - **Evidence**:
   - participants.tsv — N=30 subjects with gender column: 5 female, 25 male (complete, categorical)
 - **Notes**: Subject-level trait prediction via fixed-window EEG segmentation. Severe class imbalance (5:25) but technically valid binary classification with ≥2 distinct classes. 2-second windows with 50% overlap are inferred defaults for subject-level classification tasks where no trial structure is needed.
-
-### Potential Task 6: handedness classification from EEG
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `handedness`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | handedness | left | 0 | left-handed |
-  | handedness | right | 1 | right-handed |
-- **Evidence**:
-- **Notes**: Binary classification of subject handedness from segmented resting/task EEG. Extremely imbalanced dataset (1 left-handed vs 29 right-handed subjects). The single left-handed subject may be an outlier, making this task likely not learnable in practice. Included per soft guideline favoring inclusion of technically valid tasks. Segmentation parameters inferred from default subject-level classification settings.
-
-### Potential Task 7: Continuous EEG Segmentation with Age Label
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `age`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 18.0–27.0 (years) | Subject chronological age from participants.tsv; used as continuous regression target for subject trait prediction |
-- **Evidence**:
-  - participants.tsv — age column complete for N=30 subjects, range 18.0–27.0 years, sample values [22, 23, 24]
-- **Notes**: Archetype C (segmentation + info-native). Uses fixed-length 2-second non-overlapping windows (50% overlap) from continuous EEG without event locking, paired with subject age as regression target. Suitable for self-supervised pretraining or contrastive learning with age as downstream biomarker. Meta Level is raw because age is a native participants.tsv column requiring no kernel computation.
 
 ## Data Quality Notes
 

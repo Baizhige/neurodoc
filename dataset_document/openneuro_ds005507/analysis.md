@@ -74,44 +74,7 @@ The Healthy Brain Network (HBN) EEG Release 3 is a large-scale, multi-task devel
 
 ## Tasks
 
-### Classical Task 1: Phenotypic prediction from functional connectivity
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
-- **Label Route**: `misc`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `resting_start` | continuous | Functional connectivity features from resting-state EEG epochs |
-  | `video_start` | continuous | Functional connectivity features from movie-viewing EEG epochs |
-- **Super Meta Notes**: Derived from raw events [`resting_start`, `video_start`, `video_stop`] by computing imaginary coherence (iCOH) on 2-s sliding windows, then regressing against phenotypic variables (age, sex, IQ, ADHD, anxiety, SES, CBCL). Kernel step: Extract EEG epochs around events → compute FC matrix → join with phenotypic table → train regression model.
-- **Evidence**:
-  - DOI: 10.1016/j.neuroimage.2020.117001 — Analyzes N=1657 children/adolescents from HBN; investigates phase-coupling (iCOH) FC networks and their correlation with 10 phenotypic/demographic measures.
-- **Kernel Notes**: Use source-localized EEG for iCOH computation. Exclude flicker task (no raw event marker available). Verify subject ID harmonization between EEG and phenotypic tables.
-
-### Classical Task 2: Psychiatric multimorbidity classification from resting EEG
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
-- **Label Route**: `misc`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `resting_start` | ADHD | Attention-deficit/hyperactivity disorder |
-  | `resting_start` | ODD | Oppositional defiant disorder |
-  | `resting_start` | ASD | Autism spectrum disorder |
-  | `resting_start` | anxiety | Anxiety disorders |
-  | `resting_start` | depression | Depressive disorders |
-  | `resting_start` | learning | Learning disorders |
-  | `resting_start` | enuresis | Enuresis |
-- **Super Meta Notes**: Labels derived from subject metadata DSM-V diagnosis fields. Kernel must load per-subject diagnostic labels from companion clinical assessment file and join to resting-state EEG segments. Over 56% of children have multiple psychiatric disorders.
-- **Evidence**:
-  - DOI: 10.1016/j.neuroimage.2022.119348 — ML benchmark for psychiatric multimorbidity prediction using resting EEG; predicts 7 DSM-V diagnoses (ADHD, ODD, ASD, anxiety disorders, depressive disorders, learning disorders, enuresis) in large pediatric sample including HBN hidden test sets.
-- **Kernel Notes**: Resting-state segments extracted using same 2-s sliding window approach as functional connectivity task. Verify diagnostic criteria used across sites. Multi-label classification may be required given high comorbidity rates.
-
-### Classical Task 3: Sequence learning state classification
+### Classical Task 1: Sequence learning state classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [`contrastTrial_start`]
@@ -128,7 +91,7 @@ The Healthy Brain Network (HBN) EEG Release 3 is a large-scale, multi-task devel
   - DOI: 10.1038/sdata.2017.40 — Describes HBN sequence learning paradigm where trials categorized as still-unknown, newly-learned, or known based on recall reports.
 - **Kernel Notes**: Verify event ID mapping from events.tsv. Recall performance data must be joined from separate behavioral file. Exclude incomplete trial chains.
 
-### Classical Task 4: Contrast detection ERP (stimulus-locked)
+### Classical Task 2: Contrast detection ERP (stimulus-locked)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`stim_ON`]

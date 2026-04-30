@@ -24,8 +24,6 @@ Forty-eight subjects participated in two EEG-based speech BCI paradigms recorded
 | `65536` | ~144 (3/file x 48) | admin | raw | BioSemi system trigger |
 | `65790` | ~192 (4/file x 48) | admin | raw | BioSemi system trigger |
 
-> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
->
 > Trigger codes are stored as integer-string annotations converted from BioSemi Status stim channel values. Events 65536 and 65790 are BioSemi hardware codes and should be excluded from analysis.
 
 ### MISC Label Summary

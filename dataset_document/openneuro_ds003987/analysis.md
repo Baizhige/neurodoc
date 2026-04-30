@@ -76,70 +76,7 @@ A double-blind, crossover pharmacological study investigating the effects of d-a
 
 ## Tasks
 
-### Classical Task 1: 3-class drug dose classification (session-level)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5 *, target_events = []`
-- **Label Route**: `info`
-- **Label Field**: `session`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | session | 1 | 0 | Placebo (Sess1_Drug) |
-  | session | 2 | 1 | 10 mg d-amphetamine (Sess2_Drug) |
-  | session | 3 | 2 | 20 mg d-amphetamine (Sess3_Drug) |
-- **Evidence**:
-  - 10.1038/s41398-021-01562-w — Pharmacological EEG study using counterbalanced amphetamine doses with session-level drug conditions
-  - 10.1007/s00213-022-06082-z — D-amphetamine dose effects on EEG measures in 5CCPT paradigm
-  - participants.tsv — Contains Sess1_Drug, Sess2_Drug, Sess3_Drug columns with counterbalanced Placebo/10 mg/20 mg conditions; session column maps to drug dose per subject
-  - README — "3 drug conditions: placebo, 10mg, 20mg" with counterbalanced design across sessions
-- **Notes**: The session number (1, 2, 3) serves as the info field label, with drug dose determined by cross-referencing the corresponding SessN_Drug column in participants.tsv. Since events.tsv files contain only untranslated trigger codes (65535, 65289) and lack the actual 5CCPT response markers, segmentation is used instead of event-based epoching. The kernel must map session→drug dose using the per-subject Sess1_Drug/Sess2_Drug/Sess3_Drug values.
 
-### Potential Task 1: 2-class sex classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5, target_events = []`
-- **Label Route**: `info`
-- **Label Field**: `sex`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | female | 0 | Female subject |
-  | sex | male | 1 | Male subject |
-- **Evidence**:
-- **Notes**: Subject-level biometric classification from resting/task EEG using demographic sex labels from participants.tsv. Segmentation creates multiple samples per subject across the continuous recording. Small sample size (N=23, 12 male / 11 female) makes this a challenging few-subject classification problem. All 3 sessions per subject (placebo, 10mg, 20mg amphetamine conditions) are pooled, with drug condition treated as uncontrolled variability.
-
-### Potential Task 2: Age Regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `age`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 18.0 – 35.0 (years) | Continuous demographic variable from participants.tsv; N=23 subjects, mean ~24.5 years. Narrow range in young adults may limit predictive power. |
-- **Evidence**:
-- **Notes**: Standard brain-age regression paradigm using sliding-window segmentation. Each 2-second EEG segment is labeled with the subject's chronological age from participants.tsv. Segmentation with 50% overlap maximizes training samples given continuous resting/task-state recordings. The relatively narrow age range (18-35 years) in this young-adult cohort constrains the regression problem compared to lifespan brain-age models.
-
-### Potential Task 3: 3-class session number classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5 *, target_events = []`
-- **Label Route**: `info`
-- **Label Field**: `session`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | session | 1 | 0 | First testing session |
-  | session | 2 | 1 | Second testing session |
-  | session | 3 | 2 | Third testing session |
-- **Evidence**:
-- **Notes**: Session values 1, 2, 3 are drawn directly from the native participants.tsv `session` column (sample values: [1, 2, 3]). The three sessions represent counterbalanced drug conditions (Placebo/10mg/20mg amphetamine) administered in different orders per subject. Since drug condition is counterbalanced, session number captures order/habituation effects rather than drug state, making this a control variable for practice and session-dependent EEG changes. Segmentation with 2s windows and 50% overlap provides sufficient samples for session-level classification while respecting the continuous recording structure.
 
 ## Data Quality Notes
 

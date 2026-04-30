@@ -34,12 +34,11 @@ Participants performed a threshold-level vibrotactile detection task in which a 
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.5, target_events = []`
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|-------------|-------|
-  | age | 18–34 (years) | Subject-level continuous label from participants.tsv; N=18, mean≈25.2 |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | 18–34 (years); no mapping |
 - **Evidence**:
 - **Notes**: Segmentation-based regression with no event locking. 10s windows with 50% overlap provide sufficient samples per subject for subject-level age prediction while maintaining stationarity. Age is a native participants.tsv column (B3 archetype, Meta=raw).
 
@@ -48,13 +47,11 @@ Participants performed a threshold-level vibrotactile detection task in which a 
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.5, target_events = []`
 - **Label Route**: `info`
-- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | F | 0 | Female |
-  | sex | M | 1 | Male |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_sex | F -> 0; M -> 1 |
 - **Evidence**:
 - **Notes**: Subject-level demographic classification using continuous EEG segments. No task-related events are used for labeling; instead, the sex field from participants.tsv provides binary labels (F=7, M=11). Segmentation with 10s windows and 50% overlap is standard for resting-state/demographic prediction from EEG when no discriminating events exist.
 

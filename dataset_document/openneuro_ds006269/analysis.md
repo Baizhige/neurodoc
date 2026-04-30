@@ -34,20 +34,7 @@ Continuous 6-hour tethered EEG recordings were collected from wildtype and Synga
 
 ## Tasks
 
-### Classical Task 1: Genotype classification from resting-state EEG
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4 s, overlap = 0.5 s
-- **Label Route**: `misc`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `wildtype` | 0 | Wildtype rat genotype control |
-  | `Syngap1` | 1 | Syngap1 mutant haploinsufficient rat |
-- **Evidence**:
-  - DOI: `10.1016/j.celrep.2024.114733` — 6-hour tethered EEG recordings from wildtype and Syngap1 mutant LE rats used to characterize neural phenotypes; supports 2-class genotype classification from spontaneous EEG.
-- **Kernel Notes**: Dataset contains only `unknown` admin markers—no usable event IDs. Labels must be derived from subject-level genotype metadata in participants.tsv. Extract subject ID for each recording, lookup genotype (wildtype=0, Syngap1=1), and assign as label to all epochs from that subject. Use fixed-length segmentation (4 s, 50% overlap) for sliding window analysis across the 6-hour continuous recordings. Cross-subject split required (no within-subject mixing) to avoid data leakage given all epochs from a subject share the same label. Consider rat EEG artifact characteristics (muscle artifacts, tethered setup electrical noise) in preprocessing.
+
 
 ## Data Quality Notes
 

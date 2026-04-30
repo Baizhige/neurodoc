@@ -1,7 +1,7 @@
 # sleepdata_shhs
 
 **Dataset**: `sleepdata_shhs` | **Year**: 1995-2003 | **URL**: https://sleepdata.org/datasets/shhs
-**Category**: Biological State | **Subjects**: 6441 | **Files (Completed)**: 5786 | **Manual Review**: Jiping Cui
+**Category**: Biological State | **Subjects**: 6441 | **Files (Completed)**: 5786 | **Manual Review**:
 **Channels**: 14 | **Sampling Rate**: 125 Hz (EEG/EMG/ECG primary), 50 Hz (EOG), 10 Hz (respiratory), 1 Hz (SpO2/HR); exported EDF channels are resampled to 125 Hz
 
 ## Paradigm
@@ -10,38 +10,68 @@ The Sleep Heart Health Study (SHHS) is a multi-center NIH/NHLBI cohort investiga
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
-> **EEGUnity Version**: `N/A`
-> **Scan Type**: Sampled
+> **Kernel SHA256**: `c07e572c2097434833f230846d58e8f32f84e4ba8d6e0f09d9f4c921560f6771`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 
 ### Event Structure
 
-Annotations are available in both original Profusion XML and NSRR-processed XML (`*-nsrr.xml`). The NSRR XML files contain three high-level `EventType` groups:
-
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
-| `Stages|Stages` | ~100-400 annotations/file | event | raw | Sleep-stage labels in 30 s scoring epochs |
-| `Arousals|Arousals` | variable | event | raw | Cortical arousal events |
-| `Respiratory|Respiratory` | variable | event | raw | Respiratory events (apnea/hypopnea/desaturation-related) |
+|---|---|---|---|---|
+| `ASDA arousal\|Arousal (ASDA)` | 3429 | event | raw |  |
+| `Arousal resulting from Chin EMG\|Arousal (CHESHIRE)` | 980 | event | raw |  |
+| `Arousal resulting from Chin EMG\|Arousal (Cheshire)` | 1 | event | raw |  |
+| `Arousal resulting from respiratory effort\|Arousal (ARO RES)` | 111 | event | raw |  |
+| `Arousal\|Arousal ()` | 1072561 | event | raw |  |
+| `Arousal\|Arousal (STANDARD)` | 12345 | event | raw |  |
+| `Arousal\|Arousal (Standard)` | 1103 | event | raw |  |
+| `Central apnea\|Central Apnea` | 38217 | event | raw |  |
+| `External arousal\|Arousal (External Arousal)` | 120 | event | raw |  |
+| `Hypopnea\|Hypopnea` | 1588062 | event | raw |  |
+| `Mixed apnea\|Mixed Apnea` | 530 | event | raw |  |
+| `Movement\|6` | 2 | event | raw |  |
+| `Obstructive apnea\|Obstructive Apnea` | 238656 | event | raw |  |
+| `Periodic breathing\|Periodic Breathing` | 1 | event | raw |  |
+| `REM sleep\|5` | 77963 | event | raw |  |
+| `Recording Start Time` | 8444 | event | raw |  |
+| `Respiratory artifact\|Respiratory artifact` | 7 | event | raw |  |
+| `SpO2 artifact\|SpO2 artifact` | 286898 | event | raw |  |
+| `SpO2 desaturation\|SpO2 desaturation` | 1151606 | event | raw |  |
+| `Stage 1 sleep\|1` | 159595 | event | raw |  |
+| `Stage 2 sleep\|2` | 391562 | event | raw |  |
+| `Stage 3 sleep\|3` | 229582 | event | raw |  |
+| `Stage 4 sleep\|4` | 22813 | event | raw |  |
+| `Unscored\|9` | 198 | event | raw |  |
+| `Unsure\|Unsure` | 1219 | event | raw |  |
+| `Wake\|0` | 260624 | event | raw |  |
 
-The `Stages|Stages` event type uses the following `EventConcept` labels (inside `EventConcept`):
+### MISC Label Summary
 
-| Event ID | Count (total) | Type | Meta Level | Meaning |
-|--------|-------------|----|----------|-------|
-| `Wake|0` | frequent | event | raw | Wake |
-| `Stage 1|1` | lower frequency | event | raw | NREM Stage 1 (N1) |
-| `Stage 2|2` | high frequency | event | raw | NREM Stage 2 (N2) |
-| `Stage 3|3` | moderate | event | raw | Slow-wave sleep |
-| `Stage 4|4` | rare | event | raw | Slow-wave sleep (legacy R&K stage) |
-| `REM|5` | moderate | event | raw | REM sleep |
+| Channel | Source | Meta | Notes |
+|---|---|---|---|
+| `ABDO RES` | native (raw misc in EEG file) | raw | Verify channel role and unit |
+| `AIRFLOW` | native (raw misc in EEG file) | raw | Verify channel role and unit |
+| `H.R.` | native (raw misc in EEG file) | raw | Verify channel role and unit |
+| `LIGHT` | native (raw misc in EEG file) | raw | Verify channel role and unit |
+| `NEW AIR` | native (raw misc in EEG file) | raw | Verify channel role and unit |
+| `OX stat` | native (raw misc in EEG file) | raw | Verify channel role and unit |
+| `POSITION` | native (raw misc in EEG file) | raw | Verify channel role and unit |
+| `SaO2` | native (raw misc in EEG file) | raw | Verify channel role and unit |
+| `THOR RES` | native (raw misc in EEG file) | raw | Verify channel role and unit |
 
 ### Info
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
-| `device` | missing | N/A |
+| `subject_age` | partial (8444/8571) | N/A |
+| `subject_sex` | partial (8444/8571) | N/A |
+| `device` | complete | N/A |
+| `amplifier` | complete | e.g. Compumedics |
+| `cap` | complete | e.g. minimal PSG montage (C3/C4, A1/A2 referential) |
+| `bmi` | partial (8377/8571) | e.g. 21.777553339, 32.950680272, 24.114149822 |
+| `height` | partial (5751/8571) | e.g. 178, 168, 145 |
+| `race` | partial (8444/8571) | e.g. 1, 2, 3 |
+| `weight` | partial (5680/8571) | e.g. 65, 93, 51 |
 
 ## Tasks
 
@@ -54,11 +84,11 @@ The `Stages|Stages` event type uses the following `EventConcept` labels (inside 
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|
-  | `Wake|0` | 0 | Wake |
-  | `Stage 1|1` | 1 | N1 |
-  | `Stage 2|2` | 2 | N2 |
-  | `Stage 3|3` or `Stage 4|4` | 3 | N3/SWS |
-  | `REM|5` | 4 | REM |
+  | `Wake\|0` | 0 | Wake |
+  | `Stage 1\|1` | 1 | N1 |
+  | `Stage 2\|2` | 2 | N2 |
+  | `Stage 3\|3` or `Stage 4\|4` | 3 | N3/SWS |
+  | `REM\|5` | 4 | REM |
 - **Evidence**:
   - DOI: `10.5665/sleep.5774` — National Sleep Research Resource provides SHHS PSG data with expert sleep-stage annotations in 30-second epochs
 - **Kernel Notes**: Stage 4 is rare; merge Stage 3 and Stage 4 into N3/SWS class for robust modeling. (replaces Potential Task 1 from original analysis.md)
@@ -88,7 +118,7 @@ The `Stages|Stages` event type uses the following `EventConcept` labels (inside 
 
 | Event | y | Meaning |
 |-------|---|---------|
-| `Wake|0` | 0 | Awake |
+| `Wake\|0` | 0 | Awake |
 | Any sleep stage (`1/2/3/4/5`) | 1 | Asleep |
 
 ### Potential Task 3: Arousal Detection (binary)

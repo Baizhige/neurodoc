@@ -128,26 +128,6 @@ Participants completed a reinforcement learning task using a 3-armed bandit para
 - **Evidence**:
   - DOI: 10.5334/cpsy.96 — "Choice display signals onset of three-armed bandit options; cued decision-making process analyzed via ERP components."
 
-### Potential Task 2: Cue-to-Substance Mapping Verification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, target_events = [`cue: alcohol`, `cue: neutral`, `novel cue: order 1`, `novel cue: order 2`, `novel cue: order 3`, `novel cue: order 4`, `novel cue: order 5`, `novel cue: order 6`]
-- **Label Route**: `misc`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `cue: alcohol` | 0 | Confirmed alcohol cue |
-  | `cue: neutral` | 1 | Confirmed neutral cue |
-  | `novel cue: order 1` | TBD | Requires events.tsv verification |
-  | `novel cue: order 2` | TBD | Requires events.tsv verification |
-  | `novel cue: order 3` | TBD | Requires events.tsv verification |
-  | `novel cue: order 4` | TBD | Requires events.tsv verification |
-  | `novel cue: order 5` | TBD | Requires events.tsv verification |
-  | `novel cue: order 6` | TBD | Requires events.tsv verification |
-- **Kernel Notes**: The mapping between `novel cue: order X` events and alcohol vs neutral substance conditions requires verification from events.tsv. Once verified, these events can be merged with `cue: alcohol`/`cue: neutral` for comprehensive cue-type classification or separated for order-specific analysis.
-- **Evidence**: No DOI — supported by kernel notes requiring events.tsv verification to determine if novel cue orders map to distinct substance conditions.
-
 ## Data Quality Notes
 
 - Pending manual review.

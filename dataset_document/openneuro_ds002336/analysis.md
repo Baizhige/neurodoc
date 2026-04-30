@@ -101,12 +101,11 @@ Simultaneous EEG-fMRI acquisition during a kinesthetic motor imagery neurofeedba
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 19.0 – 39.0 (years) | Continuous age from participants.tsv; N=10 subjects, each segment inherits subject's age as regression target |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | `subject_age` | no mapping |
 - **Evidence**:
   - participants.tsv — age column complete for all N=10 subjects, range 19.0–39.0 years
   - analysis.md Potential Task 1 — 4-second windows with 50% overlap during sustained Rest blocks (20s), yielding ~7 segments per block
@@ -117,13 +116,11 @@ Simultaneous EEG-fMRI acquisition during a kinesthetic motor imagery neurofeedba
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | M | 0 | male |
-  | sex | F | 1 | female |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | `subject_sex` | M -> 0; F -> 1 |
 - **Evidence**:
 - **Notes**: Segmentation-based classification using 4-second non-overlapping windows (50% overlap) of continuous resting-state/task EEG. Each segment inherits the subject's sex label from participants.tsv. Highly imbalanced dataset with 8 male and 2 female subjects. The small sample size (N=10) makes this a high-risk potential task with limited generalizability. No event markers are used for epoching since this is a pure segmentation approach on continuous data.
 
@@ -132,12 +129,11 @@ Simultaneous EEG-fMRI acquisition during a kinesthetic motor imagery neurofeedba
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `misc`
-- **Label Field**: `ECG`
 - **Meta Level**: super
 - **Target Definition**:
-  | MISC Channel | Value (unit) | Notes |
-  |--------------|--------------|-------|
-  | ECG | continuous (mV) | Native ECG channel recorded simultaneously with EEG; regression target is the ECG signal amplitude within each window |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | ECG | no mapping |
 - **Evidence**:
   - EEG File Header Sample (sub-xp101_task-eegNF_eeg_pp.vhdr, sub-xp101_task-eegfmriNF_eeg_pp.vhdr) — ECG listed among 64 channels in raw EEG recordings, confirming native continuous misc channel presence
   - README / dataset_description.json — simultaneous EEG-fMRI acquisition with physiological monitoring; ECG standard for cardiac artifact detection and physiological correlation studies

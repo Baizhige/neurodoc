@@ -161,92 +161,36 @@ Participants walked two different outdoor routes while performing a self-paced b
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `misc`
-- **Label Field**: `x_dir`
-- **Meta Level**: super
+- **Meta Level**: raw
 - **Target Definition**:
-  | MISC Channel | Value (unit) | Notes |
-  |--------------|--------------|-------|
-  | x_dir | continuous (a.u.) | Horizontal movement direction component; native continuous misc channel from mobile EEG during free walking |
-- **Evidence**:
-  - eeg.json — MiscChannelCount: 3 confirms presence of misc channels including x_dir
-  - channels.tsv (inferred from header) — x_dir listed as native misc channel alongside y_dir, z_dir
-  - dataset_description.json — "free walking study" with mobile EEG recordings; Jacobsen et al. (2020) characterizes gait-related artifacts in mobile EEG
-- **Notes**: Native misc channel x_dir is directly available on the raw object (archetype B1). No kernel derivation needed. The 2s segment length with 50% overlap is inferred from standard practice for continuous decoding from mobile EEG during locomotion. The x_dir channel likely represents horizontal head/body orientation or movement direction during free walking, forming a continuous regression target for predicting directional movement from EEG. **Super Meta**: Derived from native MISC channel `x_dir` — kernel must read per-sample values from the raw object and use as continuous regression target.
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | x_dir | no mapping |
+- **Notes**: Native misc channel x_dir is directly available on the raw object (archetype B1). No kernel derivation needed. The 2s segment length with 50% overlap is inferred from standard practice for continuous decoding from mobile EEG during locomotion. The x_dir channel represents horizontal head/body orientation or movement direction during free walking, forming a continuous regression target for predicting directional movement from EEG.
 
 ### Potential Task 3: Direction Channel Regression (y_dir)
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `misc`
-- **Label Field**: `y_dir`
-- **Meta Level**: super
+- **Meta Level**: raw
 - **Target Definition**:
-  | MISC Channel | Value (unit) | Notes |
-  |--------------|--------------|-------|
-  | y_dir | continuous | Vertical/anterior-posterior movement direction component from head-mounted IMU; regression target for movement direction prediction |
-- **Evidence**:
-  - eeg.json — MiscChannelCount=3 confirms three auxiliary channels present (x_dir, y_dir, z_dir)
-  - EEG File Header Sample — 67 total channels includes 64 EEG + 3 misc channels
-  - evidence_summary — Native continuous y_dir channel available for vertical/anterior-posterior direction regression
-- **Notes**: Native B1 archetype using pre-existing misc channel y_dir from head-mounted IMU. No kernel derivation needed; channel is directly available on the raw object. Segmentation approach (2s windows, 50% overlap) chosen for continuous regression target without event-locked structure. **Super Meta**: Derived from native MISC channel `y_dir` — kernel must read per-sample values from the raw object and use as continuous regression target.
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | y_dir | no mapping |
+- **Notes**: Native B1 archetype using pre-existing misc channel y_dir from head-mounted IMU. No kernel derivation needed; channel is directly available on the raw object. Segmentation approach (2s windows, 50% overlap) chosen for continuous regression target without event-locked structure.
 
 ### Potential Task 4: Direction Channel Regression (z_dir)
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `misc`
-- **Label Field**: `z_dir`
-- **Meta Level**: super
+- **Meta Level**: raw
 - **Target Definition**:
-  | MISC Channel | Value (unit) | Notes |
-  |--------------|--------------|-------|
-  | z_dir | continuous (a.u.) | Vertical/gravity-aligned movement direction component; third axis of 3D directional sensing from motion sensors. May capture trunk/head vertical oscillation during gait. |
-- **Evidence**:
-- **Notes**: Native continuous misc channel z_dir available on the raw EEG object as one of three directional channels (x_dir, y_dir, z_dir). This is a B1 archetype task using native misc channel regression with segmentation-based epochs. The 2-second window with 50% overlap follows the same segmentation pattern used for other direction channels in this dataset. Values are inferred from the candidate's epoch_hint. **Super Meta**: Derived from native MISC channel `z_dir` — kernel must read per-sample values from the raw object and use as continuous regression target.
-
-### Potential Task 5: age regression from EEG
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.5 *, target_events = []`
-- **Label Route**: `info`
-- **Label Field**: `age`
-- **Meta Level**: super
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 19–32 (years) | Subject-level continuous age from participants.tsv; N=19 complete |
-- **Evidence**:
-- **Notes**: Brain-age prediction using continuous 10-second EEG segments with 50% overlap. No event-locked structure required since this is a subject-level regression task. The age values are continuous numeric (19–32 years) from the native participants.tsv info field. Segmentation approach maximizes usable data volume per subject for regression model training. **Super Meta**: Derived from subject metadata field `age` — kernel must load per-subject label from participants.tsv and broadcast to all segments.
-
-### Potential Task 6: Gender Classification from EEG
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 10 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `gender`
-- **Meta Level**: super
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | gender | F | 0 | Female |
-  | gender | M | 1 | Male |
-- **Evidence**:
-- **Notes**: Subject-level binary classification using 10-second non-overlapping segments with 50% overlap. Classes are imbalanced (13 Female, 6 Male). Since no task events discriminate gender, segmentation is used to create samples from continuous EEG, with labels drawn from participants.tsv. The kernel must read the `gender` column from participants.tsv and broadcast it to all segments belonging to that subject. **Super Meta**: Derived from subject metadata field `gender` — kernel must load per-subject label from participants.tsv and broadcast to all segments.
-
-### Potential Task 7: Continuous Walking Segmentation with Gender Labels
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.75 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `gender`
-- **Meta Level**: super
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | gender | F | 0 | Female participant |
-  | gender | M | 1 | Male participant |
-- **Evidence**:
-- **Notes**: Archetype C with native info column. The entire continuous walking recording is segmented into 4-second windows with 75% overlap; each segment inherits the subject's gender label from participants.tsv. This tests whether gait-related EEG spectral features can distinguish female vs male participants without any event-locked structure. **Super Meta**: Derived from subject metadata field `gender` — kernel must load per-subject label from participants.tsv and broadcast to all segments.
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | z_dir | no mapping |
+- **Notes**: Native continuous misc channel z_dir available on the raw EEG object as one of three directional channels (x_dir, y_dir, z_dir). This is a B1 archetype task using native misc channel regression with segmentation-based epochs. The 2-second window with 50% overlap follows the same segmentation pattern used for other direction channels in this dataset.
 
 ## Data Quality Notes
 

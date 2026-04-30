@@ -98,23 +98,6 @@ The dataset enables comparison of sensory processing and resting-state EEG activ
   - 10.1093/braincomms/fcab061 — The visual stimulation condition includes 4 Hz and 6 Hz steady-state visual stimulation, enabling frequency-specific SSVEP analysis.
 - **Notes**: Restrict this task to SSVEP/visual recordings. The group suffixes are included only because they are part of the available Event Structure IDs; the classification target should be frequency, not subject group.
 
-### Potential Task 2: Migraine Patient vs Healthy Control Classification - Resting State
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.0, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `subject group derived from participant metadata / subject ID prefix`
-- **Meta Level**: super
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |---|---|---|---|
-  | `Subject group` | Healthy control / C-series subject | 0 | Healthy control |
-  | `Subject group` | Migraine / M-series subject | 1 | Interictal migraine patient |
-- **Evidence**:
-  - Protocol: resting state consists of six 2 min fixation blocks; label `1` marks block start and label `2` marks block end.
-  - 10.1093/braincomms/fcab061 — Resting-state EEG was analyzed using 2 s non-overlapping intervals for group-level comparison.
-- **Notes**: Restrict this task to resting-state recordings. Prefer segmenting within valid resting blocks when block markers are available, then assign labels from subject metadata or subject ID prefix. Use subject-level train/test splitting to avoid leakage across segments from the same participant.
-
 ## Data Quality Notes
 
 - Group labels are subject-level metadata derived from the subject ID prefix (`M` = migraine, `C` = control), not native task labels. Raw scanned event names may also contain group-specific suffixes and should be normalized before task construction to avoid label leakage.

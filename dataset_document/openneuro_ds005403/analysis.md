@@ -48,12 +48,11 @@ Participants performed a speech production task while receiving delayed auditory
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: `tmin = 0 s, tmax = 3.5 s *, overlap = 0 *, target_events = [`baseline`, `adaption`]`
 - **Label Route**: `misc`
-- **Label Field**: `audio_envelope`
 - **Meta Level**: raw
 - **Target Definition**:
-  | MISC Channel | Value (unit) | Notes |
-  |--------------|-------------|-------|
-  | audio_envelope | continuous amplitude (a.u.) | Gammatone-filtered audio envelope of delayed auditory feedback; continuous regression target for encoding model |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | audio_envelope | continuous amplitude (a.u.); no mapping |
 - **Evidence**:
   - 10.1523/JNEUROSCI.2294-24.2025 — Encoding model predicting continuous EEG from audio envelope during speech production with delayed auditory feedback; describes gammatone filter bank and envelope computation from raw audio channels
 - **Notes**: Native misc channel 'audio_envelope' is pre-computed and available in the raw recording. The kernel does not need to derive this channel. tmax inferred from events.tsv sample showing baseline trial durations ~2.8-3.5s; overlap=0 as contiguous blocks. Only baseline and adaption events are used as target_events per the reference description; random1/random2 are excluded as they are not mentioned in the encoding model.
@@ -63,12 +62,11 @@ Participants performed a speech production task while receiving delayed auditory
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 3.5 s *, overlap = 0 *, target_events = [`baseline`, `adaption`]
 - **Label Route**: `misc`
-- **Label Field**: `audio_onsets`
 - **Meta Level**: raw
 - **Target Definition**:
-  | MISC Channel | Value (unit) | Notes |
-  |--------------|--------------|-------|
-  | audio_onsets | onset time (s) | Continuous audio onset timestamps marking speech event boundaries during delayed auditory feedback; derived from audio envelope |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | audio_onsets | onset time (s); no mapping |
 - **Evidence**:
   - 10.1523/JNEUROSCI.2294-24.2025 — Encoding model predicting continuous EEG from audio onset times during speech production; audio onsets mark speech event boundaries derived from audio envelope
 - **Notes**: Native misc channel 'audio_onsets' is a pre-existing continuous channel in the raw EEG data (alongside 'audio' and 'audio_envelope'), not kernel-derived. The epoch structure follows long-event epochs anchored to trial phase onsets (baseline/adaption blocks) with tmin=0.0s and tmax=3.5s covering full block duration. tmax and overlap inferred from the epoch hint indicating full-block epochs; these are marked with * as they were not explicitly numerically specified in the reference.
@@ -78,12 +76,11 @@ Participants performed a speech production task while receiving delayed auditory
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0 s, tmax = 3.5 s *, overlap = 0.0 *, target_events = [`baseline`, `adaption`]
 - **Label Route**: `misc`
-- **Label Field**: `egg_envelope`
 - **Meta Level**: raw
 - **Target Definition**:
-  | MISC Channel | Value (unit) | Notes |
-  |--------------|-------------|-------|
-  | egg_envelope | continuous amplitude (a.u.) | EGG envelope derived from continuous EGG with phase-corrected hardware filter; serves as regression target for EEG encoding model |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | egg_envelope | continuous amplitude (a.u.); no mapping |
 - **Evidence**:
   - 10.1523/JNEUROSCI.2294-24.2025 — Encoding model predicting continuous EEG from electroglottography (EGG) envelope, capturing vocal fold activity during speech production under DAF
   - README — EGG minimally preprocessed with phase delay correction; audio/EGG included in EEG files as native misc channels
@@ -161,92 +158,32 @@ Participants performed a speech production task while receiving delayed auditory
   - README — Confirms delayed auditory feedback (DAF) paradigm with per-trial delays recorded in events sidecar
 - **Notes**: This is a 3-way classification task where random1 and random2 are pooled into a single y=2 class representing 'random delay' conditions, versus baseline (y=0, no delay) and adaption (y=1, fixed delay). The pooling is justified by the DAF paradigm structure where both random1 and random2 represent variable/unpredictable delay regimes distinct from the fixed adaption and zero-delay baseline conditions. Epoch window inferred from standard speech production trial durations in DAF paradigms.
 
-### Potential Task 5: Sex classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 10 s *, overlap = 0.0 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `sex`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | F | 0 | Female |
-  | sex | M | 1 | Male |
-- **Evidence**:
-- **Notes**: Subject-level classification task using 10-second non-overlapping segments across continuous DAF task recordings. The 'sex' label from participants.tsv is applied to all segments from each participant. Segment length and overlap values are inferred from Category SKILL defaults for subject-characteristic tasks with no event-discriminating structure.
-
-### Potential Task 6: Handedness regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.0 *, target_events = []`
-- **Label Route**: `info`
-- **Label Field**: `hand`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | hand | 50–100 (dimensionless) | Edinburgh Handedness Inventory score; higher = more right-handed. N=32 complete. |
-- **Evidence**:
-- **Notes**: Subject-level continuous trait regression. EEG segments are labeled by the participant's handedness score from participants.tsv. No kernel derivation needed — 'hand' is a native participants.tsv column.
-
-### Potential Task 7: Continuous speech DAF segmentation with sex label
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 5 s *, overlap = 0.5 *, target_events = []`
-- **Label Route**: `info`
-- **Label Field**: `sex`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | F | 0 | Female subject |
-  | sex | M | 1 | Male subject |
-- **Evidence**:
-- **Notes**: Archetype C with segmentation-based epoching and native info field label. The 5-second segment length with 0.5 overlap was chosen to capture local neural dynamics during continuous speech production while respecting the ~3-second trial structure of the DAF paradigm. Since segments are drawn from continuous recordings without event alignment, target_events is empty as required. The sex label is a complete, balanced subject-level variable (17 F, 15 M) from participants.tsv, enabling classification of sex-specific neural patterns during ongoing auditory-motor processing under delayed auditory feedback manipulation.
-
-### Potential Task 8: Continuous speech DAF segmentation with handedness regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 5 s *, overlap = 0.5 *, target_events = []`
-- **Label Route**: `info`
-- **Label Field**: `hand`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | hand | 50–100 (Edinburgh Handedness Inventory score) | Higher values indicate stronger right-handedness; applied per-subject to all segments |
-- **Evidence**:
-- **Notes**: Segmentation-based approach for continuous DAF speech monitoring. The 5-second segments with 50% overlap capture ongoing neural dynamics during auditory-motor integration without relying on discrete event boundaries. Handedness scores from participants.tsv (range 50–100, Edinburgh Handedness Inventory) serve as subject-level continuous labels, testing whether manual lateralization proxies for speech lateralization are reflected in EEG patterns during delayed auditory feedback processing. Meta Level is raw because `hand` is a native pre-existing column in participants.tsv.
-
-### Potential Task 9: Raw audio channel EEG encoding
+### Potential Task 5: Raw audio channel EEG encoding
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0 s *, tmax = 3.5 s *, overlap = 0 *, target_events = [`baseline`, `adaption`, `random1`, `random2`]
 - **Label Route**: `misc`
-- **Label Field**: `audio`
 - **Meta Level**: raw
 - **Target Definition**:
-  | MISC Channel | Value (unit) | Notes |
-  |---|---|---|
-  | audio | continuous (arbitrary units) | Raw audio waveform of delayed auditory feedback heard by subject; continuous non-EEG channel recorded on same hardware |
+  | MISC Channel Name | Y Mapping Notes |
+  |------------------|----------------|
+  | audio | continuous (arbitrary units); no mapping |
 - **Evidence**:
   - README — "The audio is the audio the subject heard, i.e. their delayed auditory feedback"
   - eeg.json — MiscChannelCount=2 confirms audio/EGG stored as native misc channels in EEG files
   - events.tsv — trial_type column confirms `baseline` events with delay=0.004 and detected_delay values, establishing DAF paradigm structure
 - **Notes**: Native misc channel 'audio' is used directly as continuous regression target (archetype B1). This task tests fine-grained temporal encoding of raw waveform rather than envelope, requiring the kernel to preserve high-frequency audio content at 10kHz sampling. Long-event epochs span full trial durations (~2.8-3.5s) with overlap=0 for non-overlapping trials. tmax inferred from maximum observed baseline trial duration (~3.5s); actual trial durations vary by sentence length.
 
-### Potential Task 10: Raw EGG channel EEG encoding
+### Potential Task 6: Raw EGG channel EEG encoding
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0 s *, tmax = 4 s *, overlap = 0 s *, target_events = [`baseline`, `adaption`, `random1`, `random2`]
 - **Label Route**: `misc`
-- **Label Field**: `egg`
 - **Meta Level**: raw
 - **Target Definition**:
-  | MISC Channel | Value (unit) | Notes |
-  |--------------|--------------|-------|
-  | egg | continuous (arbitrary units) | Raw electroglottography waveform; phase-corrected for hardware filter. Continuous vocal fold contact area dynamics during speech production. |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | egg | continuous (arbitrary units); no mapping |
 - **Evidence**:
 - **Notes**: Archetype B1 — native misc channel 'egg' is pre-existing in the raw recording (not kernel-derived). The task tests whether raw EGG waveform (beyond derived envelope/onsets) contains predictive information for EEG during delayed auditory feedback. Long-event epochs span full speech block durations. tmax=4s is inferred from typical sentence reading durations in the events.tsv samples (2.7–3.5s) plus margin; overlap=0s for non-overlapping blocks. All four trial phase events are included as epoch anchors to maximize data coverage across experimental conditions.
 

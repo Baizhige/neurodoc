@@ -83,49 +83,7 @@ The Healthy Brain Network (HBN) EEG Release 11 is a large-scale, multi-task deve
 
 ## Tasks
 
-### Classical Task 1: FC-phenotype association regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.0 (segments concatenated across entire recording for FC computation)
-- **Label Route**: `misc`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
-  | `age` | continuous | Participant age in years |
-  | `sex` | 0/1 | Biological sex (binary) |
-  | `IQ` | continuous | WISC-measured intelligence quotient |
-  | `CBCL` | continuous | Child Behavior Checklist score |
-  | `SWAN_ADHD` | continuous | SWAN ADHD measure |
-  | `SES` | continuous | Barratt Socioeconomic Status |
-  | `anxiety` | continuous | SCARED anxiety score |
-- **Super Meta Notes**: Derived from phenotypic assessment tables (WISC, CBCL, SWAN, Barratt, SCARED) external to EEG. Kernel must: (1) identify subject ID from EEG filename, (2) join with phenotypic CSV by subject, (3) compute FC (iCOH) from 2s segments across concatenated tasks, (4) apply MDMR or similar multivariate regression to predict phenotypic vectors from FC matrices.
-- **Evidence**:
-  - DOI: `10.1016/j.neuroimage.2020.117001` — Uses HBN EEG source-space connectivity (iCOH) to predict age, sex, IQ, CBCL, ADHD, SES, anxiety via MDMR association analysis
-- **Kernel Notes**: Requires full-recording concatenation across multiple task blocks (resting 300s, video 117-230s, visual flicker 210s). Segment-level FC computed per 2s window, then aggregated into subject-level connectivity matrix. Phenotypic labels must be aligned by subject ID. Use subject-wise splits to prevent data leakage.
-
-### Classical Task 2: Psychiatric multimorbidity classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0, tmax = 300.0, overlap = null
-- **Label Route**: `info`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
-  | `ADHD` | 0/1 | Attention-Deficit/Hyperactivity Disorder diagnosis |
-  | `ODD` | 0/1 | Oppositional Defiant Disorder diagnosis |
-  | `CD` | 0/1 | Conduct Disorder diagnosis |
-  | `Anxiety_Disorder` | 0/1 | Anxiety Disorder diagnosis |
-  | `MDD` | 0/1 | Major Depressive Disorder diagnosis |
-  | `ASD` | 0/1 | Autism Spectrum Disorder diagnosis |
-  | `Learning_Disorder` | 0/1 | Learning Disorder diagnosis |
-- **Super Meta Notes**: Multi-label classification for 7 DSM-V diagnoses. Labels derived from clinical assessment; kernel must load per-subject diagnostic labels from companion phenotypic file. Hidden test sets defined in original benchmark paper.
-- **Evidence**:
-  - DOI: `10.1016/j.neuroimage.2022.119348` — Benchmark paper defining psychiatric multimorbidity prediction from resting EEG data in N=2042 HBN participants; establishes 7-class classification and symptom severity regression tasks with hidden test sets
-- **Kernel Notes**: Resting state epochs from `resting_start` events (372 total) capture spontaneous activity for disorder classification. Frequency band features (delta, theta, alpha, beta, gamma) commonly used. Multi-label format allows comorbid diagnoses. Subject-wise splits essential.
-
-### Classical Task 3: Contrast detection ERP analysis
+### Classical Task 1: Contrast detection ERP analysis
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2, tmax = 1.0, overlap = null
@@ -142,7 +100,7 @@ The Healthy Brain Network (HBN) EEG Release 11 is a large-scale, multi-task deve
   - DOI: `10.1038/sdata.2017.181` — Foundational HBN Biobank paper providing context for paradigm design
 - **Kernel Notes**: `stim_ON` (37,825 events) serves as primary stimulus onset; approximately 1:1 with `fixpoint_ON` indicating trial structure. Button presses (`left_buttonPress`: 14,777, `right_buttonPress`: 13,758) provide response-locked analysis opportunity. Task involves sensory contrast detection requiring fine-grained temporal resolution. 500 Hz sampling adequate for ERP characterization.
 
-### Classical Task 4: Resting state functional connectivity
+### Classical Task 2: Resting state functional connectivity
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0, tmax = 300.0, overlap = null
@@ -159,7 +117,7 @@ The Healthy Brain Network (HBN) EEG Release 11 is a large-scale, multi-task deve
   - DOI: `10.1016/j.neuroimage.2022.119348` — Resting state segments used as primary input for psychiatric classification benchmark
 - **Kernel Notes**: 372 `resting_start` events define resting blocks; separate `instructed_toOpenEyes` (1,644) and `instructed_toCloseEyes` (1,370) allow condition-specific analysis. Long epochs capture sustained oscillatory activity for functional connectivity. Eye condition may modulate alpha power and connectivity patterns.
 
-### Classical Task 5: Surround suppression ERP analysis
+### Classical Task 3: Surround suppression ERP analysis
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2, tmax = 0.8, overlap = null
@@ -178,7 +136,7 @@ The Healthy Brain Network (HBN) EEG Release 11 is a large-scale, multi-task deve
   - DOI: `10.1038/sdata.2017.181` — HBN Biobank context for paradigm implementation
 - **Kernel Notes**: Contrast change events (B1: 398, B2: 283, B3: 234) capture surround suppression responses; block onset events provide trial structure. Standard ERP window (tmax=0.8s) captures early visual processing. Paradigm measures contrast discrimination with contextual modulation.
 
-### Classical Task 6: Sequence learning ERD/ERP analysis
+### Classical Task 4: Sequence learning ERD/ERP analysis
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5, tmax = 2.0, overlap = null
@@ -197,7 +155,7 @@ The Healthy Brain Network (HBN) EEG Release 11 is a large-scale, multi-task deve
   - DOI: `10.1038/sdata.2017.40` — HBN paradigm includes sequence learning as active task (one of 3 active paradigms)
 - **Kernel Notes**: Sequence learning is an active paradigm requiring motor response. Extended epoch window (tmax=2.0s) captures learning-related ERD in motor cortex and later cognitive ERP components. Block progression (learningBlock_1 through learningBlock_5) enables analysis of skill acquisition across training.
 
-### Classical Task 7: Symbol search ERP analysis
+### Classical Task 5: Symbol search ERP analysis
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2, tmax = 1.0, overlap = null
@@ -211,7 +169,7 @@ The Healthy Brain Network (HBN) EEG Release 11 is a large-scale, multi-task deve
   - DOI: `10.1038/sdata.2017.40` — HBN paradigm includes symbol search as active cognitive task (one of 3 active paradigms)
 - **Kernel Notes**: Symbol search is a cognitive assessment task measuring visual search and processing speed. `symbolSearch_start` (222 events) defines task blocks; `newPage` (601 events) indicates trial boundaries within blocks. Standard ERP window captures stimulus-locked processing and cognitive workload components.
 
-### Classical Task 8: Movie watching functional connectivity
+### Classical Task 6: Movie watching functional connectivity
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0, tmax = 230.0, overlap = null

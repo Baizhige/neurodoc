@@ -196,69 +196,32 @@ A perceptual decision-making task investigating whether lonely individuals exhib
   - events.json / events.tsv analysis — Codes 192 and 200 consistently appear paired at trial beginnings across all subjects (192: 118 occurrences, 200: 219 occurrences), identified as trial phase onset markers
 - **Notes**: This is a phase-detection task distinguishing two trial-start event codes (192 vs 200) that co-occur at trial beginnings. The classification target is which specific trial-start marker is present, not a motor imagery class. Both codes serve as trial initiation markers in the DotProbe paradigm, with 200 appearing more frequently than 192. The 1-second window captures the fixation/anticipation period before stimulus onset. Overlap set to 0.0 as default for long-event method when not specified.
 
-### Potential Task 4: Loneliness Group from EEG Segmentation
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `group`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | group | lonely | 0 | Lonely group (sub-H*) |
-  | group | not-lonely | 1 | Not-lonely group (sub-L*) |
-  | group | not-lonley | 1 | Not-lonely group (typo variant, merged) |
-- **Evidence**:
-  - participants.tsv — 52 subjects with complete group information: 'lonely' (sub-H*) and 'not-lonely'/'not-lonley' (sub-L*) groups
-  - README — Dataset explicitly studies loneliness vs non-loneliness group differences in ERPs and drift diffusion modeling
-- **Notes**: Segmentation-based approach for continuous EEG analysis with subject-level group labels. The 2-second window with 50% overlap is a standard choice for spectral/feature-based group classification when trial structure is ignored. All three unique group values in participants.tsv are mapped to two classes: 'lonely' → y=0, both 'not-lonely' and 'not-lonley' → y=1 (the latter is a typo variant in the source data).
-
-### Potential Task 5: Age Regression from EEG
+### Potential Task 4: Age Regression from EEG
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 19.0–35.0 (years) | Continuous age from participants.tsv; N=52 complete |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_age | Range 19.0–35.0 years; no mapping |
 - **Evidence**:
-  - participants.tsv — age column present for all 52 participants with range 19–35 years
+  - participants.tsv — subject_age column present for all 52 participants with range 19–35 years
 - **Notes**: Segmentation-based regression task predicting chronological age from continuous resting/task EEG. 2-second windows with 50% overlap maximize sample count for subject-level age prediction. Age is a native participants.tsv column requiring no kernel derivation.
 
-### Potential Task 6: Education Years Regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `edu_years`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | edu_years | 12–17+ (years) | Continuous education years from participants.tsv; N=52 complete. Cognitive reserve proxy for neural efficiency regression. |
-- **Evidence**:
-  - participants.tsv — edu_years column: numeric, complete across N=52 subjects, sample values [12, 17, 15], range approximately 12–17+ years
-  - dataset_description.json — confirms dataset is EEG study of lonely vs not-lonely individuals with ERP and drift diffusion modeling analyses
-- **Notes**: Archetype B3 (info-native). Standard continuous EEG segmentation for subject-level regression: 2-second non-overlapping/overlapping windows with 50% overlap. Each segment inherits the subject's edu_years value as regression target. No kernel derivation needed—edu_years is a native participants.tsv column.
-
-### Potential Task 7: Sex Classification from EEG
+### Potential Task 5: Sex Classification from EEG
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | Male | 0 | Male participant |
-  | sex | Female | 1 | Female participant |
+  | Info Field | Y Mapping Notes |
+  |------------|----------------|
+  | subject_sex | Male -> 0; Female -> 1 |
 - **Evidence**:
-  - participants.tsv — N=52 participants with sex column: Male=20, Female=32
+  - participants.tsv — N=52 participants with subject_sex column: Male=20, Female=32
   - eeg.json — continuous EEG recordings at 1000 Hz, 68 channels, suitable for segmentation-based classification
 - **Notes**: Standard 2-second segmentation with 50% overlap for sex classification from continuous resting/task EEG. Sex differences in EEG spectral power and connectivity are well-documented in the literature, making this a plausible baseline ML task. The segment_length was inferred from standard practice for demographic classification from continuous EEG; no specific epoch timing was provided in the dataset documentation.
 

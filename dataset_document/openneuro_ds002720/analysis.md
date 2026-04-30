@@ -1,7 +1,7 @@
 # A dataset recorded during development of a tempo-based brain-computer music interface
 
 **Dataset**: `openneuro_ds002720` | **Year**: 2018 | **URL**: https://openneuro.org/datasets/ds002720
-**Category**: Action/Output | **Subjects**: 18 | **Files (Completed)**: 165 | **Channels**: 19 | **Sampling Rate**: 1000 Hz | **Manual Review**:
+**Category**: Action/Output | **Subjects**: 18 | **Files (Completed)**: 165 | **Channels**: 19 | **Sampling Rate**: 1000 Hz | **Manual Review**: Jun Li
 
 ## Paradigm
 
@@ -16,73 +16,77 @@ Participants used EEG self-regulation to control the tempo of music in a tempo-b
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|---|---|---|---|---|
 | `1` | 1353 | event | raw | Lower alpha: participants instructed to lower their alpha levels to modulate the position of an on-screen cue or the tempo of some music |
 | `2` | 1358 | event | raw | Raise alpha: participants instructed to increase their alpha levels to modulate the position of an on-screen cue or the tempo of some music |
 
 
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
 
+
 ## Tasks
 
-### Classical Task 1: 2-class alpha self-regulation (lower vs raise)
+### Classical Task 1: 2-class alpha-state BCMI classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 20 s, overlap = 0.0, target_events = [`1`, `2`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 20 s, overlap = 0, target_events = [`1`, `2`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
-  | `1` | 0 | Lower alpha: participants instructed to lower their alpha levels to modulate the position of an on-screen cue or the tempo of some music |
-  | `2` | 1 | Raise alpha: participants instructed to increase their alpha levels to modulate the position of an on-screen cue or the tempo of some music |
+  |---|---|---|
+  | `1` | 0 | Lower alpha condition |
+  | `2` | 1 | Raise alpha condition |
 - **Evidence**:
-  - 10.1038/s41597-020-0507-6 — Binary classification of two instructed alpha modulation states: lower alpha (event ID 1) and raise alpha (event ID 2). Each event spans a full 20-second music clip interval. N=2711 total events across 18 subjects (~1353 lower, ~1358 raise). Core BCMI paradigm where participants self-regulate EEG alpha to control music tempo.
-- **Notes**: Event IDs 1 and 2 are the two self-regulation conditions in the BCMI paradigm. The 20-second duration is explicitly confirmed by both the events.tsv duration column (20) and the publication description. Long-event epoching with overlap=0 captures each full music clip as a single epoch. y=0 for lower alpha, y=1 for raise alpha follows 0-based sequential integer convention.
+  - sub-01_task-run2_events.json — defines event `1` as `Lower alpha` and event `2` as `Raise alpha`
+  - README — states that the dataset contains EEG from a music-based BCI in which participants intentionally modulated music tempo, and that each music clip is 20 s long
+  - events.tsv scan — confirms 2525 total labeled events across the dataset, with 1275 instances of `1` and 1250 instances of `2`
+- **Notes**: This is the most direct task supported by the released BIDS event metadata. All non-empty events have duration exactly 20 s, so long-event decoding over the full labeled interval is the most natural formulation. This task should take precedence over demographic segmentation tasks because it reflects the actual experimental manipulation.
 
-### Potential Task 1: Age Regression from EEG Segments
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `age`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 18.0–28.0 (years) | Subject-level age from participants.tsv; all segments from a subject share the same age label. N=18 subjects. |
-- **Evidence**:
-- **Notes**: Segmentation-based regression with no event dependence. Age is a native participants.tsv column (B3 archetype, raw meta level). Standard 4s windows with 50% overlap applied per Category SKILL defaults for continuous task-EEG since no reference guidance exists for this dataset's continuous BCMI paradigm.
-
-### Potential Task 2: sex classification from EEG segments
+### Potential Task 1: sex classification from EEG segments
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
+- **Epoch Parameters**: segment_length = 4 s, overlap = 0.5, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | M | 0 | Male |
-  | sex | F | 1 | Female |
+  | Info Field | Y Mapping Notes |
+  |---|---|
+  | `subject_sex` | M -> 0; F -> 1 |
 - **Evidence**:
-  - participants.tsv — N=18 subjects with sex column: M=14, F=4 (complete)
-- **Notes**: Continuous EEG segmentation with 4s windows and 50% overlap for subject-level sex classification. Class imbalance noted (78% male). Labels mapped to 0-based integers: 0=Male, 1=Female. No event-locked structure required; segmentation extracts fixed-length windows from continuous recordings.
+  - participants.tsv — sex field complete for all 18 subjects with class imbalance (M=14, F=4)
+- **Notes**: Continuous EEG segmentation (4s windows, 50% overlap) applied across all BCMI runs per subject. Binary classification of subject sex from resting/task-continuous EEG. Class imbalance present (M=14, F=4 out of 18 subjects). The segment_length and overlap values are standard defaults for continuous EEG segmentation with no task-specific reference guidance. This is a weak subject-trait task compared with the explicit alpha-state labels available in the event tables.
+
+### Potential Task 2: Binned-Age Classification from EEG Segments
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 4 s, overlap = 0.5, target_events = []
+- **Label Route**: `info`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Y Mapping Notes |
+  |---|---|
+  | `subject_age` | no mapping |
+- **Evidence**:
+  - participants.tsv — age column complete for N=18, range 18–28, sample values [23, 24, 28, 20, 19, 26, 20]
+- **Notes**: The kernel must derive binary binned labels from the native age field using a median split at approximately 22–23 years (median of 18–28 range ≈ 23). This is a derived classification variant of the continuous age regression task; the kernel discretizes the continuous age into two balanced classes for segment-level classification. Segmentation produces fixed-length windows with 50% overlap; no event alignment is used. This remains an auxiliary demographic task, not the core BCMI task.
 
 ## Data Quality Notes
 
-- Device information is missing from info fields; equipment details must be inferred from publication or dataset documentation.
-- The two alpha modulation conditions (lower vs raise) are well-balanced with nearly equal event counts (1353 vs 1358).
-- Sex classification task has significant class imbalance (M=14, F=4).
-- Event durations are consistently 20 seconds as confirmed by both events.tsv and publication, supporting reliable long-event epoching.
+- Twenty-two event files are empty (no events recorded), leaving 143 files with usable event data.
+- Non-empty event files do contain valid event labels: trial_type `1` (Lower alpha) and `2` (Raise alpha), with 2525 total labeled events across the dataset.
+- Device metadata is completely missing from the dataset; equipment information must be inferred from other sources.
+- There is a discrepancy in subject count between the metadata (18 subjects) and dataset_description.json which mentions 19 healthy participants.
+- Class imbalance is present in sex classification (14 male, 4 female), which may affect model training and evaluation.
+- All non-empty events have duration exactly 20 s, matching the README description that each music clip lasts 20 s.
 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: completed

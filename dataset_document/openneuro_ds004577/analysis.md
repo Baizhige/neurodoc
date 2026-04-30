@@ -44,21 +44,6 @@ Resting-state EEG recordings from 103 healthy infants (aged 1-12 months) during 
   - 10.1038/s41597-024-03606-4 — Data descriptor paper describing 103 infants (0-12.5 months) with resting-state EEG; explicitly supports binary ML classification of eyes-closed vs eyes-open states using 2.0 s sliding windows with 0.5 overlap. Event markers 65 (eyes_closed) and 66 (eyes_open) indicate state onsets with segments inheriting corresponding labels.
 - **Notes**: Segmentation-based approach required because state durations vary; labels are assigned to 2-second windows based on which state interval they fall into. Discontinuity markers (value=2) at recording onset are excluded from labeling. The event route with segmentation method treats the state onset markers as anchors for label propagation across contiguous segments.
 
-### Potential Task 1: sex classification from continuous resting EEG
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.0 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `sex`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | M | 0 | male |
-  | sex | F | 1 | female |
-- **Evidence**:
-- **Notes**: Segmentation-based task with no event structure; 4-second non-overlapping windows extracted from continuous resting-state EEG. Sex labels (62 M, 41 F) are drawn from participants.tsv and applied uniformly to all segments from each subject. Conservative 4 s segment length and 0% overlap chosen to maximize independence between windows; values marked with * as inferred from SKILL resting-state defaults. Imbalanced classes (60% M / 40% F) are usable for binary classification.
-
 ## Data Quality Notes
 
 - `subject_age` field is missing from metadata, preventing age-based analyses despite the dataset's developmental focus on 1-12 month infants.
