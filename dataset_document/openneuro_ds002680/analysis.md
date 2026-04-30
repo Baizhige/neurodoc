@@ -1,8 +1,7 @@
 # Go-nogo categorization and detection task
 
 **Dataset**: `openneuro_ds002680` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002680
-**Category**: Sensory/Response | **Subjects**: 14 | **Files (Completed)**: 350 | **Channels**: 31 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: Sensory/Response | **Subjects**: 14 | **Files (Completed)**: 350 | **Channels**: 31 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed two alternating visual go/no-go tasks: an animal categori
 > **Kernel SHA256**: `e60bd9d976550ddd04ba2224e19595e7163bb9c539cc62c489359498c159186c`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

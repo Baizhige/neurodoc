@@ -1,17 +1,17 @@
 # BCI Competition III Dataset II (P300 Speller)
 
 **Dataset**: `bcic_iii_2` | **Year**: 2005 | **URL**: https://www.bbci.de/competition/iii/download/
-**Category**: Action/Output | **Subjects**: 2 | **Files (Completed)**: 4 | **Channels**: 64 | **Sampling Rate**: 240 Hz
+**Category**: Action/Output | **Subjects**: 2 | **Files (Completed)**: 4 | **Channels**: 64 | **Sampling Rate**: 240 Hz | **Manual Review**:
 
 ## Paradigm
 
 Two subjects (A and B) attended to individual letters in a 6x6 character matrix while rows and columns flashed sequentially (BCI Competition III, 2005). Each character trial consisted of 15 sequences, each sequence comprising 12 flashes (6 rows + 6 columns). The P300 event-related potential, peaking ~300 ms after the target row or column flash, encodes the attended character. The training set contains 85 labeled characters per subject; the test set contains 100 characters without disclosed labels. The original `.mat` files are in a pre-epoched 3D format and are reconstructed into continuous raw data by the Case B kernel, which concatenates the 85 training sequences end-to-end.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Sampled
 
 ### Event Structure
 
@@ -32,6 +32,7 @@ Two subjects (A and B) attended to individual letters in a 6x6 character matrix 
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: P300 Target Detection (ERP Binary Classification)
@@ -61,7 +62,6 @@ Two subjects (A and B) attended to individual letters in a 6x6 character matrix 
 - Test labels are not publicly available; test files yield `unknown` annotations after kernel processing.
 - Case B kernel: original `.mat` data is pre-epoched (3D array) and is reconstructed into a continuous raw signal; treat sequence boundaries marked by `seq_onset` as artificial discontinuities.
 - Only 2 subjects; model generalization cannot be assessed from this dataset alone.
-
 
 ## Kernel Responsibilities
 

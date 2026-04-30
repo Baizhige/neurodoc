@@ -1,8 +1,7 @@
 # Simon-conflict Task
 
 **Dataset**: `openneuro_ds004580` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004580
-**Category**: Sensory/Response | **Subjects**: 147 | **Files (Completed)**: 147 | **Channels**: 64 | **Sampling Rate**: 512 Hz
-**Manual Review**:
+**Category**: Sensory/Response | **Subjects**: 147 | **Files (Completed)**: 147 | **Channels**: 64 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed a Simon conflict task in which stimulus location (left/ri
 > **Kernel SHA256**: `93010a60eba62473fd2ce055cffe5b0d615f2dbb6fc7cc29e883eabce9e67bce`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

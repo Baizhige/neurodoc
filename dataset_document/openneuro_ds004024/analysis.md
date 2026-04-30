@@ -1,8 +1,7 @@
 # TMS-EEG-MRI-fMRI-DWI data on paired associative stimulation and connectivity (Shirley Ryan AbilityLab, Chicago, IL)
 
 **Dataset**: `openneuro_ds004024` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004024
-**Category**: Sensory/Response | **Subjects**: 497 | **Files (Completed)**: 497 | **Channels**: 69 | **Sampling Rate**: 20000 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 497 | **Files (Completed)**: 497 | **Channels**: 69 | **Sampling Rate**: 20000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A multi-modal neuroimaging study using Paired Associative Stimulation (PAS) comb
 > **Kernel SHA256**: `988cb59edb145a20bce331016908f2354f7e6d8186b847043025a57a0ed13640`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -73,3 +73,12 @@ A multi-modal neuroimaging study using Paired Associative Stimulation (PAS) comb
   - The 20kHz sampling rate requires downsampling before analysis
   - TMS artifact contaminates first ~10ms; specialized cleaning required before analysis
   - Verify sub-threshold condition timing matches experimental protocol specifications
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

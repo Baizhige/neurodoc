@@ -1,8 +1,7 @@
 # ODE (Social-Cognitive EEG Dataset)
 
 **Dataset**: `openneuro_ds004850` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004850
-**Category**: Complex Applied | **Subjects**: 1 | **Files (Completed)**: 1 | **Channels**: 64 | **Sampling Rate**: 128 Hz
-**Manual Review**:
+**Category**: Complex Applied | **Subjects**: 1 | **Files (Completed)**: 1 | **Channels**: 64 | **Sampling Rate**: 128 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ An EEG dataset (ODE) recorded during a social-cognitive paradigm with hierarchic
 > **Kernel SHA256**: `8354cb1eb6cd79a9fadeaff627f7d9f84035c974e98d3efa97394d8be83f14ea`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -28,6 +28,8 @@ An EEG dataset (ODE) recorded during a social-cognitive paradigm with hierarchic
 | `device` | missing | N/A |
 
 ## Tasks
+
+
 
 ## Data Quality Notes
 

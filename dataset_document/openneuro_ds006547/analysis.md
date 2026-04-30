@@ -1,8 +1,7 @@
 # Visual EEG Study (BrainVision -> BIDS)
 
 **Dataset**: `openneuro_ds006547` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006547
-**Category**: Sensory/Response | **Subjects**: 31 | **Files (Completed)**: 31 | **Channels**: 67 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 31 | **Files (Completed)**: 31 | **Channels**: 67 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ High-density EEG recordings were collected during a visual stimulation task usin
 > **Kernel SHA256**: `6306944dafaf4b43bc154d6444152e02a0b35fe052e41ac4a2ed5c7355a69c14`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -129,3 +129,12 @@ High-density EEG recordings were collected during a visual stimulation task usin
   - S1-S22 and S41-S56 ranges may represent distinct experimental blocks or condition families; verify against paradigm documentation.
   - Event spacing inconsistent: "S  1" (double space) vs "S 5" (single space) in raw labels; normalize on read.
   - Trial counts vary (506-681) indicating unbalanced classes; stratification recommended for train/test splits.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

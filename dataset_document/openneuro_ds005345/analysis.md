@@ -1,8 +1,7 @@
 # Le Petit Prince Multitalker: Naturalistic 7T fMRI and EEG Dataset
 
 **Dataset**: `openneuro_ds005345` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005345
-**Category**: Complex Applied | **Subjects**: 25 | **Files (Completed)**: 28 | **Channels**: 64 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: Complex Applied | **Subjects**: 25 | **Files (Completed)**: 28 | **Channels**: 64 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants engaged in naturalistic listening to excerpts of "Le Petit Prince" 
 > **Kernel SHA256**: `f3e0d978cfe4a7ea00dde0136943c950c3ce25aa1e4e0842777d18365c3d9c21`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

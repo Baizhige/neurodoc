@@ -1,8 +1,7 @@
 # Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging
 
 **Dataset**: `openneuro_ds002158` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002158
-**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 119 | **Channels**: 63 | **Sampling Rate**: 5000 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 119 | **Channels**: 63 | **Sampling Rate**: 5000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed speeded perceptual judgments and subsequently reported th
 > **Kernel SHA256**: `a6df321b40731aa8c9ea1eefe7979e21b9467d923ec7a8aa26f2972a40bbaf32`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,9 +1,8 @@
 # Music Listening Genre EEG Dataset (MUSIN-G)
 
 **Dataset**: `openneuro_ds003774` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003774
-**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 260
+**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 260 | **Manual Review**: Pending
 **Channels**: 129 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ Twenty participants listened to 12 music tracks spanning various genres (classic
 > **Kernel SHA256**: `f30691bc53a2a28c00a2169a91162de693b2913d17a5ccd93b0b5b66ce3871e4`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -163,3 +163,12 @@ Twenty participants listened to 12 music tracks spanning various genres (classic
 - **Evidence**:
   - DOI: 10.1016/j.dib.2022.108663 — Dataset supports various epoch lengths for frequency band analysis and feature extraction
 - **Kernel Notes**: Use 2-second windows with 50% overlap for fine-grained frequency band feature extraction (delta, theta, alpha, beta, gamma). The `TRSP` (720) events may indicate track transitions within recordings requiring additional segmentation logic. The `clyp` (260) events likely indicate clip boundaries that should be respected during segmentation.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

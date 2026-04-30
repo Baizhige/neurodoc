@@ -1,9 +1,8 @@
 # Spatial Memory and Non-Invasive Closed-Loop Stimulus Timing
 
 **Dataset**: `openneuro_ds004706` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004706
-**Category**: High-level Mental | **Subjects**: 149 | **Files (Completed)**: 298
+**Category**: High-level Mental | **Subjects**: 149 | **Files (Completed)**: 298 | **Manual Review**: Pending
 **Channels**: 137 | **Sampling Rate**: 2048 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ A hybrid spatial-navigation and free recall task where participants delivered it
 > **Kernel SHA256**: `2dbab021919d54b2e66e38e1fe87013d5d6a8568e8740b69522728dd4b08a4b3`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -75,3 +75,12 @@ A hybrid spatial-navigation and free recall task where participants delivered it
   | `EFR_MARK` | coupling_strength | Theta-gamma coupling measure at encoding marker |
 - **Kernel Notes**: Extended 3 s epochs centered on WORD events needed to analyze theta-gamma coupling during memory encoding. Paradigm explicitly mentions closed-loop stimulus timing targeting theta oscillations for stimulation-driven memory enhancement. Captures pre-stimulus baseline and full encoding window for cross-frequency coupling analysis. High sampling rate (2048 Hz) preserves phase information for coupling metrics. EFR_MARK events provide orthogonal validation markers for encoding phase. Downsample to 512 Hz for efficiency while retaining theta phase accuracy. Exclude CLASSIFIER/CLASSIFIER_WAIT administrative events from coupling analysis.
 - **Evidence**: Paradigm description (closed-loop theta stimulation, theta oscillations, memory enhancement)
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

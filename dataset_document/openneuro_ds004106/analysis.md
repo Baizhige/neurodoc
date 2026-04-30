@@ -1,7 +1,7 @@
 # BCIT Advanced Guard Duty
 
 **Dataset**: `openneuro_ds004106` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004106
-**Category**: Complex Applied | **Subjects**: 29 | **Files (Completed)**: 29 | **Channels**: 262 | **Sampling Rate**: 1024 Hz
+**Category**: Complex Applied | **Subjects**: 29 | **Files (Completed)**: 29 | **Channels**: 262 | **Sampling Rate**: 1024 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -12,6 +12,7 @@ Subjects performed a sustained vigilance task simulating advanced security guard
 > **Kernel SHA256**: `028fc78b6b65cf41623d2af88d02ee671c1e40caf0f318cd7f6b3b5a58498c4e`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
@@ -51,3 +52,12 @@ Subjects performed a sustained vigilance task simulating advanced security guard
 - **Evidence**:
   - DOI: 10.1016/j.biopsycho.2015.12.009 — Study implemented high vs low workload conditions in guard duty task paradigm with stochastic arrival rates simulating varying guard duty demands.
 - **Kernel Notes**: Epoch EEG relative to workload condition markers (2110=high, 2120=low). Extract spectral features (theta, alpha, beta power) from 262-channel data using memory-efficient chunked processing. Binary classification to decode workload state from EEG signatures of mental workload.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

@@ -1,8 +1,7 @@
 # An EEG dataset recorded during affective music listening
 
 **Dataset**: `openneuro_ds002721` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002721
-**Category**: High-level Mental | **Subjects**: 31 | **Files (Completed)**: 185 | **Channels**: 19 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 31 | **Files (Completed)**: 185 | **Channels**: 19 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants listened to music clips from film scores while their EEG was record
 > **Kernel SHA256**: `6bf8e6a13c940930c57917267c033a33bf77684c9aeef5788912caf77ee28cd1`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

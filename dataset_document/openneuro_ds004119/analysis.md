@@ -1,9 +1,8 @@
 # BCIT Basic Guard Duty
 
 **Dataset**: `openneuro_ds004119` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004119
-**Category**: Complex Applied | **Subjects**: 22 | **Files (Completed)**: 22
+**Category**: Complex Applied | **Subjects**: 22 | **Files (Completed)**: 22 | **Manual Review**: Pending
 **Channels**: 262 | **Sampling Rate**: 1024 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ A realistic sustained vigilance task in which subjects verified multiple identif
 > **Kernel SHA256**: `a62c169e1c45a0131ed705dbfc23dbb9a77cb3846305583277edca8f6a047e56`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -110,3 +110,12 @@ A realistic sustained vigilance task in which subjects verified multiple identif
   | `1111` | 10 | Guard duty task event type 11 |
   | `1112` | 11 | Guard duty task event type 12 |
 - **Kernel Notes**: Multiple task event codes require BCIT codebook documentation for proper interpretation. May represent different trial phases, sub-tasks, or behavioral checkpoints within the guard duty protocol. Full event code decoding essential before analysis.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

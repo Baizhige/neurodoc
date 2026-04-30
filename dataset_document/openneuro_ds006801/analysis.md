@@ -1,8 +1,7 @@
 # Resting-State EEG Before and After Different Study Methods
 
 **Dataset**: `openneuro_ds006801` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006801
-**Category**: Biological State | **Subjects**: 21 | **Files (Completed)**: 42 | **Channels**: 31 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Biological State | **Subjects**: 21 | **Files (Completed)**: 42 | **Channels**: 31 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Resting-state EEG was recorded before and after an educational intervention in w
 > **Kernel SHA256**: `6951d06471e5bde013f2b4b80f0ce484335d39c96370bfa2fb275e5f6099b072`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -77,3 +77,12 @@ Resting-state EEG was recorded before and after an educational intervention in w
 
 - **Evidence**: DOI — (no references provided; task is plausible from paradigm alone)
 - **Kernel Notes**: Each participant completed both eyes-open and eyes-closed resting blocks. However, EEG events cannot distinguish these states—labels must be inferred from session metadata or file naming conventions. If eyes-open/eyes-closed cannot be determined from metadata, this dimension should be excluded from classification or duration-based heuristics should be implemented. Standard alpha rhythm differences typically distinguish these states.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

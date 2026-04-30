@@ -1,9 +1,8 @@
 # EEG: Continuous Gameplay of an 8-Bit Style Video Game
 
 **Dataset**: `openneuro_ds003517` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003517
-**Category**: Complex Applied | **Subjects**: 17 | **Files (Completed)**: 34
+**Category**: Complex Applied | **Subjects**: 17 | **Files (Completed)**: 34 | **Manual Review**: Pending
 **Channels**: 65 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ Participants played a continuous 8-bit style video game while EEG was recorded t
 > **Kernel SHA256**: `44ba692bce80533a303f7b5de9ce7e38b19bce72989fb3af22da701f0aa3c3f8`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -107,3 +107,12 @@ Participants played a continuous 8-bit style video game while EEG was recorded t
 - **Evidence**:
   - DOI: 10.1016/j.neuroimage.2025.121521 — Decodes six naturalistic game behaviors from brain-wide EEG oscillatory activation patterns during continuous gameplay; uses oscillatory amplitude envelopes to define active/inactive states
 - **Kernel Notes**: CRITICAL — Analysis.md references SHOOT_BUTTON, COLLECT_STAR, COLLECT_AMMO, PLAYER_CRASH_WALL, PLAYER_CRASH_ENEMY, MISSILE_HIT_ENEMY but these labels not in scan. High-count events S 90–S 97 likely correspond, but mapping unverified. Kernel must decode Stim channel before processing. Paper uses continuous oscillatory amplitude approach; verify epoch window with raw file inspection. High epoch counts suggest sufficient training data.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

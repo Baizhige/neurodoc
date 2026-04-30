@@ -1,8 +1,7 @@
 # SJTU Emotion EEG Dataset (SEED)
 
 **Dataset**: `other_seed` | **Year**: 2015 | **URL**: https://bcmi.sjtu.edu.cn<LOCAL_HOME>/
-**Category**: High-level Mental | **Subjects**: 15 | **Files (Completed)**: 81 | **Channels**: 62 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 15 | **Files (Completed)**: 81 | **Channels**: 62 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ The SEED (SJTU Emotion EEG Dataset) was collected from 15 subjects who watched 1
 > **Kernel SHA256**: `b007ef59fd365c24a093fcb83b5f9c9f5884c598254eb434790690005d69d31b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

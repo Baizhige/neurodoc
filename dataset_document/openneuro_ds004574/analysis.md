@@ -1,8 +1,7 @@
 # Cross-modal Oddball Task
 
 **Dataset**: `openneuro_ds004574` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004574
-**Category**: Sensory/Response | **Subjects**: 30 | **Files (Completed)**: 30 | **Channels**: 64 | **Sampling Rate**: 512 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 30 | **Files (Completed)**: 30 | **Channels**: 64 | **Sampling Rate**: 512 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed an oddball task with cross-modal stimuli (visual and audi
 > **Kernel SHA256**: `e11dcab388e5f0e492c8d25e0210666920a3c27f52f946dd140d17c0b68bcc88`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -62,3 +62,12 @@ Participants performed an oddball task with cross-modal stimuli (visual and audi
   | `S255` | 1 | BrainVision overflow/system marker |
 - **Evidence**: No reference required for potential task; task is plausible from paradigm structure
 - **Kernel Notes**: Identify and filter admin markers for clean downstream analysis. S255 appears only twice, boundary appears 148 times across 30 subjects.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

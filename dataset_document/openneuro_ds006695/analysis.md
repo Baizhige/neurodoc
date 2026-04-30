@@ -1,8 +1,7 @@
 # Validation of Sleep Staging with Forehead EEG Patch
 
 **Dataset**: `openneuro_ds006695` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006695
-**Category**: Biological State | **Subjects**: 19 | **Files (Completed)**: 19 | **Channels**: 3 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Biological State | **Subjects**: 19 | **Files (Completed)**: 19 | **Channels**: 3 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ This dataset validates a spectral sleep staging approach using a three-electrode
 > **Kernel SHA256**: `79475293afd909f4cc5ddcf8972754aa504848804472eddb7d0906ec875e0206`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -71,3 +71,12 @@ This dataset validates a spectral sleep staging approach using a three-electrode
   2. Extract spectral power features (sigma band 11–16 Hz for spindles; delta band for K-complexes)
   3. Limited to 3 forehead channels — frontal-specific features accessible but cortical topography resolution reduced
   4. Ground-truth labels for microevents may require manual annotation of spindle/K-complex occurrences
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

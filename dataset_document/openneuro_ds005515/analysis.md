@@ -1,8 +1,7 @@
 # Healthy Brain Network (HBN) EEG - Release 10
 
 **Dataset**: `openneuro_ds005515` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005515
-**Category**: Complex Applied | **Subjects**: 533 | **Files (Completed)**: 2515 | **Channels**: 129 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 533 | **Files (Completed)**: 2515 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ The Healthy Brain Network (HBN) EEG Release 10 is a large-scale, multi-task deve
 > **Kernel SHA256**: `ef980d7b864fceb627a20b5551f437591c612916ba3ca15cdfc74126c4a3143d`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -137,3 +137,12 @@ The Healthy Brain Network (HBN) EEG Release 10 is a large-scale, multi-task deve
 - **Evidence**:
   - DOI: 10.1038/sdata.2017.40 — Surround suppression listed as passive task in six-task paradigm
 - **Kernel Notes**: Sub-block markers with limited counts (B1: 98, B2: 67). May need to aggregate or use parent-level event if available. Passive task—no motor response required.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

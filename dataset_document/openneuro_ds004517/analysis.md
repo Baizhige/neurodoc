@@ -1,8 +1,7 @@
 # EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task
 
 **Dataset**: `openneuro_ds004517` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004517
-**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 20 | **Channels**: 32 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 20 | **Channels**: 32 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants imagined animals and tools in response to auditory cues while EEG w
 > **Kernel SHA256**: `a3b68996291cfaa4e6cf8dc5aea0f899c26c048cf854475f67a62a5f713ea929`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

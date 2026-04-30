@@ -1,9 +1,8 @@
 # EEG: Visual Working Memory in Acute TBI
 
 **Dataset**: `openneuro_ds003523` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003523
-**Category**: High-level Mental | **Subjects**: 62 | **Files (Completed)**: 219
+**Category**: High-level Mental | **Subjects**: 62 | **Files (Completed)**: 219 | **Manual Review**: Pending
 **Channels**: 65 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ A visual working memory task with intermittent mind-wandering probes was adminis
 > **Kernel SHA256**: `bb6350a0f2fc7e55a19db4c38913125953a3084340240000c3b2fc4f6326cbc6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -86,3 +86,12 @@ A visual working memory task with intermittent mind-wandering probes was adminis
 - **Evidence**:
   - DOI: 10.1016/j.neuroimage.2020.116978 — EEG classification of encoding vs. retrieval phases in working memory tasks distinguishes distinct neural signatures
 - **Kernel Notes**: Group 'Stim Onset' variants (10833, 10898, 10858) as encoding phase (y=0) and 'Question Mark Probe' variants (16098, 16096) as retrieval phase (y=1). The -0.2s to 1.0s window captures early visual components (P1/N1) and memory-related processing. Longitudinal design: multiple sessions per subject require session-level epoch indexing. Verify stimulus type annotations in events.tsv for additional label refinement.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

@@ -1,8 +1,7 @@
 # EEG: Improvisation and Musical Structures (Auditory Oddball Chords)
 
 **Dataset**: `openneuro_ds003570` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003570
-**Category**: Sensory/Response | **Subjects**: 34 | **Files (Completed)**: 34 | **Channels**: 64 | **Sampling Rate**: 2048 Hz
-**Manual Review**:
+**Category**: Sensory/Response | **Subjects**: 34 | **Files (Completed)**: 34 | **Channels**: 64 | **Sampling Rate**: 2048 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants listened to sequences of three-chord musical progressions in an odd
 > **Kernel SHA256**: `840b4dd49c47b95a0b5cd8d96b712a797ad98e91995d95c848ca6207e6a5f7bc`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

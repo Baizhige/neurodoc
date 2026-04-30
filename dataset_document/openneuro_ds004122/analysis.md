@@ -1,8 +1,7 @@
 # BCIT Speed Control
 
 **Dataset**: `openneuro_ds004122` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004122
-**Category**: Complex Applied | **Subjects**: 32 | **Files (Completed)**: 32 | **Channels**: 74 | **Sampling Rate**: 1024 Hz
-**Manual Review**:
+**Category**: Complex Applied | **Subjects**: 32 | **Files (Completed)**: 32 | **Channels**: 74 | **Sampling Rate**: 1024 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A simulated driving task assessing driver fatigue and performance through a spee
 > **Kernel SHA256**: `346e3a371a26942ac2dcdada07e4c7eacaac1795abc6836ff6e497cd309f904c`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

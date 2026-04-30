@@ -1,8 +1,7 @@
 # EEG and motion capture data set for a full-body/joystick rotation task
 
 **Dataset**: `openneuro_ds004460` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004460
-**Category**: Complex Applied | **Subjects**: 20 | **Files (Completed)**: 40 | **Channels**: 160 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 20 | **Files (Completed)**: 40 | **Channels**: 160 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed a spatial orientation task in a virtual environment, navi
 > **Kernel SHA256**: `f873576bee7413de764fdb6572d83e95997183334f165f5d91c93b8979f39a37`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -89,3 +89,12 @@ Participants performed a spatial orientation task in a virtual environment, navi
   | `/Event/Category/Experimental stimulus/Instruction/Read/` | 1 | Read instruction stimulus |
 - **Evidence**: Plausible from paradigm alone; instruction events present in dataset (80 Attend + 40 Read occurrences) suggest task requiring attention vs reading phases
 - **Kernel Notes**: Event strings require sanitization. Two instruction types may reflect different cognitive processing demands (visual attention vs comprehension).
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

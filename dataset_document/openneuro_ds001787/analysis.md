@@ -1,8 +1,7 @@
 # EEG Meditation Study
 
 **Dataset**: `openneuro_ds001787` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds001787
-**Category**: Biological State | **Subjects**: 24 | **Files (Completed)**: 40 | **Channels**: 80 | **Sampling Rate**: 256 Hz
-**Manual Review**:
+**Category**: Biological State | **Subjects**: 24 | **Files (Completed)**: 40 | **Channels**: 80 | **Sampling Rate**: 256 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Twenty-four meditators (12 expert with ≥10 years daily practice, 12 novices) e
 > **Kernel SHA256**: `a4bdc0abf3528185c2c555d74381ad494021cdfafb528ab69250f7b1a8398a99`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

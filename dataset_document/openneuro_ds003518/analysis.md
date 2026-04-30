@@ -1,8 +1,7 @@
 # EEG: Simon Conflict with Reinforcement + Cabergoline Challenge
 
 **Dataset**: `openneuro_ds003518` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003518
-**Category**: High-level Mental | **Subjects**: 110 | **Files (Completed)**: 137 | **Channels**: 64 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 110 | **Files (Completed)**: 137 | **Channels**: 64 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ This study examines whether conflict acts as an implicit cost in reinforcement l
 > **Kernel SHA256**: `acb6b744009087a86d617f1b6e416921b67ad6d6365b12f26c4430057c8d8fe9`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

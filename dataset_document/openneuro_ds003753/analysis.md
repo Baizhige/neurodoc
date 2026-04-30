@@ -1,8 +1,7 @@
 # EEG: Probabilistic Learning with Affective Feedback: Exp #2
 
 **Dataset**: `openneuro_ds003753` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003753
-**Category**: High-level Mental | **Subjects**: 25 | **Files (Completed)**: 25 | **Channels**: 66 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 25 | **Files (Completed)**: 25 | **Channels**: 66 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A reinforcement learning task involving probabilistic affective feedback to inve
 > **Kernel SHA256**: `907cc31ea39c0a3db7ec13e2d99ccbb532df9b433f3107583144327a7e49d696`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

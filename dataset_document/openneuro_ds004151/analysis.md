@@ -1,8 +1,7 @@
 # Effect of obesity on inhibitory control in preadolescents during stop-signal task. An event-related potentials study
 
 **Dataset**: `openneuro_ds004151` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004151
-**Category**: Sensory/Response | **Subjects**: 57 | **Files (Completed)**: 57 | **Channels**: 128 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 57 | **Files (Completed)**: 57 | **Channels**: 128 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Preadolescents (obese and normal-weight, ages 9-10) performed a stop-signal task
 > **Kernel SHA256**: `192766816e023e07da05021619601b5aa6434d8f43ad7ecdcd7453d8dcbefb23`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -98,3 +98,12 @@ Preadolescents (obese and normal-weight, ages 9-10) performed a stop-signal task
     2. Use event type as binary classification target (raw meta level)
     3. Class imbalance: ~70% go (Ton-) vs ~30% stop (Ton+) trials
     4. Useful as a sanity check task before applying to BMI-related analyses
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

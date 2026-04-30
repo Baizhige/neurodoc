@@ -1,8 +1,7 @@
 # Face Processing MEEG Dataset with HED Annotation
 
 **Dataset**: `openneuro_ds003645` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds003645
-**Category**: Sensory/Response | **Subjects**: 18 | **Files (Completed)**: 114 | **Channels**: 395 | **Sampling Rate**: 1100 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 18 | **Files (Completed)**: 114 | **Channels**: 395 | **Sampling Rate**: 1100 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed a simple perceptual task judging the spatial symmetry of 
 > **Kernel SHA256**: `1bcb7fd82e5ba3373573a9b83d8aac6ed8740dc6d4f796cb4d70b7ea4f8d6061`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -59,3 +59,12 @@ Participants performed a simple perceptual task judging the spatial symmetry of 
   - DOI: 10.1016/j.neuroimage.2021.118766 — HED-annotated face processing MEEG dataset (ds003645) demonstrating super-level event metadata for three-class face perception (famous/familiar vs unfamiliar vs scrambled) with epochs extracted from -500ms to +1200ms around stimulus onset.
   - DOI: 10.1038/sdata.2015.1 — Original Wakeman and Henson face processing MEEG dataset with three-class face perception paradigm.
 - **Kernel Notes**: Raw event IDs are event_1 through event_9 (9 conditions). The 9 events encode face type (famous/familiar, unfamiliar, scrambled) combined with symmetry judgment conditions. Map events 1-2 to famous/familiar (y=0), events 3-5 to unfamiliar (y=1), events 6-9 to scrambled (y=2) using HED sidecar annotations for validation. Extract only EEG channels (~64-70) from the 395-channel MEEG data before epoching. Verify event-to-condition mapping against HED JSON sidecar files in the BIDS dataset.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

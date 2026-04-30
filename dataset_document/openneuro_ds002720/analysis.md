@@ -1,8 +1,7 @@
 # A dataset recorded during development of a tempo-based brain-computer music interface
 
 **Dataset**: `openneuro_ds002720` | **Year**: 2018 | **URL**: https://openneuro.org/datasets/ds002720
-**Category**: Action/Output | **Subjects**: 18 | **Files (Completed)**: 165 | **Channels**: 19 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: Action/Output | **Subjects**: 18 | **Files (Completed)**: 165 | **Channels**: 19 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants used EEG self-regulation to control the tempo of music in a tempo-b
 > **Kernel SHA256**: `ebc8108fe8d4e055bcec1d19676f2b228af0595909a5042752c27eda2447188d`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

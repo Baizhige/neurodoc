@@ -1,17 +1,17 @@
 # KU Leuven Auditory Attention Decoding Dataset
 
 **Dataset**: `zenodo_kul` | **Year**: 2020 | **URL**: https://zenodo.org/records/4004271
-**Category**: High-level Mental | **Subjects**: 15 | **Files (Completed)**: 15 | **Channels**: 64 | **Sampling Rate**: 128 Hz
+**Category**: High-level Mental | **Subjects**: 15 | **Files (Completed)**: 15 | **Channels**: 64 | **Sampling Rate**: 128 Hz | **Manual Review**:
 
 ## Paradigm
 
 Fifteen subjects performed a dichotic listening auditory attention decoding (AAD) task (Biesmans et al., 2017). Two competing story narratives were presented simultaneously, one to each ear, and subjects were instructed to attend to one. EEG was recorded from 64 channels (BioSemi ActiveTwo, standard 10-20 layout) at 128 Hz. Each MATLAB `.mat` file contains 20 trials (10 attended-left + 10 attended-right), stored as a Python list of trial dictionaries. The Case B kernel concatenates all 20 trials from each file into a single continuous raw signal and creates per-trial annotations indicating the attended ear.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 ### Event Structure
 
@@ -31,6 +31,7 @@ Fifteen subjects performed a dichotic listening auditory attention decoding (AAD
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Dichotic Auditory Attention Decoding (Left vs. Right Ear)
@@ -67,7 +68,6 @@ Fifteen subjects performed a dichotic listening auditory attention decoding (AAD
 - 15 subjects only; relatively small cohort for robust model evaluation.
 - No age or sex information available in the public release.
 - Each file contains 20 trials; the Case B kernel creates discontinuities at trial boundaries (artificial concatenation).
-
 
 ## Kernel Responsibilities
 

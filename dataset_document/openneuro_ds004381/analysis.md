@@ -1,8 +1,7 @@
 # Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates
 
 **Dataset**: `openneuro_ds004381` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004381
-**Category**: Sensory/Response | **Subjects**: 18 | **Files (Completed)**: 763 | **Channels**: 4 | **Sampling Rate**: 20000 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 18 | **Files (Completed)**: 763 | **Channels**: 4 | **Sampling Rate**: 20000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Intraoperative recording of Somatosensory Evoked Potentials (SEP) elicited by me
 > **Kernel SHA256**: `c6927a6f05fd704c492903a3a626c79c005833345653ec08e757ad043712fd51`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -58,3 +58,12 @@ Intraoperative recording of Somatosensory Evoked Potentials (SEP) elicited by me
 - **Meta Level**: super
 - **Target Definition**: N/A (unsupervised segmentation for artifact detection/quality control before SEP averaging)
 - **Notes**: No BIDS trial event markers; stimulation rate (8 levels) encoded in filename/metadata only. Continuous segmentation enables artifact rejection before per-stimulus SEP averaging.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

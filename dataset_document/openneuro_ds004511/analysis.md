@@ -1,17 +1,17 @@
 # Deception_data
 
 **Dataset**: `openneuro_ds004511` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004511
-**Category**: High-level Mental | **Subjects**: 29 | **Files (Completed)**: 29 | **Channels**: 64 | **Sampling Rate**: 512 Hz
+**Category**: High-level Mental | **Subjects**: 29 | **Files (Completed)**: 29 | **Channels**: 64 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 
 Participants performed a deception task while EEG was recorded. The dataset contains continuous EEG recordings; only a single hardware synchronization marker (Sync) is present per recording rather than trial-level event markers. No meaningful trial annotations are available for epoch-based analysis.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 ### Event Structure
 
@@ -30,6 +30,7 @@ _No task event markers detected (`no_events`). Only hardware sync marker `Sync(1
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Potential Task 1: Continuous Segmentation (resting/segmentation)
@@ -45,16 +46,7 @@ _No task event markers detected (`no_events`). Only hardware sync marker `Sync(1
 - No trial-level event markers
 - Sync(1) is a hardware-only event and should not be used for epoching
 
-
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
 > **Status**: failed
-
----
-
-> **auto_eeg FAILED**: No trial-level event markers exist in this dataset—only hardware sync markers are present, making supervised ML tasks impossible. The references either discuss deception detection but use different datasets (LieWaves vs. this 64-channel dataset) or are methodologically irrelevant. Without identifiable labels or trial structure, epoch-based analysis is not viable.
-
----
-
-> **Pipeline FAILED**: The events.tsv samples confirm only 'Sync(1)' hardware synchronization markers with value=1 are present across all task runs (CC, GG, Rest). There are no trial-level event markers, no 'instruction' or 'trial_type' values indicating task conditions, and no identifiable labels for deception/truth or cognitive control conditions. The README describes rich paradigms, but the actual BIDS event files contain no extractable task structure for supervised ML.

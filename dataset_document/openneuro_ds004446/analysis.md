@@ -1,8 +1,7 @@
 # The BMI-HDEEG dataset 2
 
 **Dataset**: `openneuro_ds004446` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004446
-**Category**: Action/Output | **Subjects**: 30 | **Files (Completed)**: 237 | **Channels**: 130 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: Action/Output | **Subjects**: 30 | **Files (Completed)**: 237 | **Channels**: 130 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A high-density EEG dataset focused on sensorimotor rhythm-based brain-computer i
 > **Kernel SHA256**: `846f88e87a5726a11f362cc12f7e71288781559b9b1ba11d04a676cb789854ff`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

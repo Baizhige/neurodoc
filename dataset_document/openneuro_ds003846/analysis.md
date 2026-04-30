@@ -1,9 +1,8 @@
 # Prediction Error
 
 **Dataset**: `openneuro_ds003846` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds003846
-**Category**: Complex Applied | **Subjects**: 19 | **Files (Completed)**: 50
+**Category**: Complex Applied | **Subjects**: 19 | **Files (Completed)**: 50 | **Manual Review**:
 **Channels**: 64 | **Sampling Rate**: 500 Hz
-**Manual Review**:
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ A virtual reality haptic interaction study where participants reached out to tou
 > **Kernel SHA256**: `7f74f7e3fbcbc9c441066de0be6e0c963c61370c4444f4fd9b49517aa7134126`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

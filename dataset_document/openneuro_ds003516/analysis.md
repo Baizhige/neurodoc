@@ -1,8 +1,7 @@
 # EEG: Attended Speaker Paradigm (Own Name in Ignored Stream)
 
 **Dataset**: `openneuro_ds003516` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003516
-**Category**: High-level Mental | **Subjects**: 25 | **Files (Completed)**: 25 | **Channels**: 49 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 25 | **Files (Completed)**: 25 | **Channels**: 49 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed a cocktail-party selective auditory attention task with t
 > **Kernel SHA256**: `ab3203b0314d66402523c7e0da16ac339f14e963890ec81ff54fba69d79bb286`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -81,3 +81,8 @@ Participants performed a cocktail-party selective auditory attention task with t
 - Available events (`beam`, `beep`, `omni`, `StartTrigger`) do not align with critical behavioral events (own-name in ignored stream)
 - Critical task analysis (Classical Task 2) requires external experimental design logs with precise name/control-word onset timestamps
 - Must load audio stimulus files separately to compute speech envelopes via Hilbert transform for envelope tracking tasks
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

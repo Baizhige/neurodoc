@@ -1,8 +1,7 @@
 # EEG: Amphetamine trials 5CCPT and Probabilistic Learning
 
 **Dataset**: `openneuro_ds003987` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003987
-**Category**: High-level Mental | **Subjects**: 23 | **Files (Completed)**: 69 | **Channels**: 71 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 23 | **Files (Completed)**: 69 | **Channels**: 71 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A double-blind, crossover pharmacological study investigating the effects of d-a
 > **Kernel SHA256**: `bc63a5f872f1f40b4689a56d0f0ba55ae04ca1a92ffd323d0c337362d7eea0ed`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

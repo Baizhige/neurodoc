@@ -1,13 +1,17 @@
 # IEEE ICASSP 2024 EEG Competition Dataset
 
 **Dataset**: `ieee_icassp_competition_2024` | **Year**: 2024 | **URL**: https://2024.ieeeicassp.org/
-**Category**: High-level Mental | **Subjects**: 48 | **Files (Completed)**: 96 | **Channels**: 73 | **Sampling Rate**: 256 Hz
+**Category**: High-level Mental | **Subjects**: 48 | **Files (Completed)**: 96 | **Channels**: 73 | **Sampling Rate**: 256 Hz | **Manual Review**:
 
 ## Paradigm
 
 Forty-eight subjects participated in two EEG-based speech BCI paradigms recorded with a 72-channel BioSemi ActiveTwo cap (plus Status stim channel, total 73) at 256 Hz. Task II_II (Imagined + Inner Speech): subjects imagined speaking or performed inner speech, with two stimulus classes (trigger codes 101 and 102, ~200 events each per session). Task RBII (Real Speech + BCI): subjects produced real speech with BCI feedback under the same two class scheme. Each subject contributed one file per task type (48 x 2 = 96 BDF files). Trigger codes are stored in the BioSemi Status stim channel and extracted via `mne.find_events()`.
 
 ## File Scan Result
+
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Sampled
 
 ### Event Structure
 
@@ -86,11 +90,5 @@ Forty-eight subjects participated in two EEG-based speech BCI paradigms recorded
 
 ## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://2024.ieeeicassp.org/
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

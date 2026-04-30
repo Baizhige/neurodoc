@@ -1,17 +1,17 @@
 # YOTO (You Only Think Once): An EEG Dataset for Tracking Spontaneous Cognitive Transitions and Multimodal Stimuli Responses in Resting-State and Task Phases
 
 **Dataset**: `openneuro_ds005815` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005815
-**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 205 | **Channels**: 30 | **Sampling Rate**: 250 Hz
+**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 205 | **Channels**: 30 | **Sampling Rate**: 250 Hz | **Manual Review**:
 
 ## Paradigm
 
 Participants engaged in resting-state (eyes open/closed) and task phases involving unimodal and multimodal stimuli (visual and auditory) and mental imagery, providing self-reported vividness ratings. The YOTO paradigm investigates spontaneous cognitive transitions and mental imagery across stimulus modalities with numeric condition codes and named state markers.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 ### Event Structure
 
@@ -41,6 +41,7 @@ Participants engaged in resting-state (eyes open/closed) and task phases involvi
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Multi-class Mental Imagery Classification
@@ -130,7 +131,6 @@ Participants engaged in resting-state (eyes open/closed) and task phases involvi
 - Numerical event codes require mapping from dataset events.tsv or README.
 - Small dataset (20 subjects); low statistical power for rare conditions.
 - Apply bandpass filter (1-40 Hz) and artifact rejection prior to epoching.
-
 
 ## Kernel Responsibilities
 

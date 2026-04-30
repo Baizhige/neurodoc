@@ -1,8 +1,7 @@
 # BCIT Auditory Cueing
 
 **Dataset**: `openneuro_ds004105` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004105
-**Category**: Complex Applied | **Subjects**: 34 | **Files (Completed)**: 34 | **Channels**: 74 | **Sampling Rate**: 1024 Hz
-**Manual Review**:
+**Category**: Complex Applied | **Subjects**: 34 | **Files (Completed)**: 34 | **Channels**: 74 | **Sampling Rate**: 1024 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed a long-duration simulated driving task involving lane mai
 > **Kernel SHA256**: `2861a03d26d5955207e3567d0a300efca701bd6f65239f5731918a912441a1be`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

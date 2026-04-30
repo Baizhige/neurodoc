@@ -1,8 +1,7 @@
 # EEG/ECG/EMG During Music Therapy in ICU Burn Patients
 
 **Dataset**: `openneuro_ds004840` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004840
-**Category**: Complex Applied | **Subjects**: 9 | **Files (Completed)**: 68 | **Channels**: 10 | **Sampling Rate**: 1024 Hz
-**Manual Review**:
+**Category**: Complex Applied | **Subjects**: 9 | **Files (Completed)**: 68 | **Channels**: 10 | **Sampling Rate**: 1024 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Electrophysiological recordings (EEG, ECG, EMG) of adult burn patients in a clin
 > **Kernel SHA256**: `d781d8bb83998be99a967f1595e5f0364ba2fe656956f059154b9ae9192e29a8`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

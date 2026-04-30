@@ -1,9 +1,8 @@
 # Neural Tracking to Go
 
 **Dataset**: `openneuro_ds003801` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003801
-**Category**: Complex Applied | **Subjects**: 20 | **Files (Completed)**: 20
+**Category**: Complex Applied | **Subjects**: 20 | **Files (Completed)**: 20 | **Manual Review**:
 **Channels**: 24 | **Sampling Rate**: 250 Hz
-**Manual Review**:
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ A mobile EEG study investigating neural speech tracking during a dichotic listen
 > **Kernel SHA256**: `e00f11cfabb8509b0d3ebd0b641413bb1668bba8f70c27db5b5fa73051d48085`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

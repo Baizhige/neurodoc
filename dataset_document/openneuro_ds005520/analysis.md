@@ -1,17 +1,17 @@
 # Research data supporting 'EEG recording during playing MOBA game'
 
 **Dataset**: `openneuro_ds005520` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005520
-**Category**: Complex Applied | **Subjects**: 23 | **Files (Completed)**: 23 | **Channels**: 60 | **Sampling Rate**: 256 Hz
+**Category**: Complex Applied | **Subjects**: 23 | **Files (Completed)**: 23 | **Channels**: 60 | **Sampling Rate**: 256 Hz | **Manual Review**:
 
 ## Paradigm
 
 Participants played a real MOBA (Multiplayer Online Battle Arena) game while 60-channel EEG was recorded alongside resting-state sessions. Trigger codes mark game events such as kills, deaths, and other in-game actions. The study investigates neural correlates of naturalistic gaming behavior.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 ### Event Structure
 
@@ -36,6 +36,7 @@ Participants played a real MOBA (Multiplayer Online Battle Arena) game while 60-
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: In-game Kill vs Death Event Classification
@@ -95,7 +96,6 @@ Participants played a real MOBA (Multiplayer Online Battle Arena) game while 60-
 - Event codes require decoding from dataset events.tsv or README.
 - Very small dataset (23 subjects, 23 files); rare codes (164, 244, -255) have <10 occurrences total.
 - Apply bandpass filter (1-40 Hz) and artifact rejection prior to epoching.
-
 
 ## Kernel Responsibilities
 

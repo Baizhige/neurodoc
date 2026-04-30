@@ -1,8 +1,7 @@
 # Placebo Neuroepo multisession
 
 **Dataset**: `openneuro_ds003195` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003195
-**Category**: Biological State | **Subjects**: 20 | **Files (Completed)**: 20 | **Channels**: 19 | **Sampling Rate**: 200 Hz
-**Manual Review**:
+**Category**: Biological State | **Subjects**: 20 | **Files (Completed)**: 20 | **Channels**: 19 | **Sampling Rate**: 200 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Resting-state EEG recorded from Parkinson's disease patients who received a plac
 > **Kernel SHA256**: `a8d33d3dabe9077b0653fcc7b6c67408e630b4fb1f108bcda2df57d9c9035899`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

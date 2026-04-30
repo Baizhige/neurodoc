@@ -1,8 +1,7 @@
 # Motor Imagery vs Rest - Low-Cost EEG System
 
 **Dataset**: `openneuro_ds003810` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003810
-**Category**: Action/Output | **Subjects**: 10 | **Files (Completed)**: 50 | **Channels**: 15 | **Sampling Rate**: 125 Hz
-**Manual Review**:
+**Category**: Action/Output | **Subjects**: 10 | **Files (Completed)**: 50 | **Channels**: 15 | **Sampling Rate**: 125 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed kinesthetic motor imagery of grasping movements with the 
 > **Kernel SHA256**: `1c1ce2b498db2c62a25bae192b266f958d71e5bfc606f104f1c535ac01bbd383`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

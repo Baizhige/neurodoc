@@ -1,8 +1,7 @@
 # Can We Dissociate Hypervigilance to Social Threats from Altered Perceptual Decision-Making in Lonely Individuals
 
 **Dataset**: `openneuro_ds004626` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004626
-**Category**: High-level Mental | **Subjects**: 52 | **Files (Completed)**: 52 | **Channels**: 68 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 52 | **Files (Completed)**: 52 | **Channels**: 68 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A perceptual decision-making task investigating whether lonely individuals exhib
 > **Kernel SHA256**: `803728206c185507baf90e4356ef3057790f62b9fa780aba0cfd2c37811af341`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

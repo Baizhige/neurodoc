@@ -1,17 +1,17 @@
 # High-Density Resting-State EEG of Phantom Limb Pain and Controls
 
 **Dataset**: `openneuro_ds006921` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006921
-**Category**: Biological State | **Subjects**: 152 | **Files (Completed)**: 152 | **Channels**: 128 | **Sampling Rate**: 2400 Hz
+**Category**: Biological State | **Subjects**: 152 | **Files (Completed)**: 152 | **Channels**: 128 | **Sampling Rate**: 2400 Hz | **Manual Review**:
 
 ## Paradigm
 
 High-density resting-state EEG recordings were collected from three groups: amputees with phantom limb pain (PLP), amputees without phantom limb pain, and healthy controls. Recordings were made during eyes-open and eyes-closed conditions. The dataset enables investigation of neural correlates associated with phantom limb pain, cortical reorganization following amputation, and resting-state oscillatory differences across groups.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 ### Event Structure
 
@@ -30,6 +30,7 @@ _No event markers detected (`no_events`). This dataset contains continuous resti
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Resting-state group classification (PLP vs non-PLP vs controls)
@@ -79,12 +80,7 @@ _No event markers detected (`no_events`). This dataset contains continuous resti
 - 152 files may include multiple sessions per subject; verify session structure.
 - High-density 128-channel system (likely EGI/Geodesic); non-standard montage.
 
-
 ## Kernel Responsibilities
 
 > **Super Meta Required**: Yes
 > **Status**: failed
-
----
-
-> **auto_eeg FAILED**: The dataset has identifiable group labels (AmpPLP/AmpNoPLP/IC) and clear paradigm structure for resting-state group classification. However, the only 'partial' reference (paper_10_21203_rs_3_rs_8645281_v1.pdf) explicitly states 'supports_task: false' and uses mixed-effects models rather than ML classification, while the other two references are classified as 'uncertain'. The analysis.md provides task definitions, but without at least one reference that supports ML classification, feasibility cannot be established.

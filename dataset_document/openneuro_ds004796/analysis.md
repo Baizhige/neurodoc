@@ -1,8 +1,7 @@
 # PEARL-Neuro Database (Alzheimer's Risk Genes, Lifestyle, Neuroimaging)
 
 **Dataset**: `openneuro_ds004796` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004796
-**Category**: Clinical / Cognitive Neuroscience | **Subjects**: 192 | **Files (Completed)**: 192 | **Channels**: 64 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: Clinical / Cognitive Neuroscience | **Subjects**: 192 | **Files (Completed)**: 192 | **Channels**: 64 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ The PEARL-Neuro database comprises EEG recordings from 192 middle-aged participa
 > **Kernel SHA256**: `ba07d441d2fd6b98482c167468aa53b755b27a14dca38795653deb08fd2ab380`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

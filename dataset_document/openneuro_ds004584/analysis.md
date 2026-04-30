@@ -1,8 +1,7 @@
 # Rest Eyes Open (Parkinson's Disease)
 
 **Dataset**: `openneuro_ds004584` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004584
-**Category**: Biological State | **Subjects**: 149 | **Files (Completed)**: 149 | **Channels**: 63 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: Biological State | **Subjects**: 149 | **Files (Completed)**: 149 | **Channels**: 63 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Resting-state EEG was collected from 149 participants (100 with Parkinson's dise
 > **Kernel SHA256**: `893b33a9e023d1f9d733bfdcee8853ce439ca4ca0056a9afb09c50a7a0106c61`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

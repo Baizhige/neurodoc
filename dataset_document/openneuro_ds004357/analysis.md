@@ -1,8 +1,7 @@
 # Features-EEG
 
 **Dataset**: `openneuro_ds004357` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004357
-**Category**: Sensory/Response | **Subjects**: 16 | **Files (Completed)**: 16 | **Channels**: 127 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: Sensory/Response | **Subjects**: 16 | **Files (Completed)**: 16 | **Channels**: 127 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants viewed rapid serial visual presentation (RSVP) streams of Gabor-lik
 > **Kernel SHA256**: `14f7646bb8ae9bb8b23fdb5dd31c76aa78f8ade2c82e5b066c8c4627fdadbfd5`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

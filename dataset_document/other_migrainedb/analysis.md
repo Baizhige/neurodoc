@@ -1,8 +1,7 @@
 # Ultra High-Density EEG - Interictal Migraine and Controls
 
 **Dataset**: `other_migrainedb` | **Year**: 2020 | **URL**: https://kilthub.cmu.edu/articles/dataset/Ultra_high-density_EEG_recording_of_interictal_migraine_and_controls_sensory_and_rest/12636731
-**Category**: Biological State | **Subjects**: 35 | **Files (Completed)**: 117 | **Channels**: 128 | **Sampling Rate**: 512 Hz
-**Manual Review**: Jiping Cui
+**Category**: Biological State | **Subjects**: 35 | **Files (Completed)**: 117 | **Channels**: 128 | **Sampling Rate**: 512 Hz | **Manual Review**: Jiping Cui
 
 ## Paradigm
 

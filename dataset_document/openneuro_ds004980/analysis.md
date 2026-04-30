@@ -1,8 +1,7 @@
 # EEG Data for an Architectural Affordances Task
 
 **Dataset**: `openneuro_ds004980` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004980
-**Category**: Complex Applied | **Subjects**: 17 | **Files (Completed)**: 17 | **Channels**: 64 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 17 | **Files (Completed)**: 17 | **Channels**: 64 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants navigated a virtual architectural environment using keyboard contro
 > **Kernel SHA256**: `a4ee721c67fc7e3f214518ed2177ab65a92391289b064776f62f01ad052f2cdc`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -104,3 +104,12 @@ Participants navigated a virtual architectural environment using keyboard contro
 
 - **Evidence**: DOI: 10.1111/ejn.16461 — Architectural transitions investigated as affordance markers
 - **Kernel Notes**: Focus on spatial boundary crossings as discrete environmental events. Plausible from paradigm alone without direct classification=relevant reference. Could complement door affordance analysis in Normal Task 1.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

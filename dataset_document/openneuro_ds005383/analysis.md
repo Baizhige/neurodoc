@@ -1,9 +1,8 @@
 # TMNRED: A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification in Natural Reading Environments
 
 **Dataset**: `openneuro_ds005383` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005383
-**Category**: High-level Mental | **Subjects**: 30 | **Files (Completed)**: 720
+**Category**: High-level Mental | **Subjects**: 30 | **Files (Completed)**: 720 | **Manual Review**: Pending
 **Channels**: 30 | **Sampling Rate**: 200 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ Participants engaged in self-paced natural reading of Chinese sentences and news
 > **Kernel SHA256**: `aa57f78b39f44f306ef0cc03667bfd2bbe6eeff381a0079cf70a1b432f230c91`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -279,3 +279,12 @@ Participants engaged in self-paced natural reading of Chinese sentences and news
   | `32` | continuous | Target sentence reading time |
 - **Evidence**: Paradigm description states "self-paced natural reading" but paper focuses on 2-second fixed presentation windows; plausible extended analysis examining reading time differences between target/non-target conditions.
 - **Kernel Notes**: Self-paced reading paradigm suggests variable trial durations; however paper emphasizes 2-second fixed windows. Verify in events.tsv whether reading duration markers exist or if this is fixed-speed presentation with self-paced button response. May require extended tmax or separate reading-time annotation extraction.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

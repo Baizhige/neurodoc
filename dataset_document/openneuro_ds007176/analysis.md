@@ -1,8 +1,7 @@
 # Longitudinal EEG Test-Retest Reliability in Healthy Individuals
 
 **Dataset**: `openneuro_ds007176` | **Year**: 2026 | **URL**: https://openneuro.org/datasets/ds007176
-**Category**: Biological State | **Subjects**: 43 | **Files (Completed)**: 300 | **Channels**: 60 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Biological State | **Subjects**: 43 | **Files (Completed)**: 300 | **Channels**: 60 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Longitudinal resting-state EEG recordings collected over four sessions spanning 
 > **Kernel SHA256**: `30c2951678cc4852690f010c87ac639e9b54d873561630f622b2853ba049384a`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -47,3 +47,12 @@ Longitudinal resting-state EEG recordings collected over four sessions spanning 
 - **Evidence (DOI)**: https://doi.org/10.1016/j.bspc.2026.109484
 
 - **Kernel Notes**: Dataset contains purely continuous resting-state EEG with no meaningful experimental events (only null triggers `Stimulus/S 1`, count=2). Use fixed-length segmentation (4 s windows, 0.5 s overlap) to extract representative epochs across full recording duration. Apply bandpass filter (0.5–40 Hz) and artifact rejection (ICA) prior to segmentation. For test-retest reliability analysis, ensure consistent segment extraction strategy across all sessions per subject. Band power estimation via multitaper spectral approach as per referenced methodology.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

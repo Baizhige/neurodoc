@@ -1,65 +1,99 @@
 # BCI Competition III Dataset 1 (Directional Motor Imagery EEG)
 
 **Dataset**: `bcic_iii_1` | **Year**: 2005 | **URL**: https://www.bbci.de/competition/iii/download/
-**Category**: Action/Output | **Subjects**: 1 | **Files (Completed)**: 1 | **Channels**: 64 | **Sampling Rate**: 1000 Hz
+**Category**: Action/Output | **Subjects**: 1 | **Files (Completed)**: 1 | **Channels**: 64 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
 A single subject performed directional motor imagery (BCI Competition III, 2005). Visual arrow cues prompted 4-second motor imagery periods (two classes: left and right/foot). The dataset is stored in a single GDF file (`BCI2005_I.gdf`). The GDF format embeds event annotations natively; MNE reads them automatically. No age or sex information is available in the public release.
 
-| Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
-| `768` | 377 | admin | raw | Start of a trial (pre-cue marker) |
-| `769` | 138 | short | raw | Cue onset - class 1 (left hand / motor imagery direction 1) |
-| `772` | 139 | short | raw | Cue onset - class 2 (right hand or foot, motor imagery direction 2) |
-| `783` | 100 | admin | raw | Cue unknown (evaluation-set placeholder) |
-
-> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
-
 ## File Scan Result
 
-> **Kernel SHA256**: `b0fb53a13b65ddd627a459885811c0110078172e3fe0af22802920a04880cb10`
+> **Kernel SHA256**: `0c3d0c93040028190511ea41a99743313b965b932a8f604a46dc9b38b7dc3634`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |----------|---------------|------|------------|---------|
-| `768` | 377 | admin | raw | Start of a trial (pre-cue marker) |
-| `769` | 138 | short | raw | Cue onset - class 1 (left hand / motor imagery direction 1) |
-| `772` | 139 | short | raw | Cue onset - class 2 (right hand or foot, motor imagery direction 2) |
-| `783` | 100 | admin | raw | Cue unknown (evaluation-set placeholder) |
+| `768` | 377 | event | raw | Annotation code 768 |
+| `769` | 138 | event | raw | Annotation code 769 |
+| `772` | 139 | event | raw | Annotation code 772 |
+| `783` | 100 | event | raw | Annotation code 783 |
 
 
 ### Info
-- **Status**: Complete
-- **Files Scanned**: 1
-- **File Name**: `BCI2005_I.gdf`
-- **File Size**: Not recorded
-- **Event Summary**: See ### Event Structure above
+| Field | Completeness | Notes |
+|---|---|---|
+| `subject_age` | missing | N/A |
+| `subject_sex` | missing | N/A |
+| `device` | missing | N/A |
 
 ## Tasks
 
-### Primary Task 1: Motor imagery decoding
+### Classical Task 1: 2-class motor imagery (left vs right/foot)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
-- **Target Definition**: Imagery class labels (e.g., left/right hand, feet, tongue; dataset-specific)
-- **Evidence**: The official BCI Competition III dataset description identifies directional motor-imagery decoding as the benchmark objective for this dataset. Source: https://www.bbci.de/competition/iii/ Official description file: `references/website_des.txt`
+- **Epoch Parameters**: `tmin = 0 s *, tmax = 4 s *, target_events = [769, 772]`
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---|
+  | 769 | 0 | Annotation code 769 |
+  | 772 | 1 | Annotation code 772 |
+- **Evidence**:
+  - https://www.bbci.de/competition/iii/ — BCI Competition III official dataset page
+  - https://www.bbci.de/competition/iii/download/ — Official dataset download and documentation
+- **Notes**: This is a classical 2-class motor imagery benchmark from BCI Competition III. The event codes 769 and 772 serve as class-specific cue onsets for two motor imagery conditions. Despite the competition description mentioning left pinky vs tongue imagery, the dataset documentation and analysis notes reference left hand vs right hand/foot as class labels. Event 768 (trial start) and 783 (unknown/evaluation placeholder) are excluded from classification. Epoch window parameters are inferred from competition structure (4-second imagery periods from cue onset) following SKILL defaults for cue-onset BCI paradigms.
 
-### Normal Task 1: Binary Motor Imagery Classification (epoch_by_event)
+### Classical Task 2: 2-class motor imagery with baseline (left vs right/foot)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s, target_events = see Target Definition
-- **Label Route**: `Annotation`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Event codes follow the GDF/BCIC standard but are not renamed by the kernel; they appear as numeric strings. Event `768` is a trial-onset marker preceding the cue and should be excluded from classification targets. Event `783` (cue unknown) appears in unlabeled evaluation data and should also be excluded unless the test labels are available.
+- **Epoch Parameters**: tmin = -0.5 s *, tmax = 4.0 s *, target_events = [`769`, `772`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
 
-| Event | y | Meaning |
-|-------|-----|---------|
-| `769` | 0 | Motor imagery class 1 (left-hand direction) |
-| `772` | 1 | Motor imagery class 2 (right-hand or foot direction) |
+| Event ID | y | Meaning |
+|----------|---|---|
+| 769 | 0 | Annotation code 769 |
+| 772 | 1 | Annotation code 772 |
+
+- **Evidence**:
+  - https://www.bbci.de/competition/iii/ — BCI Competition III official website describing the dataset and competition tasks
+  - https://www.bbci.de/competition/iii/download/ — Dataset download page confirming event structure with codes 769 (138 trials) and 772 (139 trials)
+- **Notes**: This task uses a -0.5s pre-stimulus baseline to capture preparatory activity and enable baseline correction, a common preprocessing step in offline BCI motor imagery analysis. The two event codes (769, 772) represent the two motor imagery classes in this variant of the primary task. Event 768 trial-start markers are available for potential baseline extraction anchoring but are not used as class labels.
+
+### Potential Task 1: trial phase detection (trial-start vs cue-onset)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.5 s *, tmax = 1.0 s *, target_events = [`768`, `769`, `772`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---|
+  | 768 | 0 | trial-start |
+  | 769 | 1 | cue-onset |
+  | 772 | 1 | cue-onset |
+- **Evidence**:
+- **Notes**: Events 769 and 772 are merged into a single cue-onset class (y=1) versus 768 as trial-start (y=0). This tests whether EEG contains discriminable patterns between pre-cue readiness and active cued-imagery periods. All event codes are annotation descriptions from the GDF file header with unknown semantic meaning due to lack of documentation; the phase interpretation is inferred from the candidate's evidence summary based on typical BCI competition paradigms where 768 commonly marks trial onset and 769/772 mark cue presentations.
+
+### Potential Task 2: Known vs Unknown Cue Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: `tmin = 0 s *, tmax = 4 s *, target_events = [769, 772, 783]`
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---|
+  | 769 | 0 | Annotation code 769 (known class cue) |
+  | 772 | 0 | Annotation code 772 (known class cue) |
+  | 783 | 1 | Annotation code 783 (unknown/evaluation cue) |
+- **Evidence**:
+- **Notes**: This task tests for potential data leakage or distribution shift between the training-known cues (769, 772) and the evaluation-set placeholder cue (783). The 783 event is explicitly described in the candidate's evidence summary as 'Cue unknown (evaluation-set placeholder)' and occurs in 100 trials versus 277 combined trials for 769/772. Both known-class cues are merged to y=0 since they share the same functional status as training-visible class labels, while 783 forms the distinct y=1 class. The epoch window [0, 4]s is inferred from the competition structure to match the primary MI task timing for direct comparability. Event meanings are locked to the grounded annotation codes since no semantic documentation was available.
 
 ## Data Quality Notes
 
@@ -71,11 +105,5 @@ A single subject performed directional motor imagery (BCI Competition III, 2005)
 
 ## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://www.bbci.de/competition/iii/download/
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

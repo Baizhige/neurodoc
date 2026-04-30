@@ -1,8 +1,7 @@
 # BCIT Traffic Complexity
 
 **Dataset**: `openneuro_ds004123` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004123
-**Category**: Complex Applied | **Subjects**: 30 | **Files (Completed)**: 30 | **Channels**: 74 | **Sampling Rate**: 1024 Hz
-**Manual Review**:
+**Category**: Complex Applied | **Subjects**: 30 | **Files (Completed)**: 30 | **Channels**: 74 | **Sampling Rate**: 1024 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Subjects performed a simulated driving task with varying levels of visual traffi
 > **Kernel SHA256**: `7c20f0f885e99333e4abe19bf41e82f12c5fb6fcf705c4088f6789c3b3412006`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

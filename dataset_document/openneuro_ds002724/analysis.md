@@ -1,8 +1,7 @@
 # A dataset recorded during development of an affective brain-computer music interface: training sessions
 
 **Dataset**: `openneuro_ds002724` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002724
-**Category**: High-level Mental | **Subjects**: 17 | **Files (Completed)**: 96 | **Channels**: 37 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 17 | **Files (Completed)**: 96 | **Channels**: 37 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 > **Kernel SHA256**: `6c59f4ea085164cb445b3775d8178b74879582b124f5d7e5939e0878184bc350`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -84,3 +84,12 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds002724
 - **Kernel Notes**: Verify raw event extraction pipeline—triggers may use non-standard channel naming. Event detection reported 'no events detected' despite metadata confirming well-balanced distribution. Verify event channel name in raw data.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

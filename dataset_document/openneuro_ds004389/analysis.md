@@ -1,8 +1,7 @@
 # Somatosensory Evoked Potentials in the Human Spinal Cord to Mixed and Sensory Nerve Stimulation
 
 **Dataset**: `openneuro_ds004389` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004389
-**Category**: Sensory/Response | **Subjects**: 26 | **Files (Completed)**: 259 | **Channels**: 90 | **Sampling Rate**: 10000 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 26 | **Files (Completed)**: 259 | **Channels**: 90 | **Sampling Rate**: 10000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Simultaneous EEG, epidural spinal cord (ESG), nerve conduction (ENG), and EMG re
 > **Kernel SHA256**: `f2113e548187a3942585127fb11d7479488553ba3568414ab9a7f87f25e0b756`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -104,3 +104,12 @@ Simultaneous EEG, epidural spinal cord (ESG), nerve conduction (ENG), and EMG re
 - **Meta Level**: raw
 - **Evidence**: Paradigm description supports tibial nerve stimulation as primary experimental condition. DOI: https://doi.org/10.18112/openneuro.ds004389.v1.0.0
 - **Kernel Notes**: BIDS task label = "Tibialmixed". Longer latencies than median nerve stimulation; 2s window captures P40-N60 tibial SEP components. tib12 and tibMixed share code 51997—resolve via trial timing context.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

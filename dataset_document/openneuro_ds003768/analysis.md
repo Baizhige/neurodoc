@@ -1,8 +1,7 @@
 # Simultaneous EEG and fMRI Signals During Sleep from Humans
 
 **Dataset**: `openneuro_ds003768` | **Year**: 2026 | **URL**: https://openneuro.org/datasets/ds003768
-**Category**: Biological State | **Subjects**: 33 | **Files (Completed)**: 254 | **Channels**: 32 | **Sampling Rate**: 5000 Hz
-**Manual Review**: Pending
+**Category**: Biological State | **Subjects**: 33 | **Files (Completed)**: 254 | **Channels**: 32 | **Sampling Rate**: 5000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Simultaneous EEG-fMRI recordings were acquired during resting-state wakefulness 
 > **Kernel SHA256**: `4c62d576cc9d09d80f102d36b7c8a924ed9e16f4eb3686c4d3b2652de816cbed`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -89,3 +89,12 @@ Simultaneous EEG-fMRI recordings were acquired during resting-state wakefulness 
 - **Evidence**:
   - DOI: 10.1016/j.neuroimage.2022.119720 — Analyzes transient arousal dynamics and neural events at arousal changes; suggests utility of short-epoch analysis around transition markers
 - **Kernel Notes**: Apply MRI artifact removal before short-epoch extraction. Downsample to 250 Hz. Use symmetric window (tmin=-1s, tmax=2s) to capture pre-trigger baseline and post-transition activity. Verify trigger-to-stage mapping from sourcedata/events.tsv for accurate labeling.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

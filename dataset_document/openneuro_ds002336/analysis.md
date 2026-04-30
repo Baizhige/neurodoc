@@ -1,8 +1,7 @@
 # A multi-modal human neuroimaging dataset for data integration: simultaneous EEG and fMRI acquisition during a motor imagery neurofeedback task: XP1
 
 **Dataset**: `openneuro_ds002336` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002336
-**Category**: Action/Output | **Subjects**: 10 | **Files (Completed)**: 107 | **Channels**: 64 | **Sampling Rate**: 5000 Hz
-**Manual Review**:
+**Category**: Action/Output | **Subjects**: 10 | **Files (Completed)**: 107 | **Channels**: 64 | **Sampling Rate**: 5000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Simultaneous EEG-fMRI acquisition during a kinesthetic motor imagery neurofeedba
 > **Kernel SHA256**: `b8765f797051b568f914682c5c07b2c71452b6c67b90de5d6877e88536ae30d8`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

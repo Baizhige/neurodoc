@@ -1,9 +1,8 @@
 # Embodied Learning for Literacy EEG
 
 **Dataset**: `openneuro_ds004017` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004017
-**Category**: High-level Mental | **Subjects**: 21 | **Files (Completed)**: 126
+**Category**: High-level Mental | **Subjects**: 21 | **Files (Completed)**: 126 | **Manual Review**: Pending
 **Channels**: 65 | **Sampling Rate**: 2048 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ A pre-post intervention study assessing literacy and orthographic processing in 
 > **Kernel SHA256**: `555c78dd8273b63d837453c068473624d2c3fb9881faa43d83610e44ae5221c7`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -107,3 +107,12 @@ A pre-post intervention study assessing literacy and orthographic processing in 
   | `stimulus_d` | 1 | Letter type d stimulus onset |
 - **Notes**: Paradigm includes visual search task alongside letter discrimination. Stimulus events likely shared across both tasks within sessions. Plausible to extract visual search-specific epochs if task markers are present in annotations.
 - **Kernel Notes**: Verify if visual search trials are distinguished via annotations or additional event codes not captured in initial file scan.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

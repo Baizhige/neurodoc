@@ -1,8 +1,7 @@
 # Runabout: A Mobile EEG Study of Auditory Oddball Processing in Laboratory and Real-World Conditions
 
 **Dataset**: `openneuro_ds003620` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003620
-**Category**: Complex Applied | **Subjects**: 44 | **Files (Completed)**: 271 | **Channels**: 35 | **Sampling Rate**: 250 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 44 | **Files (Completed)**: 271 | **Channels**: 35 | **Sampling Rate**: 250 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed an auditory oddball task under three levels of environmen
 > **Kernel SHA256**: `167606e080f52acfeae27436261f36147486b8c9edca79bf8d374baa59a5a369`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -115,3 +115,12 @@ Participants performed an auditory oddball task under three levels of environmen
 - **Evidence**:
   - DOI: 10.1038/s41598-021-01772-8 — Implicit in the study design: examines how walking introduces artifacts and reduces P300 amplitude compared to lab sitting.
 - **Kernel Notes**: Motion artifact classification may help identify clean vs artifact-contaminated epochs for downstream analysis. Consider using temporal features (variance, peak-to-peak amplitude) or frequency features (muscle artifact patterns ~20-50Hz) as additional features. This task supports quality control for the cross-environment analysis.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

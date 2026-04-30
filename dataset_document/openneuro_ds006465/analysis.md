@@ -1,8 +1,7 @@
 # 3M-CPSEED: EEG Dataset for Chinese Pinyin Production in Overt, Silent-Intended, and Imagined Speech
 
 **Dataset**: `openneuro_ds006465` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006465
-**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 84 | **Channels**: 33 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 84 | **Channels**: 33 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed three modes of speech production - overt (spoken aloud), 
 > **Kernel SHA256**: `8d982b8f1dc1dee89fd6d8b12eabee17634bc734ad5fdf3d830146a792f0b5df`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -160,3 +160,12 @@ Participants performed three modes of speech production - overt (spoken aloud), 
 - **Evidence**:
   - DOI: 10.1038/s41597-025-06346-1 — experimental design specifies 10 distinct pinyin phonemes with known temporal profiles; event_1 aggregates all phoneme triggers for epoch extraction
 - **Kernel Notes**: Primary task is epoch extraction from phoneme trigger events. Subsequent analysis (decoding, ERP averaging, time-frequency) can be applied post-epoch. Verify events.tsv for phoneme-level annotations within individual trial records.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

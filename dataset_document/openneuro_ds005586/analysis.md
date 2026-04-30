@@ -1,8 +1,7 @@
 # EEG responses to the number of objects in partially occluded and uncovered scenes
 
 **Dataset**: `openneuro_ds005586` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005586
-**Category**: Sensory/Response | **Subjects**: 23 | **Files (Completed)**: 23 | **Channels**: 63 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 23 | **Files (Completed)**: 23 | **Channels**: 63 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants passively viewed game boards depicting varying numbers of game piec
 > **Kernel SHA256**: `baf5356b61564a0375f5d160ea4039aaffd7603362c4837beaab1a47ccb903f2`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -243,3 +243,12 @@ Participants passively viewed game boards depicting varying numbers of game piec
   | all others | 0 | Experimental stimulus |
 - **Evidence**: Supported by event structure — S95 (14399 events) is the dominant event type representing catch/fixation baseline trials interspersed throughout the experiment.
 - **Kernel Notes**: Binary detection of catch/fixation trials vs experimental stimuli. High class imbalance expected (S95 has 14399 events vs ~8000 total experimental events). Consider undersampling or class weighting.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

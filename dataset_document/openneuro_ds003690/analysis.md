@@ -1,8 +1,7 @@
 # EEG, ECG and Pupil Data from Young and Older Adults: Rest and Auditory Cued Reaction Time Tasks
 
 **Dataset**: `openneuro_ds003690` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003690
-**Category**: Sensory/Response | **Subjects**: 75 | **Files (Completed)**: 375 | **Channels**: 66 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: Sensory/Response | **Subjects**: 75 | **Files (Completed)**: 375 | **Channels**: 66 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Young and older adults performed auditory-cued simple reaction time and go/no-go
 > **Kernel SHA256**: `ae1771744b1e9be52e1185e15ec5a571439a12368d20c2faf981c8daf98a2cba`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

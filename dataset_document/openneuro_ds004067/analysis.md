@@ -1,8 +1,7 @@
 # Moral conviction and metacognitive ability shape multiple stages of information processing
 
 **Dataset**: `openneuro_ds004067` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004067
-**Category**: High-level Mental | **Subjects**: 80 | **Files (Completed)**: 83 | **Channels**: 63 | **Sampling Rate**: 2000 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 80 | **Files (Completed)**: 83 | **Channels**: 63 | **Sampling Rate**: 2000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants evaluated their support for sociopolitical protest photographs foll
 > **Kernel SHA256**: `2e0660a070b8e1df6267ff16adb503545053bae4750a4a167344ae026cdc849c`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -171,3 +171,12 @@ Participants evaluated their support for sociopolitical protest photographs foll
 - **Target Definition**: Combined labeling of moral conviction level and social influence condition across trial segments
 - **Evidence**: Paradigm description; DOI: 10.10106/j.cortex.2022.03.008 (examined interaction between moral conviction and social influence cues)
 - **Kernel Notes**: This task requires segment-level labeling to capture trial structure where photos precede social cues. Admin markers (ProtestStart/End, ClipTaskStart/End, Rest blocks) must be excluded.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

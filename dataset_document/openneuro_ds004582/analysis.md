@@ -1,13 +1,17 @@
 # FakeFaceEmo_data
 
 **Dataset**: `openneuro_ds004582` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004582
-**Category**: High-level Mental | **Subjects**: 30 | **Files (Completed)**: 30 | **Channels**: 64 | **Sampling Rate**: 512 Hz
+**Category**: High-level Mental | **Subjects**: 30 | **Files (Completed)**: 30 | **Channels**: 64 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 
 Participants viewed fake face images with different emotional expressions while EEG was recorded. The dataset contains continuous EEG recordings; only hardware/metadata markers (New Segment, Comment) are present in the event files rather than trial-level stimulus markers. No trial-level event markers are available for epoch-based analysis.
 
 ## File Scan Result
+
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Sampled
 
 ### Event Structure
 
@@ -49,6 +53,7 @@ No additional scan information available.
 - **Label Route**: `Annotation`
 - **Target Definition**: N/A (unsupervised segmentation)
 - **Notes**: New Segment/ is a BrainVision hardware recording marker, not a task event. Use sliding window segmentation for feature extraction.
+
 ## Data Quality Notes
 
 - No trial-level event markers
@@ -57,19 +62,5 @@ No additional scan information available.
 
 ## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004582
-
----
-
-> **auto_eeg FAILED**: The dataset lacks trial-level event markers needed to epoch data by emotional condition—only hardware markers (New Segment/) are present. All reference extractions are irrelevant or uncertain, providing no alternative labeling approach. Without identifiable event/label structure, no concrete supervised ML task can be defined.
-
----
-
-> **Pipeline FAILED**: The events.tsv shows only a single 'New Segment/' hardware marker with value=1 at time 0.0 across all files—there are no trial-level stimulus markers encoding the experimental conditions (angry/neutral primes, target faces, or participant responses). The README describes a rich 222-trial paradigm, but these condition labels are completely absent from the BIDS event files. Without any event markers mapping to the emotional arousal manipulation or realness judgments, no supervised classification or regression task can be constructed from this dataset as currently released.
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

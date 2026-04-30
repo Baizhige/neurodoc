@@ -1,8 +1,7 @@
 # Healthy Brain Network (HBN) EEG - Release 5
 
 **Dataset**: `openneuro_ds005509` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005509
-**Category**: Complex Applied | **Subjects**: 330 | **Files (Completed)**: 3326 | **Channels**: 129 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: Complex Applied | **Subjects**: 330 | **Files (Completed)**: 3326 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ The Healthy Brain Network (HBN) EEG Release 5 is a large-scale, multi-task devel
 > **Kernel SHA256**: `cd0428f4c2d883197e217263d674e9396e02295c8c2537055ab47a7f49020043`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,8 +1,7 @@
 # Attended Speaker Paradigm (cEEGrid Data)
 
 **Dataset**: `openneuro_ds004015` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004015
-**Category**: High-level Mental | **Subjects**: 36 | **Files (Completed)**: 36 | **Channels**: 18 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 36 | **Files (Completed)**: 36 | **Channels**: 18 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A two-competing speaker auditory attention paradigm in which participants were i
 > **Kernel SHA256**: `95bccff97766b74a8a2c1cdb30945199d6fec540a29cc7cbe14814d8571c86b6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

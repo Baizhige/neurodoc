@@ -1,17 +1,17 @@
 # Ultra High-Density 256-Channel EEG AAD Dataset (Subset)
 
 **Dataset**: `zenodo_4518754` | **Year**: 2021 | **URL**: https://zenodo.org/records/4518754
-**Category**: High-level Mental | **Subjects**: 13 | **Files (Completed)**: 156 | **Channels**: 256 | **Sampling Rate**: 1000 Hz
+**Category**: High-level Mental | **Subjects**: 13 | **Files (Completed)**: 156 | **Channels**: 256 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
 Thirteen subjects listened to two simultaneously presented Dutch stories (left vs. right ear) and were asked to attend to one speaker while ignoring the other (auditory attention decoding, AAD). EEG was recorded from 256 channels (BioSemi ActiveTwo ultra-high-density, Ag/AgCl) at 1000 Hz. Stories were presented via insert earphones at 60 dBA, with 180 deg spatial separation (left vs. right). Each subject completed multiple trials per session; each recording file corresponds to one trial labeled by attended direction (L/R) encoded in the filename (`S{N}_AAD_{trial}{L/R}.dap`). The kernel creates a single whole-trial `attend_left` or `attend_right` annotation per file.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Sampled
 
 ### Event Structure
 
@@ -31,6 +31,7 @@ Thirteen subjects listened to two simultaneously presented Dutch stories (left v
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Auditory attention decoding (attend left vs right)
@@ -54,7 +55,6 @@ Thirteen subjects listened to two simultaneously presented Dutch stories (left v
 - High sampling rate (1000 Hz); consider downsampling to 128 or 64 Hz for typical AAD decoding.
 - Stimulus audio files are required for stimulus-reconstruction AAD methods; check availability.
 - Only `.dap` files are EEG; auxiliary `.dat` / `.rs3` files are skipped by the kernel.
-
 
 ## Kernel Responsibilities
 

@@ -1,8 +1,7 @@
 # UC San Diego Resting State EEG Data from Patients with Parkinson's Disease
 
 **Dataset**: `openneuro_ds002778` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002778
-**Category**: Biological State | **Subjects**: N/A | **Files (Completed)**: 46 | **Channels**: 41 | **Sampling Rate**: 512 Hz
-**Manual Review**: Pending
+**Category**: Biological State | **Subjects**: N/A | **Files (Completed)**: 46 | **Channels**: 41 | **Sampling Rate**: 512 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Spontaneous scalp EEG recorded from patients with Parkinson's disease (PD) and h
 > **Kernel SHA256**: `be10479841313314c0e24a0c18cfe514d131441a85541ecc65d0c4d02c84069d`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -69,3 +69,12 @@ Spontaneous scalp EEG recorded from patients with Parkinson's disease (PD) and h
   - DOI: 10.1038/s41598-022-26644-7 — Three-class classification off-PD vs on-PD vs HC using DWT-based entropy features
   - DOI: 10.3389/fnins.2022.957181 — Three-class classification: HC=0, PD_OFF=1, PD_ON=2 with multi-scale CNN
 - **Kernel Notes**: Optional task; for binary PD vs HC use Classical Task 1. Requires medication_status field in participants.tsv. Segment_length=3.0s with no overlap matches literature parameters for DWT-based entropy classification.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

@@ -1,8 +1,7 @@
 # EEG Frequency Tagging Reveals the Integration of Dissimilar Observed Actions
 
 **Dataset**: `openneuro_ds005406` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005406
-**Category**: Sensory/Response | **Subjects**: 29 | **Files (Completed)**: 29 | **Channels**: 64 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 29 | **Files (Completed)**: 29 | **Channels**: 64 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A frequency-tagging EEG study measuring steady-state visual evoked potentials (S
 > **Kernel SHA256**: `31c1edbda1ea156c9a954d9e15b07057e742dd664f402adcf412b02e91845bca`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -80,3 +80,12 @@ A frequency-tagging EEG study measuring steady-state visual evoked potentials (S
 - **Evidence**:
   - Paradigm: Short-window transient analysis around individual action markers to capture event-related responses for action integration mechanisms.
 - **Kernel Notes**: Epoch around all 8 markers to capture transient responses to both sequence start and end events. The -0.2s to 1.0s window captures pre-stimulus baseline and initial evoked response to each marker. Useful for distinguishing neural responses at sequence onset vs offset.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

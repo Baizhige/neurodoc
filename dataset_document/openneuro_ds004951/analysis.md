@@ -1,8 +1,7 @@
 # Braille Letters EEG
 
 **Dataset**: `openneuro_ds004951` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004951
-**Category**: Sensory/Response | **Subjects**: 23 | **Files (Completed)**: 23 | **Channels**: 64 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: Sensory/Response | **Subjects**: 23 | **Files (Completed)**: 23 | **Channels**: 64 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants identified Braille letters presented via tactile stimulation to the
 > **Kernel SHA256**: `2a0d33acc56d02fbe3ab1e2835ffdfa68ff4fdf0b9daddfd0ffaa442ac6bea45`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

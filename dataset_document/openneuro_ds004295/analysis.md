@@ -1,9 +1,8 @@
 # Reward Gain and Punishment Avoidance Reversal Learning
 
 **Dataset**: `openneuro_ds004295` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004295
-**Category**: High-level Mental | **Subjects**: 26 | **Files (Completed)**: 26
+**Category**: High-level Mental | **Subjects**: 26 | **Files (Completed)**: 26 | **Manual Review**: Pending
 **Channels**: 66 | **Sampling Rate**: 1024 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ A reversal learning task comparing brain activity during reward gain (monetary) 
 > **Kernel SHA256**: `153428dbd4972f8d86815d3c7cb7b1fca49fbb91f5bdd3f1894d759b4c43f2ff`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -105,3 +105,12 @@ A reversal learning task comparing brain activity during reward gain (monetary) 
 - **Super Meta Notes**: N/A
 - **Evidence**: N/A
 - **Kernel Notes**: `response_time` stored in misc channel (route: misc) serves as continuous regression target for trial-by-trial analysis. Kernel must preserve derivation metadata including source, unit (ms), and version. Segmentation should align epochs around response events extracted from stimulus events or derived from raw events.tsv timing analysis. Narrow window (±0.5s) focuses on motor response and immediate post-response processing.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

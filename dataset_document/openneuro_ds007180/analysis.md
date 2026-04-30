@@ -1,8 +1,7 @@
 # Exo-EEG Experiment
 
 **Dataset**: `openneuro_ds007180` | **Year**: 2026 | **URL**: https://openneuro.org/datasets/ds007180
-**Category**: Complex Applied | **Subjects**: 25 | **Files (Completed)**: 25 | **Channels**: 63 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 25 | **Files (Completed)**: 25 | **Channels**: 63 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ EEG was recorded during interaction with an exoskeleton in a gait or robotic-ass
 > **Kernel SHA256**: `285edc6ad3d6ac3ecf0ff53ece92dfbba1db2e6d56f9b640bb7d11eaadbc07fb`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -162,3 +162,12 @@ EEG was recorded during interaction with an exoskeleton in a gait or robotic-ass
 
 - **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
 - **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

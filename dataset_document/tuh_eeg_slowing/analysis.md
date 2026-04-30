@@ -1,8 +1,7 @@
 # TUH EEG Slowing Corpus
 
 **Dataset**: `tuh_eeg_slowing` | **Year**: 2017 | **URL**: https://isip.piconepress.com/projects/nedc/html/tuh_eeg
-**Category**: Biological State | **Subjects**: 38 | **Files (Completed)**: 112 | **Channels**: 27-41 | **Sampling Rate**: 250/256/400/512 Hz
-**Manual Review**: Chengxuan Qin
+**Category**: Biological State | **Subjects**: 38 | **Files (Completed)**: 112 | **Channels**: 27-41 | **Sampling Rate**: 250/256/400/512 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -14,14 +13,17 @@ Clinical EEGs in the dataset utilize two common reference configurations: averag
 
 ## File Scan Result
 
+> **Kernel SHA256**: `25d3dd7c66e5c06b63d712490f8a5a2603faeb1a5d721ffa93853ebf56e412ab`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |---|---|---|---|---|
-| `seiz` | varies | event | raw | Seizure activity |
-| `slow` | varies | event | raw | EEG slowing (pathological slow-wave activity) |
-| `bckg` | varies | event | raw | Background - normal EEG |
-
+| `bckg` | 2150 | event | raw | Background - normal EEG |
+| `seiz` | 2143 | event | raw | Seizure activity |
+| `slow` | 2119 | event | raw | EEG slowing (pathological slow-wave activity) |
 
 ### Info
 
@@ -30,7 +32,6 @@ Clinical EEGs in the dataset utilize two common reference configurations: averag
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
-
 
 ## Tasks
 
@@ -66,6 +67,7 @@ Clinical EEGs in the dataset utilize two common reference configurations: averag
 - **Notes**: 
 
 ## Data Quality Notes
+-
 
 ## Kernel Responsibilities
 

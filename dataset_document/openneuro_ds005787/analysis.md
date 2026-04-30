@@ -1,18 +1,17 @@
 # NOD-EEG
 
 **Dataset**: `openneuro_ds005787` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005787
-**Category**: Others | **Subjects**: N/A | **Files (Completed)**: 896 | **Channels**: 64 | **Sampling Rate**: 250 Hz
+**Category**: Others | **Subjects**: N/A | **Files (Completed)**: 896 | **Channels**: 64 | **Sampling Rate**: 250 Hz | **Manual Review**:
 
 ## Paradigm
 
 The NOD-EEG dataset contains 64-channel EEG recordings from a stimulus-response paradigm. Each trial includes a stimulus onset (`stim_on`), participant button-press response (`resp`), and block boundary markers (`begin`, `end`). The precise experimental task and stimuli are described in the dataset README.
 
-
 ## File Scan Result
 
-
-> **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 ### Event Structure
 
@@ -54,12 +53,7 @@ The NOD-EEG dataset contains 64-channel EEG recordings from a stimulus-response 
 - Very high total event count for `resp`; verify no duplicate events.
 - Apply bandpass filter (1-40 Hz) and artifact rejection prior to epoching.
 
-
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
 > **Status**: failed
-
----
-
-> **auto_eeg FAILED**: While the NOD-EEG dataset has a clear stimulus-response event structure (stim_on, resp, begin, end) and a described paradigm, all 28 reference extractions are classified as irrelevant or junk with no relevant/partial support for an ML task. Additionally, NOD-EEG does not qualify as a 'well-known public EEG dataset' (unlike classic paradigms such as MI-BCI, P300, or ERP CORE), and the analysis notes flag manual review is required ('wait_manual_review') to verify epoch parameters and task specifics.

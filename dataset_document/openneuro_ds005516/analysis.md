@@ -1,8 +1,7 @@
 # Healthy Brain Network (HBN) EEG - Release 11
 
 **Dataset**: `openneuro_ds005516` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005516
-**Category**: Complex Applied | **Subjects**: 3000 | **Files (Completed)**: 3396 | **Channels**: 129 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 3000 | **Files (Completed)**: 3396 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ The Healthy Brain Network (HBN) EEG Release 11 is a large-scale, multi-task deve
 > **Kernel SHA256**: `c85548ebc527e585364c42eb6356397ebe0c9bbb52fd1c24f4f9166dba15ce36`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -226,3 +226,12 @@ The Healthy Brain Network (HBN) EEG Release 11 is a large-scale, multi-task deve
   - DOI: `10.1016/j.neuroimage.2020.117001` — Video watching segments concatenated with resting state for full-recording FC computation
   - DOI: `10.1101/089060` — Age and sex modulate variability of neural responses to naturalistic videos in developmental sample
 - **Kernel Notes**: Movie viewing blocks (video_start: 1,666, video_stop: 1,541) provide sustained naturalistic stimulation for FC analysis. Clip durations 117-230s. Concatenated with resting and other tasks for subject-level connectivity matrices. Naturalistic paradigm may elicit inter-subject correlation patterns.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

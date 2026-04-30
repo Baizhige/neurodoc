@@ -1,9 +1,8 @@
 # EEG data from an auditory oddball task
 
 **Dataset**: `openneuro_ds003061` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003061
-**Category**: Sensory/Response | **Subjects**: 39 | **Files (Completed)**: 39
+**Category**: Sensory/Response | **Subjects**: 39 | **Files (Completed)**: 39 | **Manual Review**: Pending
 **Channels**: 79 | **Sampling Rate**: 256 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ An auditory three-stimulus oddball task in which participants pressed a key in r
 > **Kernel SHA256**: `590cef96bf678dafeb0e4d820a1eae0922a577f8f75c8c73fe24db793bf95e50`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -98,3 +98,12 @@ An auditory three-stimulus oddball task in which participants pressed a key in r
   | `oddball_with_response` | response_time | Reaction time: time from stimulus onset to keypress (in seconds) |
 - **Regression Target**: `response_time` (from `misc` channel or computed as time(response) - time(stimulus))
 - **Kernel Notes**: Compute RT = timestamp(response) - timestamp(stimulus) for each oddball_with_response trial. RT provides continuous target for regression, capturing variability in decision speed. Motor-related components (MRN, LRP) appear ~100-200ms around response; shorter window (-0.2 to 1.0s) captures perception-to-action pipeline.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

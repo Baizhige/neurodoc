@@ -1,8 +1,7 @@
 # Audiocue walking study
 
 **Dataset**: `openneuro_ds001971` | **Year**: 2019 | **URL**: https://openneuro.org/datasets/ds001971
-**Category**: Complex Applied | **Subjects**: 18 | **Files (Completed)**: 273 | **Channels**: 115 | **Sampling Rate**: 512 Hz
-**Manual Review**:
+**Category**: Complex Applied | **Subjects**: 18 | **Files (Completed)**: 273 | **Channels**: 115 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 > **Kernel SHA256**: `59420e30c0a5baa281428b5581da12b1fbc6a0ff364452a955cac2a8f7a012d1`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

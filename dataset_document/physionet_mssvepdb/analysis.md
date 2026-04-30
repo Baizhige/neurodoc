@@ -1,13 +1,17 @@
 # Multi-Stimulus SSVEP Database
 
 **Dataset**: `physionet_mssvepdb` | **Year**: 2021 | **URL**: N/A
-**Category**: Sensory/Response | **Subjects**: 11 | **Files (Completed)**: 235 | **Channels**: 14 | **Sampling Rate**: 128 Hz (dataset3) or 250 Hz (datasets 1-2)
+**Category**: Sensory/Response | **Subjects**: 11 | **Files (Completed)**: 235 | **Channels**: 14 | **Sampling Rate**: 128 Hz (dataset3) or 250 Hz (datasets 1-2) | **Manual Review**:
 
 ## Paradigm
 
 Eleven subjects performed steady-state visual evoked potential (SSVEP) tasks across three recording datasets with different EEG hardware (Nakanishi et al., 2018). Subjects fixated on flickering visual stimuli at different frequencies while EEG was recorded. Datasets 1 and 2 used a BrainProducts system (256 channels, 250 Hz); dataset 3 used an Emotiv EPOC (14 channels, 128 Hz). Each recording corresponds to one SSVEP stimulus condition (frequency). The kernel creates a single whole-recording `SSVEP` annotation for each file; the stimulus frequency is encoded in the filename/subdirectory.
 
 ## File Scan Result
+
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 - **Scan Status**: Pending
 - **Files Expected**: TBD
@@ -47,6 +51,7 @@ Eleven subjects performed steady-state visual evoked potential (SSVEP) tasks acr
 - **Label Route**: `Annotation`
 - **Target Definition**: Frequency label derived from filename; e.g., map each stimulus frequency to a class index.
 - **Notes**: Stimulus frequencies and their mapping to class indices must be parsed from file paths or metadata. Process datasets 1/2 (BrainProducts, 256ch, 250Hz) and dataset 3 (Emotiv, 14ch, 128Hz) **separately** due to different channel counts and sampling rates.
+
 ## Data Quality Notes
 
 - Hardware differences across datasets: datasets 1-2 (BrainProducts, 256 channels, 250 Hz) vs. dataset 3 (Emotiv EPOC, 14 channels, 128 Hz); do not mix datasets in cross-subject analysis without normalization.
@@ -56,11 +61,5 @@ Eleven subjects performed steady-state visual evoked potential (SSVEP) tasks acr
 
 ## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://www.physionet.org/
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

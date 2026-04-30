@@ -1,8 +1,7 @@
 # EEG-Asymmetries Dataset
 
 **Dataset**: `openneuro_ds007172` | **Year**: 2026 | **URL**: https://openneuro.org/datasets/ds007172
-**Category**: High-level Mental | **Subjects**: 100 | **Files (Completed)**: 501 | **Channels**: 32 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 100 | **Files (Completed)**: 501 | **Channels**: 32 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Multi-task EEG battery investigating hemispheric asymmetries across resting stat
 > **Kernel SHA256**: `e5fb94a11a73b79da1de5255127daf5e9ced0fbf77136528adbaac579d787729`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -139,3 +139,12 @@ Multi-task EEG battery investigating hemispheric asymmetries across resting stat
   | `Stimulus/S22` | 2 | House visual category 3 |
 - **Evidence**: DOI 10.1080/1357650X.2025.2591660
 - **Kernel Notes**: Shorter 1s window suitable for visual discrimination tasks with earlier peak latencies. S11 and S21 have ~12,000 trials each; S22 has ~4,000 trials. Class imbalance may require oversampling or class weighting. Overlap at 200ms provides adequate temporal resolution for category-specific visual evoked potentials.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

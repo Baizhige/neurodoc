@@ -1,8 +1,7 @@
 # SRM Resting-State EEG
 
 **Dataset**: `openneuro_ds003775` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003775
-**Category**: Biological State | **Subjects**: 111 | **Files (Completed)**: 152 | **Channels**: 64 | **Sampling Rate**: 1024 Hz
-**Manual Review**: Pending
+**Category**: Biological State | **Subjects**: 111 | **Files (Completed)**: 152 | **Channels**: 64 | **Sampling Rate**: 1024 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Four minutes of uninterrupted eyes-closed resting-state EEG recorded from health
 > **Kernel SHA256**: `e962bd927fb0b37a55f8e4f9c5988bcf17e17df5e2de6e262fcb438084b429db`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -76,3 +76,12 @@ Four minutes of uninterrupted eyes-closed resting-state EEG recorded from health
 - **Evidence**:
   - DOI: `10.1016/j.dib.2022.108647` — Dataset documentation describes 4-minute eyes-closed resting-state suitable for spectral power, connectivity, and individual difference studies; no discrete trial events, only continuous recording with resting-state annotation
 - **Kernel Notes**: Pure 4-minute eyes-closed resting-state with no discrete events. Extract 2-second epochs with 50% overlap for finer temporal resolution. Use for exploratory analyses such as individual alpha frequency estimation, microstate analysis, sliding-window connectivity metrics, or unsupervised clustering. The only available event `resting-state-eyes-closed` (152 occurrences) marks the continuous recording segments rather than discrete trial markers. Suitable for normative baseline characterization and individual differences research.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

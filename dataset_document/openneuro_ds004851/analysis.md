@@ -1,8 +1,7 @@
 # HID (High-Density EEG Operational Dataset)
 
 **Dataset**: `openneuro_ds004851` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004851
-**Category**: Complex Applied | **Subjects**: 65 | **Files (Completed)**: 65 | **Channels**: 72 | **Sampling Rate**: 2048 Hz
-**Manual Review**:
+**Category**: Complex Applied | **Subjects**: 65 | **Files (Completed)**: 65 | **Channels**: 72 | **Sampling Rate**: 2048 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ High-density EEG (72 channels) was recorded in an operational context involving 
 > **Kernel SHA256**: `cfaa22cb59fd5feef36bd7eb0386d427a2ef3fa4d2c8b7d597b4c6f0f3d7f0bd`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,9 +1,8 @@
 # EEG: Reinforcement Learning in Parkinson's
 
 **Dataset**: `openneuro_ds003506` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003506
-**Category**: High-level Mental | **Subjects**: 56 | **Files (Completed)**: 84
+**Category**: High-level Mental | **Subjects**: 56 | **Files (Completed)**: 84 | **Manual Review**: Pending
 **Channels**: 67 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ This study investigates the Reward Positivity (RewP) EEG component in Parkinson'
 > **Kernel SHA256**: `a33ab40e6191a81b59353650e798b68594c25496871c674465db6705d09b2ab8`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -106,3 +106,12 @@ This study investigates the Reward Positivity (RewP) EEG component in Parkinson'
 - **Meta Level**: raw
 - **Target Definition**: Epochs aligned to imperative stimulus onset to capture stimulus-locked ERPs and response preparation.
 - **Notes**: Event code mapping required: `S  4` (10,918 events) likely corresponds to imperative stimulus requiring response. The analysis.md references 'Imperative Stimulus' (84 events per file) but actual event counts suggest multiple stimulus types. Verify mapping in events.tsv.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

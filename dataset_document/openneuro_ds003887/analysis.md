@@ -1,9 +1,8 @@
 # Capacity for Movement is an Organisational Principle in Object Representations: EEG Data from Experiment 2
 
 **Dataset**: `openneuro_ds003887` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds003887
-**Category**: High-level Mental | **Subjects**: 24 | **Files (Completed)**: 48
+**Category**: High-level Mental | **Subjects**: 24 | **Files (Completed)**: 48 | **Manual Review**: Pending
 **Channels**: 127 | **Sampling Rate**: 250 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ Participants performed time-pressured categorization of static images based on m
 > **Kernel SHA256**: `1684c7a58a7a66d24b19e3f6e1ee3ebc0699fd3edc146da0c1943527eb111094`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -105,3 +105,12 @@ Participants performed time-pressured categorization of static images based on m
 - **Target Definition**: Same as Classical Task 1
 - **Evidence**: DOI: 10.1016/j.neuroimage.2022.119517 | DOI: 10.31234/osf.io/3x2qh
 - **Kernel Notes**: Time-resolved MVPA analysis examining when neural classifiers can distinguish movement-capable vs non-movement-capable objects. Standard stimulus-locked epoch window (-0.2s to 1.0s) captures early visual ERP components and later categorization-related activity. Baseline correction applied to remove pre-stimulus drift.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

@@ -1,8 +1,7 @@
 # Cognitive Electrophysiology in Socioeconomic Context in Adulthood: An EEG dataset
 
 **Dataset**: `openneuro_ds006018` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006018
-**Category**: High-level Mental | **Subjects**: 127 | **Files (Completed)**: 357 | **Channels**: 31 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 127 | **Files (Completed)**: 357 | **Channels**: 31 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A suite of standardized ERP tasks from the ERP CORE compendium (Kappenman et al.
 > **Kernel SHA256**: `7998c7fdd31fcb765d3a858c2d64059ceff98c366149177134ff2e5696d06109`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -152,3 +152,12 @@ A suite of standardized ERP tasks from the ERP CORE compendium (Kappenman et al.
 - **Evidence**:
   - DOI: `10.1038/s41597-025-05209-z` — Describes openneuro_ds006018 dataset containing EEG recordings during N400 semantic priming paradigm with stimulus event codes S111 and S112.
 - **Kernel Notes**: N400 analysis requires centroparietal ROI for amplitude measurement. Epoch window [-0.2, 1.0]s captures N400 peak (~300-500ms).
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

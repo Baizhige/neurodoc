@@ -1,8 +1,7 @@
 # Neuma (Neuromarketing)
 
 **Dataset**: `openneuro_ds004588` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004588
-**Category**: Complex Applied | **Subjects**: 42 | **Files (Completed)**: 84 | **Channels**: 6 | **Sampling Rate**: 300 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 42 | **Files (Completed)**: 84 | **Channels**: 6 | **Sampling Rate**: 300 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A multimodal neuromarketing study where 42 participants browsed supermarket prod
 > **Kernel SHA256**: `ed1d082a45a87a71d0c3b10c1e2c9c35ec765c84e5f403e02f68b2c91509ac7a`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -76,3 +76,12 @@ A multimodal neuromarketing study where 42 participants browsed supermarket prod
   | `MouseButtonLeft pressed` | 0 | Left mouse button press (product selection action) |
 - **Evidence**: None — task inferred from paradigm. Left mouse button presses (1734 total) indicate product selection moments during free browsing. The -0.2 to 1.0s window captures motor preparation and execution phases of the click action. While no published paper explicitly analyzes EEG around click events separately from product viewing, this represents a plausible motor-related potential analysis.
 - **Kernel Notes**: Scroll wheel events (`MouseWheelDown120 pressed`, `MouseWheelUp120 pressed`) are admin data—exclude from analysis. Very limited spatial resolution with 6 EEG channels. Mouse clicks occur asynchronously relative to image onsets; variable timing within product viewing windows may introduce latency confounds. Consider aligning epochs by click onset rather than image onset for this task.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

@@ -1,8 +1,7 @@
 # Dataset of EEG Recordings of Pediatric Patients with Epilepsy Based on the 10-20 System
 
 **Dataset**: `openneuro_ds003555` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003555
-**Category**: Biological State | **Subjects**: 30 | **Files (Completed)**: 257 | **Channels**: 52 | **Sampling Rate**: 2000 Hz
-**Manual Review**:
+**Category**: Biological State | **Subjects**: 30 | **Files (Completed)**: 257 | **Channels**: 52 | **Sampling Rate**: 2000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Continuous sleep EEG recordings from pediatric patients with epilepsy, focused o
 > **Kernel SHA256**: `7e787ebc9fb9ca76b842349fc82a88f2ab8639a65e9c4c8bc767dd9ef778e42c`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

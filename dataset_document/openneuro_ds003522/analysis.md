@@ -1,9 +1,8 @@
 # EEG: Three-Stimulus Auditory Oddball and Rest in Acute and Chronic TBI
 
 **Dataset**: `openneuro_ds003522` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003522
-**Category**: Sensory/Response | **Subjects**: 62 | **Files (Completed)**: 196
+**Category**: Sensory/Response | **Subjects**: 62 | **Files (Completed)**: 196 | **Manual Review**: Pending
 **Channels**: 65 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ This study investigates EEG markers in mild traumatic brain injury (mTBI) using 
 > **Kernel SHA256**: `aa376756639f2ca95904d4b9d34917117ee655424ca06b2435883cb846f5bb2f`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -130,3 +130,12 @@ This study investigates EEG markers in mild traumatic brain injury (mTBI) using 
 - **Event ID Verification**: Standard Tone (11,750), Novel Tone (11,748), Target Tone (11,620) counts suggest per-subject totals across 62 subjects. Verify event structure in events.tsv to confirm trial counts align with paradigm description (~80% standard, ~10% novel, ~10% target).
 - **Undocumented Codes**: The 'S  4'–'S 10' codes (11,621 total) and other S-codes require cross-referencing with stimulus timing files. Current tasks exclude these codes pending verification of their relationship to primary paradigm events.
 - **Novel Tone Count Discrepancy**: Novel Tone (11,748) nearly matching Standard Tone (11,750) is atypical for oddball paradigms—verify trial structure to confirm 1:1 pairing is intentional or an artifact.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

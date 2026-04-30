@@ -1,9 +1,8 @@
 # EEG-attention-rsvp-exp2
 
 **Dataset**: `openneuro_ds004817` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004817
-**Category**: Sensory/Response | **Subjects**: 20 | **Files (Completed)**: 20
+**Category**: Sensory/Response | **Subjects**: 20 | **Files (Completed)**: 20 | **Manual Review**:
 **Channels**: 63 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ A Rapid Serial Visual Presentation (RSVP) task (Experiment 2) investigating the 
 > **Kernel SHA256**: `3a82a14f640b20e68beb91e412e3f7f183abfdb657e0d2a4b15b4857043dc177`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,8 +1,7 @@
 # EEG during Near-Threshold Visual Detection Tasks (No-Cue, 50%-Cue, 100%-Cue)
 
 **Dataset**: `openneuro_ds006171` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006171
-**Category**: Sensory/Response | **Subjects**: 26 | **Files (Completed)**: 104 | **Channels**: 144 | **Sampling Rate**: 1024 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 26 | **Files (Completed)**: 104 | **Channels**: 144 | **Sampling Rate**: 1024 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed near-threshold visual detection tasks across three cueing
 > **Kernel SHA256**: `381e414604cb6acd819041e926bfee9c690c53bcd0d53f4d8c584953860a01ea`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -139,3 +139,12 @@ Participants performed near-threshold visual detection tasks across three cueing
 
 - **Evidence**: Paradigm description indicates response_time stored in events.tsv; plausible from experimental design (reaction time is standard dependent variable in detection tasks)
 - **Kernel Notes**: Preserve response_time derivation source (events.tsv column), unit (seconds), and version metadata. Use response-aligned epoching (tmax=0.5s captures early motor response; exclude trials with response_time > 2.0s as outliers). Continuous predictors available: gabor_contrast, subjective_r, objective_r.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

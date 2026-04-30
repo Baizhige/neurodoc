@@ -1,8 +1,7 @@
 # Human Infant EEG for 200 Object Images in Rapid Visual Streams
 
 **Dataset**: `openneuro_ds005106` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005106
-**Category**: Sensory/Response | **Subjects**: 42 | **Files (Completed)**: 42 | **Channels**: 32 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 42 | **Files (Completed)**: 42 | **Channels**: 32 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Human infant EEG dataset recorded while infants viewed 200 distinct object image
 > **Kernel SHA256**: `3c079cb5e9aafd2fd2562b71d3eb2aa2e06908c03425ba325d1b3c70042a0b3d`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -299,3 +299,12 @@ Human infant EEG dataset recorded while infants viewed 200 distinct object image
 - OSF: https://www.31234/osf.io/dzrkq
 
 **Kernel Notes**: With ~217-220 trials per object across 42 subjects (~5 trials/object/subject), this task requires averaging within subjects or using cross-session validation. High-dimensional classification (200 classes) may suffer from low sample-to-class ratio; hierarchical classification (superordinate → category → object) is recommended. Infant EEG SNR limitations may require data augmentation or regularization.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

@@ -1,8 +1,7 @@
 # Gaffrey Lab Infant EEG Microstates Reliability
 
 **Dataset**: `openneuro_ds004635` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004635
-**Category**: Biological State | **Subjects**: 48 | **Files (Completed)**: 1 | **Channels**: 129 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: Biological State | **Subjects**: 48 | **Files (Completed)**: 1 | **Channels**: 129 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Infants watched a series of engaging and relaxing videos to facilitate recording
 > **Kernel SHA256**: `579ff38edceb732e54126de9b90c5c74352adca4bc60bd785fcaf2b0cc022ec2`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,7 +1,7 @@
 # Selective Auditory Attention EEG Dataset (Normal-Hearing and Hearing-Impaired)
 
 **Dataset**: `zenodo_3618205` | **Year**: 2020 | **URL**: https://zenodo.org/records/3618205
-**Category**: High-level Mental | **Subjects**: 44 | **Files (Completed)**: 74 | **Channels**: 73 | **Sampling Rate**: 512 Hz
+**Category**: High-level Mental | **Subjects**: 44 | **Files (Completed)**: 74 | **Channels**: 73 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -9,10 +9,10 @@ Forty-four participants (22 normal-hearing, 22 hearing-impaired) underwent EEG r
 
 ## File Scan Result
 
-
 > **Kernel SHA256**: `25fd07109b6a06499cc25ac1d336133aca00fb8d8a4ab201224974d4adc3b637`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

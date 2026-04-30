@@ -1,17 +1,17 @@
 # STRONG (Social-Cognitive EEG Dataset)
 
 **Dataset**: `openneuro_ds004849` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004849
-**Category**: Complex Applied | **Subjects**: 1 | **Files (Completed)**: 1 | **Channels**: 64 | **Sampling Rate**: 128 Hz
+**Category**: Complex Applied | **Subjects**: 1 | **Files (Completed)**: 1 | **Channels**: 64 | **Sampling Rate**: 128 Hz | **Manual Review**:
 
 ## Paradigm
 
 An EEG dataset recorded during a social-cognitive paradigm involving multiple hierarchically encoded stimulus conditions. The 5-digit numeric trigger codes encode stimulus type, valence, and response. The dataset contains a single aggregated file across participants; specific task details require decoding from events.tsv.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 ### Event Structure
 
@@ -39,6 +39,7 @@ An EEG dataset recorded during a social-cognitive paradigm involving multiple hi
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Potential Task 1: Stimulus Classification (multiclass)
@@ -68,12 +69,7 @@ An EEG dataset recorded during a social-cognitive paradigm involving multiple hi
 - Single aggregated file; individual subject data not separable without additional metadata.
 - Full trigger decode required from events.tsv.
 
-
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
 > **Status**: failed
-
----
-
-> **auto_eeg FAILED**: No relevant or partial references exist to support a concrete ML task on this dataset. While the analysis.md describes a clear multiclass classification task with 12 stimulus conditions from event triggers, all reference papers are classified as irrelevant or uncertain, and the exception for well-known public datasets cannot be applied since references do exist.

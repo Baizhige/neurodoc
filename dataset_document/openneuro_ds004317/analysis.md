@@ -1,9 +1,8 @@
 # Mood Manipulation and PST, Experiment 2
 
 **Dataset**: `openneuro_ds004317` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004317
-**Category**: High-level Mental | **Subjects**: 50 | **Files (Completed)**: 50
+**Category**: High-level Mental | **Subjects**: 50 | **Files (Completed)**: 50 | **Manual Review**: Pending
 **Channels**: 66 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ A reinforcement learning task (Probabilistic Selection Task) performed by partic
 > **Kernel SHA256**: `no_kernel`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -148,3 +148,12 @@ A reinforcement learning task (Probabilistic Selection Task) performed by partic
   | `FB` (S134) | 2 | Feedback from stimulus pair C |
 - **Evidence**: Indirect evidence only; supported by paradigm structure where participants learn stimulus-outcome associations across multiple pairs.
 - **Kernel Notes**: S116-S161 events likely encode different stimulus pairs with varying reinforcement probabilities. Examining neural responses by pair could reveal differential learning rates. TESTING events (S  8, 7126 total) may contain additional sub-label information in events.tsv trial_type column.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

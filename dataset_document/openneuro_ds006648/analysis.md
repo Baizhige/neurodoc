@@ -1,8 +1,13 @@
+**Manual Review**:
 ## Paradigm
 
 Participants read and evaluated 210 short English-language texts including Haikus and Senryus on five subjective dimensions related to aesthetic and creative cognition: Aesthetic Appeal, Vivid Imagery, Being Moved, Originality, and Creativity. EEG was recorded during reading using a 64-channel BioSemi system (70 channels total including references). This is the first of two poetry datasets (companion to ds006647) with full N=47 subject coverage.
 
 ## File Scan Result
+
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 ### Event Structure
 
@@ -55,6 +60,7 @@ Participants read and evaluated 210 short English-language texts including Haiku
  | `65288` | 6 | BioSemi condition code 65288 |
  | `65285` | 7 | BioSemi condition code 65285 |
  | `65280` | 8 | BioSemi condition code 65280 |
+
 ## Data Quality Notes
 
 - Codes 65285-65288 and 65280 are rare events; consider excluding from classification due to imbalance.
@@ -63,15 +69,5 @@ Participants read and evaluated 210 short English-language texts including Haiku
 
 ## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006648
-
----
-
-> **auto_eeg FAILED**: No reference extractions were classified as 'relevant' or 'partial' — all 14 references are 'uncertain'. While the dataset has clear event structure (BioSemi triggers 65280-65288) and well-documented paradigm information in analysis.md, the strict feasibility criteria require at least one confirmed relevant reference. The dataset structure supports classification tasks (poetry aesthetic evaluation with multiple conditions), but this cannot be established without reference validation.
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

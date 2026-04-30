@@ -1,8 +1,7 @@
 # CHB-MIT Scalp EEG Database
 
 **Dataset**: `physionet_chbmit` | **Year**: 2010 | **URL**: https://physionet.org/content/chbmit/1.0.0/
-**Category**: Biological State | **Subjects**: 23 | **Files (Completed)**: 686 | **Channels**: 23 | **Sampling Rate**: 256 Hz
-**Manual Review**: Zhida Shang
+**Category**: Biological State | **Subjects**: 23 | **Files (Completed)**: 686 | **Channels**: 23 | **Sampling Rate**: 256 Hz | **Manual Review**: Zhida Shang
 
 ## Paradigm
 
@@ -10,10 +9,10 @@ Twenty-three pediatric subjects (22 original cases plus chb24 added later; 5 mal
 
 ## File Scan Result
 
-
 > **Kernel SHA256**: `eb70166664a91b7840320b90d885d45471c1a9282a38f440c5b085e2ee00d584`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,8 +1,7 @@
 # APPLESEED Infant EEG Dataset
 
 **Dataset**: `openneuro_ds003710` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003710
-**Category**: Biological State | **Subjects**: 13 | **Files (Completed)**: 48 | **Channels**: 32 | **Sampling Rate**: 5000 Hz
-**Manual Review**: Pending
+**Category**: Biological State | **Subjects**: 13 | **Files (Completed)**: 48 | **Channels**: 32 | **Sampling Rate**: 5000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Longitudinal spontaneous EEG recordings from infants at 4, 8, and 12 months of a
 > **Kernel SHA256**: `a00915a69eefe39c6bbea614db31be42ce7b8aba20ade7579fa65222fd072c1f`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -88,3 +88,12 @@ Longitudinal spontaneous EEG recordings from infants at 4, 8, and 12 months of a
 - **Evidence**:
   - Plausible from paradigm: The APPLESEED paradigm description indicates attention-getter events orient infant attention before stimulus trials. Event ID `admin: Stimulus/S  5` (1406 occurrences) likely corresponds to attention-getter markers based on count ratios and paradigm structure.
 - **Kernel Notes**: Extract epochs around attention-getter onset for analysis of attentional orienting responses. Symmetric window (tmin=-0.5s, tmax=0.5s) captures pre- and post-attention-getter baseline and response. Use `admin: Stimulus/S  6` (64 occurrences) for pause-related events if needed; exclude `New Segment` events from epoching. Downsample from 5000 Hz. High artifact rate expected due to infant population.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

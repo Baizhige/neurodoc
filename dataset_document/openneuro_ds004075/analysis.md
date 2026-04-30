@@ -1,8 +1,7 @@
 # what_are_we_talking_about
 
 **Dataset**: `openneuro_ds004075` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004075
-**Category**: Others | **Subjects**: N/A | **Files (Completed)**: 115 | **Channels**: 64 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: Others | **Subjects**: N/A | **Files (Completed)**: 115 | **Channels**: 64 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ This dataset contains EEG recordings from a language/context processing experime
 > **Kernel SHA256**: `84d8ddf6ad848a2c1fa97d4402605a95886645dd847a9385862a4a7764e30360`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

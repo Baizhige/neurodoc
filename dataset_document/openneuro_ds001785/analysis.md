@@ -1,8 +1,7 @@
 # Evidence accumulation relates to perceptual consciousness and monitoring
 
 **Dataset**: `openneuro_ds001785` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds001785
-**Category**: High-level Mental | **Subjects**: 21 | **Files (Completed)**: 54 | **Channels**: 71 | **Sampling Rate**: 1024 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 21 | **Files (Completed)**: 54 | **Channels**: 71 | **Sampling Rate**: 1024 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed a threshold-level vibrotactile detection task in which a 
 > **Kernel SHA256**: `86c9fc412900d161a63c11717d321a8e57a629d6f374b06bcdbda89495328629`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

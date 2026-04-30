@@ -1,7 +1,7 @@
 # EEG/fNIRS Motion Artifact Dataset
 
 **Dataset**: `physionet_motionartifact` | **Year**: 2018 | **URL**: https://physionet.org/content/motion-artifact/1.0.0/
-**Category**: Others | **Subjects**: 32 | **Files (Completed)**: 32 | **Channels**: 10 | **Sampling Rate**: 2048 Hz (EEG), 200 Hz (fNIRS)
+**Category**: Others | **Subjects**: 32 | **Files (Completed)**: 32 | **Channels**: 10 | **Sampling Rate**: 2048 Hz (EEG), 200 Hz (fNIRS) | **Manual Review**:
 
 ## Paradigm
 
@@ -12,6 +12,7 @@ Thirty-two recordings (23 EEG + 9 fNIRS) were collected from subjects performing
 > **Kernel SHA256**: `f5f23b6eaff653b5422dd754f5674fe93940d1734cb3bd7df0b240c6b5021314`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

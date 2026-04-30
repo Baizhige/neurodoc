@@ -1102,13 +1102,16 @@ function parseMeta(raw) {
   const l1 = raw.match(/\*\*Dataset\*\*[^\n]+/);
   if (l1) l1[0].split('|').forEach(p => { const m=p.match(/\*\*([^*]+)\*\*:\s*`?([^`|*\n]+)`?/); if(m) f[m[1].trim()]=m[2].trim(); });
   const l2 = raw.match(/\*\*Category\*\*[^\n]+/);
-  if (l2) l2[0].split('|').forEach(p => { const m=p.match(/\*\*([^*]+)\*\*:\s*`?([^`|*\n]+)`?/); if(m) f[m[1].trim()]=m[2].trim(); });
+  if (l2) l2[0].split('|').forEach(p => { const m=p.match(/\*\*([^*]+)\*\*:\s*`?([^`|*\n]*)`?/); if(m) f[m[1].trim()]=m[2].trim(); });
   const tm = raw.match(/^#\s+(.+)/m); f['_title'] = tm ? tm[1].trim() : '';
-  const mrm = raw.match(/\*\*Manual Review\*\*:\s*([^\n]+)/); f['_manualReview'] = mrm ? mrm[1].trim() : '';
+  const inlineMR = (f['Manual Review'] || '').trim();
+  const legacyMR = raw.match(/^\*\*Manual Review\*\*:\s*([^\n]*)$/m);
+  f['_manualReview'] = inlineMR || (legacyMR ? legacyMR[1].trim() : '');
   return f;
 }
 function serializeMeta(f) {
-  return `**Dataset**: \`${f['Dataset']||''}\` | **Year**: ${f['Year']||''} | **URL**: ${f['URL']||''}\n**Category**: ${f['Category']||''} | **Subjects**: ${f['Subjects']||''} | **Files (Completed)**: ${f['Files (Completed)']||''} | **Channels**: ${f['Channels']||''} | **Sampling Rate**: ${f['Sampling Rate']||''}`;
+  const manualReview = ('_manualReview' in f ? f['_manualReview'] : (f['Manual Review'] || '')).trim();
+  return `**Dataset**: \`${f['Dataset']||''}\` | **Year**: ${f['Year']||''} | **URL**: ${f['URL']||''}\n**Category**: ${f['Category']||''} | **Subjects**: ${f['Subjects']||''} | **Files (Completed)**: ${f['Files (Completed)']||''} | **Channels**: ${f['Channels']||''} | **Sampling Rate**: ${f['Sampling Rate']||''} | **Manual Review**: ${manualReview}`;
 }
 function parseMarkdownTable(text) {
   const lines = text.split('\n').filter(l => l.trim().startsWith('|'));
@@ -1616,14 +1619,18 @@ function renderMetaParadigm(content) {
 function appendManualReview() {
   const name = document.getElementById('m-mr-append').value.trim();
   if (!name) return;
-  const mrRe = /\*\*Manual Review\*\*:\s*([^\n]+)/;
-  const m = rawContent.match(mrRe);
-  if (m) {
-    const existing = m[1].trim();
-    rawContent = rawContent.replace(mrRe, `**Manual Review**: ${existing ? existing + ' / ' + name : name}`);
-  } else {
-    const cat2 = rawContent.match(/\*\*Category\*\*[^\n]*/);
-    if (cat2) rawContent = rawContent.replace(cat2[0], cat2[0] + `\n**Manual Review**: ${name}`);
+  const cat2 = rawContent.match(/^\*\*Category\*\*[^\n]*$/m);
+  if (cat2) {
+    const catLine = cat2[0];
+    const inlineMR = catLine.match(/\|\s*\*\*Manual Review\*\*:\s*([^\n]*)$/);
+    const legacyMR = rawContent.match(/^\*\*Manual Review\*\*:\s*([^\n]*)$/m);
+    const existing = inlineMR ? inlineMR[1].trim() : (legacyMR ? legacyMR[1].trim() : '');
+    const nextValue = existing ? `${existing} / ${name}` : name;
+    const nextCatLine = inlineMR
+      ? catLine.replace(/\|\s*\*\*Manual Review\*\*:\s*[^\n]*$/, `| **Manual Review**: ${nextValue}`)
+      : `${catLine} | **Manual Review**: ${nextValue}`;
+    rawContent = rawContent.replace(catLine, nextCatLine);
+    rawContent = rawContent.replace(/\n\*\*Manual Review\*\*:[^\n]*\n(?=\s*##\s+Paradigm)/m, '\n');
   }
   dirty = true;
   document.getElementById('m-mr-append').value = '';
@@ -1647,10 +1654,12 @@ function collectMetaParadigm() {
   const fields = { Dataset: meta['Dataset']||'', Year: document.getElementById('m-year')?.value.trim()||'',
     URL: document.getElementById('m-url')?.value.trim()||'', Category: document.getElementById('m-category')?.value.trim()||'',
     Subjects: document.getElementById('m-subjects')?.value.trim()||'', 'Files (Completed)': document.getElementById('m-files')?.value.trim()||'',
-    Channels: document.getElementById('m-channels')?.value.trim()||'', 'Sampling Rate': document.getElementById('m-sr')?.value.trim()||'' };
+    Channels: document.getElementById('m-channels')?.value.trim()||'', 'Sampling Rate': document.getElementById('m-sr')?.value.trim()||'',
+    _manualReview: meta['_manualReview'] || '' };
   const newMeta = serializeMeta(fields);
   if (title) rawContent = rawContent.replace(/^#\s+.+/m, `# ${title}`);
   rawContent = rawContent.replace(/\*\*Dataset\*\*[^\n]+\n\*\*Category\*\*[^\n]+/, newMeta);
+  rawContent = rawContent.replace(/\n\*\*Manual Review\*\*:[^\n]*\n(?=\s*##\s+Paradigm)/m, '\n');
   rawContent = replaceSection(rawContent, 'Paradigm', document.getElementById('para-body')?.value||'');
   dirty = true;
 }

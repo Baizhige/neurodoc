@@ -1,8 +1,7 @@
 # Dataset of Intracranial EEG during Cortical Stimulations Evoking Negative Motor Responses
 
 **Dataset**: `openneuro_ds006519` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006519
-**Category**: Action/Output | **Subjects**: 23 | **Files (Completed)**: 35 | **Channels**: 33 | **Sampling Rate**: 4096 Hz
-**Manual Review**: Pending
+**Category**: Action/Output | **Subjects**: 23 | **Files (Completed)**: 35 | **Channels**: 33 | **Sampling Rate**: 4096 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Patients undergoing presurgical evaluation for drug-resistant epilepsy received 
 > **Kernel SHA256**: `ef4db72c250192ddcac3bf81f87a71ba23d22ca47154bbdf66d42939b8d55087`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -77,3 +77,12 @@ Patients undergoing presurgical evaluation for drug-resistant epilepsy received 
 
 - **Evidence**: OpenNeuro metadata.tasksCompleted references a BIDS task named 'Dcs'. Source: https://openneuro.org/datasets/ds006519 DOI: https://doi.org/10.18112/openneuro.ds006519.v1.0.0
 - **Kernel Notes**: No task-specific parameters provided in dataset metadata. Verify BIDS task JSON or README for event definitions and epoch parameters before implementation. Default to Normal Task 1 parameters if no additional documentation is found.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

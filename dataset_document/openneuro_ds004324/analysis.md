@@ -1,8 +1,7 @@
 # ToonFaces
 
 **Dataset**: `openneuro_ds004324` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004324
-**Category**: High-level Mental | **Subjects**: 26 | **Files (Completed)**: 26 | **Channels**: 38 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 26 | **Files (Completed)**: 26 | **Channels**: 38 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants viewed rapid serial visual presentation (RSVP) streams of three typ
 > **Kernel SHA256**: `b27f860326399603255ab4e132a51767467fbcd872d7fea6715716fab9f46af7`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -84,3 +84,12 @@ Participants viewed rapid serial visual presentation (RSVP) streams of three typ
   - DOI: 10.3389/fnhum.2023.1160800 — Paradigm includes emotion detection evaluation; ERP responses analyzed for affective state discrimination across emotional intensity levels.
   - DOI: 10.21203/rs.3.rs-1886096/v1 — Emotion detection is the stated task; differential entropy features analyzed to distinguish emotional from non-emotional responses.
 - **Kernel Notes**: Collapse face types and pool all emotional intensities (1-4) vs neutral (0). This creates a more balanced binary problem than multi-level intensity classification. Baseline correction from -200ms to 0ms. Exclude all admin events from epoching.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

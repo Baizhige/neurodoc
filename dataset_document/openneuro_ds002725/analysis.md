@@ -1,8 +1,7 @@
 # A dataset recording joint EEG-fMRI during affective music listening
 
 **Dataset**: `openneuro_ds002725` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002725
-**Category**: High-level Mental | **Subjects**: 21 | **Files (Completed)**: 105 | **Channels**: 47 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 21 | **Files (Completed)**: 105 | **Channels**: 47 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants listened to music stimuli designed to elicit emotional responses (a
 > **Kernel SHA256**: `f7e665f220717520135490e3c5e3be337cff08091e3cbb82bc2217657bce69f1`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -134,3 +134,12 @@ Participants listened to music stimuli designed to elicit emotional responses (a
 - **Evidence**:
   - DOI: 10.1038/s41598-019-45105-2 — "Electroencephalography reflects the activity of sub-cortical brain regions during approach-withdrawal behaviour while listening to music" (same paradigm as ds002725)
 - **Kernel Notes**: Correlational analysis task linking EEG frontal asymmetry to subcortical fMRI activity. Requires MRI gradient artifact correction and EEG-fMRI motion regression. Short epochs (±2s) capture transient asymmetry changes. Event 768 missing from scan.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

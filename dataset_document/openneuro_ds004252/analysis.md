@@ -1,8 +1,7 @@
 # Rotation-tolerant representations elucidate the time course of high-level object processing
 
 **Dataset**: `openneuro_ds004252` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004252
-**Category**: Sensory/Response | **Subjects**: 1 | **Files (Completed)**: 1 | **Channels**: 127 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 1 | **Files (Completed)**: 1 | **Channels**: 127 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A single participant viewed visual stimuli of objects at various rotations to in
 > **Kernel SHA256**: `75fddba52bcd3d5732d811a3397a785865bb4d52f2d496ebdb113da635022fb8`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -60,3 +60,12 @@ A single participant viewed visual stimuli of objects at various rotations to in
   | `Event/E 3` | 2 | Object/rotation condition 3 (coarse category group) |
 - **Evidence**: No direct classification-relevant reference; plausible from paradigm alone (RSVP object recognition with 3 stimulus conditions). Extended epoch window (-200ms to 1000ms) captures N100 and N400 components.
 - **Kernel Notes**: Fallback task if 60-way finer labels cannot be reconstructed from metadata. Warning: severe class imbalance (14400:14400:120 ratio) requires subsampling or class weighting. Single-subject design; extended window may improve signal-to-noise for coarse classification.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

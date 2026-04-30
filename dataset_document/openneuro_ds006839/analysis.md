@@ -1,8 +1,7 @@
 # EEG Recordings during Sham Neurofeedback in Virtual Reality
 
 **Dataset**: `openneuro_ds006839` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006839
-**Category**: Complex Applied | **Subjects**: 144 | **Files (Completed)**: 144 | **Channels**: 29 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 144 | **Files (Completed)**: 144 | **Channels**: 29 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed an attentional task within a virtual reality environment 
 > **Kernel SHA256**: `f8e26ffa93b8443a102db4652c8b3bb0d0593318064cc5c344e4e6cb58e2a6aa`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -34,3 +34,12 @@ Participants performed an attentional task within a virtual reality environment 
 ## Tasks
 
 (No tasks could be synthesized.)
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

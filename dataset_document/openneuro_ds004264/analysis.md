@@ -1,8 +1,7 @@
 # Steer the Ship
 
 **Dataset**: `openneuro_ds004264` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004264
-**Category**: Complex Applied | **Subjects**: 21 | **Files (Completed)**: 21 | **Channels**: 31 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 21 | **Files (Completed)**: 21 | **Channels**: 31 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A ship-steering simulation where participants control a rotating arrow to mainta
 > **Kernel SHA256**: `539d3d2a27a6922e3847639adf4071884ff8f962a1b683cceea5719b3353e5e8`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -136,3 +136,12 @@ A ship-steering simulation where participants control a rotating arrow to mainta
 
 - **Evidence**: OpenNeuro metadata; paradigm description states study of cognitive load under dynamic uncertainty with varying noise levels. Source: https://openneuro.org/datasets/ds004264 DOI: https://doi.org/10.18112/openneuro.ds004264.v1.1.0
 - **Kernel Notes**: Super meta labels (noise_level, performance_metric) not directly in raw event stream—must be loaded from events.tsv columns. Variable trial counts (1473-2373 per subject) across 21 subjects. Regression targets enable cognitive load estimation during closed-loop BCI control.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

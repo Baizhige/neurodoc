@@ -1,8 +1,7 @@
 # EEG Datasets of Stroke Patients (Motor Imagery)
 
 **Dataset**: `figshare_stroke` | **Year**: 2022 | **URL**: https://figshare.com/articles/dataset/EEG_datasets_of_stroke_patients/21679035/5
-**Category**: Action/Output | **Subjects**: 50 | **Files (Completed)**: 50 | **Channels**: 33 | **Sampling Rate**: 500 Hz
-**Manual Review**: Jiping Cui
+**Category**: Action/Output | **Subjects**: 50 | **Files (Completed)**: 50 | **Channels**: 33 | **Sampling Rate**: 500 Hz | **Manual Review**: Jiping Cui
 
 ## Paradigm
 

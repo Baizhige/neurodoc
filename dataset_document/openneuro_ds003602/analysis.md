@@ -1,9 +1,8 @@
 # Childhood Sexual Abuse and Problem Drinking in Women: Neurobehavioral Mechanisms
 
 **Dataset**: `openneuro_ds003602` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003602
-**Category**: High-level Mental | **Subjects**: 234 | **Files (Completed)**: 699
+**Category**: High-level Mental | **Subjects**: 234 | **Files (Completed)**: 699 | **Manual Review**: Pending
 **Channels**: 35 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 > **Kernel SHA256**: `32d5f8ebc4297f564303deafb89204c552060317e7efeb4f2e122f3cf168acb3`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -311,3 +311,12 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 
 - **Evidence**: Dataset includes validated problem drinking measures; alcohol cue reactivity is mechanistically linked to drinking severity.
 - **Kernel Notes**: Target variable derived from clinical assessments (not events). Merge behavioral data with EEG epochs for regression. Alcohol-specific stimuli (Alc*) likely show stronger correlation with drinking severity than non-alcohol stimuli.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

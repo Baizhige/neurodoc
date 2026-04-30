@@ -1,8 +1,7 @@
 # Healthy Brain Network (HBN) EEG - Release 8
 
 **Dataset**: `openneuro_ds005512` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005512
-**Category**: Complex Applied | **Subjects**: 257 | **Files (Completed)**: 2320 | **Channels**: 129 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 257 | **Files (Completed)**: 2320 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ The Healthy Brain Network (HBN) EEG Release 8 is a large-scale, multi-task devel
 > **Kernel SHA256**: `1de300b1f9f342318c2e24b4f83d3cea81182875e0285df17bd675309c276388`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -125,3 +125,12 @@ The Healthy Brain Network (HBN) EEG Release 8 is a large-scale, multi-task devel
   - DOI: 10.1101/2024.10.03.615261 — HBN-EEG documentation lists 6 paradigms: resting state, movie watching, contrast detection, surround suppression, sequence learning, and symbol search with corresponding block markers
   - DOI: 10.1038/sdata.2017.40 — Earlier HBN pilot (N=126) confirms multi-task battery structure with block-level state markers
 - **Kernel Notes**: Overlap=0.5 creates dense segment coverage for state classification across sustained blocks. Verify block durations vary by paradigm (resting ~40s, movie watching ~variable, tasks ~variable). Keep block-label mapping stable across releases. `learningBlock_1-5` (n~200 each) and `surroundSuppB1-3` provide additional task-specific segments. `break cnt` (2258) and `boundary` (1237) are admin markers—exclude from supervised targets.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

@@ -1,8 +1,7 @@
 # Somatosensory evoked potentials in the human spinal cord to mixed nerve stimulation
 
 **Dataset**: `openneuro_ds004388` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004388
-**Category**: Sensory/Response | **Subjects**: 40 | **Files (Completed)**: 399 | **Channels**: 115 | **Sampling Rate**: 10000 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 40 | **Files (Completed)**: 399 | **Channels**: 115 | **Sampling Rate**: 10000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ The dataset records somatosensory evoked potentials (SEPs) in response to mixed 
 > **Kernel SHA256**: `bc5d70f1557b015ca40a105acb9e174af146e0015d2631038779ba873cc1ba31`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -69,3 +69,12 @@ The dataset records somatosensory evoked potentials (SEPs) in response to mixed 
   | `Tibial - Stimulation` | 0 | Tibial nerve stimulation onset |
 - **Kernel Notes**: Single-site SEP averaging for lower limb responses. Lower limb SEPs show larger spinalcord involvement (lumbar enlargement) with distinct cortical generators compared to median nerve. Same epoching rationale as median stimulation task.
 - **Evidence**: Paradigm-plausible task: stimulus-locked SEP acquisition with known lower limb SEP generators (tibial nerve → lumbar spinal cord → sensorimotor cortex).
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

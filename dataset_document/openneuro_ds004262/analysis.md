@@ -1,8 +1,7 @@
 # Continuous Feedback Processing
 
 **Dataset**: `openneuro_ds004262` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004262
-**Category**: High-level Mental | **Subjects**: 21 | **Files (Completed)**: 21 | **Channels**: 31 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 21 | **Files (Completed)**: 21 | **Channels**: 31 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants predicted the final height of an animated rising bar based on cues 
 > **Kernel SHA256**: `9701d09920a9a5e5312b7d7b3075acbfec9ac35a59e2b68bca56bb14a611a9e6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

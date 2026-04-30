@@ -1,8 +1,7 @@
 # EEG: 3-Stim Auditory Oddball and Rest in Parkinson's
 
 **Dataset**: `openneuro_ds003490` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003490
-**Category**: Sensory/Response | **Subjects**: 50 | **Files (Completed)**: 75 | **Channels**: 67 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: Sensory/Response | **Subjects**: 50 | **Files (Completed)**: 75 | **Channels**: 67 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A three-stimulus auditory oddball task (standard tones, target tones requiring b
 > **Kernel SHA256**: `7eed99c23187737b1771b37bd447699725593af250d425a9cb95c01999b5a4d4`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

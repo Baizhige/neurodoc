@@ -1,8 +1,7 @@
 # Capacity for movement is an organisational principle in object representations: EEG data from Experiment 1
 
 **Dataset**: `openneuro_ds003885` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds003885
-**Category**: High-level Mental | **Subjects**: 24 | **Files (Completed)**: 48 | **Channels**: 127 | **Sampling Rate**: 250 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 24 | **Files (Completed)**: 48 | **Channels**: 127 | **Sampling Rate**: 250 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed a semantic classification task (alive vs. not alive) and 
 > **Kernel SHA256**: `32437208c5e894b08b9283ef42d5bc2a191cdcf0e9cbd74da34a078e22c4962d`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -115,3 +115,12 @@ Participants performed a semantic classification task (alive vs. not alive) and 
   | `E 9` | 5 | Moving artificial objects |
 - **Evidence**: None (plausible from paradigm alone)
 - **Kernel Notes**: Compute Representational Dissimilarity Matrices (RDMs) from EEG epoch responses to characterize the geometric structure of object category representations. The 6-category structure enables testing whether the representational geometry is organized by aliveness, movement capacity, or both dimensions. Compare EEG RDMs to model RDMs based on animacy and movement features.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

@@ -1,8 +1,7 @@
 # A test-retest resting and cognitive state EEG dataset
 
 **Dataset**: `openneuro_ds004148` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004148
-**Category**: High-level Mental | **Subjects**: 60 | **Files (Completed)**: 1797 | **Channels**: 61 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 60 | **Files (Completed)**: 1797 | **Channels**: 61 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A test-retest reliability study recording EEG during five cognitive/resting cond
 > **Kernel SHA256**: `dcafdcd15ba238c47ca2ab5180bba52f331198a9be7d52d1c07b24a878f15523`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -108,3 +108,12 @@ A test-retest reliability study recording EEG during five cognitive/resting cond
   | `S 44` | 1 | Eyes-closed resting state |
 - **Evidence**: Paradigm provides EC/EO as standard rest conditions; supported by the dataset paper (DOI: 10.1038/s41597-022-01607-9) but not specifically highlighted for binary rest classification.
 - **Kernel Notes**: Focus on discriminating EC vs EO only; segment into 4-s epochs; extract alpha power (expected higher in EC) and other spectral features.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

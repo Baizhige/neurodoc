@@ -1,8 +1,7 @@
 # BCIT Mind Wandering
 
 **Dataset**: `openneuro_ds004121` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004121
-**Category**: Complex Applied | **Subjects**: 21 | **Files (Completed)**: 21 | **Channels**: 74 | **Sampling Rate**: 1024 Hz
-**Manual Review**:
+**Category**: Complex Applied | **Subjects**: 21 | **Files (Completed)**: 21 | **Channels**: 74 | **Sampling Rate**: 1024 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Subjects performed a long-duration simulated driving task involving lane mainten
 > **Kernel SHA256**: `fc65488bb8fca5ce7e612a0839377096ee92ff2e3cc4f1212d8c7cec499d416b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

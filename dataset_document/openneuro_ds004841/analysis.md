@@ -1,8 +1,7 @@
 # TX14 (Semi-Autonomous Vehicle Monitoring)
 
 **Dataset**: `openneuro_ds004841` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004841
-**Category**: Complex Applied | **Subjects**: 11 | **Files (Completed)**: 147 | **Channels**: 70 | **Sampling Rate**: 256 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 11 | **Files (Completed)**: 147 | **Channels**: 70 | **Sampling Rate**: 256 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants monitored a semi-autonomous vehicle system and performed local situ
 > **Kernel SHA256**: `5015c68b45b1447cbd4bfd82f425de14e526a81633ad7792577ebe8369d4d1c7`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -233,3 +233,12 @@ Participants monitored a semi-autonomous vehicle system and performed local situ
 
 - **Evidence**: Plausible from paradigm — 7-digit codes with format 43XXXXX encode state transitions requiring cognitive re-engagement. High event counts (464–789) support statistical classification.
 - **Kernel Notes**: Captures event-related neural dynamics during vehicle state transitions. Short epoch window (-0.2 to 1.0 s) aligns with transient cognitive responses. Requires decode table for semantic state mapping. Type 1 kernel extracts raw transition labels from 43XXXXX events.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

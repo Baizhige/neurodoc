@@ -1,9 +1,8 @@
 # HD-EEGtask (Dataset 2)
 
 **Dataset**: `openneuro_ds003421` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds003421
-**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 80
+**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 80 | **Manual Review**: Pending
 **Channels**: 257 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ Participants completed a multi-condition experiment including resting state, vis
 > **Kernel SHA256**: `80f72fbeeaad8d1b86fa438eb424325cb767158946812bbb41972163629f7fe7`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -125,3 +125,12 @@ Participants completed a multi-condition experiment including resting state, vis
 
 - **Evidence**: DOI: 10.1038/s41597-021-00821-1 (dataset includes both visual and auditory object naming tasks; paradigm documentation confirms modality variation)
 - **Kernel Notes**: Plausible task from paradigm alone (no direct classification reference). Trigger codes 0/1 may encode modality differences. Requires events.tsv validation for semantic mapping. Long event epoching captures sustained processing for modality discrimination.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

@@ -1,9 +1,8 @@
 # EEG: Simon Conflict in Parkinson's
 
 **Dataset**: `openneuro_ds003509` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003509
-**Category**: High-level Mental | **Subjects**: 56 | **Files (Completed)**: 84
+**Category**: High-level Mental | **Subjects**: 56 | **Files (Completed)**: 84 | **Manual Review**: Pending
 **Channels**: 67 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ This study investigates mid-frontal theta deficits in Parkinson's disease (PD) p
 > **Kernel SHA256**: `42511851ad2e2f82b4cb6ccf8e24abda912c768bada14cd90c837f8102a7f97d`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -135,3 +135,12 @@ This study investigates mid-frontal theta deficits in Parkinson's disease (PD) p
 - **Evidence**:
   - DOI: `10.1016/j.neuropsychologia.2018.05.020` — Paradigm explicitly distinguishes training (with feedback) and test (without feedback) phases; phase-dependent theta modulation patterns expected.
 - **Kernel Notes**: Phase discrimination serves as a confound check and enables analysis of training vs test differences in theta dynamics. Use S 12 vs S 13 event IDs as binary labels (0=training, 1=test). Combined with Task 1, allows analysis of conflict effects within each phase separately. Ensure session alignment for multi-session subjects (84 files across 56 subjects indicates ~1.5 sessions per subject on average).
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

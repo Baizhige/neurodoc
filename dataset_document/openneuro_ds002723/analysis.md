@@ -1,8 +1,7 @@
 # A dataset recorded during development of an affective brain-computer music interface: testing session
 
 **Dataset**: `openneuro_ds002723` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002723
-**Category**: Complex Applied | **Subjects**: 8 | **Files (Completed)**: 44 | **Channels**: 37 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 8 | **Files (Completed)**: 44 | **Channels**: 37 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants interacted with a real-time affective brain-computer music interfac
 > **Kernel SHA256**: `567d94e30faa6107dc4c0b55e4c1c3e13d47c23ef7830f2bd9f83748c7437e1c`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -49,3 +49,12 @@ Participants interacted with a real-time affective brain-computer music interfac
 - **Evidence**:
   - DOI: 10.1038/s41597-020-0507-6 — Data descriptor explicitly describing the BCMI testing dataset (ds002723) with 8 participants, ~1.3 hours per participant of EEG+ECG+GSR recordings. The synthetic music conditions 1-9 are used as affective state markers, with condition 8 excluded from analysis per the experimental protocol.
 - **Kernel Notes**: Events are long-type markers representing sustained 60-second trials with three distinct phases: 20s target affective state, 20s identify state, and 20s alter state. Use epoch_by_long_event_hdf5 to extract the full 60s window capturing the complete affective trajectory. Verify EEG-only channel selection from the 37-channel array (includes physiological channels). Validate channel count consistency across subjects before pooling.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

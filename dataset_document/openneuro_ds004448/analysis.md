@@ -1,8 +1,7 @@
 # The BMI-HDEEG dataset 4
 
 **Dataset**: `openneuro_ds004448` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004448
-**Category**: Action/Output | **Subjects**: 56 | **Files (Completed)**: 280 | **Channels**: 130 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: Action/Output | **Subjects**: 56 | **Files (Completed)**: 280 | **Channels**: 130 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed a sensorimotor rhythm-based brain-computer interface task
 > **Kernel SHA256**: `d72f26fbb472eccd2b3469776dfe7698494f2e80185fb7afd92c7a5e7ba46828`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,8 +1,7 @@
 # BCI Competition IV Dataset 1 (Motor Imagery, Uncued Classifier Application)
 
 **Dataset**: `bcic_iv_1` | **Year**: 2008 | **URL**: https://www.bbci.de/competition/iv/desc_1.html
-**Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 14 | **Channels**: 59 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Zhida Shang
+**Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 14 | **Channels**: 59 | **Sampling Rate**: 1000 Hz | **Manual Review**: Zhida Shang
 
 ## Paradigm
 
@@ -10,10 +9,10 @@ Seven subjects performed two-class motor imagery without feedback in an asynchro
 
 ## File Scan Result
 
-
 > **Kernel SHA256**: `be708ccaca35d8c1b12185468ac158b74a29c36fa810b3dc09073853c425cde5`
 > **EEGUnity Version**: `0.8.0`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

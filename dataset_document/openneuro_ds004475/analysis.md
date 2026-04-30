@@ -1,9 +1,8 @@
 # Mobile EEG split-belt walking study
 
 **Dataset**: `openneuro_ds004475` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004475
-**Category**: Complex Applied | **Subjects**: 30 | **Files (Completed)**: 30
+**Category**: Complex Applied | **Subjects**: 30 | **Files (Completed)**: 30 | **Manual Review**: Pending
 **Channels**: 260 | **Sampling Rate**: 512 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ A mobile brain-body imaging experiment investigating brain activity during gait 
 > **Kernel SHA256**: `81149a5a21d952f77607a7f09330e537c77a1e5528638920096ee82850d6dd03`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -106,3 +106,12 @@ A mobile brain-body imaging experiment investigating brain activity during gait 
   | `LHS` (late adaptation) | 1 | Left heel strike during late/proficient split-belt walking |
 - **Evidence**: Plausible from paradigm — the reference paper (10.1113/jp284505) explicitly examines "early vs late adaptation" spectral changes, indicating behavioral/electrophysiological state transitions during split-belt learning. Adaptation state can be inferred from gait cycle timing (step length asymmetry) and timing within SB2 block.
 - **Kernel Notes**: Adaptation state requires deriving labels from gait metrics (step length, inter-limb timing) computed from LHS/RHS/RTO/LTO events, not directly from event IDs. Kernel must implement step length asymmetry calculation and split SB2 into early/late adaptation phases. TRIG markers (~48k) may provide additional timing synchronization for block-relative positioning.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

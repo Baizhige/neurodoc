@@ -1,8 +1,7 @@
 # A dataset recorded during development of an affective brain-computer music interface: calibration session
 
 **Dataset**: `openneuro_ds002722` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002722
-**Category**: High-level Mental | **Subjects**: 19 | **Files (Completed)**: 94 | **Channels**: 37 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 19 | **Files (Completed)**: 94 | **Channels**: 37 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 > **Kernel SHA256**: `cc4dd8f39d0f4fc06cf3802de20a5097bf76db5896df6e28426930390b5def20`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,9 +1,8 @@
 # Dataset on Emotion with Naturalistic Stimuli (DENS)
 
 **Dataset**: `openneuro_ds003751` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds003751
-**Category**: High-level Mental | **Subjects**: 40 | **Files (Completed)**: 40
+**Category**: High-level Mental | **Subjects**: 40 | **Files (Completed)**: 40 | **Manual Review**: Pending
 **Channels**: 132 | **Sampling Rate**: 250 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ Participants viewed naturalistic multimedia video clips (film excerpts, document
 > **Kernel SHA256**: `c667176ee37367028edf39272aa7b49de7d660958c021021a8a618188ae5ce22`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -182,3 +182,12 @@ Participants viewed naturalistic multimedia video clips (film excerpts, document
   | stimulus | video_id | Video clip onset (432 events) |
 - **Evidence**: N/A (plausible from paradigm alone)
 - **Kernel Notes**: Alternative epoching approach using stimulus onset (`stimulus`, 432 events) instead of subjective click markers. Labels derived from subsequent continuous ratings. Captures initial stimulus-driven emotional response vs. self-initiated moment marking.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

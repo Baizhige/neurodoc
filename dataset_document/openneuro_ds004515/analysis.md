@@ -1,8 +1,7 @@
 # EEG: Alcohol imagery reinforcement learning task with light and heavy drinker participants
 
 **Dataset**: `openneuro_ds004515` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004515
-**Category**: High-level Mental | **Subjects**: 54 | **Files (Completed)**: 54 | **Channels**: 64 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 54 | **Files (Completed)**: 54 | **Channels**: 64 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants (light and heavy drinkers) performed a reinforcement learning task 
 > **Kernel SHA256**: `181607f103ff9acae9f17f4264a3c7c7c0e7e5bde25fcaccd0f5b919e3313de1`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

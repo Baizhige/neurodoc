@@ -1,8 +1,7 @@
 # Visual Attribute-Specific Contextual Trajectory Paradigm
 
 **Dataset**: `openneuro_ds004603` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004603
-**Category**: Sensory/Response | **Subjects**: 37 | **Files (Completed)**: 37 | **Channels**: 65 | **Sampling Rate**: 1024 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 37 | **Files (Completed)**: 37 | **Channels**: 65 | **Sampling Rate**: 1024 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants observed sequences of visual stimuli that either followed or violat
 > **Kernel SHA256**: `cf52e094e4933369a312724f19fb6ad6a22ad5d12efdc177ede6aac1a9b54184`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -91,3 +91,12 @@ Participants observed sequences of visual stimuli that either followed or violat
 - **Evidence**:
   - Plausible from paradigm: Catch trials test whether participants detect violations and require motor responses, enabling reaction time and hit rate analysis alongside EEG correlates of response preparation and execution.
 - **Kernel Notes**: Extended tmax=1.5 s captures button press timing (~0.2-0.8 s post-stimulus) and associated motor potentials (CNV, lateralized readiness potential). These trials contain motor response contamination and should be analyzed separately from perception-only violation trials. Count: 2958 catch trials across 37 subjects (~80 per subject).
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

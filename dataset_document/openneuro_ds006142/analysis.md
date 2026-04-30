@@ -1,17 +1,17 @@
 # Essex EEG Movie Memory dataset
 
 **Dataset**: `openneuro_ds006142` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006142
-**Category**: High-level Mental | **Subjects**: 27 | **Files (Completed)**: 27 | **Channels**: 64 | **Sampling Rate**: 2048 Hz
+**Category**: High-level Mental | **Subjects**: 27 | **Files (Completed)**: 27 | **Channels**: 64 | **Sampling Rate**: 2048 Hz | **Manual Review**:
 
 ## Paradigm
 
 Memory recognition task where participants watched 10-second movie clips and identified whether they remembered them from previous viewings, including time-stamping recognition instants. Clips were shown twice; the first watch (`startOfRememberedClipFirstWatch`, `startOfRecognisedClipFirstWatch`) established encoding, while the second watch (`startOfSecondWatch`) tested recognition. Participants clicked when they recognized clips (`firstRecognitionClick`, `recognitionClick`).
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 ### Event Structure
 
@@ -35,6 +35,7 @@ Memory recognition task where participants watched 10-second movie clips and ide
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Three-class Movie Memory Recognition
@@ -78,7 +79,6 @@ Memory recognition task where participants watched 10-second movie clips and ide
 - High sampling rate (2048 Hz); downsample to 512 Hz for standard ERP analysis.
 - Small dataset (27 subjects); limited statistical power.
 - Apply bandpass filter (0.1-40 Hz) and artifact rejection prior to epoching.
-
 
 ## Kernel Responsibilities
 

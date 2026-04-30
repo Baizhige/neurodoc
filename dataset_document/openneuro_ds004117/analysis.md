@@ -1,8 +1,7 @@
 # Sternberg Working Memory
 
 **Dataset**: `openneuro_ds004117` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004117
-**Category**: High-level Mental | **Subjects**: 23 | **Files (Completed)**: 85 | **Channels**: 71 | **Sampling Rate**: 250 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 23 | **Files (Completed)**: 85 | **Channels**: 71 | **Sampling Rate**: 250 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A modified Sternberg working memory task in which participants selectively memor
 > **Kernel SHA256**: `be715a4795f74edcca9c3c2b7b9c25fb824b97b2a9f1aa6ade2096156946841b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -75,3 +75,12 @@ A modified Sternberg working memory task in which participants selectively memor
 - **Evidence**:
   - DOI: `10.1016/j.neuroimage.2005.04.014` — Supports fine-grained analysis of letter-specific processing during the Sternberg WM paradigm.
 - **Kernel Notes**: Shorter epoch window focused on individual letter presentation events (gA-gZ for memorization targets, A-Z for distractors). Captures early ERP components (N100, P200) and letter-specific processing. Exclude event ID `255` (admin/system marker). Fine-grained letter event analysis (A-Z, gA-gZ) may provide additional ERP resolution but requires careful event code mapping. 23 subjects x ~3.7 sessions on average = 85 files.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

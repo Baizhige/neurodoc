@@ -1,8 +1,7 @@
 # Face processing EEG dataset for EEGLAB
 
 **Dataset**: `openneuro_ds002718` | **Year**: 2015 | **URL**: https://openneuro.org/datasets/ds002718
-**Category**: High-level Mental | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 74 | **Sampling Rate**: 250 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 74 | **Sampling Rate**: 250 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 > **Kernel SHA256**: `ba29c0f01eb87c59052deabc969c88bed8cdd501d18e42ee08c87973dfbbe9aa`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

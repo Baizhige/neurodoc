@@ -1,8 +1,7 @@
 # Healthy Brain Network (HBN) EEG - Release 6
 
 **Dataset**: `openneuro_ds005510` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005510
-**Category**: Complex Applied | **Subjects**: 3000 | **Files (Completed)**: 1227 | **Channels**: 129 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 3000 | **Files (Completed)**: 1227 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ The Healthy Brain Network (HBN) EEG Release 6 is a large-scale, multi-task devel
 > **Kernel SHA256**: `91fb01ced8d2c0bb6e3439df752198906b8698b9ee4263f78340a136ecd2e06e`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -209,3 +209,12 @@ The Healthy Brain Network (HBN) EEG Release 6 is a large-scale, multi-task devel
   - DOI: `10.1101/2024.10.03.615261` — Dataset paper mentions surround suppression as one of the six HBN-EEG sensory paradigms.
   - DOI: `10.1038/sdata.2017.40` — Parent resource describes surround suppression paradigm for information processing assessment.
 - **Kernel Notes**: The dot_ON/dot_OFF events (n=634–1271) likely represent individual elements in a surround suppression stimulus configuration (central target + surrounding context). Use `surroundSuppB1_start`, `surroundSuppB2_start` (n=118, 96) to identify task blocks. Compute suppression index (response amplitude in suppressive vs facilitative contexts). Requires understanding of stimulus configuration from task-sidecar JSON — verify element mapping and suppression condition coding before analysis.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

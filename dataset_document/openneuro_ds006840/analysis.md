@@ -1,8 +1,7 @@
 # IACKD: Intention Action Conflict EEG-Hand Kinematics Dataset
 
 **Dataset**: `openneuro_ds006840` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006840
-**Category**: High-level Mental | **Subjects**: 128 | **Files (Completed)**: 128 | **Channels**: 29 | **Sampling Rate**: 1024 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 128 | **Files (Completed)**: 128 | **Channels**: 29 | **Sampling Rate**: 1024 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ This dataset investigates the neural correlates and hand kinematics associated w
 > **Kernel SHA256**: `c806331b2555e150293399309a114c72dd7de967c86557d7614352a764108e4f`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -74,3 +74,12 @@ This dataset investigates the neural correlates and hand kinematics associated w
 
 - **Evidence**: The incongruent_trial marker (6881 events) directly indicates conflict conditions in the intention-action paradigm. Paradigm plausibility: conflict between motor intention and execution creates measurable neural signatures (ERP components, beta rebound patterns) well-established in motor planning literature.
 - **Kernel Notes**: Type 2 super-meta integration available if conflict-specific analysis required. Combine with motor phase markers to examine neural signatures at specific timepoints within conflict trials.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

@@ -1,8 +1,7 @@
 # Fatigue Characterization of EEG under Mixed Reality Stereo Vision
 
 **Dataset**: `openneuro_ds005416` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005416
-**Category**: Complex Applied | **Subjects**: 23 | **Files (Completed)**: 23 | **Channels**: 64 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 23 | **Files (Completed)**: 23 | **Channels**: 64 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants viewed resting and movement scenes in a Mixed Reality (MR) stereo v
 > **Kernel SHA256**: `a70e3482770baa1ec8f19a91dfce8d718d12edcbb4b06607b7e4451767e3a200`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -59,3 +59,12 @@ Participants viewed resting and movement scenes in a Mixed Reality (MR) stereo v
 | 13 | condition_block | Block onset (23 per dataset, 1 per subject) — likely movement scene condition |
 
 - **Notes**: Events 11 and 13 occur once per subject, indicating sustained condition blocks. Epoch as long events to capture sustained fatigue-related neural changes across MR viewing periods. Events 21 and 23 (single occurrence) are recording metadata markers (task start/end). Labels from subjective ratings mapped to comfort/fatigue states at condition-block level.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

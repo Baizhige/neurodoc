@@ -1,8 +1,7 @@
 # Healthy Brain Network (HBN) EEG - Release 3
 
 **Dataset**: `openneuro_ds005507` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005507
-**Category**: Complex Applied | **Subjects**: 183 | **Files (Completed)**: 1812 | **Channels**: 129 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 183 | **Files (Completed)**: 1812 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ The Healthy Brain Network (HBN) EEG Release 3 is a large-scale, multi-task devel
 > **Kernel SHA256**: `88f6fb972833ad2d7ce0abc71410b452a4645352fe4047a1b393791c09ee933b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -184,3 +184,12 @@ The Healthy Brain Network (HBN) EEG Release 3 is a large-scale, multi-task devel
   | `symbolSearch_start` | continuous | Symbol search task epochs (accuracy/RT from misc) |
 - **Evidence**: Paradigm exists in dataset (107 events). DOI: 10.1038/sdata.2017.40 describes active tasks including symbol search.
 - **Kernel Notes**: Low event count (107) suggests few trials per subject. May require aggregation across subjects for population-level analysis. Verify accuracy/RT availability in behavioral files.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

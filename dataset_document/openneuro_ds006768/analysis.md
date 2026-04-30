@@ -1,8 +1,7 @@
 # Multiple Object Monitoring EEG
 
 **Dataset**: `openneuro_ds006768` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006768
-**Category**: High-level Mental | **Subjects**: 30 | **Files (Completed)**: 210 | **Channels**: 65 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 30 | **Files (Completed)**: 210 | **Channels**: 65 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Subjects completed a Multiple Object Monitoring (MOM) task requiring sustained v
 > **Kernel SHA256**: `b6b038c288020932ef1894336a754f1696681df732c914559be3feb92d3cc719`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -78,3 +78,12 @@ No MISC labels identified in this dataset.
 
 - **Evidence**: Partial support from DOI: https://doi.org/10.1371/journal.pone.0022660 (EEG Correlates of Attentional Load during Multiple Object Tracking); DOI: https://doi.org/10.1088/1741-2552/abb9bc (Continuous decoding of cognitive load from EEG)
 - **Kernel Notes**: For sustained tracking analysis, segment trials around the `event` marker indicating trial onset. The 4s window accommodates the full trial structure including target designation, tracking period, and response. Supports primary classification/segmentation task defined in dataset metadata. 210 files from 30 subjects with ~7 runs each requires consistent run-level handling.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

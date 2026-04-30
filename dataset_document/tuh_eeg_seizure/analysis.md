@@ -1,8 +1,7 @@
 # TUH EEG Seizure Corpus
 
 **Dataset**: `tuh_eeg_seizure` | **Year**: 2018 | **URL**: https://isip.piconepress.com/projects/nedc/html/tuh_eeg
-**Category**: Biological State | **Subjects**: 675 | **Files (Completed)**: 7361 | **Channels**: 17-128 | **Sampling Rate**: 250/256/400/1000 Hz
-**Manual Review**: Chengxuan Qin
+**Category**: Biological State | **Subjects**: 675 | **Files (Completed)**: 7361 | **Channels**: 17-128 | **Sampling Rate**: 250/256/400/1000 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 

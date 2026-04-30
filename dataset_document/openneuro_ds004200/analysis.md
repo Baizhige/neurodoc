@@ -1,8 +1,7 @@
 # Temporal Scaling
 
 **Dataset**: `openneuro_ds004200` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004200
-**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 20 | **Channels**: 37 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 20 | **Channels**: 37 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants learned to produce and judge short, medium, and long temporal inter
 > **Kernel SHA256**: `ada696a32bc7d9b051ca9f489674553d553e60ea1d229421516cac83235bf9c6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -154,3 +154,12 @@ Participants learned to produce and judge short, medium, and long temporal inter
 
 - **Evidence**: 10.1073/pnas.2214638119 (paradigm support)
 - **Kernel Notes**: Core temporal scaling task within production paradigm. Three-class classification of interval duration scaling. Can be extended to Cond2 and Cond3 phases separately. Paradigm explicitly states participants learned to produce/judge short, medium, and long intervals.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

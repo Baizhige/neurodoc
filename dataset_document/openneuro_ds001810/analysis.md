@@ -1,8 +1,7 @@
 # EEG study of the attentional blink; before, during, and after transcranial Direct Current Stimulation (tDCS)
 
 **Dataset**: `openneuro_ds001810` | **Year**: 2019 | **URL**: https://openneuro.org/datasets/ds001810
-**Category**: Sensory/Response | **Subjects**: 40 | **Files (Completed)**: 527 | **Channels**: 73 | **Sampling Rate**: 512 Hz
-**Manual Review**:
+**Category**: Sensory/Response | **Subjects**: 40 | **Files (Completed)**: 527 | **Channels**: 73 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed an attentional blink (AB) task using a Rapid Serial Visua
 > **Kernel SHA256**: `d55a66a4e3966fc9ce78ca8a74e33ec0ee53f7675c01b7ab05cc8b564bdf73d6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

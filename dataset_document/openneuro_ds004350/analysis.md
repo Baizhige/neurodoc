@@ -1,8 +1,7 @@
 # Executive Functioning Study for Assessing the Effect of Neurofeedback
 
 **Dataset**: `openneuro_ds004350` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds004350
-**Category**: High-level Mental | **Subjects**: 24 | **Files (Completed)**: 479 | **Channels**: 64 | **Sampling Rate**: 256 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 24 | **Files (Completed)**: 479 | **Channels**: 64 | **Sampling Rate**: 256 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed a battery of executive function tasks including visual N-
 > **Kernel SHA256**: `3935db34da01b67e06fa4226a7dbc869e536deb16d8eb03e49126612d474d646`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

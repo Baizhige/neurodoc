@@ -1,8 +1,7 @@
 # MAVIS
 
 **Dataset**: `openneuro_ds004010` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004010
-**Category**: Sensory/Response | **Subjects**: 24 | **Files (Completed)**: 24 | **Channels**: 64 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: Sensory/Response | **Subjects**: 24 | **Files (Completed)**: 24 | **Channels**: 64 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A multisensory detection task (MAVIS) in which participants identified auditory 
 > **Kernel SHA256**: `4beb8110131aae5992a0343909970197c066b8c37de124c54b632c9c9b5ed898`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,9 +1,8 @@
 # EEG: Visual Working Memory + Cabergoline Challenge
 
 **Dataset**: `openneuro_ds003519` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003519
-**Category**: High-level Mental | **Subjects**: 27 | **Files (Completed)**: 54
+**Category**: High-level Mental | **Subjects**: 27 | **Files (Completed)**: 54 | **Manual Review**: Pending
 **Channels**: 64 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ Participants performed a visuospatial working memory task under a double-blind C
 > **Kernel SHA256**: `1cb8589b573d43f9a98bd9145188ef7418a29b000ebe134761dc3b9b6d18d0f4`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -95,3 +95,12 @@ Participants performed a visuospatial working memory task under a double-blind C
   | `Error` | 1 | Incorrect response |
 - **Evidence**: No direct DOI reference; task is standard in cognitive neuroscience paradigms.
 - **Kernel Notes**: Behavioral labels must be derived by merging EEG events with behavioral log (response time, accuracy). Participants.tsv or behavioral log files should contain trial-level accuracy data. Session-level super meta (drug vs placebo) may interact with error rates.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

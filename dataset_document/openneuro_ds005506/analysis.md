@@ -1,8 +1,7 @@
 # Healthy Brain Network (HBN) EEG - Release 2
 
 **Dataset**: `openneuro_ds005506` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005506
-**Category**: Complex Applied | **Subjects**: 152 | **Files (Completed)**: 1405 | **Channels**: 129 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 152 | **Files (Completed)**: 1405 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ The Healthy Brain Network (HBN) EEG Release 2 is a large-scale, multi-task devel
 > **Kernel SHA256**: `4a1d43c3be46afdd8d1652c35836f64bbffb8609c451ea9fab1360705fb5640f`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -173,3 +173,12 @@ The Healthy Brain Network (HBN) EEG Release 2 is a large-scale, multi-task devel
   - DOI: 10.1101/2024.10.03.615261 — [indirect] Lists sequence learning as one of the five core HBN paradigms; learningBlock_1 through _5 events (131, 129, 128, 126, 126 counts) suggest progressive learning across 5 sub-blocks
   - DOI: 10.1016/j.neuroimage.2020.117001 — [indirect] Oscillatory changes across learning trials observed in similar developmental EEG studies
 - **Kernel Notes**: Fixed 4s windows aligned to learning block onsets without overlap to capture learning-related theta/beta oscillatory changes across progressive blocks. 5-class block ordering may serve as proxy for learning progression when behavioral accuracy data is unavailable. Exclude `seqLearning_stop` (126 events) and `boundary` (799) admin markers.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

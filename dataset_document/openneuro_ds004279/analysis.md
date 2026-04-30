@@ -1,8 +1,7 @@
 # Large Spanish EEG
 
 **Dataset**: `openneuro_ds004279` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004279
-**Category**: High-level Mental | **Subjects**: 56 | **Files (Completed)**: 60 | **Channels**: 69 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 56 | **Files (Completed)**: 60 | **Channels**: 69 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed speech perception and silent speech production tasks invo
 > **Kernel SHA256**: `d659db75b998c95432f7d5ce269d3ecd21ea826dbc6fd3871b395d5a8727414a`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

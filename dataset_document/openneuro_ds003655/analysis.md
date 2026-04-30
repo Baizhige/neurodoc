@@ -1,8 +1,7 @@
 # VerbalWorkingMemory
 
 **Dataset**: `openneuro_ds003655` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds003655
-**Category**: High-level Mental | **Subjects**: 26 | **Files (Completed)**: 156 | **Channels**: 21 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 26 | **Files (Completed)**: 156 | **Channels**: 21 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A modified Sternberg working memory task requiring either simple retention or me
 > **Kernel SHA256**: `21a0164b0b6cf912dea56980c6fce67abeb2914c32eb269057c411453ddebbf5`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -131,3 +131,12 @@ A modified Sternberg working memory task requiring either simple retention or me
   | All probe events | 1 | Stimulus onset (binary presence) |
 - **Evidence**: No direct DOI reference. Plausible from paradigm: probe events represent letter stimulus presentations suitable for P300/N200 ERP analysis. Response events available for trial-level accuracy labels (match vs non-match).
 - **Kernel Notes**: Tight window captures stimulus-locked ERP components. Baseline: −200 to 0 ms. Combine with Response events for accuracy-based trial rejection.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

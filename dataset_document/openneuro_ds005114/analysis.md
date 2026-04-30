@@ -1,8 +1,7 @@
 # EEG: DPX Cognitive Control Task in Acute Mild TBI
 
 **Dataset**: `openneuro_ds005114` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005114
-**Category**: High-level Mental | **Subjects**: 62 | **Files (Completed)**: 217 | **Channels**: 65 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 62 | **Files (Completed)**: 217 | **Channels**: 65 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
 > **Kernel SHA256**: `fcdb5d4dbb680875053b897046eae52db15d3093648ad48f9d659d1d1c613124`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -209,3 +209,12 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
 - **Evidence**:
   - DOI: 10.1007/s11682-019-00171-y — Same patient cohort with mTBI vs healthy control comparison
 - **Kernel Notes**: Group labels from participants.tsv enable mTBI subgroup analysis. Super meta-level classification combines EEG features with clinical group membership. Verify group label availability in participants.tsv before training.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

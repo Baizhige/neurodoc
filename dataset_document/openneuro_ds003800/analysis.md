@@ -1,9 +1,8 @@
 # Auditory Gamma Entrainment
 
 **Dataset**: `openneuro_ds003800` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003800
-**Category**: Sensory/Response | **Subjects**: 8 | **Files (Completed)**: 24
+**Category**: Sensory/Response | **Subjects**: 8 | **Files (Completed)**: 24 | **Manual Review**:
 **Channels**: 19 | **Sampling Rate**: 250 Hz
-**Manual Review**:
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ Elderly participants with dementia received 40 Hz amplitude-modulated (AM) audit
 > **Kernel SHA256**: `acb182177b3fe8a79612be884d45c0ccf55fa8409970c03de87bf032381bb0fb`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

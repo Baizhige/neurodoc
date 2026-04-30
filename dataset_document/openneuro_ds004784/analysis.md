@@ -1,8 +1,7 @@
 # Phantom EEG Dataset with Motion, Muscle, and Eye Artifacts
 
 **Dataset**: `openneuro_ds004784` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004784
-**Category**: Others | **Subjects**: N/A | **Files (Completed)**: 10 | **Channels**: 264 | **Sampling Rate**: 512 Hz
-**Manual Review**:
+**Category**: Others | **Subjects**: N/A | **Files (Completed)**: 10 | **Channels**: 264 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Technical validation study using an electrically conductive head phantom to simu
 > **Kernel SHA256**: `378b290db8f4cdd7ef26187d6b45c976123447f38a189a6cae217bdfccca83dd`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

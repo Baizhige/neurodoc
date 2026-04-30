@@ -1,17 +1,17 @@
 # DTU Auditory Attention Decoding Dataset
 
 **Dataset**: `zenodo_dtu` | **Year**: 2018 | **URL**: https://zenodo.org/records/1199011
-**Category**: High-level Mental | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 73 | **Sampling Rate**: 512 Hz
+**Category**: High-level Mental | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 73 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 
 Eighteen subjects (S1-S18) participated in an auditory attention decoding (AAD) task in which two competing speakers were presented simultaneously and subjects were asked to attend to one speaker (Fuglsang et al., 2018). EEG was recorded from 64 channels (BioSemi ActiveTwo, 512 Hz) plus additional auxiliary channels (total 73). Each subject's recording is stored as a single MATLAB `.mat` file containing EEG data, stimulus onsets (`data.stimu`), and attended speaker labels (`data.attended`). The kernel extracts per-trial onset times and attended speaker indices to create trial-level annotations.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 ### Event Structure
 
@@ -68,7 +68,6 @@ Eighteen subjects (S1-S18) participated in an auditory attention decoding (AAD) 
 - MATLAB `.mat` field names (`data.stimu`, `data.attended`) must be present; verify before processing.
 - One file per subject (18 files total); each file contains all trials for that subject.
 - Stimulus audio files (speech signals) are required for full stimulus-reconstruction AAD decoding.
-
 
 ## Kernel Responsibilities
 

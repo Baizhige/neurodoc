@@ -1,8 +1,7 @@
 # EEG Experiment measuring ERPs in VR
 
 **Dataset**: `openneuro_ds005841` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005841
-**Category**: Complex Applied | **Subjects**: 48 | **Files (Completed)**: 288 | **Channels**: 73 | **Sampling Rate**: 512 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 48 | **Files (Completed)**: 288 | **Channels**: 73 | **Sampling Rate**: 512 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ An investigation of event-related potentials (ERPs) during visual tasks performe
 > **Kernel SHA256**: `dff9f33d6713a8cc2dce7301d67b7be99593cdbd614f1d3bc57a4b391976c202`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -105,3 +105,12 @@ An investigation of event-related potentials (ERPs) during visual tasks performe
   | `event_59` | 5 | Dark luminance VR stimulus |
 - **Evidence (DOI)**: N/A — no reference papers with classification=relevant available for this dataset
 - **Kernel Notes**: Binary classification of luminance-based ERP differences. Collapses across predictability conditions (RAND vs REF) to isolate neural response to lighting variation in VR environment. Kernel MUST verify event code mapping to DARK vs LIGHT conditions via BIDS events.tsv inspection.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

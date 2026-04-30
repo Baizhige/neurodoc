@@ -1,8 +1,7 @@
 # Auditory-Visual Shift Study
 
 **Dataset**: `openneuro_ds002893` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds002893
-**Category**: Sensory/Response | **Subjects**: 49 | **Files (Completed)**: 52 | **Channels**: 36 | **Sampling Rate**: 250 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 49 | **Files (Completed)**: 52 | **Channels**: 36 | **Sampling Rate**: 250 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ An interleaved dual-oddball task in which subjects selectively attended to eithe
 > **Kernel SHA256**: `06279b5cae711747c4c1192ce8883b36815035e082cf18804a5f0320512f6b35`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -78,3 +78,12 @@ No MISC labels identified in current scan.
 
 - **Evidence**: DOI: https://doi.org/10.18112/openneuro.ds002893.v2.0.0 | Spoken and printed attention cue instructions for modality switching supported by paradigm description.
 - **Kernel Notes**: `shift_attention` is a transition cue marking the moment of modality switching. Epoching around it can reveal cue-locked ERP components (CNV, frontal midlines) associated with attention reorientation. Treat as admin event; do not include in sustained attention classification targets.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

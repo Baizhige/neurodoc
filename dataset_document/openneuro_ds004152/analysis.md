@@ -1,8 +1,7 @@
 # Drum Trainer
 
 **Dataset**: `openneuro_ds004152` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004152
-**Category**: Complex Applied | **Subjects**: 21 | **Files (Completed)**: 21 | **Channels**: 31 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 21 | **Files (Completed)**: 21 | **Channels**: 31 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants learned and performed specific rhythmic drumming patterns at varyin
 > **Kernel SHA256**: `882d940e77cbeb5c4509f76c94b23d52ca0f7bc0269920c7fa5d639f1303a6c4`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -159,3 +159,12 @@ Participants learned and performed specific rhythmic drumming patterns at varyin
   2. Use tighter window than RewP analysis (-0.2s to 1.0s) to focus on early sensorymotor responses.
   3. New Segment and Comment/Active Shielding events are administrative; correctly excluded.
   4. Very high event density (~65,000 total Stimulus events across 21 subjects) — standard epoching feasible but monitor memory usage.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

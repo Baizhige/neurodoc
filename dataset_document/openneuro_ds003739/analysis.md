@@ -1,8 +1,7 @@
 # openneuro_ds003739
 
 **Dataset**: `openneuro_ds003739` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003739
-**Category**: Complex Applied | **Subjects**: 30 | **Files (Completed)**: 120 | **Channels**: 149 | **Sampling Rate**: 256 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 30 | **Files (Completed)**: 120 | **Channels**: 149 | **Sampling Rate**: 256 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed walking on a treadmill-mounted balance beam while being s
 > **Kernel SHA256**: `e7d3d4de7e9ccdcc8a5f822582bc5efce7fefb61a47483a56e231ec91b441a86`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -68,3 +68,12 @@ Participants performed walking on a treadmill-mounted balance beam while being s
 - **Evidence**:
   - DOI: 10.1016/j.dib.2021.107635 — Mentions 75 events per direction per session, confirming left/right perturbation direction is tracked in metadata.
 - **Kernel Notes**: Extract direction field from events.tsv. Filter for valid perturbations only. Apply bandpass filter 0.5-40 Hz. Asymmetric durations (pull=1s vs rotation=0.5s) may require task-specific tmax adjustments.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

@@ -1,8 +1,7 @@
 # Simultaneous EEG and fNIRS recordings for semantic decoding of imagined animals and tools
 
 **Dataset**: `openneuro_ds004514` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004514
-**Category**: High-level Mental | **Subjects**: 12 | **Files (Completed)**: 12 | **Channels**: 32 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 12 | **Files (Completed)**: 12 | **Channels**: 32 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed mental imagery tasks involving semantic categories of ani
 > **Kernel SHA256**: `9e4ac72eeeba2ae337cb2c3972d72c87bb4555866153c72ca91f780f565a3567`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,5 +1,5 @@
 # Object Recognition in Healthy Aging (ORHA) - EEG
-
+**Manual Review**:
 ## Paradigm
 
 (See existing draft)
@@ -9,6 +9,7 @@
 > **Kernel SHA256**: `3583aa1b5e26ec08b61adb74d32b02e0aed8f95e571755adc8e85e26a46feaf0`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -158,3 +159,12 @@
 - **Evidence**:
   - DOI: 10.1016/j.cub.2025.03.062 — Uses representational similarity analysis on EEG responses to individual exemplar images (64 images across 4 categories) to track age-related changes in neural object coding patterns.
 - **Kernel Notes**: 60+ exemplar codes with ~1313-1315 trials each provide sufficient stimulus diversity for RSA. Standard 1s post-stimulus window captures neural object coding patterns. Exclude category codes S65-S69 (used for classification tasks) and fixation markers S99/admin: fixation_marker.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

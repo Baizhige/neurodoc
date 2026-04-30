@@ -1,8 +1,7 @@
 # Effects of ON/OFF deep brain stimulation on cognitive control in treatment-resistant depression (EEG)
 
 **Dataset**: `openneuro_ds001784` | **Year**: 2019 | **URL**: https://openneuro.org/datasets/ds001784
-**Category**: High-level Mental | **Subjects**: 14 | **Files (Completed)**: 38 | **Channels**: 65 | **Sampling Rate**: 1450 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 14 | **Files (Completed)**: 38 | **Channels**: 65 | **Sampling Rate**: 1450 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants with treatment-resistant depression performed a modified Multi-Sour
 > **Kernel SHA256**: `488b4b0485c2f75a4a5565ec7262d1b1e3f90e28befead3622af1ad005dc9bc2`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,8 +1,7 @@
 # A high-quality EEG dataset for studying visual touch perception
 
 **Dataset**: `openneuro_ds005662` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005662
-**Category**: Sensory/Response | **Subjects**: N/A | **Files (Completed)**: 80 | **Channels**: 65 | **Sampling Rate**: 2048 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: N/A | **Files (Completed)**: 80 | **Channels**: 65 | **Sampling Rate**: 2048 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants viewed rapid streams of videos depicting touch to a hand or an obje
 > **Kernel SHA256**: `ae6939484ae682db3726c4e319b9322ca64e4283bd38ac5c8be8b4302f28db0e`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -119,3 +119,12 @@ Participants viewed rapid streams of videos depicting touch to a hand or an obje
 - **Super Meta Notes**: Valence/arousal ratings available in Validated Touch-Video Database but NOT validated in EEG decoding papers. Paradigm plausible (affective response to observed touch), but requires independent validation.
 - **Evidence**: None — valence/arousal regression NOT supported by references (DOIs only validate classification tasks for perspective and material).
 - **Kernel Notes**: Requires external metadata lookup; no direct evidence this signal is decodable from EEG in this dataset.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

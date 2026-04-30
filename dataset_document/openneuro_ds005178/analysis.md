@@ -1,8 +1,7 @@
 # Ear-EEG Sleep Monitoring 2023 (EESM23)
 
 **Dataset**: `openneuro_ds005178` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005178
-**Category**: Biological State | **Subjects**: 10 | **Files (Completed)**: 159 | **Channels**: 5 | **Sampling Rate**: 250 Hz
-**Manual Review**:
+**Category**: Biological State | **Subjects**: 10 | **Files (Completed)**: 159 | **Channels**: 5 | **Sampling Rate**: 250 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Naturalistic nightly sleep monitoring using ear-EEG (in-ear electrodes) and poly
 > **Kernel SHA256**: `05c952b5adbb7c51c1e20d55e1cac5b7e2995315d83205c70482ea76be573017`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

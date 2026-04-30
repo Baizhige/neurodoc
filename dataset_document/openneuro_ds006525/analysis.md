@@ -1,8 +1,7 @@
 # Resting EEG with Structural MRI
 
 **Dataset**: `openneuro_ds006525` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006525
-**Category**: Biological State | **Subjects**: 34 | **Files (Completed)**: 34 | **Channels**: 128 | **Sampling Rate**: 250 Hz
-**Manual Review**: Pending
+**Category**: Biological State | **Subjects**: 34 | **Files (Completed)**: 34 | **Channels**: 128 | **Sampling Rate**: 250 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Spontaneous brain activity was recorded during resting-state EEG from 34 partici
 > **Kernel SHA256**: `870a86dccfc573560147295368fcf35953208f040f1c7cf11ce1990258384370`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -75,3 +75,12 @@ Spontaneous brain activity was recorded during resting-state EEG from 34 partici
 - **Evidence**:
   - DOI: 10.1016/j.neuroimage.2025.121408 — Uses resting-state block markers (rsts/rstf) to define boundaries for CAP analysis, applying sliding windows within these boundaries
 - **Kernel Notes**: Use `rsts` and `rstf` markers to define resting-state block boundaries; extract epochs within these boundaries only using 2-s sliding windows with 50% overlap to capture transient CAP transitions. Exclude `NRST` periods (y=2) from resting-state analyses—these periods are labeled but not included in the resting-state target set. Apply bandpass filter (0.5-40 Hz) and artifact rejection prior to segmentation. 34 resting blocks total (one per subject), with 19202 end markers indicating multiple start-stop cycles per session.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

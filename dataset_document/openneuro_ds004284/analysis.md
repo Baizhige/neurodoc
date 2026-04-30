@@ -1,8 +1,7 @@
 # eeg-neuroforecasting
 
 **Dataset**: `openneuro_ds004284` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004284
-**Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 18 | **Channels**: 129 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 18 | **Channels**: 129 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A neuroforecasting task that utilizes EEG activity during decision-making or val
 > **Kernel SHA256**: `789185d5ce1e8a49f721cdf2816d15beef27120732fcfb0c53ce9166173645c6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -28,6 +28,8 @@ A neuroforecasting task that utilizes EEG activity during decision-making or val
 | `device` | missing | N/A |
 
 ## Tasks
+
+
 
 ## Data Quality Notes
 

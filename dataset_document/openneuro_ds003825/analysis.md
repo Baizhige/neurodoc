@@ -1,8 +1,7 @@
 # Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts
 
 **Dataset**: `openneuro_ds003825` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003825
-**Category**: Sensory/Response | **Subjects**: 50 | **Files (Completed)**: 100 | **Channels**: 64 | **Sampling Rate**: 250 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 50 | **Files (Completed)**: 100 | **Channels**: 64 | **Sampling Rate**: 250 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants viewed a large-scale set of 22,248 images spanning 1,854 object con
 > **Kernel SHA256**: `0b193703292dadd80c05026f52914244f4031b303db0da8eba87cda632245a6e`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -102,3 +102,12 @@ Participants viewed a large-scale set of 22,248 images spanning 1,854 object con
   - DOI: 10.1038/s41597-021-01102-7 — documents continuous RSVP streams with artifact segments flagged by boundary markers
   - Partial Evidence: 52 boundary events suggest segment breaks requiring detection for epoch quality control
 - **Kernel Notes**: Distinguishing valid stimulus epochs from boundary artifacts supports data cleaning pipeline. Boundary events (n=52) are rare but critical for artifact detection. Use short epoch window to capture transient boundary effects.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

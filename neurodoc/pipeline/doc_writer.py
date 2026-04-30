@@ -29,8 +29,7 @@ The file must have exactly this structure (5 top-level ## sections, in this exac
 # <Dataset Full Name>
 
 **Dataset**: `<dataset_name>` | **Year**: <year> | **URL**: <url>
-**Category**: <category> | **Subjects**: <n> | **Files (Completed)**: <n> | **Channels**: <n> | **Sampling Rate**: <hz> Hz
-**Manual Review**:
+**Category**: <category> | **Subjects**: <n> | **Files (Completed)**: <n> | **Channels**: <n> | **Sampling Rate**: <hz> Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -458,7 +457,8 @@ def write_failed_analysis(
         kr_block = _build_kr_block("No", "wait_kernel_update")
         content = (
             f"# {dataset_name}\n\n"
-            f"**Manual Review**:\n\n"
+            f"**Dataset**: `{dataset_name}` | **Year**:  | **URL**: \n"
+            f"**Category**:  | **Subjects**:  | **Files (Completed)**:  | **Channels**:  | **Sampling Rate**:  | **Manual Review**:\n\n"
             f"## Paradigm\n\n(Pending)\n\n"
             f"## File Scan Result\n\n"
             f"> **Kernel SHA256**: `N/A`\n"
@@ -490,8 +490,12 @@ def _fallback_analysis_md(
     file_scan_block, kr_block,
 ) -> str:
     """Simple string-based fallback when LLM fails to produce doc."""
-    header_match = re.match(r"(#[^\n]+\n[^\n]*\n)", existing_md)
-    header = header_match.group(1) if header_match else f"# {dataset_name}\n\n"
+    header_match = re.match(r"(#[^\n]+\n(?:[^\n]*\n){0,4})", existing_md)
+    header = header_match.group(1) if header_match else (
+        f"# {dataset_name}\n\n"
+        f"**Dataset**: `{dataset_name}` | **Year**:  | **URL**: \n"
+        f"**Category**:  | **Subjects**:  | **Files (Completed)**:  | **Channels**:  | **Sampling Rate**:  | **Manual Review**:\n"
+    )
 
     return (
         f"{header}\n"

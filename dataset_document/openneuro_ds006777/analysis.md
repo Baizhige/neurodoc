@@ -1,8 +1,7 @@
 # SFARI AVSRT EEG
 
 **Dataset**: `openneuro_ds006777` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006777
-**Category**: Sensory/Response | **Subjects**: 132 | **Files (Completed)**: 132 | **Channels**: 73 | **Sampling Rate**: 512 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 132 | **Files (Completed)**: 132 | **Channels**: 73 | **Sampling Rate**: 512 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ An audiovisual simple reaction-time task (AVSRT) in which participants press a b
 > **Kernel SHA256**: `f237482396a85eec6555c494a62d58c7b723ae9791bdfdc5e6816c78f50e4ec9`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -99,3 +99,12 @@ An audiovisual simple reaction-time task (AVSRT) in which participants press a b
 
 - **Evidence** (DOI): https://doi.org/10.18112/openneuro.ds006777.v1.0.0
 - **Kernel Notes**: SFARI cohort includes ASD and neurotypical participants. Group membership is a subject-level covariate, not an event label; route via misc with source (participant metadata) and version metadata. May be combined with stimulus-locked epochs for group-difference decoding.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

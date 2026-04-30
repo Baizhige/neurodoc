@@ -1,8 +1,7 @@
 # Loneliness in the Brain: Distinguishing Between Hypersensitivity and Hyperalertness (Pilot)
 
 **Dataset**: `openneuro_ds004802` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004802
-**Category**: High-level Mental | **Subjects**: 79 | **Files (Completed)**: 79 | **Channels**: 73 | **Sampling Rate**: 512 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 79 | **Files (Completed)**: 79 | **Channels**: 73 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A pilot EEG study investigating the neural underpinnings of loneliness by contra
 > **Kernel SHA256**: `969ccec64d6022cd0426dc183d1f2e496ca601c022defefb2d85286e29971e8b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

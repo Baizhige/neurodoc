@@ -1,8 +1,7 @@
 # Driving with Autonomous Aids
 
 **Dataset**: `openneuro_ds004657` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004657
-**Category**: Complex Applied | **Subjects**: N/A | **Files (Completed)**: 119 | **Channels**: 74 | **Sampling Rate**: 1024 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: N/A | **Files (Completed)**: 119 | **Channels**: 74 | **Sampling Rate**: 1024 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed a semi-automated driving task involving lane maintenance 
 > **Kernel SHA256**: `b679e822b19f01636c5c85db16529502472020a1b36962ac3697fdae63407672`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -213,3 +213,12 @@ Participants performed a semi-automated driving task involving lane maintenance 
   - Consider grouping by leading 3 digits (e.g., 231, 411, 232, 141) to reduce cardinality before classification
   - Binary V1/V2 variants within each condition — may collapse for higher-level condition grouping
   - No explicit condition duration markers in events.tsv — infer from adjacent code transitions
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

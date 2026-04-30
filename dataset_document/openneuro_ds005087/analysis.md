@@ -1,8 +1,7 @@
 # Visual Hemifield RSVP Object Recognition Dataset
 
 **Dataset**: openneuro_ds005087 | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005087
-**Category**: EEG | **Subjects**: 80 | **Files (Completed)**: 80 | **Channels**: 63 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: EEG | **Subjects**: 80 | **Files (Completed)**: 80 | **Channels**: 63 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants viewed object and word stimuli presented at 5 Hz in rapid visual st
 > **Kernel SHA256**: `5e138eb3a207e9d0dcec61de127b7afcbbe8ecb2dd10353e4a650020f8d9d9c6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

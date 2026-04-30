@@ -1,8 +1,7 @@
 # Intracranial EEG During Cortical Stimulation Evoking Visual Effects
 
 **Dataset**: `openneuro_ds005169` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005169
-**Category**: Sensory/Response | **Subjects**: 22 | **Files (Completed)**: 112 | **Channels**: 82 | **Sampling Rate**: 4096 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 22 | **Files (Completed)**: 112 | **Channels**: 82 | **Sampling Rate**: 4096 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Intracranial EEG was recorded from drug-resistant epilepsy patients undergoing p
 > **Kernel SHA256**: `e9eaaa6de3c32f35b7684f29f3b93c838e3a5cc24cd30598a81c1019c73ba803`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -88,3 +88,12 @@ Intracranial EEG was recorded from drug-resistant epilepsy patients undergoing p
 - **Evidence**:
   - DOI: 10.1016/j.brs.2025.05.138 — Uses openneuro_ds005169 dataset to analyze functional and effective brain connectivity during high-frequency intracranial stimulation, classifying visual hallucinations into 14 subtypes (elementary, plus, minus, static, dynamic, continuous, intermittent, whole_visual_field, center, peripheric, color, non_color, combined, multimodal) in 22 patients.
 - **Kernel Notes**: Use epoch_by_event_hdf5 with symmetric window around stimulation: response onset. 14-class labels derived from patient-reported symptoms in clinical notes - not directly present in raw events. Requires post-hoc mapping of clinical documentation to visual hallucination taxonomy. UUID-format Comment events contain patient-specific visual descriptions that inform label mapping.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

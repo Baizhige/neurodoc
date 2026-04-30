@@ -41,9 +41,29 @@ def _format_errors(errors: List[str]) -> List[str]:
     return result
 
 
+def _check_manual_review_inline(content: str) -> List[str]:
+    errors: List[str] = []
+    first_section = re.search(r"^##\s+\S", content, flags=re.MULTILINE)
+    header = content[: first_section.start()] if first_section else content
+    category_line_match = re.search(r"^\*\*Category\*\*[^\n]*$", header, flags=re.MULTILINE)
+    standalone_match = re.search(r"^\*\*Manual Review\*\*:[^\n]*$", header, flags=re.MULTILINE)
+
+    if standalone_match:
+        errors.append("Manual Review must be inline on the second meta line, not a standalone line.")
+
+    if not category_line_match:
+        return errors
+
+    category_line = category_line_match.group(0)
+    if "**Manual Review**:" not in category_line:
+        errors.append("Manual Review must appear inline on the second meta line.")
+    return errors
+
+
 def check_analysis_template(content: str) -> Dict[str, object]:
     errors: List[str] = []
     content = str(content or "")
+    errors.extend(_check_manual_review_inline(content))
 
     top_headings = _find_headings(_TOP_LEVEL_RE, content)
     top_names = [name for name, _ in top_headings]
@@ -206,7 +226,8 @@ Hard invariants to satisfy when fixing v3 semantic errors:
       (epoch_by_event_hdf5: tmin/tmax/target_events; epoch_by_long_event_hdf5: tmin/tmax/overlap/target_events;
       epoch_by_segmentation_hdf5: segment_length/overlap; target_events = [] for segmentation).
 - H6: segmentation ⇒ target_events = [].
-- H7: **Manual Review**: must be blank (reviewer-managed; never fill it in).
+- H7: `Manual Review` must stay blank and must appear inline on the second meta line
+      (after `Sampling Rate`, not as a standalone line).
 
 If an error refers to `label_field_required_for_nonevent` — add a `- **Label Field**: ...` line.
 If `label_field_absent_for_event` — remove the stray Label Field line.

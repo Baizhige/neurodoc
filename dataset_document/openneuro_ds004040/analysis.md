@@ -1,8 +1,7 @@
 # Trance Channeling EEG Dataset
 
 **Dataset**: openneuro_ds004040 | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds004040
-**Category**: Neuroscience | **Subjects**: 13 | **Files (Completed)**: 26 | **Channels**: 64 | **Sampling Rate**: 512 Hz
-**Manual Review**:
+**Category**: Neuroscience | **Subjects**: 13 | **Files (Completed)**: 26 | **Channels**: 64 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Thirteen experienced trance channelers performed alternating 5-minute blocks of 
 > **Kernel SHA256**: `2dae4eccd153c0f54620bb55ee284ed6ebe47dc306b8abaa5ee6c09a6c3c539e`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

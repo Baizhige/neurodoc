@@ -1,8 +1,7 @@
 # ANDI: Auditory N-back Dual-task EEG
 
 **Dataset**: `openneuro_ds004661` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004661
-**Category**: Complex Applied | **Subjects**: 17 | **Files (Completed)**: 17 | **Channels**: 64 | **Sampling Rate**: 128 Hz
-**Manual Review**:
+**Category**: Complex Applied | **Subjects**: 17 | **Files (Completed)**: 17 | **Channels**: 64 | **Sampling Rate**: 128 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A dual-task paradigm combining a guided visual search task (tracking a red annul
 > **Kernel SHA256**: `720caebe32c368bee7750f3e7edc27478c4affaff156bfa63744b6077c108144`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -29,6 +29,8 @@ A dual-task paradigm combining a guided visual search task (tracking a red annul
 | `device` | missing | N/A |
 
 ## Tasks
+
+
 
 ## Data Quality Notes
 

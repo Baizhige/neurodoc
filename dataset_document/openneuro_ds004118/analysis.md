@@ -1,9 +1,8 @@
 # BCIT Calibration Driving
 
 **Dataset**: `openneuro_ds004118` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004118
-**Category**: Complex Applied | **Subjects**: 247 | **Files (Completed)**: 247
+**Category**: Complex Applied | **Subjects**: 247 | **Files (Completed)**: 247 | **Manual Review**: Pending
 **Channels**: 266 | **Sampling Rate**: 1024 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ Subjects performed a 15-minute simulated driving calibration task on a straight 
 > **Kernel SHA256**: `6cda310e62c32e5f7cc7c222543faee149659d4d1ce9f442ba634840f79e1914`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -81,3 +81,12 @@ Subjects performed a 15-minute simulated driving calibration task on a straight 
 
 - **Evidence**: None (plausible from paradigm: event pair 3111/3112 captures full perturbation-response cycle for sustained corrective activity analysis)
 - **Kernel Notes**: Long epoch window (3.3 s total) needed to analyze sustained cortical involvement during lane maintenance and recovery. Events present in all 247 files. High-density 266-channel data requires careful memory management for extended epoch analysis.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

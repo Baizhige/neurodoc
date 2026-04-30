@@ -1,8 +1,7 @@
 # Social Observation EEG Raw Data
 
 **Dataset**: `openneuro_ds006554` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006554
-**Category**: Complex Applied | **Subjects**: 47 | **Files (Completed)**: 47 | **Channels**: 64 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 47 | **Files (Completed)**: 47 | **Channels**: 64 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ EEG was recorded while participants engaged in social observation tasks, likely 
 > **Kernel SHA256**: `6c067a4038008f41ec790c6e02d14669379b3300d6c278260a0103129d61eba4`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -126,3 +126,12 @@ EEG was recorded while participants engaged in social observation tasks, likely 
 
 - **Evidence**: None (no reference papers available)
 - **Kernel Notes**: Social observation paradigm with 30 distinct condition codes. The tens-digit grouping (10s, 20s, 30s, 60s, 80s) may represent factor levels (e.g., stimulus type × emotion × viewpoint). Consider reduced-class grouping for hierarchical classification. Perfectly balanced design across 47 subjects supports cross-subject decoding. Apply bandpass filter (0.5-40 Hz) and artifact rejection prior to epoching.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

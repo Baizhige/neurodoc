@@ -1,8 +1,7 @@
 # Resting-State EEG Before and After Cognitive Activity Across the Adult Lifespan (5-Year Follow-Up)
 
 **Dataset**: `openneuro_ds005385` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005385
-**Category**: Biological State | **Subjects**: 608 | **Files (Completed)**: 3264 | **Channels**: 65 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Biological State | **Subjects**: 608 | **Files (Completed)**: 3264 | **Channels**: 65 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Resting-state EEG was recorded with eyes open and eyes closed before and after a
 > **Kernel SHA256**: `6b71b55fdd21d5b3bc51de60807ab0751e0d2f9f69639c7263d3f74e45ba5556`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -3058,3 +3058,12 @@ Resting-state EEG was recorded with eyes open and eyes closed before and after a
 - **Evidence**:
   - DOI: `10.1038/s41597-024-03797-w` — Dataset publication confirming S-code event structure for rest condition encoding across sessions.
 - **Kernel Notes**: Primary condition markers (event_1 through event_256) encode resting-state conditions. Higher-count events (~200 each) map to main paradigm conditions. Subject-specific events with counts 1-3 represent follow-up session markers. Verify condition marker mapping against paradigm documentation.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

@@ -1,8 +1,7 @@
 # Auditory and Visual Rhythm Omission EEG
 
 **Dataset**: `openneuro_ds002218` | **Year**: 2019 | **URL**: https://openneuro.org/datasets/ds002218
-**Category**: Sensory/Response | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 32 | **Sampling Rate**: 256 Hz
-**Manual Review**:
+**Category**: Sensory/Response | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 32 | **Sampling Rate**: 256 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants passively perceived rhythmic auditory tone sequences and visual fla
 > **Kernel SHA256**: `c321e8c16ce2439b0d7cb2735e681c043b1173f0cbf10ec93ceac6c3b3b78eb9`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

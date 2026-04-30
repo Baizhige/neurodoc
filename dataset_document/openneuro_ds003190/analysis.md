@@ -1,9 +1,8 @@
 # Assessment of the visual stimuli properties in P300 paradigm
 
 **Dataset**: `openneuro_ds003190` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds003190
-**Category**: Sensory/Response | **Subjects**: 19 | **Files (Completed)**: 384
+**Category**: Sensory/Response | **Subjects**: 19 | **Files (Completed)**: 384 | **Manual Review**: Pending
 **Channels**: 9 | **Sampling Rate**: 256 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ A P300 ERP experiment evaluating the effects of stimulus count and visual presen
 > **Kernel SHA256**: `b39efab60211591cb32356eb1c56e892a569f70e6752c09d171e14fa6d5b2df1`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -81,3 +81,12 @@ A P300 ERP experiment evaluating the effects of stimulus count and visual presen
 - **Evidence**:
   - DOI: 10.3390/s20247198 — "Single-Option P300-BCI Performance Is Affected by Visual Stimulation Conditions"; explicit dataset match (19 subjects, 3 sessions, ds003190); binary classification between target codes (101-109) and non-target codes (1-9) using CCA spatial filtering with LDA classifier; reports ~82% accuracy with cartoon face stimuli; paradigm confirms P300 oddball with standard flash vs cartoon face conditions.
 - **Kernel Notes**: Group all target flash codes (101-109) as class 0 (target) and all non-target stimulus codes (1-9) as class 1 (non-target). The extreme class imbalance (~2,524 target vs ~584,169 non-target events across dataset) requires stratified sampling or class weighting. Configuration codes 200-203 (~3,515 each) are session/block markers and should NOT be included in epoching. Use -0.2 to 0 s for baseline correction to capture pre-stimulus activity.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

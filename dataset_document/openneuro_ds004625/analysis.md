@@ -1,8 +1,7 @@
 # Mind in Motion: Young Adults Walking Over Uneven Terrain
 
 **Dataset**: `openneuro_ds004625` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004625
-**Category**: Complex Applied | **Subjects**: 32 | **Files (Completed)**: 543 | **Channels**: 284 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: Complex Applied | **Subjects**: 32 | **Files (Completed)**: 543 | **Channels**: 284 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants walked over uneven terrain at different speeds while high-density E
 > **Kernel SHA256**: `eec29ae51dff17785ba0eb410e00b3b9ac95a5f5192003e7cbe81d79322222a6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

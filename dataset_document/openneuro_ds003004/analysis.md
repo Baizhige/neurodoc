@@ -1,8 +1,7 @@
 # Imagined Emotion Study
 
 **Dataset**: `openneuro_ds003004` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003004
-**Category**: High-level Mental | **Subjects**: 31 | **Files (Completed)**: 34 | **Channels**: 219 | **Sampling Rate**: 256 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 31 | **Files (Completed)**: 34 | **Channels**: 219 | **Sampling Rate**: 256 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants used voice-guided imagery to induce and sustain 15 distinct emotion
 > **Kernel SHA256**: `9c087043f37ac6921fc1b534eb9f79b4f58c41884cf33a3bbd5820b1f68a4d5c`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

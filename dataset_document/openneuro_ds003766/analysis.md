@@ -1,9 +1,8 @@
 # A Resource for Assessing Dynamic Binary Choices in the Adult Brain Using EEG and Mouse-Tracking
 
 **Dataset**: `openneuro_ds003766` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds003766
-**Category**: High-level Mental | **Subjects**: 31 | **Files (Completed)**: 217
+**Category**: High-level Mental | **Subjects**: 31 | **Files (Completed)**: 217 | **Manual Review**: Pending
 **Channels**: 129 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ Participants performed dynamic decision-making tasks including food preference c
 > **Kernel SHA256**: `4705529e337e327cb265f22d53b751f9762299fc6b6a1161f0e506333a0a2fcc`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -447,3 +447,12 @@ Participants performed dynamic decision-making tasks including food preference c
 - **Evidence**:
   - DOI: 10.1038/s41597-022-01538-5 — Paper describes three distinct binary choice paradigms (food preference, semantic word judgment, image judgment) with different stimulus types encoded by 0400-series events.
 - **Kernel Notes**: Count distribution (0400: 28,542 >> 0401-0403: ~9,200 each) suggests food task has more trials or 0400 used as generic food marker. Verify task-to-event mapping from events.tsv before implementing. Cross-task classification tests domain-general vs domain-specific neural representations.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

@@ -1,8 +1,7 @@
 # OpenNeuro ds004147: EEG during reinforcement learning with varying feedback validity
 
 **Dataset**: `openneuro_ds004147` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004147
-**Category**: reinforcement learning / value-based learning | **Subjects**: 12 | **Files (Completed)**: 12 | **Channels**: 64 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: reinforcement learning / value-based learning | **Subjects**: 12 | **Files (Completed)**: 12 | **Channels**: 64 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A reinforcement learning task requiring participants to learn cue-response mappi
 > **Kernel SHA256**: `2d517e6aef5ec2951e8b06c29efcb48dbe165d27c87ebc315a392515d203e068`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,13 +1,17 @@
 # Implicit Learning EEG (BioSemi)
 
 **Dataset**: `openneuro_ds006159` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006159
-**Category**: High-level Mental | **Subjects**: 35 | **Files (Completed)**: 35 | **Channels**: 69 | **Sampling Rate**: 1024 Hz
+**Category**: High-level Mental | **Subjects**: 35 | **Files (Completed)**: 35 | **Channels**: 69 | **Sampling Rate**: 1024 Hz | **Manual Review**:
 
 ## Paradigm
 
 An experimental study investigating the neural correlates of implicit learning using a BioSemi EEG system. Participants underwent repeated exposure to structured sequences without explicit instructions to learn the underlying patterns. No trial-level event annotations are present in the dataset; the EEG is recorded as a continuous stream during the implicit learning protocol.
 
 ## File Scan Result
+
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 ### Event Structure
 
@@ -49,15 +53,5 @@ No additional scan result info available.
 
 ## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds006159
-
----
-
-> **auto_eeg FAILED**: No relevant or partial references exist in the extraction set (all relevant neuroscience papers are classified as irrelevant), and critically, the dataset contains no trial-level event markers or discrete annotations—it is purely continuous EEG. While the analysis.md describes an implicit learning paradigm, without any identifiable label structure or verified event parameters, no concrete supervised ML task can be defined.
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

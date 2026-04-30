@@ -1,9 +1,8 @@
 # Subcortical responses to music and speech are alike while cortical responses diverge
 
 **Dataset**: `openneuro_ds004356` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004356
-**Category**: Sensory/Response | **Subjects**: 22 | **Files (Completed)**: 24
+**Category**: Sensory/Response | **Subjects**: 22 | **Files (Completed)**: 24 | **Manual Review**:
 **Channels**: 34 | **Sampling Rate**: 10000 Hz
-**Manual Review**:
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ The study measures subcortical Auditory Brainstem Responses (ABR) and cortical a
 > **Kernel SHA256**: `5c95da9f7885cfea812f8e9ae73c60a937cea95a8f3a1e8669e6afc53d8ab476`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

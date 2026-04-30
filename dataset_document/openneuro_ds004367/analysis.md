@@ -1,8 +1,7 @@
 # Meta-rdk: Raw EEG data
 
 **Dataset**: `openneuro_ds004367` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004367
-**Category**: High-level Mental | **Subjects**: 42 | **Files (Completed)**: 40 | **Channels**: 68 | **Sampling Rate**: 1200 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 42 | **Files (Completed)**: 40 | **Channels**: 68 | **Sampling Rate**: 1200 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A visual motion discrimination task involving left/right direction decisions on 
 > **Kernel SHA256**: `d89b05628847049682560ac8a7ac64ce492a8d1b6c4c74a813f598c6943268a0`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,8 +1,7 @@
 # Encoding of Sound Source Elevation in Human Cortex
 
 **Dataset**: `openneuro_ds004256` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004256
-**Category**: Sensory/Response | **Subjects**: 53 | **Files (Completed)**: 53 | **Channels**: 64 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: Sensory/Response | **Subjects**: 53 | **Files (Completed)**: 53 | **Channels**: 64 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed an auditory deviant detection task and a one-back sound l
 > **Kernel SHA256**: `e5e150ee81879fa2dd7abd06556c47e6841afbf9abc2679faa2f4fe7415a669f`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,5 +1,5 @@
 # Mood Manipulation and PST, Experiment 1
-
+**Manual Review**:
 ## Paradigm
 
 (See existing draft)
@@ -9,6 +9,7 @@
 > **Kernel SHA256**: `20311fff644cb38d02ca2a4ee3141e0b26b865840ae3880ecc1a8a9509306953`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -119,3 +120,11 @@
 - **Evidence**: Paradigm-based plausibility (reinforcement learning testing phase with novel stimulus pairs).
 - **Kernel Notes**: Extract epochs for TESTING events. Parse events.tsv trial_type column for sub-label mapping (response direction + outcome). Window captures stimulus presentation, response, and feedback during testing trials.
 
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

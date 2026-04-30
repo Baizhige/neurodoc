@@ -1,8 +1,7 @@
 # TUH EEG Events Corpus
 
 **Dataset**: `tuh_eeg_events` | **Year**: 2015-2016 | **URL**: https://isip.piconepress.com/projects/nedc/html/tuh_eeg/
-**Category**: Biological State | **Subjects**: 290 | **Files (Completed)**: 518 | **Channels**: 24-33 | **Sampling Rate**: 250 Hz
-**Manual Review**: Chengxuan Qin
+**Category**: Biological State | **Subjects**: 290 | **Files (Completed)**: 518 | **Channels**: 24-33 | **Sampling Rate**: 250 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 

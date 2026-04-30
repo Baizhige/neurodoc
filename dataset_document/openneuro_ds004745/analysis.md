@@ -1,8 +1,7 @@
 # 8-Channel SSVEP EEG Dataset with Artifact Trials
 
 **Dataset**: `openneuro_ds004745` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004745
-**Category**: Sensory/Response | **Subjects**: 6 | **Files (Completed)**: 6 | **Channels**: 8 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 6 | **Files (Completed)**: 6 | **Channels**: 8 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed Steady-State Visual Evoked Potential (SSVEP) tasks at sti
 > **Kernel SHA256**: `8ec4540117314d5c94bcdba63475778b4971a7f0fdaef0fb2bd508b0cac49327`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -70,3 +70,12 @@ Participants performed Steady-State Visual Evoked Potential (SSVEP) tasks at sti
 - **Evidence**:
   - Paradigm-aligned: SSVEP condition onsets marked by trigger codes allow event-locked epoching around condition transitions. The 1.2 s window captures transient response dynamics following condition switches while maintaining a baseline period for drift correction.
 - **Kernel Notes**: Event-locked epoching around condition onset markers (events 2/4/8 for frequency conditions, event 10 for artifact/rest). Shorter window suitable for capturing transient responses to condition changes. Note: only 6 subjects limits statistical power; this approach is plausible but not directly validated by the reference paper which used sliding window segmentation.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

@@ -1,8 +1,7 @@
 # Ear-EEG Sleep Monitoring 2017 (EESM17)
 
 **Dataset**: `openneuro_ds004348` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004348
-**Category**: Biological State | **Subjects**: 9 | **Files (Completed)**: 36 | **Channels**: 35 | **Sampling Rate**: 200 Hz
-**Manual Review**:
+**Category**: Biological State | **Subjects**: 9 | **Files (Completed)**: 36 | **Channels**: 35 | **Sampling Rate**: 200 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Nightly sleep monitoring and pre-sleep resting recordings using ear-EEG and part
 > **Kernel SHA256**: `f3dc6f84457dde259198b2c8ce281375ff4cefab30da313223fbbeef7bd99c92`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

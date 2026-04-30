@@ -1,8 +1,7 @@
 # Illusion of Agency over Electrically-Actuated Movements
 
 **Dataset**: `openneuro_ds004561` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004561
-**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 20 | **Channels**: 64 | **Sampling Rate**: 512 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 20 | **Channels**: 64 | **Sampling Rate**: 512 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants experienced electrical muscle stimulation that actuated their hand 
 > **Kernel SHA256**: `60a5e98f949d2b8ff5248518d585d8eb27ef0b462d3274617dd5587a5695b562`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -79,3 +79,12 @@ Participants experienced electrical muscle stimulation that actuated their hand 
 
 - **Evidence**: No explicit classification=relevant reference; inferred from epoch alignment recommendations supporting extended post-event window for reaction-time and agency attribution analysis.
 - **Kernel Notes**: Extended window captures movement execution, sensory feedback integration, and agency-related processing. Pre-stimulus baseline window assesses motor preparation differences between voluntary and stimulation-induced movements. Require careful artifact handling for stimulation condition.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

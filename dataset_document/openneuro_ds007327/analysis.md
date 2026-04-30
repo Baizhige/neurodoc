@@ -1,8 +1,7 @@
 # EEG During Sport-Related Motor Imagery and Observation Tasks
 
 **Dataset**: `openneuro_ds007327` | **Year**: 2026 | **URL**: https://openneuro.org/datasets/ds007327
-**Category**: Action/Output | **Subjects**: 35 | **Files (Completed)**: 105 | **Channels**: 88 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Action/Output | **Subjects**: 35 | **Files (Completed)**: 105 | **Channels**: 88 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ EEG was recorded during two sports-related tasks (ball passing and dribbling) to
 > **Kernel SHA256**: `6ba1ab7c5348ae377d6004db997113952440f2d3adfcf6435db90c82db8f1370`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -163,3 +163,12 @@ EEG was recorded during two sports-related tasks (ball passing and dribbling) to
 - **Label verification**: This mapping is only valid if B18/C18 = MIMI and B12/C12 = MIMO (imagination conditions) and B14/C14 = MOMI and B16/C16 = MOMO (observation conditions). Confirm raw-to-semantic mapping before releasing super labels.
 - **Class balance**: Each binary class will contain ~16 700–16 800 trials pooled across both sport tasks, yielding near-perfect balance.
 - **Alternative**: A11 (MO) vs A22 (MI) from the A-series provides a clean single-factor binary MI vs. MO contrast with ~4 200 trials per class and may be preferable for a simpler benchmark.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

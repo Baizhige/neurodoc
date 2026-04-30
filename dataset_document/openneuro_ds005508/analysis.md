@@ -1,8 +1,7 @@
 # Healthy Brain Network (HBN) EEG - Release 4
 
 **Dataset**: `openneuro_ds005508` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005508
-**Category**: Complex Applied | **Subjects**: 324 | **Files (Completed)**: 3342 | **Channels**: 129 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 324 | **Files (Completed)**: 3342 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ The Healthy Brain Network (HBN) EEG Release 4 is a large-scale, multi-task devel
 > **Kernel SHA256**: `8ca00d13062ddeb2c9ff9fec7ba02291f7ded72272f85478303cca5b9787f50c`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -170,3 +170,12 @@ The Healthy Brain Network (HBN) EEG Release 4 is a large-scale, multi-task devel
   - DOI: `10.1101/089060` — Discusses neural responses to naturalistic videos in HBN context (partial evidence; sample size and dataset version differ)
   - Paradigm: Movie watching segments (`video_start`: 1,368, `video_stop`: 1,342) provide continuous naturalistic stimulus periods
 - **Kernel Notes**: Use overlapping short segments (10 s) for time-frequency analysis. Without external annotations, perform exploratory TF decomposition without supervised labels. Frame-rate sync may enable stimulus-locked analysis if movie ID and timestamp alignment are available.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

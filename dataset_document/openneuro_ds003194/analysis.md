@@ -1,9 +1,8 @@
 # Neuroepo multisession
 
 **Dataset**: `openneuro_ds003194` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003194
-**Category**: Biological State | **Subjects**: 25 | **Files (Completed)**: 29
+**Category**: Biological State | **Subjects**: 25 | **Files (Completed)**: 29 | **Manual Review**: Pending
 **Channels**: 19 | **Sampling Rate**: 200 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ Resting-state EEG recorded before and after a six-month Neuroepo drug administra
 > **Kernel SHA256**: `10d519af7b7b69ec1c59163c3aff14f3e34d3352d92ed7aa40355ef44c1d3549`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -108,3 +108,12 @@ Resting-state EEG recorded before and after a six-month Neuroepo drug administra
 - **Evidence**:
   - DOI: 10.3389/fnins.2022.841428 — Photic stimulation is part of the standard clinical neurological assessment battery; the dataset includes photic stimulation events to assess cortical responsiveness.
 - **Kernel Notes**: 1) `photic stimulation` and `fotoestimulacion` are equivalent labels (Spanish/English) for the same condition — merge for single-class analysis or use as label noise detection task. 2) Photic stimulation events present in 11 files only — limited sample size. 3) Analyze frequency-following response (FFR) in EEG during photic stimulation. 4) Merge with other brain state events for extended classification task.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

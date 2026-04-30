@@ -1,8 +1,7 @@
 # Reward Biases Spontaneous Neural Reactivation During Sleep
 
 **Dataset**: `openneuro_ds003574` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003574
-**Category**: Complex Applied | **Subjects**: 18 | **Files (Completed)**: 17 | **Channels**: 69 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 18 | **Files (Completed)**: 17 | **Channels**: 69 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants played two video games (FACE and MAZE) during a waking session—on
 > **Kernel SHA256**: `b3500524c31b123bf55456ee9a2252655278c4bcca336506eddda6f2171f4231`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -332,3 +332,12 @@ Participants played two video games (FACE and MAZE) during a waking session—on
   | `REM` | 3 | REM sleep |
   | `Wake` | 4 | Wakefulness |
 - **Notes**: Standard AASM sleep staging uses 20s epochs. Paper (10.1038/s41467-021-24357-5) reports N3 sleep as key period for reward-associated replay. Requires hypnogram annotations from events.tsv or external sleep stage labels. 50% overlap ensures smooth stage transition detection.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

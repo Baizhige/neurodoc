@@ -1,8 +1,7 @@
 # Healthy Brain Network (HBN) EEG - Release 7
 
 **Dataset**: `openneuro_ds005511` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005511
-**Category**: Complex Applied | **Subjects**: 381 | **Files (Completed)**: 3100 | **Channels**: 129 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 381 | **Files (Completed)**: 3100 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ The Healthy Brain Network (HBN) EEG Release 7 is a large-scale, multi-task devel
 > **Kernel SHA256**: `653efcd3f42364f68252d19dd092a59c303dadbb65fee162019431e8e8f84f00`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -75,3 +75,12 @@ The Healthy Brain Network (HBN) EEG Release 7 is a large-scale, multi-task devel
 ## Tasks
 
 (No tasks could be synthesized.)
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

@@ -1,8 +1,7 @@
 # Visual Oddball Task (256 channels)
 
 **Dataset**: `openneuro_ds002578` | **Year**: 2004/2021 | **URL**: https://openneuro.org/datasets/ds002578
-**Category**: Sensory/Response | **Subjects**: 2 | **Files (Completed)**: 2 | **Channels**: 256 | **Sampling Rate**: 256 Hz
-**Manual Review**:
+**Category**: Sensory/Response | **Subjects**: 2 | **Files (Completed)**: 2 | **Channels**: 256 | **Sampling Rate**: 256 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A continuous visual oddball / selective-attention task recorded with 256-channel
 > **Kernel SHA256**: `89aaab696910b7caca856bbec641e222da1e8595c2a1c6209cb4a7ceef402a07`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

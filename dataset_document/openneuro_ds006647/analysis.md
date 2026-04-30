@@ -1,8 +1,7 @@
 # Poetry EEG Study
 
 **Dataset**: `openneuro_ds006647` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006647
-**Category**: High-level Mental | **Subjects**: 51 | **Files (Completed)**: 4 | **Channels**: 70 | **Sampling Rate**: 512 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 51 | **Files (Completed)**: 4 | **Channels**: 70 | **Sampling Rate**: 512 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 > **Kernel SHA256**: `41238c913650e8aee93c6d08a502fd173adb57ece461b45c54422e369b91fdbd`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -114,3 +114,12 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 
 - **Evidence**: DOI: https://doi.org/10.1038/s41597-025-06189-w (paradigm evidence, not direct classification-relevant)
 - **Kernel Notes**: Binary contrast between poetry (Haiku, Senryu, and additional conditions) and non-poetic control. Tests whether aesthetic processing during poetry reading produces distinct neural signatures. Collapse 3 poetry conditions into single class for binary analysis.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

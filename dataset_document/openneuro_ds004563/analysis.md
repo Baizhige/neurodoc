@@ -1,8 +1,7 @@
 # Vicarious touch: overlapping neural patterns between seeing and feeling touch
 
 **Dataset**: `openneuro_ds004563` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004563
-**Category**: Sensory/Response | **Subjects**: 29 | **Files (Completed)**: 29 | **Channels**: 64 | **Sampling Rate**: 512 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 29 | **Files (Completed)**: 29 | **Channels**: 64 | **Sampling Rate**: 512 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants either saw someone else being touched (vicarious touch, event_4) or
 > **Kernel SHA256**: `0f62f39e754af5773c385b0213395765a12cb12a9fb91320468953b18b2f1207`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -113,3 +113,12 @@ Participants either saw someone else being touched (vicarious touch, event_4) or
 
 - **Evidence**: DOI: 10.1101/2022.06.21.497107; DOI: 10.1016/j.neuroimage.2023.120269 (both mention within-trial decoding of touch location: little finger vs thumb)
 - **Kernel Notes**: Requires sub-condition labels for touch location. May require additional annotation or event refinement. Verify location encoding from dataset documentation before implementation.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

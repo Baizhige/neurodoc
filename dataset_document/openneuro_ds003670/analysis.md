@@ -1,9 +1,8 @@
 # Dataset of Concurrent EEG, ECG, and Behavior with Multiple Doses of Transcranial Electrical Stimulation
 
 **Dataset**: `openneuro_ds003670` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003670
-**Category**: Complex Applied | **Subjects**: 19 | **Files (Completed)**: 62
+**Category**: Complex Applied | **Subjects**: 19 | **Files (Completed)**: 62 | **Manual Review**: Pending
 **Channels**: 35 | **Sampling Rate**: 2000 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ Participants performed a continuous tracking task (CTT) requiring them to mainta
 > **Kernel SHA256**: `580fa6085db72bd619171bfab71f09723c8be13475bfd248c4e2ade2b1c8b0ab`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -79,3 +79,12 @@ Participants performed a continuous tracking task (CTT) requiring them to mainta
 - **Evidence**:
   - DOI: 10.1038/s41597-021-01046-y — Documents 5-sec ramp-up/down transitions during tES delivery; ramp periods provide distinct transient dynamics for analysis.
 - **Kernel Notes**: Shorter 2-sec windows with 50% overlap enable detailed characterization of tES artifact and neural response during transition periods. Event codes: code 16→`Stimulation Start`, code 2→`Stimulation Stop`. Consider baseline correction using pre-onset window. High sampling rate (2000 Hz) may require downsampling to 500 Hz for memory efficiency.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

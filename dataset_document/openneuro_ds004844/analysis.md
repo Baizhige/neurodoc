@@ -1,8 +1,7 @@
 # T22 (Semi-Automated Driving Trust Paradigm)
 
 **Dataset**: `openneuro_ds004844` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004844
-**Category**: Complex Applied | **Subjects**: 68 | **Files (Completed)**: 68 | **Channels**: 72 | **Sampling Rate**: 1024 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 68 | **Files (Completed)**: 68 | **Channels**: 72 | **Sampling Rate**: 1024 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Simulated semi-automated driving in a leader-follower paradigm focused on predic
 > **Kernel SHA256**: `73a9ee3558379d3ca8d7e3f011233c4e66ad62b0bd2b2038d80e74c34fcd323c`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -153,9 +153,5 @@ Simulated semi-automated driving in a leader-follower paradigm focused on predic
 
 ## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from event streams including both high-level semantic markers and 7-digit hierarchical identifiers.
-- **Type 2 (Raw + Super meta integration)**: Derive automation level and driving condition categories from hierarchical event code structure.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels with reproducible schema for downstream classification tasks.
-
-> **Selected Mode**: Type 1 + Type 2 + Type 3
-> **Why**: Combination enables both raw marker preservation and high-level semantic labeling for trust-based driving classification tasks.
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

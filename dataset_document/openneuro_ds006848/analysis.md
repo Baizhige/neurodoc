@@ -1,9 +1,8 @@
 # AlphaDirection1: EEG, ECG, PPG in the resting state and working memory for sequentially and simultaneously presented digits
 
 **Dataset**: `openneuro_ds006848` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006848/versions/1.0.0
-**Category**: High-level Mental | **Subjects**: 30 | **Files (Completed)**: 52
+**Category**: High-level Mental | **Subjects**: 30 | **Files (Completed)**: 52 | **Manual Review**: Pending
 **Channels**: 65 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ This dataset investigates the directional characteristics of brain alpha waves d
 > **Kernel SHA256**: `48e0c09d8efe7799c84862c95346506dcc817f9524266beb676ba7a20aac2ab4`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -157,3 +157,12 @@ This dataset investigates the directional characteristics of brain alpha waves d
   - Near-uniform class balance (~3100 trials/class); minimal resampling required.
   - High trial count (~31 000 total) makes this suitable for deep learning (EEGNet, ShallowConvNet) approaches.
   - Encoding presentation rate (Fast 400 ms SOA vs. Slow 1000 ms SOA) is not distinguished at the digit-onset level; consider stratifying or separating models by encoding mode for controlled comparisons.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

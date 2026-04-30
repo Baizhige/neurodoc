@@ -1,13 +1,17 @@
 # Registered Replication Report of ERN/Pe Psychometrics
 
 **Dataset**: `openneuro_ds004602` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004602
-**Category**: Sensory/Response | **Subjects**: 182 | **Files (Completed)**: 546 | **Channels**: 129 | **Sampling Rate**: 500 Hz
+**Category**: Sensory/Response | **Subjects**: 182 | **Files (Completed)**: 546 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
 Participants completed Flanker, Stroop, and Go/no-go tasks to evaluate the psychometric reliability and convergent/divergent validity of error-related ERP components (ERN and Pe). The study tests whether error-related components are stable within individuals across tasks and sessions. Three task files per subject yield the 546-file count. `cor`/`err` mark correct/error responses; `con`/`inc` mark congruent/incongruent Flanker/Stroop trials; `go`/`ng`/`neu` mark Go/no-go trial types.
 
 ## File Scan Result
+
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 ### Event Structure
 
@@ -67,6 +71,7 @@ Participants completed Flanker, Stroop, and Go/no-go tasks to evaluate the psych
  |-------|--|--------|
  | `con` | 0 | Congruent trial |
  | `inc` | 1 | Incongruent trial |
+
 ## Data Quality Notes
 
 - boundary (545) is admin - exclude.
@@ -75,11 +80,5 @@ Participants completed Flanker, Stroop, and Go/no-go tasks to evaluate the psych
 
 ## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004602
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

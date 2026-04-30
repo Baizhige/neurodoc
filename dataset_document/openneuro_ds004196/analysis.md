@@ -1,8 +1,7 @@
 # Bimodal dataset on Inner speech
 
 **Dataset**: `openneuro_ds004196` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004196
-**Category**: High-level Mental | **Subjects**: 4 | **Files (Completed)**: 4 | **Channels**: 73 | **Sampling Rate**: 512 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 4 | **Files (Completed)**: 4 | **Channels**: 73 | **Sampling Rate**: 512 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ An inner-speech production task where participants mentally vocalized eight spec
 > **Kernel SHA256**: `988afec0b6493fd2034ec9543c69e9333904ca7281a8d505b99709b43248b148`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -84,3 +84,12 @@ An inner-speech production task where participants mentally vocalized eight spec
   - DOI: 10.1038/s41597-023-02286.w — "Dataset contains 8 word stimuli (4 social: child, daughter, father, wife; 4 numeric: four, three, ten, six) with event markers mapped to individual word types."
   - DOI: 10.1101/2022.05.24.492109 — "8-class word classification with Random Forest achieving 22.19% accuracy (chance 12.5%) using epochs extracted around stimulus onset."
 - **Kernel Notes**: Each event ID (111-114, 125-128) maps to a unique word label (y=0 through y=7). Verify counts: ~160 events per event_id confirms 40 trials × 4 subjects structure. Use 2s epochs aligned to stimulus onset for each event.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

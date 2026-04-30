@@ -1,19 +1,18 @@
 # sleepdata_shhs
 
 **Dataset**: `sleepdata_shhs` | **Year**: 1995-2003 | **URL**: https://sleepdata.org/datasets/shhs
-**Category**: Biological State | **Subjects**: 6441 | **Files (Completed)**: 5786
+**Category**: Biological State | **Subjects**: 6441 | **Files (Completed)**: 5786 | **Manual Review**: Jiping Cui
 **Channels**: 14 | **Sampling Rate**: 125 Hz (EEG/EMG/ECG primary), 50 Hz (EOG), 10 Hz (respiratory), 1 Hz (SpO2/HR); exported EDF channels are resampled to 125 Hz
-**Manual Review**: Jiping Cui
 
 ## Paradigm
 
 The Sleep Heart Health Study (SHHS) is a multi-center NIH/NHLBI cohort investigating cardiovascular and other outcomes of sleep-disordered breathing. Participants aged 40+ underwent unattended overnight home polysomnography (PSG), collected by certified technicians. SHHS-1 enrolled 6,441 participants from major epidemiological cohorts, and 3,295 participants completed a second PSG approximately 5 years later (SHHS-2). The dataset includes full-night EEG, EOG, EMG, ECG, respiratory, and oximetry signals with expert sleep-stage annotation in 30-second epochs.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Sampled
 
 ### Event Structure
 
@@ -43,6 +42,7 @@ The `Stages|Stages` event type uses the following `EventConcept` labels (inside 
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Sleep Stage Classification
@@ -126,7 +126,6 @@ The `Stages|Stages` event type uses the following `EventConcept` labels (inside 
 - Class imbalance is expected (N2 dominant; Wake/N1 relatively sparse; Stage 4 rare).
 - Recordings are unattended home PSG and therefore may have higher motion/environmental artifact than in-lab PSG.
 - Hardware/Sampling Shift between cohorts: SHHS-1 (1995-1998) and SHHS-2 (2001-2003) use different native sampling rates — SHHS-2 ECG is 250 Hz (vs 125 Hz), EOG is 64 Hz (vs 50 Hz), Respiratory is 8 Hz (vs 10 Hz). DataLoader must check signal headers dynamically rather than hardcoding frequencies.
-
 
 ## Kernel Responsibilities
 

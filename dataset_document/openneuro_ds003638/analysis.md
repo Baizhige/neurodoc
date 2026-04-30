@@ -1,8 +1,7 @@
 # EEG: Electrophysiological Biomarkers of Behavioral Dimensions from Cross-Species Paradigms
 
 **Dataset**: `openneuro_ds003638` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003638
-**Category**: High-level Mental | **Subjects**: 57 | **Files (Completed)**: 57 | **Channels**: 73 | **Sampling Rate**: 512 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 57 | **Files (Completed)**: 57 | **Channels**: 73 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ This study employs three cross-species behavioral paradigms (5-Choice Continuous
 > **Kernel SHA256**: `c2a2ef344f6f244253df13aa1d78c12743cd86515c5af5512f519c499626be7d`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

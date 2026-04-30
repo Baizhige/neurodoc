@@ -1,8 +1,7 @@
 # TUH EEG Corpus (Base)
 
 **Dataset**: `tuh_eeg` | **Year**: 2002-2017 | **URL**: https://isip.piconepress.com/projects/nedc/html/tuh_eeg/
-**Category**: Biological State | **Subjects**: 10874 | **Files (Completed)**: 69652 | **Channels**: 17-128 | **Sampling Rate**: 250-1000 Hz
-**Manual Review**: Chengxuan Qin
+**Category**: Biological State | **Subjects**: 10874 | **Files (Completed)**: 69652 | **Channels**: 17-128 | **Sampling Rate**: 250-1000 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -10,15 +9,14 @@ The Temple University Hospital EEG Corpus (v2.0.1) is the largest publicly avail
 
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `None
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |---|---|---|---|---|
-| `unknown` | 69652 | admin | raw | Clinical EEG with unstructured technician annotations; no ML-ready event labels |
-
 
 > No structured classification annotations. The base corpus is not labeled for any specific ML task, so it generaly use for pre-training; use specialized TUH subsets (tuh_eeg_abnormal, tuh_eeg_seizure, etc.) for supervised learning.
 
@@ -35,7 +33,7 @@ The Temple University Hospital EEG Corpus (v2.0.1) is the largest publicly avail
 
 
 ## Data Quality Notes
-
+-
 
 ## Kernel Responsibilities
 

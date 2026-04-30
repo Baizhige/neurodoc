@@ -1,7 +1,7 @@
 # A Multimodal Neuroimaging Dataset to Study Spatiotemporal Dynamics of Visual Processing in Humans
 
 **Dataset**: `openneuro_ds002814` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002814
-**Category**: Sensory/Response | **Subjects**: N/A | **Files (Completed)**: 168 | **Channels**: 68 | **Sampling Rate**: 1200 Hz
+**Category**: Sensory/Response | **Subjects**: N/A | **Files (Completed)**: 168 | **Channels**: 68 | **Sampling Rate**: 1200 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -9,10 +9,10 @@ A multimodal neuroimaging study (EEG + MEG/MRI) investigating the spatiotemporal
 
 ## File Scan Result
 
-
 > **Kernel SHA256**: `76d6a1e02e2103b4a6de56938e3866a6618f85f4a1093e5ec755c47725bb3fbb`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -66,7 +66,3 @@ A multimodal neuroimaging study (EEG + MEG/MRI) investigating the spatiotemporal
 
 > **Super Meta Required**: No
 > **Status**: failed
-
----
-
-> **auto_eeg FAILED**: While two relevant references (10.1101/2022.05.12.491595 and 10.3389/fnins.2022.983602) support a 5-class visual category classification task with clear event definitions, the analysis.md explicitly states 'No event markers detected in any of the 168 EEG files.' Without detectable events in the BIDS EEG files, the primary classification task cannot be executed despite paradigm documentation.

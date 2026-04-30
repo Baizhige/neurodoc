@@ -1,8 +1,7 @@
 # EEG dataset for speech decoding
 
 **Dataset**: `openneuro_ds006104` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006104
-**Category**: High-level Mental | **Subjects**: 24 | **Files (Completed)**: 80 | **Channels**: 62 | **Sampling Rate**: 2000 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 24 | **Files (Completed)**: 80 | **Channels**: 62 | **Sampling Rate**: 2000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A phoneme discrimination task where participants listened to speech sounds—inc
 > **Kernel SHA256**: `592a716bd95ad4d3b848e85417b611d884096b21cb66039ef4eed4286bea4c02`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -107,3 +107,12 @@ A phoneme discrimination task where participants listened to speech sounds—inc
   | `stimulus` | 1 | Speech stimulus onset |
 - **Evidence**: Equal event counts (14630 each) indicate systematic 1:1 pairing. Task is supported by paradigm logic; TMS pulses co-occur with stimuli to test speech motor cortex involvement.
 - **Kernel Notes**: Binary classification of TMS artifact vs auditory evoked response morphology. Apply TMS artifact rejection before analysis. Verify temporal offset between TMS and stimulus within each trial.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

@@ -1,8 +1,7 @@
 # TUH EEG Abnormal Corpus
 
 **Dataset**: `tuh_eeg_abnormal` | **Year**: 2016-2017/2024 | **URL**: https://isip.piconepress.com/projects/nedc/html/tuh_eeg/
-**Category**: Biological State | **Subjects**: 2383 | **Files (Completed)**: 2983 | **Channels**: 27-36 | **Sampling Rate**: 250 Hz
-**Manual Review**: Chengxuan Qin
+**Category**: Biological State | **Subjects**: 2383 | **Files (Completed)**: 2983 | **Channels**: 27-36 | **Sampling Rate**: 250 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 

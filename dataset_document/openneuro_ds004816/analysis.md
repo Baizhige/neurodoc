@@ -1,8 +1,7 @@
 # EEG Attention RSVP Experiment 1
 
 **Dataset**: `openneuro_ds004816` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004816
-**Category**: Sensory/Response | **Subjects**: 15 | **Files (Completed)**: 40 | **Channels**: 63 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: Sensory/Response | **Subjects**: 15 | **Files (Completed)**: 40 | **Channels**: 63 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A Rapid Serial Visual Presentation (RSVP) task investigating the neural dynamics
 > **Kernel SHA256**: `40e5aa1eea3c81ef7bdccba037c83ae12d3578127d0cfd9688ef7787d396cc00`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

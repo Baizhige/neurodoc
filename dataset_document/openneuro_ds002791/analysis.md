@@ -1,8 +1,7 @@
 # DataSet1 - Visual Object Naming EEG
 
 **Dataset**: `openneuro_ds002791` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002791
-**Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 92 | **Channels**: 256 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 92 | **Channels**: 256 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants viewed and named visual objects (pictures presented as bitmap image
 > **Kernel SHA256**: `14da52f3b53f696e39f72f6b27d5bf353f8d008c31d8053c53f4ce41b09c46ee`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -56,3 +56,8 @@ Participants viewed and named visual objects (pictures presented as bitmap image
 - 30 distinct object images (e.g., GLOVE.bmp, CARROT.bmp, FISH.bmp, ALLIGATO.bmp) across 92 files (46 files containing stimulus events each).
 - High-density 256-channel EEG; verify electrode positions and bad channel rejection per subject before pooling.
 - Stimulus event derivation required prior to epoching; verify alignment between derived stimulus onsets and response_time labels.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

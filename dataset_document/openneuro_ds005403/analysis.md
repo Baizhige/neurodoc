@@ -1,8 +1,7 @@
 # Delayed Auditory Feedback EEG/EGG
 
 **Dataset**: `openneuro_ds005403` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005403
-**Category**: High-level Mental | **Subjects**: 66 | **Files (Completed)**: 66 | **Channels**: 66 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 66 | **Files (Completed)**: 66 | **Channels**: 66 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed a speech production task while receiving delayed auditory
 > **Kernel SHA256**: `4afa48fb7528750b8cf2c52fac832c22120aa5dd1a863f48d4c1bb18d10f1d3b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,8 +1,7 @@
 # TUH EEG Artifact Corpus
 
 **Dataset**: `tuh_eeg_artifact` | **Year**: 2021-2020/2024 | **URL**: https://isip.piconepress.com/projects/nedc/html/tuh_eeg/
-**Category**: Others | **Subjects**: 213 | **Files (Completed)**: 310 | **Channels**: 27-41 | **Sampling Rate**: 250/256/400/512 Hz
-**Manual Review**: Chengxuan Qin
+**Category**: Others | **Subjects**: 213 | **Files (Completed)**: 310 | **Channels**: 27-41 | **Sampling Rate**: 250/256/400/512 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 

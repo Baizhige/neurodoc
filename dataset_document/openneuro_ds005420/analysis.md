@@ -1,9 +1,8 @@
 # Resting State EEG with Closed Eyes and Open Eyes in Females from 60 to 80 Years Old
 
 **Dataset**: `openneuro_ds005420` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005420
-**Category**: Biological State | **Subjects**: 72 | **Files (Completed)**: 72
+**Category**: Biological State | **Subjects**: 72 | **Files (Completed)**: 72 | **Manual Review**: Pending
 **Channels**: 20 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ Spontaneous resting-state EEG was recorded in a cohort of females aged 60-80 yea
 > **Kernel SHA256**: `d3b7b79c84680f3d40ce6c47df5ccebe2db47adda3250d9511022b86589da3bb`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -59,3 +59,12 @@ Spontaneous resting-state EEG was recorded in a cohort of females aged 60-80 yea
 - **Kernel Notes**: Shorter 4-s segments with 0.5-s overlap suitable for alpha/beta power comparisons between eyes-open and eyes-closed states. Condition labels derived from BIDS task identifiers (Oa/Oc) as described for Classical Task 1. Apply bandpass filter (0.5–40 Hz), notch filter (50/60 Hz), and artifact rejection before segmentation. This alternative segmentation scheme is plausible for frequency-domain analyses but lacks direct validation on this dataset.
 - **Evidence**:
   - DOI: 10.1109/UBMK67458.2025.11207051 — Reference confirms 10-s segmentation approach; 4-s alternative is plausible for frequency-domain analyses but not directly validated.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

@@ -1,8 +1,7 @@
 # Symmetry perception and affective responses: a combined EEG/EMG study
 
 **Dataset**: `openneuro_ds004347` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004347
-**Category**: Sensory/Response | **Subjects**: 24 | **Files (Completed)**: 24 | **Channels**: 73 | **Sampling Rate**: 512 Hz
-**Manual Review**:
+**Category**: Sensory/Response | **Subjects**: 24 | **Files (Completed)**: 24 | **Channels**: 73 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed a visual perception task identifying whether stimuli were
 > **Kernel SHA256**: `a60563dd79622904c3d1cc7955e44f868f37d925b51d097be2cb64bb2b805f9b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

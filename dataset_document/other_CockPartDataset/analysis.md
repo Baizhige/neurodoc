@@ -1,7 +1,7 @@
 # CockPart Multi-Paradigm EEG Dataset
 
 **Dataset**: `unknown_CockPartDataset` | **Year**: N/A | **URL**: N/A
-**Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 1590 | **Channels**: 128 | **Sampling Rate**: 128 Hz (N400/Natural Speech) / 512 Hz (Speech in Noise)
+**Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 1590 | **Channels**: 128 | **Sampling Rate**: 128 Hz (N400/Natural Speech) / 512 Hz (Speech in Noise) | **Manual Review**:
 
 ## Paradigm
 
@@ -18,6 +18,10 @@ A multi-paradigm EEG corpus comprising four experimental subdatasets, all record
 The Case B kernel dispatches loading to the appropriate paradigm-specific method based on the file path.
 
 ## File Scan Result
+
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 ### Event Structure
 
@@ -101,11 +105,5 @@ Dataset origin and publication unknown. Multi-paradigm EEG corpus (CockPart Data
 
 ## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: N/A (local/private dataset description)
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

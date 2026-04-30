@@ -1,8 +1,7 @@
 # Resting-State EEG Dataset for Sleep Deprivation
 
 **Dataset**: `openneuro_ds004902` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004902
-**Category**: Biological State | **Subjects**: 71 | **Files (Completed)**: 218 | **Channels**: 61 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: Biological State | **Subjects**: 71 | **Files (Completed)**: 218 | **Channels**: 61 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Resting-state EEG recordings with eyes open and eyes closed were conducted under
 > **Kernel SHA256**: `853b689d3ac3a4b842f90ee5a6bfcb311ac1e5d90547a4b1422d93c08fcf1930`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

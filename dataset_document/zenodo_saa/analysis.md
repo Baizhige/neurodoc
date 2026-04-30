@@ -1,17 +1,17 @@
 # Spatial Auditory Attention EEG Dataset
 
 **Dataset**: `zenodo_saa` | **Year**: 2019 | **URL**: https://zenodo.org/records/3357164
-**Category**: High-level Mental | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 41 | **Sampling Rate**: 1024-4096 Hz (subject-variable)
+**Category**: High-level Mental | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 41 | **Sampling Rate**: 1024-4096 Hz (subject-variable) | **Manual Review**:
 
 ## Paradigm
 
 Eighteen subjects (S12, S13, S15, S21, S27, S28, S31, S33, S36, S37, S38, S39, S40, S42, S46, S47, S50, S51) participated in a spatial auditory attention decoding (SAA) task in which a target speaker was positioned at a fixed azimuth (30 deg) among distractors. EEG was recorded from 32 BioSemi ActiveTwo channels (A1-A32, Ag/AgCl cap) plus 8 external channels (total 41 channels) at variable sampling rates (1024, 2048, or 4096 Hz depending on subject). Stimulus events are encoded as BioSemi trigger codes in the Status channel; the kernel extracts these using `mne.find_events()` and converts them to text annotations.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 ### Event Structure
 
@@ -30,6 +30,7 @@ Eighteen subjects (S12, S13, S15, S21, S27, S28, S31, S33, S36, S37, S38, S39, S
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Spatial auditory attention decoding
@@ -60,7 +61,6 @@ Eighteen subjects (S12, S13, S15, S21, S27, S28, S31, S33, S36, S37, S38, S39, S
 - Variable sampling rates (1024-4096 Hz) across subjects; resample to a common rate before cross-subject analysis.
 - Trigger code interpretation requires dataset-specific documentation (Status channel values need decoding).
 - 41 channels (32 EEG + 8 external); identify and exclude non-EEG channels before analysis.
-
 
 ## Kernel Responsibilities
 

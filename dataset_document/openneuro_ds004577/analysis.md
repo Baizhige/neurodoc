@@ -1,8 +1,7 @@
 # Dataset containing resting EEG for a sample of 103 normal infants in the first year of life
 
 **Dataset**: `openneuro_ds004577` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004577
-**Category**: Biological State | **Subjects**: 103 | **Files (Completed)**: 103 | **Channels**: 128 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: Biological State | **Subjects**: 103 | **Files (Completed)**: 103 | **Channels**: 128 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Resting-state EEG recordings from 103 healthy infants (aged 1-12 months) during 
 > **Kernel SHA256**: `e1637d1741cd7dcfae96b0fc025448949e83855805a558e4b57002f089be2e33`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

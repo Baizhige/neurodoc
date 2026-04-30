@@ -1,8 +1,7 @@
 # Structural MRI, Resting-State fMRI, and PSG/EEG Dataset of Zoster-Associated Neuralgia
 
 **Dataset**: `openneuro_ds007181` | **Year**: 2026 | **URL**: https://openneuro.org/datasets/ds007181
-**Category**: Biological State | **Subjects**: 59 | **Files (Completed)**: 59 | **Channels**: 24 | **Sampling Rate**: 1024 Hz
-**Manual Review**: Pending
+**Category**: Biological State | **Subjects**: 59 | **Files (Completed)**: 59 | **Channels**: 24 | **Sampling Rate**: 1024 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Resting-state EEG (part of a full PSG recording) was collected from patients dia
 > **Kernel SHA256**: `c7a2badbf13ef768ecc7a1d58172c4ff9ffe004cfd6e934638a1c26aa11ba6dc`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -77,3 +77,12 @@ Resting-state EEG (part of a full PSG recording) was collected from patients dia
 - **Evidence**:
   - URL: https://openneuro.org/datasets/ds007181 — Resting-state PSG/EEG recordings from zoster-associated neuralgia patients and healthy controls
 - **Kernel Notes**: Sliding window segmentation with 50% overlap provides data augmentation for continuous EEG. Subject group and sleep stage metadata from participants.tsv and PSG annotations must be attached per segment. The 4-second window balances frequency resolution (~0.25 Hz for EEG alpha/beta bands) with sufficient sample count for downstream classification models.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

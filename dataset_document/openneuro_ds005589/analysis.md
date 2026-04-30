@@ -1,8 +1,7 @@
 # A multi-subject and multi-session EEG dataset for modelling human visual object recognition
 
 **Dataset**: `openneuro_ds005589` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005589
-**Category**: Sensory/Response | **Subjects**: 32 | **Files (Completed)**: 1592 | **Channels**: 133 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 32 | **Files (Completed)**: 1592 | **Channels**: 133 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants underwent Rapid Serial Visual Presentation (RSVP) at 5 Hz and a low
 > **Kernel SHA256**: `3b862d82c5ab1d387cde8c3a7ca69199072c3173f11f49286045281157f4c51c`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -82,3 +82,12 @@ Participants underwent Rapid Serial Visual Presentation (RSVP) at 5 Hz and a low
 - **Evidence**:
   - DOI: 10.1038/s41597-025-04843-x — The paradigm description confirms RSVP at 5 Hz with object category codes 21–27, providing the basis for rapid visual object recognition decoding. The dataset contains ~798 trials per RSVP category.
 - **Kernel Notes**: Hard-cap epochs at 200ms to avoid bleed from the next RSVP stimulus (5 Hz = 200ms interval). Omit pre-stimulus baseline since the prior stimulus occupies that window; if baseline correction is needed, use a within-epoch window (first 10–20ms). Exclude feedback events (252/254) and catch trials (99) from RSVP classification epochs. Map event IDs 21–27 to labels 0–6 for 7-category classification.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

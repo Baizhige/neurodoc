@@ -1,9 +1,8 @@
 # EEG: Probabilistic Learning with Affective Feedback: Exp #1
 
 **Dataset**: `openneuro_ds003822` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003822
-**Category**: High-level Mental | **Subjects**: 25 | **Files (Completed)**: 25
+**Category**: High-level Mental | **Subjects**: 25 | **Files (Completed)**: 25 | **Manual Review**: Pending
 **Channels**: 66 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ A reinforcement learning task using probabilistic affective feedback to investig
 > **Kernel SHA256**: `da8530e877f8eb992d6189633b68c0e310a545bf76e90a90d3d641d0b9713d53`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -124,3 +124,12 @@ A reinforcement learning task using probabilistic affective feedback to investig
   | `S200` | 0 | Response marker type 1 |
   | `S201` | 1 | Response marker type 2 |
 - **Kernel Notes**: S200 (n=1500) and S201 (n=3500) show unequal counts. S200 likely marks response events (left/right button, accurate/inaccurate); S201 may mark trial completion or inter-trial interval. Verify via paradigm description (25 left + 25 right + 25 accurate + 25 inaccurate = 100 response events per subject, 2500 total across 25 subjects). Plausible from paradigm: response-locked ERPs examining feedback processing aligned to participant decisions.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

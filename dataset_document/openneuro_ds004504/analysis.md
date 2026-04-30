@@ -1,8 +1,7 @@
 # A dataset of EEG recordings from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects
 
 **Dataset**: `openneuro_ds004504` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004504
-**Category**: Biological State | **Subjects**: 88 | **Files (Completed)**: 176 | **Channels**: 19 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: Biological State | **Subjects**: 88 | **Files (Completed)**: 176 | **Channels**: 19 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Resting-state EEG recordings with eyes closed were collected from 88 participant
 > **Kernel SHA256**: `a5a077e03a8e97e9503e578a34a4e0100bd823268763bd9b43b023e84609fded`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

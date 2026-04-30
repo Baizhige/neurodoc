@@ -1,9 +1,8 @@
 # Inner Speech BCI Dataset
 
 **Dataset**: `openneuro_ds003626` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003626
-**Category**: High-level Mental | **Subjects**: 10 | **Files (Completed)**: 30
+**Category**: High-level Mental | **Subjects**: 10 | **Files (Completed)**: 30 | **Manual Review**:
 **Channels**: 137 | **Sampling Rate**: 1024 Hz
-**Manual Review**:
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ Participants performed inner speech (imagined speech), pronounced speech, and vi
 > **Kernel SHA256**: `4abba4f94a1884a74a575ba2135a3e0353f431ab58466e86e6e1b514b2eb9c9a`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

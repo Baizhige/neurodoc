@@ -1,8 +1,7 @@
 # EEG: Probabilistic Selection Task (PST) + PST with Cabergoline Challenge
 
 **Dataset**: `openneuro_ds004532` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004532
-**Category**: High-level Mental | **Subjects**: 40 | **Files (Completed)**: 80 | **Channels**: 64 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 40 | **Files (Completed)**: 80 | **Channels**: 64 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed the Probabilistic Selection Task (PST) across two session
 > **Kernel SHA256**: `14f3c5fd1ced57e9a77ddf96c36a0cfedce46e05ae91e4a9a23528ed44f8ff6c`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -113,3 +113,12 @@ Participants performed the Probabilistic Selection Task (PST) across two session
   | `correct` | 0 | Correct response (reward) |
   | `incorrect` | 1 | Incorrect response (punishment) |
 - **Notes**: Shortened feedback-locked window focusing on early outcome processing phase (FRN/P300 components) while reducing potential contamination from adjacent events. Labels derived from `correct`/`incorrect` events following FB. This variation offers a more computationally efficient approach with potentially cleaner ERP components at the cost of missing later outcome processing phases.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

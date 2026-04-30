@@ -1,8 +1,7 @@
 # PES - Pandemic Emergency Scenario
 
 **Dataset**: `openneuro_ds004477` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004477
-**Category**: Complex Applied | **Subjects**: 9 | **Files (Completed)**: 9 | **Channels**: 80 | **Sampling Rate**: 2048 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 9 | **Files (Completed)**: 9 | **Channels**: 80 | **Sampling Rate**: 2048 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A strategic pandemic simulation task where participants allocate limited resourc
 > **Kernel SHA256**: `d9f3a211a413be47366ad5c9cf4135b72f0a93415991e566fc4a8fbb0ba7ab89`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -85,3 +85,12 @@ No tasks meet the Classical Task criteria (≥1 reference with classification=re
 - **Target Definition**: Labels derived from sustained decision phases (resource allocation strategy periods) — requires verification from behavioral logs or paradigm documentation.
 - **Evidence**: Paradigm description mentions "strategy formation in a realistic multi-agent scenario."
 - **Kernel Notes**: Strategy periods likely span multiple trials; long event epoching appropriate. Kernel should verify boundary markers or derive from behavioral state transitions.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

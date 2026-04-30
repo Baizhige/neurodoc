@@ -1,8 +1,7 @@
 # EEG Resting-State Microstates and Executive Functions
 
 **Dataset**: `openneuro_ds005305` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005305
-**Category**: High-level Mental | **Subjects**: 165 | **Files (Completed)**: 165 | **Channels**: 64 | **Sampling Rate**: 512 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 165 | **Files (Completed)**: 165 | **Channels**: 64 | **Sampling Rate**: 512 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Resting-state EEG microstates were recorded to correlate spontaneous brain dynam
 > **Kernel SHA256**: `ac519f813a35bc395e58e2f5909d0f841569d134cd5d0100de771e5a4952c500`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -64,3 +64,12 @@ Resting-state EEG microstates were recorded to correlate spontaneous brain dynam
 
 - **Evidence**: DOI: `10.1016/j.cortex.2024.05.019` (partial support—paradigm includes RS_EC/RS_EO alternating blocks; binary classification not explicitly performed)
 - **Kernel Notes**: Each resting block is 30–60 s; 2-second sliding windows with 50% overlap yield ~30–60 epochs per block. Exclude `boundary` (165) and all key press events (admin markers). Class imbalance (~55/45) may require stratified sampling during training. Total potential epochs: RS_EC ~41,250–49,500; RS_EO ~33,000–39,600. High epoch count may require memory-efficient batching across 165 subjects with 64 channels at 512 Hz.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

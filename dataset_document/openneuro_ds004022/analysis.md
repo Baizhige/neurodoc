@@ -1,9 +1,8 @@
 # Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment
 
 **Dataset**: `openneuro_ds004022` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004022
-**Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 21
+**Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 21 | **Manual Review**:
 **Channels**: 18 | **Sampling Rate**: 500 Hz
-**Manual Review**:
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ Seven patients with orthopedic impairment performed motor imagery tasks involvin
 > **Kernel SHA256**: `86f8ec17196fd19c621c4b469487c054ecd896ae4c5c24a4d8bf1b3332b98045`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

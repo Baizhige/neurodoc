@@ -1,8 +1,7 @@
 # EEG: RL Task (3-Armed Bandit) with Alcohol Cues in Hazardous Drinkers
 
 **Dataset**: `openneuro_ds004595` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004595
-**Category**: High-level Mental | **Subjects**: 53 | **Files (Completed)**: 53 | **Channels**: 66 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 53 | **Files (Completed)**: 53 | **Channels**: 66 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants completed a reinforcement learning task using a 3-armed bandit para
 > **Kernel SHA256**: `703cddbf0fd78b8779e7559d2973521d743f4af58aad5a42d62103835216eff7`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -147,3 +147,12 @@ Participants completed a reinforcement learning task using a 3-armed bandit para
   | `novel cue: order 6` | TBD | Requires events.tsv verification |
 - **Kernel Notes**: The mapping between `novel cue: order X` events and alcohol vs neutral substance conditions requires verification from events.tsv. Once verified, these events can be merged with `cue: alcohol`/`cue: neutral` for comprehensive cue-type classification or separated for order-specific analysis.
 - **Evidence**: No DOI — supported by kernel notes requiring events.tsv verification to determine if novel cue orders map to distinct substance conditions.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

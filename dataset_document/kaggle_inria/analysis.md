@@ -1,8 +1,7 @@
 # Kaggle BCI Challenge (INRIA) Dataset
 
 **Dataset**: `kaggle_inria` | **Year**: 2015 | **URL**: https://www.kaggle.com/c/inria-bci-challenge
-**Category**: Action/Output | **Subjects**: 26 | **Files (Completed)**: 130 | **Channels**: 58 | **Sampling Rate**: 200 Hz
-**Manual Review**: Mingze Tang
+**Category**: Action/Output | **Subjects**: 26 | **Files (Completed)**: 130 | **Channels**: 58 | **Sampling Rate**: 200 Hz | **Manual Review**: Mingze Tang
 
 ## Paradigm
 
@@ -10,10 +9,10 @@ Twenty-six subjects (ages 20-37) performed a P300-based BCI feedback task using 
 
 ## File Scan Result
 
-
 > **Kernel SHA256**: `b7b6d30d084aef11930444b66f20db1a72b9b071faa81dd4d08634281a8d276f`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

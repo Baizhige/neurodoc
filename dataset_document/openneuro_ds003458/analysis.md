@@ -1,8 +1,7 @@
 # EEG: Three Armed Bandit Gambling Task
 
 **Dataset**: `openneuro_ds003458` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003458
-**Category**: High-level Mental | **Subjects**: 23 | **Files (Completed)**: 23 | **Channels**: 66 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 23 | **Files (Completed)**: 23 | **Channels**: 66 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed a three-armed bandit gambling task with oscillating reinf
 > **Kernel SHA256**: `6ad9d6a9fc4dbf8426679203081ba1d10524c5e37df2654ff92805f400126037`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -110,3 +110,12 @@ Participants performed a three-armed bandit gambling task with oscillating reinf
 
 - **Evidence**: Event counts suggest S5 is primary response marker (corresponds to "Response" in analysis.md description; ~69 files × ~100 responses); S6 may be alternative response or correction event.
 - **Kernel Notes**: Response-related epochs capture motor preparation and execution signals. Verify button-press mapping to left/right/up choices from events.tsv for choice-locked response analysis.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

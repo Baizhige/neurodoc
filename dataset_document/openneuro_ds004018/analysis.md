@@ -1,8 +1,7 @@
 # EEG recordings for 200 object images presented in RSVP sequences at 5Hz or 20Hz
 
 **Dataset**: `openneuro_ds004018` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004018
-**Category**: Sensory/Response | **Subjects**: 2 | **Files (Completed)**: 2 | **Channels**: 63 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 2 | **Files (Completed)**: 2 | **Channels**: 63 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Rapid Serial Visual Presentation (RSVP) of 200 object images at two presentation
 > **Kernel SHA256**: `bc3ce5ec9f3b496c0d56da90177a7013c47f26490de533945a7641c986a4e033`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -76,3 +76,12 @@ Rapid Serial Visual Presentation (RSVP) of 200 object images at two presentation
   | `inanimate` | 1 | Inanimate/non-living category superordinate label |
 - **Super Meta Notes**: Derive animacy labels (animate vs inanimate) from original stimulus metadata for all 200 images. `stars` are celestial/inanimate objects; `boats` are vehicles/inanimate objects. For more varied super-meta, include object identity labels (specific object identities within categories) if stimulus metadata provides this level of detail.
 - **Kernel Notes**: Load original stimulus metadata (200 images) and map each epoch to its animacy and category labels. Version super-meta labels in kernel output. Consider multi-level classification (animacy → category → identity) as hierarchical super-meta approach. Very small dataset (2 subjects) limits generalization; use within-subject cross-validation. No device information available; device field missing in BIDS metadata.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

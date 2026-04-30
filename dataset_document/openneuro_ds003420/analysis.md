@@ -1,8 +1,7 @@
 # conneXion Dataset 1: HD-EEG Visual Naming
 
 **Dataset**: `openneuro_ds003420` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds003420
-**Category**: High-level Mental | **Subjects**: 23 | **Files (Completed)**: 92 | **Channels**: 256 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 23 | **Files (Completed)**: 92 | **Channels**: 256 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed visual naming and spelling tasks of visually presented ob
 > **Kernel SHA256**: `e2c76b9fc2465677cf94c0cccd91992cce2bec50cef6c015550bcefbf603f37d`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -77,3 +77,12 @@ Participants performed visual naming and spelling tasks of visually presented ob
 - **Evidence**:
   - DOI: 10.1088/1741-2552.aad7b1 — Two-class visual object recognition task comparing meaningful vs meaningless images with reaction time regression; stimulus codes distinguish condition types
 - **Kernel Notes**: Classify epochs based on stimulus condition. Meaningful pictures (trigger/D249) elicit vocal responses (reaction time available); meaningless pictures (trigger/D250) elicit no vocal response (participants silent). Critical: verify trigger/D249 and trigger/D250 condition mapping in events.tsv since analysis.md documented generic IDs 0/1 that do not match actual event nomenclature. Use events.tsv semantic decoding to confirm which trigger corresponds to meaningful vs meaningless conditions.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

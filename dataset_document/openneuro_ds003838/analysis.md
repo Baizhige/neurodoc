@@ -1,8 +1,7 @@
 # EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task
 
 **Dataset**: `openneuro_ds003838` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003838/versions/1.0.0
-**Category**: High-level Mental | **Subjects**: 86 | **Files (Completed)**: 296 | **Channels**: 2 | **Sampling Rate**: 1000 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 86 | **Files (Completed)**: 296 | **Channels**: 2 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed a classic digit span working memory task involving serial
 > **Kernel SHA256**: `72be9b71cff9d332c437c15932ff7b2710ac85e0f5b790a157ad8c3103e48c46`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

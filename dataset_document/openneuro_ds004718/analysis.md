@@ -1,8 +1,7 @@
 # Le Petit Prince Hong Kong: Naturalistic fMRI and EEG Dataset
 
 **Dataset**: `openneuro_ds004718` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds004718
-**Category**: Complex Applied | **Subjects**: 52 | **Files (Completed)**: 2003 | **Channels**: 62 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 52 | **Files (Completed)**: 2003 | **Channels**: 62 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Naturalistic listening task where older Cantonese-speaking adults (65+) listened
 > **Kernel SHA256**: `02715511ce4a456fc1033e6419491b0406aa1163bcbbc5a872f2cdb8bb6884df`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -4567,3 +4567,12 @@ Naturalistic listening task where older Cantonese-speaking adults (65+) listened
 - **Evidence**:
   - DOI: 10.1038/s41597-024-03745-8 — Naturalistic story listening paradigm supports extended narrative processing; longer windows capture sustained neural states during story comprehension across multiple sections.
 - **Kernel Notes**: Plausible from paradigm alone; no direct classification-relevant citation. Use overlapping windows to capture extended narrative processing. Gradient artifact removal needed for fMRI-EEG.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

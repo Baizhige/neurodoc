@@ -1,8 +1,7 @@
 # Effect of obesity on arithmetic processing in preteens with high and low math skills. An event-related potentials study
 
 **Dataset**: `openneuro_ds004019` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004019
-**Category**: High-level Mental | **Subjects**: 62 | **Files (Completed)**: 62 | **Channels**: 132 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 62 | **Files (Completed)**: 62 | **Channels**: 132 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Obese and non-obese preteens (ages 9-10) performed a delayed-verification arithm
 > **Kernel SHA256**: `58f1a7b1af01814a0b283766fb3a3931292ebecb274da0ba0386859fe3b90f34`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -92,3 +92,12 @@ Obese and non-obese preteens (ages 9-10) performed a delayed-verification arithm
   | `ch++` | - | Choice/comparison stimulus onset |
 - **Evidence**: Plausible from paradigm alone — the `ch++` event represents the choice/comparison stimulus presentation, distinct from the face verification digit. Epoching on this event enables analysis of comparison processing stages separate from face verification and response execution.
 - **Kernel Notes**: The paradigm contains both `ch++` and `face` events, suggesting distinct cognitive stages. Verify original stimulus presentation logic to confirm whether `ch++` and `face` represent different trial phases or alternative stimulus types. Epoch parameter overlap with other tasks (tmin=-0.2s, tmax=1.0s) ensures consistency across analyses.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

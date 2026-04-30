@@ -445,7 +445,8 @@ def _build_shell_analysis_md(
 
     return (
         "# placeholder\n\n"
-        "**Manual Review**:\n\n"
+        "**Dataset**: `placeholder` | **Year**:  | **URL**: \n"
+        "**Category**:  | **Subjects**:  | **Files (Completed)**:  | **Channels**:  | **Sampling Rate**:  | **Manual Review**:\n\n"
         "## Paradigm\n\n(placeholder)\n\n"
         "## File Scan Result\n\n"
         "### Event Structure\n\n| Event ID | Count (total) | Type | Meta Level | Meaning |\n|---|---|---|---|---|\n\n"

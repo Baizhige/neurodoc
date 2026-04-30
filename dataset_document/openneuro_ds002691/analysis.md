@@ -1,8 +1,7 @@
 # Internal Attention Study
 
 **Dataset**: `openneuro_ds002691` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002691
-**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 20 | **Channels**: 32 | **Sampling Rate**: 250 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 20 | **Channels**: 32 | **Sampling Rate**: 250 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A sustained internal attention task where participants were asked to either ment
 > **Kernel SHA256**: `5d036d2cbdcc15eaed25e3fde5582a6d7f2786f274dff77aa3a066b5f6616fcb`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

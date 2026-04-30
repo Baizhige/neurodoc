@@ -1,8 +1,7 @@
 # EEG: Depression rest
 
 **Dataset**: `openneuro_ds003478` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003478
-**Category**: Biological State | **Subjects**: 122 | **Files (Completed)**: 243 | **Channels**: 66 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Biological State | **Subjects**: 122 | **Files (Completed)**: 243 | **Channels**: 66 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Resting-state EEG recording featuring alternating one-minute intervals of eyes-o
 > **Kernel SHA256**: `a4805a785718ebe14178100eda6a1fb7cab2ce6a8163913ac1f7aca39ac64ba6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -109,3 +109,12 @@ Resting-state EEG recording featuring alternating one-minute intervals of eyes-o
 - **Super Meta Notes**: Kernel step: (1) Read BDI scores from participant metadata. (2) Assign continuous BDI score (0–63 scale) as regression target for all segments from same subject. (3) Train regression model to predict BDI from EEG features.
 - **Evidence**: Supported by DOI 10.3389/fpsyt.2023.1132996 (BDI used for group assignment), extended to continuous prediction rather than categorical thresholding.
 - **Kernel Notes**: BDI ranges 0–63; consider log-transform or normalization for regression target. Report Pearson correlation between predicted and actual BDI as primary metric.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

@@ -1,8 +1,7 @@
 # Fribourg Ultimatum Game in Schizophrenia Study
 
 **Dataset**: `openneuro_ds004000` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004000
-**Category**: High-level Mental | **Subjects**: 43 | **Files (Completed)**: 86 | **Channels**: 132 | **Sampling Rate**: 2048 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 43 | **Files (Completed)**: 86 | **Channels**: 132 | **Sampling Rate**: 2048 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ A social decision-making study investigating fairness processing and social cogn
 > **Kernel SHA256**: `bb5699d4c626a491c710b60079283172bc4b15d36ff7209d179aa129452861ab`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

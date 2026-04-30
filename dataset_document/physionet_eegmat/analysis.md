@@ -1,8 +1,7 @@
 # EEG During Mental Arithmetic Task
 
 **Dataset**: `physionet_eegmat` | **Year**: 2020 | **URL**: https://physionet.org/content/eegmat/1.0.0/
-**Category**: High-level Mental | **Subjects**: 36 | **Files (Completed)**: 72 | **Channels**: 23 | **Sampling Rate**: 500 Hz
-**Manual Review**: Liu Peng
+**Category**: High-level Mental | **Subjects**: 36 | **Files (Completed)**: 72 | **Channels**: 23 | **Sampling Rate**: 500 Hz | **Manual Review**: Liu Peng
 
 ## Paradigm
 
@@ -10,10 +9,10 @@ Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly fema
 
 ## File Scan Result
 
-
 > **Kernel SHA256**: `2d377403dfb36e0b6ad6454cf2d69b00d8096cf9a7ebb560a8baff950dedaad6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

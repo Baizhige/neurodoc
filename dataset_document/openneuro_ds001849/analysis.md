@@ -1,8 +1,7 @@
 # RS_TMSEEG_Data
 
 **Dataset**: `openneuro_ds001849` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds001849
-**Category**: Biological State | **Subjects**: 15 | **Files (Completed)**: 120 | **Channels**: 30 | **Sampling Rate**: 5000 Hz
-**Manual Review**:
+**Category**: Biological State | **Subjects**: 15 | **Files (Completed)**: 120 | **Channels**: 30 | **Sampling Rate**: 5000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Resting-state EEG data recorded in conjunction with Transcranial Magnetic Stimul
 > **Kernel SHA256**: `2431a8f0a63df523216e52313865a716bfe9114d0b950d95fdba5d32db2fc9ba`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,8 +1,7 @@
 # EEG responses to continuous naturalistic speech
 
 **Dataset**: `openneuro_ds004408` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004408
-**Category**: High-level Mental | **Subjects**: 380 | **Files (Completed)**: 380 | **Channels**: 128 | **Sampling Rate**: 512 Hz
-**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 380 | **Files (Completed)**: 380 | **Channels**: 128 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants listened to continuous segments of an audiobook version of 'The Old
 > **Kernel SHA256**: `69309912a03b98adbdb68c0bc2dbaeeee96453fe754099441fa3617e36d96247`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

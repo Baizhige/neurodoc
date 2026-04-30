@@ -1,8 +1,7 @@
 # Healthy Brain Network (HBN) EEG - Release 9
 
 **Dataset**: `openneuro_ds005514` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005514
-**Category**: Complex Applied | **Subjects**: 295 | **Files (Completed)**: 2885 | **Channels**: 129 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Complex Applied | **Subjects**: 295 | **Files (Completed)**: 2885 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ The Healthy Brain Network (HBN) EEG Release 9 is a large-scale, multi-task devel
 > **Kernel SHA256**: `86027ad9df54899b153e9a0d59e314d45072742e0b8be065535142202cb3d3b6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -197,3 +197,12 @@ The Healthy Brain Network (HBN) EEG Release 9 is a large-scale, multi-task devel
 - **Evidence**:
   - DOI: 10.1101/2024.10.03.615261 — HBN-EEG FAIR implementation (bifactor psychopathology dimensions publicly available in participant metadata)
 - **Kernel Notes**: Resting blocks identified via `resting_start` (269 events) or instruction events; same segmentation approach as classical tasks; p-factor represents transdiagnostic liability; dimensional scores available per subject for regression; optional: multi-output regression for all four factors jointly.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

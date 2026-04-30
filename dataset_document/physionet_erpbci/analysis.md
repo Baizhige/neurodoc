@@ -1,8 +1,7 @@
 # ERP-Based Brain-Computer Interface Recordings
 
 **Dataset**: `physionet_erpbci` | **Year**: 2013 | **URL**: https://physionet.org/content/erpbci/1.0.0/
-**Category**: Action/Output | **Subjects**: 21 | **Files (Completed)**: 245 | **Channels**: 70 | **Sampling Rate**: 2048 Hz
-**Manual Review**: Liu Peng
+**Category**: Action/Output | **Subjects**: 21 | **Files (Completed)**: 245 | **Channels**: 70 | **Sampling Rate**: 2048 Hz | **Manual Review**: Liu Peng
 
 ## Paradigm
 
@@ -10,10 +9,10 @@ Participants spelled characters using a standard 6x6 matrix speller while EEG wa
 
 ## File Scan Result
 
-
 > **Kernel SHA256**: `e0a11f6326ce932b8d655a71963420e1b77d7b011e8ab2e0e3a96f36b3fac752`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,8 +1,7 @@
 # Sustained Attention Task (gradCPT) Dataset using simultaneous EEG-fMRI and DTI
 
 **Dataset**: `openneuro_ds006040` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006040
-**Category**: High-level Mental | **Subjects**: 28 | **Files (Completed)**: 1064 | **Channels**: 64 | **Sampling Rate**: 5000 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 28 | **Files (Completed)**: 1064 | **Channels**: 64 | **Sampling Rate**: 5000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
 > **Kernel SHA256**: `c366a0baea6143a577a42e690cd48c882a632f54dfdcf84b5eecf48aba27ec43`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -140,3 +140,12 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
 - **Evidence**:
   - DOI: 10.1038/s41597-026-06616-6 — Omission error framework described: failure to respond to target stimuli (S245).
 - **Kernel Notes**: Focus specifically on S245 (target) trials to detect omission errors. Check for S254 absence within 2s window. Downsample from 5000 Hz before processing.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

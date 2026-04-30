@@ -1,8 +1,7 @@
 # EEG Mortality Dataset in Parkinson's Disease
 
 **Dataset**: `openneuro_ds007020` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds007020
-**Category**: Biological State | **Subjects**: 94 | **Files (Completed)**: 94 | **Channels**: 63 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
+**Category**: Biological State | **Subjects**: 94 | **Files (Completed)**: 94 | **Channels**: 63 | **Sampling Rate**: 500 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Resting-state EEG recordings (eyes open) were collected from Parkinson's disease
 > **Kernel SHA256**: `af4e64ea8045052b6b5293763aaf05cd8fe102f81b932cd214e59c31769b35f5`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -55,3 +55,12 @@ Resting-state EEG recordings (eyes open) were collected from Parkinson's disease
 - **Super Meta Notes**: Shorter overlapping segments enable exploratory spectral and connectivity analysis (alpha/beta power, coherence) without requiring explicit event markers. Group labels (PD vs healthy control, mortality outcome) must be derived from participants.tsv metadata.
 - **Evidence**: Not required — paradigm is plausible from resting-state EEG literature for PD spectral biomarker analysis.
 - **Kernel Notes**: Extract 10-second overlapping segments (50% overlap) to increase sample count for exploratory analysis. Compute spectral power in canonical bands (delta, theta, alpha, beta, gamma) and connectivity metrics (coherence, phase-locking value). Aggregate metrics per subject for downstream classification or group comparison. Exclude `New Segment/` marker from all analyses.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

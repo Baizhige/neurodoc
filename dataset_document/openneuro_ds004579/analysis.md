@@ -1,8 +1,7 @@
 # Interval Timing Task
 
 **Dataset**: `openneuro_ds004579` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004579
-**Category**: Sensory/Response | **Subjects**: 139 | **Files (Completed)**: 139 | **Channels**: 64 | **Sampling Rate**: 512 Hz
-**Manual Review**:
+**Category**: Sensory/Response | **Subjects**: 139 | **Files (Completed)**: 139 | **Channels**: 64 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants performed an interval timing task where they estimated durations of
 > **Kernel SHA256**: `464b935071c0e7b1526544d59f3eb63f5c8cce7af296c6f01261de426c39747f`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

@@ -1,8 +1,7 @@
 # InsurgentCivilian (Social-Cognitive EEG Dataset)
 
 **Dataset**: `openneuro_ds004852` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004852
-**Category**: Complex Applied | **Subjects**: 1 | **Files (Completed)**: 1 | **Channels**: 64 | **Sampling Rate**: 128 Hz
-**Manual Review**:
+**Category**: Complex Applied | **Subjects**: 1 | **Files (Completed)**: 1 | **Channels**: 64 | **Sampling Rate**: 128 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ An EEG dataset recorded during a dual-paradigm session combining N-back working 
 > **Kernel SHA256**: `073b0786cca4e4167989dc5cd44ecf56e75b8fe41de5f120d497cbdef5972cff`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -102,6 +102,8 @@ An EEG dataset recorded during a dual-paradigm session combining N-back working 
 | `device` | missing | N/A |
 
 ## Tasks
+
+
 
 ## Data Quality Notes
 

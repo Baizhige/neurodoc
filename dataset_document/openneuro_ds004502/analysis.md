@@ -1,8 +1,7 @@
 # Anticipatory differences between Attention and Expectation
 
 **Dataset**: `openneuro_ds004502` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004502
-**Category**: Sensory/Response | **Subjects**: 38 | **Files (Completed)**: 38 | **Channels**: 63 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Pending
+**Category**: Sensory/Response | **Subjects**: 38 | **Files (Completed)**: 38 | **Channels**: 63 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ An experimental task investigating neural mechanisms of anticipation by comparin
 > **Kernel SHA256**: `e55fcc32f1c0c663a6e615920982c072c481c866ed5b9ccccf663fa49fbe82aa`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -175,3 +175,12 @@ An experimental task investigating neural mechanisms of anticipation by comparin
 
 - **Evidence**: Plausible from paradigm description ("attended to auditory or visual stimuli") and consistent event counts (38 each) suggest stimulus delivery markers. Exact modality mapping requires events.tsv confirmation.
 - **Kernel Notes**: Stimulus/S100-S105 events are separate from cue validity markers and appear at consistent 38 counts per subject, suggesting stimulus delivery events aligned to trial structure.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

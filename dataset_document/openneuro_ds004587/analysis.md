@@ -1,14 +1,17 @@
 # IllusionGameEEG_data
 
 **Dataset**: `openneuro_ds004587` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004587
-**Category**: Sensory/Response | **Subjects**: 103 | **Files (Completed)**: 114 | **Channels**: 64 | **Sampling Rate**: 10000 Hz
+**Category**: Sensory/Response | **Subjects**: 103 | **Files (Completed)**: 114 | **Channels**: 64 | **Sampling Rate**: 10000 Hz | **Manual Review**:
 
 ## Paradigm
 
 Participants performed perceptual judgements on visual targets embedded within three classic visual illusions - Ebbinghaus, Muller-Lyer, and Vertical-Horizontal - to measure individual differences in illusion sensitivity and perceptual bias. The study investigates how prior experience and personality shape perceptual decision-making. EEG was recorded at 10 kHz; actual stimulus-event markers appear not to have been stored in events.tsv.
 
-
 ## File Scan Result
+
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 ### Event Structure
 
@@ -47,29 +50,14 @@ No stimulus/response trial events captured in events.tsv. All markers are admini
 - **Label Route**: `Annotation`
 - **Target Definition**: None
 - **Notes**: All events in events.tsv are administrative markers or artifact annotations. No stimulus/response trial events were captured. Trial structure may be recoverable from separate behavioral logs. Use sliding-window segmentation.
+
 ## Data Quality Notes
 
 - All events are admin; no stimulus-locked epochs possible from events.tsv alone.
 - Very high sampling rate (10 kHz) - downsample before analysis.
 - Paper reference (ARSQ 2.0) may be a metadata mismatch; verify README.
 
-
 ## Kernel Responsibilities
 
-
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004587
-
----
-
-> **auto_eeg FAILED**: Although this is a legitimate OpenNeuro dataset with a described paradigm (visual illusion perceptual judgments), it fails feasibility criteria because (1) no reference is rated 'relevant' or 'partial' to support the task, and (2) critically, the events.tsv contains no stimulus/response trial events—only administrative/artifact markers—making it impossible to construct stimulus-locked epochs from the EEG data alone without uncertain behavioral log recovery.
-
----
-
-> **Pipeline FAILED**: The events.tsv contains only administrative markers (New Segment boundaries, lost samples, motion artifacts, comments) with zero stimulus or response trial events. The README describes a rich 384-trial illusion paradigm with perceptual judgments, but these trial events were not stored in the BIDS events files. Without recoverable event markers linking EEG to trial conditions (illusion type, difficulty, response, correctness), no supervised ML classification or regression task can be constructed from this dataset as currently structured.
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

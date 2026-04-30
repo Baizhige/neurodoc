@@ -1,8 +1,7 @@
 # Dataset of Intracranial EEG, Scalp EEG and Beamforming Sources from Epilepsy Patients - Verbal Working Memory
 
 **Dataset**: `openneuro_ds004752` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004752
-**Category**: High-level Mental | **Subjects**: 15 | **Files (Completed)**: 134 | **Channels**: 64 | **Sampling Rate**: 2000 Hz
-**Manual Review**: Pending
+**Category**: High-level Mental | **Subjects**: 15 | **Files (Completed)**: 134 | **Channels**: 64 | **Sampling Rate**: 2000 Hz | **Manual Review**: Pending
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Epilepsy patients performed a modified Sternberg verbal working memory task cons
 > **Kernel SHA256**: `96562d5a1650fc9393c32f1c18511b1c7e78d9e0df4f8c407133e392870dce6c`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -72,3 +72,12 @@ Epilepsy patients performed a modified Sternberg verbal working memory task cons
 - **Meta Level**: raw
 - **Evidence**: DOI: 10.7554/eLife.78677 | Paradigm phases (encoding 2s, maintenance 3s) are conceptually documented but not timestamped in available event files. |
 - **Kernel Notes**: Use only if behavioral log files with trial timing are unavailable. Sliding-window segmentation creates pseudo-trials for continuous analysis. Downsample to 250–500 Hz before segmentation to reduce computational load while preserving theta-band [4–8 Hz] content relevant for WM research. Exclude ictal periods from epilepsy patients.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: Yes
+> **Status**: wait_manual_review

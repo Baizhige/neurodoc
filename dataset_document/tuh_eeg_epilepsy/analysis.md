@@ -1,13 +1,17 @@
 # TUH EEG Epilepsy Corpus
 
 **Dataset**: `tuh_eeg_epilepsy` | **Year**: 2022 | **URL**: https://isip.piconepress.com/projects/tuh_eeg/downloads/tuh_eeg_epilepsy/v2.0.1/
-**Category**: Biological State | **Subjects**: ~2298 | **Files (Completed)**: 2298 | **Channels**: 17-41 | **Sampling Rate**: 250-1000 Hz
+**Category**: Biological State | **Subjects**: ~2298 | **Files (Completed)**: 2298 | **Channels**: 17-41 | **Sampling Rate**: 250-1000 Hz | **Manual Review**:
 
 ## Paradigm
 
 The TUH EEG Epilepsy Corpus (v2.0.1) is a clinically labeled subset of the TUH EEG Corpus where each recording is classified as **epilepsy** or **no epilepsy** based on patients' established clinical diagnoses (not real-time EEG pattern) recorded in hospital notes. Unlike tuh_eeg_seizure, the epilepsy label reflects a patient-level diagnosis, not the presence of ictal activity in the specific recording. The label is extracted from the directory path (`00_epilepsy/` or `01_no_epilepsy/`) and assigned as a single whole-recording annotation by the kernel.
 
 ## File Scan Result
+
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 *Placeholder: File scan results pending completion.*
 
@@ -60,11 +64,5 @@ The TUH EEG Epilepsy Corpus (v2.0.1) is a clinically labeled subset of the TUH E
 
 ## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation
-> **Web Reference Used for Decision**: https://isip.piconepress.com/projects/tuh_eeg/downloads/tuh_eeg_epilepsy/v2.0.1/
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

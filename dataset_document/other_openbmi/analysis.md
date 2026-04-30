@@ -1,8 +1,7 @@
 # OpenBMI Motor Imagery EEG Dataset
 
 **Dataset**: `other_openbmi` | **Year**: 2019 | **URL**: https://gigadb.org/dataset/100542
-**Category**: Action/Output | **Subjects**: 54 | **Files (Completed)**: 108 | **Channels**: 62 | **Sampling Rate**: 1000 Hz
-**Manual Review**: Chengxuan Qin
+**Category**: Action/Output | **Subjects**: 54 | **Files (Completed)**: 108 | **Channels**: 62 | **Sampling Rate**: 1000 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -50,7 +49,7 @@ Fifty-four healthy subjects (24–35 years old; 25 females) participated in the 
 - **Notes**: 
 
 ## Data Quality Notes
-
+- 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No

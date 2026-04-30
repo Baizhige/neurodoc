@@ -1,8 +1,7 @@
 # TNO (Military Cognitive Workload)
 
 **Dataset**: `openneuro_ds004660` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004660
-**Category**: Military/Defense | **Subjects**: 9 | **Files (Completed)**: 18 | **Channels**: 64 | **Sampling Rate**: 256 Hz
-**Manual Review**:
+**Category**: Military/Defense | **Subjects**: 9 | **Files (Completed)**: 18 | **Channels**: 64 | **Sampling Rate**: 256 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ This dataset contains EEG recordings from 9 military personnel performing a P300
 > **Kernel SHA256**: `5db0f107b2be46903d445341f63b9882e524d03e7b43aa51db4839b18e728183`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

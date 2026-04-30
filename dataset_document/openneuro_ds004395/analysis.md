@@ -1,9 +1,8 @@
 # Penn Electrophysiology of Encoding and Retrieval Study (PEERS)
 
 **Dataset**: `openneuro_ds004395` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004395
-**Category**: High-level Mental | **Subjects**: 300 | **Files (Completed)**: 6480
+**Category**: High-level Mental | **Subjects**: 300 | **Files (Completed)**: 6480 | **Manual Review**: Pending
 **Channels**: 129 | **Sampling Rate**: 500 Hz
-**Manual Review**: Pending
 
 ## Paradigm
 
@@ -14,6 +13,7 @@ A large-scale study investigating the electrophysiological correlates of memory 
 > **Kernel SHA256**: `9d157f1bc9002373cf993976877bffb0f85323ccced6baad5b1ae2e0ee065340`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
@@ -77,3 +77,12 @@ A large-scale study investigating the electrophysiological correlates of memory 
   | `REC_WORD` | 1 | Correct recall |
 - **Evidence**: DOI: 10.1038/s41467-024-46926-0 — "EEG decoders track memory dynamics" uses REC_WORD and REC_WORD_VV events for retrieval success classification. Validates that EEG spectral features in pre-retrieval window (500ms preceding recall) predict correct vs. intrusion recall.
 - **Kernel Notes**: Epoch window captures recall initiation and vocalization period. Cross-reference REC_WORD_VV (voice-verified) for ground truth successful retrieval. REC_START marks recall period onset; use for period segmentation if needed.
+
+## Data Quality Notes
+
+- Pending manual review.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

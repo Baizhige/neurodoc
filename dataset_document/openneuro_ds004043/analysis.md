@@ -1,8 +1,7 @@
 # The time-course of feature-based attention effects dissociated from temporal expectation and target-related processes
 
 **Dataset**: `openneuro_ds004043` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004043
-**Category**: Sensory/Response | **Subjects**: 20 | **Files (Completed)**: 40 | **Channels**: 63 | **Sampling Rate**: 250 Hz
-**Manual Review**:
+**Category**: Sensory/Response | **Subjects**: 20 | **Files (Completed)**: 40 | **Channels**: 63 | **Sampling Rate**: 250 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Participants viewed rapid sequences of overlaid oriented grating pairs (presente
 > **Kernel SHA256**: `ae100be3bcccd0a91c5423c0ebafe55756e7b33fbfec510964ce8a3e2c04fc03`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

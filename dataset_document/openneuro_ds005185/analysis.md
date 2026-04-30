@@ -1,8 +1,7 @@
 # Ear-EEG Sleep Monitoring 2019 (EESM19)
 
 **Dataset**: `openneuro_ds005185` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005185
-**Category**: Biological State | **Subjects**: 20 | **Files (Completed)**: 516 | **Channels**: 25 | **Sampling Rate**: 500 Hz
-**Manual Review**:
+**Category**: Biological State | **Subjects**: 20 | **Files (Completed)**: 516 | **Channels**: 25 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -13,6 +12,7 @@ Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG
 > **Kernel SHA256**: `72bd902f86d674ca5c847830f226a8c52a7e171d239fee0b661644595134676b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
+
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |

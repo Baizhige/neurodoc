@@ -1,17 +1,17 @@
 # BCI Competition IV Dataset 4 (ECoG Finger Movement Decoding)
 
 **Dataset**: `bcic_iv_4` | **Year**: 2008 | **URL**: https://www.bbci.de/competition/iv/desc_4.html
-**Category**: Action/Output | **Subjects**: 3 | **Files (Completed)**: 3 | **Channels**: 48-64 | **Sampling Rate**: 1000 Hz
+**Category**: Action/Output | **Subjects**: 3 | **Files (Completed)**: 3 | **Channels**: 48-64 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
 Three subjects (sub1-sub3) performed individual finger flexions under instruction while ECoG (electrocorticography) was recorded from 48-64 electrodes implanted over sensorimotor cortex (BCI Competition IV, 2008). Subjects flexed each of the five fingers individually on cue. Continuous finger flexion amplitude was measured via a data glove and stored as 5 labels per time sample. The dataset contains a training segment (~400 s per subject) with labeled finger flexion signals and a test segment (~200 s) with labels withheld. The Case B kernel concatenates train and test segments into a single continuous raw signal per subject; finger flexion signals (5 channels) are stored as `misc`-type stim channels (`finger1`-`finger5`).
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 ### Event Structure
 
@@ -39,6 +39,7 @@ Three subjects (sub1-sub3) performed individual finger flexions under instructio
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Continuous Finger Flexion Trajectory Decoding (5 fingers)
@@ -101,7 +102,6 @@ Three subjects (sub1-sub3) performed individual finger flexions under instructio
 - No age or sex information available.
 - High sampling rate (1000 Hz); consider downsampling to <=250 Hz for classification tasks.
 - Test-segment labels are withheld; only the `train_segment` portion is usable for supervised learning.
-
 
 ## Kernel Responsibilities
 

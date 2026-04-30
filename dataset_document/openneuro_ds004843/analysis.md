@@ -1,13 +1,17 @@
 # Visual Situational Awareness EEG (T16)
 
 **Dataset**: `openneuro_ds004843` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004843
-**Category**: Others | **Subjects**: 7 | **Files (Completed)**: 7 | **Channels**: 70 | **Sampling Rate**: 256 Hz
+**Category**: Others | **Subjects**: 7 | **Files (Completed)**: 7 | **Channels**: 70 | **Sampling Rate**: 256 Hz | **Manual Review**:
 
 ## Paradigm
 
 The `VisualSituationalAwareness` task investigates neural correlates of situational awareness during visual monitoring. Subjects viewed structured visual scenes with EEG recorded across multiple runs. The 5-digit hierarchical trigger codes encode stimulus category, load level, and response type. Codes 22301/22302 (3,384 each) and 22501/22502 (2,331/2,325) dominate; code 32000 (1,099) likely marks scene/trial boundaries. Codes ending in 01/02 mark paired conditions (onset/offset or left/right).
 
 ## File Scan Result
+
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
 
 ### Event Structure
 
@@ -34,7 +38,6 @@ The `VisualSituationalAwareness` task investigates neural correlates of situatio
 ### Info
 
 Placeholder for additional file scan metadata.
-
 
 ## Tasks
 
@@ -65,6 +68,7 @@ Placeholder for additional file scan metadata.
  | `22102` | 5 | Condition 22102 |
  | `22601` | 6 | Condition 22601 |
  | `22602` | 7 | Condition 22602 |
+
 ## Data Quality Notes
 
 - Only 7 files - very small dataset for training.
@@ -73,15 +77,5 @@ Placeholder for additional file scan metadata.
 
 ## Kernel Responsibilities
 
-- **Type 1 (Raw-meta extraction only)**: Extract and normalize raw labels from events/trigger streams.
-- **Type 2 (Raw + Super meta integration)**: Derive and merge high-level labels that are not directly represented in raw events.
-- **Type 3 (Label-route orchestration)**: Route final labels to EEGUnity-compatible channels (`Annotation`, `stim`, `misc`) with reproducible schema.
-
-> **Selected Mode**: Type 1 + Type 3
-> **Why**: Raw markers are sufficient for primary tasks.
-> **Primary Label Routes**: Annotation, stim
-> **Web Reference Used for Decision**: https://openneuro.org/datasets/ds004843
-
----
-
-> **auto_eeg FAILED**: While the dataset has a well-documented event/label structure and clear multiclass classification paradigm described in analysis.md, none of the reference extractions qualify as 'relevant' or 'partial'. The official DOI and OpenNeuro pages are classified as 'uncertain', and all other references are 'irrelevant'. Since the instructions require at least one relevant/partial reference, this dataset does not meet the feasibility threshold.
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

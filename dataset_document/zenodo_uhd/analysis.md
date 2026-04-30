@@ -1,17 +1,17 @@
 # Ultra High-Density 256-Channel EEG AAD Dataset
 
 **Dataset**: `zenodo_uhd` | **Year**: 2021 | **URL**: N/A
-**Category**: High-level Mental | **Subjects**: 13 | **Files (Completed)**: 156 | **Channels**: 256 | **Sampling Rate**: 1000 Hz
+**Category**: High-level Mental | **Subjects**: 13 | **Files (Completed)**: 156 | **Channels**: 256 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
 Thirteen subjects listened to two simultaneously presented stories (one in each ear) and attended to one speaker while ignoring the other (auditory attention decoding, AAD). Ultra-high-density EEG was recorded from 256 channels (BioSemi ActiveTwo, Ag/AgCl) at 1000 Hz. Subjects completed multiple trials; each recording file corresponds to one trial, with the attended direction (left/right) encoded in the filename (`S{N}_AAD_{trial}{L/R}.dap`). The kernel creates a whole-trial `attend_left` or `attend_right` annotation per file. This dataset has the same structure as `zenodo_4518754` and uses an identical kernel implementation.
 
-
 ## File Scan Result
 
-> **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `N/A`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Sampled
 
 ### Event Structure
 
@@ -31,6 +31,7 @@ Thirteen subjects listened to two simultaneously presented stories (one in each 
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
+
 ## Tasks
 
 ### Classical Task 1: Ultra-high-density auditory attention decoding (left vs right)
@@ -67,7 +68,6 @@ Thirteen subjects listened to two simultaneously presented stories (one in each 
 - High sampling rate (1000 Hz); consider downsampling to 64 or 128 Hz for typical AAD decoding.
 - Same structure and kernel as `zenodo_4518754`; may be processed identically.
 - No age or sex information available.
-
 
 ## Kernel Responsibilities
 
