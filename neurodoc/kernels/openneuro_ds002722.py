@@ -1,331 +1,288 @@
-"""OpenNeuro DS002722 stage1 kernel for EEGUnity.
+"""OpenNeuro DS002722 stage-1 kernel for EEGUnity.
 
-Affective Brain-Computer Music Interface (BCMI) calibration dataset.
-EEG and physiological recordings from 19 participants listening to
-40-second synthetic music clips with 9 affective conditions.
+BCMI-MIdAS calibration recordings contain EDF EEG plus physiological and
+continuous user-report channels while participants listened to affective music
+clips. The EDF files do not carry usable annotations, so trial annotations are
+loaded from the sibling BIDS ``*_events.tsv`` files.
 
-Source: https://openneuro.org/datasets/ds002722
-DOI: 10.1038/s41597-020-0507-6
+Dataset evidence used by this kernel:
+- participants.tsv: subject-level age and sex.
+- per-file *_channels.tsv: 32 EEG channels plus GSR, ECG, VA1, VA2, VAtarg.
+- per-file *_events.tsv/json: raw trial_type event IDs 1-9 and 101-209.
+- per-file *_eeg.json: 1000 Hz sampling rate and channel-count metadata.
 """
 
 from __future__ import annotations
 
 import json
-import os
 import re
-from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+import warnings
+from pathlib import Path
+from typing import Dict, List, Optional
 
 import mne
-import numpy as np
 import pandas as pd
 
 
-# ============================================================================
-# Channel Rename Map
-# ============================================================================
-# The dataset uses BrainVision format with channel names like 'EEG 001', 'EEG 002', etc.
-# plus physiological channels (ECG, GSR, Resp, etc.)
-# Source: Paper 10.1038/s41597-020-0507-6, Table 1 - 32-channel EEG cap layout
-# Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
-_EEG_CHANNEL_RENAME_MAP: Dict[str, str] = {
-    "EEG 001": "FC5",
-    "EEG 002": "FC3",
-    "EEG 003": "FC1",
-    "EEG 004": "Fz",
-    "EEG 005": "FC2",
-    "EEG 006": "FC4",
-    "EEG 007": "FC6",
-    "EEG 008": "C5",
-    "EEG 009": "C3",
-    "EEG 010": "C1",
-    "EEG 011": "Cz",
-    "EEG 012": "C2",
-    "EEG 013": "C4",
-    "EEG 014": "C6",
-    "EEG 015": "CP5",
-    "EEG 016": "CP3",
-    "EEG 017": "CP1",
-    "EEG 018": "CPz",
-    "EEG 019": "CP2",
-    "EEG 020": "CP4",
-    "EEG 021": "CP6",
-    "EEG 022": "FP1",
-    "EEG 023": "FP2",
-    "EEG 024": "F7",
-    "EEG 025": "F3",
-    "EEG 026": "F4",
-    "EEG 027": "F8",
-    "EEG 028": "T7",
-    "EEG 029": "T8",
-    "EEG 030": "P7",
-    "EEG 031": "P3",
-    "EEG 032": "Pz",
-    "EEG 033": "P4",
-    "EEG 034": "P8",
-    "EEG 035": "O1",
-    "EEG 036": "Oz",
-    "EEG 037": "O2",
-}
-
-# Physiological channel names (keep as-is or rename to standard types)
-# Source: Paper 10.1038/s41597-020-0507-6, physiological recordings section
-# Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
-_PHYSIOLOGICAL_CHANNEL_MAP: Dict[str, str] = {
-    "ECG": "ECG",
-    "GSR": "GSR",
-    "Resp": "Resp",
-    "Plethysmograph": "Pleth",
-}
+_INFO_FIELDS = ("age", "sex")
+_MISSING_VALUES = {"", "n/a", "na", "nan", "none"}
 
 
-def _load_participants_tsv(dataset_path: str) -> pd.DataFrame:
-    """Load participants.tsv from the BIDS dataset root."""
-    participants_path = os.path.join(dataset_path, "participants.tsv")
-    if os.path.exists(participants_path):
-        return pd.read_csv(participants_path, sep="\t")
-    return pd.DataFrame()
+def _row_get(row, *keys: str) -> str:
+    for key in keys:
+        try:
+            value = row.get(key)
+        except AttributeError:
+            try:
+                value = row[key]
+            except Exception:
+                value = None
+        if value not in (None, ""):
+            return str(value)
+    return ""
 
 
-def _get_required_info_fields(participants_df: pd.DataFrame, subject_id: str) -> Dict[str, str]:
-    """Extract required info fields from participants.tsv for eegunity_description.
-    
-    Required fields: age, sex, handedness, amplifier, cap
-    """
-    info = {}
-    
-    if participants_df.empty or "participant_id" not in participants_df.columns:
-        for field in ["age", "sex", "handedness", "amplifier", "cap"]:
-            info[field] = "unknown"
-        return info
-    
-    subject_row = participants_df[participants_df["participant_id"] == subject_id]
-    if subject_row.empty:
-        for field in ["age", "sex", "handedness", "amplifier", "cap"]:
-            info[field] = "unknown"
-        return info
-    
-    row = subject_row.iloc[0]
-    
-    # Age
-    if "age" in row and pd.notna(row["age"]):
-        info["age"] = str(int(float(row["age"])))
-    else:
-        info["age"] = "unknown"
-    
-    # Sex (lowercase)
-    if "sex" in row and pd.notna(row["sex"]):
-        sex_val = str(row["sex"]).strip().lower()
-        if sex_val in ("m", "male"):
-            info["sex"] = "male"
-        elif sex_val in ("f", "female"):
-            info["sex"] = "female"
-        else:
-            info["sex"] = "unknown"
-    else:
-        info["sex"] = "unknown"
-    
-    # Handedness
-    if "handedness" in row and pd.notna(row["handedness"]):
-        info["handedness"] = str(row["handedness"]).strip().lower()
-    else:
-        info["handedness"] = "unknown"
-    
-    # Amplifier - from participants.tsv if available, else unknown
-    if "amplifier" in row and pd.notna(row["amplifier"]):
-        info["amplifier"] = str(row["amplifier"]).strip()
-    else:
-        info["amplifier"] = "unknown"
-    
-    # Cap - from participants.tsv if available, else unknown
-    if "cap" in row and pd.notna(row["cap"]):
-        info["cap"] = str(row["cap"]).strip()
-    else:
-        info["cap"] = "unknown"
-    
-    # Ensure all required fields are present
-    for field in ["age", "sex", "handedness", "amplifier", "cap"]:
-        if field not in info:
-            info[field] = "unknown"
-    
-    return info
+def _get_file_path(row) -> str:
+    return _row_get(row, "File Path", "file_path", "filepath", "path")
 
 
-def _find_events_tsv(file_path: str) -> Optional[str]:
-    """Find the corresponding events.tsv file for a given EEG file."""
-    # BIDS convention: eeg/<file>.edf -> eeg/<file>_events.tsv
-    base_dir = os.path.dirname(file_path)
-    base_name = os.path.basename(file_path)
-    
-    # Remove extension
-    base_name_no_ext = os.path.splitext(base_name)[0]
-    
-    # Try standard BIDS events.tsv naming
-    events_path = os.path.join(base_dir, f"{base_name_no_ext}_events.tsv")
-    if os.path.exists(events_path):
-        return events_path
-    
-    # Try alternative: some datasets use different naming
-    for ext in [".vhdr", ".vmrk", ".eeg", ".set", ".edf"]:
-        if base_name.endswith(ext):
-            alt_name = base_name[:-len(ext)]
-            alt_events_path = os.path.join(base_dir, f"{alt_name}_events.tsv")
-            if os.path.exists(alt_events_path):
-                return alt_events_path
-    
+def _find_dataset_root(file_path: str) -> Optional[Path]:
+    current = Path(file_path).resolve().parent
+    while True:
+        if (current / "dataset_description.json").is_file():
+            return current
+        if current.parent == current:
+            return None
+        current = current.parent
+
+
+def _extract_subject_id(file_path: str) -> str:
+    match = re.search(r"(sub-[A-Za-z0-9]+)", file_path)
+    return match.group(1) if match else "unknown"
+
+
+def _find_sibling_sidecar(file_path: str, suffix: str) -> Optional[Path]:
+    path = Path(file_path)
+    stem = path.stem
+    candidates: List[Path] = []
+    if stem.endswith("_eeg"):
+        candidates.append(path.with_name(stem[:-4] + suffix))
+    candidates.append(path.with_name(stem + suffix))
+
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
     return None
 
 
-def _load_events_from_tsv(events_path: str) -> pd.DataFrame:
-    """Load events from a BIDS events.tsv file."""
-    if not os.path.exists(events_path):
-        return pd.DataFrame()
-    
-    df = pd.read_csv(events_path, sep="\t")
-    return df
+def _find_participants_tsv(file_path: str) -> Optional[Path]:
+    root = _find_dataset_root(file_path)
+    if not root:
+        return None
+    path = root / "participants.tsv"
+    return path if path.is_file() else None
 
 
-def _events_to_annotations(events_df: pd.DataFrame) -> mne.Annotations:
-    """Convert BIDS events DataFrame to MNE Annotations.
-    
-    Note: onset is in seconds, which is what MNE Annotations expects.
-    Do NOT divide by sfreq - MNE Annotations.onset is in seconds.
-    """
-    if events_df.empty:
+def _clean_value(value) -> str:
+    value_str = str(value).strip()
+    if value_str.lower() in _MISSING_VALUES:
+        return "unknown"
+    return value_str
+
+
+def _normalize_sex(value: str) -> str:
+    normalized = value.strip().lower()
+    if normalized in {"f", "female"}:
+        return "female"
+    if normalized in {"m", "male"}:
+        return "male"
+    return "unknown"
+
+
+def _read_participants_info(file_path: str, subject_id: str) -> Dict[str, str]:
+    info = {field: "unknown" for field in _INFO_FIELDS}
+    participants_path = _find_participants_tsv(file_path)
+    if not participants_path:
+        return info
+
+    try:
+        df = pd.read_csv(participants_path, sep="\t", dtype=str, keep_default_na=False)
+    except Exception:
+        return info
+
+    if "participant_id" not in df.columns:
+        return info
+
+    subject_rows = df[df["participant_id"].astype(str) == subject_id]
+    if subject_rows.empty:
+        return info
+
+    row = subject_rows.iloc[0]
+    for field in _INFO_FIELDS:
+        if field in row.index:
+            info[field] = _clean_value(row[field])
+    info["sex"] = _normalize_sex(info.get("sex", "unknown"))
+    return info
+
+
+def _read_json(path: Optional[Path]) -> Dict[str, object]:
+    if not path:
+        return {}
+    try:
+        with path.open("r", encoding="utf-8") as stream:
+            data = json.load(stream)
+    except Exception:
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _set_channel_types_from_sidecar(raw: mne.io.BaseRaw, file_path: str) -> None:
+    channels_path = _find_sibling_sidecar(file_path, "_channels.tsv")
+    if not channels_path:
+        return
+
+    try:
+        channels_df = pd.read_csv(channels_path, sep="\t", dtype=str, keep_default_na=False)
+    except Exception:
+        return
+
+    if "name" not in channels_df.columns or "type" not in channels_df.columns:
+        return
+
+    raw_names = set(raw.ch_names)
+    channel_types: Dict[str, str] = {}
+    for _, channel in channels_df.iterrows():
+        name = str(channel.get("name", "")).strip()
+        source_type = str(channel.get("type", "")).strip().upper()
+        if name not in raw_names:
+            continue
+        if source_type == "EEG":
+            channel_types[name] = "eeg"
+        elif source_type == "ECG":
+            channel_types[name] = "ecg"
+        elif source_type in {"GSR", "USERREPORT", "METADATA", "MISC"}:
+            channel_types[name] = "misc"
+
+    if channel_types:
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message=r"The unit for channel\(s\).*")
+            raw.set_channel_types(channel_types)
+
+
+def _set_montage(raw: mne.io.BaseRaw) -> None:
+    try:
+        montage = mne.channels.make_standard_montage("standard_1020")
+        raw.set_montage(montage, match_case=False, on_missing="ignore")
+    except Exception:
+        pass
+
+
+def _read_events_tsv(file_path: str) -> Optional[pd.DataFrame]:
+    events_path = _find_sibling_sidecar(file_path, "_events.tsv")
+    if not events_path:
+        return None
+    try:
+        return pd.read_csv(events_path, sep="\t", dtype=str, keep_default_na=False)
+    except Exception:
+        return None
+
+
+def _is_missing(value) -> bool:
+    return str(value).strip().lower() in _MISSING_VALUES
+
+
+def _event_id_to_string(value) -> str:
+    value_str = str(value).strip()
+    try:
+        value_float = float(value_str)
+    except ValueError:
+        return value_str
+    if value_float.is_integer():
+        return str(int(value_float))
+    return value_str
+
+
+def _events_to_annotations(events_df: Optional[pd.DataFrame]) -> mne.Annotations:
+    if events_df is None or events_df.empty or "onset" not in events_df.columns:
         return mne.Annotations(onset=[], duration=[], description=[])
-    
-    # Standard BIDS events columns: onset, duration, trial_type, value, sample, etc.
-    onsets = []
-    durations = []
-    descriptions = []
-    
+
+    onsets: List[float] = []
+    durations: List[float] = []
+    descriptions: List[str] = []
+
     for _, row in events_df.iterrows():
-        onset = float(row.get("onset", 0))
-        
-        # Duration: default to 0 if not present or empty
-        duration = row.get("duration", 0)
-        if pd.isna(duration) or duration == "":
+        onset_value = row.get("onset")
+        if _is_missing(onset_value):
+            continue
+        try:
+            onset = float(str(onset_value).strip())
+        except ValueError:
+            continue
+
+        duration_value = row.get("duration", 0)
+        try:
+            duration = 0.0 if _is_missing(duration_value) else float(str(duration_value).strip())
+        except ValueError:
             duration = 0.0
-        else:
-            duration = float(duration)
-        
-        # Description: prefer trial_type, then value, then stim_type
-        # Use literal string values from the TSV - NO remapping (HC-5)
-        desc = None
-        for col in ["trial_type", "value", "stim_type"]:
-            if col in row and pd.notna(row[col]):
-                desc = str(row[col])
+
+        description = ""
+        for column in ("trial_type", "value", "stim_type"):
+            if column in events_df.columns and not _is_missing(row.get(column)):
+                description = _event_id_to_string(row.get(column))
                 break
-        
-        if desc is None or desc == "" or desc == "nan":
-            desc = "unknown"
-        
+        if not description:
+            continue
+
         onsets.append(onset)
         durations.append(duration)
-        descriptions.append(desc)
-    
-    return mne.Annotations(
-        onset=onsets,
-        duration=durations,
-        description=descriptions,
-    )
+        descriptions.append(description)
+
+    return mne.Annotations(onset=onsets, duration=durations, description=descriptions)
 
 
-def _has_native_events(raw: mne.io.BaseRaw) -> bool:
-    """Check if the raw file already has meaningful events/annotations."""
-    # Check for existing annotations with non-empty descriptions
-    if raw.annotations is not None and len(raw.annotations) > 0:
-        # Check if descriptions are meaningful (not just empty or "BAD" etc.)
-        for desc in raw.annotations.description:
-            if desc and not desc.startswith("BAD"):
-                return True
-    
-    # Check for stim channels
-    stim_picks = mne.pick_types(raw.info, stim=True, exclude=[])
-    if len(stim_picks) > 0:
-        return True
-    
-    return False
-
-
-@dataclass
 class OpenNeuroDS002722Kernel:
-    """Stage1 kernel for OpenNeuro DS002722 (BCMI calibration dataset)."""
+    """Stage-1 kernel for OpenNeuro ds002722."""
 
-    KERNEL_ID: str = "openneuro-ds002722-stage1"
+    KERNEL_ID = "openneuro_ds002722"
 
     def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
-        """Apply stage1 preprocessing to a single record."""
-        # Determine dataset path
-        dataset_path = getattr(udataset, "path", None)
-        if dataset_path is None:
-            dataset_path = os.environ.get("EEG_DATASET_PATH", "")
-        
-        # Get subject ID from file path or row
-        file_path = row.get("file_path", "") if isinstance(row, dict) else str(row)
-        subject_match = re.search(r"sub-(\w+)", file_path)
-        if subject_match:
-            subject_id = f"sub-{subject_match.group(1)}"
-        else:
-            subject_id = "unknown"
-        
-        # Load participants.tsv and get required info fields
-        participants_df = _load_participants_tsv(dataset_path)
-        required_info = _get_required_info_fields(participants_df, subject_id)
-        
-        # Rename EEG channels
-        rename_map = {}
-        for ch in raw.ch_names:
-            if ch in _EEG_CHANNEL_RENAME_MAP:
-                rename_map[ch] = _EEG_CHANNEL_RENAME_MAP[ch]
-        
-        if rename_map:
-            raw = raw.rename_channels(rename_map)
-        
-        # Set channel types for physiological channels
-        channel_types = {}
-        for ch in raw.ch_names:
-            if ch in _PHYSIOLOGICAL_CHANNEL_MAP:
-                ch_type = _PHYSIOLOGICAL_CHANNEL_MAP[ch]
-                if ch_type == "ECG":
-                    channel_types[ch] = "ecg"
-                elif ch_type == "GSR":
-                    channel_types[ch] = "gsr"
-                elif ch_type == "Resp":
-                    channel_types[ch] = "resp"
-                else:
-                    channel_types[ch] = "misc"
-        
-        if channel_types:
-            raw.set_channel_types(channel_types)
-        
-        # Always load events from events.tsv if available, regardless of native events
-        # The EDF files in this dataset have no native triggers; events.tsv is the source
-        events_path = _find_events_tsv(file_path)
-        if events_path is not None:
-            events_df = _load_events_from_tsv(events_path)
-            if not events_df.empty:
-                annotations = _events_to_annotations(events_df)
-                raw.set_annotations(annotations)
-        
-        # Set eegunity_description
-        eegunity_description = {
-            "dataset": "ds002722",
-            "dataset_name": "BCMI Calibration Dataset",
-            "task": "affective_music_listening",
-            "subject_id": subject_id,
-            "age": required_info.get("age", "unknown"),
-            "sex": required_info.get("sex", "unknown"),
-            "handedness": required_info.get("handedness", "unknown"),
-            "amplifier": required_info.get("amplifier", "unknown"),
-            "cap": required_info.get("cap", "unknown"),
-            "channel_count": len(raw.ch_names),
-            "sfreq": raw.info["sfreq"],
-            "recording_duration_sec": raw.n_times / raw.info["sfreq"],
+        file_path = _get_file_path(row)
+        subject_id = _extract_subject_id(file_path) if file_path else "unknown"
+        subject_info = _read_participants_info(file_path, subject_id) if file_path else {
+            "age": "unknown",
+            "sex": "unknown",
         }
-        
-        raw.info["eegunity_description"] = json.dumps(eegunity_description)
-        
+
+        if file_path:
+            # Channel names and non-EEG roles are directly listed in each
+            # *_channels.tsv file; no speculative channel rename is performed.
+            _set_channel_types_from_sidecar(raw, file_path)
+            _set_montage(raw)
+
+            annotations = _events_to_annotations(_read_events_tsv(file_path))
+            if len(annotations) > 0:
+                raw.set_annotations(annotations)
+
+        eeg_json = _read_json(_find_sibling_sidecar(file_path, "_eeg.json")) if file_path else {}
+        original_description = raw.info.get("description", "") or ""
+        eegunity_description = {
+            "dataset": "openneuro_ds002722",
+            "subject_id": subject_id,
+            "age": subject_info.get("age", "unknown"),
+            "sex": subject_info.get("sex", "unknown"),
+            "handedness": "unknown",
+            "device": "unknown",
+            "amplifier": "unknown",
+            "cap": f"{eeg_json.get('EEGChannelCount', 32)}-channel EEG cap",
+            "eeg_reference": str(eeg_json.get("EEGReference", "unknown")),
+            "task": str(eeg_json.get("TaskName", "Run")),
+        }
+
+        raw.info["description"] = json.dumps({
+            "original_description": original_description,
+            "eegunity_description": eegunity_description,
+        })
+
         return raw
 
 

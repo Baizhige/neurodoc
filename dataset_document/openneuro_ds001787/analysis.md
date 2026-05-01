@@ -1,84 +1,59 @@
 # EEG Meditation Study
 
-**Dataset**: `openneuro_ds001787` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds001787
+**Dataset**: `openneuro_ds001787` | **Year**: 2018/2024 | **URL**: https://openneuro.org/datasets/ds001787
 **Category**: Biological State | **Subjects**: 24 | **Files (Completed)**: 40 | **Channels**: 80 | **Sampling Rate**: 256 Hz | **Manual Review**:
 
 ## Paradigm
 
-Twenty-four meditators (12 expert with ≥10 years daily practice, 12 novices) engaged in sustained meditation sessions continuously recorded at 256 Hz. Approximately every two minutes, a brief probe interrupted the session to assess concentration level or mind-wandering, with subjects providing button-press responses. The study examines neural correlates of sustained attention, including infraslow activity coupled with autonomic markers like galvanic skin response.
+Twenty-four meditators (12 expert with ≥10 years daily practice, 12 novices) engaged in sustained meditation sessions. The released BDF files contain 80 channels (64 EEG, 15 auxiliary/misc physiological channels, and one BioSemi Status channel) sampled at 256 Hz after downsampling from the original 2048 Hz recordings. Approximately every two minutes, a brief probe interrupted the session to assess concentration level or mind-wandering, with subjects providing button-press responses. The study examines neural correlates of sustained attention, including infraslow activity coupled with autonomic markers like galvanic skin response.
 
 ## File Scan Result
 
-> **Kernel SHA256**: `a4bdc0abf3528185c2c555d74381ad494021cdfafb528ab69250f7b1a8398a99`
+> **Kernel SHA256**: `377803ea82e8e3e2c7cbb78f82abd7bb1a5a1723dac9b49a67ff799a39eb1fc4`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
-
-
+|---|---|---|---|---|
+| `128` | 983 | event | raw | First question onset during the meditation probe |
+| `16` | 2 | event | raw | Involuntary response marker |
+| `2` | 1131 | event | raw | Response 1 to one of the probe questions |
+| `254` | 5 | event | raw | BioSemi STATUS marker; administrative trigger not tied to a probe response |
+| `4` | 754 | event | raw | Response 2 to one of the probe questions |
+| `8` | 258 | event | raw | Response 3 to one of the probe questions |
 
 ### MISC Label Summary
+
 | Channel | Source | Meta | Notes |
 |---|---|---|---|
-| `B1` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B10` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B11` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B12` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B13` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B14` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B15` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B16` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B17` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B18` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B19` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B2` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B20` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B21` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B22` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B23` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B24` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B25` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B26` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B27` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B28` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B29` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B3` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B30` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B31` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B32` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B4` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B5` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B6` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B7` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B8` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `B9` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `EXG1` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `EXG2` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `EXG3` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `EXG4` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `EXG5` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `EXG6` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `EXG7` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `EXG8` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `Erg1` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `Erg2` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `GSR1` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `GSR2` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `Plet` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `Resp` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `Status` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `Temp` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-- **Candidate Labels**: `B1`, `B10`, `B11`, `B12`, `B13`, `B14`, `B15`, `B16`, `B17`, `B18`, `B19`, `B2`, `B20`, `B21`, `B22`, `B23`, `B24`, `B25`, `B26`, `B27`, `B28`, `B29`, `B3`, `B30`, `B31`, `B32`, `B4`, `B5`, `B6`, `B7`, `B8`, `B9`, `EXG1`, `EXG2`, `EXG3`, `EXG4`, `EXG5`, `EXG6`, `EXG7`, `EXG8`, `Erg1`, `Erg2`, `GSR1`, `GSR2`, `Plet`, `Resp`, `Status`, `Temp`
+| `EXG1` | native (raw misc in EEG file) | raw | Native BioSemi EXG auxiliary channel; units are n/a in channels.tsv; sample-aligned with EEG and not derived |
+| `EXG2` | native (raw misc in EEG file) | raw | Native BioSemi EXG auxiliary channel; units are n/a in channels.tsv; sample-aligned with EEG and not derived |
+| `EXG3` | native (raw misc in EEG file) | raw | Native BioSemi EXG auxiliary channel; units are n/a in channels.tsv; sample-aligned with EEG and not derived |
+| `EXG4` | native (raw misc in EEG file) | raw | Native BioSemi EXG auxiliary channel; units are n/a in channels.tsv; sample-aligned with EEG and not derived |
+| `EXG5` | native (raw misc in EEG file) | raw | Native BioSemi EXG auxiliary channel; units are n/a in channels.tsv; sample-aligned with EEG and not derived |
+| `EXG6` | native (raw misc in EEG file) | raw | Native BioSemi EXG auxiliary channel; units are n/a in channels.tsv; sample-aligned with EEG and not derived |
+| `EXG7` | native (raw misc in EEG file) | raw | Native BioSemi EXG auxiliary channel; units are n/a in channels.tsv; sample-aligned with EEG and not derived |
+| `EXG8` | native (raw misc in EEG file) | raw | Native BioSemi EXG auxiliary channel; units are n/a in channels.tsv; sample-aligned with EEG and not derived |
+| `Erg1` | native (raw misc in EEG file) | raw | Native BioSemi auxiliary channel; units are n/a in channels.tsv; sample-aligned with EEG and not derived |
+| `Erg2` | native (raw misc in EEG file) | raw | Native BioSemi auxiliary channel; units are n/a in channels.tsv; sample-aligned with EEG and not derived |
+| `GSR1` | native (raw misc in EEG file) | raw | Native galvanic skin response channel; units are n/a in channels.tsv; sample-aligned with EEG and not derived |
+| `GSR2` | native (raw misc in EEG file) | raw | Native galvanic skin response channel; units are n/a in channels.tsv; sample-aligned with EEG and not derived |
+| `Plet` | native (raw misc in EEG file) | raw | Native plethysmography/PPG channel; units are n/a in channels.tsv; sample-aligned with EEG and not derived |
+| `Resp` | native (raw misc in EEG file) | raw | Native respiration channel; units are n/a in channels.tsv; sample-aligned with EEG and not derived |
+| `Temp` | native (raw misc in EEG file) | raw | Native temperature channel; units are n/a in channels.tsv; sample-aligned with EEG and not derived |
 
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
+| `subject_age` | partial (38/40) | N/A |
 | `subject_sex` | complete | N/A |
-| `device` | missing | N/A |
+| `device` | complete | N/A |
+| `amplifier` | complete | e.g. BIOSEMI ActiveTwo |
+| `cap` | complete | e.g. BioSemi 64-channel cap |
+| `group` | complete | e.g. expert, novice |
 
 ## Tasks
 
@@ -145,4 +120,4 @@ Twenty-four meditators (12 expert with ≥10 years daily practice, 12 novices) e
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_kernel_update
+> **Status**: wait_manual_review

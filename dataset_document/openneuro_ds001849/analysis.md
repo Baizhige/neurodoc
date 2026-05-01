@@ -9,24 +9,33 @@ Resting-state EEG data recorded in conjunction with Transcranial Magnetic Stimul
 
 ## File Scan Result
 
-> **Kernel SHA256**: `2431a8f0a63df523216e52313865a716bfe9114d0b950d95fdba5d32db2fc9ba`
+> **Kernel SHA256**: `c31387a701982cfeafedb63f6475c4a03348bfce5175c24945a85d9c25f9274b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|---|---|---|---|---|
 | `R128` | 11961 | event | raw | TMS pulse trigger marker |
 | `boundary` | 135 | admin | raw | Data segment boundary marker |
 
-
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | missing | N/A |
 | `subject_sex` | missing | N/A |
-| `device` | missing | N/A |
+| `device` | complete | N/A |
+| `acq` | complete | e.g. dlpfcactive, dlpfcsham, m1active |
+| `amplifier` | complete | e.g. Brain Vision |
+| `cap` | complete | e.g. 30-channel 10-20 EEG cap |
+| `eeg_reference` | complete | e.g. CP4 |
+| `site_condition` | complete | e.g. dlpfcactive, dlpfcsham, m1active |
+| `stimulation_condition` | complete | e.g. active, sham |
+| `subject_id` | complete | e.g. sub-01, sub-02, sub-03 |
+| `task` | complete | e.g. tmseegrest |
+| `tms_site` | complete | e.g. dlpfc, m1, ppc |
 
 ## Tasks
 
@@ -74,4 +83,4 @@ Resting-state EEG data recorded in conjunction with Transcranial Magnetic Stimul
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_kernel_update
+> **Status**: wait_manual_review
