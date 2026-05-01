@@ -17,113 +17,113 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |---|---|---|---|---|
-| `1` | 125 | event | raw | Trial onset: Low valence, low arousal targeted affect |
-| `101` | 19 | event | raw | Music stimulus onset: piece 1 from stimuli list |
-| `102` | 18 | event | raw | Music stimulus onset: piece 2 from stimuli list |
-| `103` | 18 | event | raw | Music stimulus onset: piece 3 from stimuli list |
-| `104` | 19 | event | raw | Music stimulus onset: piece 4 from stimuli list |
-| `105` | 19 | event | raw | Music stimulus onset: piece 5 from stimuli list |
-| `106` | 19 | event | raw | Music stimulus onset: piece 6 from stimuli list |
-| `107` | 19 | event | raw | Music stimulus onset: piece 7 from stimuli list |
-| `108` | 19 | event | raw | Music stimulus onset: piece 8 from stimuli list |
-| `109` | 18 | event | raw | Music stimulus onset: piece 9 from stimuli list |
-| `110` | 19 | event | raw | Music stimulus onset: piece 10 from stimuli list |
-| `113` | 19 | event | raw | Music stimulus onset: piece 13 from stimuli list |
-| `114` | 19 | event | raw | Music stimulus onset: piece 14 from stimuli list |
-| `115` | 19 | event | raw | Music stimulus onset: piece 15 from stimuli list |
-| `116` | 18 | event | raw | Music stimulus onset: piece 16 from stimuli list |
-| `117` | 19 | event | raw | Music stimulus onset: piece 17 from stimuli list |
-| `118` | 19 | event | raw | Music stimulus onset: piece 18 from stimuli list |
-| `119` | 18 | event | raw | Music stimulus onset: piece 19 from stimuli list |
-| `120` | 18 | event | raw | Music stimulus onset: piece 20 from stimuli list |
-| `121` | 19 | event | raw | Music stimulus onset: piece 21 from stimuli list |
-| `122` | 18 | event | raw | Music stimulus onset: piece 22 from stimuli list |
-| `125` | 19 | event | raw | Music stimulus onset: piece 25 from stimuli list |
-| `126` | 18 | event | raw | Music stimulus onset: piece 26 from stimuli list |
-| `127` | 18 | event | raw | Music stimulus onset: piece 27 from stimuli list |
-| `128` | 19 | event | raw | Music stimulus onset: piece 28 from stimuli list |
-| `129` | 19 | event | raw | Music stimulus onset: piece 29 from stimuli list |
-| `130` | 18 | event | raw | Music stimulus onset: piece 30 from stimuli list |
-| `131` | 18 | event | raw | Music stimulus onset: piece 31 from stimuli list |
-| `132` | 19 | event | raw | Music stimulus onset: piece 32 from stimuli list |
-| `133` | 19 | event | raw | Music stimulus onset: piece 33 from stimuli list |
-| `134` | 19 | event | raw | Music stimulus onset: piece 34 from stimuli list |
-| `137` | 19 | event | raw | Music stimulus onset: piece 37 from stimuli list |
-| `138` | 19 | event | raw | Music stimulus onset: piece 38 from stimuli list |
-| `139` | 19 | event | raw | Music stimulus onset: piece 39 from stimuli list |
-| `140` | 18 | event | raw | Music stimulus onset: piece 40 from stimuli list |
-| `141` | 18 | event | raw | Music stimulus onset: piece 41 from stimuli list |
-| `142` | 19 | event | raw | Music stimulus onset: piece 42 from stimuli list |
-| `143` | 19 | event | raw | Music stimulus onset: piece 43 from stimuli list |
-| `144` | 19 | event | raw | Music stimulus onset: piece 44 from stimuli list |
-| `145` | 18 | event | raw | Music stimulus onset: piece 45 from stimuli list |
-| `146` | 18 | event | raw | Music stimulus onset: piece 46 from stimuli list |
-| `149` | 19 | event | raw | Music stimulus onset: piece 49 from stimuli list |
-| `150` | 19 | event | raw | Music stimulus onset: piece 50 from stimuli list |
-| `151` | 18 | event | raw | Music stimulus onset: piece 51 from stimuli list |
-| `152` | 19 | event | raw | Music stimulus onset: piece 52 from stimuli list |
-| `153` | 19 | event | raw | Music stimulus onset: piece 53 from stimuli list |
-| `154` | 19 | event | raw | Music stimulus onset: piece 54 from stimuli list |
-| `155` | 19 | event | raw | Music stimulus onset: piece 55 from stimuli list |
-| `156` | 19 | event | raw | Music stimulus onset: piece 56 from stimuli list |
-| `157` | 19 | event | raw | Music stimulus onset: piece 57 from stimuli list |
-| `158` | 19 | event | raw | Music stimulus onset: piece 58 from stimuli list |
-| `161` | 19 | event | raw | Music stimulus onset: piece 61 from stimuli list |
-| `162` | 19 | event | raw | Music stimulus onset: piece 62 from stimuli list |
-| `163` | 18 | event | raw | Music stimulus onset: piece 63 from stimuli list |
-| `164` | 18 | event | raw | Music stimulus onset: piece 64 from stimuli list |
-| `165` | 19 | event | raw | Music stimulus onset: piece 65 from stimuli list |
-| `166` | 19 | event | raw | Music stimulus onset: piece 66 from stimuli list |
-| `167` | 19 | event | raw | Music stimulus onset: piece 67 from stimuli list |
-| `168` | 19 | event | raw | Music stimulus onset: piece 68 from stimuli list |
-| `169` | 19 | event | raw | Music stimulus onset: piece 69 from stimuli list |
-| `170` | 19 | event | raw | Music stimulus onset: piece 70 from stimuli list |
-| `173` | 19 | event | raw | Music stimulus onset: piece 73 from stimuli list |
-| `174` | 18 | event | raw | Music stimulus onset: piece 74 from stimuli list |
-| `175` | 19 | event | raw | Music stimulus onset: piece 75 from stimuli list |
-| `176` | 18 | event | raw | Music stimulus onset: piece 76 from stimuli list |
-| `177` | 18 | event | raw | Music stimulus onset: piece 77 from stimuli list |
-| `178` | 18 | event | raw | Music stimulus onset: piece 78 from stimuli list |
-| `179` | 18 | event | raw | Music stimulus onset: piece 79 from stimuli list |
-| `180` | 19 | event | raw | Music stimulus onset: piece 80 from stimuli list |
-| `181` | 18 | event | raw | Music stimulus onset: piece 81 from stimuli list |
-| `182` | 18 | event | raw | Music stimulus onset: piece 82 from stimuli list |
-| `185` | 18 | event | raw | Music stimulus onset: piece 85 from stimuli list |
-| `186` | 19 | event | raw | Music stimulus onset: piece 86 from stimuli list |
-| `187` | 18 | event | raw | Music stimulus onset: piece 87 from stimuli list |
-| `188` | 18 | event | raw | Music stimulus onset: piece 88 from stimuli list |
-| `189` | 19 | event | raw | Music stimulus onset: piece 89 from stimuli list |
-| `190` | 19 | event | raw | Music stimulus onset: piece 90 from stimuli list |
-| `191` | 19 | event | raw | Music stimulus onset: piece 91 from stimuli list |
-| `192` | 19 | event | raw | Music stimulus onset: piece 92 from stimuli list |
-| `193` | 19 | event | raw | Music stimulus onset: piece 93 from stimuli list |
-| `194` | 19 | event | raw | Music stimulus onset: piece 94 from stimuli list |
-| `197` | 18 | event | raw | Music stimulus onset: piece 97 from stimuli list |
-| `198` | 18 | event | raw | Music stimulus onset: piece 98 from stimuli list |
-| `199` | 18 | event | raw | Music stimulus onset: piece 99 from stimuli list |
-| `2` | 188 | event | raw | Trial onset: Neutral valence, low arousal targeted affect |
-| `200` | 18 | event | raw | Music stimulus onset: piece 100 from stimuli list |
-| `201` | 18 | event | raw | Music stimulus onset: piece 101 from stimuli list |
-| `202` | 19 | event | raw | Music stimulus onset: piece 102 from stimuli list |
-| `203` | 18 | event | raw | Music stimulus onset: piece 103 from stimuli list |
-| `204` | 18 | event | raw | Music stimulus onset: piece 104 from stimuli list |
-| `205` | 19 | event | raw | Music stimulus onset: piece 105 from stimuli list |
-| `206` | 18 | event | raw | Music stimulus onset: piece 106 from stimuli list |
-| `3` | 148 | event | raw | Trial onset: High valence, low arousal targeted affect |
-| `4` | 205 | event | raw | Trial onset: Low valence, neutral arousal targeted affect |
-| `5` | 205 | event | raw | Trial onset: Neutral valence, neutral arousal targeted affect |
-| `6` | 195 | event | raw | Trial onset: High valence, neutral arousal targeted affect |
-| `7` | 258 | event | raw | Trial onset: Low valence, high arousal targeted affect |
-| `9` | 368 | event | raw | Trial onset: High valence, high arousal targeted affect |
+| `1` | 125 | event | raw | Affect target trial onset: LVLA, low valence and low arousal |
+| `101` | 19 | event | raw | musicPlayed marker: stimulus-list item 1 (code - 100) |
+| `102` | 18 | event | raw | musicPlayed marker: stimulus-list item 2 (code - 100) |
+| `103` | 18 | event | raw | musicPlayed marker: stimulus-list item 3 (code - 100) |
+| `104` | 19 | event | raw | musicPlayed marker: stimulus-list item 4 (code - 100) |
+| `105` | 19 | event | raw | musicPlayed marker: stimulus-list item 5 (code - 100) |
+| `106` | 19 | event | raw | musicPlayed marker: stimulus-list item 6 (code - 100) |
+| `107` | 19 | event | raw | musicPlayed marker: stimulus-list item 7 (code - 100) |
+| `108` | 19 | event | raw | musicPlayed marker: stimulus-list item 8 (code - 100) |
+| `109` | 18 | event | raw | musicPlayed marker: stimulus-list item 9 (code - 100) |
+| `110` | 19 | event | raw | musicPlayed marker: stimulus-list item 10 (code - 100) |
+| `113` | 19 | event | raw | musicPlayed marker: stimulus-list item 13 (code - 100) |
+| `114` | 19 | event | raw | musicPlayed marker: stimulus-list item 14 (code - 100) |
+| `115` | 19 | event | raw | musicPlayed marker: stimulus-list item 15 (code - 100) |
+| `116` | 18 | event | raw | musicPlayed marker: stimulus-list item 16 (code - 100) |
+| `117` | 19 | event | raw | musicPlayed marker: stimulus-list item 17 (code - 100) |
+| `118` | 19 | event | raw | musicPlayed marker: stimulus-list item 18 (code - 100) |
+| `119` | 18 | event | raw | musicPlayed marker: stimulus-list item 19 (code - 100) |
+| `120` | 18 | event | raw | musicPlayed marker: stimulus-list item 20 (code - 100) |
+| `121` | 19 | event | raw | musicPlayed marker: stimulus-list item 21 (code - 100) |
+| `122` | 18 | event | raw | musicPlayed marker: stimulus-list item 22 (code - 100) |
+| `125` | 19 | event | raw | musicPlayed marker: stimulus-list item 25 (code - 100) |
+| `126` | 18 | event | raw | musicPlayed marker: stimulus-list item 26 (code - 100) |
+| `127` | 18 | event | raw | musicPlayed marker: stimulus-list item 27 (code - 100) |
+| `128` | 19 | event | raw | musicPlayed marker: stimulus-list item 28 (code - 100) |
+| `129` | 19 | event | raw | musicPlayed marker: stimulus-list item 29 (code - 100) |
+| `130` | 18 | event | raw | musicPlayed marker: stimulus-list item 30 (code - 100) |
+| `131` | 18 | event | raw | musicPlayed marker: stimulus-list item 31 (code - 100) |
+| `132` | 19 | event | raw | musicPlayed marker: stimulus-list item 32 (code - 100) |
+| `133` | 19 | event | raw | musicPlayed marker: stimulus-list item 33 (code - 100) |
+| `134` | 19 | event | raw | musicPlayed marker: stimulus-list item 34 (code - 100) |
+| `137` | 19 | event | raw | musicPlayed marker: stimulus-list item 37 (code - 100) |
+| `138` | 19 | event | raw | musicPlayed marker: stimulus-list item 38 (code - 100) |
+| `139` | 19 | event | raw | musicPlayed marker: stimulus-list item 39 (code - 100) |
+| `140` | 18 | event | raw | musicPlayed marker: stimulus-list item 40 (code - 100) |
+| `141` | 18 | event | raw | musicPlayed marker: stimulus-list item 41 (code - 100) |
+| `142` | 19 | event | raw | musicPlayed marker: stimulus-list item 42 (code - 100) |
+| `143` | 19 | event | raw | musicPlayed marker: stimulus-list item 43 (code - 100) |
+| `144` | 19 | event | raw | musicPlayed marker: stimulus-list item 44 (code - 100) |
+| `145` | 18 | event | raw | musicPlayed marker: stimulus-list item 45 (code - 100) |
+| `146` | 18 | event | raw | musicPlayed marker: stimulus-list item 46 (code - 100) |
+| `149` | 19 | event | raw | musicPlayed marker: stimulus-list item 49 (code - 100) |
+| `150` | 19 | event | raw | musicPlayed marker: stimulus-list item 50 (code - 100) |
+| `151` | 18 | event | raw | musicPlayed marker: stimulus-list item 51 (code - 100) |
+| `152` | 19 | event | raw | musicPlayed marker: stimulus-list item 52 (code - 100) |
+| `153` | 19 | event | raw | musicPlayed marker: stimulus-list item 53 (code - 100) |
+| `154` | 19 | event | raw | musicPlayed marker: stimulus-list item 54 (code - 100) |
+| `155` | 19 | event | raw | musicPlayed marker: stimulus-list item 55 (code - 100) |
+| `156` | 19 | event | raw | musicPlayed marker: stimulus-list item 56 (code - 100) |
+| `157` | 19 | event | raw | musicPlayed marker: stimulus-list item 57 (code - 100) |
+| `158` | 19 | event | raw | musicPlayed marker: stimulus-list item 58 (code - 100) |
+| `161` | 19 | event | raw | musicPlayed marker: stimulus-list item 61 (code - 100) |
+| `162` | 19 | event | raw | musicPlayed marker: stimulus-list item 62 (code - 100) |
+| `163` | 18 | event | raw | musicPlayed marker: stimulus-list item 63 (code - 100) |
+| `164` | 18 | event | raw | musicPlayed marker: stimulus-list item 64 (code - 100) |
+| `165` | 19 | event | raw | musicPlayed marker: stimulus-list item 65 (code - 100) |
+| `166` | 19 | event | raw | musicPlayed marker: stimulus-list item 66 (code - 100) |
+| `167` | 19 | event | raw | musicPlayed marker: stimulus-list item 67 (code - 100) |
+| `168` | 19 | event | raw | musicPlayed marker: stimulus-list item 68 (code - 100) |
+| `169` | 19 | event | raw | musicPlayed marker: stimulus-list item 69 (code - 100) |
+| `170` | 19 | event | raw | musicPlayed marker: stimulus-list item 70 (code - 100) |
+| `173` | 19 | event | raw | musicPlayed marker: stimulus-list item 73 (code - 100) |
+| `174` | 18 | event | raw | musicPlayed marker: stimulus-list item 74 (code - 100) |
+| `175` | 19 | event | raw | musicPlayed marker: stimulus-list item 75 (code - 100) |
+| `176` | 18 | event | raw | musicPlayed marker: stimulus-list item 76 (code - 100) |
+| `177` | 18 | event | raw | musicPlayed marker: stimulus-list item 77 (code - 100) |
+| `178` | 18 | event | raw | musicPlayed marker: stimulus-list item 78 (code - 100) |
+| `179` | 18 | event | raw | musicPlayed marker: stimulus-list item 79 (code - 100) |
+| `180` | 19 | event | raw | musicPlayed marker: stimulus-list item 80 (code - 100) |
+| `181` | 18 | event | raw | musicPlayed marker: stimulus-list item 81 (code - 100) |
+| `182` | 18 | event | raw | musicPlayed marker: stimulus-list item 82 (code - 100) |
+| `185` | 18 | event | raw | musicPlayed marker: stimulus-list item 85 (code - 100) |
+| `186` | 19 | event | raw | musicPlayed marker: stimulus-list item 86 (code - 100) |
+| `187` | 18 | event | raw | musicPlayed marker: stimulus-list item 87 (code - 100) |
+| `188` | 18 | event | raw | musicPlayed marker: stimulus-list item 88 (code - 100) |
+| `189` | 19 | event | raw | musicPlayed marker: stimulus-list item 89 (code - 100) |
+| `190` | 19 | event | raw | musicPlayed marker: stimulus-list item 90 (code - 100) |
+| `191` | 19 | event | raw | musicPlayed marker: stimulus-list item 91 (code - 100) |
+| `192` | 19 | event | raw | musicPlayed marker: stimulus-list item 92 (code - 100) |
+| `193` | 19 | event | raw | musicPlayed marker: stimulus-list item 93 (code - 100) |
+| `194` | 19 | event | raw | musicPlayed marker: stimulus-list item 94 (code - 100) |
+| `197` | 18 | event | raw | musicPlayed marker: stimulus-list item 97 (code - 100) |
+| `198` | 18 | event | raw | musicPlayed marker: stimulus-list item 98 (code - 100) |
+| `199` | 18 | event | raw | musicPlayed marker: stimulus-list item 99 (code - 100) |
+| `2` | 188 | event | raw | Affect target trial onset: NVLA, neutral valence and low arousal |
+| `200` | 18 | event | raw | musicPlayed marker: stimulus-list item 100 (code - 100) |
+| `201` | 18 | event | raw | musicPlayed marker: stimulus-list item 101 (code - 100) |
+| `202` | 19 | event | raw | musicPlayed marker: stimulus-list item 102 (code - 100) |
+| `203` | 18 | event | raw | musicPlayed marker: stimulus-list item 103 (code - 100) |
+| `204` | 18 | event | raw | musicPlayed marker: stimulus-list item 104 (code - 100) |
+| `205` | 19 | event | raw | musicPlayed marker: stimulus-list item 105 (code - 100) |
+| `206` | 18 | event | raw | musicPlayed marker: stimulus-list item 106 (code - 100) |
+| `3` | 148 | event | raw | Affect target trial onset: HVLA, high valence and low arousal |
+| `4` | 205 | event | raw | Affect target trial onset: LVNA, low valence and neutral arousal |
+| `5` | 205 | event | raw | Affect target trial onset: NVNA, neutral valence and neutral arousal |
+| `6` | 195 | event | raw | Affect target trial onset: HVNA, high valence and neutral arousal |
+| `7` | 258 | event | raw | Affect target trial onset: LVHA, low valence and high arousal |
+| `9` | 368 | event | raw | Affect target trial onset: HVHA, high valence and high arousal |
 
 ### MISC Label Summary
 
 | Channel | Source | Meta | Notes |
 |---|---|---|---|
-| `GSR` | derived (per Task Notes) | super | Super Meta — kernel derives per-segmentation value |
-| `VA1` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `VA2` | native (raw misc in EEG file) | raw | Verify channel role and unit |
-| `VAtarg` | native (raw misc in EEG file) | raw | Verify channel role and unit |
+| `GSR` | derived (per Task Notes) | super | Native GSR signal listed in channels.tsv with unit microV; sample-aligned with EEG, so no additional derived channel is required |
+| `VA1` | native (raw misc in EEG file) | raw | Continuous FEELTRACE valence report on a 0-9 scale; native UserReport channel, sample-aligned with EEG |
+| `VA2` | native (raw misc in EEG file) | raw | Continuous FEELTRACE arousal report on a 0-9 scale; native UserReport channel, sample-aligned with EEG |
+| `VAtarg` | native (raw misc in EEG file) | raw | Target affect code for the music clip, using the 1-9 valence/arousal grid; native MetaData channel, sample-aligned with EEG |
 
 ### Info
 
