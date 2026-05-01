@@ -1,16 +1,20 @@
-"""OpenNeuro DS005505 (HBN EEG Release 1) stage-1 kernel for EEGUnity.
+"""OpenNeuro ds005505 (HBN EEG Release 1) kernel for EEGUnity.
 
-This kernel keeps the raw event stream intact and adds only two derived labels
-needed by the current benchmark draft:
+The HBN-EEG release is a multi-task developmental EEG battery. This kernel keeps
+native BIDS event names unchanged, exposes participant-level phenotype fields in
+``eegunity_description`` (including ``p_factor``), and adds two narrowly scoped
+derived labels for the contrast-change detection task:
 
-1. `response_time` misc channel for contrast change detection, computed as the
-   latency between a target onset and the first subsequent button press in the
-   same trial window.
-2. `contrast_response_correct` / `contrast_response_incorrect` response-locked
-   annotations, derived from whether the button side matches the target side.
+* ``response_time`` misc channel: target-to-first-valid-button latency in
+  seconds, filled only from target onset to the matched response.
+* ``contrast_response_correct`` / ``contrast_response_incorrect`` annotations:
+  response-locked events derived from target side and response feedback.
 
-The sequence-learning and resting-state tasks rely on native events only.
-The p-factor target is exposed as a participant-level description field.
+The original EEGLAB files already contain annotations, but the BIDS
+``events.tsv`` files are the authoritative source here because they include the
+behavioral columns imported by the HBN-EEG release. To avoid double-counting
+events during scans, this kernel replaces embedded annotations with sidecar
+events whenever the matching ``events.tsv`` file is available.
 """
 
 from __future__ import annotations
@@ -18,38 +22,17 @@ from __future__ import annotations
 import json
 import os
 import re
-from typing import Dict, Optional
+from pathlib import Path
+from typing import Dict, Iterable, Optional, Tuple
 
 import mne
 import numpy as np
 import pandas as pd
 
 
-_HBN_129_CHANNELS = [
-    "Fp1", "Fpz", "Fp2",
-    "AF7", "AF3", "AFz", "AF4", "AF8",
-    "F7", "F5", "F3", "F1", "Fz", "F2", "F4", "F6", "F8",
-    "FT7", "FC5", "FC3", "FC1", "FCz", "FC2", "FC4", "FC6", "FT8",
-    "T7", "C5", "C3", "C1", "Cz", "C2", "C4", "C6", "T8",
-    "TP7", "CP5", "CP3", "CP1", "CPz", "CP2", "CP4", "CP6", "TP8",
-    "P7", "P5", "P3", "P1", "Pz", "P2", "P4", "P6", "P8",
-    "PO7", "PO3", "POz", "PO4", "PO8",
-    "O1", "Oz", "O2",
-    "I1", "Iz", "I2",
-    "F9", "F10",
-    "FT9", "FT10",
-    "TP9", "TP10",
-    "P9", "P10",
-    "PO9", "PO10",
-    "PO1", "PO2",
-    "M1", "M2",
-    "VEO", "HEO", "VEOG", "HEOG",
-    "CB1", "CB2",
-    "A1", "A2",
-    "REF", "CzREF",
-    "Status", "Trigger",
-]
+DATASET_ID = "openneuro_ds005505"
 
+_CONTRAST_TASK = "contrastChangeDetection"
 _TARGET_TO_CORRECT_PRESS = {
     "left_target": "left_buttonPress",
     "right_target": "right_buttonPress",
@@ -57,235 +40,422 @@ _TARGET_TO_CORRECT_PRESS = {
 _PRESS_LABELS = set(_TARGET_TO_CORRECT_PRESS.values())
 _DERIVED_CORRECT_EVENT = "contrast_response_correct"
 _DERIVED_INCORRECT_EVENT = "contrast_response_incorrect"
+_RESPONSE_TIME_CHANNEL = "response_time"
 _MAX_CONTRAST_RESPONSE_SEC = 2.5
-KERNEL_ID = "openneuro_ds005505"
+
+_PARTICIPANT_FIELDS = (
+    "release_number",
+    "sex",
+    "age",
+    "ehq_total",
+    "commercial_use",
+    "full_pheno",
+    "p_factor",
+    "attention",
+    "internalizing",
+    "externalizing",
+    "RestingState",
+    "DespicableMe",
+    "FunwithFractals",
+    "ThePresent",
+    "DiaryOfAWimpyKid",
+    "contrastChangeDetection_1",
+    "contrastChangeDetection_2",
+    "contrastChangeDetection_3",
+    "surroundSupp_1",
+    "surroundSupp_2",
+    "seqLearning6target",
+    "seqLearning8target",
+    "symbolSearch",
+)
+
+_CHANNEL_TYPE_MAP = {
+    "EEG": "eeg",
+    "EOG": "eog",
+    "ECG": "ecg",
+    "EMG": "emg",
+    "MISC": "misc",
+    "OTHER": "misc",
+    "TRIG": "stim",
+    "TRIGGER": "stim",
+    "STIM": "stim",
+}
+
 _DERIVED_EVENT_HINTS = {
     _DERIVED_CORRECT_EVENT: {
         "type": "event",
         "meta_level": "super",
-        "meaning": "Response side matched the preceding contrast target",
+        "meaning": "Button response was correct for the preceding contrast target",
     },
     _DERIVED_INCORRECT_EVENT: {
         "type": "event",
         "meta_level": "super",
-        "meaning": "Response side did not match the preceding contrast target",
+        "meaning": "Button response was incorrect for the preceding contrast target",
     },
 }
+
 _DERIVED_MISC_HINTS = {
-    "response_time": {
+    _RESPONSE_TIME_CHANNEL: {
         "source": "derived (kernel)",
         "meta_level": "super",
-        "notes": "Latency from target onset to the first subsequent button press in the same contrast trial",
+        "notes": (
+            "Latency in seconds from left_target/right_target onset to the first "
+            "valid left_buttonPress/right_buttonPress in the same contrast trial"
+        ),
     }
 }
 
 
-def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
-    """Build a conservative rename map for recognizable HBN channel labels."""
-    rename_map: Dict[str, str] = {}
-    used_targets = set()
+def _row_get(row, *keys: str) -> str:
+    if isinstance(row, (str, os.PathLike)):
+        return os.fspath(row)
 
-    for ch in raw.ch_names:
-        cleaned = ch.strip()
-        for prefix in ("EEG ", "EEG-", "eeg_", "Ch ", "CH", "Ch"):
-            if cleaned.startswith(prefix):
-                cleaned = cleaned[len(prefix):].strip()
-                break
-
-        target = None
-        if cleaned in _HBN_129_CHANNELS and cleaned not in used_targets:
-            target = cleaned
-        elif cleaned.upper() in {c.upper() for c in _HBN_129_CHANNELS}:
-            for std_ch in _HBN_129_CHANNELS:
-                if std_ch.upper() == cleaned.upper() and std_ch not in used_targets:
-                    target = std_ch
-                    break
-
-        if target is not None:
-            rename_map[ch] = target
-            used_targets.add(target)
-
-    return rename_map
+    for key in keys:
+        value = None
+        try:
+            value = row.get(key)
+        except AttributeError:
+            try:
+                value = row[key]
+            except Exception:
+                value = None
+        if value not in (None, ""):
+            return str(value)
+    return ""
 
 
-def _get_subject_id_from_path(file_path: str) -> Optional[str]:
-    match = re.search(r"sub-([A-Za-z0-9]+)", file_path)
-    if match:
-        return f"sub-{match.group(1)}"
-    return None
+def _get_file_path(row) -> str:
+    return _row_get(row, "File Path", "file_path", "filepath", "path")
 
 
-def _find_participants_tsv(file_path: str) -> Optional[str]:
-    current_dir = os.path.dirname(os.path.abspath(file_path))
-    for _ in range(10):
-        for cand in (
-            os.path.join(current_dir, "participants.tsv"),
-            os.path.join(current_dir, "..", "participants.tsv"),
-        ):
-            cand = os.path.normpath(cand)
-            if os.path.exists(cand):
-                return cand
-        parent = os.path.dirname(current_dir)
-        if parent == current_dir:
-            break
-        current_dir = parent
-    return None
+def _find_dataset_root(file_path: str) -> Optional[Path]:
+    current = Path(file_path).resolve().parent
+    while True:
+        if (current / "dataset_description.json").is_file():
+            return current
+        if current.parent == current:
+            return None
+        current = current.parent
 
 
-def _find_events_tsv(file_path: str) -> Optional[str]:
-    base = file_path.replace("_eeg.edf", "_events.tsv")
-    base = base.replace("_eeg.set", "_events.tsv")
-    base = base.replace("_eeg.vhdr", "_events.tsv")
-    base = base.replace("_eeg.eeg", "_events.tsv")
-    base = base.replace("_eeg.fif", "_events.tsv")
+def _extract_subject_id(file_path: str) -> str:
+    match = re.search(r"(sub-[A-Za-z0-9]+)", file_path)
+    return match.group(1) if match else ""
 
-    dir_name = os.path.dirname(file_path)
-    parent_dir = os.path.dirname(dir_name)
-    candidates = (
-        base,
-        os.path.join(dir_name, os.path.basename(base)),
-        os.path.join(parent_dir, "eeg", os.path.basename(base)),
-    )
-    for cand in candidates:
-        cand = os.path.normpath(cand)
-        if os.path.exists(cand):
-            return cand
 
+def _extract_entity(file_path: str, entity: str) -> str:
+    match = re.search(rf"(?:^|_){entity}-([^_./]+)", Path(file_path).name)
+    return match.group(1) if match else ""
+
+
+def _raw_prefix(file_path: str) -> str:
+    name = Path(file_path).name
+    for suffix in (
+        "_eeg.set",
+        "_eeg.fdt",
+        "_eeg.bdf",
+        "_eeg.edf",
+        "_eeg.vhdr",
+        "_eeg.eeg",
+        "_eeg.fif",
+    ):
+        if name.endswith(suffix):
+            return name[: -len(suffix)]
+    return Path(file_path).stem
+
+
+def _sidecar_path(file_path: str, suffix: str) -> Optional[Path]:
+    path = Path(file_path)
+    candidate = path.with_name(_raw_prefix(file_path) + suffix)
+    return candidate if candidate.is_file() else None
+
+
+def _events_tsv_path(file_path: str) -> Optional[Path]:
+    return _sidecar_path(file_path, "_events.tsv")
+
+
+def _channels_tsv_path(file_path: str) -> Optional[Path]:
+    return _sidecar_path(file_path, "_channels.tsv")
+
+
+def _file_eeg_json_path(file_path: str) -> Optional[Path]:
+    return _sidecar_path(file_path, "_eeg.json")
+
+
+def _task_eeg_json_path(root: Optional[Path], task: str) -> Optional[Path]:
+    if not root or not task:
+        return None
+    candidate = root / f"task-{task}_eeg.json"
+    return candidate if candidate.is_file() else None
+
+
+def _read_json(path: Optional[Path]) -> Dict[str, object]:
+    if not path:
+        return {}
     try:
-        for name in os.listdir(dir_name):
-            if name.endswith("_events.tsv"):
-                return os.path.join(dir_name, name)
-    except OSError:
-        pass
-    return None
+        with path.open("r", encoding="utf-8") as stream:
+            data = json.load(stream)
+    except Exception:
+        return {}
+    return data if isinstance(data, dict) else {}
 
 
-def _read_events_tsv(events_path: str) -> Optional[pd.DataFrame]:
+def _read_tsv(path: Optional[Path]) -> Optional[pd.DataFrame]:
+    if not path:
+        return None
     try:
-        return pd.read_csv(events_path, sep="\t")
+        return pd.read_csv(path, sep="\t", dtype=str, keep_default_na=False)
     except Exception:
         return None
 
 
-def _read_participants_tsv(participants_path: str) -> Optional[pd.DataFrame]:
-    try:
-        return pd.read_csv(participants_path, sep="\t")
-    except Exception:
-        return None
+def _missing(value: object) -> bool:
+    if value is None:
+        return True
+    text = str(value).strip()
+    return text == "" or text.lower() in {"nan", "none", "n/a", "na", "null"}
 
 
-def _get_subject_info_from_participants(
-    participants_df: pd.DataFrame, subject_id: str
-) -> Dict[str, str]:
-    if participants_df is None or len(participants_df) == 0:
+def _clean_value(value: object) -> str:
+    return "" if _missing(value) else str(value).strip()
+
+
+def _read_participant_info(root: Optional[Path], subject_id: str) -> Dict[str, str]:
+    if not root or not subject_id:
         return {}
 
-    participant_id_col = "participant_id"
-    if participant_id_col not in participants_df.columns:
-        for col in participants_df.columns:
-            if col.lower() in ("participant_id", "subject_id", "sub_id"):
-                participant_id_col = col
-                break
-    if participant_id_col not in participants_df.columns:
+    participants_path = root / "participants.tsv"
+    participants = _read_tsv(participants_path)
+    if participants is None or "participant_id" not in participants.columns:
         return {}
 
-    search_id = subject_id if subject_id.startswith("sub-") else f"sub-{subject_id}"
-    search_id_short = search_id.replace("sub-", "")
-    mask = (
-        (participants_df[participant_id_col].astype(str) == search_id)
-        | (participants_df[participant_id_col].astype(str) == search_id_short)
+    subject_short = subject_id.replace("sub-", "")
+    mask = (participants["participant_id"] == subject_id) | (
+        participants["participant_id"] == subject_short
     )
     if not mask.any():
         return {}
 
-    row = participants_df[mask].iloc[0]
-    info: Dict[str, str] = {}
-    for col in participants_df.columns:
-        val = row[col]
-        info[col] = "" if pd.isna(val) else str(val)
-    return info
+    row = participants.loc[mask].iloc[0]
+    return {str(key): _clean_value(row.get(key)) for key in participants.columns}
 
 
-def _normalize_event_label(value: object) -> str:
-    if value is None or pd.isna(value):
-        return ""
-    text = str(value).strip()
-    if text.lower() in ("", "nan", "n/a", "na", "none"):
-        return ""
-    return text
+def _merged_eeg_json(root: Optional[Path], task: str, file_path: str) -> Dict[str, object]:
+    data: Dict[str, object] = {}
+    data.update(_read_json(_task_eeg_json_path(root, task)))
+    data.update(_read_json(_file_eeg_json_path(file_path)))
+    return data
 
 
-def _prepare_events(events_df: Optional[pd.DataFrame]) -> Optional[pd.DataFrame]:
-    if events_df is None or len(events_df) == 0 or "onset" not in events_df.columns:
+def _device_label(eeg_json: Dict[str, object]) -> str:
+    manufacturer = _clean_value(eeg_json.get("Manufacturer"))
+    model = _clean_value(eeg_json.get("ManufacturersModelName"))
+    if manufacturer and model:
+        return f"{manufacturer} {model}"
+    return manufacturer or model
+
+
+def _build_description(
+    file_path: str,
+    root: Optional[Path],
+    subject_info: Dict[str, str],
+    eeg_json: Dict[str, object],
+) -> Dict[str, str]:
+    task = _extract_entity(file_path, "task")
+    run = _extract_entity(file_path, "run")
+    subject_id = _extract_subject_id(file_path)
+
+    description: Dict[str, str] = {
+        "dataset": DATASET_ID,
+        "dataset_root": str(root) if root else "",
+        "subject_id": subject_id,
+        "task": task,
+        "run": run,
+        "age": subject_info.get("age", ""),
+        "sex": subject_info.get("sex", ""),
+        "device": _device_label(eeg_json),
+        "manufacturer": _clean_value(eeg_json.get("Manufacturer")),
+        "manufacturers_model_name": _clean_value(eeg_json.get("ManufacturersModelName")),
+        "eeg_reference": _clean_value(eeg_json.get("EEGReference")),
+        "recording_type": _clean_value(eeg_json.get("RecordingType")),
+        "sampling_frequency": _clean_value(eeg_json.get("SamplingFrequency")),
+        "power_line_frequency": _clean_value(eeg_json.get("PowerLineFrequency")),
+    }
+
+    for field in _PARTICIPANT_FIELDS:
+        if field in subject_info:
+            description[field] = subject_info[field]
+
+    return description
+
+
+def _set_channel_types_from_sidecar(raw: mne.io.BaseRaw, file_path: str) -> None:
+    channels = _read_tsv(_channels_tsv_path(file_path))
+    if channels is None or "name" not in channels.columns or "type" not in channels.columns:
+        return
+
+    raw_names = set(raw.ch_names)
+    mapping: Dict[str, str] = {}
+    for _, row in channels.iterrows():
+        name = _clean_value(row.get("name"))
+        kind = _clean_value(row.get("type")).upper()
+        mapped = _CHANNEL_TYPE_MAP.get(kind)
+        if name in raw_names and mapped:
+            mapping[name] = mapped
+
+    if not mapping:
+        return
+
+    try:
+        raw.set_channel_types(mapping, on_unit_change="ignore")
+    except TypeError:
+        raw.set_channel_types(mapping)
+
+
+def _set_hbn_montage(raw: mne.io.BaseRaw) -> None:
+    # The per-file channels.tsv files name E1-E128 plus Cz, and task EEG JSON
+    # files identify the EGI 128-channel GSN system, so no channel renaming is
+    # needed before applying MNE's matching GSN montage.
+    try:
+        montage = mne.channels.make_standard_montage("GSN-HydroCel-129")
+        raw.set_montage(montage, match_case=False, match_alias=True, on_missing="ignore")
+    except TypeError:
+        try:
+            montage = mne.channels.make_standard_montage("GSN-HydroCel-129")
+            raw.set_montage(montage, match_case=False, on_missing="ignore")
+        except Exception:
+            return
+    except Exception:
+        return
+
+
+def _normalize_label(value: object) -> str:
+    return _clean_value(value)
+
+
+def _numeric_series(values: Iterable[object], default: float = 0.0) -> pd.Series:
+    return pd.to_numeric(pd.Series(list(values)), errors="coerce").fillna(default)
+
+
+def _prepare_events(events: Optional[pd.DataFrame]) -> Optional[pd.DataFrame]:
+    if events is None or events.empty or "onset" not in events.columns:
         return None
 
-    df = events_df.copy()
+    df = events.copy()
     label_col = None
-    for cand in ("trial_type", "value", "stim_type"):
-        if cand in df.columns:
-            label_col = cand
+    for candidate in ("trial_type", "value", "stim_type"):
+        if candidate in df.columns:
+            label_col = candidate
             break
+    if label_col is None and "event_code" in df.columns:
+        label_col = "event_code"
     if label_col is None:
-        df["_label"] = ""
-    else:
-        df["_label"] = df[label_col].map(_normalize_event_label)
+        return None
 
+    df["_label"] = df[label_col].map(_normalize_label)
     df["_onset_sec"] = pd.to_numeric(df["onset"], errors="coerce")
     if "duration" in df.columns:
-        df["_duration_sec"] = pd.to_numeric(df["duration"], errors="coerce").fillna(0.0)
+        df["_duration_sec"] = _numeric_series(df["duration"], default=0.0)
     else:
         df["_duration_sec"] = 0.0
 
     df = df.dropna(subset=["_onset_sec"]).copy()
     df = df[df["_label"] != ""].sort_values("_onset_sec").reset_index(drop=True)
-    return df
+    return df if not df.empty else None
 
 
-def _events_to_annotations(events_df: Optional[pd.DataFrame]) -> Optional[mne.Annotations]:
-    if events_df is None or len(events_df) == 0:
+def _valid_annotation_rows(
+    raw: mne.io.BaseRaw,
+    onsets: Iterable[float],
+    durations: Iterable[float],
+    descriptions: Iterable[str],
+) -> Tuple[list[float], list[float], list[str]]:
+    max_time = raw.n_times / raw.info["sfreq"]
+    valid_onsets: list[float] = []
+    valid_durations: list[float] = []
+    valid_descriptions: list[str] = []
+
+    for onset, duration, description in zip(onsets, durations, descriptions):
+        if onset < 0 or onset > max_time:
+            continue
+        valid_onsets.append(float(onset))
+        valid_durations.append(max(0.0, float(duration)))
+        valid_descriptions.append(str(description))
+    return valid_onsets, valid_durations, valid_descriptions
+
+
+def _events_to_annotations(
+    raw: mne.io.BaseRaw, events: Optional[pd.DataFrame]
+) -> Optional[mne.Annotations]:
+    if events is None or events.empty:
         return None
-    try:
-        return mne.Annotations(
-            onset=events_df["_onset_sec"].astype(float).tolist(),
-            duration=events_df["_duration_sec"].astype(float).tolist(),
-            description=events_df["_label"].astype(str).tolist(),
-        )
-    except Exception:
+
+    onsets, durations, descriptions = _valid_annotation_rows(
+        raw,
+        events["_onset_sec"].astype(float),
+        events["_duration_sec"].astype(float),
+        events["_label"].astype(str),
+    )
+    if not onsets:
         return None
+
+    return mne.Annotations(onset=onsets, duration=durations, description=descriptions)
+
+
+def _feedback_value(record: Dict[str, object]) -> str:
+    return _clean_value(record.get("feedback")).lower()
+
+
+def _is_valid_contrast_press(record: Dict[str, object], has_feedback: bool) -> bool:
+    if record["_label"] not in _PRESS_LABELS:
+        return False
+    if not has_feedback:
+        return True
+
+    feedback = _feedback_value(record)
+    return feedback in {"", "smiley_face", "sad_face"}
+
+
+def _press_correctness(target_label: str, press_record: Dict[str, object]) -> str:
+    feedback = _feedback_value(press_record)
+    if feedback == "smiley_face":
+        return _DERIVED_CORRECT_EVENT
+    if feedback == "sad_face":
+        return _DERIVED_INCORRECT_EVENT
+    if press_record["_label"] == _TARGET_TO_CORRECT_PRESS[target_label]:
+        return _DERIVED_CORRECT_EVENT
+    return _DERIVED_INCORRECT_EVENT
 
 
 def _build_contrast_derivatives(
-    events_df: Optional[pd.DataFrame], sfreq: float, n_times: int
-) -> tuple[np.ndarray, Optional[mne.Annotations]]:
+    events: Optional[pd.DataFrame], sfreq: float, n_times: int
+) -> Tuple[np.ndarray, Optional[mne.Annotations]]:
     response_time = np.full((1, n_times), np.nan, dtype=float)
-    if events_df is None or len(events_df) == 0:
+    if events is None or events.empty:
         return response_time, None
 
-    records = events_df[["_label", "_onset_sec"]].to_dict("records")
-    derived_onsets = []
-    derived_durations = []
-    derived_descriptions = []
+    has_feedback = "feedback" in events.columns
+    records = events.to_dict("records")
+    derived_onsets: list[float] = []
+    derived_durations: list[float] = []
+    derived_descriptions: list[str] = []
 
-    for idx, record in enumerate(records):
+    for index, record in enumerate(records):
         target_label = record["_label"]
         if target_label not in _TARGET_TO_CORRECT_PRESS:
             continue
 
         target_onset = float(record["_onset_sec"])
-        next_target_onset = None
         press_record = None
-
-        for future in records[idx + 1:]:
+        for future in records[index + 1 :]:
             future_label = future["_label"]
             future_onset = float(future["_onset_sec"])
 
             if future_label in _TARGET_TO_CORRECT_PRESS:
-                next_target_onset = future_onset
                 break
-
-            if future_label in _PRESS_LABELS:
-                if future_onset - target_onset > _MAX_CONTRAST_RESPONSE_SEC:
-                    break
+            if future_onset - target_onset > _MAX_CONTRAST_RESPONSE_SEC:
+                break
+            if _is_valid_contrast_press(future, has_feedback):
                 press_record = future
                 break
 
@@ -293,23 +463,17 @@ def _build_contrast_derivatives(
             continue
 
         press_onset = float(press_record["_onset_sec"])
-        if next_target_onset is not None and press_onset >= next_target_onset:
-            continue
-
         rt = press_onset - target_onset
-        if rt <= 0:
+        if rt <= 0 or rt > _MAX_CONTRAST_RESPONSE_SEC:
             continue
 
-        start_sample = max(0, min(int(round(target_onset * sfreq)), n_times - 1))
-        end_sample = max(start_sample + 1, min(int(round(press_onset * sfreq)), n_times))
-        response_time[0, start_sample:end_sample] = rt
+        start = max(0, min(int(round(target_onset * sfreq)), n_times - 1))
+        stop = max(start + 1, min(int(round(press_onset * sfreq)), n_times))
+        response_time[0, start:stop] = rt
 
         derived_onsets.append(press_onset)
         derived_durations.append(0.0)
-        if press_record["_label"] == _TARGET_TO_CORRECT_PRESS[target_label]:
-            derived_descriptions.append(_DERIVED_CORRECT_EVENT)
-        else:
-            derived_descriptions.append(_DERIVED_INCORRECT_EVENT)
+        derived_descriptions.append(_press_correctness(target_label, press_record))
 
     if not derived_onsets:
         return response_time, None
@@ -322,92 +486,86 @@ def _build_contrast_derivatives(
     return response_time, derived_annotations
 
 
-class OpenNeuroDS005505Kernel:
-    """Stage-1 kernel for OpenNeuro DS005505 (HBN EEG Release 1)."""
+def _append_annotations(raw: mne.io.BaseRaw, annotations: Optional[mne.Annotations]) -> None:
+    if annotations is None or len(annotations) == 0:
+        return
+    if len(raw.annotations):
+        raw.set_annotations(raw.annotations + annotations)
+    else:
+        raw.set_annotations(annotations)
 
-    DATASET_NAME = "openneuro_ds005505"
+
+def _add_response_time_channel(
+    raw: mne.io.BaseRaw, response_time: np.ndarray
+) -> Tuple[mne.io.BaseRaw, bool]:
+    if _RESPONSE_TIME_CHANNEL in raw.ch_names or not np.isfinite(response_time).any():
+        return raw, False
+
+    if not raw.preload:
+        raw.load_data(verbose="ERROR")
+
+    info = mne.create_info(
+        ch_names=[_RESPONSE_TIME_CHANNEL],
+        sfreq=raw.info["sfreq"],
+        ch_types=["misc"],
+    )
+    rt_raw = mne.io.RawArray(
+        response_time,
+        info,
+        first_samp=raw.first_samp,
+        verbose="ERROR",
+    )
+    if raw.info.get("meas_date") is not None:
+        rt_raw.set_meas_date(raw.info["meas_date"])
+
+    raw.add_channels([rt_raw], force_update_info=True)
+    return raw, True
+
+
+class OpenNeuroDS005505Kernel:
+    """Stage-1 kernel for OpenNeuro ds005505 (HBN EEG Release 1)."""
+
+    DATASET_NAME = DATASET_ID
     DATASET_PATH = "openneuro/ds005505"
 
-    def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
-        file_path = str(row["File Path"])
-        subject_id = _get_subject_id_from_path(file_path) or ""
+    def apply(self, udataset, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
+        file_path = _get_file_path(row)
+        root = _find_dataset_root(file_path)
+        subject_id = _extract_subject_id(file_path)
+        task = _extract_entity(file_path, "task")
 
-        participants_path = _find_participants_tsv(file_path)
-        participants_df = _read_participants_tsv(participants_path) if participants_path else None
-        subject_info = (
-            _get_subject_info_from_participants(participants_df, subject_id)
-            if participants_df is not None and subject_id
-            else {}
-        )
+        participant_info = _read_participant_info(root, subject_id)
+        eeg_json = _merged_eeg_json(root, task, file_path)
+        original_description = raw.info.get("description") or ""
 
-        eegunity_description = {
-            "age": subject_info.get("age", ""),
-            "sex": subject_info.get("sex", ""),
-            "amplifier": subject_info.get("amplifier", ""),
-            "cap": subject_info.get("cap", ""),
-            "handedness": subject_info.get("handedness", ""),
-            "attention": subject_info.get("attention", ""),
-            "ehq_total": subject_info.get("ehq_total", ""),
-            "externalizing": subject_info.get("externalizing", ""),
-            "full_pheno": subject_info.get("full_pheno", ""),
-            "internalizing": subject_info.get("internalizing", ""),
-            "p_factor": subject_info.get("p_factor", ""),
-            "seqLearning6target": subject_info.get("seqLearning6target", ""),
-        }
+        _set_channel_types_from_sidecar(raw, file_path)
+        _set_hbn_montage(raw)
 
-        original_description = raw.info.get("description", "")
+        events = _prepare_events(_read_tsv(_events_tsv_path(file_path)))
+        sidecar_annotations = _events_to_annotations(raw, events)
+        if sidecar_annotations is not None:
+            raw.set_annotations(sidecar_annotations)
 
-        rename_map = _build_channel_rename_map(raw)
-        if rename_map:
-            raw = raw.rename_channels(rename_map)
-
-        try:
-            montage = mne.channels.make_standard_montage("GSN-HydroCel-129")
-            raw.set_montage(montage, match_case=False, match_alias=True, on_missing="ignore")
-        except Exception:
-            try:
-                montage = mne.channels.make_standard_montage("standard_1020")
-                raw.set_montage(montage, match_case=False, match_alias=True, on_missing="ignore")
-            except Exception:
-                pass
-
-        events_path = _find_events_tsv(file_path)
-        events_df = _prepare_events(_read_events_tsv(events_path) if events_path else None)
-        if events_df is not None and len(events_df) > 0:
-            native_annotations = _events_to_annotations(events_df)
-            if native_annotations is not None:
-                if raw.annotations is not None and len(raw.annotations) > 0:
-                    raw.set_annotations(raw.annotations + native_annotations)
-                else:
-                    raw.set_annotations(native_annotations)
-
-        response_time_data, contrast_annotations = _build_contrast_derivatives(
-            events_df, raw.info["sfreq"], len(raw.times)
-        )
-
-        derived_event_hints = {}
-        if contrast_annotations is not None:
-            if raw.annotations is not None and len(raw.annotations) > 0:
-                raw.set_annotations(raw.annotations + contrast_annotations)
-            else:
-                raw.set_annotations(contrast_annotations)
-            derived_event_hints = _DERIVED_EVENT_HINTS
-
-        derived_misc_hints = {}
-        if np.isfinite(response_time_data).any() and "response_time" not in raw.ch_names:
-            info_rt = mne.create_info(
-                ch_names=["response_time"],
-                sfreq=raw.info["sfreq"],
-                ch_types=["misc"],
+        derived_event_hints: Dict[str, Dict[str, str]] = {}
+        derived_misc_hints: Dict[str, Dict[str, str]] = {}
+        if task == _CONTRAST_TASK:
+            response_time, contrast_annotations = _build_contrast_derivatives(
+                events, raw.info["sfreq"], raw.n_times
             )
-            raw_rt = mne.io.RawArray(response_time_data, info_rt, first_samp=raw.first_samp)
-            raw = raw.add_channels([raw_rt], force_update_info=True)
-            derived_misc_hints = _DERIVED_MISC_HINTS
+            if contrast_annotations is not None:
+                _append_annotations(raw, contrast_annotations)
+                derived_event_hints = _DERIVED_EVENT_HINTS
+
+            raw, added_rt = _add_response_time_channel(raw, response_time)
+            if added_rt:
+                derived_misc_hints = _DERIVED_MISC_HINTS
 
         raw.info["description"] = json.dumps(
             {
-                "original_description": original_description,
-                "eegunity_description": eegunity_description,
+                "original_description": str(original_description),
+                "eegunity_description": _build_description(
+                    file_path, root, participant_info, eeg_json
+                ),
                 "eegunity_scan_hints": {
                     "events": derived_event_hints,
                     "misc_channels": derived_misc_hints,
@@ -415,7 +573,6 @@ class OpenNeuroDS005505Kernel:
             },
             ensure_ascii=False,
         )
-
         return raw
 
 

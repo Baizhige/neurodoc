@@ -1,121 +1,121 @@
 # SKILL: Custom / Proprietary Format Kernel (HANDLES_UNAVAILABLE)
 
-> **适用模式**: EEGUnity 无法直接解析数据文件（非标准格式、私有二进制、  
-> 多文件组合等），需在 kernel 中实现 `HANDLES_UNAVAILABLE=True` 并提供  
-> `load()` 方法自行构建 MNE `RawArray`。  
-> **参考文档**: EEGUnity kernel tutorial — "HANDLES_UNAVAILABLE Interface"  
-> **规范文档**: `kernels/KERNEL_RULEBOOK.md`
+> **Applicable mode**: EEGUnity cannot directly parse the data files (non-standard format, proprietary binary,  
+> multi-file combination, etc.), requiring the kernel to implement `HANDLES_UNAVAILABLE=True` and provide  
+> a `load()` method to manually construct an MNE `RawArray`.  
+> **Reference document**: EEGUnity kernel tutorial — "HANDLES_UNAVAILABLE Interface"  
+> **Specification document**: `kernels/KERNEL_RULEBOOK.md`
 
 ---
 
-## 你的角色
+## Your Role
 
-你是一名 EEGUnity kernel 工程师。目标：为给定数据集生成符合 `KERNEL_RULEBOOK.md` 的 Stage1 kernel。  
-此 SKILL 适用于 **EEGUnity 会报错无法解析的文件格式**，需在 kernel 内部自行读取数据。  
-**在写任何代码前，先完成 Phase 1 全部探索步骤。**
+You are an EEGUnity kernel engineer. Goal: generate a Stage1 kernel for the given dataset that complies with `KERNEL_RULEBOOK.md`.  
+This SKILL applies to **file formats that EEGUnity reports errors and cannot parse** — the kernel must read the data internally.  
+**Before writing any code, complete all exploration steps in Phase 1.**
 
 ---
 
-## Phase 1: 数据集探索（自动提取）
+## Phase 1: Dataset Exploration (Auto-extraction)
 
-### 1.1 确认文件格式
+### 1.1 Confirm File Format
 
 ```bash
-# 列出所有数据文件扩展名
+# List all data file extensions
 find <dataset_path> -type f | grep -v "__pycache__" | sed 's/.*\.//' | sort | uniq -c | sort -rn | head -20
 ```
 
-记录：文件扩展名，文件命名规律。
+Record: file extensions, file naming pattern.
 
-### 1.2 尝试标准 MNE 解析（确认确实无法解析）
+### 1.2 Attempt Standard MNE Parsing (Confirm It Truly Cannot Be Parsed)
 
 ```python
 import mne
-# 根据扩展名尝试对应读取函数：
+# Try the corresponding read function based on extension:
 # .eeg/.vhdr: mne.io.read_raw_brainvision
 # .cnt: mne.io.read_raw_cnt
 # .set: mne.io.read_raw_eeglab
 # .fif: mne.io.read_raw_fif
-# 其他: mne.io.read_raw（让 MNE 自动检测）
+# other: mne.io.read_raw (let MNE auto-detect)
 try:
     raw = mne.io.read_raw("<sample_file>", preload=False)
-    print("MNE 可以解析！改用 SKILL_gdf_annotation_remap.md 或其他 SKILL。")
+    print("MNE can parse this! Switch to SKILL_gdf_annotation_remap.md or another SKILL.")
 except Exception as e:
-    print("MNE 无法解析:", e)
-    print("→ 需要 HANDLES_UNAVAILABLE kernel")
+    print("MNE cannot parse:", e)
+    print("→ HANDLES_UNAVAILABLE kernel needed")
 ```
 
-### 1.3 检查文件结构
+### 1.3 Inspect File Structure
 
-针对常见私有格式：
+For common proprietary formats:
 
 ```python
-# 若为 .mat 格式：
+# If .mat format:
 import scipy.io as sio
 mat = sio.loadmat("<sample_file>", simplify_cells=True)
 print("keys:", [k for k in mat.keys() if not k.startswith('__')])
 
-# 若为 HDF5 / .h5 格式：
+# If HDF5 / .h5 format:
 import h5py
 with h5py.File("<sample_file>", "r") as f:
     print("keys:", list(f.keys()))
-    # 递归展示结构
+    # Recursively display structure
     f.visititems(lambda name, obj: print(name, type(obj)))
 
-# 若为 numpy / .npy / .npz 格式：
+# If numpy / .npy / .npz format:
 import numpy as np
 data = np.load("<sample_file>", allow_pickle=True)
 print("shape:", data.shape if hasattr(data, 'shape') else data.files)
 
-# 若为纯二进制格式，查阅官方文档或 README 获取解析方式。
+# If pure binary format, consult official documentation or README for parsing method.
 ```
 
-记录：数据字段路径、EEG 矩阵的 shape（n_channels × n_samples 还是 n_samples × n_channels）、采样率字段名、通道名字段名、标记/事件字段名。
+Record: data field paths, EEG matrix shape (n_channels × n_samples or n_samples × n_channels), sample rate field name, channel name field name, marker/event field name.
 
-### 1.4 提取通道信息
+### 1.4 Extract Channel Information
 
 ```python
-# 获取通道名
-ch_names = mat["<path>"]["chnames"]   # 根据 1.3 结果替换
-print("通道名:", ch_names)
-print("数量:", len(ch_names))
+# Get channel names
+ch_names = mat["<path>"]["chnames"]   # replace based on 1.3 results
+print("Channel names:", ch_names)
+print("Count:", len(ch_names))
 
-# 获取采样率
-sfreq = float(mat["<path>"]["sampFreq"])   # 根据 1.3 结果替换
-print("采样率:", sfreq, "Hz")
+# Get sample rate
+sfreq = float(mat["<path>"]["sampFreq"])   # replace based on 1.3 results
+print("Sample rate:", sfreq, "Hz")
 ```
 
-识别哪些通道是 EEG、EOG、其他类型。
+Identify which channels are EEG, EOG, or other types.
 
-### 1.5 提取事件 / 标记
+### 1.5 Extract Events / Markers
 
-参见 `SKILL_mat_sidecar.md` Phase 1.3：定位 marker 字段，判断连续标记还是事件索引。
+See `SKILL_mat_sidecar.md` Phase 1.3: locate the marker field and determine whether it is a continuous marker or event index.
 
-### 1.6 提取受试者信息
+### 1.6 Extract Participant Information
 
-按优先级尝试：
+Try in order of priority:
 
-1. `participants.tsv`（BIDS）
-2. README / 说明文档
-3. 官方论文（DOI / URL）
-4. 均无法获取时，所有字段写 `"unknown"`
+1. `participants.tsv` (BIDS)
+2. README / documentation
+3. Official paper (DOI / URL)
+4. If none are accessible, write `"unknown"` for all fields
 
 ---
 
-## Phase 2: Kernel 生成
+## Phase 2: Kernel Generation
 
-`HANDLES_UNAVAILABLE` kernel 必须实现两个方法：`load()` 和 `apply()`。  
-EEGUnity 在检测到文件无法解析时，自动调用 `load()` 代替标准读取流程。
+A `HANDLES_UNAVAILABLE` kernel must implement two methods: `load()` and `apply()`.  
+EEGUnity automatically calls `load()` in place of the standard read workflow when it detects the file cannot be parsed.
 
 ```python
 """<DatasetName> stage1 kernel for EEGUnity (HANDLES_UNAVAILABLE).
 
-<简短描述：数据集名称、范式、文件格式、通道数、事件结构>
+<Short description: dataset name, paradigm, file format, channel count, event structure>
 
 This kernel reads <format> files directly because EEGUnity cannot parse
 them with standard MNE routines.
 
-Source: <论文 DOI 或数据集 URL>
+Source: <paper DOI or dataset URL>
 """
 
 from __future__ import annotations
@@ -128,17 +128,17 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import mne
 import numpy as np
-import scipy.io as sio   # 根据实际格式替换
+import scipy.io as sio   # replace based on actual format
 
 
-# Source: <论文引用 / 数据集文档 URL>
-# Annotator: <claude-model-id>, <YYYY-MM-DD> — LLM 推断，需人类复核
+# Source: <paper citation / dataset documentation URL>
+# Annotator: <claude-model-id>, <YYYY-MM-DD> — inferred by LLM, needs human review
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     # "<sub_key>": {"age": "<age_str>", "sex": "<sex_str>"},
 }
 
-# Source: <数据集文档，说明各 marker 值含义>
-# Annotator: <claude-model-id>, <YYYY-MM-DD> — LLM 推断，需人类复核
+# Source: <dataset documentation describing the meaning of each marker value>
+# Annotator: <claude-model-id>, <YYYY-MM-DD> — inferred by LLM, needs human review
 _EVENT_MAP: Dict[int, str] = {
     # marker_int_value: "annotation_description",
 }
@@ -149,22 +149,22 @@ def _load_raw_from_file(file_path: str) -> mne.io.BaseRaw:
 
     Adjust the data access paths based on Phase 1.3 findings.
     """
-    # 读取文件（根据 Phase 1.3 结果选择）
+    # Read file (select based on Phase 1.3 results)
     mat = sio.loadmat(file_path, simplify_cells=True)
     data_struct = mat["<top_key>"]
 
-    # EEG 数据矩阵
+    # EEG data matrix
     eeg_data = np.array(data_struct["<data_key>"], dtype=float)
-    # 确保 shape 为 (n_channels, n_samples)
+    # Ensure shape is (n_channels, n_samples)
     if eeg_data.shape[0] > eeg_data.shape[1]:
         eeg_data = eeg_data.T
 
     sfreq = float(data_struct["<sfreq_key>"])
 
-    # 通道信息
-    # 根据 Phase 1.4 填写实际通道名
+    # Channel information
+    # Fill in actual channel names based on Phase 1.4
     ch_names: List[str] = list(data_struct["<chnames_key>"])
-    # 设置通道类型（根据 Phase 1.4 识别结果）
+    # Set channel types (based on Phase 1.4 identification results)
     ch_types = []
     for ch in ch_names:
         if ch.upper().startswith("EOG"):
@@ -177,11 +177,11 @@ def _load_raw_from_file(file_path: str) -> mne.io.BaseRaw:
     info = mne.create_info(ch_names=ch_names, sfreq=sfreq, ch_types=ch_types)
     raw = mne.io.RawArray(eeg_data, info, verbose=False)
 
-    # 标准 montage（若通道名符合 standard_1020）
+    # Standard montage (if channel names conform to standard_1020)
     montage = mne.channels.make_standard_montage("standard_1020")
     raw.info.set_montage(montage, on_missing="ignore")
 
-    # 从 marker 字段构建 annotations（参考 SKILL_mat_sidecar.md 的辅助函数）
+    # Build annotations from marker field (refer to helper functions in SKILL_mat_sidecar.md)
     marker = data_struct["<marker_key>"].flatten()
     onsets, durations, descs = [], [], []
     current_code: Optional[int] = None
@@ -256,22 +256,22 @@ KERNEL = <DatasetName>Kernel()
 
 ---
 
-## Phase 3: 验证清单（对照 KERNEL_RULEBOOK.md）
+## Phase 3: Validation Checklist (Against KERNEL_RULEBOOK.md)
 
-| 编号 | 规则 | 检查项 |
-|------|------|--------|
-| 第5条 | 接口 | 模块末尾有 `KERNEL = <ClassName>()` |
-| 第5条 | 接口 | `HANDLES_UNAVAILABLE = True` 作为类属性存在 |
-| 第5条 | 接口 | `load(self, file_path: str) -> mne.io.BaseRaw` 方法存在 |
-| 第5条 | 接口 | `apply(self, udataset, raw, row) -> mne.io.BaseRaw` 签名正确 |
-| 第6条 | 通道 | `ch_types` 正确区分 eeg / eog / stim，与实际通道对应 |
-| 第6条 | 通道 | `set_montage` 使用 `on_missing="ignore"` |
-| 第8条 | 描述 | `raw.info["description"]` 写入合法 JSON，包含 `original_description` + `eegunity_description` |
-| 第9条 | 描述 | `eegunity_description` 包含全部 5 个字段：`age`、`sex`、`amplifier`、`cap`、`handedness` |
-| 第10条 | age | `age` 为字符串类型（`"22"` 而非整数 `22`） |
-| 第11条 | sex | `sex` 为小写 `"male"`/`"female"`/`"unknown"` |
-| 第12条 | 标签 | `_EVENT_MAP` 中的描述字符串为人类可读，而非裸数字 |
-| 第13条 | raw meta | 所有 annotation 均对应原始 marker 值，未引入语义派生 |
-| 第16条 | 外部文件 | `load()` 对找不到字段/键的情况有明确错误信息 |
-| 第17条 | 注释 | `_SUBJECT_DICT` 和 `_EVENT_MAP` 均有来源注释 |
-| 第3条 | LLM诚信 | LLM 推断的信息全部标注"需人类复核" |
+| Number | Rule | Check Item |
+|--------|------|------------|
+| Article 5 | Interface | Module ends with `KERNEL = <ClassName>()` |
+| Article 5 | Interface | `HANDLES_UNAVAILABLE = True` exists as a class attribute |
+| Article 5 | Interface | `load(self, file_path: str) -> mne.io.BaseRaw` method exists |
+| Article 5 | Interface | `apply(self, udataset, raw, row) -> mne.io.BaseRaw` signature is correct |
+| Article 6 | Channel | `ch_types` correctly distinguishes eeg / eog / stim, corresponding to actual channels |
+| Article 6 | Channel | `set_montage` uses `on_missing="ignore"` |
+| Article 8 | Description | `raw.info["description"]` writes valid JSON containing `original_description` + `eegunity_description` |
+| Article 9 | Description | `eegunity_description` contains all 5 fields: `age`, `sex`, `amplifier`, `cap`, `handedness` |
+| Article 10 | age | `age` is a string type (`"22"` not integer `22`) |
+| Article 11 | sex | `sex` is lowercase `"male"`/`"female"`/`"unknown"` |
+| Article 12 | Label | Description strings in `_EVENT_MAP` are human-readable, not bare numbers |
+| Article 13 | raw meta | All annotations correspond to original marker values, no semantic derivation introduced |
+| Article 16 | External file | `load()` has clear error messages for missing fields/keys |
+| Article 17 | Annotation | `_SUBJECT_DICT` and `_EVENT_MAP` both have source annotations |
+| Article 3 | LLM integrity | All LLM-inferred information is marked "needs human review" |

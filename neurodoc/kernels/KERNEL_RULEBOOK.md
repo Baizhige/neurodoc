@@ -1,94 +1,94 @@
-# EEG Dataset Kernel 编写与维护规则
+# EEG Dataset Kernel Authoring and Maintenance Rules
 
-状态：草案 v0.1
+Status: Draft v0.1
 
-最近确认：2026-04-08
+Last confirmed: 2026-04-08
 
-适用对象：kernel 编写者（人类、LLM）、维护者（人类、LLM）
+Applies to: kernel authors (human, LLM), maintainers (human, LLM)
 
-适用范围：`neurodoc/kernels/` 目录下所有 kernel 文件
-
----
-
-# 第一编 总则
-
-## 第一章 目的与适用范围
-
-### 第1条 目的
-
-本规则用于统一 EEG 数据集 kernel 文件的编写、维护与扩展行为，确保 kernel 文件能够：
-
-1. 与 EEGUnity 现行接口规范保持兼容。
-2. 尽可能准确还原原始数据中缺失或编码混乱的通道信息。
-3. 为 EEGUnity 提供标准化的被试者与设备元信息。
-4. 输出规范化的标签结构，支持 raw meta 与 super meta 的动态实例化。
-5. 作为可维护的增强数据容器，对所有非原始来源的信息记录来源、添加日期与责任归属。
-
-### 第2条 适用范围
-
-本规则适用于 `neurodoc/kernels/` 目录下所有 kernel 文件的以下行为：
-
-1. 新建与初始化。
-2. 人工扩展或 LLM 辅助扩展。
-3. 审核与复核。
-
-### 第3条 基本原则
-
-1. **接口兼容性优先**：kernel 必须与当前版本 EEGUnity / MNE 接口保持兼容，不得引入破坏标准接口的自定义封装。
-2. **来源可追溯**：kernel 文件中所有非原始数据来源的信息均须在紧邻的代码注释中标注来源、标注者与日期。
-3. **LLM 标记诚信原则**：LLM 不得以人类身份标记任何信息。除非收到人类的明确指令，LLM 添加的所有内容必须注明"由 LLM 推断，需人类复核"。
+Scope: All kernel files under the `neurodoc/kernels/` directory
 
 ---
 
-# 第二编 接口规范
+# Part I  General Provisions
 
-## 第二章 EEGUnity Kernel 接口
+## Chapter 1  Purpose and Scope
 
-### 第4条 接口标准参考
+### Article 1  Purpose
 
-kernel 文件必须遵守 EEGUnity 现行的 kernel 接口规范。本规则不重复定义接口细节；维护者应查阅 EEGUnity 相关函数与文档（包括但不限于 `UnifiedDataset.eeg_parser`、`EEGBatch` 及其 kernel 加载机制）以确认最新接口要求。
+These rules establish a unified standard for authoring, maintaining, and extending EEG dataset kernel files, ensuring that kernel files can:
 
-### 第5条 接口一致性要求
+1. Remain compatible with the current EEGUnity interface specification.
+2. Restore, as accurately as possible, channel information that is missing or encoded inconsistently in the original data.
+3. Provide EEGUnity with standardized subject and device metadata.
+4. Output a normalized label structure that supports dynamic instantiation of raw meta and super meta.
+5. Serve as a maintainable, augmented data container that records the source, addition date, and attribution for all information not derived from the original data.
 
-1. kernel 文件必须暴露模块级别的 `KERNEL` 对象，供 EEGUnity 加载与调用。
-2. kernel 的核心方法签名与返回值必须与当前版本 EEGUnity 保持一致；若 EEGUnity 升级导致接口变动，kernel 文件须同步更新。
-3. kernel 文件内部的辅助函数与数据结构不受接口约束，但不得影响 `KERNEL` 对象的标准行为。
+### Article 2  Scope of Application
 
----
+These rules apply to the following operations on all kernel files under `neurodoc/kernels/`:
 
-# 第三编 通道信息还原
+1. Creation and initialization.
+2. Manual extension or LLM-assisted extension.
+3. Audit and review.
 
-## 第三章 通道信息
+### Article 3  Basic Principles
 
-### 第6条 通道信息还原义务
-
-1. kernel 应尽可能将原始数据中编码混乱或缺失的通道名称还原为标准名称（如 `EEG-0` → `FC3`）。还原依据应来自论文、数据集说明文档或数据集提供方的官方资料。
-2. 通道类型解析依赖 EEGUnity 的 `format_channel_name()` 函数，kernel **不强制要求**对所有通道显式设置 `type`。若 kernel 确实调用 `set_channel_types()`，其结果应与 `format_channel_name()` 的解析结果保持一致，不得矛盾。
-3. 若原始数据使用标准帽（如 standard_1020），kernel 应在通道重命名后调用 `set_montage()` 设置空间位置信息。
-4. 若原始数据使用非标准帽或无法确认电极布局，可跳过 montage 设置，但须在 kernel 文件顶部注释中说明原因。
-
-### 第7条 非原始来源的通道信息
-
-1. kernel 文件中包含的通道重映射信息，若**非来自原始数据文件本身**（即来自论文、数据集说明、人工标记、LLM 推断等外部来源），必须在对应代码处以注释标注：
-   - **来源**：论文（附引用或 DOI）、数据集 README（附路径）、人工指令等。
-   - **标注者**：人类审核员（附姓名或 ID）或 LLM（附模型标识）。
-   - **日期**：信息添加的日期（ISO 格式，如 `2026-04-08`）。
-2. 若由 LLM 填写，必须额外注明"由 LLM 推断，需人类复核"。人类审核员确认后，可移除该标记，并更新标注者为人类。
-3. LLM 不得以人类身份标记任何通道信息，除非收到人类的明确书面指令。
+1. **Interface compatibility first**: a kernel must remain compatible with the current version of EEGUnity / MNE interfaces and must not introduce custom wrappers that break standard interfaces.
+2. **Source traceability**: all information in a kernel file that does not originate from the raw data must have its source, annotator, and date recorded in an immediately adjacent code comment.
+3. **LLM honesty principle**: an LLM must not label any information as if it were a human. Unless explicitly instructed by a human, all content added by an LLM must be marked "inferred by LLM, needs human review".
 
 ---
 
-# 第四编 被试者与设备元信息
+# Part II  Interface Specification
 
-## 第四章 eegunity_description 格式
+## Chapter 2  EEGUnity Kernel Interface
 
-### 第8条 写入路径
+### Article 4  Interface Reference Standard
 
-被试者与设备元信息必须以 JSON 字符串的形式写入 `raw.info["description"]`，格式如下：
+Kernel files must comply with the current EEGUnity kernel interface specification. These rules do not redefine interface details; maintainers should consult EEGUnity's relevant functions and documentation (including but not limited to `UnifiedDataset.eeg_parser`, `EEGBatch`, and its kernel loading mechanism) to confirm the latest interface requirements.
+
+### Article 5  Interface Consistency Requirements
+
+1. A kernel file must expose a module-level `KERNEL` object for EEGUnity to load and call.
+2. The core method signatures and return values of a kernel must remain consistent with the current version of EEGUnity; if an EEGUnity upgrade changes the interface, the kernel file must be updated in sync.
+3. Helper functions and data structures internal to a kernel file are not constrained by the interface, but must not affect the standard behavior of the `KERNEL` object.
+
+---
+
+# Part III  Channel Information Restoration
+
+## Chapter 3  Channel Information
+
+### Article 6  Obligation to Restore Channel Information
+
+1. A kernel should, wherever possible, restore channel names that are encoded inconsistently or missing in the original data to standard names (e.g., `EEG-0` -> `FC3`). The restoration basis should come from papers, dataset documentation, or official materials from the dataset provider.
+2. Channel type resolution relies on EEGUnity's `format_channel_name()` function; a kernel is **not required** to explicitly set `type` for every channel. If a kernel does call `set_channel_types()`, its results must be consistent with the resolution results of `format_channel_name()` and must not contradict them.
+3. If the original data uses a standard cap (e.g., standard_1020), the kernel should call `set_montage()` after channel renaming to set spatial position information.
+4. If the original data uses a non-standard cap or the electrode layout cannot be confirmed, the montage setting may be skipped, but the reason must be stated in a comment at the top of the kernel file.
+
+### Article 7  Channel Information from Non-Original Sources
+
+1. Channel remapping information in a kernel file that does **not come from the raw data files themselves** (i.e., sourced from papers, dataset documentation, manual annotation, LLM inference, or other external sources) must be annotated at the corresponding code location with:
+   - **Source**: paper (with citation or DOI), dataset README (with path), manual instruction, etc.
+   - **Annotator**: human reviewer (with name or ID) or LLM (with model identifier).
+   - **Date**: the date the information was added (ISO format, e.g., `2026-04-08`).
+2. If filled in by an LLM, the annotation must additionally state "inferred by LLM, needs human review". After a human reviewer confirms, the mark may be removed and the annotator updated to the human.
+3. An LLM must not label any channel information as if it were a human, unless an explicit written instruction from a human has been received.
+
+---
+
+# Part IV  Subject and Device Metadata
+
+## Chapter 4  eegunity_description Format
+
+### Article 8  Write Path
+
+Subject and device metadata must be written as a JSON string into `raw.info["description"]` in the following format:
 
 ```json
 {
-  "original_description": "<原始 description 字段值，字符串>",
+  "original_description": "<original description field value, string>",
   "eegunity_description": {
     "age": "<str>",
     "sex": "<str>",
@@ -99,68 +99,68 @@ kernel 文件必须遵守 EEGUnity 现行的 kernel 接口规范。本规则不�
 }
 ```
 
-其中 `original_description` 应保留原始 `raw.info["description"]` 的值（若原始值为空，写空字符串）。
+`original_description` should retain the value of the original `raw.info["description"]` (if the original value is empty, write an empty string).
 
-### 第9条 必填字段
+### Article 9  Required Fields
 
-`eegunity_description` 中以下字段均为**必填**，不得省略：
+All of the following fields in `eegunity_description` are **required** and must not be omitted:
 
-| 字段 | 含义 | 合法值 |
-|------|------|--------|
-| `age` | 被试者年龄 | 正整数字符串（`"22"`）；或范围字符串（`"22-45"`）；未知时写 `"unknown"` |
-| `sex` | 被试者性别 | `"female"` 或 `"male"`；未知时写 `"unknown"` |
-| `amplifier` | 采集设备型号 | 设备名称字符串（如 `"BrainAmp"`）；未知时写 `"unknown"` |
-| `cap` | 电极帽材质或型号 | 材质字符串（如 `"Ag/AgCl"`）；未知时写 `"unknown"` |
-| `handedness` | 利手方向 | `"right"`、`"left"`；未知时写 `"unknown"` |
+| Field | Meaning | Valid values |
+|-------|---------|--------------|
+| `age` | Subject age | Positive integer string (`"22"`); or range string (`"22-45"`); write `"unknown"` if unknown |
+| `sex` | Subject sex | `"female"` or `"male"`; write `"unknown"` if unknown |
+| `amplifier` | Recording device model | Device name string (e.g., `"BrainAmp"`); write `"unknown"` if unknown |
+| `cap` | Electrode cap material or model | Material string (e.g., `"Ag/AgCl"`); write `"unknown"` if unknown |
+| `handedness` | Handedness | `"right"`, `"left"`; write `"unknown"` if unknown |
 
-所有字段无论是否已知均**必须出现**。未知值一律写字符串 `"unknown"`，不得写 `null`、空字符串或 Python `None`。
+All fields must **appear** regardless of whether the value is known. Unknown values must always be written as the string `"unknown"`; do not write `null`, an empty string, or Python `None`.
 
-### 第10条 age 字段约定
+### Article 10  age Field Conventions
 
-1. `age` 统一以字符串（`str`）存储，不得使用整数或浮点数类型。
-2. 若已知精确年龄，写正整数字符串，如 `"22"`。
-3. 若仅知年龄范围（如论文描述"22–45岁"），写范围字符串，格式为 `"<下界>-<上界>"`，如 `"22-45"`；两端均为正整数，中间用英文连字符 `-` 连接。
-4. 未知时写 `"unknown"`，不得写 `"0"` 或负数字符串。
+1. `age` is stored uniformly as a string (`str`); integer or float types must not be used.
+2. If the exact age is known, write a positive integer string, e.g., `"22"`.
+3. If only an age range is known (e.g., a paper states "22-45 years old"), write a range string in the format `"<lower>-<upper>"`, e.g., `"22-45"`; both ends are positive integers joined by an ASCII hyphen `-`.
+4. Write `"unknown"` if the age is unknown; do not write `"0"` or a negative number string.
 
-### 第11条 被试者信息的来源标注
+### Article 11  Source Annotation for Subject Information
 
-1. 若 `eegunity_description` 中任何字段的值来自外部资料（论文、数据集说明文档、人工录入），必须在 kernel 文件中对应的 subject dict 或赋值代码处以注释说明来源、标注者与日期。
-2. 若由 LLM 填写，所有字段值须设置为 `"unknown"`，并注明"由 LLM 推断，需人类复核"，除非收到人类的明确指令提供具体值。
-3. LLM 不得在未获人类指令的情况下在 subject dict 中填写具体的 age、sex 等实质性数值。
+1. If the value of any field in `eegunity_description` comes from external materials (papers, dataset documentation, manual entry), the source, annotator, and date must be stated in a comment adjacent to the corresponding subject dict or assignment code in the kernel file.
+2. If filled in by an LLM, all field values must be set to `"unknown"` and annotated "inferred by LLM, needs human review", unless explicit human instructions providing specific values have been received.
+3. An LLM must not fill in substantive values such as age and sex in a subject dict without human instruction.
 
 ---
 
-# 第五编 标签标准化
+# Part V  Label Standardization
 
-## 第五章 标签形式与职责
+## Chapter 5  Label Form and Responsibilities
 
-### 第12条 kernel 的标签职责
+### Article 12  Kernel Label Responsibilities
 
-kernel 负责将原始数据中的标签信息标准化，输出为 EEGUnity / MNE 可稳定解析的格式。具体职责包括：
+The kernel is responsible for normalizing label information from the raw data into a format that can be stably parsed by EEGUnity / MNE. Specific responsibilities include:
 
-1. 将原始数字编码的 annotation 映射为人类可读的描述字符串。
-2. 确保输出标签通过 `mne.events_from_annotations()` 可被稳定解析。
-3. 若数据集的标签来源于 STIM channel 或 MISC channel，kernel 可选择将其转化为 annotation 形式输出，或保留原始通道形式，但须在 kernel 文件中以注释说明选择依据。
+1. Mapping numerically encoded annotations from the original data to human-readable description strings.
+2. Ensuring output labels can be stably parsed by `mne.events_from_annotations()`.
+3. If a dataset's labels originate from a STIM channel or MISC channel, the kernel may choose to convert them to annotation form for output, or retain the original channel form, but must state the rationale in a comment in the kernel file.
 
-### 第13条 raw meta
+### Article 13  raw meta
 
-1. **raw meta**（对应 `analysis.md` 中 `Meta Level = raw`）：kernel 输出的标签直接对应原始数据中的事件编码，经过名称标准化但不引入任何语义派生。
-2. raw meta 是所有 kernel **必须实现**的基础层，不得缺失。
-3. raw meta 事件的描述字符串应与数据集 `analysis.md` 的 `### Event Structure` 表格中的 `Event ID` 列保持一致；若二者不一致，应以 kernel 实际输出为准并同步修正 `analysis.md`。
+1. **raw meta** (corresponding to `Meta Level = raw` in `analysis.md`): labels output by the kernel correspond directly to event codes in the raw data, normalized in name but without introducing any semantic derivation.
+2. raw meta is the foundational layer that all kernels **must implement**; it must not be absent.
+3. The description strings of raw meta events should be consistent with the `Event ID` column of the `### Event Structure` table in the dataset's `analysis.md`; if there is an inconsistency, the kernel's actual output takes precedence and `analysis.md` should be corrected in sync.
 
-### 第13条之1 多范式数据集的范式前缀约定
+### Article 13-1  Paradigm Prefix Convention for Multi-Paradigm Datasets
 
-当单一数据集包含**多个范式**（paradigm），且不同范式之间存在**重叠的事件编码**（即相同数字码在不同范式中代表不同语义），kernel 应在所有事件描述字符串前加上范式标识前缀，以消除歧义。
+When a single dataset contains **multiple paradigms** and there are **overlapping event codes** between different paradigms (i.e., the same numeric code represents different semantics in different paradigms), the kernel should prepend a paradigm identifier prefix to all event description strings to eliminate ambiguity.
 
-1. **触发条件**：同一数据集下存在多个范式，且不同范式的事件编码存在重叠（如 CLA 和 HaLT 均使用编码 1 表示左手 MI，但 NoMT 使用编码 1 表示左手 cue）。
-2. **前缀格式**：`<PARADIGM>: <event_label>`，其中 `<PARADIGM>` 为范式名称（大写或数据集约定的缩写），`<event_label>` 为该范式中该编码的语义描述。示例：`CLA: left hand MI`、`HaLT: right hand MI`、`NoMT: left hand cue`。
-3. **分类依据**：此类标签仍归类为 **raw meta**，因为范式标识来源于原始文件名或路径前缀，不引入任何语义推断；前缀提取本质上是文件名解析，非语义派生。
-4. **行政标记（admin codes）**：若数据集中存在用途不明确的管理标记编码（如 91 / 92 / 99），在尚未确认其具体含义的情况下，统一使用 `admin: marker-<code>` 格式，**不加范式前缀**，以标示其跨范式的共用属性，并在 kernel 文件顶部注释中说明已知的观测规律。
-5. **同步要求**：范式前缀的引入必须同步更新对应数据集的 `analysis.md` 中 `### Event Structure` 表格，确保 `Event ID` 列与 kernel 实际输出保持一致。
-6. **范式检测逻辑**：kernel 文件应提供独立的范式检测函数（如 `_detect_paradigm(file_name)`），基于文件名前缀进行匹配，并在 kernel 文件顶部注释中说明检测顺序（如 FREEFORM 须先于 FREE 或 CLA 检查，以防前缀歧义）。
+1. **Trigger condition**: the same dataset contains multiple paradigms and their event codes overlap (e.g., both CLA and HaLT use code 1 for left-hand MI, but NoMT uses code 1 for left-hand cue).
+2. **Prefix format**: `<PARADIGM>: <event_label>`, where `<PARADIGM>` is the paradigm name (uppercase or the abbreviation defined by the dataset convention) and `<event_label>` is the semantic description of that code in that paradigm. Examples: `CLA: left hand MI`, `HaLT: right hand MI`, `NoMT: left hand cue`.
+3. **Classification basis**: such labels are still classified as **raw meta**, because the paradigm identifier comes from the original filename or path prefix and introduces no semantic inference; prefix extraction is essentially filename parsing, not semantic derivation.
+4. **Admin codes**: if a dataset contains administrative marker codes whose purpose is unclear (e.g., 91 / 92 / 99), until their specific meaning is confirmed, use the format `admin: marker-<code>` uniformly, **without a paradigm prefix**, to indicate their cross-paradigm shared nature, and document the known observed patterns in a comment at the top of the kernel file.
+5. **Synchronization requirement**: the introduction of paradigm prefixes must be accompanied by an update to the `### Event Structure` table in the dataset's `analysis.md`, ensuring the `Event ID` column matches the kernel's actual output.
+6. **Paradigm detection logic**: the kernel file should provide an independent paradigm detection function (e.g., `_detect_paradigm(file_name)`) that matches based on filename prefixes, and the detection order should be stated in a comment at the top of the kernel file (e.g., FREEFORM must be checked before FREE or CLA to avoid prefix ambiguity).
 
 ```python
-# 示例：范式前缀事件映射表
+# Example: paradigm prefix event mapping table
 _PARADIGM_LABEL_MAP = {
     "CLA": {1: "CLA: left hand MI", 2: "CLA: right hand MI"},
     "HaLT": {1: "HaLT: left hand MI", 2: "HaLT: right hand MI",
@@ -169,50 +169,50 @@ _PARADIGM_LABEL_MAP = {
 }
 ```
 
-### 第14条 super meta
+### Article 14  super meta
 
-1. **super meta**（对应 `analysis.md` 中 `Meta Level = super`）：kernel 可在 raw meta 基础上进一步构建语义派生标签，例如将多个 raw 事件组合为高层试次类型，或引入外部信息对事件打标。
-2. super meta 与 raw meta 的存储形式相同（均写入 MNE Raw 的 annotations 或相应通道中）。
-3. super meta 的引入**必须**与数据集 `analysis.md` 中 `Tasks Area` 对应任务的 `Meta Level` 字段一致（参见主规则书 `neuroaudit/rulebook.md` 相关条款）。kernel 不得单方面引入在 `analysis.md` 中未声明的 super meta 标签。
-4. LLM 可根据 `analysis.md` 的内容推断并构建 super meta，但须在 kernel 文件中明确标注"由 LLM 构建"并说明推断依据；人类审核员确认后方可移除"需人类复核"标记。
-5. super meta 的构建逻辑应在 kernel 文件中以独立的数据结构或注释块清晰标注，不得与 raw meta 逻辑混写且无注释区分。
+1. **super meta** (corresponding to `Meta Level = super` in `analysis.md`): the kernel may further construct semantically derived labels on top of raw meta, for example by combining multiple raw events into higher-level trial types, or by introducing external information to annotate events.
+2. super meta and raw meta use the same storage form (both written into MNE Raw annotations or corresponding channels).
+3. The introduction of super meta **must** be consistent with the `Meta Level` field of the corresponding task in the `Tasks Area` of the dataset's `analysis.md` (see the relevant articles of the main rulebook `neuroaudit/rulebook.md`). A kernel must not unilaterally introduce super meta labels not declared in `analysis.md`.
+4. An LLM may infer and construct super meta based on the content of `analysis.md`, but must clearly annotate "constructed by LLM" in the kernel file and state the inference basis; only after a human reviewer confirms may the "needs human review" mark be removed.
+5. The construction logic of super meta should be clearly annotated in the kernel file using an independent data structure or comment block, and must not be interleaved with raw meta logic without distinguishing comments.
 
 ---
 
-# 第六编 静态增强数据与外部资源
+# Part VI  Static Enhancement Data and External Resources
 
-## 第六章 kernel 文件中的增强数据
+## Chapter 6  Enhancement Data in Kernel Files
 
-### 第15条 允许在 kernel 文件中包含的非原始数据
+### Article 15  Non-Original Data Allowed in Kernel Files
 
-kernel 文件允许包含以下类型的静态增强数据：
+Kernel files are allowed to contain the following types of static enhancement data:
 
-| 数据类型 | 典型示例 | 推荐命名风格 |
-|----------|----------|--------------|
-| 被试者信息字典 | `_SUBJECT_DICT` | 下划线前缀私有变量 |
-| 通道重映射表 | `_CHANNEL_RENAME_MAP`、`alias_groups` | 下划线前缀私有变量 |
-| 事件编码映射表 | `_NUMERIC_EVENT_MAP` | 下划线前缀私有变量 |
-| super meta 构建规则 | `_SUPER_META_RULES` | 下划线前缀私有变量 |
-| 设备 / 帽信息 | 硬编码字符串常量 | 大写常量或 subject dict 内嵌 |
+| Data type | Typical example | Recommended naming style |
+|-----------|----------------|--------------------------|
+| Subject information dictionary | `_SUBJECT_DICT` | Underscore-prefixed private variable |
+| Channel remapping table | `_CHANNEL_RENAME_MAP`, `alias_groups` | Underscore-prefixed private variable |
+| Event code mapping table | `_NUMERIC_EVENT_MAP` | Underscore-prefixed private variable |
+| super meta construction rules | `_SUPER_META_RULES` | Underscore-prefixed private variable |
+| Device / cap information | Hardcoded string constants | Uppercase constant or embedded in subject dict |
 
-以上数据均视为 kernel 文件的合法组成部分。数据的存在本身意味着它已经过（或待经过）人类或 LLM 的审核，必须附有来源注释（见第16条）。
+All of the above data are considered legitimate components of the kernel file. The presence of data implies that it has been (or is pending) review by a human or LLM, and must be accompanied by a source comment (see Article 16).
 
-### 第16条 外部文件读取
+### Article 16  Reading External Files
 
-1. kernel 文件允许读取外部文件（如同目录或指定路径下的 `.json`、`.csv`、`.mat` 等）以补充或替代硬编码数据。
-2. 读取外部文件时，须在 kernel 文件中以注释说明外部文件的用途、格式与来源。
-3. 外部文件的读取逻辑不得破坏 kernel 的接口兼容性：即使外部文件缺失，kernel 也必须有合理的降级处理（如回退到内置默认值，或抛出包含明确说明的错误信息）。
+1. Kernel files are allowed to read external files (e.g., `.json`, `.csv`, `.mat` files in the same directory or at a specified path) to supplement or replace hardcoded data.
+2. When reading external files, a comment in the kernel file must state the purpose, format, and source of the external file.
+3. The external file reading logic must not break the kernel's interface compatibility: even if an external file is missing, the kernel must have a reasonable fallback (e.g., fall back to built-in defaults, or raise an error with a clear explanation).
 
-### 第17条 来源注释规范
+### Article 17  Source Comment Standards
 
-对于 kernel 文件中所有非原始数据来源的信息，必须在**紧邻的代码注释**中说明以下内容：
+For all information in kernel files that does not originate from the raw data, the following must be stated in an **immediately adjacent code comment**:
 
-1. **来源**：论文（附引用或 DOI）、数据集说明文档（附路径或 URL）、人工录入、LLM 推断等。
-2. **标注者**：人类审核员（附姓名或缩写）或 LLM（附模型标识，如 `claude-sonnet-4-6`）。
-3. **日期**：信息添加或最近确认的日期（ISO 格式，如 `2026-04-08`）。
-4. LLM 标注时，必须额外注明"需人类复核"；人类审核员确认后，由人类将标注者更新为自己并移除"需人类复核"标记。
+1. **Source**: paper (with citation or DOI), dataset documentation (with path or URL), manual entry, LLM inference, etc.
+2. **Annotator**: human reviewer (with name or abbreviation) or LLM (with model identifier, e.g., `claude-sonnet-4-6`).
+3. **Date**: the date the information was added or last confirmed (ISO format, e.g., `2026-04-08`).
+4. When annotated by an LLM, "needs human review" must be additionally noted; after a human reviewer confirms, the human updates the annotator to themselves and removes the "needs human review" mark.
 
-示例注释格式（Python）：
+Example comment format (Python):
 
 ```python
 # Source: BCI Competition IV Dataset 2a description, https://www.bbci.de/competition/iv/
@@ -220,6 +220,6 @@ kernel 文件允许包含以下类型的静态增强数据：
 _SUBJECT_DICT = { ... }
 
 # Source: Inferred from channel naming convention in dataset README
-# Annotator: claude-sonnet-4-6, 2026-04-08 — 需人类复核
+# Annotator: claude-sonnet-4-6, 2026-04-08 — needs human review
 _CHANNEL_RENAME_MAP = { ... }
 ```

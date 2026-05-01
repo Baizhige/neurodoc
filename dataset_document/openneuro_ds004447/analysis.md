@@ -9,28 +9,47 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `a622f3c18fda073fcab4904a246197ba85ac15a30fabf10670a0af99d88be864`
+> **Kernel SHA256**: `e882c899bcb6d30b0e0311b5eca21d951830de6467723b91a72c1eb23f2d4564`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
-| `event_1` | 327 | event | raw | Trial phase onset: rest |
-| `event_2` | 5090 | event | raw | Trial phase onset: task |
-| `event_3` | 3270 | event | raw | Trial phase onset: rest |
-| `event_4` | 1237 | event | raw | Trial phase onset: task |
-| `event_5` | 1237 | event | raw | Trial phase onset: interval |
-| `event_6` | 91 | event | raw | Trial phase onset: ready |
+|---|---|---|---|---|
+| `event_1-rest` | 4180 | event | raw | Rest/relaxation instruction onset; trigger value 1, instruction `rest`, present in both 2-phase and 4-phase blocks. |
+| `event_2-ready` | 910 | event | raw | Ready/preparation instruction onset in 4-phase blocks; trigger value 2, instruction `ready`, typically preceding the motor imagery task period. |
+| `event_2-task` | 3270 | event | raw | Task/motor imagery instruction onset in 2-phase blocks; trigger value 2, instruction `task`, corresponding to right-finger kinesthetic motor imagery/SMR-ERD control. |
+| `event_3-task` | 910 | event | raw | Task/motor imagery instruction onset in 4-phase blocks; trigger value 3, instruction `task`, corresponding to right-finger kinesthetic motor imagery/SMR-ERD control. |
+| `event_4-interval` | 910 | event | raw | Interval/blank instruction onset in 4-phase blocks; trigger value 4, instruction `interval`, used as the post-task blank/break phase. |
 
+> Event IDs are emitted as `event_<value>-<instruction>` because raw trigger value 2 is reused with different meanings (`ready` in 4-phase blocks and `task` in 2-phase blocks). Onsets are converted from the events.tsv millisecond unit to MNE seconds by the kernel.
 
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
-| `device` | missing | N/A |
+| `device` | complete | N/A |
+| `amplifier` | complete | e.g. GES400 |
+| `cap` | complete | e.g. Magstim EGI Hydrocel Geodesic Sensor Net |
+| `dataset` | complete | e.g. openneuro_ds004447 |
+| `eeg_channel_count` | complete | e.g. 129, 128 |
+| `eeg_ground` | complete | e.g. CPz, placed on FCz |
+| `eeg_placement_scheme` | complete | e.g. 10-20 system, 10 percent system |
+| `eeg_reference` | complete | e.g. Cz |
+| `event_description_format` | complete | e.g. event_<value>-<instruction> |
+| `event_onset_units` | complete | e.g. ms converted to seconds |
+| `handedness` | complete | e.g. left, right |
+| `manufacturer` | complete | e.g. Magstim EGI |
+| `paradigm_schema` | complete | e.g. 4phase, 2phase |
+| `sampling_rate_hz` | complete | e.g. 1000 |
+| `session` | complete | e.g. ses-01, ses-02, ses-03 |
+| `source_file` | complete | e.g. sub-001_ses-01_task-smrbmi_eeg.edf, sub-001_ses-02_task-smrbmi_eeg.edf, sub-001_ses-03_task-smrbmi_eeg.edf |
+| `stim_channel` | complete | e.g. Status |
+| `subject_id` | complete | e.g. sub-001, sub-002, sub-003 |
+| `task` | complete | e.g. smrbmi |
 
 ## Tasks
 
@@ -116,30 +135,63 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
 ### Potential Task 4: Age Regression from EEG
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5 *, target_events = []`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
 - **Label Route**: `info`
+- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Y Mapping Notes |
-  |------------|-----------------|
-  | subject_age | no mapping |
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 18.0–27.0 (years) | N=30 subjects; narrow 9-year span may limit predictive signal |
 - **Evidence**:
   - participants.tsv — age column complete for all 30 subjects (range 18–27 years)
-- **Notes**: Segmentation-based subject-level regression. No event structure needed; fixed 2-second windows with 50% overlap provide multiple samples per recording while preserving frequency resolution at 1000 Hz sampling rate. Age is a native participants.tsv column (B3 archetype, Meta Level = raw). Note: narrow 9-year span (18–27 years) may limit predictive signal.
+- **Notes**: Segmentation-based subject-level regression. No event structure needed; fixed 2-second windows with 50% overlap provide multiple samples per recording while preserving frequency resolution at 1000 Hz sampling rate. Age is a native participants.tsv column (B3 archetype, Meta Level = raw).
 
 ### Potential Task 5: Gender Classification from EEG
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5, target_events = []`
 - **Label Route**: `info`
+- **Label Field**: `gender`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Y Mapping Notes |
-  |------------|-----------------|
-  | subject_sex | Female -> 0; Male -> 1 |
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | gender | female | 0 | female |
+  | gender | male | 1 | male |
 - **Evidence**:
   - participants.tsv — N=30 subjects with gender column: 5 female, 25 male (complete, categorical)
 - **Notes**: Subject-level trait prediction via fixed-window EEG segmentation. Severe class imbalance (5:25) but technically valid binary classification with ≥2 distinct classes. 2-second windows with 50% overlap are inferred defaults for subject-level classification tasks where no trial structure is needed.
+
+### Potential Task 6: handedness classification from EEG
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `handedness`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Value | y | Meaning |
+  |------------|-------|---|---------|
+  | handedness | left | 0 | left-handed |
+  | handedness | right | 1 | right-handed |
+- **Evidence**:
+- **Notes**: Binary classification of subject handedness from segmented resting/task EEG. Extremely imbalanced dataset (1 left-handed vs 29 right-handed subjects). The single left-handed subject may be an outlier, making this task likely not learnable in practice. Included per soft guideline favoring inclusion of technically valid tasks. Segmentation parameters inferred from default subject-level classification settings.
+
+### Potential Task 7: Continuous EEG Segmentation with Age Label
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Label Route**: `info`
+- **Label Field**: `age`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Range (unit) | Notes |
+  |------------|--------------|-------|
+  | age | 18.0–27.0 (years) | Subject chronological age from participants.tsv; used as continuous regression target for subject trait prediction |
+- **Evidence**:
+  - participants.tsv — age column complete for N=30 subjects, range 18.0–27.0 years, sample values [22, 23, 24]
+- **Notes**: Archetype C (segmentation + info-native). Uses fixed-length 2-second non-overlapping windows (50% overlap) from continuous EEG without event locking, paired with subject age as regression target. Suitable for self-supervised pretraining or contrastive learning with age as downstream biomarker. Meta Level is raw because age is a native participants.tsv column requiring no kernel computation.
 
 ## Data Quality Notes
 
@@ -155,4 +207,4 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_kernel_update
+> **Status**: wait_manual_review

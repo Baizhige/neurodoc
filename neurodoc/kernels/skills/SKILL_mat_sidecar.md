@@ -1,115 +1,115 @@
 # SKILL: .mat Sidecar Marker Kernel
 
-> **适用模式**: 主数据文件为 `.mat` 格式（或存在同名 `.mat` sidecar），  
-> 事件标签存储于 `.mat` 文件的某个字段（如 `marker`、`classlabel`、`event`）中，  
-> 而非 MNE Annotations 中。需从 `.mat` 字段提取事件并写回 MNE Annotations。  
-> **参考示例**: `kernels/figshare_largemi.py`  
-> **规范文档**: `kernels/KERNEL_RULEBOOK.md`
+> **Applicable mode**: The main data file is in `.mat` format (or a same-name `.mat` sidecar exists),  
+> event labels are stored in a field of the `.mat` file (e.g., `marker`, `classlabel`, `event`),  
+> rather than in MNE Annotations. Events must be extracted from the `.mat` field and written back to MNE Annotations.  
+> **Reference example**: `kernels/figshare_largemi.py`  
+> **Specification document**: `kernels/KERNEL_RULEBOOK.md`
 
 ---
 
-## 你的角色
+## Your Role
 
-你是一名 EEGUnity kernel 工程师。目标：为给定数据集生成符合 `KERNEL_RULEBOOK.md` 的 Stage1 kernel。  
-**在写任何代码前，先完成 Phase 1 全部探索步骤。**
+You are an EEGUnity kernel engineer. Goal: generate a Stage1 kernel for the given dataset that complies with `KERNEL_RULEBOOK.md`.  
+**Before writing any code, complete all exploration steps in Phase 1.**
 
 ---
 
-## Phase 1: 数据集探索（自动提取）
+## Phase 1: Dataset Exploration (Auto-extraction)
 
-### 1.1 列出 .mat 文件结构
+### 1.1 List .mat File Structure
 
 ```bash
 find <dataset_path> -name "*.mat" | head -20
 ```
 
-记录：文件命名规律（如 `CLA-SubjectA-160405-3St-LRHand.mat`、`A01E.mat`）。
+Record: file naming pattern (e.g., `CLA-SubjectA-160405-3St-LRHand.mat`, `A01E.mat`).
 
-### 1.2 读取一个 .mat 文件，检查顶层结构
+### 1.2 Read a .mat File, Check Top-Level Structure
 
 ```python
 import scipy.io as sio
 mat = sio.loadmat("<sample_mat_file>", simplify_cells=True)
-print("顶层 keys:", list(mat.keys()))
-# 过滤 '__header__', '__version__', '__globals__'
+print("Top-level keys:", list(mat.keys()))
+# Filter '__header__', '__version__', '__globals__'
 data_keys = [k for k in mat.keys() if not k.startswith('__')]
-print("数据 keys:", data_keys)
+print("Data keys:", data_keys)
 ```
 
-若顶层有嵌套结构（如 `mat['o']`），继续展开：
+If the top level has a nested structure (e.g., `mat['o']`), continue expanding:
 
 ```python
 inner = mat["o"]
-print("内层 keys:", list(inner.keys()) if hasattr(inner, 'keys') else type(inner))
+print("Inner keys:", list(inner.keys()) if hasattr(inner, 'keys') else type(inner))
 ```
 
-### 1.3 定位 marker / label 字段
+### 1.3 Locate the marker / label Field
 
 ```python
-# 常见字段名：marker, classlabel, event, labels, y
-marker = mat["o"]["marker"]   # 根据 1.2 结果替换路径
+# Common field names: marker, classlabel, event, labels, y
+marker = mat["o"]["marker"]   # replace path based on 1.2 results
 print("marker shape:", marker.shape)
 print("marker dtype:", marker.dtype)
 print("unique values:", set(marker.flatten().tolist()[:1000]))
 ```
 
-记录：
-- marker 的 shape（通常为 `(n_samples,)` 或 `(1, n_samples)`）
-- 所有唯一值及其含义（查阅数据集文档）
-- marker 是"连续标记"（每个采样点一个值）还是"事件索引"（稀疏的时间戳+值对）
+Record:
+- marker shape (typically `(n_samples,)` or `(1, n_samples)`)
+- All unique values and their meanings (consult dataset documentation)
+- Whether the marker is a "continuous marker" (one value per sample) or an "event index" (sparse timestamp+value pairs)
 
-**连续标记**：值在整个录制期间逐采样变化，0 表示无事件，非零值表示事件类型。  
-**事件索引**：仅列出事件发生时刻的 `[onset_sample, event_code]`，其余时刻没有条目。
+**Continuous marker**: values change sample-by-sample throughout the recording; 0 means no event, non-zero values indicate event type.  
+**Event index**: only lists the timestamps of event occurrences as `[onset_sample, event_code]`; no entries for other time points.
 
-### 1.4 读取 EEG 数据结构
+### 1.4 Read EEG Data Structure
 
 ```python
-# 常见字段：data, eeg, X, signal
-eeg = mat["o"]["data"]   # 根据 1.2 结果替换
-print("EEG shape:", eeg.shape)  # 期望: (n_channels, n_samples) 或 (n_samples, n_channels)
-sfreq = mat["o"]["sampFreq"]    # 或 sFreq, Fs, fs, sample_rate
-print("采样率:", sfreq)
-ch_names_raw = mat["o"]["chnames"]   # 或 channels, channames
-print("通道名:", ch_names_raw)
+# Common field names: data, eeg, X, signal
+eeg = mat["o"]["data"]   # replace based on 1.2 results
+print("EEG shape:", eeg.shape)  # expected: (n_channels, n_samples) or (n_samples, n_channels)
+sfreq = mat["o"]["sampFreq"]    # or sFreq, Fs, fs, sample_rate
+print("Sample rate:", sfreq)
+ch_names_raw = mat["o"]["chnames"]   # or channels, channames
+print("Channel names:", ch_names_raw)
 ```
 
-记录：EEG shape、采样率、通道名列表。
+Record: EEG shape, sample rate, channel name list.
 
-### 1.5 提取受试者信息
+### 1.5 Extract Participant Information
 
-按优先级尝试：
+Try in order of priority:
 
-1. **参与者列表文件**：
+1. **Participant list file**:
    ```bash
    find <dataset_path> -name "participants.tsv" | head -3
    ```
-2. **README / 文档**：
+2. **README / documentation**:
    ```bash
    find <dataset_path> -name "README*" -o -name "*.txt" | head -5
    cat <readme_path>
    ```
-3. **数据集官方论文**（DOI / URL，若用户提供）。
-4. 均无法获取时，所有字段写 `"unknown"`。
+3. **Official dataset paper** (DOI / URL, if provided by user).
+4. If none are accessible, write `"unknown"` for all fields.
 
-记录：每个受试者 ID → age（str）、sex、amplifier、cap、handedness。
+Record: each subject ID → age (str), sex, amplifier, cap, handedness.
 
-### 1.6 确认 marker 类型（连续 vs 事件索引）
+### 1.6 Confirm Marker Type (Continuous vs Event Index)
 
-- 若 `marker.shape == (n_samples,)` 且大多数值为 0 → **连续标记**（参见模板 Option A）
-- 若 marker 是稀疏的事件列表（每行 `[onset, code]`）→ **事件索引**（参见模板 Option B）
+- If `marker.shape == (n_samples,)` and most values are 0 → **continuous marker** (see template Option A)
+- If marker is a sparse event list (each row is `[onset, code]`) → **event index** (see template Option B)
 
 ---
 
-## Phase 2: Kernel 生成
+## Phase 2: Kernel Generation
 
-根据 Phase 1 的提取结果，选择 Option A 或 Option B。
+Based on the extraction results from Phase 1, select Option A or Option B.
 
 ```python
 """<DatasetName> stage1 kernel for EEGUnity.
 
-<简短描述：数据集名称、范式、通道数、事件结构>
+<Short description: dataset name, paradigm, channel count, event structure>
 
-Source: <论文 DOI 或数据集 URL>
+Source: <paper DOI or dataset URL>
 """
 
 from __future__ import annotations
@@ -125,15 +125,15 @@ import numpy as np
 import scipy.io as sio
 
 
-# Source: <论文引用 / 数据集文档 URL>
-# Annotator: <claude-model-id>, <YYYY-MM-DD> — LLM 推断，需人类复核
+# Source: <paper citation / dataset documentation URL>
+# Annotator: <claude-model-id>, <YYYY-MM-DD> — inferred by LLM, needs human review
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     # "<sub_key>": {"age": "<age_str>", "sex": "<sex_str>"},
 }
 
-# Source: <数据集文档，说明各 marker 值含义>
-# Annotator: <claude-model-id>, <YYYY-MM-DD> — LLM 推断，需人类复核
-# 格式：{marker_int_value: "annotation_description"}
+# Source: <dataset documentation describing the meaning of each marker value>
+# Annotator: <claude-model-id>, <YYYY-MM-DD> — inferred by LLM, needs human review
+# Format: {marker_int_value: "annotation_description"}
 _EVENT_MAP: Dict[int, str] = {
     # 1: "left hand MI",
     # 2: "right hand MI",
@@ -141,7 +141,7 @@ _EVENT_MAP: Dict[int, str] = {
 }
 
 
-# ── Option A: 连续标记（每采样点一个 marker 值） ───────────────────────────────
+# ── Option A: Continuous marker (one marker value per sample) ───────────────────────────────
 
 def _build_annotations_from_continuous_marker(
     marker: np.ndarray,
@@ -196,7 +196,7 @@ def _build_annotations_from_continuous_marker(
     return mne.Annotations([], [], [])
 
 
-# ── Option B: 事件索引（稀疏的 [onset_sample, code] 列表） ────────────────────
+# ── Option B: Event index (sparse [onset_sample, code] list) ────────────────────
 
 def _build_annotations_from_event_index(
     events_array: np.ndarray,
@@ -230,7 +230,7 @@ class <DatasetName>Kernel:
         file_path = row["File Path"]
 
         # ── Subject ID extraction ────────────────────────────────────────────
-        # 根据 Phase 1.1 的文件命名规律调整
+        # Adjust based on file naming pattern from Phase 1.1
         subject_match = re.search(r"<pattern>", os.path.basename(file_path), re.IGNORECASE)
         if subject_match is None:
             raise ValueError(f"Cannot infer subject id from: {file_path!r}")
@@ -240,16 +240,16 @@ class <DatasetName>Kernel:
 
         # ── Step 1: Load .mat file ───────────────────────────────────────────
         mat = sio.loadmat(file_path, simplify_cells=True)
-        # 根据 Phase 1.2–1.4 的结果调整路径
+        # Adjust path based on Phase 1.2–1.4 results
         data_struct = mat["<top_key>"]
         marker = data_struct["<marker_key>"]
         sfreq = float(raw.info["sfreq"])
 
         # ── Step 2: Build annotations ────────────────────────────────────────
-        # 选择 Option A 或 Option B，删除另一个
-        # Option A（连续标记）:
+        # Select Option A or Option B, delete the other
+        # Option A (continuous marker):
         annotations = _build_annotations_from_continuous_marker(marker, sfreq, _EVENT_MAP)
-        # Option B（事件索引）:
+        # Option B (event index):
         # annotations = _build_annotations_from_event_index(marker, sfreq, _EVENT_MAP)
 
         raw.set_annotations(annotations)
@@ -274,19 +274,19 @@ KERNEL = <DatasetName>Kernel()
 
 ---
 
-## Phase 3: 验证清单（对照 KERNEL_RULEBOOK.md）
+## Phase 3: Validation Checklist (Against KERNEL_RULEBOOK.md)
 
-| 编号 | 规则 | 检查项 |
-|------|------|--------|
-| 第5条 | 接口 | 模块末尾有 `KERNEL = <ClassName>()` |
-| 第5条 | 接口 | `apply(self, udataset, raw, row) -> mne.io.BaseRaw` 签名正确 |
-| 第8条 | 描述 | `raw.info["description"]` 写入合法 JSON，包含 `original_description` + `eegunity_description` |
-| 第9条 | 描述 | `eegunity_description` 包含全部 5 个字段：`age`、`sex`、`amplifier`、`cap`、`handedness` |
-| 第10条 | age | `age` 为字符串类型（`"22"` 而非整数 `22`） |
-| 第11条 | sex | `sex` 为小写 `"male"`/`"female"`/`"unknown"`（不得有大写首字母） |
-| 第11条 | 来源 | `_SUBJECT_DICT` 有来源注释；LLM 填写须标注"需人类复核" |
-| 第12条 | 标签 | `_EVENT_MAP` 中的描述字符串为人类可读，而非裸数字 |
-| 第13条 | raw meta | 所有 annotation 均对应原始 marker 值，未引入语义派生 |
-| 第16条 | 外部文件 | `.mat` 读取逻辑有合理的错误提示（找不到字段时 raise 明确信息） |
-| 第17条 | 注释 | `_EVENT_MAP` 有来源注释（论文/文档 + 标注者 + 日期） |
-| 第3条 | LLM诚信 | LLM 推断的信息全部标注"需人类复核" |
+| Number | Rule | Check Item |
+|--------|------|------------|
+| Article 5 | Interface | Module ends with `KERNEL = <ClassName>()` |
+| Article 5 | Interface | `apply(self, udataset, raw, row) -> mne.io.BaseRaw` signature is correct |
+| Article 8 | Description | `raw.info["description"]` writes valid JSON containing `original_description` + `eegunity_description` |
+| Article 9 | Description | `eegunity_description` contains all 5 fields: `age`, `sex`, `amplifier`, `cap`, `handedness` |
+| Article 10 | age | `age` is a string type (`"22"` not integer `22`) |
+| Article 11 | sex | `sex` is lowercase `"male"`/`"female"`/`"unknown"` (no uppercase first letter) |
+| Article 11 | Source | `_SUBJECT_DICT` has source annotation; if filled by LLM, must mark "needs human review" |
+| Article 12 | Label | Description strings in `_EVENT_MAP` are human-readable, not bare numbers |
+| Article 13 | raw meta | All annotations correspond to original marker values, no semantic derivation introduced |
+| Article 16 | External file | `.mat` read logic has clear error messages (raises informative error when field not found) |
+| Article 17 | Annotation | `_EVENT_MAP` has source annotation (paper/document + annotator + date) |
+| Article 3 | LLM integrity | All LLM-inferred information is marked "needs human review" |

@@ -9,7 +9,7 @@ The Healthy Brain Network (HBN) EEG Release 1 is a large-scale developmental EEG
 
 ## File Scan Result
 
-> **Kernel SHA256**: `408c4de431d79f2ad2e58f06612a85921984275f00a6ad401b8527463f257b7f`
+> **Kernel SHA256**: `f6ba47d7656d84e5080b68cbd7441e4d0d62823f934c16c417d30ecfafd68901`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -17,69 +17,94 @@ The Healthy Brain Network (HBN) EEG Release 1 is a large-scale developmental EEG
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |---|---|---|---|---|
-| `9999` | 2272 | admin | raw | Session start marker |
-| `boundary` | 1456 | event | raw | Scene boundary in video stimulus |
-| `break cnt` | 2976 | event | raw | Trial phase onset: break |
-| `contrastChangeB1_start` | 204 | event | raw | Trial phase onset: block 1 start |
-| `contrastChangeB2_start` | 234 | event | raw | Trial phase onset: block 2 start |
-| `contrastChangeB3_start` | 286 | event | raw | Trial phase onset: block 3 start |
-| `contrastTrial_start` | 17768 | event | raw | Trial phase onset: trial start |
-| `contrast_response_correct` | 6701 | event | raw |  |
-| `contrast_response_incorrect` | 751 | event | raw |  |
-| `dot_no1_OFF` | 1200 | event | raw | Trial phase onset: dot 1 offset |
-| `dot_no1_ON` | 1200 | event | raw | Trial phase onset: dot 1 onset |
-| `dot_no2_OFF` | 2404 | event | raw | Trial phase onset: dot 2 offset |
-| `dot_no2_ON` | 2468 | event | raw | Trial phase onset: dot 2 onset |
-| `dot_no3_OFF` | 1200 | event | raw | Trial phase onset: dot 3 offset |
-| `dot_no3_ON` | 1248 | event | raw | Trial phase onset: dot 3 onset |
-| `dot_no4_OFF` | 1200 | event | raw | Trial phase onset: dot 4 offset |
-| `dot_no4_ON` | 1200 | event | raw | Trial phase onset: dot 4 onset |
-| `dot_no5_OFF` | 1200 | event | raw | Trial phase onset: dot 5 offset |
-| `dot_no5_ON` | 1200 | event | raw | Trial phase onset: dot 5 onset |
-| `dot_no6_OFF` | 1200 | event | raw | Trial phase onset: dot 6 offset |
-| `dot_no6_ON` | 1200 | event | raw | Trial phase onset: dot 6 onset |
-| `dot_no7_OFF` | 1589 | event | raw | Trial phase onset: dot 7 offset |
-| `dot_no7_ON` | 1584 | event | raw | Trial phase onset: dot 7 onset |
-| `dot_no8_OFF` | 792 | event | raw | Trial phase onset: dot 8 offset |
-| `dot_no8_ON` | 792 | event | raw | Trial phase onset: dot 8 onset |
-| `fixpoint_ON` | 26496 | event | raw | Trial phase onset: fixation point onset |
-| `instructed_toCloseEyes` | 1360 | event | raw | Trial phase onset: instruction to close eyes |
-| `instructed_toOpenEyes` | 1632 | event | raw | Trial phase onset: instruction to open eyes |
-| `learningBlock_1` | 244 | event | raw | Trial phase onset: learning block 1 |
-| `learningBlock_2` | 242 | event | raw | Trial phase onset: learning block 2 |
-| `learningBlock_3` | 240 | event | raw | Trial phase onset: learning block 3 |
-| `learningBlock_4` | 238 | event | raw | Trial phase onset: learning block 4 |
-| `learningBlock_5` | 236 | event | raw | Trial phase onset: learning block 5 |
-| `left_buttonPress` | 10190 | event | raw | Response: left button press |
-| `left_target` | 8486 | event | raw | Stimulus: left target presentation |
-| `newPage` | 388 | event | raw | Trial phase onset: new page/instruction screen |
-| `resting_start` | 278 | event | raw | Trial phase onset: resting period start |
-| `right_buttonPress` | 9268 | event | raw | Response: right button press |
-| `right_target` | 8502 | event | raw | Stimulus: right target presentation |
-| `seqLearning_start` | 244 | event | raw | Trial phase onset: sequence learning task start |
-| `seqLearning_stop` | 236 | event | raw | Trial phase onset: sequence learning task stop |
-| `stim_ON` | 26556 | event | raw | Stimulus: stimulus onset |
-| `surroundSuppB1_start` | 216 | event | raw | Trial phase onset: surround suppression block 1 start |
-| `surroundSuppB2_start` | 198 | event | raw | Trial phase onset: surround suppression block 2 start |
-| `symbolSearch_start` | 152 | event | raw | Trial phase onset: symbol search task start |
-| `trialResponse` | 2494 | event | raw | Response: trial response |
-| `video_start` | 1522 | event | raw | Trial phase onset: video start |
-| `video_stop` | 1446 | event | raw | Trial phase onset: video stop |
+| `9999` | 1136 | event | raw |  |
+| `boundary` | 728 | event | raw |  |
+| `break cnt` | 1488 | event | raw |  |
+| `contrastChangeB1_start` | 102 | event | raw |  |
+| `contrastChangeB2_start` | 117 | event | raw |  |
+| `contrastChangeB3_start` | 143 | event | raw |  |
+| `contrastTrial_start` | 8884 | event | raw |  |
+| `contrast_response_correct` | 6588 | event | super | Button response was correct for the preceding contrast target |
+| `contrast_response_incorrect` | 731 | event | super | Button response was incorrect for the preceding contrast target |
+| `dot_no1_OFF` | 600 | event | raw |  |
+| `dot_no1_ON` | 600 | event | raw |  |
+| `dot_no2_OFF` | 1202 | event | raw |  |
+| `dot_no2_ON` | 1234 | event | raw |  |
+| `dot_no3_OFF` | 600 | event | raw |  |
+| `dot_no3_ON` | 624 | event | raw |  |
+| `dot_no4_OFF` | 600 | event | raw |  |
+| `dot_no4_ON` | 600 | event | raw |  |
+| `dot_no5_OFF` | 600 | event | raw |  |
+| `dot_no5_ON` | 600 | event | raw |  |
+| `dot_no6_OFF` | 600 | event | raw |  |
+| `dot_no6_ON` | 600 | event | raw |  |
+| `dot_no7_OFF` | 793 | event | raw |  |
+| `dot_no7_ON` | 792 | event | raw |  |
+| `dot_no8_OFF` | 396 | event | raw |  |
+| `dot_no8_ON` | 396 | event | raw |  |
+| `fixpoint_ON` | 13248 | event | raw |  |
+| `instructed_toCloseEyes` | 680 | event | raw |  |
+| `instructed_toOpenEyes` | 816 | event | raw |  |
+| `learningBlock_1` | 122 | event | raw |  |
+| `learningBlock_2` | 121 | event | raw |  |
+| `learningBlock_3` | 120 | event | raw |  |
+| `learningBlock_4` | 119 | event | raw |  |
+| `learningBlock_5` | 118 | event | raw |  |
+| `left_buttonPress` | 5095 | event | raw |  |
+| `left_target` | 4243 | event | raw |  |
+| `newPage` | 194 | event | raw |  |
+| `resting_start` | 139 | event | raw |  |
+| `right_buttonPress` | 4634 | event | raw |  |
+| `right_target` | 4251 | event | raw |  |
+| `seqLearning_start` | 122 | event | raw |  |
+| `seqLearning_stop` | 118 | event | raw |  |
+| `stim_ON` | 13278 | event | raw |  |
+| `surroundSuppB1_start` | 108 | event | raw |  |
+| `surroundSuppB2_start` | 99 | event | raw |  |
+| `symbolSearch_start` | 76 | event | raw |  |
+| `trialResponse` | 1247 | event | raw |  |
+| `video_start` | 761 | event | raw |  |
+| `video_stop` | 723 | event | raw |  |
 
 ### Info
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | partial (1049/1342) | N/A |
-| `subject_sex` | partial (1049/1342) | N/A |
-| `device` | missing | N/A |
-| `attention` | partial (1020/1342) | e.g. -0.446, -0.425, -0.119 |
-| `ehq_total` | partial (1035/1342) | e.g. 71.17, 100.05, -53.36 |
-| `externalizing` | partial (1020/1342) | e.g. 0.325, 0.509, 0.366 |
-| `full_pheno` | partial (1049/1342) | e.g. Yes, No |
-| `internalizing` | partial (1020/1342) | e.g. 1.248, 1.006, 0.222 |
-| `p_factor` | partial (1020/1342) | e.g. -0.603, -0.258, 0.062 |
-| `seqLearning6target` | partial (1049/1342) | e.g. unavailable, available |
+| `subject_age` | complete | N/A |
+| `subject_sex` | complete | N/A |
+| `device` | complete | N/A |
+| `DespicableMe` | complete | e.g. available, unavailable |
+| `DiaryOfAWimpyKid` | complete | e.g. available, unavailable |
+| `FunwithFractals` | complete | e.g. available, unavailable |
+| `RestingState` | complete | e.g. available |
+| `ThePresent` | complete | e.g. available, unavailable |
+| `attention` | partial (1304/1342) | e.g. -0.446, -0.425, -0.119 |
+| `commercial_use` | complete | e.g. Yes |
+| `contrastChangeDetection_1` | complete | e.g. available, unavailable, caution |
+| `contrastChangeDetection_2` | complete | e.g. available, unavailable, caution |
+| `contrastChangeDetection_3` | complete | e.g. available, unavailable, caution |
+| `dataset` | complete | e.g. openneuro_ds005505 |
+| `dataset_root` | complete | e.g. <LOCAL_HOME>/eeg_dataset/openneuro_raw/ds005505 |
+| `eeg_reference` | complete | e.g. Cz |
+| `ehq_total` | partial (1325/1342) | e.g. 71.17, 100.05, -53.36 |
+| `externalizing` | partial (1304/1342) | e.g. 0.325, 0.509, 0.366 |
+| `full_pheno` | complete | e.g. Yes, No |
+| `internalizing` | partial (1304/1342) | e.g. 1.248, 1.006, 0.222 |
+| `manufacturer` | complete | e.g. Magtism EGI |
+| `manufacturers_model_name` | complete | e.g. 128-channel GSN 200 v.2.1 |
+| `p_factor` | partial (1304/1342) | e.g. -0.603, -0.258, 0.062 |
+| `power_line_frequency` | complete | e.g. 60 |
+| `recording_type` | complete | e.g. continuous |
+| `release_number` | complete | e.g. R1 |
+| `run` | partial (500/1342) | e.g. 1, 2, 3 |
+| `sampling_frequency` | complete | e.g. 500 |
+| `seqLearning6target` | complete | e.g. unavailable, available |
+| `seqLearning8target` | complete | e.g. available, unavailable |
+| `subject_id` | complete | e.g. sub-NDARAC904DMU, sub-NDARAG143ARJ, sub-NDARAM704GKZ |
+| `surroundSupp_1` | complete | e.g. available, unavailable |
+| `surroundSupp_2` | complete | e.g. available, unavailable |
+| `symbolSearch` | complete | e.g. available, caution, unavailable |
+| `task` | complete | e.g. DespicableMe, DiaryOfAWimpyKid, FunwithFractals |
 
 ## Tasks
 

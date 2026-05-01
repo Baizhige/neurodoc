@@ -1,5 +1,5 @@
-﻿"""
-scan_engine.py 鈥?Core logic for app_scan.
+""
+scan_engine.py —Core logic for app_scan.
 Handles: machine identity, locator cache, EEGUnity scan, analysis.md merge.
 """
 
@@ -71,7 +71,7 @@ def load_machine_config() -> Dict:
     p = get_config_path()
     if p.exists():
         cfg = json.loads(p.read_text(encoding="utf-8"))
-        # Migrate legacy single dataset_root 鈫?dataset_roots list
+        # Migrate legacy single dataset_root →dataset_roots list
         if "dataset_root" in cfg and "dataset_roots" not in cfg:
             old = cfg.pop("dataset_root")
             cfg["dataset_roots"] = [old] if old else []
@@ -860,7 +860,7 @@ def _completeness_label(ok: int, total: int) -> str:
 
 
 # ---------------------------------------------------------------------------
-# analysis.md 鈥?Status field helpers
+# analysis.md —Status field helpers
 # ---------------------------------------------------------------------------
 
 _STATUS_RE = re.compile(r"^(> \*\*Status\*\*:\s*)(\S+)\s*$", re.MULTILINE)
@@ -892,7 +892,7 @@ _SHA256_LINE_RE = re.compile(r"^> \*\*(?:Kernel )?SHA256\*\*:.*$", re.MULTILINE)
 _EEGUNITY_VER_RE = re.compile(r"^> \*\*EEGUnity Version\*\*:.*$", re.MULTILINE)
 _SCAN_TYPE_RE = re.compile(r"^> \*\*Scan Type\*\*:.*$", re.MULTILINE)
 
-# Legacy AUTO marker constants 鈥?kept only for stripping old-format documents
+# Legacy AUTO marker constants —kept only for stripping old-format documents
 _AUTO_EVENT_START = "<!-- AUTO-KERNEL-EVENT-STRUCTURE:START -->"
 _AUTO_EVENT_END = "<!-- AUTO-KERNEL-EVENT-STRUCTURE:END -->"
 _AUTO_SUBJECT_START = "<!-- AUTO-KERNEL-SUBJECT-INFO:START -->"
@@ -966,7 +966,7 @@ def _build_event_table(existing: Dict[str, Dict], new_counts: Dict[str, int], sa
 
 
 def _parse_info_table(md_block: str) -> Dict[str, Dict]:
-    """Parse ### Info table rows 鈫?{field: {completeness, notes}}."""
+    """Parse ### Info table rows →{field: {completeness, notes}}."""
     result = {}
     for m in re.finditer(
         r"^\|\s*`?([^`|\n]+?)`?\s*\|\s*([^|\n]*?)\s*\|\s*([^|\n]*?)\s*\|",
@@ -1027,7 +1027,7 @@ def merge_scan_results(
     fsr_m0 = _FILE_SCAN_RE.search(new_content)
     old_fsr_text = fsr_m0.group(0).rstrip() if fsr_m0 else ""
 
-    # 鈹€鈹€ 1. Update kernel fingerprint header 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    # ── 1. Update kernel fingerprint header ──────────────────────────────────
     fsr_m = _FILE_SCAN_RE.search(new_content)
     if fsr_m:
         block = fsr_m.group(2)
@@ -1057,7 +1057,7 @@ def merge_scan_results(
 
         new_content = new_content[:fsr_m.start(2)] + block + new_content[fsr_m.end(2):]
 
-    # 鈹€鈹€ 2. Update Event Structure table 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    # ── 2. Update Event Structure table ─────────────────────────────────────
     es_m = re.search(r"(### Event Structure\s*\n)(.*?)(?=\n###|\n## |\Z)", new_content, re.DOTALL)
     if es_m:
         es_inner = es_m.group(2)
@@ -1076,7 +1076,7 @@ def merge_scan_results(
 
         new_content = new_content[:es_m.start(2)] + new_es_inner + new_content[es_m.end(2):]
 
-    # 鈹€鈹€ 3. Update Info table (preserve Notes where Completeness unchanged) 鈹€鈹€鈹€
+    # ── 3. Update Info table (preserve Notes where Completeness unchanged) ───
     info_m = re.search(
         r"(### Info\s*\n\| Field.*?\n\|[-| ]+\n)(.*?)(?=\n###|\n## |\Z)",
         new_content, re.DOTALL,
@@ -1104,7 +1104,7 @@ def merge_scan_results(
                 inner = inner.rstrip("\n") + "\n" + new_candidate_line + "\n"
             new_content = new_content[:misc_m.start(2)] + inner + new_content[misc_m.end(2):]
 
-    # 鈹€鈹€ Produce single diff for entire File Scan Result block 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    # ── Produce single diff for entire File Scan Result block ───────────────
     fsr_m_new = _FILE_SCAN_RE.search(new_content)
     new_fsr_text = fsr_m_new.group(0).rstrip() if fsr_m_new else ""
 

@@ -1,4 +1,3 @@
-﻿#!/usr/bin/env python3
 """
 neurodoc - detect: batch check analysis.md and kernel files against semantic rulebook.
 
@@ -24,7 +23,7 @@ try:
 except ImportError:
     sys.exit("ERROR: PyYAML not installed. Run: pip install pyyaml")
 
-# 鈹€鈹€ Paths 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+# ── Paths ──────────────────────────────────────────────────────────────────
 AGENT_DIR = Path(__file__).parent
 sys.path.insert(0, str(AGENT_DIR))
 from paths import DATASET_DOCUMENT_DIR, KERNELS_DIR, PROGRESS_DIR, ROOT_DIR, RULEBOOK_DIR
@@ -42,7 +41,7 @@ _REQUIRED_SECTIONS = [
 ]
 
 
-# 鈹€鈹€ Section extraction helper 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+# ── Section extraction helper ───────────────────────────────────────────────
 
 def _extract_section(text: str, section_name: str) -> str:
     """Return the text of a ## section (from heading to next ## heading)."""
@@ -57,7 +56,7 @@ def _extract_section(text: str, section_name: str) -> str:
     return rest[: end_m.start() + 3] if end_m else rest
 
 
-# 鈹€鈹€ Cross-check registry 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+# ── Cross-check registry ────────────────────────────────────────────────────
 
 _CROSS_CHECKS: dict[str, Callable] = {}
 
@@ -68,7 +67,7 @@ def _cc(fn: Callable) -> Callable:
     return fn
 
 
-# 鈹€鈹€ Cross-check implementations 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+# ── Cross-check implementations ─────────────────────────────────────────────
 # Signature: (analysis_text, *, dataset_name="", kernel_text="") -> (violated, detail)
 
 
@@ -156,7 +155,7 @@ def target_events_exist(analysis_text: str, **_) -> tuple[bool, str]:
     return False, ""
 
 
-# 鈹€鈹€ v3 helpers: task-block extraction 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+# ── v3 helpers: task-block extraction ───────────────────────────────────────
 
 def _split_task_blocks(tasks_text: str) -> list[str]:
     """Split '## Tasks' section into Classical/Potential Task blocks."""
@@ -243,7 +242,7 @@ def _first_column_backticked(table_text: str) -> set[str]:
     return names
 
 
-# Expected Target Definition headers per Route 脳 Task Type.
+# Expected Target Definition headers per Route × Task Type.
 # Each entry is a canonical tuple of normalized column names (lowercased, unit-stripped).
 _TD_HEADERS: dict[tuple[str, str], tuple[list[str], ...]] = {
     ("event", "classification"): (["event id", "y", "meaning"],),
@@ -260,16 +259,16 @@ def _normalize_td_header(cells: list[str]) -> list[str]:
     normalized = []
     for c in cells:
         c = c.lower().strip()
-        # Strip parenthetical units, e.g. "value (unit)" 鈫?"value"
+        # Strip parenthetical units, e.g. "value (unit)" → "value"
         c = re.sub(r"\s*\([^)]*\)", "", c).strip()
         normalized.append(c)
     return normalized
 
 
-# 鈹€鈹€ v3 cross-checks 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+# ── v3 cross-checks ─────────────────────────────────────────────────────────
 
 
-# 鈹€鈹€ v3.1 dispatchability cross-checks (participants.tsv + factory dry-run) 鈹€鈹€鈹€鈹€
+# ── v3.1 dispatchability cross-checks (participants.tsv + factory dry-run) ──
 
 
 def _locate_participants_tsv(dataset_name: str) -> Path | None:
@@ -421,7 +420,7 @@ def task_dataset_dispatchable(analysis_text: str, **_) -> tuple[bool, str]:
 
 @_cc
 def target_def_schema_matches_route(analysis_text: str, **_) -> tuple[bool, str]:
-    """TD table header must match the Route 脳 Task Type canonical schema."""
+    """TD table header must match the Route × Task Type canonical schema."""
     tasks_text = _extract_section(analysis_text, "Tasks")
     if not tasks_text:
         return False, ""
@@ -476,7 +475,7 @@ def single_target_per_task(analysis_text: str, **_) -> tuple[bool, str]:
 
 @_cc
 def classification_task_has_multiple_classes(analysis_text: str, **_) -> tuple[bool, str]:
-    """Classification tasks must have 鈮? distinct y values in Target Definition."""
+    """Classification tasks must have ≥2 distinct y values in Target Definition."""
     tasks_text = _extract_section(analysis_text, "Tasks")
     if not tasks_text:
         return False, ""
@@ -515,7 +514,7 @@ def classification_y_zero_indexed_sequential(analysis_text: str, **_) -> tuple[b
     """Classification tasks: distinct y values must be exactly {0, 1, ..., N-1}.
 
     Applies to event classification (col 'y') and info classification (col 'y').
-    Many-to-one mapping is allowed (multiple Event IDs / Info values 鈫?same y).
+    Many-to-one mapping is allowed (multiple Event IDs / Info values → same y).
     Rejects: string y labels, gapped y (e.g. {0, 2}), 1-based y (e.g. {1, 2}).
     """
     tasks_text = _extract_section(analysis_text, "Tasks")
@@ -601,7 +600,7 @@ def derived_misc_requires_super_meta(analysis_text: str, **_) -> tuple[bool, str
 
 @_cc
 def segmentation_requires_empty_target_events(analysis_text: str, **_) -> tuple[bool, str]:
-    """epoch_by_segmentation_hdf5 鈬?target_events must be empty."""
+    """epoch_by_segmentation_hdf5 => target_events must be empty."""
     tasks_text = _extract_section(analysis_text, "Tasks")
     if not tasks_text:
         return False, ""
@@ -633,7 +632,7 @@ _EPOCH_METHOD_REQUIRED_KEYS: dict[str, set[str]] = {
 @_cc
 def epoch_parameters_complete(analysis_text: str, **_) -> tuple[bool, str]:
     """Each Task's Epoch Parameters must contain the minimum keys for its Epoch Method
-    (rulebook 绗?9鈥?2鏉?. Extra MNE keys are allowed; only the minimum set is enforced."""
+    (rulebook Articles 49–52). Extra MNE keys are allowed; only the minimum set is enforced."""
     tasks_text = _extract_section(analysis_text, "Tasks")
     if not tasks_text:
         return False, ""
@@ -643,7 +642,7 @@ def epoch_parameters_complete(analysis_text: str, **_) -> tuple[bool, str]:
         method = raw_method.strip().strip("`").lower()
         required = _EPOCH_METHOD_REQUIRED_KEYS.get(method)
         if not required:
-            # Unknown/absent Epoch Method 鈥?a different rule already flags this; skip.
+            # Unknown/absent Epoch Method — a different rule already flags this; skip.
             continue
         params = _task_field(block, "Epoch Parameters")
         present = {m.group(1) for m in re.finditer(r"\b(\w+)\s*=", params)}
@@ -762,15 +761,15 @@ def kernel_sha256_matches(
                     break
 
     if not kernel_path.exists():
-        return True, f"kernel file not found 鈥?cannot verify SHA256 (doc: {doc_sha[:16]}鈥?"
+        return True, f"kernel file not found — cannot verify SHA256 (doc: {doc_sha[:16]}…)"
 
     raw = kernel_path.read_bytes().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
     actual_sha = hashlib.sha256(raw).hexdigest()
     if actual_sha != doc_sha:
         return (
             True,
-            f"SHA256 mismatch: doc={doc_sha[:16]}鈥?file={actual_sha[:16]}鈥?"
-            f"鈥?rerun scan to update fingerprint",
+            f"SHA256 mismatch: doc={doc_sha[:16]}… file={actual_sha[:16]}…"
+            f"— rerun scan to update fingerprint",
         )
     return False, ""
 
@@ -912,7 +911,7 @@ def task_numbering_from_one(analysis_text: str, **_) -> tuple[bool, str]:
     return False, ""
 
 
-# 鈹€鈹€ Core check engine 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+# ── Core check engine ───────────────────────────────────────────────────────
 
 def _check_pattern(text: str, rule: dict) -> bool:
     """Return True if rule is violated."""
@@ -941,7 +940,7 @@ def _check_field_value(text: str, rule: dict) -> tuple[bool, str]:
     value = value.split("|")[0].strip()
 
     if value not in allowed:
-        return True, f"invalid value: {value!r} 鈥?allowed: {', '.join(allowed)}"
+        return True, f"invalid value: {value!r} — allowed: {', '.join(allowed)}"
     return False, ""
 
 
@@ -980,7 +979,7 @@ def _check_rule(
         fn_name = rule.get("function", "")
         fn = _CROSS_CHECKS.get(fn_name)
         if fn is None:
-            return False, f"(cross_check '{fn_name}' not yet implemented 鈥?add to detect.py)"
+            return False, f"(cross_check '{fn_name}' not yet implemented — add to detect.py)"
         violated, detail = fn(
             text, dataset_name=dataset_name, kernel_text=kernel_text
         )
@@ -997,7 +996,7 @@ def _check_rule(
     return violated, detail
 
 
-# 鈹€鈹€ In-memory checker (used by NeuroAudit server) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+# ── In-memory checker (used by NeuroAudit server) ───────────────────────────
 
 def load_rules(rulebook_path: Path | str | None = None) -> list[dict]:
     """Load the semantic rulebook. Caller-friendly wrapper around yaml.safe_load."""
@@ -1052,7 +1051,7 @@ def check_analysis_text(
     return violations
 
 
-# 鈹€鈹€ Dataset checker 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+# ── Dataset checker ─────────────────────────────────────────────────────────
 
 def check_dataset(
     dataset_name: str, rules: list[dict], severity_filter: str | None
@@ -1128,7 +1127,7 @@ def check_dataset(
     return violations
 
 
-# 鈹€鈹€ Report output 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+# ── Report output ───────────────────────────────────────────────────────────
 
 def _print_report(all_violations: list[dict], datasets: list[str]) -> None:
     SEV_ORDER = {"error": 0, "warning": 1, "info": 2}
@@ -1140,9 +1139,9 @@ def _print_report(all_violations: list[dict], datasets: list[str]) -> None:
     for v in all_violations:
         if v["dataset"] != current_ds:
             current_ds = v["dataset"]
-            print(f"\n{'鈹€' * 60}")
+            print(f"\n{'─' * 60}")
             print(f"  {current_ds}")
-            print(f"{'鈹€' * 60}")
+            print(f"{'─' * 60}")
         icon = {"error": "X", "warning": "!", "info": "i"}.get(v["severity"], "?")
         print(
             f"  [{icon}] [{v['severity'].upper():7}] [{v['target']:11}] {v['rule_id']}"
@@ -1150,7 +1149,7 @@ def _print_report(all_violations: list[dict], datasets: list[str]) -> None:
         if v.get("desc"):
             print(f"          {v['desc']}")
         if v.get("detail"):
-            print(f"          鈫?{v['detail']}")
+            print(f"          → {v['detail']}")
 
     print(f"\n{'=' * 60}")
     n_err = sum(1 for v in all_violations if v["severity"] == "error")
@@ -1166,7 +1165,7 @@ def _print_report(all_violations: list[dict], datasets: list[str]) -> None:
     print()
 
 
-# 鈹€鈹€ Main 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+# ── Main ────────────────────────────────────────────────────────────────────
 
 def main() -> None:
     parser = argparse.ArgumentParser(
@@ -1214,7 +1213,7 @@ def main() -> None:
             datasets.extend(d.strip() for d in item.split(",") if d.strip())
         datasets = list(dict.fromkeys(datasets))
 
-    print(f"[detect] Checking {len(datasets)} dataset(s)鈥n")
+    print(f"[detect] Checking {len(datasets)} dataset(s)…\n")
 
     all_violations: list[dict] = []
     for ds in datasets:

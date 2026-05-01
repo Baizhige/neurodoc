@@ -1,35 +1,35 @@
-# Kernel SKILL 文件索引
+# Kernel SKILL File Index
 
-本目录存放用于 AI 辅助生成 EEGUnity kernel 的 SKILL prompt 模板。
+This directory contains SKILL prompt templates for AI-assisted generation of EEGUnity kernels.
 
-使用方法：根据数据集的文件格式和标签存储方式选择对应 SKILL 文件，  
-将其完整内容提供给 AI（Claude Code / Codex / 其他 LLM），  
-同时提供数据集路径，AI 将自动探索数据集并生成 kernel。
+Usage: Select the appropriate SKILL file based on the dataset's file format and label storage method,  
+provide its full content to the AI (Claude Code / Codex / other LLM),  
+along with the dataset path, and the AI will automatically explore the dataset and generate a kernel.
 
 ---
 
-## 选择 SKILL 文件
+## Selecting a SKILL File
 
-| 数据集特征 | 使用 SKILL 文件 |
-|------------|-----------------|
-| GDF / BDF / EDF，事件在 MNE Annotations 中 | [SKILL_gdf_annotation_remap.md](SKILL_gdf_annotation_remap.md) |
-| `.mat` 文件（主文件或 sidecar），事件在 `.mat` 字段中 | [SKILL_mat_sidecar.md](SKILL_mat_sidecar.md) |
-| EEGUnity 无法解析的私有格式 | [SKILL_custom_format.md](SKILL_custom_format.md) |
-| BIDS 标准数据集（有 participants.tsv / events.tsv） | [SKILL_bids_standard.md](SKILL_bids_standard.md) |
+| Dataset Characteristics | Use SKILL File |
+|-------------------------|----------------|
+| GDF / BDF / EDF, events in MNE Annotations | [SKILL_gdf_annotation_remap.md](SKILL_gdf_annotation_remap.md) |
+| `.mat` files (main file or sidecar), events in `.mat` fields | [SKILL_mat_sidecar.md](SKILL_mat_sidecar.md) |
+| Proprietary format that EEGUnity cannot parse | [SKILL_custom_format.md](SKILL_custom_format.md) |
+| BIDS standard dataset (with participants.tsv / events.tsv) | [SKILL_bids_standard.md](SKILL_bids_standard.md) |
 
-## 决策树
+## Decision Tree
 
 ```
-数据集文件能被 MNE 直接读取？
-├── 否 → SKILL_custom_format.md
-└── 是 → 数据集遵循 BIDS 结构（有 participants.tsv）？
-          ├── 是 → SKILL_bids_standard.md
-          └── 否 → 事件标签在哪里？
-                    ├── MNE Annotations（GDF/BDF/EDF header）→ SKILL_gdf_annotation_remap.md
-                    └── 独立 .mat 文件字段 → SKILL_mat_sidecar.md
+Can the dataset files be read directly by MNE?
+├── No → SKILL_custom_format.md
+└── Yes → Dataset follows BIDS structure (has participants.tsv)?
+          ├── Yes → SKILL_bids_standard.md
+          └── No → Where are the event labels?
+                    ├── MNE Annotations (GDF/BDF/EDF header) → SKILL_gdf_annotation_remap.md
+                    └── Separate .mat file fields → SKILL_mat_sidecar.md
 ```
 
-## 规范参考
+## Specification Reference
 
-所有 SKILL 文件的验证清单均对照 [KERNEL_RULEBOOK.md](../KERNEL_RULEBOOK.md)。  
-生成的 kernel 应存放在 `neurodoc/kernels/` 目录中。
+The validation checklists in all SKILL files are aligned with [KERNEL_RULEBOOK.md](../KERNEL_RULEBOOK.md).  
+Generated kernels should be placed in the `neurodoc/kernels/` directory.

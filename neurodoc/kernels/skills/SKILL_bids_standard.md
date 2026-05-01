@@ -1,69 +1,69 @@
 # SKILL: BIDS Standard Dataset Kernel
 
-> **适用模式**: 数据集遵循 BIDS 标准，包含 `participants.tsv` 和 `*_events.tsv`，  
-> EEGUnity 可正常读取 EEG 文件（EDF / BDF / SET 等）。  
-> kernel 的主要任务是从 BIDS sidecar 文件中提取被试者元信息和事件结构。  
-> **参考示例**: `kernels/bids.py`（通用 BIDS kernel，可直接复用）  
-> **规范文档**: `kernels/KERNEL_RULEBOOK.md`
+> **Applicable mode**: The dataset follows the BIDS standard, contains `participants.tsv` and `*_events.tsv`,  
+> and EEGUnity can read EEG files normally (EDF / BDF / SET, etc.).  
+> The kernel's main task is to extract participant metadata and event structure from BIDS sidecar files.  
+> **Reference example**: `kernels/bids.py` (generic BIDS kernel, can be reused directly)  
+> **Specification document**: `kernels/KERNEL_RULEBOOK.md`
 
 ---
 
-## 你的角色
+## Your Role
 
-你是一名 EEGUnity kernel 工程师。目标：为给定 BIDS 数据集生成符合 `KERNEL_RULEBOOK.md` 的 Stage1 kernel。  
-**首先确认通用 BIDS kernel 是否已经满足需求；仅在需要数据集特定处理时才新建 kernel。**
+You are an EEGUnity kernel engineer. Goal: generate a Stage1 kernel for the given BIDS dataset that complies with `KERNEL_RULEBOOK.md`.  
+**First confirm whether the generic BIDS kernel already meets requirements; only create a new kernel when dataset-specific processing is needed.**
 
 ---
 
-## Phase 0: 是否需要新建 kernel？
+## Phase 0: Does a New Kernel Need to Be Created?
 
-首先尝试使用通用 BIDS kernel（`kernels/bids.py`）：
+First try using the generic BIDS kernel (`kernels/bids.py`):
 
 ```python
-# neurodoc/kernels/bids.py 已实现：
-# - 从 participants.tsv 提取 age / sex
-# - 从 *_events.tsv 或 raw.annotations 提取事件摘要
-# - 写入 eegunity_description（不包含 amplifier/cap/handedness）
+# neurodoc/kernels/bids.py already implements:
+# - Extract age / sex from participants.tsv
+# - Extract event summary from *_events.tsv or raw.annotations
+# - Write to eegunity_description (does not include amplifier/cap/handedness)
 ```
 
-只有在以下情况下才需要新建数据集专属 kernel：
-1. 通道名称不标准，需要重命名
-2. 事件需要重映射（events.tsv 的标签格式特殊）
-3. 需要读取额外的 sidecar 文件（如 `.mat`、`.json`）
-4. amplifier / cap / handedness 有已知值需要硬编码
-5. 存在多范式文件需要范式前缀
+A new dataset-specific kernel is only needed in the following cases:
+1. Channel names are non-standard and need renaming
+2. Events need remapping (events.tsv label format is unusual)
+3. Additional sidecar files need to be read (e.g., `.mat`, `.json`)
+4. amplifier / cap / handedness have known values that need to be hardcoded
+5. Multi-paradigm files exist that require paradigm prefixes
 
-若通用 kernel 已满足，直接在 analysis.md 中指定 `bids.py` 即可，无需新建文件。
+If the generic kernel is sufficient, simply specify `bids.py` in analysis.md — no new file is needed.
 
 ---
 
-## Phase 1: 数据集探索（自动提取）
+## Phase 1: Dataset Exploration (Auto-extraction)
 
-### 1.1 确认 BIDS 结构
+### 1.1 Confirm BIDS Structure
 
 ```bash
-# 检查顶层结构
+# Check top-level structure
 ls <dataset_path>/
-# 期望：participants.tsv, dataset_description.json, sub-*/ 目录
+# Expected: participants.tsv, dataset_description.json, sub-*/ directories
 
-# 检查受试者目录结构
+# Check subject directory structure
 ls <dataset_path>/sub-01/
-# 期望：eeg/ 目录（或 ses-XX/eeg/）
+# Expected: eeg/ directory (or ses-XX/eeg/)
 ```
 
-### 1.2 读取 participants.tsv
+### 1.2 Read participants.tsv
 
 ```python
 import pandas as pd
 df = pd.read_csv("<dataset_path>/participants.tsv", sep="\t")
 print(df.head(10))
-print("列名:", df.columns.tolist())
-print("行数:", len(df))
+print("columns:", df.columns.tolist())
+print("row count:", len(df))
 ```
 
-记录：`participant_id` 列的格式，`age` 列（是否存在，格式），`sex`/`gender` 列（值的格式）。
+Record: format of the `participant_id` column, `age` column (whether it exists, format), `sex`/`gender` column (value format).
 
-### 1.3 读取一个样本 EEG 文件
+### 1.3 Read a Sample EEG File
 
 ```bash
 find <dataset_path> -name "*.edf" -o -name "*.bdf" -o -name "*.set" | head -3
@@ -77,9 +77,9 @@ print("ch_types:", raw.get_channel_types())
 print("sfreq:", raw.info['sfreq'])
 ```
 
-记录：是否存在非标准通道名。
+Record: whether non-standard channel names exist.
 
-### 1.4 读取 events.tsv
+### 1.4 Read events.tsv
 
 ```bash
 find <dataset_path> -name "*_events.tsv" | head -5
@@ -88,43 +88,43 @@ find <dataset_path> -name "*_events.tsv" | head -5
 ```python
 events_df = pd.read_csv("<sample_events_tsv>", sep="\t")
 print(events_df.head(10))
-print("列名:", events_df.columns.tolist())
-# 标准列：onset, duration, trial_type, value, stim_type
+print("columns:", events_df.columns.tolist())
+# Standard columns: onset, duration, trial_type, value, stim_type
 ```
 
-记录：事件标签列名，所有唯一标签值及其含义。
+Record: event label column name, all unique label values and their meanings.
 
-### 1.5 检查 dataset_description.json
+### 1.5 Check dataset_description.json
 
 ```python
 import json
 with open("<dataset_path>/dataset_description.json") as f:
     desc = json.load(f)
 print(json.dumps(desc, indent=2))
-# 查找: Name, Authors, ReferencesAndLinks, EEGReference 等
+# Look for: Name, Authors, ReferencesAndLinks, EEGReference, etc.
 ```
 
-记录：数据集名称、引用论文 DOI，设备信息（若有）。
+Record: dataset name, reference paper DOI, device information (if available).
 
-### 1.6 确认通用 bids.py 是否可用
+### 1.6 Confirm Whether Generic bids.py Is Usable
 
-| 检查项 | 结果 |
-|--------|------|
-| participants.tsv 存在且有 age / sex 列 | ✓ / ✗ |
-| 通道名符合 standard_1020 | ✓ / ✗ |
-| events.tsv 标签已是可读字符串 | ✓ / ✗ |
-| amplifier / cap 有已知硬编码值 | ✓ / ✗ |
-| 无多范式歧义 | ✓ / ✗ |
+| Check Item | Result |
+|------------|--------|
+| participants.tsv exists and has age / sex columns | ✓ / ✗ |
+| Channel names conform to standard_1020 | ✓ / ✗ |
+| events.tsv labels are already human-readable strings | ✓ / ✗ |
+| amplifier / cap have known hardcoded values | ✓ / ✗ |
+| No multi-paradigm ambiguity | ✓ / ✗ |
 
-若全为 ✓，使用通用 `bids.py`，本 SKILL 流程结束。  
-若有 ✗，继续 Phase 2 新建专属 kernel。
+If all ✓, use the generic `bids.py` — this SKILL workflow ends here.  
+If any ✗, proceed to Phase 2 to create a dedicated kernel.
 
 ---
 
-## Phase 2: 专属 Kernel 生成
+## Phase 2: Dedicated Kernel Generation
 
-仅在通用 `bids.py` 不满足时使用此模板。  
-可从 `bids.py` 的 `BIDSKernel` 继承，只覆盖需要扩展的部分。
+Only use this template when the generic `bids.py` is insufficient.  
+You can inherit from `bids.py`'s `BIDSKernel` and only override the parts that need extension.
 
 ```python
 """<DatasetName> stage1 kernel for EEGUnity.
@@ -132,7 +132,7 @@ print(json.dumps(desc, indent=2))
 Extends the generic BIDS kernel with dataset-specific channel mapping
 and/or hardcoded device metadata.
 
-Source: <数据集 DOI 或 OpenNeuro 链接>
+Source: <dataset DOI or OpenNeuro link>
 """
 
 from __future__ import annotations
@@ -144,23 +144,23 @@ from typing import Any, Dict
 
 import mne
 
-# 继承通用 BIDS kernel（已处理 participants.tsv / events.tsv）
+# Inherit generic BIDS kernel (already handles participants.tsv / events.tsv)
 from kernels.bids import BIDSKernel
 
 
-# Source: <数据集文档>
-# Annotator: <claude-model-id>, <YYYY-MM-DD> — LLM 推断，需人类复核
-# 仅在通道名不标准时添加此字典
+# Source: <dataset documentation>
+# Annotator: <claude-model-id>, <YYYY-MM-DD> — inferred by LLM, needs human review
+# Only add this dictionary when channel names are non-standard
 _CHANNEL_RENAME_MAP: Dict[str, str] = {
-    # "<原始名>": "<标准 10-20 名>",
+    # "<original_name>": "<standard 10-20 name>",
 }
 
-# 已知的设备元信息（若数据集文档明确记载）
-# Source: <数据集文档 / 论文>
-# Annotator: <claude-model-id>, <YYYY-MM-DD> — LLM 推断，需人类复核
-_AMPLIFIER = "<amplifier_str>"   # 未知写 "unknown"
-_CAP = "<cap_str>"               # 未知写 "unknown"
-_HANDEDNESS = "<handedness_str>" # 未知写 "unknown"
+# Known device metadata (if explicitly documented in the dataset)
+# Source: <dataset documentation / paper>
+# Annotator: <claude-model-id>, <YYYY-MM-DD> — inferred by LLM, needs human review
+_AMPLIFIER = "<amplifier_str>"   # write "unknown" if not known
+_CAP = "<cap_str>"               # write "unknown" if not known
+_HANDEDNESS = "<handedness_str>" # write "unknown" if not known
 
 
 @dataclass
@@ -172,7 +172,7 @@ class <DatasetName>Kernel(BIDSKernel):
     def apply(self, udataset, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
         file_path = row["File Path"]
 
-        # ── Step 1: Rename channels (仅在存在非标准名时) ────────────────────
+        # ── Step 1: Rename channels (only when non-standard names exist) ────────────────────
         if _CHANNEL_RENAME_MAP:
             rename_map = {
                 ch: _CHANNEL_RENAME_MAP[ch]
@@ -209,26 +209,26 @@ KERNEL = <DatasetName>Kernel()
 
 ---
 
-## Phase 3: 验证清单（对照 KERNEL_RULEBOOK.md）
+## Phase 3: Validation Checklist (Against KERNEL_RULEBOOK.md)
 
-| 编号 | 规则 | 检查项 |
-|------|------|--------|
-| 第5条 | 接口 | 模块末尾有 `KERNEL = <ClassName>()` |
-| 第5条 | 接口 | `apply(self, udataset, raw, row) -> mne.io.BaseRaw` 签名正确 |
-| 第6条 | 通道 | channel rename 在 `set_montage()` **之前**调用 |
-| 第6条 | 通道 | `set_montage` 使用 `on_missing="ignore"` |
-| 第7条 | 来源 | `_CHANNEL_RENAME_MAP` 有来源注释（若存在） |
-| 第8条 | 描述 | `raw.info["description"]` 写入合法 JSON，包含 `original_description` + `eegunity_description` |
-| 第9条 | 描述 | `eegunity_description` 包含全部 5 个字段：`age`、`sex`、`amplifier`、`cap`、`handedness` |
-| 第10条 | age | `age` 为字符串；未知时为 `"unknown"` 而非 `"0"` |
-| 第11条 | sex | `sex` 为小写 `"male"`/`"female"`/`"unknown"` |
-| 第13条 | raw meta | 若修改了 annotations，确认仍为 raw meta（无语义派生） |
-| 第17条 | 注释 | `_CHANNEL_RENAME_MAP`、`_AMPLIFIER`/`_CAP` 有来源注释 |
-| 第3条 | LLM诚信 | LLM 推断的信息全部标注"需人类复核" |
+| Number | Rule | Check Item |
+|--------|------|------------|
+| Article 5 | Interface | Module ends with `KERNEL = <ClassName>()` |
+| Article 5 | Interface | `apply(self, udataset, raw, row) -> mne.io.BaseRaw` signature is correct |
+| Article 6 | Channel | channel rename is called **before** `set_montage()` |
+| Article 6 | Channel | `set_montage` uses `on_missing="ignore"` |
+| Article 7 | Source | `_CHANNEL_RENAME_MAP` has source annotation (if present) |
+| Article 8 | Description | `raw.info["description"]` writes valid JSON containing `original_description` + `eegunity_description` |
+| Article 9 | Description | `eegunity_description` contains all 5 fields: `age`, `sex`, `amplifier`, `cap`, `handedness` |
+| Article 10 | age | `age` is a string; `"unknown"` when not known, not `"0"` |
+| Article 11 | sex | `sex` is lowercase `"male"`/`"female"`/`"unknown"` |
+| Article 13 | raw meta | If annotations were modified, confirm they remain raw meta (no semantic derivation) |
+| Article 17 | Annotation | `_CHANNEL_RENAME_MAP`, `_AMPLIFIER`/`_CAP` have source annotations |
+| Article 3 | LLM integrity | All LLM-inferred information is marked "needs human review" |
 
 ---
 
-## 附：通用 bids.py 的局限性说明
+## Appendix: Limitations of the Generic bids.py
 
-通用 `bids.py` 不填写 `amplifier`、`cap`、`handedness` 字段（写入 `"unknown"`），  
-且不做通道重命名。如果数据集有这些已知信息，必须新建专属 kernel 并硬编码。
+The generic `bids.py` does not fill in the `amplifier`, `cap`, or `handedness` fields (writes `"unknown"`),  
+and does not perform channel renaming. If the dataset has this known information, a dedicated kernel must be created with hardcoded values.

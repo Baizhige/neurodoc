@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+!/usr/bin/env python3
 """
 neurodoc - generate kernel + analysis.md from scratch.
 
@@ -28,7 +28,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 
-# 鈹€鈹€ Path setup 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+# ── Path setup ──────────────────────────────────────────────────────────────
 AGENT_DIR = Path(__file__).parent
 
 sys.path.insert(0, str(AGENT_DIR))
@@ -38,7 +38,7 @@ from paths import LOGS_DIR, MACHINE_CONFIG_DIR
 from pipeline.runner import Pipeline, load_progress
 
 
-# 鈹€鈹€ Config 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+# ── Config ──────────────────────────────────────────────────────────────────
 
 def _find_config(explicit: str | None) -> dict:
     if explicit:
@@ -51,7 +51,7 @@ def _find_config(explicit: str | None) -> dict:
     return json.loads(candidates[-1].read_text(encoding="utf-8"))
 
 
-# 鈹€鈹€ Per-dataset worker 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+# ── Per-dataset worker ───────────────────────────────────────────────────────
 
 def _run_one(dataset_name: str, cfg: dict, fresh: bool, stop_event: threading.Event) -> dict:
     LOGS_DIR.mkdir(parents=True, exist_ok=True)
@@ -100,7 +100,7 @@ def _run_one(dataset_name: str, cfg: dict, fresh: bool, stop_event: threading.Ev
     }
 
 
-# 鈹€鈹€ Summary table 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+# ── Summary table ────────────────────────────────────────────────────────────
 
 def _print_summary(results: list[dict]) -> None:
     print("\n" + "=" * 80)
@@ -119,7 +119,7 @@ def _print_summary(results: list[dict]) -> None:
     print(f"  Done: {n_done}/{len(results)}  |  Errors: {n_fail}  |  Logs: {LOGS_DIR}/\n")
 
 
-# 鈹€鈹€ Main 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+# ── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
     parser = argparse.ArgumentParser(description="neurodoc: generate kernel + analysis.md")
@@ -145,7 +145,7 @@ def main():
     cfg["num_workers"] = eegunity_workers
 
     print(f"[generate] Datasets ({len(datasets)}): {', '.join(datasets[:5])}{'...' if len(datasets) > 5 else ''}")
-    print(f"[generate] Workers: {workers} batch 脳 {eegunity_workers} eegunity")
+    print(f"[generate] Workers: {workers} batch × {eegunity_workers} eegunity")
     print(f"[generate] Fresh: {args.fresh} | Logs: {LOGS_DIR}/")
     llm_cfg = resolve_llm_config(cfg)
     print(
@@ -158,7 +158,7 @@ def main():
     completed_results: list[dict] = []
 
     def _sigint_handler(sig, frame):
-        print("\n[generate] Interrupt 鈥?pausing all pipelines...")
+        print("\n[generate] Interrupt —pausing all pipelines...")
         stop_event.set()
 
     signal.signal(signal.SIGINT, _sigint_handler)

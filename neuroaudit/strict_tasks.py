@@ -109,6 +109,10 @@ Formatting requirements for tasks_section:
 - `Epoch Parameters` MUST be one single line of comma-separated `key = value` pairs.
 - `Target Definition` MUST be a markdown table placed immediately under `- **Target Definition**:`.
 - `Evidence` MUST be a markdown bullet list placed immediately under `- **Evidence**:`.
+- Every Evidence bullet MUST use the exact format `- <ref> — <description>` when a
+  description exists. Use a literal em dash with one space on each side: ` — `.
+- Do NOT use `DOI:` prefixes.
+- Do NOT use ` - ` as the separator between ref and description.
 
 Canonical task skeleton:
 ### Classical Task 1: Example title
@@ -123,7 +127,7 @@ Canonical task skeleton:
   | `event_a` | 0 | class A |
   | `event_b` | 1 | class B |
 - **Evidence**:
-  - 10.0000/example - concise evidence
+  - 10.0000/example — concise evidence
 - **Notes**: optional notes
 
 Output JSON only:
@@ -496,10 +500,33 @@ def _parse_evidence_lines(block: str) -> list[str]:
     for raw in field.splitlines():
         line = raw.strip()
         if line.startswith("- "):
-            lines.append(line)
+            line = line[2:].strip()
         elif line:
-            lines.append("- " + line.lstrip("* ").strip())
+            line = line.lstrip("* ").strip()
+        else:
+            continue
+        normalized = _normalize_evidence_line(line)
+        if normalized:
+            lines.append(normalized)
     return lines
+
+
+def _normalize_evidence_line(line: str) -> str:
+    text = (line or "").strip()
+    if not text:
+        return ""
+    text = re.sub(r"^DOI:\s*", "", text, flags=re.IGNORECASE).strip()
+    if " — " in text:
+        ref, desc = text.split(" — ", 1)
+        ref = ref.strip()
+        desc = desc.strip()
+        return f"- {ref} — {desc}" if ref and desc else (f"- {ref}" if ref else "")
+    if " - " in text:
+        ref, desc = text.split(" - ", 1)
+        ref = ref.strip()
+        desc = desc.strip()
+        return f"- {ref} — {desc}" if ref and desc else (f"- {ref}" if ref else "")
+    return f"- {text}"
 
 
 def _parse_task_block(block: str) -> dict[str, Any]:
