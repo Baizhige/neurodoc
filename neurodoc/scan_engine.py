@@ -1,4 +1,4 @@
-""
+"""
 scan_engine.py —Core logic for app_scan.
 Handles: machine identity, locator cache, EEGUnity scan, analysis.md merge.
 """

@@ -66,18 +66,22 @@ The Healthy Brain Network (HBN) EEG Release 1 is a large-scale developmental EEG
 | `video_start` | 761 | event | raw |  |
 | `video_stop` | 723 | event | raw |  |
 
+### MISC Label Summary
+
+| Channel | Source | Meta | Notes |
+|---|---|---|---|
+| `response_time` | derived (kernel) | super | Latency in seconds from left_target/right_target onset to the first valid left_buttonPress/right_buttonPress in the same contrast trial |
+
 ### Info
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
-| `device` | complete | N/A |
 | `DespicableMe` | complete | e.g. available, unavailable |
 | `DiaryOfAWimpyKid` | complete | e.g. available, unavailable |
 | `FunwithFractals` | complete | e.g. available, unavailable |
 | `RestingState` | complete | e.g. available |
 | `ThePresent` | complete | e.g. available, unavailable |
+| `age` | complete | e.g. 11.3386, 7.6648, 10.9449 |
 | `attention` | partial (1304/1342) | e.g. -0.446, -0.425, -0.119 |
 | `commercial_use` | complete | e.g. Yes |
 | `contrastChangeDetection_1` | complete | e.g. available, unavailable, caution |
@@ -85,6 +89,7 @@ The Healthy Brain Network (HBN) EEG Release 1 is a large-scale developmental EEG
 | `contrastChangeDetection_3` | complete | e.g. available, unavailable, caution |
 | `dataset` | complete | e.g. openneuro_ds005505 |
 | `dataset_root` | complete | e.g. <LOCAL_HOME>/eeg_dataset/openneuro_raw/ds005505 |
+| `device` | complete | e.g. Magtism EGI 128-channel GSN 200 v.2.1 |
 | `eeg_reference` | complete | e.g. Cz |
 | `ehq_total` | partial (1325/1342) | e.g. 71.17, 100.05, -53.36 |
 | `externalizing` | partial (1304/1342) | e.g. 0.325, 0.509, 0.366 |
@@ -100,6 +105,7 @@ The Healthy Brain Network (HBN) EEG Release 1 is a large-scale developmental EEG
 | `sampling_frequency` | complete | e.g. 500 |
 | `seqLearning6target` | complete | e.g. unavailable, available |
 | `seqLearning8target` | complete | e.g. available, unavailable |
+| `sex` | complete | e.g. F, M |
 | `subject_id` | complete | e.g. sub-NDARAC904DMU, sub-NDARAG143ARJ, sub-NDARAM704GKZ |
 | `surroundSupp_1` | complete | e.g. available, unavailable |
 | `surroundSupp_2` | complete | e.g. available, unavailable |
