@@ -9,14 +9,14 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 
 ## File Scan Result
 
-> **Kernel SHA256**: `cc4dd8f39d0f4fc06cf3802de20a5097bf76db5896df6e28426930390b5def20`
+> **Kernel SHA256**: `edceca8fb0342cae25894706ac98f4bee2577ea60c03235c17862ab9d5cd2415`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|---|---|---|---|---|
 | `1` | 125 | event | raw | Trial onset: Low valence, low arousal targeted affect |
 | `101` | 19 | event | raw | Music stimulus onset: piece 1 from stimuli list |
 | `102` | 18 | event | raw | Music stimulus onset: piece 2 from stimuli list |
@@ -116,20 +116,27 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 | `7` | 258 | event | raw | Trial onset: Low valence, high arousal targeted affect |
 | `9` | 368 | event | raw | Trial onset: High valence, high arousal targeted affect |
 
-
 ### MISC Label Summary
+
 | Channel | Source | Meta | Notes |
 |---|---|---|---|
-| `GSR` | native (raw misc in EEG file) | raw | Verify channel role and unit |
 | `GSR` | derived (per Task Notes) | super | Super Meta — kernel derives per-segmentation value |
-- **Candidate Labels**: `GSR`
+| `VA1` | native (raw misc in EEG file) | raw | Verify channel role and unit |
+| `VA2` | native (raw misc in EEG file) | raw | Verify channel role and unit |
+| `VAtarg` | native (raw misc in EEG file) | raw | Verify channel role and unit |
 
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
-| `device` | missing | N/A |
+| `device` | complete | N/A |
+| `cap` | complete | e.g. 32-channel EEG cap |
+| `dataset` | complete | e.g. openneuro_ds002722 |
+| `eeg_reference` | complete | e.g. placed on FCz |
+| `subject_id` | complete | e.g. sub-01, sub-02, sub-03 |
+| `task` | complete | e.g. Run |
 
 ## Tasks
 
@@ -384,4 +391,4 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 ## Kernel Responsibilities
 
 > **Super Meta Required**: Yes
-> **Status**: wait_kernel_update
+> **Status**: wait_manual_review
