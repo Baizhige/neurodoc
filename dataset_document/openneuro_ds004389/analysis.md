@@ -40,7 +40,7 @@ Simultaneous EEG, epidural spinal cord (ESG), nerve conduction (ENG), and EMG re
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, overlap = null, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**:
 
 | Event | y | Meaning |
@@ -61,7 +61,7 @@ Simultaneous EEG, epidural spinal cord (ESG), nerve conduction (ENG), and EMG re
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, overlap = null, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**:
 
 | Event | y | Meaning |
@@ -77,7 +77,7 @@ Simultaneous EEG, epidural spinal cord (ESG), nerve conduction (ENG), and EMG re
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, overlap = null, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**:
 
 | Event | y | Meaning |
@@ -91,7 +91,7 @@ Simultaneous EEG, epidural spinal cord (ESG), nerve conduction (ENG), and EMG re
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, overlap = null, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**:
 
 | Event | y | Meaning |

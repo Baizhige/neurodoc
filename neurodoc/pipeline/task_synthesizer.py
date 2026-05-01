@@ -42,133 +42,6 @@ ANTI-HALLUCINATION RULES:
 """
 
 
-_EPOCH_ALIGNMENT_SYSTEM = """\
-You are an EEG preprocessing expert. Given a dataset's description and event structure,
-determine the correct epoch alignment and recommended parameters.
-
-Output ONLY valid JSON:
-{
-  "alignment": "onset|offset|mixed|unclear",
-  "cue_duration_s": null,
-  "recommendations": [
-    {
-      "paradigm_label": "<short name>",
-      "epoch_method": "epoch_by_event_hdf5|epoch_by_long_event_hdf5|epoch_by_segmentation_hdf5",
-      "tmin": 0.0,
-      "tmax": 4.0,
-      "overlap": null,
-      "segment_length": null,
-      "reasoning": "<2-3 sentences>"
-    }
-  ],
-  "complications": "",
-  "kernel_notes": ""
-}"""
-
-
-_TASK_SYNTHESIS_SYSTEM = """\
-You are an EEG machine learning task documentation expert.
-Write the complete "## Tasks" section of an analysis.md file.
-
-=== Task Template v3 (MUST follow this exact bullet-list format) ===
-### Classical Task N: <concise name>
-- **Task Type**: classification | regression
-- **Epoch Method**: `epoch_by_event_hdf5 | epoch_by_long_event_hdf5 | epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: <minimum required keys per method — see Epoch Parameters rules below>
-- **Label Route**: `event | misc | info`
-- **Label Field**: `<channel_or_column_name>`     # ONLY when Label Route ∈ {misc, info}
-- **Meta Level**: raw | super
-- **Target Definition**:
-  <route-specific table — see schema matrix below>
-- **Evidence**:
-  - DOI: <doi_or_ref> — <description>
-- **Notes**: <free-form task annotation; recommended for super-meta derivation steps and parameter-inference rationale>
-
-=== Epoch Parameters rules (MANDATORY — detect.py rule epoch_parameters_complete, severity=error) ===
-Every Task MUST list AT LEAST these keys in Epoch Parameters for its declared Epoch Method:
-  * epoch_by_event_hdf5       — tmin, tmax, target_events
-  * epoch_by_long_event_hdf5  — tmin, tmax, overlap, target_events
-  * epoch_by_segmentation_hdf5 — segment_length, overlap (target_events MUST be [])
-Format examples:
-  epoch_by_event_hdf5:       `tmin = 0 s, tmax = 3 s, target_events = [\`left\`, \`right\`]`
-  epoch_by_long_event_hdf5:  `tmin = 0 s, tmax = 4 s, overlap = 0.5, target_events = [\`rest\`]`
-  epoch_by_segmentation_hdf5: `segment_length = 4 s, overlap = 0.5, target_events = []`
-Additional MNE.Epoch parameters (e.g. baseline, reject, picks) are allowed as extra `key = value` pairs.
-If you do not have ground-truth values for the required keys, DROP the task — do not leave them blank or placeholder.
-
-=== Three Task Archetypes (choose one per task) ===
-
-ARCHETYPE A — Event is the label
-  Example: left_target → class 0, right_target → class 1
-  Route=event, Meta Level=raw (usually), NO Label Field bullet
-
-ARCHETYPE B — Event anchors the epoch, label lives elsewhere
-  B1 — Native misc: label = numeric column of events.tsv (e.g. `response_time`, `correct`)
-       Route=misc, Meta Level=raw, Label Field = column name, Task Type=regression
-  B2 — Derived misc: label = derived from participants.tsv (e.g. `p_factor`, clinical score)
-       Route=misc, Meta Level=super, Label Field = new misc channel name, Task Type=regression
-  B3 — Native info: label = raw participants.tsv column used directly (e.g. `subject_sex`)
-       Route=info, Meta Level=raw, Label Field = column name
-
-ARCHETYPE C — No event; segmentation + subject-level label
-  Epoch Method = epoch_by_segmentation_hdf5; target_events = [] (empty)
-  Label Route = misc (derived) or info (native). Same Label Field rules as above.
-
-=== Target Definition schema matrix (Route × Task Type) ===
-
-  Label Route    Task Type           Table columns
-  ─────────────────────────────────────────────────────────────────
-  event          classification      | Event ID | y | Meaning |
-  event          regression          | Event ID | Value | Meaning |   (rare)
-  misc           regression          | MISC Channel | Value (unit) | Notes |
-  misc           classification      FORBIDDEN — use event or info instead
-  info           classification      | Info Field | Value | y | Meaning |
-  info           regression          | Info Field | Range (unit) | Notes |
-
-=== HARD RULES (violations will be stripped by post-synthesis guards) ===
-1. ONE LABEL FIELD PER TASK. Multi-dimension labels (e.g. 4 psychopathology factors)
-   MUST be split into N separate tasks — one per Label Field.
-2. CLASSIFICATION ≥ 2 DISTINCT y VALUES. A classification task with only one class in
-   Target Definition is invalid. Either convert to regression, reframe with a contrastive
-   class (e.g. stimulus vs baseline/rest), or DROP the task.
-3. misc ROUTE IS REGRESSION-ONLY. If you want discrete labels from a misc value, put
-   the derivation into the kernel and use Route=info or Route=event.
-4. LABEL FIELD REQUIRED iff Route ∈ {misc, info}; FORBIDDEN when Route=event.
-5. DERIVED MISC ⇒ Meta Level=super. Notes SHOULD describe the derivation step
-   (how the kernel creates the misc channel from participants.tsv or elsewhere).
-   (Recommended, not enforced by detect.py — the Notes field is freeform.)
-6. GROUND TRUTH: If the Label Field is not present in events.tsv numeric columns,
-   participants.tsv columns, OR the native misc channel list provided below, DROP the task.
-   Do not invent fields.
-7. segmentation ⇒ target_events = [].
-
-=== Task type classification ===
-- "Classical Task": ≥1 reference with classification=relevant AND a real DOI/URL ref.
-- "Potential Task": partial references, or plausible from paradigm alone.
-- ALL Classical Tasks before all Potential Tasks.
-- Numbering starts at 1 within each type.
-
-=== Format rules ===
-- Each field: "- **Field**: value" bullet (NOT a wrapping markdown table).
-- Target Definition table MUST be indented 2 spaces under "- **Target Definition**:".
-- Evidence entries MUST be indented 2 spaces: "  - DOI: ref — description".
-
-=== Anti-hallucination ===
-1. events.tsv value→instruction mapping is GROUND TRUTH; do not override with BCI convention.
-2. NEVER assign MI class labels (left/right hand, feet, tongue) unless events.tsv/json/README
-   explicitly says so.
-3. Phase markers (rest/ready/task/interval) are phase markers, not MI classes — but they
-   CAN form valid binary tasks (rest vs task state), just label them for what they are.
-
-Output ONLY valid JSON:
-{
-  "tasks_section": "## Tasks\\n\\n### Classical Task 1: ...\\n\\n...",
-  "num_classical_tasks": 0,
-  "num_potential_tasks": 0,
-  "reasoning": "<2-3 sentences summarizing key decisions>"
-}"""
-
-
 def _format_bids_sidecars(bids_sidecars: Dict) -> str:
     """Format BIDS sidecar data as a readable block for LLM prompts."""
     if not bids_sidecars:
@@ -229,8 +102,8 @@ def _format_grounded_label_fields(grounded: Dict[str, List[Dict[str, Any]]]) -> 
     """Format the grounded Label Field catalog for the synthesis prompt."""
     parts = [
         "=== GROUNDED LABEL FIELD CATALOG — ONLY SOURCES ALLOWED ===",
-        "Every Task's Label Field MUST be drawn from one of the three lists below.",
-        "If the label you want does not appear here, you MUST DROP the task.",
+        "Every misc/info Task's source field MUST be drawn from one of the three lists below.",
+        "If the source you want does not appear here, you MUST DROP the task.",
         "",
     ]
 
@@ -256,7 +129,7 @@ def _format_grounded_label_fields(grounded: Dict[str, List[Dict[str, Any]]]) -> 
         parts.append("  (none discovered — no per-trial numeric columns in events.tsv)")
     parts.append("")
 
-    parts.append("[Native misc channels — ARCHETYPE B1 (native misc, regression only)]")
+    parts.append("[Native misc channels — ARCHETYPE B1 (native misc, regression or classification)]")
     parts.append("  Continuous non-EEG channels already on the raw (EMG, EOG, GSR, etc.).")
     if grounded["misc_native"]:
         for f in grounded["misc_native"]:
@@ -473,6 +346,9 @@ def _strip_single_class_classifications(tasks_section: str, log) -> str:
             kept.append(block)
             continue
         route = (_get_task_field(block, "Label Route") or "").strip("`").lower()
+        if route in ("misc", "info"):
+            kept.append(block)
+            continue
         rows = _extract_target_def_rows(block)
         if not rows:
             kept.append(block)
@@ -529,18 +405,15 @@ def _strip_ungrounded_label_fields(
         if route not in ("misc", "info"):
             kept.append(block)
             continue
-        label_field_raw = _get_task_field(block, "Label Field")
-        if not label_field_raw:
-            # Missing Label Field for non-event route → detect.py will flag it;
-            # keep the block so the rule can report the violation.
+        rows = _extract_target_def_rows(block)
+        if not rows or not rows[0]:
+            # No TD rows → keep block; detect.py will flag schema issues
             kept.append(block)
             continue
-        # Strip backticks / trailing descriptions
-        lf = label_field_raw.strip().strip("`")
-        lf = lf.split()[0] if lf else ""
-        # For derived misc, the Label Field names a NEW channel, not an existing one —
-        # but Notes (freeform) may describe the derivation. Accept the task if any
-        # grounded name appears in Notes (preferred) or Kernel Notes (legacy docs).
+        lf = rows[0][0].strip().strip("`").strip()
+        if not lf:
+            kept.append(block)
+            continue
         meta_level = (_get_task_field(block, "Meta Level") or "").strip("`").lower()
         notes_text = (
             _get_task_field(block, "Notes")
@@ -607,90 +480,3 @@ def _format_locked_meanings(event_annotations: Optional[Dict]) -> str:
     if notes:
         lines += ["", f"Evidence summary: {notes}"]
     return "\n".join(lines)
-
-
-def synthesize_tasks(
-    dataset_name: str,
-    analysis_md: str,
-    ref_extractions: List[Dict],
-    event_ids_preview: str,
-    category_skill: str,
-    call_llm,
-    budget,
-    log,
-    bids_sidecars: Optional[Dict] = None,
-    format_type: str = "unknown",
-    eeg_header_summary: str = "",
-    event_annotations: Optional[Dict] = None,
-    misc_channel_names: Optional[List[str]] = None,
-) -> str:
-    """Run epoch alignment + task synthesis. Returns the '## Tasks' markdown string."""
-
-    sidecar_block = _format_bids_sidecars(bids_sidecars or {})
-    locked_meanings_block = _format_locked_meanings(event_annotations)
-    grounded = _collect_grounded_label_fields(bids_sidecars, misc_channel_names)
-    grounded_block = _format_grounded_label_fields(grounded)
-
-    # Step A: epoch alignment
-    log("[TaskSynth] Running epoch alignment analysis...")
-    alignment_user = (
-        f"Dataset: {dataset_name} (format: {format_type})\n\n"
-        f"=== analysis.md ===\n{analysis_md[:4000]}\n\n"
-        + (f"{sidecar_block}\n\n" if sidecar_block else "")
-        + (f"=== EEG File Header Sample ===\n{eeg_header_summary}\n\n" if eeg_header_summary else "")
-        + f"=== Category SKILL ===\n{category_skill[:2000]}\n\n"
-        f"=== Available event IDs (from pre-scan) ===\n{event_ids_preview}"
-        + (f"\n\n{locked_meanings_block}" if locked_meanings_block else "")
-    )
-    budget.charge("task_synthesis")
-    alignment_raw = call_llm([
-        {"role": "system", "content": _EPOCH_ALIGNMENT_SYSTEM},
-        {"role": "user", "content": alignment_user},
-    ])
-    alignment = _parse_json(alignment_raw) or {}
-    log(f"[TaskSynth] Alignment: {alignment.get('alignment')} | {len(alignment.get('recommendations', []))} paradigm(s)")
-
-    # Step B: task synthesis
-    log("[TaskSynth] Synthesizing tasks...")
-    extractions_full = json.dumps([
-        {k: v for k, v in e.items() if k not in ("cot_reasoning",)}
-        for e in ref_extractions
-        if e.get("classification") in ("relevant", "partial")
-    ], indent=2)
-
-    synthesis_user = (
-        f"Dataset: {dataset_name} (format: {format_type})\n\n"
-        f"=== analysis.md ===\n{analysis_md[:4000]}\n\n"
-        + (f"{sidecar_block}\n\n" if sidecar_block else "")
-        + (f"=== EEG File Header Sample ===\n{eeg_header_summary}\n\n" if eeg_header_summary else "")
-        + f"=== Available event IDs (from pre-scan — USE THESE EXACT NAMES) ===\n{event_ids_preview}\n\n"
-        f"IMPORTANT: Target Definition events MUST use the exact event IDs listed above.\n"
-        f"If BIDS events.json defines meanings for these IDs, use that as the authoritative semantic definition.\n\n"
-        + (f"{locked_meanings_block}\n\n" if locked_meanings_block else "")
-        + f"{grounded_block}\n\n"
-        + f"=== Epoch alignment recommendations ===\n{json.dumps(alignment, indent=2)}\n\n"
-        f"=== Category SKILL ===\n{category_skill[:2000]}\n\n"
-        f"=== Reference extractions (relevant/partial only) ===\n{extractions_full}"
-    )
-
-    budget.charge("task_synthesis")
-    synthesis_raw = call_llm([
-        {"role": "system", "content": _TASK_SYNTHESIS_SYSTEM},
-        {"role": "user", "content": synthesis_user},
-    ])
-    result = _parse_json(synthesis_raw) or {}
-    tasks_section = result.get("tasks_section", "## Tasks\n\n(No tasks could be synthesized.)")
-    log(f"[TaskSynth] Tasks: {result.get('num_classical_tasks', 0)} classical, "
-        f"{result.get('num_potential_tasks', 0)} potential")
-
-    # Post-synthesis guard: strip tasks that hallucinate MI class labels onto phase markers
-    phase_marker_ids = _get_phase_marker_event_ids(event_annotations)
-    if phase_marker_ids:
-        log(f"[TaskSynth][Guard] Phase marker IDs locked by P3b: {sorted(phase_marker_ids)}")
-        tasks_section = _strip_hallucinated_mi_tasks(tasks_section, phase_marker_ids, log)
-
-    # v3 guards: drop single-class classifications and Label Fields with no grounded source
-    tasks_section = _strip_single_class_classifications(tasks_section, log)
-    tasks_section = _strip_ungrounded_label_fields(tasks_section, grounded, log)
-
-    return tasks_section

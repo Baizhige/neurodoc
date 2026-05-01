@@ -1,7 +1,7 @@
 # A dataset recorded during development of an affective brain-computer music interface: calibration session
 
 **Dataset**: `openneuro_ds002722` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002722
-**Category**: High-level Mental | **Subjects**: 19 | **Files (Completed)**: 94 | **Channels**: 37 | **Sampling Rate**: 1000 Hz | **Manual Review**:
+**Category**: High-level Mental | **Subjects**: 19 | **Files (Completed)**: 94 | **Channels**: 37 | **Sampling Rate**: 1000 Hz | **Manual Review**: 
 
 ## Paradigm
 
@@ -116,6 +116,7 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 | `7` | 258 | event | raw | Affect target trial onset: LVHA, low valence and high arousal |
 | `9` | 368 | event | raw | Affect target trial onset: HVHA, high valence and high arousal |
 
+
 ### MISC Label Summary
 
 | Channel | Source | Meta | Notes |
@@ -138,246 +139,236 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 | `subject_id` | complete | e.g. sub-01, sub-02, sub-03 |
 | `task` | complete | e.g. Run |
 
+
 ## Tasks
 
-### Classical Task 1: Age Regression from Continuous Music Listening
+### Classical Task 1: 9-Class Affective State Classification (Valence × Arousal)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `1` | 0 | LVLA: low valence, low arousal |
+  | `2` | 1 | NVLA: neutral valence, low arousal |
+  | `3` | 2 | HVLA: high valence, low arousal |
+  | `4` | 3 | LVNA: low valence, neutral arousal |
+  | `5` | 4 | NVNA: neutral valence, neutral arousal |
+  | `6` | 5 | HVNA: high valence, neutral arousal |
+  | `7` | 6 | LVHA: low valence, high arousal |
+  | `9` | 7 | HVHA: high valence, high arousal |
+- **Evidence**:
+  - 10.1038/s41597-020-0507-6 - Primary data descriptor for openneuro_ds002722 describing 9-class affective state classification across 3×3 valence-by-arousal design with 21-second music clips
+  - 10.1038/s41598-019-45105-2 - Describes calibration session for affective BCMI with 21-second synthetic music clips and event codes 1-9 marking target affective conditions
+- **Notes**: Event ID 8 (NVHA: neutral valence, high arousal) is defined in events.json but has zero occurrences, reducing the design from 9 to 8 observed classes. The 21-second epoch duration matches the full music clip length per events.tsv. Classification y values are 0-based sequential integers.
+
+### Classical Task 2: 3-Class Valence Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `1` | 0 | low valence |
+  | `4` | 1 | low valence |
+  | `7` | 2 | low valence |
+  | `2` | 3 | neutral valence |
+  | `5` | 4 | neutral valence |
+  | `3` | 5 | high valence |
+  | `6` | 6 | high valence |
+  | `9` | 7 | high valence |
+- **Evidence**:
+  - 10.1038/s41598-019-45105-2 - Reports results for reduced 3-class valence-only classification problem derived from the full 3×3 design
+- **Notes**: Collapses the 3×3 valence-arousal grid into three valence levels. Event ID 8 (neutral valence, high arousal) is absent from data. Low valence events: 1 (LVLA), 4 (LVNA), 7 (LVHA). Neutral valence events: 2 (NVLA), 5 (NVNA). High valence events: 3 (HVLA), 6 (HVNA), 9 (HVHA).
+
+### Classical Task 3: 3-Class Arousal Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `1` | 0 | low arousal |
+  | `2` | 1 | low arousal |
+  | `3` | 2 | low arousal |
+  | `4` | 3 | neutral arousal |
+  | `5` | 4 | neutral arousal |
+  | `6` | 5 | neutral arousal |
+  | `7` | 6 | high arousal |
+  | `9` | 7 | high arousal |
+- **Evidence**:
+  - 10.1038/s41598-019-45105-2 - Reports results for reduced 3-class arousal-only classification problem derived from the full 3×3 design
+- **Notes**: Collapses the 3×3 valence-arousal grid into three arousal levels. Event ID 8 (neutral valence, high arousal) is absent from data. Low arousal events: 1 (LVLA), 2 (NVLA), 3 (HVLA). Neutral arousal events: 4 (LVNA), 5 (NVNA), 6 (HVNA). High arousal events: 7 (LVHA), 9 (HVHA).
+
+### Potential Task 1: Continuous Valence Regression from FEELTRACE
 - **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 10 s, overlap = 0.5, target_events = []
-- **Label Route**: `info`
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
+- **Label Route**: `misc`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Y Mapping Notes |
-  |------------|-----------------|
-  | subject_age | no mapping |
+  | MISC Channel Name | Y Mapping Notes |
+  |---|---|
+  | `VA1` | 0–9 (a.u.) |
 - **Evidence**:
-  - 10.1038/s41597-020-0507-6 — Dataset publication describing 19 participants (age 19–30) in BCMI calibration with continuous 21-second music trials; age is a complete native participants.tsv column
-- **Notes**: Segmentation approach (10-second windows, 50% overlap) chosen because music listening is continuous with no clear inter-trial rest boundaries. Each subject contributes multiple overlapping segments, all labeled with the same age value. This is a subject-level regression task with repeated measures structure.
+  - 10.1038/s41597-020-0507-6 - Dataset includes continuous FEELTRACE ratings for valence and arousal during music clip listening
+  - analysis.md MISC Label Summary - VA1 documented as continuous FEELTRACE valence report on 0-9 scale
+- **Notes**: Regression on continuous subjective valence ratings collected during each 21-second trial. VA1 is a native raw MISC channel sample-aligned with EEG. The 0-9 scale matches the FEELTRACE interface used in the paradigm.
 
-### Potential Task 1: 8-class affective valence-arousal music classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s *, tmax = 21 s *, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]`
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event ID | y | Meaning |
-  |----------|---|---------|
-  | 1 | 0 | Low valence, low arousal (LVLA) |
-  | 2 | 1 | Neutral valence, low arousal (NVLA) |
-  | 3 | 2 | High valence, low arousal (HVLA) |
-  | 4 | 3 | Low valence, neutral arousal (LVNA) |
-  | 5 | 4 | Neutral valence, neutral arousal (NVNA) |
-  | 6 | 5 | High valence, neutral arousal (HVNA) |
-  | 7 | 6 | Low valence, high arousal (LVHA) |
-  | 9 | 7 | High valence, high arousal (HVHA) |
-- **Evidence**:
-  - sub-01_task-run1_events.json — Defines event IDs 1-9 as affective condition trial onsets with valence/arousal combinations (LVLA, NVLA, HVLA, LVNA, NVNA, HVNA, LVHA, NVHA, HVHA)
-  - events.tsv samples — Confirm paired events per trial: one affective condition marker (1-9) and one music stimulus marker (101-209), both with duration=21s
-  - README — Describes 3×3 valence (low/neutral/high) by arousal (low/neutral/high) design for affective music induction
-- **Notes**: Event ID 8 (NVHA) is defined in sidecar but has zero occurrences in the dataset, leaving 8 observed classes mapped to y=0-7. The 101-209 music stimulus events are not used as targets; they are paired with the affective condition markers and serve as stimulus identifiers only.
-
-### Potential Task 2: 3-class valence classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s *, tmax = 21 s *, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]`
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event ID | y | Meaning |
-  |----------|---|---------|
-  | 1, 4, 7 | 0 | Low valence (LVLA, LVNA, LVHA) |
-  | 2, 5 | 1 | Neutral valence (NVLA, NVNA) |
-  | 3, 6, 9 | 2 | High valence (HVLA, HVNA, HVHA) |
-- **Evidence**:
-  - sub-01_task-run1_events.json — Defines event IDs 1-9 as affective condition trial onsets with valence/arousal combinations (LVLA, NVLA, HVLA, LVNA, NVNA, HVNA, LVHA, NVHA, HVHA)
-  - sub-01_task-run1_events.tsv — Shows paired event structure with 21s duration for affective condition markers and simultaneous music stimulus markers
-  - README — Describes the BCMI-MIdAS calibration study targeting affective states via valence and arousal dimensions using 21-second music clips
-- **Notes**: Event ID 8 (NVHA, neutral valence high arousal) is defined in events.json but has zero occurrences in the dataset, so neutral valence class (y=1) is supported by only two source event IDs (2, 5) rather than three. The 21-second epoch spans the full music trial duration as indicated by the duration=21s in events.tsv and the experimental design described in the README. The valence collapse is theoretically motivated by the primary dimension of affect in the Russell circumplex model underlying this paradigm.
-
-### Potential Task 3: 3-class arousal classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s *, tmax = 21 s *, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]`
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event ID | y | Meaning |
-  |----------|---|---------|
-  | 1, 2, 3 | 0 | Low arousal (LVLA, NVLA, HVLA) |
-  | 4, 5, 6 | 1 | Neutral arousal (LVNA, NVNA, HVNA) |
-  | 7, 9 | 2 | High arousal (LVHA, HVHA) |
-- **Evidence**:
-- **Notes**: Collapses the 9 affective condition trial onsets into 3 arousal levels by ignoring valence. Event IDs 1-3 (low arousal) map to y=0, 4-6 (neutral arousal) map to y=1, and 7,9 (high arousal) map to y=2. Event ID 8 (NVHA) is excluded as it has zero occurrences in the dataset. Epoch window covers the full 21-second music trial duration. The tmin/tmax values are inferred from the trial duration observed in events.tsv (duration=21s) and the paradigm design.
-
-### Potential Task 4: 2-class high vs low valence
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s *, tmax = 21 s *, target_events = [`1`, `3`, `4`, `6`, `7`, `9`]`
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event ID | y | Meaning |
-  |----------|---|---------|
-  | 1 | 0 | Low valence, low arousal |
-  | 4 | 0 | Low valence, neutral arousal |
-  | 7 | 0 | Low valence, high arousal |
-  | 3 | 1 | High valence, low arousal |
-  | 6 | 1 | High valence, neutral arousal |
-  | 9 | 1 | High valence, high arousal |
-- **Evidence**:
-- **Notes**: Binary valence classification collapsing across arousal levels. Event IDs 1,4,7 (all low valence conditions) mapped to y=0; event IDs 3,6,9 (all high valence conditions) mapped to y=1. Neutral valence conditions (2,5,8) excluded to maximize discriminability. Event ID 8 had zero occurrences in the dataset. Epoch window spans full 21-second trial duration matching the stimulus presentation length.
-
-### Potential Task 5: 2-class high vs low arousal
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s *, tmax = 21 s *, target_events = [1, 2, 3, 7, 9]`
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event ID | y | Meaning |
-  |----------|---|---------|
-  | 1 | 0 | Low arousal (LVLA: low valence, low arousal) |
-  | 2 | 0 | Low arousal (NVLA: neutral valence, low arousal) |
-  | 3 | 0 | Low arousal (HVLA: high valence, low arousal) |
-  | 7 | 1 | High arousal (LVHA: low valence, high arousal) |
-  | 9 | 1 | High arousal (HVHA: high valence, high arousal) |
-- **Evidence**:
-  - events.json sidecar (sub-01_task-run1_events.json) — Defines event IDs 1-9 as affective condition trial onsets with explicit valence/arousal combinations; IDs 1-3 are low arousal, 7-9 are high arousal, 4-6 are neutral arousal
-  - events.tsv samples — Confirms paired event structure with 21s duration for trial onsets; event ID 8 (NVHA) has zero occurrences across dataset
-  - README — Describes calibration session for affective BCMI targeting valence and arousal states via music listening
-- **Notes**: Binary classification excludes neutral arousal conditions (4,5,6). Event ID 8 (neutral valence, high arousal) was defined in sidecar but had zero occurrences, so high arousal class uses only events 7 and 9. Epoch duration of 21s matches the full trial length as indicated by events.tsv duration column. Parameters marked with * are inferred from the trial structure.
-
-### Potential Task 6: Sex Classification from Continuous Music Listening
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.5 *, target_events = []`
-- **Label Route**: `info`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Y Mapping Notes |
-  |------------|-----------------|
-  | subject_sex | F -> 0; M -> 1 |
-- **Evidence**:
-- **Notes**: Binary classification using sex from participants.tsv as the label. 11 female (F) and 8 male (M) participants. Segmentation creates 10-second sliding windows with 50% overlap across continuous music listening epochs, matching the approach used for age regression in this dataset. Each window inherits the subject's sex label for subject-level classification.
-
-### Potential Task 7: GSR regression from continuous music listening
+### Potential Task 2: Continuous Arousal Regression from FEELTRACE
 - **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 10 s *, overlap = 0.5 *, target_events = []
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
+- **Label Route**: `misc`
+- **Meta Level**: raw
+- **Target Definition**:
+  | MISC Channel Name | Y Mapping Notes |
+  |---|---|
+  | `VA2` | 0–9 (a.u.) |
+- **Evidence**:
+  - 10.1038/s41597-020-0507-6 - Dataset includes continuous FEELTRACE ratings for valence and arousal during music clip listening
+  - analysis.md MISC Label Summary - VA2 documented as continuous FEELTRACE arousal report on 0-9 scale
+- **Notes**: Regression on continuous subjective arousal ratings collected during each 21-second trial. VA2 is a native raw MISC channel sample-aligned with EEG. The 0-9 scale matches the FEELTRACE interface used in the paradigm.
+
+### Potential Task 3: GSR-Based Arousal Regression
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
 - **Label Route**: `misc`
 - **Meta Level**: super
 - **Target Definition**:
   | MISC Channel Name | Y Mapping Notes |
-  |-------------------|-----------------|
-  | GSR | no mapping |
+  |---|---|
+  | `GSR` | continuous (μV) |
 - **Evidence**:
-- **Notes**: Native GSR channel is available as one of 4 misc channels (MiscChannelCount=4 in eeg.json). The GSR signal is recorded continuously alongside EEG during affective music listening trials, enabling regression of peripheral physiological arousal from EEG features. Segmentation parameters follow the continuous analysis approach with 10-second windows and 50% overlap, appropriate for capturing slow-varying GSR dynamics. Per-segment GSR target uses the mean value within each 10-second window.
+  - analysis.md MISC Label Summary - GSR listed as derived (per Task Notes) with native signal in channels.tsv
+  - analysis.md Data Quality Notes - GSR channel units are unspecified and require verification
+- **Notes**: Uses galvanic skin response as a physiological proxy for arousal level. GSR is marked as super meta because the derived channel annotation requires verification. Units are documented as microV in channels.tsv but may be μS; this uncertainty is noted in Data Quality Notes.
 
-### Potential Task 8: Music Piece Identification
+### Potential Task 4: Subject Sex Classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s *, tmax = 21 s *, target_events = [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206]`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: target_events = []
+- **Label Route**: `info`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Y Mapping Notes |
+  |---|---|
+  | `subject_sex` | female |
+- **Evidence**:
+  - analysis.md Paradigm - 19 healthy adults (11 female, 8 male) participated
+  - analysis.md Info table - subject_sex field marked complete
+- **Notes**: Demographic classification task using EEG features to predict participant sex. Epoching uses segmentation due to lack of event-locked structure for this demographic variable. 11 female and 8 male participants provides imbalanced but viable two-class problem.
+
+### Potential Task 5: Music Stimulus Identification (90-Class)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: target_events = [`101`, `102`, `103`, `104`, `105`, `106`, `107`, `108`, `109`, `110`, `113`, `114`, `115`, `116`, `117`, `118`, `119`, `120`, `121`, `122`, `125`, `126`, `127`, `128`, `129`, `130`, `131`, `132`, `133`, `134`, `137`, `138`, `139`, `140`, `141`, `142`, `143`, `144`, `145`, `146`, `149`, `150`, `151`, `152`, `153`, `154`, `155`, `156`, `157`, `158`, `161`, `162`, `163`, `164`, `165`, `166`, `167`, `168`, `169`, `170`, `173`, `174`, `175`, `176`, `177`, `178`, `179`, `180`, `181`, `182`, `185`, `186`, `187`, `188`, `189`, `190`, `191`, `192`, `193`, `194`, `197`, `198`, `199`, `200`, `201`, `202`, `203`, `204`, `205`, `206`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
-  | 101 | 0 | Music stimulus onset: piece 1 |
-  | 102 | 1 | Music stimulus onset: piece 2 |
-  | 103 | 2 | Music stimulus onset: piece 3 |
-  | 104 | 3 | Music stimulus onset: piece 4 |
-  | 105 | 4 | Music stimulus onset: piece 5 |
-  | 106 | 5 | Music stimulus onset: piece 6 |
-  | 107 | 6 | Music stimulus onset: piece 7 |
-  | 108 | 7 | Music stimulus onset: piece 8 |
-  | 109 | 8 | Music stimulus onset: piece 9 |
-  | 110 | 9 | Music stimulus onset: piece 10 |
-  | 113 | 10 | Music stimulus onset: piece 13 |
-  | 114 | 11 | Music stimulus onset: piece 14 |
-  | 115 | 12 | Music stimulus onset: piece 15 |
-  | 116 | 13 | Music stimulus onset: piece 16 |
-  | 117 | 14 | Music stimulus onset: piece 17 |
-  | 118 | 15 | Music stimulus onset: piece 18 |
-  | 119 | 16 | Music stimulus onset: piece 19 |
-  | 120 | 17 | Music stimulus onset: piece 20 |
-  | 121 | 18 | Music stimulus onset: piece 21 |
-  | 122 | 19 | Music stimulus onset: piece 22 |
-  | 125 | 20 | Music stimulus onset: piece 25 |
-  | 126 | 21 | Music stimulus onset: piece 26 |
-  | 127 | 22 | Music stimulus onset: piece 27 |
-  | 128 | 23 | Music stimulus onset: piece 28 |
-  | 129 | 24 | Music stimulus onset: piece 29 |
-  | 130 | 25 | Music stimulus onset: piece 30 |
-  | 131 | 26 | Music stimulus onset: piece 31 |
-  | 132 | 27 | Music stimulus onset: piece 32 |
-  | 133 | 28 | Music stimulus onset: piece 33 |
-  | 134 | 29 | Music stimulus onset: piece 34 |
-  | 137 | 30 | Music stimulus onset: piece 37 |
-  | 138 | 31 | Music stimulus onset: piece 38 |
-  | 139 | 32 | Music stimulus onset: piece 39 |
-  | 140 | 33 | Music stimulus onset: piece 40 |
-  | 141 | 34 | Music stimulus onset: piece 41 |
-  | 142 | 35 | Music stimulus onset: piece 42 |
-  | 143 | 36 | Music stimulus onset: piece 43 |
-  | 144 | 37 | Music stimulus onset: piece 44 |
-  | 145 | 38 | Music stimulus onset: piece 45 |
-  | 146 | 39 | Music stimulus onset: piece 46 |
-  | 149 | 40 | Music stimulus onset: piece 49 |
-  | 150 | 41 | Music stimulus onset: piece 50 |
-  | 151 | 42 | Music stimulus onset: piece 51 |
-  | 152 | 43 | Music stimulus onset: piece 52 |
-  | 153 | 44 | Music stimulus onset: piece 53 |
-  | 154 | 45 | Music stimulus onset: piece 54 |
-  | 155 | 46 | Music stimulus onset: piece 55 |
-  | 156 | 47 | Music stimulus onset: piece 56 |
-  | 157 | 48 | Music stimulus onset: piece 57 |
-  | 158 | 49 | Music stimulus onset: piece 58 |
-  | 161 | 50 | Music stimulus onset: piece 61 |
-  | 162 | 51 | Music stimulus onset: piece 62 |
-  | 163 | 52 | Music stimulus onset: piece 63 |
-  | 164 | 53 | Music stimulus onset: piece 64 |
-  | 165 | 54 | Music stimulus onset: piece 65 |
-  | 166 | 55 | Music stimulus onset: piece 66 |
-  | 167 | 56 | Music stimulus onset: piece 67 |
-  | 168 | 57 | Music stimulus onset: piece 68 |
-  | 169 | 58 | Music stimulus onset: piece 69 |
-  | 170 | 59 | Music stimulus onset: piece 70 |
-  | 173 | 60 | Music stimulus onset: piece 73 |
-  | 174 | 61 | Music stimulus onset: piece 74 |
-  | 175 | 62 | Music stimulus onset: piece 75 |
-  | 176 | 63 | Music stimulus onset: piece 76 |
-  | 177 | 64 | Music stimulus onset: piece 77 |
-  | 178 | 65 | Music stimulus onset: piece 78 |
-  | 179 | 66 | Music stimulus onset: piece 79 |
-  | 180 | 67 | Music stimulus onset: piece 80 |
-  | 181 | 68 | Music stimulus onset: piece 81 |
-  | 182 | 69 | Music stimulus onset: piece 82 |
-  | 185 | 70 | Music stimulus onset: piece 85 |
-  | 186 | 71 | Music stimulus onset: piece 86 |
-  | 187 | 72 | Music stimulus onset: piece 87 |
-  | 188 | 73 | Music stimulus onset: piece 88 |
-  | 189 | 74 | Music stimulus onset: piece 89 |
-  | 190 | 75 | Music stimulus onset: piece 90 |
-  | 191 | 76 | Music stimulus onset: piece 91 |
-  | 192 | 77 | Music stimulus onset: piece 92 |
-  | 193 | 78 | Music stimulus onset: piece 93 |
-  | 194 | 79 | Music stimulus onset: piece 94 |
-  | 197 | 80 | Music stimulus onset: piece 97 |
-  | 198 | 81 | Music stimulus onset: piece 98 |
-  | 199 | 82 | Music stimulus onset: piece 99 |
-  | 200 | 83 | Music stimulus onset: piece 100 |
-  | 201 | 84 | Music stimulus onset: piece 101 |
-  | 202 | 85 | Music stimulus onset: piece 102 |
-  | 203 | 86 | Music stimulus onset: piece 103 |
-  | 204 | 87 | Music stimulus onset: piece 104 |
-  | 205 | 88 | Music stimulus onset: piece 105 |
-  | 206 | 89 | Music stimulus onset: piece 106 |
+  |---|---|---|
+  | `101` | 0 | stimulus item 1 |
+  | `102` | 1 | stimulus item 2 |
+  | `103` | 2 | stimulus item 3 |
+  | `104` | 3 | stimulus item 4 |
+  | `105` | 4 | stimulus item 5 |
+  | `106` | 5 | stimulus item 6 |
+  | `107` | 6 | stimulus item 7 |
+  | `108` | 7 | stimulus item 8 |
+  | `109` | 8 | stimulus item 9 |
+  | `110` | 9 | stimulus item 10 |
+  | `113` | 10 | stimulus item 13 |
+  | `114` | 11 | stimulus item 14 |
+  | `115` | 12 | stimulus item 15 |
+  | `116` | 13 | stimulus item 16 |
+  | `117` | 14 | stimulus item 17 |
+  | `118` | 15 | stimulus item 18 |
+  | `119` | 16 | stimulus item 19 |
+  | `120` | 17 | stimulus item 20 |
+  | `121` | 18 | stimulus item 21 |
+  | `122` | 19 | stimulus item 22 |
+  | `125` | 20 | stimulus item 25 |
+  | `126` | 21 | stimulus item 26 |
+  | `127` | 22 | stimulus item 27 |
+  | `128` | 23 | stimulus item 28 |
+  | `129` | 24 | stimulus item 29 |
+  | `130` | 25 | stimulus item 30 |
+  | `131` | 26 | stimulus item 31 |
+  | `132` | 27 | stimulus item 32 |
+  | `133` | 28 | stimulus item 33 |
+  | `134` | 29 | stimulus item 34 |
+  | `137` | 30 | stimulus item 37 |
+  | `138` | 31 | stimulus item 38 |
+  | `139` | 32 | stimulus item 39 |
+  | `140` | 33 | stimulus item 40 |
+  | `141` | 34 | stimulus item 41 |
+  | `142` | 35 | stimulus item 42 |
+  | `143` | 36 | stimulus item 43 |
+  | `144` | 37 | stimulus item 44 |
+  | `145` | 38 | stimulus item 45 |
+  | `146` | 39 | stimulus item 46 |
+  | `149` | 40 | stimulus item 49 |
+  | `150` | 41 | stimulus item 50 |
+  | `151` | 42 | stimulus item 51 |
+  | `152` | 43 | stimulus item 52 |
+  | `153` | 44 | stimulus item 53 |
+  | `154` | 45 | stimulus item 54 |
+  | `155` | 46 | stimulus item 55 |
+  | `156` | 47 | stimulus item 56 |
+  | `157` | 48 | stimulus item 57 |
+  | `158` | 49 | stimulus item 58 |
+  | `161` | 50 | stimulus item 61 |
+  | `162` | 51 | stimulus item 62 |
+  | `163` | 52 | stimulus item 63 |
+  | `164` | 53 | stimulus item 64 |
+  | `165` | 54 | stimulus item 65 |
+  | `166` | 55 | stimulus item 66 |
+  | `167` | 56 | stimulus item 67 |
+  | `168` | 57 | stimulus item 68 |
+  | `169` | 58 | stimulus item 69 |
+  | `170` | 59 | stimulus item 70 |
+  | `173` | 60 | stimulus item 73 |
+  | `174` | 61 | stimulus item 74 |
+  | `175` | 62 | stimulus item 75 |
+  | `176` | 63 | stimulus item 76 |
+  | `177` | 64 | stimulus item 77 |
+  | `178` | 65 | stimulus item 78 |
+  | `179` | 66 | stimulus item 79 |
+  | `180` | 67 | stimulus item 80 |
+  | `181` | 68 | stimulus item 81 |
+  | `182` | 69 | stimulus item 82 |
+  | `185` | 70 | stimulus item 85 |
+  | `186` | 71 | stimulus item 86 |
+  | `187` | 72 | stimulus item 87 |
+  | `188` | 73 | stimulus item 88 |
+  | `189` | 74 | stimulus item 89 |
+  | `190` | 75 | stimulus item 90 |
+  | `191` | 76 | stimulus item 91 |
+  | `192` | 77 | stimulus item 92 |
+  | `193` | 78 | stimulus item 93 |
+  | `194` | 79 | stimulus item 94 |
+  | `197` | 80 | stimulus item 97 |
+  | `198` | 81 | stimulus item 98 |
+  | `199` | 82 | stimulus item 99 |
+  | `200` | 83 | stimulus item 100 |
+  | `201` | 84 | stimulus item 101 |
+  | `202` | 85 | stimulus item 102 |
+  | `203` | 86 | stimulus item 103 |
+  | `204` | 87 | stimulus item 104 |
+  | `205` | 88 | stimulus item 105 |
+  | `206` | 89 | stimulus item 106 |
 - **Evidence**:
-  - events.json sidecars (sub-01_task-run1_events.json, sub-01_task-run2_events.json) — Define codes 101-209 as "musicPlayed" stimuli where subtracting 100 yields an index into a list of 108 .wav files in the stimuli folder.
-  - events.tsv samples — Confirm paired event structure with simultaneous onset of affect condition marker (1-9) and music stimulus marker (101-209), each with duration=21s.
-  - README — Describes 20 healthy adult volunteers listening to music clips (40 s) targeting affective states, with 5 runs of 18 music trials each.
-- **Notes**: This task uses 90 distinct event IDs (101-206, excluding gaps) representing 90 unique music pieces from the stimuli set. Event IDs are mapped to sequential y values 0-89. The full 21-second trial epoch captures complete music exposure. Note: This is an extremely challenging many-class identification problem with limited trials per class (~18-19 occurrences per event ID across the dataset), likely underpowered for reliable classification but theoretically valid as a potential task.
+  - analysis.md Event Structure - musicPlayed markers (codes 101-209, minus gaps) indicate specific stimulus items with 18-19 trials each
+  - analysis.md Data Quality Notes - explicitly notes this as "Potential Task 8" involving 90 classes with ~18-19 trials each, severely underpowered
+- **Notes**: Classification of which specific music stimulus was played based on EEG response. This task is severely underpowered with only ~18-19 trials per class across 90 classes, as noted in Data Quality Notes. Some stimulus codes are missing from the sequence (e.g., 111-112, 123-124, etc.), resulting in non-contiguous numbering. Listed as Potential due to severe class imbalance and underpowered design.
 
 ## Data Quality Notes
 

@@ -432,7 +432,7 @@ class Pipeline:
 
             # ── Phase 7: Doc Write ───────────────────────────────────────
             if cur <= self._phase_index("doc_write"):
-                status = "wait_manual_review" if kernel_ok else "wait_kernel_update"
+                status = "wait_manual_review"
                 analysis_md_new = generate_analysis_md(
                     self.dataset_name,
                     context,

@@ -34,7 +34,7 @@ Dataset is a Zenodo mirror of the Mendeley SiN dataset. Each `.mat` file contain
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5` or `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, target_events = [Needs Verification] | tmin = Needs Verification, tmax = Needs Verification, overlap = Needs Verification, target_events = [Needs Verification]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Condition or attended-stream labels (released split commonly uses condition 7 vs 13).
 - **Evidence**: Speech-in-noise AAD dataset is explicitly provided for supervised attention decoding tasks. Source: https://zenodo.org/
 
@@ -43,7 +43,7 @@ Dataset is a Zenodo mirror of the Mendeley SiN dataset. Each `.mat` file contain
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 3.5 s (= 896/256 Hz; matches pre-epoched trial length), target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Case B kernel reconstructs continuous raw from pre-epoched data; trial boundaries are annotated. Epoch window (3.5 s) matches the original pre-epoched length; use exactly 896/256 = 3.5 s to avoid boundary effects.
 

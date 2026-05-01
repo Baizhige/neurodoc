@@ -199,7 +199,7 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`CueAOnset`, `CueBOnset`, `Probe_aX_onset`, `Probe_aY_onset`, `Probe_bY_onset`]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: `super`
 - **Target Definition**:
   | Event | y | Meaning |

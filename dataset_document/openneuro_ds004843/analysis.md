@@ -42,10 +42,10 @@ Placeholder for additional file scan metadata.
 ## Tasks
 
 ### Primary Task 1: Publisher-defined BIDS task: Visual Situational Awareness
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004843 DOI: https://doi.org/10.18112/openneuro.ds004843.v1.0.0
 
@@ -54,7 +54,7 @@ Placeholder for additional file scan metadata.
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: `32000` (1,099) is a scene/trial boundary - exclude. Very small dataset (7 files); balance classes by undersampling. 5-digit codes require README or paper decode.
 

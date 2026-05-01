@@ -108,7 +108,7 @@ This study investigates mid-frontal theta deficits in Parkinson's disease (PD) p
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.5 s, target_events = [`S 5`]
-- **Label Route**: `stim`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |

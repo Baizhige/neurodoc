@@ -62,7 +62,7 @@ Participants performed near-threshold visual detection tasks across three cueing
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [1, 2, 11, 12, 21, 22, 101, 102, 103, 104, 111, 112, 113, 114, 121, 122, 124, 125]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: `raw`
 - **Target Definition**:
 
@@ -91,10 +91,10 @@ Participants performed near-threshold visual detection tasks across three cueing
 - **Kernel Notes**: BioSemi code 128 is boundary marker (admin; exclude). Preserve continuous behavioral regressors (gabor_contrast, subjective_r, objective_r, response_time) from events.tsv for regression-based analyses. Event codes 111/121 both encode 50pct_hit—may reflect separate recording runs; preserve source metadata.
 
 ### Classical Task 2: Cue Validity Effect on Detection Performance
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 2.5 s, overlap = null, segment_length = 3.0 s, target_events = [11, 12, 21, 22]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: `super`
 - **Target Definition**:
 
@@ -111,7 +111,7 @@ Participants performed near-threshold visual detection tasks across three cueing
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, overlap = null, target_events = [11, 12, 21, 22, 101, 111, 121, 122]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: `super`
 - **Target Definition**:
 

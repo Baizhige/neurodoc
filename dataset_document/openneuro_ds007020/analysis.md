@@ -49,7 +49,7 @@ Resting-state EEG recordings (eyes open) were collected from Parkinson's disease
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 10 s, overlap = 0.5 s
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**: N/A (no trial events; segmentation-based exploration)
 - **Super Meta Notes**: Shorter overlapping segments enable exploratory spectral and connectivity analysis (alpha/beta power, coherence) without requiring explicit event markers. Group labels (PD vs healthy control, mortality outcome) must be derived from participants.tsv metadata.

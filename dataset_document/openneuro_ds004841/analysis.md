@@ -177,7 +177,7 @@ Participants monitored a semi-autonomous vehicle system and performed local situ
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, overlap = N/A, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -199,7 +199,7 @@ Participants monitored a semi-autonomous vehicle system and performed local situ
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4.0 s, overlap = 0.0, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -216,7 +216,7 @@ Participants monitored a semi-autonomous vehicle system and performed local situ
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = N/A, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 

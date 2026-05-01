@@ -127,7 +127,7 @@ def target_events_exist(analysis_text: str, **_) -> tuple[bool, str]:
     """Event IDs in Tasks Target Definition tables must appear in Event Structure.
 
     v3: only applied to tasks with Label Route = event. For misc/info routes, the
-    first TD column holds the Label Field, not an event ID.
+    first TD column holds the source channel/field name, not an event ID.
     """
     es_text = _extract_section(analysis_text, "File Scan Result")
     structure_ids: set[str] = set()
@@ -248,9 +248,10 @@ def _first_column_backticked(table_text: str) -> set[str]:
 _TD_HEADERS: dict[tuple[str, str], tuple[list[str], ...]] = {
     ("event", "classification"): (["event id", "y", "meaning"],),
     ("event", "regression"):     (["event id", "value", "meaning"],),
-    ("misc", "regression"):      (["misc channel", "value", "notes"],),
-    ("info", "classification"): (["info field", "value", "y", "meaning"],),
-    ("info", "regression"):      (["info field", "range", "notes"],),
+    ("misc", "classification"):  (["misc channel name", "y mapping notes"],),
+    ("misc", "regression"):      (["misc channel name", "y mapping notes"],),
+    ("info", "classification"):  (["info field", "y mapping notes"],),
+    ("info", "regression"):      (["info field", "y mapping notes"],),
 }
 
 
@@ -266,90 +267,6 @@ def _normalize_td_header(cells: list[str]) -> list[str]:
 
 
 # 鈹€鈹€ v3 cross-checks 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
-
-
-@_cc
-def label_field_required_for_nonevent(analysis_text: str, **_) -> tuple[bool, str]:
-    """Route 鈭?{misc, info} 鈬?Label Field bullet must be present and non-empty."""
-    tasks_text = _extract_section(analysis_text, "Tasks")
-    if not tasks_text:
-        return False, ""
-    missing: list[str] = []
-    for block in _split_task_blocks(tasks_text):
-        route = _task_field(block, "Label Route").lower()
-        if route not in ("misc", "info"):
-            continue
-        lf = _task_field(block, "Label Field")
-        if not lf:
-            missing.append(_task_title(block))
-    if missing:
-        return True, f"tasks missing Label Field for non-event route: {missing}"
-    return False, ""
-
-
-@_cc
-def label_field_absent_for_event(analysis_text: str, **_) -> tuple[bool, str]:
-    """Route = event 鈬?no Label Field bullet allowed."""
-    tasks_text = _extract_section(analysis_text, "Tasks")
-    if not tasks_text:
-        return False, ""
-    extra: list[str] = []
-    for block in _split_task_blocks(tasks_text):
-        route = _task_field(block, "Label Route").lower()
-        if route != "event":
-            continue
-        if _task_has_field(block, "Label Field"):
-            extra.append(_task_title(block))
-    if extra:
-        return True, f"event-route tasks with stray Label Field: {extra}"
-    return False, ""
-
-
-@_cc
-def info_label_field_in_info_section(analysis_text: str, **_) -> tuple[bool, str]:
-    """Route = info 鈬?Label Field must be registered in ### Info table."""
-    tasks_text = _extract_section(analysis_text, "Tasks")
-    if not tasks_text:
-        return False, ""
-    info_text = _extract_subsection(_extract_section(analysis_text, "File Scan Result"), "Info")
-    info_names = _first_column_backticked(info_text)
-    missing: list[str] = []
-    for block in _split_task_blocks(tasks_text):
-        route = _task_field(block, "Label Route").lower()
-        if route != "info":
-            continue
-        lf = _task_field(block, "Label Field")
-        if not lf:
-            continue  # caught by label_field_required_for_nonevent
-        if lf not in info_names:
-            missing.append(f"{_task_title(block)}: {lf!r}")
-    if missing:
-        return True, f"info Label Fields not in ### Info: {missing}"
-    return False, ""
-
-
-@_cc
-def misc_label_field_in_misc_section(analysis_text: str, **_) -> tuple[bool, str]:
-    """Route = misc 鈬?Label Field must be registered in ### MISC Label Summary table."""
-    tasks_text = _extract_section(analysis_text, "Tasks")
-    if not tasks_text:
-        return False, ""
-    misc_text = _extract_subsection(_extract_section(analysis_text, "File Scan Result"),
-                                     "MISC Label Summary")
-    misc_names = _first_column_backticked(misc_text)
-    missing: list[str] = []
-    for block in _split_task_blocks(tasks_text):
-        route = _task_field(block, "Label Route").lower()
-        if route != "misc":
-            continue
-        lf = _task_field(block, "Label Field")
-        if not lf:
-            continue
-        if lf not in misc_names:
-            missing.append(f"{_task_title(block)}: {lf!r}")
-    if missing:
-        return True, f"misc Label Fields not in ### MISC Label Summary: {missing}"
-    return False, ""
 
 
 # 鈹€鈹€ v3.1 dispatchability cross-checks (participants.tsv + factory dry-run) 鈹€鈹€鈹€鈹€
@@ -392,28 +309,34 @@ def _parse_task_block_for_factory(block: str) -> dict:
     """Convert a markdown task block into the dict shape expected by build_dataset_from_task."""
     route = _task_field(block, "Label Route").lower() or None
     ttype = _task_field(block, "Task Type").lower() or None
-    label_field = _task_field(block, "Label Field") or None
     header, body = _task_target_def_table(block)
     norm = _normalize_td_header(header) if header else []
 
+    td_source: str | None = None  # first TD row's first column (misc/info source field)
     rows: list[dict] = []
     for raw_cells in body:
         cells = [c.strip().strip("`").strip() for c in raw_cells]
         if not cells or not any(cells):
             continue
+        if td_source is None and cells:
+            td_source = cells[0]
         row: dict = {}
         for key, val in zip(norm, cells):
             if key == "event id":
                 row["event_id"] = val
             elif key == "info field":
                 row["info_field"] = val
-            elif key == "misc channel":
+                row["label_field"] = val  # backward compat for dataset_api
+            elif key in ("misc channel name", "misc channel"):
                 row["misc_channel"] = val
+                row["label_field"] = val  # backward compat for dataset_api
             elif key == "y":
                 try:
                     row["y"] = int(val)
                 except (ValueError, TypeError):
                     row["y"] = val
+            elif key == "y mapping notes":
+                row["y_mapping_notes"] = val
             elif key == "value":
                 if ttype == "regression" and route == "event":
                     try:
@@ -430,36 +353,15 @@ def _parse_task_block_for_factory(block: str) -> dict:
                 row["notes"] = val
         rows.append(row)
 
+    # label_field: for misc/info routes derive from TD first column; for event route it's None
+    label_field = td_source if route in ("misc", "info") else None
+
     return {
         "label_route": route,
         "task_type": ttype,
         "label_field": label_field,
         "target_rows": rows,
     }
-
-
-@_cc
-def info_label_field_in_participants(analysis_text: str, dataset_name: str = "", **_) -> tuple[bool, str]:
-    """Route = info 鈬?Label Field must be a column in participants.tsv (authoritative)."""
-    tasks_text = _extract_section(analysis_text, "Tasks")
-    if not tasks_text:
-        return False, ""
-    cols = _read_participants_columns(dataset_name)
-    if cols is None:
-        return False, ""  # cannot verify without participants.tsv; stay silent
-    missing: list[str] = []
-    for block in _split_task_blocks(tasks_text):
-        route = _task_field(block, "Label Route").lower()
-        if route != "info":
-            continue
-        lf = _task_field(block, "Label Field")
-        if not lf:
-            continue
-        if lf not in cols:
-            missing.append(f"{_task_title(block)}: {lf!r}")
-    if missing:
-        return True, f"info Label Fields not in participants.tsv {sorted(cols)}: {missing}"
-    return False, ""
 
 
 def _collect_kernel_misc_channels(dataset_name: str) -> set[str] | None:
@@ -487,36 +389,6 @@ def _collect_kernel_misc_channels(dataset_name: str) -> set[str] | None:
         if name:
             channels.add(name)
     return channels
-
-
-@_cc
-def misc_label_field_has_misc_channel(analysis_text: str, dataset_name: str = "", **_) -> tuple[bool, str]:
-    """Route = misc 鈬?Label Field must be declared in kernel_requirements (native or derived)."""
-    tasks_text = _extract_section(analysis_text, "Tasks")
-    if not tasks_text:
-        return False, ""
-    declared = _collect_kernel_misc_channels(dataset_name)
-    # Fall back to the ### MISC Label Summary first column when progress JSON absent.
-    if declared is None:
-        misc_text = _extract_subsection(_extract_section(analysis_text, "File Scan Result"),
-                                         "MISC Label Summary")
-        declared = _first_column_backticked(misc_text)
-    missing: list[str] = []
-    for block in _split_task_blocks(tasks_text):
-        route = _task_field(block, "Label Route").lower()
-        if route != "misc":
-            continue
-        lf = _task_field(block, "Label Field")
-        if not lf:
-            continue
-        if lf not in declared:
-            missing.append(f"{_task_title(block)}: {lf!r}")
-    if missing:
-        return True, (
-            f"misc Label Fields not declared in kernel_requirements "
-            f"(native or derived): {missing}"
-        )
-    return False, ""
 
 
 @_cc
@@ -561,7 +433,7 @@ def target_def_schema_matches_route(analysis_text: str, **_) -> tuple[bool, str]
             continue
         expected_variants = _TD_HEADERS.get((route, task_type))
         if expected_variants is None:
-            continue  # e.g. misc+classification is forbidden by another rule
+            continue  # route/type combo not in schema matrix; skip
         header, _body = _task_target_def_table(block)
         if not header:
             problems.append(f"{_task_title(block)}: Target Definition table missing")
@@ -580,7 +452,7 @@ def target_def_schema_matches_route(analysis_text: str, **_) -> tuple[bool, str]
 
 @_cc
 def single_target_per_task(analysis_text: str, **_) -> tuple[bool, str]:
-    """Target Definition first column must have exactly one unique Label Field value."""
+    """Target Definition first column (source field/channel) must have exactly one unique value per misc/info task."""
     tasks_text = _extract_section(analysis_text, "Tasks")
     if not tasks_text:
         return False, ""
@@ -595,27 +467,10 @@ def single_target_per_task(analysis_text: str, **_) -> tuple[bool, str]:
         firsts = {row[0].strip("`").strip() for row in body if row and row[0]}
         if len(firsts) > 1:
             problems.append(
-                f"{_task_title(block)}: multiple Label Fields in TD 鈥?{sorted(firsts)}"
+                f"{_task_title(block)}: multiple source values in TD first column — {sorted(firsts)}"
             )
     if problems:
         return True, "; ".join(problems)
-    return False, ""
-
-
-@_cc
-def misc_classification_forbidden(analysis_text: str, **_) -> tuple[bool, str]:
-    """Route = misc 鈬?Task Type must be regression."""
-    tasks_text = _extract_section(analysis_text, "Tasks")
-    if not tasks_text:
-        return False, ""
-    bad: list[str] = []
-    for block in _split_task_blocks(tasks_text):
-        route = _task_field(block, "Label Route").lower()
-        task_type = _task_field(block, "Task Type").lower()
-        if route == "misc" and task_type == "classification":
-            bad.append(_task_title(block))
-    if bad:
-        return True, f"misc tasks declared as classification: {bad}"
     return False, ""
 
 
@@ -631,6 +486,8 @@ def classification_task_has_multiple_classes(analysis_text: str, **_) -> tuple[b
         if task_type != "classification":
             continue
         route = _task_field(block, "Label Route").lower()
+        if route in ("misc", "info"):
+            continue  # misc/info use Y Mapping Notes; no discrete y column to validate
         header, body = _task_target_def_table(block)
         if not header or not body:
             bad.append(f"{_task_title(block)}: no TD rows")
@@ -669,6 +526,8 @@ def classification_y_zero_indexed_sequential(analysis_text: str, **_) -> tuple[b
         if _task_field(block, "Task Type").lower() != "classification":
             continue
         route = _task_field(block, "Label Route").lower()
+        if route in ("misc", "info"):
+            continue  # misc/info use Y Mapping Notes; no y column to validate
         header, body = _task_target_def_table(block)
         if not header or not body:
             continue
@@ -711,7 +570,7 @@ def classification_y_zero_indexed_sequential(analysis_text: str, **_) -> tuple[b
 
 @_cc
 def derived_misc_requires_super_meta(analysis_text: str, **_) -> tuple[bool, str]:
-    """Route=misc task whose Label Field is not a native misc channel 鈬?Meta Level=super."""
+    """Route=misc TD channel not listed as native in MISC Label Summary → Meta Level must be super."""
     tasks_text = _extract_section(analysis_text, "Tasks")
     if not tasks_text:
         return False, ""
@@ -726,12 +585,15 @@ def derived_misc_requires_super_meta(analysis_text: str, **_) -> tuple[bool, str
         route = _task_field(block, "Label Route").lower()
         if route != "misc":
             continue
-        lf = _task_field(block, "Label Field")
-        if not lf:
+        _header, body = _task_target_def_table(block)
+        if not body or not body[0]:
+            continue
+        channel = body[0][0].strip().strip("`").strip()
+        if not channel:
             continue
         meta = _task_field(block, "Meta Level").lower()
-        if lf not in native_names and meta != "super":
-            bad.append(f"{_task_title(block)}: Label Field={lf!r} is derived but Meta Level={meta!r}")
+        if channel not in native_names and meta != "super":
+            bad.append(f"{_task_title(block)}: channel={channel!r} is derived but Meta Level={meta!r}")
     if bad:
         return True, "; ".join(bad)
     return False, ""
@@ -841,7 +703,7 @@ def classical_task_evidence(analysis_text: str, **_) -> tuple[bool, str]:
 @_cc
 def info_completeness_values(analysis_text: str, **_) -> tuple[bool, str]:
     """### Info table Completeness column must use valid values only."""
-    VALID = {"complete", "partial", "incomplete", "missing"}
+    partial_re = re.compile(r"^partial \(\d+/\d+\)$")
 
     info_m = re.search(
         r"###\s+Info\s*\n(.*?)(?=^###|^##|\Z)", analysis_text, re.MULTILINE | re.DOTALL
@@ -862,7 +724,11 @@ def info_completeness_values(analysis_text: str, **_) -> tuple[bool, str]:
             continue
         if "---" in field or field.lower() in ("field",):
             continue
-        if completeness not in VALID:
+        if completeness in {"complete", "incomplete", "missing"}:
+            continue
+        if partial_re.match(completeness):
+            continue
+        else:
             invalid.append(f"{field!r}: {completeness!r}")
 
     if invalid:

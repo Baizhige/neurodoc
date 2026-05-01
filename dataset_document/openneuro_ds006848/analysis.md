@@ -84,7 +84,7 @@ This dataset investigates the directional characteristics of brain alpha waves d
 ---
 
 ### Normal Task 1: Encoding Mode Classification (Simultaneous vs. Sequential)
-- **Task Type**: binary_classification
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 6.0 s, target_events = [`Stimulus/S   28`, `Stimulus/S   40`, `Stimulus/S   60`, `Stimulus/S  100`]
 - **Label Route**: `event`
@@ -108,7 +108,7 @@ This dataset investigates the directional characteristics of brain alpha waves d
 ---
 
 ### Potential Task 1: Resting State Eyes Open vs. Eyes Closed Classification
-- **Task Type**: binary_classification
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 30.0 s, segment_length = 4.0 s, overlap = 0.0 s, target_events = [`Stimulus/S   20`, `Stimulus/S   21`]
 - **Label Route**: `event`
@@ -130,7 +130,7 @@ This dataset investigates the directional characteristics of brain alpha waves d
 ---
 
 ### Potential Task 2: Sequential Encoding Digit Identity Classification (10-Class)
-- **Task Type**: multiclass_classification
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [`Stimulus/S    1`, `Stimulus/S    2`, `Stimulus/S    3`, `Stimulus/S    4`, `Stimulus/S    5`, `Stimulus/S    6`, `Stimulus/S    7`, `Stimulus/S    8`, `Stimulus/S    9`, `Stimulus/S   10`]
 - **Label Route**: `event`

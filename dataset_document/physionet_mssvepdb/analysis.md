@@ -48,7 +48,7 @@ Eleven subjects performed steady-state visual evoked potential (SSVEP) tasks acr
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, overlap = 2.0 s, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Frequency label derived from filename; e.g., map each stimulus frequency to a class index.
 - **Notes**: Stimulus frequencies and their mapping to class indices must be parsed from file paths or metadata. Process datasets 1/2 (BrainProducts, 256ch, 250Hz) and dataset 3 (Emotiv, 14ch, 128Hz) **separately** due to different channel counts and sampling rates.
 

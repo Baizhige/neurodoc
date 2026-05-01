@@ -203,13 +203,6 @@ rules:
     function: "target_events_exist"
     severity: "error"
 
-  - id: "misc_route_requires_misc_section"
-    desc: "If any task uses Label Route=misc, ### MISC Label Summary must exist (rulebook 绗?5鏉?."
-    target: "analysis_md"
-    check: "cross_check"
-    function: "misc_route_requires_section"
-    severity: "error"
-
   - id: "classical_task_has_evidence"
     desc: "Every Classical Task must have a non-empty Evidence field (rulebook 绗?2鏉?."
     target: "analysis_md"
@@ -218,7 +211,7 @@ rules:
     severity: "error"
 
   - id: "info_completeness_valid"
-    desc: "### Info table Completeness column must use: complete, partial, incomplete, or missing (rulebook 绗?7鏉′箣涓?."
+    desc: "### Info table Completeness column must use: complete, incomplete, missing, or partial (x/n) (rulebook 绗?7鏉′箣涓?."
     target: "analysis_md"
     check: "cross_check"
     function: "info_completeness_values"
@@ -302,54 +295,11 @@ rules:
     severity: "error"
 
   # 鈹€鈹€ Group C+: v3 Task Taxonomy (Epoch/Label Separation) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
-
-  - id: "label_field_required_for_nonevent"
-    desc: "Tasks with Label Route 鈭?{misc, info} must declare **Label Field** (rulebook 绗?7鏉′箣涓?."
-    target: "analysis_md"
-    check: "cross_check"
-    function: "label_field_required_for_nonevent"
-    severity: "error"
-
-  - id: "label_field_absent_for_event"
-    desc: "Tasks with Label Route = event must NOT declare **Label Field** (rulebook 绗?7鏉′箣涓?."
-    target: "analysis_md"
-    check: "cross_check"
-    function: "label_field_absent_for_event"
-    severity: "error"
-
-  - id: "info_label_field_in_info_section"
-    desc: "For Label Route = info tasks, the Label Field should be registered in ### Info. Downgraded to warning in favour of `info_label_field_in_participants` which reads participants.tsv directly (rulebook 绗?7鏉′箣浜?绗?娆? 绗?7鏉′箣涓?绗?娆?."
-    target: "analysis_md"
-    check: "cross_check"
-    function: "info_label_field_in_info_section"
-    severity: "warning"
-
-  - id: "info_label_field_in_participants"
-    desc: "For Label Route = info tasks, the Label Field must correspond to a column in participants.tsv (authoritative source; rulebook v3.1)."
-    target: "analysis_md"
-    check: "cross_check"
-    function: "info_label_field_in_participants"
-    severity: "error"
-
-  - id: "misc_label_field_has_misc_channel"
-    desc: "For Label Route = misc tasks, the Label Field must be a native MISC channel or a derived misc channel declared in kernel_requirements (rulebook v3.1)."
-    target: "analysis_md"
-    check: "cross_check"
-    function: "misc_label_field_has_misc_channel"
-    severity: "error"
-
   - id: "task_dataset_dispatchable"
     desc: "Every Task block must be statically dispatchable by dataset_api.build_dataset_from_task(dry_run=True) (rulebook v3.1)."
     target: "analysis_md"
     check: "cross_check"
     function: "task_dataset_dispatchable"
-    severity: "error"
-
-  - id: "misc_label_field_in_misc_section"
-    desc: "For Label Route = misc tasks, the Label Field must be registered in ### MISC Label Summary (rulebook 绗?7鏉′箣涓?绗?娆?."
-    target: "analysis_md"
-    check: "cross_check"
-    function: "misc_label_field_in_misc_section"
     severity: "error"
 
   - id: "target_def_schema_matches_route"
@@ -360,17 +310,10 @@ rules:
     severity: "error"
 
   - id: "single_target_per_task"
-    desc: "Target Definition first column (Label Field) must have exactly one unique value per task (rulebook 绗?7鏉′箣浜?."
+    desc: "Target Definition first column (source field/channel) must have exactly one unique value per misc/info task (rulebook 绗?7鏉′箣浜?."
     target: "analysis_md"
     check: "cross_check"
     function: "single_target_per_task"
-    severity: "error"
-
-  - id: "misc_classification_forbidden"
-    desc: "Label Route = misc requires Task Type = regression; classification on misc is forbidden (rulebook 绗?7鏉′箣鍏?."
-    target: "analysis_md"
-    check: "cross_check"
-    function: "misc_classification_forbidden"
     severity: "error"
 
   - id: "classification_task_has_multiple_classes"
@@ -381,14 +324,14 @@ rules:
     severity: "error"
 
   - id: "classification_y_zero_indexed_sequential"
-    desc: "Classification tasks y values must be 0-based sequential ints: distinct y set == set(range(N)). Many-to-one mapping allowed (e.g. A鈫?, B鈫?, C鈫? is valid; {0,1,3} or {1,2} are not). Applies to both event and info route TD tables."
+    desc: "Classification tasks y values must be 0-based sequential ints: distinct y set == set(range(N)). Many-to-one mapping allowed (e.g. A鈫?, B鈫?, C鈫? is valid; {0,1,3} or {1,2} are not). Applies to event route TD tables only; misc/info routes use Y Mapping Notes instead of a y column."
     target: "analysis_md"
     check: "cross_check"
     function: "classification_y_zero_indexed_sequential"
     severity: "error"
 
   - id: "derived_misc_requires_super_meta"
-    desc: "Tasks referencing a derived misc Label Field must have Meta Level = super (rulebook 绗?7鏉′箣鍏?."
+    desc: "Tasks with Route=misc whose TD channel is not listed as native in MISC Label Summary must have Meta Level = super (rulebook 绗?7鏉′箣鍏?."
     target: "analysis_md"
     check: "cross_check"
     function: "derived_misc_requires_super_meta"

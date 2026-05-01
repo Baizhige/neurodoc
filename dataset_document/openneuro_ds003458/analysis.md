@@ -48,7 +48,7 @@ Participants performed a three-armed bandit gambling task with oscillating reinf
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [S100, S113, S131, S212, S221]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -67,7 +67,7 @@ Participants performed a three-armed bandit gambling task with oscillating reinf
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.5 s, target_events = [S1, S2, S3]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -81,10 +81,10 @@ Participants performed a three-armed bandit gambling task with oscillating reinf
 - **Kernel Notes**: S1, S2, S3 each have ~3500-3700 occurrences (138 files × ~27 trials each). Raw event labels in analysis.md ("Stimulus (Left", "Right", "Up)") are truncated fragments - verify full labels from events.tsv. Concatenate fragmented stimulus labels during preprocessing.
 
 ### Potential Task 1: Full Trial Segmentation Classification
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, segment_length = 4.0 s
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
 

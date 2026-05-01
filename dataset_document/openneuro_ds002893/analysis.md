@@ -35,7 +35,7 @@ No MISC labels identified in current scan.
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [Needs verification]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Target vs non-target stimulus events (standard/deviant classification)
 
@@ -52,7 +52,7 @@ No MISC labels identified in current scan.
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5, target_events = [attend_auditory, attend_visual]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**: Sustained attention modality blocks
 
@@ -68,7 +68,7 @@ No MISC labels identified in current scan.
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [shift_attention]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Attention modality switch events
 

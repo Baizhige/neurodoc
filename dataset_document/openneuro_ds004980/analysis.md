@@ -30,10 +30,10 @@ Participants navigated a virtual architectural environment using keyboard contro
 ## Tasks
 
 ### Primary Task 1: Publisher-defined BIDS task: Default Task
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004980 DOI: https://doi.org/10.18112/openneuro.ds004980.v1.0.0
 
@@ -41,7 +41,7 @@ Participants navigated a virtual architectural environment using keyboard contro
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = ["Key pressed: UpArrow (forward)", "Key pressed: RightArrow (turn right)", "Key pressed: LeftArrow (turn left)", "Door opened", "ColliderRoom1 has been entered", "ColliderRoom2 has been entered"]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -61,7 +61,7 @@ Participants navigated a virtual architectural environment using keyboard contro
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.5 s, target_events = ["SAM:start", "SAM:completed"]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -77,7 +77,7 @@ Participants navigated a virtual architectural environment using keyboard contro
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.3 s, tmax = 0.8 s, target_events = ["Wall touched: trial failed!"]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -92,7 +92,7 @@ Participants navigated a virtual architectural environment using keyboard contro
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.3 s, tmax = 1.2 s, target_events = ["ColliderRoom1 has been entered", "ColliderRoom2 has been entered", "Player left StartSquare"]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 

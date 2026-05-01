@@ -46,7 +46,7 @@ Forty-eight subjects participated in two EEG-based speech BCI paradigms recorded
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Competition-provided trial labels for imagined/inner speech and real speech tracks.
 - **Evidence**: IEEE ICASSP 2024 EEG BCI Grand Challenge defines supervised speech-BCI classification as the core task. Source: https://2024.ieeeicassp.org/ DOI: https://doi.org/10.1109/icasspw62465.2024.10626244
 
@@ -55,7 +55,7 @@ Forty-eight subjects participated in two EEG-based speech BCI paradigms recorded
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s (per stimulus onset), target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Filter to II_II task files (filename contains `II_II`) for imagined/inner speech paradigm, or RBII files for real speech BCI. Exclude events 65536 and 65790 (BioSemi system codes). The kernel stores all Status stim channel values as string annotations.
 
@@ -69,7 +69,7 @@ Forty-eight subjects participated in two EEG-based speech BCI paradigms recorded
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s (per stimulus onset), target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Filter to RBII task files (filename contains `RBII`). Same event codes as Task 1; task type is identified from filename pattern.
 

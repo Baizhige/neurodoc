@@ -42,7 +42,7 @@ An audiovisual simple reaction-time task (AVSRT) in which participants press a b
 - **Task Type**: classification
 - **Epoch Method**: epoch_by_event_hdf5
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s
-- **Label Route**: Annotation
+- **Label Route**: event
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -74,7 +74,7 @@ An audiovisual simple reaction-time task (AVSRT) in which participants press a b
 - **Task Type**: classification
 - **Epoch Method**: epoch_by_event_hdf5
 - **Epoch Parameters**: tmin = -0.6 s, tmax = 0.4 s
-- **Label Route**: Annotation
+- **Label Route**: event
 - **Meta Level**: raw
 - **Target Definition**:
 

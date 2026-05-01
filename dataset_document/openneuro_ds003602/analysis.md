@@ -196,7 +196,7 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset)
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping for valence conditions.
 - **Meta Level**: raw
 
@@ -213,7 +213,7 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.5 s (relative to event onset)
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping for alcohol vs non-alcohol content.
 - **Meta Level**: raw
 
@@ -233,7 +233,7 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 120.0 s (per block)
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Rest block type labels.
 - **Meta Level**: raw
 
@@ -251,7 +251,7 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s (relative to picture onset) OR align to probe onset separately
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Startle probe timing categories.
 - **Meta Level**: raw
 
@@ -283,7 +283,7 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset)
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Combined valence × subject group labels (requires behavioral/clinical data merge).
 - **Meta Level**: super
 
@@ -301,7 +301,7 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.5 s (relative to event onset)
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Continuous AUDIT/ADS scores as target variable.
 - **Meta Level**: super
 

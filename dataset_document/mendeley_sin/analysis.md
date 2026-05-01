@@ -34,7 +34,7 @@ Twenty-six normal-hearing subjects (NH_subject01-NH_subject26) participated in a
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5` or `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification] | tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Condition or attended-stream labels (released split commonly uses condition 7 vs 13).
 - **Evidence**: Dataset documentation describes cocktail-party speech-in-noise auditory attention decoding. Source: https://data.mendeley.com/datasets/jyvythkz5y/2 DOI: https://doi.org/10.17632/jyvythkz5y
 
@@ -43,7 +43,7 @@ Twenty-six normal-hearing subjects (NH_subject01-NH_subject26) participated in a
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 3.5 s (= 896/256 Hz; matches pre-epoched trial length), target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Case B kernel reconstructs continuous raw from pre-epoched data; trial boundaries are annotated. Epoch window (3.5 s) matches the original pre-epoched length; use exactly 896/256 = 3.5 s to avoid boundary effects. sfreq is derived from the `tE` time axis in the `.mat` file (~ 256 Hz). Channel names are generic (`EEG001`-`EEG066`); no channel label metadata is provided.
 

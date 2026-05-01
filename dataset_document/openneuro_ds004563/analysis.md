@@ -45,7 +45,7 @@ Participants either saw someone else being touched (vicarious touch, event_4) or
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2, tmax = 0.8, target_events = [event_1, event_4]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -64,7 +64,7 @@ Participants either saw someone else being touched (vicarious touch, event_4) or
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2, tmax = 1.0, target_events = [event_2, event_8, unknown]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -102,7 +102,7 @@ Participants either saw someone else being touched (vicarious touch, event_4) or
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2, tmax = 0.8, target_events = [event_1, event_4]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 

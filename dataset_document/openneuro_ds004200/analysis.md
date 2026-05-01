@@ -86,7 +86,7 @@ Participants learned to produce and judge short, medium, and long temporal inter
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [Cond1_Phase1, Cond1_Phase2, Cond1_Phase3, Cond2_Phase1, Cond2_Phase2, Cond2_Phase3, Cond3_Phase1, Cond3_Phase2, Cond3_Phase3]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**:
 
  | Event | y | Meaning |
@@ -108,7 +108,7 @@ Participants learned to produce and judge short, medium, and long temporal inter
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [Cond1_Phase1, Cond1_Phase2, Cond1_Phase3, Cond2_Phase1, Cond2_Phase2, Cond2_Phase3]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**:
 
  | Event | y | Meaning |
@@ -127,7 +127,7 @@ Participants learned to produce and judge short, medium, and long temporal inter
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, overlap = null, target_events = [Cond1_Feedback, Cond2_Feedback, Cond3_Feedback]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**:
 
  | Event | y | Meaning |
@@ -143,7 +143,7 @@ Participants learned to produce and judge short, medium, and long temporal inter
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [Cond1_Phase1, Cond1_Phase2, Cond1_Phase3]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**:
 
  | Event | y | Meaning |

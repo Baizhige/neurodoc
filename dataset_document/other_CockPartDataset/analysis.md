@@ -48,7 +48,7 @@ Dataset origin and publication unknown. Multi-paradigm EEG corpus (CockPart Data
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 0.8 s (= 103/128 Hz; matches pre-epoched trial length), target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Filter to N400 paradigm files (`N400/EEG/Subject{N}.mat`). Case B kernel concatenates hiCloze (150) then loCloze (150) epochs; epoch window (0.8 s) matches the original pre-epoched length. sfreq = 128 Hz.
 
@@ -62,7 +62,7 @@ Dataset origin and publication unknown. Multi-paradigm EEG corpus (CockPart Data
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, overlap = 0.0 s, use full recording duration from annotation, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Filter to Natural Speech and Natural Speech - Reverse paradigm files. sfreq = 128 Hz. Multiple runs per subject; run files are independent.
 
@@ -76,7 +76,7 @@ Dataset origin and publication unknown. Multi-paradigm EEG corpus (CockPart Data
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, overlap = 0.0 s, use full recording duration from annotation, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Filter to Speech in Noise paradigm files. sfreq = 512 Hz. Condition (audio/video) inferred from filename suffix (`_a_` or `_v_`).
 
@@ -90,7 +90,7 @@ Dataset origin and publication unknown. Multi-paradigm EEG corpus (CockPart Data
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: `N400_hiCloze` vs `N400_loCloze` trial labels from the N400 subset.
 - **Evidence**: Primary task inferred from internal dataset documentation only; external publication/reference is not yet available.
 - **Notes**: Demoted from Primary Task because no external DOI/URL source is available.

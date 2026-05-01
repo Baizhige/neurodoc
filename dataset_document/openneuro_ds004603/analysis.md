@@ -62,7 +62,7 @@ Participants observed sequences of visual stimuli that either followed or violat
 - **Kernel Notes**: Violations occur at the final sequence position (after step_4). Baseline correction applied -100 to 0 ms pre-stimulus. Exclude `Stimulus/S  255` (system initialization trigger) and `Stimulus/S   50` (catch trials with motor response component). Event codes use MNE-style naming: `Stimulus/S   10`=col_vio, `Stimulus/S   20`=siz_vio, `Stimulus/S   30`=ori_vio, `Stimulus/S   40`=control. The unknown event `Stimulus/S65536` (39 occurrences) should be excluded until identified.
 
 ### Normal Task 1: Trajectory Prediction Build-up Analysis
-- **Task Type**: regression / classification (step position)
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, baseline = [-0.1, 0.0] s, target_events = [`Stimulus/S    1`, `Stimulus/S    2`, `Stimulus/S    3`, `Stimulus/S    4`]
 - **Label Route**: `event`

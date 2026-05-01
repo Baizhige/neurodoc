@@ -34,7 +34,7 @@ Participants completed a multi-condition experiment including resting state, vis
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 3.5 s, overlap = 0.5, target_events = ["1", "0"] (conditions mapped to stimulus categories)
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -50,7 +50,7 @@ Participants completed a multi-condition experiment including resting state, vis
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, segment_length = 2.0 s, overlap = null, target_events = ["1", "0"]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -66,7 +66,7 @@ Participants completed a multi-condition experiment including resting state, vis
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 3.5 s, overlap = 0.5, target_events = ["1", "0"]
-- **Label Route**: `stim`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 

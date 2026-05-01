@@ -125,7 +125,7 @@
 - **Kernel Notes**: Include 200ms pre-stimulus baseline for proper baseline correction. Exclude S99 fixation marker (21460 events) to avoid event density issues. S4-S57 encode individual exemplar identities (~1315 trials each, 60+ items)—reserved for RSA task. S255 (2 events) likely experimental outlier; exclude.
 
 ### Potential Task 1: Representational Similarity Analysis (RSA) - Exemplar Level
-- **Task Type**: encoding/RSA
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = [`Stimulus/S 4`, `Stimulus/S 5`, `Stimulus/S 6`, `Stimulus/S 7`, `Stimulus/S 8`, `Stimulus/S 9`, `Stimulus/S 10`, `Stimulus/S 11`, `Stimulus/S 12`, `Stimulus/S 13`, `Stimulus/S 14`, `Stimulus/S 15`, `Stimulus/S 16`, `Stimulus/S 17`, `Stimulus/S 18`, `Stimulus/S 19`, `Stimulus/S 20`, `Stimulus/S 21`, `Stimulus/S 22`, `Stimulus/S 23`, `Stimulus/S 24`, `Stimulus/S 25`, `Stimulus/S 26`, `Stimulus/S 27`, `Stimulus/S 28`, `Stimulus/S 29`, `Stimulus/S 30`, `Stimulus/S 31`, `Stimulus/S 32`, `Stimulus/S 33`, `Stimulus/S 34`, `Stimulus/S 35`, `Stimulus/S 36`, `Stimulus/S 37`, `Stimulus/S 38`, `Stimulus/S 39`, `Stimulus/S 40`, `Stimulus/S 41`, `Stimulus/S 42`, `Stimulus/S 43`, `Stimulus/S 44`, `Stimulus/S 45`, `Stimulus/S 46`, `Stimulus/S 47`, `Stimulus/S 48`, `Stimulus/S 49`, `Stimulus/S 50`, `Stimulus/S 51`, `Stimulus/S 52`, `Stimulus/S 53`, `Stimulus/S 54`, `Stimulus/S 55`, `Stimulus/S 56`, `Stimulus/S 57`]
 - **Label Route**: `event`

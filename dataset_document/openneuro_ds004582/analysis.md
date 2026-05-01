@@ -38,10 +38,10 @@ No additional scan information available.
 ## Tasks
 
 ### Primary Task 1: Publisher-defined BIDS task: FF
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, overlap = Needs Verification, target_events = [Needs Verification] | segment_length = Needs Verification, overlap = Needs Verification
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004582 DOI: https://doi.org/10.18112/openneuro.ds004582.v1.0.0
 
@@ -50,7 +50,7 @@ No additional scan information available.
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: N/A (unsupervised segmentation)
 - **Notes**: New Segment/ is a BrainVision hardware recording marker, not a task event. Use sliding window segmentation for feature extraction.
 

@@ -63,7 +63,7 @@ Four minutes of uninterrupted eyes-closed resting-state EEG recorded from health
 - **Kernel Notes**: Extract 5-second epochs from continuous resting-state signal using sliding window with 50% overlap. Load participant sex from dataset metadata (participants.tsv). Train binary classifier to predict sex from spectral features. Apply subject-level cross-validation splits to prevent leakage given 153 files from 111 subjects (some have multiple sessions). (replaces Classical Task 2 from original analysis.md)
 
 ### Potential Task 1: Resting State EEG Segmentation (Unsupervised)
-- **Task Type**: clustering
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
 - **Label Route**: `event`

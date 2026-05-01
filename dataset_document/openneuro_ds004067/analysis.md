@@ -166,7 +166,7 @@ Participants evaluated their support for sociopolitical protest photographs foll
 - **Task Type**: classification
 - **Epoch Method**: epoch_by_segmentation_hdf5
 - **Epoch Parameters**: segment_length = Needs verification, overlap = Needs verification, segment_alignment = stimulus onset
-- **Label Route**: Annotation
+- **Label Route**: event
 - **Meta Level**: raw
 - **Target Definition**: Combined labeling of moral conviction level and social influence condition across trial segments
 - **Evidence**: Paradigm description; DOI: 10.10106/j.cortex.2022.03.008 (examined interaction between moral conviction and social influence cues)

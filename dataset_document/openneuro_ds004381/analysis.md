@@ -51,7 +51,7 @@ Intraoperative recording of Somatosensory Evoked Potentials (SEP) elicited by me
 - **Kernel Notes**: No discrete events exist in raw data (`no_events` only). Super meta parsing required to extract stimulation rate from filenames/metadata. Segmentation aligned to stimulus artifact detection; compute SNR = signal_amplitude / (0.5 * noise_rms) per sweep for regression target. Downsampling from 20 kHz to ~1000 Hz recommended.
 
 ### Potential Task 1: Continuous Segmentation for Artifact Rejection
-- **Task Type**: regression (unsupervised)
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
 - **Label Route**: `event`

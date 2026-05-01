@@ -33,7 +33,7 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to music condition onset), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -56,7 +56,7 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 40.0 s (full stimulus duration), overlap = null, target_events = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -76,10 +76,10 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 - **Kernel Notes**: 40-second continuous music clips induce sustained affective states. Long event epoching captures entire stimulus period for decoding valence/arousal patterns. Cue duration (40s) is critical parameter. Physiological channels (ECG, GSR) present alongside EEG.
 
 ### Potential Task 1: Publisher-defined BIDS Task (Run)
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5` or `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: segment_length = Needs verification, overlap = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds002724

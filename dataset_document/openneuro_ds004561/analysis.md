@@ -33,7 +33,7 @@ Participants experienced electrical muscle stimulation that actuated their hand 
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset)
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**: Binary classification of agency attribution during EMS-induced vs. voluntary movements.
 
@@ -50,7 +50,7 @@ Participants experienced electrical muscle stimulation that actuated their hand 
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset)
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Multiclass classification distinguishing all three experimental conditions.
 
@@ -67,7 +67,7 @@ Participants experienced electrical muscle stimulation that actuated their hand 
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s (relative to event onset)
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**: Sliding-window binary classification of agency vs. non-agency across the full movement epoch.
 

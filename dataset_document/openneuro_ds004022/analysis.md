@@ -1,12 +1,10 @@
 # Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment
 
 **Dataset**: `openneuro_ds004022` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004022
-**Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 21 | **Manual Review**:
-**Channels**: 18 | **Sampling Rate**: 500 Hz
-
+**Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 21 | **Channels**: 18 | **Sampling Rate**: 500 | **Manual Review**: Zhida Shang
 ## Paradigm
 
-Seven patients with orthopedic impairment performed motor imagery tasks involving four right-upper limb movements (reaching, grasping, lifting, and twisting) guided by visual cues. EEG and fNIRS were recorded simultaneously across multiple sessions to study motor imagery-related neural activation in a clinical population. The trial structure consisted of 3 s fixation, 4 s visual cue, 3 s ready state, and 5 s motor imagery execution period. Event markers S 7-S 10 denote the four motor imagery task types, though their specific semantic mapping cannot be determined from available metadata.
+Seven participants with orthopedic impairment performed four right-upper-limb motor imagery tasks (reaching, grasping, lifting, and twisting) while 18-channel EEG and fNIRS were recorded simultaneously. Each participant completed three sessions; each session contained 40 trials with the four MI tasks presented in random order. Each trial consisted of 3 s fixation, a 4 s visual cue indicating the movement task, a 3 s ready/gray-screen period to reduce afterimage effects, and a 5 s instructed motor imagery period. Event markers `S 7`-`S 10` label the four MI task types, but their exact mapping to reaching/grasping/lifting/twisting is not recoverable from the available metadata.
 
 ## File Scan Result
 
@@ -17,7 +15,7 @@ Seven patients with orthopedic impairment performed motor imagery tasks involvin
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|---|---|---|---|---|
 | `S 1` | 21 | admin | raw | Run/session start marker |
 | `S 10` | 840 | event | raw | Trial marker for one of four motor imagery task types (reaching, grasping, lifting, or twisting) |
 | `S 2` | 840 | event | raw | Trial phase onset or sub-event marker |
@@ -33,103 +31,43 @@ Seven patients with orthopedic impairment performed motor imagery tasks involvin
 
 
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
-| `device` | missing | N/A |
+| `device` | missing | BrainVision ActiCHamp |
+
 
 ## Tasks
 
-### Potential Task 1: 4-class motor imagery
+### Classical Task 1: Four-Class Right-Upper-Limb Motor Imagery Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s *, tmax = 4 s *, target_events = [`S 7`, `S 8`, `S 9`, `S 10`]`
+- **Epoch Parameters**: tmin = 7.0 s, tmax = 14.5 s, target_events = [`S 3`, `S 4`, `S 5`, `S 6`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
-  | `S 7` | 0 | Reaching, grasping, lifting, or twisting motor imagery task |
-  | `S 8` | 1 | Reaching, grasping, lifting, or twisting motor imagery task |
-  | `S 9` | 2 | Reaching, grasping, lifting, or twisting motor imagery task |
-  | `S 10` | 3 | Reaching, grasping, lifting, or twisting motor imagery task |
+  |---|---|---|
+  | `S 3` | 0 | Motor imagery condition 1: one of reaching, grasping, lifting, twisting |
+  | `S 4` | 1 | Motor imagery condition 2: one of reaching, grasping, lifting, twisting |
+  | `S 5` | 2 | Motor imagery condition 3: one of reaching, grasping, lifting, twisting |
+  | `S 6` | 3 | Motor imagery condition 4: one of reaching, grasping, lifting, twisting |
 - **Evidence**:
-- **Notes**: The specific semantic mapping between S 7-S 10 and the four MI task types (reaching, grasping, lifting, twisting) cannot be determined from available data. All four event IDs are treated as distinct class labels for a 4-way classification task. The epoch window (0-4 s) captures the visual cue period; the actual 5 s imagery period begins after a 3 s ready state, so this task classifies based on cue-period activity rather than imagery-period activity. For imagery-period classification, a longer epoch (tmin=7 s, tmax=12 s from cue onset) would be needed.
-
-### Potential Task 2: 2-class motor imagery Reach vs Grasp
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s *, tmax = 4 s *, target_events = [`S 7`, `S 10`]`
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event ID | y | Meaning |
-  |----------|---|---------|
-  | `S 7` | 0 | Reach motor imagery |
-  | `S 10` | 1 | Grasp motor imagery |
-- **Evidence**:
-  - task_motorimagery_eeg.json / README — "four right-upper limb movements for MI tasks: reaching, grasping, lifting, and twisting"; trial structure: 3 s fixation, 4 s visual cue, 3 s ready, 5 s MI execution
-  - events.tsv absent — event annotations confirmed via EEGLAB .set headers showing `S 7` and `S 10` as trial markers among four motor imagery task types
-  - Event count analysis — `S 7` and `S 10` each appear 840 times (40 trials × 21 runs), consistent with balanced 4-class design where each class appears 10 times per run
-- **Notes**: Specific S-code-to-task mapping (which of S 7/S 8/S 9/S 10 maps to which of reach/grasp/lift/twist) cannot be definitively determined from available metadata. The labels "Reach" and "Grasp" are assigned based on the candidate's naming convention and the evidence that these two S-codes represent two of the four motor imagery task types. The 4-second epoch window aligns with the 4 s visual cue period during which participants prepare for motor imagery.
-
-### Potential Task 3: 2-class motor imagery Twist vs Lift
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s *, tmax = 4 s *, target_events = [`S 8`, `S 9`]`
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event ID | y | Meaning |
-  |----------|---|---------|
-  | `S 8` | 0 | Trial marker for one of four motor imagery task types (reaching, grasping, lifting, or twisting) — Twist (inferred from task description) |
-  | `S 9` | 1 | Trial marker for one of four motor imagery task types (reaching, grasping, lifting, or twisting) — Lift (inferred from task description) |
-- **Evidence**:
-  - `task_motorimagery_eeg.json` / README — Dataset describes four right-upper limb MI tasks: reaching, grasping, lifting, and twisting; S 7-S 10 each appear 840 times (40 trials × 21 runs), corresponding to these four task types
-  - Event count analysis — S 8 and S 9 each appear exactly 840 times, consistent with being trial markers for two of the four MI task types
-  - `eeg.json` — TaskDescription confirms four MI tasks: "reaching, grasping, lifting, and twisting"
-- **Notes**: Specific S-code-to-task semantic mapping cannot be definitively determined from available data (no events.tsv files; event annotations embedded in EEGLAB .set files with limited header exposure). The pairing of S 8/S 9 as "Twist vs Lift" follows the candidate's proposed labeling. Alternative valid pairings exist (e.g., S 7/S 8, S 7/S 9, S 7/S 10, S 8/S 10, S 9/S 10). The epoch window tmin=0, tmax=4 s captures the 4 s visual cue period per README trial structure (3 s fixation, 4 s cue, 3 s ready, 5 s imagery). Values marked with * are inferred from Category SKILL defaults and the dataset's described trial structure.
-
-### Potential Task 4: Rest vs Task State Detection
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s *, tmax = 3 s *, target_events = [`S 3`, `S 4`, `S 2`, `S 5`, `S 6`]`
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event ID | y | Meaning |
-  |----------|---|---------|
-  | S 3, S 4 | 0 | Rest state (trial phase onset/sub-event marker) |
-  | S 2, S 5, S 6 | 1 | Active task state (trial phase onset/sub-event marker) |
-- **Evidence**:
-- **Notes**: The event meanings from the locked ground truth only identify S 3/S 4 and S 2/S 5/S 6 as generic "Trial phase onset or sub-event marker" without semantic differentiation. The rest vs task grouping is inferred from the candidate's evidence summary based on event count patterns (210 occurrences each, suggesting they partition trial phases) and the trial structure described in the README (fixation 3s, cue 4s, ready 3s, MI 5s). However, without explicit timing or ordering information from events.tsv files, the assignment of S 3/S 4 to "rest" and S 2/S 5/S 6 to "task" is speculative. The S 2 event appears in both rest and task groupings across different header samples (e.g., sub-01 run-1 shows S 2 early in annotation list, sub-01 run-2 shows S 2 near start), suggesting it may mark a consistent trial phase like fixation or cue onset. The binary split follows the candidate's proposed paradigm but should be treated as a hypothesis requiring validation against actual event timing data.
-
-### Potential Task 5: 4-class motor imagery with age covariate
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s *, tmax = 4 s *, target_events = [`S 7`, `S 8`, `S 9`, `S 10`]`
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event ID | y | Meaning |
-  |----------|---|---------|
-  | `S 7` | 0 | Reaching, grasping, lifting, or twisting motor imagery task |
-  | `S 8` | 1 | Reaching, grasping, lifting, or twisting motor imagery task |
-  | `S 9` | 2 | Reaching, grasping, lifting, or twisting motor imagery task |
-  | `S 10` | 3 | Reaching, grasping, lifting, or twisting motor imagery task |
-- **Evidence**:
-- **Notes**: This task uses the `age` info field as a secondary subject-level label for multi-task or domain adaptation approaches. The primary classification target remains the 4-class motor imagery task encoded by event IDs S 7-S 10. The age values (48-83 years) are continuous and would need discretization or direct use as auxiliary regression targets in multi-task frameworks. The epoch window tmin=0, tmax=4 s captures the 4-second visual cue period during which participants prepare for motor imagery, consistent with the trial structure described in the README (3 s fixation, 4 s visual cue, 3 s ready state, 5 s imagery execution).
+  - 10.18112/openneuro.ds004022.v1.0.0 — Official README
+  - 10.3389/fnhum.2025.1583342 — Table 3: confirms 18 channels, 7 participants, 3 sessions/participant, 40 trials/session, 4 MI tasks, and trial structure `3s fixation, 4s cue, 3s ready, 5s MI`.
+- **Notes**: `S 3-S 6` are confirmed as the four mutually exclusive MI condition markers by raw event counts and event order. The exact semantic mapping to reaching/grasping/lifting/twisting is not documented, so do not assign `S 3 = Reach` etc. `S 7-S 10` should not be used as class labels because all four occur once in every trial. The epoch window is cue-marker relative and chosen to cover the later MI period; if the kernel supports context labels, a cleaner implementation is to epoch `S 8` to `S 10` and label each epoch by the preceding `S 3-S 6` marker.
 
 ## Data Quality Notes
 
-- No events.tsv files present; all event annotations embedded in EEGLAB .set file headers with limited semantic detail, preventing definitive mapping of S-codes to specific motor imagery task types.
-- `device` field is missing from metadata, limiting reproducibility and equipment characterization.
-- Small sample size (N=7 subjects, 21 files) constrains statistical power and generalizability of any machine learning models trained on this dataset.
-- Event counts for S 3-S 6 (210 each) versus S 7-S 10 (840 each) suggest uneven trial phase partitioning that is not fully explained by available documentation.
-- The `boundary` and `condition 12` admin markers appear consistently across all 21 runs but their functional role in trial structure is undocumented.
+- No run-level `events.tsv` files are present; event annotations are embedded in EEGLAB `.set` headers, so event semantics must be inferred from raw event order and counts.
+- The exact mapping from `S 3`, `S 4`, `S 5`, and `S 6` to reaching, grasping, lifting, and twisting is not documented in the README, BIDS sidecars, or reference papers.
+- `S 7-S 10` occur once in every trial and are trial phase markers, not four-class MI labels; they should not be used directly as target classes.
+- The likely MI execution window is later than the `S 3-S 6` condition marker; epoch timing should account for the trial sequence `S 2 -> S 3/S 4/S 5/S 6 -> S 7 -> S 8 -> S 9 -> S 10`.
+- The dataset is small: 7 participants and 21 EEG runs, so subject leakage and weak cross-subject generalization are major evaluation risks.
 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: completed

@@ -48,7 +48,7 @@ Participants performed time-pressured categorization of static images based on m
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [E 8, E 9]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -64,7 +64,7 @@ Participants performed time-pressured categorization of static images based on m
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [E 1, E 2, E 3, E 5, E 8, E 9]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -84,7 +84,7 @@ Participants performed time-pressured categorization of static images based on m
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [E 8, E 9]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
 
@@ -100,7 +100,7 @@ Participants performed time-pressured categorization of static images based on m
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [E 8, E 9], baseline = [-0.2, 0.0]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Same as Classical Task 1
 - **Evidence**: DOI: 10.1016/j.neuroimage.2022.119517 | DOI: 10.31234/osf.io/3x2qh

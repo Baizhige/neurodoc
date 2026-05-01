@@ -35,10 +35,10 @@ No stimulus/response trial events captured in events.tsv. All markers are admini
 ## Tasks
 
 ### Primary Task 1: Publisher-defined BIDS task: IG
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004587 DOI: https://doi.org/10.18112/openneuro.ds004587.v1.0.0
 
@@ -47,7 +47,7 @@ No stimulus/response trial events captured in events.tsv. All markers are admini
 - **Task Type**: regression
 - **Epoch Method**: `segmentation`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: None
 - **Notes**: All events in events.tsv are administrative markers or artifact annotations. No stimulus/response trial events were captured. Trial structure may be recoverable from separate behavioral logs. Use sliding-window segmentation.
 

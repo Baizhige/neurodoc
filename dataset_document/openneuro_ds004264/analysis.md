@@ -65,7 +65,7 @@ A ship-steering simulation where participants control a rotating arrow to mainta
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [Stimulus/*]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -103,7 +103,7 @@ A ship-steering simulation where participants control a rotating arrow to mainta
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, target_events = [Stimulus/S 61, Stimulus/S 62, Stimulus/S 63, Stimulus/S 64, Stimulus/S 71, Stimulus/S 72, Stimulus/S 73, Stimulus/S 74]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -125,7 +125,7 @@ A ship-steering simulation where participants control a rotating arrow to mainta
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [Stimulus/*]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
 

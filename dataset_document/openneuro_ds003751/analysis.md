@@ -55,7 +55,7 @@ Participants viewed naturalistic multimedia video clips (film excerpts, document
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 5.0 s, target_events = [`stimulus`]
-- **Label Route**: `stim`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |

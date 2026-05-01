@@ -78,9 +78,9 @@ For each candidate, decide:
   name              short descriptive task name (e.g. "4-class motor imagery")
   archetype         "A" | "B1" | "B2" | "B3" | "C"
                     A  — event is the label (Route=event, no Label Field)
-                    B1 — native misc: label = numeric column of events.tsv, regression only
+                    B1 — native misc: label = numeric/continuous misc channel, regression or classification
                     B2 — derived misc: label derived from participants.tsv OR events.tsv
-                         numeric column by a kernel transform, regression only, Meta=super
+                         numeric column by a kernel transform, regression or classification, Meta=super
                     B3 — native info: label = participants.tsv column, Route=info
                     C  — segmentation with subject-level label; Route=misc(derived) or info
   label_route       event | misc | info
@@ -124,8 +124,8 @@ HARD RULES (non-negotiable):
      keeping `N3` as the label name; merge different distractor positions into y=0). Decide
      merges by task-context relevance, not convenience. FORBIDDEN: gapped y ({0, 1, 3}),
      1-based y ({1, 2}), string labels ("class_A"), non-int y ("target"/"distractor").
-  H3 misc route is REGRESSION ONLY. Never propose misc+classification.
-  H4 Label Field required iff Route ∈ {misc, info}; forbidden for Route=event.
+  H3 misc route allows both regression AND classification. For classification, Y Mapping Notes must describe value→class mapping.
+  H4 No Label Field bullet. TD first column is the sole source identifier for misc/info routes.
   H6 segmentation ⇒ target_events = [] (don't populate must_have_events).
   G1 Every must_have_event MUST be in the Available event IDs list (or locked meanings).
   G2 Every must_have_native_misc MUST correspond to a CONTINUOUS misc channel on the raw
@@ -253,7 +253,6 @@ correctly-shaped Target Definition table.
 - **Epoch Method**: `<method>`
 - **Epoch Parameters**: <see Epoch Parameters rules below>
 - **Label Route**: `event` | `misc` | `info`
-- **Label Field**: `<channel_or_column>`        # REQUIRED iff route ∈ {misc, info}; FORBIDDEN if route=event
 - **Meta Level**: raw | super
 - **Target Definition**:
   <route-specific table — see schema matrix below>
@@ -279,13 +278,13 @@ PARAMETER INFERENCE (do NOT drop for unclear params):
   - ONLY set drop=true when BOTH: (a) no ref/skill provides ANY hint AND (b) the required
     field (e.g. target_events) is empty. Do not drop for soft reasons.
 
-=== Target Definition schema matrix ===
+=== Target Definition schema matrix (Route × Task Type) ===
   event  classification  | Event ID | y | Meaning |           (≥2 distinct y)
   event  regression      | Event ID | Value | Meaning |
-  misc   regression      | MISC Channel | Value (unit) | Notes |   (single row)
-  info   classification  | Info Field | Value | y | Meaning |      (≥2 distinct y)
-  info   regression      | Info Field | Range (unit) | Notes |     (single row)
-  misc   classification  FORBIDDEN
+  misc   classification  | MISC Channel Name | Y Mapping Notes |  (single row; Y Mapping Notes describes value→class mapping)
+  misc   regression      | MISC Channel Name | Y Mapping Notes |  (single row)
+  info   classification  | Info Field | Y Mapping Notes |         (single row; Y Mapping Notes describes value→class mapping)
+  info   regression      | Info Field | Y Mapping Notes |         (single row)
 
 === Meta Level by archetype (MANDATORY) ===
   A  (Route=event)                    → Meta Level = raw
@@ -299,9 +298,9 @@ compute. All native/pre-existing sources (event IDs, events.tsv columns, partici
 columns) → Meta Level = raw.
 
 === Hard invariants (the task block will be rejected by detect.py if violated) ===
-  - Label Field present iff route ∈ {misc, info}.
-  - misc route is regression only.
-  - classification ⇒ ≥2 distinct y values in Target Definition.
+  - No Label Field bullet; label source identified solely by Target Definition first column.
+  - misc route allows both regression and classification.
+  - event classification ⇒ ≥2 distinct y values in Target Definition; misc/info use Y Mapping Notes instead.
   - classification y MUST be 0-based sequential ints: {0, 1, ..., N-1}. Many-to-one
     mapping is allowed AND encouraged when the paradigm justifies (merge sleep N3+N4
     → y=2 keeping `N3` as the label name; merge distractors at different positions
@@ -311,8 +310,8 @@ columns) → Meta Level = raw.
   - Every Event ID used MUST appear in the candidate's kernel_needs.must_have_events
     (for event route) OR be empty (for segmentation) OR be the event anchor (for B1/B2).
 
-=== Authorized Label Field sources ===
-For misc/info routes the Label Field value MUST equal one of:
+=== Authorized TD first-column sources (misc/info routes) ===
+For misc/info routes the TD first-column value MUST equal one of:
   (a) a name in kernel_needs.must_have_native_misc (B1 native misc channel),
   (b) a name in kernel_needs.must_have_info_fields (B3 native info column), OR
   (c) a name in kernel_needs.must_derive_misc[*].name (B2/C-derived; kernel-created).
@@ -320,7 +319,7 @@ For misc/info routes the Label Field value MUST equal one of:
 IMPORTANT: A (c) name is authorized even though it DOES NOT APPEAR in the grounded catalog —
 the catalog enumerates native sources only. For derived misc (archetype B2/C-derived),
 the candidate's must_derive_misc[].name is the new channel the kernel will create; do NOT
-drop the task for "Label Field not in catalog" in this case. The source_field (not the
+drop the task for "TD source not in catalog" in this case. The source_field (not the
 derived name) is what must be grounded, and the aggregator already verified that.
 
 === Output ===
@@ -433,11 +432,11 @@ def _build_shell_analysis_md(
     misc_block = ""
     if misc_label_fields_hint:
         misc_rows = "\n".join(
-            f"| `{f}` | (regression) | N/A |" for f in misc_label_fields_hint if f
+            f"| `{f}` | native (raw misc in EEG file) | raw | N/A |" for f in misc_label_fields_hint if f
         )
         misc_block = (
             "\n### MISC Label Summary\n\n"
-            "| MISC Channel | Value (unit) | Notes |\n|---|---|---|\n"
+            "| Channel | Source | Meta | Notes |\n|---|---|---|---|\n"
             f"{misc_rows}\n"
         )
 
@@ -518,19 +517,18 @@ Dropping a task is an irreversible loss of user-visible value. Prefer surgical e
 
 === Fix-in-place playbook ===
 
-(a) misc_classification_forbidden
-    → REWRITE as either `misc + regression` (if the field is naturally continuous/ordinal)
-      or `info + classification` (if the label is a participants.tsv column), or
-      `event + classification` (if the label maps 1:1 onto distinct event IDs).
-    → Do NOT drop.
+(a) misc_classification_forbidden [RULE REMOVED — misc+classification is now allowed]
+    → If this violation still appears in legacy docs, simply verify the TD schema uses
+      | MISC Channel Name | Y Mapping Notes | and ensure Y Mapping Notes describes the
+      value→class mapping. No rewrite needed for the route/type combination.
 
-(b) info_label_field_in_info_section / misc_label_field_in_misc_section
-    → These rules check that every Label Field in a non-event-route task is also listed in
-      the dataset's ### Info / ### MISC Label Summary. The Info section in this stub is
-      pre-populated with the known participants.tsv columns; if the violation still fires,
-      the Label Field you wrote may be a minor spelling variant — rewrite it to match the
-      canonical column name in the stub (see the Info/MISC tables).
-    → Do NOT drop for this rule.
+(b) target_def_schema_matches_route
+    → The Target Definition table header must match the Route × Task Type schema:
+        misc  (any type)  → | MISC Channel Name | Y Mapping Notes |
+        info  (any type)  → | Info Field | Y Mapping Notes |
+        event classif.    → | Event ID | y | Meaning |
+        event regression  → | Event ID | Value | Meaning |
+    → Fix the header row to match; do NOT drop.
 
 (c) epoch_parameters_complete (missing tmin/tmax/overlap/segment_length/target_events)
     → Infer from Category SKILL defaults; mark the inferred value with a trailing `*`.
@@ -553,12 +551,13 @@ Dropping a task is an irreversible loss of user-visible value. Prefer surgical e
       a merge over dropping rows.
     → Do NOT drop for this rule.
 
-(e) label_field_required_for_nonevent
-    → Add the **Label Field** bullet with the channel/column name the Target Definition
-      already references.
+(e) [label_field_required_for_nonevent — RULE REMOVED]
+    → The Label Field bullet is no longer used. The source is identified by the
+      Target Definition first column. No action needed for this legacy violation.
 
-(f) label_field_absent_for_event
-    → Remove the stray **Label Field** bullet. Target Definition stays unchanged.
+(f) [label_field_absent_for_event — RULE REMOVED]
+    → The Label Field bullet is no longer part of the schema. If a stray bullet exists,
+      remove it.
 
 (g) segmentation_requires_empty_target_events
     → Clear target_events to [] for segmentation-method tasks.
@@ -570,15 +569,15 @@ Epoch Parameters minimum required keys by method:
   * epoch_by_segmentation_hdf5 — segment_length, overlap (target_events = [])
 
 Target Definition schema matrix:
-  event  classification  | Event ID | y | Meaning |
+  event  classification  | Event ID | y | Meaning |              (≥2 distinct y)
   event  regression      | Event ID | Value | Meaning |
-  misc   regression      | MISC Channel | Value (unit) | Notes |
-  info   classification  | Info Field | Value | y | Meaning |
-  info   regression      | Info Field | Range (unit) | Notes |
-  misc   classification  FORBIDDEN — rewrite (see (a)).
+  misc   classification  | MISC Channel Name | Y Mapping Notes | (single row)
+  misc   regression      | MISC Channel Name | Y Mapping Notes | (single row)
+  info   classification  | Info Field | Y Mapping Notes |        (single row)
+  info   regression      | Info Field | Y Mapping Notes |        (single row)
 
-Label Field required iff Route ∈ {misc, info}.
-classification ⇒ ≥2 distinct y.
+No Label Field bullet; label source is TD first column.
+event classification ⇒ ≥2 distinct y; misc/info use Y Mapping Notes.
 segmentation ⇒ target_events = [].
 
 Renumber tasks after any drop: Classical 1,2,...  Potential 1,2,...

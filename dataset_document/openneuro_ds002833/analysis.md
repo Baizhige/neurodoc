@@ -49,7 +49,7 @@ High-density 257-channel EEG recorded during a visual object naming or picture v
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, target_events = [DIN1]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
 

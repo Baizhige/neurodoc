@@ -30,10 +30,10 @@ No additional scan result info available.
 ## Tasks
 
 ### Primary Task 1: Publisher-defined BIDS task: Implicitlearn
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, target_events = [Needs Verification]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds006159 DOI: https://doi.org/10.18112/openneuro.ds006159.v1.0.0
 
@@ -42,7 +42,7 @@ No additional scan result info available.
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5 s
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: N/A (no event markers; segmentation only)
 - **Notes**: No trial-level events available; purely continuous EEG. Labels must be derived from external metadata (e.g., block condition labels from participants.tsv if available).
 

@@ -1,7 +1,7 @@
 # SHU Motor Imagery EEG Dataset
 
 **Dataset**: `figshare_shudb` | **Year**: 2022 | **URL**: https://figshare.com/articles/software/shu_dataset/19228725/1
-**Category**: Action/Output | **Subjects**: 25 | **Files (Completed)**: 232 | **Channels**: 32 | **Sampling Rate**: 250 Hz | **Manual Review**: Chengxuan Qin
+**Category**: Action/Output | **Subjects**: 25 | **Files (Completed)**: 232 | **Channels**: 32 | **Sampling Rate**: 250 Hz | **Manual Review**: Zhida Shang, Chengxuan Qin
 
 ## Paradigm
 

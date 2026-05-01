@@ -66,7 +66,7 @@ A hybrid spatial-navigation and free recall task where participants delivered it
 - **Task Type**: regression / connectivity
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 2.5 s, segment_length = 3.0 s, target_events = [`WORD`, `EFR_MARK`]
-- **Label Route**: `stim`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |

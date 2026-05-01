@@ -47,7 +47,7 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 - **Task Type**: classification
 - **Epoch Method**: epoch_by_event_hdf5
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [65281, 65282, 65283, 65284]
-- **Label Route**: Annotation
+- **Label Route**: event
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -65,7 +65,7 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 - **Task Type**: regression
 - **Epoch Method**: epoch_by_event_hdf5
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [65281, 65282, 65283, 65284]
-- **Label Route**: Annotation
+- **Label Route**: event
 - **Meta Level**: super
 - **Target Definition**:
 
@@ -83,7 +83,7 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 - **Task Type**: segmentation
 - **Epoch Method**: epoch_by_segmentation_hdf5
 - **Epoch Parameters**: tmin = 0.0 s, tmax = null, overlap = null, segment_length = variable, target_events = [65281, 65282, 65283, 65284]
-- **Label Route**: Annotation
+- **Label Route**: event
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -101,7 +101,7 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 - **Task Type**: classification
 - **Epoch Method**: epoch_by_event_hdf5
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [65281, 65282, 65283, 65284]
-- **Label Route**: Annotation
+- **Label Route**: event
 - **Meta Level**: raw
 - **Target Definition**:
 

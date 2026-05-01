@@ -37,10 +37,10 @@ Participants completed Flanker, Stroop, and Go/no-go tasks to evaluate the psych
 ## Tasks
 
 ### Primary Task 1: Publisher-defined BIDS task: Mixed
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004602 DOI: https://doi.org/10.18112/openneuro.ds004602.v1.0.1
 
@@ -49,7 +49,7 @@ Participants completed Flanker, Stroop, and Go/no-go tasks to evaluate the psych
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: boundary (545) is admin - exclude. cor (169,236) >> err (24,198) - significant class imbalance; undersample cor or use weighted loss. con/inc/go/ng/neu usable for separate task-level analyses.
 
@@ -63,7 +63,7 @@ Participants completed Flanker, Stroop, and Go/no-go tasks to evaluate the psych
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: 54,498 vs 47,242 - reasonably balanced. Filter by Flanker/Stroop task files only.
 

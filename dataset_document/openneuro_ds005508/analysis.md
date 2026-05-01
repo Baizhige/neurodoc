@@ -78,7 +78,7 @@ The Healthy Brain Network (HBN) EEG Release 4 is a large-scale, multi-task devel
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [`stim_ON`, `fixpoint_ON`]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |

@@ -322,7 +322,7 @@ Participants played two video games (FACE and MAZE) during a waking session—on
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 20.0 s, overlap = 10.0 s
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|--------|

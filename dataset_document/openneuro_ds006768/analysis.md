@@ -35,7 +35,7 @@ No MISC labels identified in this dataset.
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = ["target", "distractor"]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -51,7 +51,7 @@ No MISC labels identified in this dataset.
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = ["target", "distractor", "miss_response"]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
 
@@ -68,7 +68,7 @@ No MISC labels identified in this dataset.
 - **Task Type**: segmentation
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, segment_length = 4.0 s
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 

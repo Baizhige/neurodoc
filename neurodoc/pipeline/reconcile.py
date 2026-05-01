@@ -1,8 +1,8 @@
 """Phase 6.5: Reconcile Tasks section against actual scan output.
 
-Purpose: the LLM can hallucinate Label Fields / derived misc channels that the
+Purpose: the LLM can hallucinate target channels / derived misc channels that the
 kernel never actually produces. After the final scan runs, this module cross-
-references every Task's referenced field against the real scan whitelist:
+references every Task's referenced TD source against the real scan whitelist:
 
   - event IDs → scan_result["event_counts"] keys
   - native misc → scan_result["misc_channel_names"]
@@ -116,8 +116,13 @@ def _extract_referenced_fields(block: str) -> Dict[str, Any]:
     """Parse one Task block into {route, task_type, label_field, event_ids, meta_level, epoch_method}."""
     route = (_get_task_field(block, "Label Route") or "").strip("`").lower()
     task_type = (_get_task_field(block, "Task Type") or "").strip().lower()
-    label_field_raw = _get_task_field(block, "Label Field") or ""
-    label_field = label_field_raw.strip().strip("`").split()[0] if label_field_raw else ""
+    # label_field: derived from TD first column (source channel/field), not a Label Field bullet
+    label_field = ""
+    if route in ("misc", "info"):
+        from .task_synthesizer import _extract_target_def_rows as _td_rows
+        td_rows = _td_rows(block)
+        if td_rows and td_rows[0]:
+            label_field = td_rows[0][0].strip().strip("`").strip()
     meta_level = (_get_task_field(block, "Meta Level") or "").strip("`").lower()
     epoch_method_raw = (_get_task_field(block, "Epoch Method") or "").strip("`")
     epoch_method = epoch_method_raw.strip() or ""

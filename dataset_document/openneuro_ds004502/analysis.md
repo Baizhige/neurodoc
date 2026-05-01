@@ -93,7 +93,7 @@ An experimental task investigating neural mechanisms of anticipation by comparin
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [S 17, S 18, S 19, S 20, S 21, S 22, S 23, S 24, S 33, S 34, S 35, S 36, S 37, S 38, S 39, S 40, S 41, S 42, S 43, S 44, S 45, S 46, S 47, S 48, S 51, S 52, S 53, S 54, S 55, S 56, S 57]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -138,7 +138,7 @@ An experimental task investigating neural mechanisms of anticipation by comparin
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [S 33, S 34, S 35, S 36, S 37, S 38, S 39, S 40]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -160,7 +160,7 @@ An experimental task investigating neural mechanisms of anticipation by comparin
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [Stimulus/S100, Stimulus/S101, Stimulus/S102, Stimulus/S103, Stimulus/S104, Stimulus/S105]
-- **Label Route**: `stim`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 

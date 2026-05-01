@@ -151,7 +151,7 @@ Participants performed three modes of speech production - overt (spoken aloud), 
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, target_events = [`event_1`]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |

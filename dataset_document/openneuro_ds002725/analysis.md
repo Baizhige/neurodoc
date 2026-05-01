@@ -124,7 +124,7 @@ Participants listened to music stimuli designed to elicit emotional responses (a
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -2.0 s, tmax = 2.0 s, overlap = 0.0, target_events = [`265`, `768`]
-- **Label Route**: `stim`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |

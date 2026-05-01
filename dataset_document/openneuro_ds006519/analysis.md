@@ -34,7 +34,7 @@ Patients undergoing presurgical evaluation for drug-resistant epilepsy received 
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = ["prestim", "poststim"]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -47,10 +47,10 @@ Patients undergoing presurgical evaluation for drug-resistant epilepsy received 
 - **Kernel Notes**: Alignment is ONSET (both events are 'short' type, <2s). The tmin=-0.2s includes a brief pre-stimulus baseline window. Downsampling from 4096 Hz to ≤1000 Hz recommended before epoching due to high sampling rate. Event counts are balanced (35 each), confirming paired trial structure suitable for binary classification.
 
 ### Potential Task 1: Long-Segment Stimulation Analysis
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s*, tmax = 4.0 s*, overlap = null, target_events = ["prestim", "poststim"] (requires verification of long-event structure)
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -63,10 +63,10 @@ Patients undergoing presurgical evaluation for drug-resistant epilepsy received 
 - **Kernel Notes**: Verify that long-event structure exists in actual data files, or adjust to epoch_by_event_hdf5 with extended window if stimulation periods are marked as consecutive short events. Requires confirmation of stimulation duration from dataset documentation to refine tmax.
 
 ### Potential Task 2: Publisher-Defined BIDS Task (Dcs)
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 

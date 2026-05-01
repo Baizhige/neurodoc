@@ -37,7 +37,7 @@ No tasks meet the Classical Task criteria (≥1 reference with classification=re
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset)
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -67,10 +67,10 @@ No tasks meet the Classical Task criteria (≥1 reference with classification=re
 - **Kernel Notes**: Shorter window (0.8 s) sufficient for confidence processing neural correlates. Confidence may be used as regression target (continuous) rather than discrete classification. Kernel must preserve derivation source, unit, and version metadata for confidence values.
 
 ### Potential Task 2: PES BIDS Task (Publisher-Defined)
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, overlap = Needs Verification | segment_length = Needs Verification
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Event/condition labels for BIDS task PES (dataset-specific mapping — requires verification from dataset readme or phenotype files)
 - **Evidence**: OpenNeuro metadata.tasksCompleted confirms PES as completed BIDS task. DOI cited in analysis.md (10.3389/fnhum.2019.00013) not confirmed in reference extraction as supporting this specific dataset.
@@ -80,7 +80,7 @@ No tasks meet the Classical Task criteria (≥1 reference with classification=re
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, overlap = 0.0–0.5 s
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Labels derived from sustained decision phases (resource allocation strategy periods) — requires verification from behavioral logs or paradigm documentation.
 - **Evidence**: Paradigm description mentions "strategy formation in a realistic multi-agent scenario."

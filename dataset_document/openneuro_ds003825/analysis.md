@@ -42,7 +42,7 @@ Participants viewed a large-scale set of 22,248 images spanning 1,854 object con
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s, target_events = [`E 1`]
-- **Label Route**: `stim`
+- **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |

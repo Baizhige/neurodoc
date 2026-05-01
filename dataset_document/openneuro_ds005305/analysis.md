@@ -34,7 +34,7 @@ Resting-state EEG microstates were recorded to correlate spontaneous brain dynam
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5, target_events = see Target Definition
-- **Label Route**: `stim`
+- **Label Route**: `event`
 - **Meta Level**: `super`
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Microstate metrics (duration, coverage, occurrence) extracted from resting-state EEG blocks serve as predictors for executive function composite scores derived from a nine-task battery. Super meta labels stored in participants.tsv.

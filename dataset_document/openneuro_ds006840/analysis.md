@@ -36,10 +36,10 @@ This dataset investigates the neural correlates and hand kinematics associated w
 ## Tasks
 
 ### Classical Task 1: Intention Action Congruency (Primary Publisher Task)
-- **Task Type**: classification/segmentation
+- **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = 0.0, tmax = 4.0, overlap = null, target_events = [incongruent_trial] | segment_length = Needs Verification, overlap = Needs Verification
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds006840 DOI: https://doi.org/10.18112/openneuro.ds006840.v1.0.0
 - **Kernel Notes**: Raw markers sufficient for primary classification. incongruent_trial marker (6881 events) serves as conflict condition label. Full motor trial spans ~3-4s from premove through execution to hit, supporting long event epoching.
@@ -48,7 +48,7 @@ This dataset investigates the neural correlates and hand kinematics associated w
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = see Target Definition
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Event-to-label mapping for motor planning-execution cycle phases.
 
 | Event | y | Meaning |
@@ -64,7 +64,7 @@ This dataset investigates the neural correlates and hand kinematics associated w
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 2.0 s, overlap = null, target_events = [incongruent_trial]
-- **Label Route**: `Annotation`
+- **Label Route**: `event`
 - **Target Definition**: Conflict condition detection.
 
 | Event | y | Meaning |
