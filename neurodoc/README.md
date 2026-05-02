@@ -51,6 +51,12 @@ neurodoc/
 |-- rulebook/
 |   `-- semantic_rules.yaml     # Semantic validation rules used by detect.py
 |
+|-- skills/                     # Agent skill definitions for Claude Code and Codex
+|   |-- CLAUDE.md               # Dialog-driven skill loaded via @neurodoc/skills/CLAUDE.md
+|   |-- AGENTS.md               # Codex / OpenAI Agents equivalent
+|   |-- install.py              # One-command installer: python -m neurodoc.skills.install
+|   `-- README.md               # Installation guide
+|
 |-- dataset_api/                # PyTorch Dataset wrappers (read EEGUnity-generated HDF5)
 |   |-- base.py                 # BaseHDF5Dataset: lazy file handles, epoch truncation/padding
 |   |-- factory.py              # build_dataset_from_task(): dispatch Dataset by label_route
@@ -216,7 +222,8 @@ dataset = build_dataset_from_task(
 |---|---|---|---|
 | `event` | `classification` | `EventDataset` | `/epoch_meta/event_code` -> `events_map` -> int y |
 | `event` | `regression` | `EventDataset` | `/epoch_meta/event_code` -> float value |
-| `misc` | `regression` | `MISCDataset` | `/misc_meta/<channel>` single row |
+| `misc` | `classification` | `MISCDataset` | `/misc_meta/<channel>` -> kernel-encoded int y (torch.long) |
+| `misc` | `regression` | `MISCDataset` | `/misc_meta/<channel>` -> float value |
 | `info` | `classification` | `InfoDataset` | `/source_meta/<group>/attrs[field]` -> `info_map` -> int y |
 | `info` | `regression` | `InfoDataset` | `/source_meta/<group>/attrs[field]` -> float |
 
@@ -327,6 +334,27 @@ post_llm_json(config, messages)
 anthropic_to_openai_response(response)
 resolve_llm_config(config)
 ```
+
+---
+
+## Agent Skill System (Claude Code / Codex)
+
+`neurodoc/skills/` provides dialog-driven agent skills that let users process datasets
+without memorizing any commands. Install once per repo:
+
+```bash
+python -m neurodoc.skills.install
+```
+
+This creates (or updates) a root `CLAUDE.md` and `AGENTS.md`:
+- **Claude Code** reads `CLAUDE.md` → auto-loads `@neurodoc/skills/CLAUDE.md`
+- **Codex / OpenAI Agents** reads `AGENTS.md` → inline skill content
+
+After installation, open a new session and say:
+> "I want to process dataset openneuro_ds001784"
+
+The agent guides through the full workflow: machine config setup → generate → scan →
+validate → fix errors → done. See [`skills/README.md`](skills/README.md) for details.
 
 ---
 

@@ -174,12 +174,24 @@ def _is_kernel_built_raw(raw) -> bool:
         return False
 
     try:
+        n_data_channels = int(raw.get_data().shape[0])
+        if n_data_channels != len(raw.ch_names):
+            return False
+
         has_finger_channels = all(name in raw.ch_names for name in _FINGER_NAMES)
         has_segment_markers = {"train_segment", "test_segment_onset"}.issubset(
             {str(desc) for desc in raw.annotations.description}
         )
         description = json.loads(raw.info.get("description", "") or "{}")
         dataset = description.get("eegunity_description", {}).get("dataset")
+
+        # Some intermediate loaders can carry the finger channel names in info/ch_names
+        # without actually materializing the misc data rows yet. Require the picks to be
+        # readable as real channels before accepting the raw as fully kernel-built.
+        for name in _FINGER_NAMES:
+            picked = raw.get_data(picks=[name])
+            if picked.shape[0] != 1 or picked.shape[1] != raw.n_times:
+                return False
     except Exception:
         return False
 

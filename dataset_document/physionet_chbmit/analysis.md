@@ -9,108 +9,96 @@ Twenty-three pediatric subjects (22 original cases plus chb24 added later; 5 mal
 
 ## File Scan Result
 
-> **Kernel SHA256**: `eb70166664a91b7840320b90d885d45471c1a9282a38f440c5b085e2ee00d584`
+> **Kernel SHA256**: `5b18a5f37633b5153a20c7a1573700377f710a8901f40e266ea5f1f3079e57e9`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
-| `interictal` | 1424 | event | raw |  |
-| `seizure` | 181 | event | raw | Seizure period (onset to offset, variable duration) |
+|---|---|---|---|---|
+| `interictal_complement` | 883 | event | super | Seizure-free complement of the raw seizure intervals within the current recording. |
+| `interictal_ge_4h` | 392 | event | super | Seizure-free time at least 4 hours away from any seizure onset or offset. |
+| `preictal_20min` | 229 | event | super | Twenty-minute window preceding seizure onset, clipped to non-seizure time. |
+| `preictal_30min` | 239 | event | super | Thirty-minute window preceding seizure onset, clipped to non-seizure time. |
+| `seizure` | 198 | event | raw | Seizure interval (onset to offset) parsed from the CHB-MIT summary/seizure annotations. |
 
+
+> Counts in the Event Structure table represent annotation segments written to individual EDF files, not the number of logical seizure episodes. Super-meta events such as preictal_20min and preictal_30min are derived from seizure onset times and then clipped to file boundaries. Therefore, a single seizure may yield more than one preictal annotation segment when its preictal window spans multiple consecutive EDF files. As a result, the total counts for preictal_20min and preictal_30min can be greater than the total count for seizure.
 
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | partial (664/686) | N/A |
-| `subject_sex` | partial (664/686) | N/A |
-| `device` | missing | N/A |
+| `age` | partial (664/686) | e.g. 11, 14, 22 |
+| `amplifier` | missing | N/A |
+| `cap` | missing | N/A |
+| `handedness` | missing | N/A |
+| `sex` | partial (664/686) | e.g. Female, Male |
+
 
 ## Tasks
 
 ### Classical Task 1: Binary seizure detection (ictal vs interictal)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.0 s
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0, target_events = [`interictal_complement`, `seizure`]
 - **Label Route**: `event`
-- **Meta Level**: raw
+- **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `seizure` | 1 | Ictal (seizure period) |
-  | (no annotation) | 0 | Interictal (seizure-free) |
+  | `interictal_complement` | 0 | Interictal (seizure-free) |
 - **Evidence**:
-  - DOI: 10.1016/j.bspc.2024.107379 — Uses 2-second epochs for ictal vs non-seizure classification on CHB-MIT
-  - DOI: 10.1038/s41598-025-18479-9 — Binary seizure detection (ictal vs non-seizure) on CHB-MIT
-  - DOI: 10.1038/s41598-025-98389-y — 5-second windows for binary seizure vs no-seizure classification
-- **Kernel Notes**: Extract seizure epochs using segmentation on the raw EEG. For interictal class, use seizure-free segments from files without seizure annotations or exclude periods within 5-10 s of seizure onset/offset. Severe class imbalance — apply undersampling or class weighting.
+  - 10.1016/j.bspc.2024.107379 — CHB-MIT seizure intervals are taken from the dataset summary files, non-seizure data are taken from the remaining recording time, and each subject is represented with 2 s samples for seizure vs non-seizure classification.
+  - 10.1038/s41598-025-18479-9 — CHB-MIT is used for binary epileptic seizure detection based on ictal and interictal EEG phases.
+  - 10.1038/s41598-025-98389-y — Public EEG datasets including CHB-MIT are divided into 5 s fragments labeled as seizure or no seizure for binary classification, providing an alternative windowing protocol.
+- **Notes**: 
 
 ### Classical Task 2: Seizure prediction (preictal vs interictal)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 10.0 s, overlap = 1.0 s (90% overlap) *
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 10.0 s, overlap = 0.9, target_events = [`interictal_ge_4h`, `preictal_30min`]
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
-  | preictal | 1 | Period 30 min before seizure onset |
-  | interictal | 0 | Seizure-free period >=4 hours before/after seizure |
-- **Super Meta Notes**: Derived from raw event `seizure` by defining preictal as the 30-minute window preceding each seizure onset, and interictal as periods at least 4 hours before seizure onset or 4 hours after seizure offset. Kernel step: compute time differences from seizure onset timestamps to label windows.
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `preictal_30min` | 1 | Thirty-minute window preceding seizure onset, clipped to non-seizure time |
+  | `interictal_ge_4h` | 0 | Seizure-free time at least 4 hours away from any seizure onset or offset |
 - **Evidence**:
-  - DOI: 10.1088/1741-2552/ada0e5 — Uses 10 s intervals with 90% overlap for preictal vs interictal classification; preictal = 30 min before seizure, interictal >=4 hours away
-  - DOI: 10.1109/access.2020.2976866 — Seizure prediction with preictal (30-90 min before seizure) vs interictal using 30-second STFT windows
-- **Kernel Notes**: Requires precise timestamp computation. Preictal segments are the 30 minutes immediately preceding each seizure onset. Interictal segments must be at least 4 hours removed from any seizure. Exclude ictal periods entirely.
+  - 10.1088/1741-2552/ada0e5 — CHB-MIT preictal data are defined as the 30 min before seizure onset, interictal data are at least 4 hours before seizure onset and 4 hours after seizure end, and EEG is segmented into 10 s intervals with 90% overlap.
+  - 10.1109/access.2020.2976866 — CHB-MIT seizure prediction is formulated as preictal vs interictal classification, with the preictal state described as the 30 min before seizure onset.
+  - 10.3390/app12094158 — CHB-MIT preictal/interictal seizure prediction uses a seizure-distance rule for interictal data and evaluates fixed-window EEG representations.
+- **Notes**: Use generated super events directly. Extract 10-second windows with 90% overlap only inside `preictal_30min` and `interictal_ge_4h`; this makes `overlap = 9.0 s`. Exclude raw `seizure` intervals, postictal transition time, and any unlabeled seizure-free periods that do not satisfy the >=4-hour interictal rule.
 
-### Classical Task 3: Three-class seizure state classification (preictal vs ictal vs interictal)
+### Potential Task 1: Three-class seizure state classification (preictal vs ictal vs interictal)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4.0 s, overlap = 3.0 s (stride = 1.0 s)
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, overlap = 0.75, target_events = [`interictal_ge_4h`, `preictal_20min`, `seizure`]
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
-  | ictal | 1 | Seizure period (annotated seizure interval) |
-  | preictal | 0 | 20 min before seizure onset * |
-  | interictal | 2 | Remaining seizure-free periods |
-- **Super Meta Notes**: Derived from raw event `seizure` by defining preictal as the 20-minute window before seizure onset and interictal as all other seizure-free time. Advanced labeling may use signal features (Shannon entropy, mean voltage) to refine preictal vs interictal distinction within the 20-min window. Kernel step: segment with 4s windows, compute time-relative labels.
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `preictal_20min` | 0 | Twenty-minute window preceding seizure onset, clipped to non-seizure time |
+  | `seizure` | 1 | Ictal period from annotated seizure onset to offset |
+  | `interictal_ge_4h` | 2 | Seizure-free time at least 4 hours away from any seizure onset or offset |
 - **Evidence**:
-  - DOI: 10.54525/bbmd.1526069 — Three-class classification (pre-seizure/ictal/non-seizure) using 4-second EEG spectrogram windows with 3-second overlap on CHB-MIT
-- **Kernel Notes**: Segment all EEG into 4-second windows. Label windows overlapping seizure annotations as ictal (y=1). Label windows in the 20-minute pre-seizure window as preictal (y=0). Label remaining seizure-free windows as interictal (y=2). Consider using advanced signal features to further distinguish preictal from interictal within the 20-min window.
-
-### Potential Task 1: Seizure Detection - Ictal vs. Interictal (epoch_by_long_event + custom)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5` (for ictal files) + `epoch_by_segmentation_hdf5` (for interictal files)
-- **Epoch Parameters**: For seizure epochs: tmin = 0.0 s (annotation onset), use full duration; For interictal: sliding window 5.0 s, overlap = 2.5 s, target_events = see Target Definition
-- **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
-- **Notes**: Files with no seizure annotations are entirely interictal; use `epoch_by_segmentation_hdf5` for those. Files with `seizure` annotations contain both ictal and pre/post-ictal segments; consider a buffer of 5-10 s before/after seizure onset as pre-ictal/post-ictal and exclude from clean interictal class. Severe class imbalance: seizure epochs (~182 events) vs. many hours of interictal EEG.
-
-| Event | y | Meaning |
-|-------|---|---------|
-| `seizure` | 1 | Ictal activity |
-| (no annotation) | 0 | Interictal (seizure-free) baseline |
-
-### Potential Task 2: Patient-Specific Seizure Detection (epoch_by_long_event)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event`
-- **Epoch Parameters**: Needs verification
-- **Label Route**: `event`
-- **Target Definition**: Needs verification.
-- **Notes**: Train per patient; subjects chb17 appears in three sub-cases (chb17a, chb17b, chb17c) and should be treated as a single subject.
+  - 10.54525/bbmd.1526069 — CHB-MIT EEG is organized as a three-class problem with pre-seizure, seizure, and non-seizure labels; the pre-seizure interval is the 20 min before seizure, and spectrogram windows are 4 s long with a 1 s shift.
+- **Notes**: 
 
 ## Data Quality Notes
 
 - Severe class imbalance: the majority of recordings are seizure-free; balance by undersampling interictal or using cost-sensitive learning.
 - Channel count varies: most files have 23 channels; some cases include 24 or 26 channels (extra ECG or vagal nerve stimulus channels); exclude non-EEG channels.
 - Patient-specific model training is recommended; cross-patient generalization is difficult.
+- Patient-specific seizure detection/prediction should be treated as evaluation protocol variants of Classical Tasks 1-2 rather than separate label tasks; avoid subject leakage, especially between chb01 and chb21.
 - Subject chb24 has unknown age and sex.
 - Age range: 1.5-22 years (pediatric); EEG morphology differs significantly from adult norms.
 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: Yes
-> **Status**: wait_manual_review
+> **Status**: completed

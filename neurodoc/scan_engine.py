@@ -1,4 +1,4 @@
-""
+"""
 scan_engine.py —Core logic for app_scan.
 Handles: machine identity, locator cache, EEGUnity scan, analysis.md merge.
 """
@@ -641,6 +641,27 @@ def _extract_misc_channels(udataset, stdout_lines: List[str]) -> List[str]:
     recordings, so reading only the first file can miss valid derived channels.
     This helper scans forward until it has seen a stable misc-channel set.
     """
+    def _load_raw_via_kernel(row):
+        kernel = None
+        try:
+            kernel = udataset.get_shared_attr().get("kernel", None)
+        except Exception:
+            kernel = None
+        if kernel is None:
+            return None
+
+        load_fn = getattr(kernel, "load", None)
+        if load_fn is None:
+            return None
+
+        raw = load_fn(row)
+        if raw is None:
+            return None
+        apply_fn = getattr(kernel, "apply", None)
+        if apply_fn is not None:
+            raw = apply_fn(udataset, raw, row)
+        return raw
+
     locator = udataset.get_shared_attr()["locator"]
     if locator.empty:
         return []
@@ -648,7 +669,13 @@ def _extract_misc_channels(udataset, stdout_lines: List[str]) -> List[str]:
     stable_without_new = 0
     try:
         for idx in range(len(locator)):
-            raw = udataset.eeg_parser.get_data(idx, preload=False)
+            row = locator.iloc[idx]
+            try:
+                raw = udataset.eeg_parser.get_data(idx, preload=False)
+            except Exception as exc:
+                raw = _load_raw_via_kernel(row)
+                if raw is None:
+                    raise exc
             current = {
                 n for n, t in zip(raw.ch_names, raw.get_channel_types()) if t == "misc"
             }

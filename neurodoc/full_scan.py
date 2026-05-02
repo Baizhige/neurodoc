@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Run a full EEGUnity scan for one dataset and rewrite analysis.md.
 
 This script is a kernel-validation utility. It does not use LLMs, BIDS sidecars,

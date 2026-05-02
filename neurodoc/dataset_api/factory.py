@@ -6,14 +6,15 @@ The task dict shape mirrors `parseTasks` output in neuroaudit/index.html and
     {
         "label_route":        "event" | "misc" | "info",
         "task_type":          "classification" | "regression",
-        "label_field":        Optional[str],     # required for misc/info
+        "label_field":        Optional[str],     # required for misc/info; derived from TD first column
         "target_rows":        List[Dict],        # Target Definition rows
-        # target_rows schema by (route, task_type):
+        # target_rows schema by (route, task_type) — rulebook v0.6 Article 77, clause 4:
         #   event/classification: {"event_id": str, "y": int | str, "meaning": str}
         #   event/regression:     {"event_id": str, "value": float, "meaning": str}
-        #   misc/regression:      {"misc_channel": str, "value": str, "notes": str}  # 1 row
-        #   info/classification:  {"info_field": str, "value": str, "y": int, "meaning": str}
-        #   info/regression:      {"info_field": str, "range": str, "notes": str}    # 1 row
+        #   misc/classification:  {"misc_channel": str, "y_mapping_notes": str}  # 1 row
+        #   misc/regression:      {"misc_channel": str, "y_mapping_notes": str}  # 1 row
+        #   info/classification:  {"info_field": str, "y_mapping_notes": str}    # 1 row
+        #   info/regression:      {"info_field": str, "y_mapping_notes": str}    # 1 row
     }
 """
 from __future__ import annotations
@@ -145,9 +146,7 @@ def build_dataset_from_task(
              label_route=route, label_field=label_field)
 
     if route == "misc":
-        _require(ttype == "regression", "schema",
-                 "misc route is regression-only (rulebook Article 77, clause 6).",
-                 label_route=route, label_field=label_field)
+        # misc allows both classification and regression (rulebook Article 77, clause 6).
         _require(bool(label_field), "schema",
                  "misc route requires non-empty label_field.",
                  label_route=route)
@@ -178,13 +177,17 @@ def build_dataset_from_task(
         return MISCDataset(
             h5_path=h5_path,
             misc_channel=label_field,
+            task_type=ttype,
             **loader_kwargs,
         )
 
     # route == "info"
-    info_map = _parse_info_map(task) if ttype == "classification" else None
+    # Parse info_map only when actually constructing the dataset (dry_run=False).
+    # Under rulebook v0.6 the TD table for info is a single-row | Info Field | Y Mapping Notes |
+    # schema — _parse_info_map is not called during schema validation (dry_run).
     if dry_run:
         return None
+    info_map = _parse_info_map(task) if ttype == "classification" else None
     _require(h5_path is not None, "schema",
              "h5_path required when dry_run=False.", label_route=route)
     return InfoDataset(

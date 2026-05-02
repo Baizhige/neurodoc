@@ -1,12 +1,14 @@
 """MISCDataset - torch Dataset for Label Route = misc tasks.
 
 Requires HDF5 v2.1+ with a `/misc_meta/<misc_channel>` dataset of shape (N,).
-Task Type is fixed to regression (per rulebook Article 77, clause 6).
+Supports both regression and classification (rulebook Article 77, clause 6).
+For classification the kernel must write pre-encoded integer class indices into
+the misc channel; MISCDataset casts them to torch.long.
 """
 from __future__ import annotations
 
 import math
-from typing import List, Optional
+from typing import List, Literal, Optional
 
 import h5py
 import numpy as np
@@ -20,14 +22,18 @@ class MISCDataset(BaseHDF5Dataset):
         self,
         h5_path: str,
         misc_channel: str,
+        task_type: Literal["classification", "regression"] = "regression",
         channels_select: Optional[List[str]] = None,
         max_len: int = 800,
         pad_to_multiple: Optional[int] = None,
     ) -> None:
         if not misc_channel:
             raise ValueError("misc_channel must be a non-empty string.")
+        if task_type not in ("classification", "regression"):
+            raise ValueError(f"task_type must be classification|regression, got {task_type!r}.")
         self.misc_channel = misc_channel
-        self.task_type = "regression"
+        self.task_type = task_type
+        self._label_dtype = torch.long if task_type == "classification" else torch.float32
 
         super().__init__(h5_path, channels_select, max_len, pad_to_multiple)
 
@@ -56,6 +62,6 @@ class MISCDataset(BaseHDF5Dataset):
     def __getitem__(self, idx: int):
         group, flat_idx, label = self.index[idx]
         data = self._load_epoch(flat_idx)
-        label_t = torch.tensor(label, dtype=torch.float32)
+        label_t = torch.tensor(label, dtype=self._label_dtype)
         meta = {"source_group": group, "flat_idx": flat_idx}
         return data, label_t, meta
