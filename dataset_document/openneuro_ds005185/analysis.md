@@ -1,11 +1,11 @@
 # Ear-EEG Sleep Monitoring 2019 (EESM19)
 
-**Dataset**: `openneuro_ds005185` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005185
-**Category**: Biological State | **Subjects**: 20 | **Files (Completed)**: 516 | **Channels**: 25 | **Sampling Rate**: 500 Hz | **Manual Review**:
+**Dataset**: `openneuro_ds005185` | **Year**: 2018-2020/2019/2024/2025 | **URL**: https://openneuro.org/datasets/ds005185
+**Category**: Biological State | **Subjects**: 20 | **Files (Completed)**: 516 | **Channels**: 25 | **Sampling Rate**: 256/500 Hz | **Manual Review**: Yikai Dong
 
 ## Paradigm
 
-Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG) in a home environment collected in 2019. Participants self-applied in-ear EEG electrodes over multiple nights for sleep staging and feasibility assessment. Event markers include Danish-language protocol annotations (lights out, going to bed, waking up), synchronization pulses, biocalibration periods, and ASSR stimulus conditions. The dominant event is `trigger` (30,726 total), a system trigger marker used for synchronization between recording systems.
+This dataset records home-based ear-EEG sleep monitoring from 20 healthy participants and is split into two parts. The official README states that data collection took place between 2018 and 2020 and that the first publication was in 2019. Part a contains 20 subjects with four nights each of simultaneous partial PSG, ear-EEG, and wrist-worn actigraphy in the home. Part b contains 10 of those subjects with an additional 12 nights using ear-EEG, actigraphy, and a single EOG electrode. PSG nights are sessions 1-4 and each PSG night has official scoring acquisition event files. The event structure also contains Danish diary/protocol annotations, synchronization and trigger markers, electrode-test/biocalibration annotations, and ASSR-related raw event codes.
 
 ## File Scan Result
 
@@ -17,45 +17,45 @@ Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |---|---|---|---|---|
-| ` Biocalibrations ` | 79 | event | raw |  |
-| ` Biocalibrations start ` | 11 | event | raw |  |
-| ` ElektrodeTest ` | 1 | event | raw |  |
-| ` Gik i seng ` | 80 | event | raw |  |
-| ` Højre prop ud/ind ` | 1 | event | raw |  |
-| ` Højre prop ude i 5 min. ` | 1 | event | raw |  |
-| ` Kort højre prop ude ` | 1 | event | raw |  |
-| ` Lights Out ` | 94 | event | raw |  |
-| ` Sov uroligt ` | 1 | event | raw |  |
-| ` Stadig vågen ` | 1 | event | raw |  |
-| ` Start af måling ` | 75 | event | raw |  |
-| ` Stod op ` | 70 | event | raw |  |
-| ` Stoppede måling ` | 2 | event | raw |  |
-| ` Sync ` | 77 | event | raw |  |
-| ` Tog propper ud ` | 1 | event | raw |  |
-| ` Tog propperne ud ` | 1 | event | raw |  |
-| ` Toietl ` | 1 | event | raw |  |
-| ` Vågen ` | 7 | event | raw |  |
-| ` Vågen i nat ` | 1 | event | raw |  |
-| ` Vågen længe ` | 1 | event | raw |  |
-| ` Vågen-gik i seng ` | 1 | event | raw |  |
-| ` Vågen-stod op ` | 1 | event | raw |  |
-| ` elektrodetest 2 ` | 1 | event | raw |  |
-| ` højre prop ude igen ` | 2 | event | raw |  |
-| ` højre øreprop i igen ` | 2 | event | raw |  |
-| ` højre øreprop ude ` | 2 | event | raw |  |
-| ` i seng igen ` | 2 | event | raw |  |
-| ` meget vågen i ca. 2 timer ` | 1 | event | raw |  |
-| ` opvågning ` | 1 | event | raw |  |
-| ` på toilet ` | 2 | event | raw |  |
-| ` satte propperne i ` | 2 | event | raw |  |
-| ` sluk mobita ` | 1 | event | raw |  |
-| ` slukkede mobita ` | 1 | event | raw |  |
-| ` tog propper ud ` | 1 | event | raw |  |
-| ` tog propperne ud ` | 1 | event | raw |  |
-| ` tog venstre prop ud ` | 1 | event | raw |  |
-| ` vågen ` | 6 | event | raw |  |
-| ` vågen i lidt tid ` | 2 | event | raw |  |
-| ` vågnede ` | 1 | event | raw |  |
+| `Biocalibrations` | 79 | event | raw |  |
+| `Biocalibrations start` | 11 | event | raw |  |
+| `ElektrodeTest` | 1 | event | raw |  |
+| `Gik i seng` | 80 | event | raw |  |
+| `Højre prop ud/ind` | 1 | event | raw |  |
+| `Højre prop ude i 5 min.` | 1 | event | raw |  |
+| `Kort højre prop ude` | 1 | event | raw |  |
+| `Lights Out` | 94 | event | raw |  |
+| `Sov uroligt` | 1 | event | raw |  |
+| `Stadig vågen` | 1 | event | raw |  |
+| `Start af måling` | 75 | event | raw |  |
+| `Stod op` | 70 | event | raw |  |
+| `Stoppede måling` | 2 | event | raw |  |
+| `Sync` | 77 | event | raw |  |
+| `Tog propper ud` | 1 | event | raw |  |
+| `Tog propperne ud` | 1 | event | raw |  |
+| `Toietl` | 1 | event | raw |  |
+| `Vågen` | 7 | event | raw |  |
+| `Vågen i nat` | 1 | event | raw |  |
+| `Vågen længe` | 1 | event | raw |  |
+| `Vågen-gik i seng` | 1 | event | raw |  |
+| `Vågen-stod op` | 1 | event | raw |  |
+| `elektrodetest 2` | 1 | event | raw |  |
+| `højre prop ude igen` | 2 | event | raw |  |
+| `højre øreprop i igen` | 2 | event | raw |  |
+| `højre øreprop ude` | 2 | event | raw |  |
+| `i seng igen` | 2 | event | raw |  |
+| `meget vågen i ca. 2 timer` | 1 | event | raw |  |
+| `opvågning` | 1 | event | raw |  |
+| `på toilet` | 2 | event | raw |  |
+| `satte propperne i` | 2 | event | raw |  |
+| `sluk mobita` | 1 | event | raw |  |
+| `slukkede mobita` | 1 | event | raw |  |
+| `tog propper ud` | 1 | event | raw |  |
+| `tog propperne ud` | 1 | event | raw |  |
+| `tog venstre prop ud` | 1 | event | raw |  |
+| `vågen` | 6 | event | raw |  |
+| `vågen i lidt tid` | 2 | event | raw |  |
+| `vågnede` | 1 | event | raw |  |
 | `Electrodetest` | 198 | event | raw |  |
 | `Forsøg på at sove` | 1 | event | raw |  |
 | `Got up` | 126 | event | raw |  |
@@ -105,18 +105,18 @@ Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG
 | `på toilet` | 1 | event | raw |  |
 | `rettede på prop` | 1 | event | raw |  |
 | `rettede øreprop til` | 1 | event | raw |  |
-| `scoring1_1-W` | 11408 | event | raw |  |
-| `scoring1_2-REM` | 13675 | event | raw |  |
-| `scoring1_3-N1` | 5510 | event | raw |  |
-| `scoring1_4-N2` | 32478 | event | raw |  |
-| `scoring1_5-N3` | 12836 | event | raw |  |
-| `scoring1_7-Artefact` | 2871 | event | raw |  |
-| `scoring2_1-W` | 12464 | event | raw |  |
-| `scoring2_2-REM` | 14263 | event | raw |  |
-| `scoring2_3-N1` | 3713 | event | raw |  |
-| `scoring2_4-N2` | 31305 | event | raw |  |
-| `scoring2_5-N3` | 16167 | event | raw |  |
-| `scoring2_7-Artefact` | 886 | event | raw |  |
+| `scoring1_1-W` | 11408 | event | raw | Manual sleep scoring by scorer 1: Wake |
+| `scoring1_2-REM` | 13675 | event | raw | Manual sleep scoring by scorer 1: REM sleep |
+| `scoring1_3-N1` | 5510 | event | raw | Manual sleep scoring by scorer 1: N1 sleep |
+| `scoring1_4-N2` | 32478 | event | raw | Manual sleep scoring by scorer 1: N2 sleep |
+| `scoring1_5-N3` | 12836 | event | raw | Manual sleep scoring by scorer 1: N3 sleep |
+| `scoring1_7-Artefact` | 2871 | event | raw | Manual sleep scoring by scorer 1: Artefact; exclude from sleep-stage targets |
+| `scoring2_1-W` | 12464 | event | raw | Manual sleep scoring by scorer 2: Wake |
+| `scoring2_2-REM` | 14263 | event | raw | Manual sleep scoring by scorer 2: REM sleep |
+| `scoring2_3-N1` | 3713 | event | raw | Manual sleep scoring by scorer 2: N1 sleep |
+| `scoring2_4-N2` | 31305 | event | raw | Manual sleep scoring by scorer 2: N2 sleep |
+| `scoring2_5-N3` | 16167 | event | raw | Manual sleep scoring by scorer 2: N3 sleep |
+| `scoring2_7-Artefact` | 886 | event | raw | Manual sleep scoring by scorer 2: Artefact; exclude from sleep-stage targets |
 | `tog højre øreprop ud` | 1 | event | raw |  |
 | `tog propper ud` | 1 | event | raw |  |
 | `tog venstre prop ud` | 1 | event | raw |  |
@@ -125,13 +125,14 @@ Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG
 | `vågen i lidt tid` | 1 | event | raw |  |
 | `vågnede uden prop` | 1 | event | raw |  |
 
+
 ### Info
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
-| `device` | complete | N/A |
+| `subject_age` | complete | Mapped from `participants.tsv` column `age`; age in 2019, range 22-36 years. |
+| `subject_sex` | complete | Mapped from `participants.tsv` column `sex`; values `f` = 13, `m` = 7. |
+| `device` | complete | README identifies the EEG recorder as TMSi Mobita; amplifier/cap details are also captured in scan-derived fields. |
 | `acq` | partial (356/516) | e.g. PSG, earEEG |
 | `amplifier` | complete | e.g. TMSi Mobita |
 | `cap` | complete | e.g. custom ear-EEG earpieces, custom ear-EEG earpieces with partial PSG electrodes, custom self-applied ear-EEG earpieces with single EOG electrode |
@@ -154,79 +155,84 @@ Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG
 | `task` | partial (356/516) | e.g. ASSR, sleep, electrodeTestLab |
 | `task_description` | partial (156/516) | e.g. Auditory Steady State Response: 40 Hz amplitude modulated noise, with accompanying trigger signal, was played to the subject. By focusing on the 40 Hz SNR in the recorded data, an objective signal quality could be determined., Subject watched a short video clip with various instructions (jaw clenching, eyes open/closed, eyes moving left & right), to be able to compare those results to the ASSR results. |
 
+
 ## Tasks
 
-### Potential Task 1: Age Regression from Sleep EEG
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 30 s *, overlap = 0.0 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `age`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 22.0–36.0 (years) | Continuous chronological age from participants.tsv; N=20 subjects with mean ~26 years. Each 30-second segment inherits the subject's age as regression target. |
-- **Evidence**:
-- **Notes**: Segmentation-based regression task using standard 30-second sleep epoch length. No event structure required since target (age) is subject-level continuous variable. Independent segments (0 overlap) treated as samples for age prediction model.
-
-### Potential Task 2: Sex Classification from Sleep EEG
+### Classical Task 1: Scorer 1 5-class sleep stage classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 30 s *, overlap = 0.0 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `sex`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | f | 0 | female |
-  | sex | m | 1 | male |
-- **Evidence**:
-  - participants.tsv — 20 subjects with complete sex labels (13 female, 7 male); confirmed f/m encoding
-- **Notes**: 30-second segments match standard sleep epoch length used in clinical sleep staging. Sex is a subject-level constant label broadcast to all segments from the same subject. Classification is binary with y ∈ {0, 1}.
-
-### Potential Task 3: continuous sleep monitoring segmentation
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 30 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `age`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 22.0–36.0 (years) | Subject chronological age from participants.tsv; predicted from 30-s unannotated ear-EEG segments |
-- **Evidence**:
-  - participants.tsv — age column complete for all 20 subjects (range 22–36 years)
-  - README — describes 16-night subjects (sessions 1–4 with PSG, sessions 5–16 ear-EEG only without scoring), enabling continuous monitoring without stage labels
-  - task-sleep_acq-diary_events.json — confirms sleep acquisition diary structure; nights without scoring events lack hypnogram labels
-- **Notes**: Archetype C (segmentation + info-native). The 30-second segment length with 50% overlap is standard for wearable EEG analysis and sleep monitoring applications. This task leverages the subset of 16-night subjects where most nights (sessions 5–16) have no PSG scoring, making them suitable for continuous unannotated segmentation. Age prediction from raw EEG segments demonstrates biological state inference without full PSG montage or manual sleep staging.
-
-### Potential Task 4: ASSR stimulus condition classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -1 s *, tmax = 5 s *, target_events = [`event_4`, `event_5`, `event_6`, `event_7`, `event_8`, `event_9`]
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`scoring1_1-W`, `scoring1_2-REM`, `scoring1_3-N1`, `scoring1_4-N2`, `scoring1_5-N3`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
-  | event_4 | 0 | ASSR stimulus condition 1 |
-  | event_5 | 1 | ASSR stimulus condition 2 |
-  | event_6 | 2 | ASSR stimulus condition 3 |
-  | event_7 | 3 | ASSR stimulus condition 4 |
-  | event_8 | 4 | ASSR stimulus condition 5 |
-  | event_9 | 5 | ASSR stimulus condition 6 |
+  |---|---|---|
+  | `scoring1_1-W` | 0 | Wake, scorer 1 |
+  | `scoring1_3-N1` | 1 | N1 sleep, scorer 1 |
+  | `scoring1_4-N2` | 2 | N2 sleep, scorer 1 |
+  | `scoring1_5-N3` | 3 | N3 sleep, scorer 1 |
+  | `scoring1_2-REM` | 4 | REM sleep, scorer 1 |
 - **Evidence**:
-  - eeg.json — TaskName="ASSR", TaskDescription describes 40 Hz amplitude modulated noise with trigger signal for objective signal quality determination
-  - Event meanings (locked) — event_4 through event_9 map to ASSR stimulus conditions 1-6 respectively, scoped to task-ASSR
-- **Notes**: Potential task: no actual events.tsv files were found for ASSR tasks after exhaustive search, making this candidate uncertain despite the clear event meaning mappings. The event counts for event_4 (19), event_5 (51), event_6 (34), event_7 (20), event_8 (6), and event_9 (2) suggest these events do appear in the data, but their provenance cannot be verified from TSV files. Epoch timing inferred from ASSR paradigm requirements (6-second window to capture 40 Hz response stabilization).
+  - OpenNeuro ds005185 README — PSG nights are sessions 1-4 and each PSG night has an additional scoring acquisition event file.
+  - OpenNeuro `task-sleep_events.json` — `Scoring1` defines manual sleep scoring by scorer 1 with Wake, REM, N1, N2, N3, Artefact, and Unscored levels.
+  - Full official S3 audit — 80 scorer-1 scoring files; all scoring rows have `duration = 30`.
+  - 10.1038/s41597-025-04579-8 — Data descriptor states EESM19 manual scorings are included as `.tsv` event files and PSG recordings were scored twice by different technicians.
+  - 10.1038/s41598-019-53115-3 — First EESM19 publication supports whole-night ear-EEG sleep-stage analysis.
+- **Notes**: `scoring1_7-Artefact` is excluded from target events. Scorer 1 is kept separate from scorer 2; no scorer merging or adjudication is assumed.
+
+### Classical Task 2: Scorer 2 5-class sleep stage classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`scoring2_1-W`, `scoring2_2-REM`, `scoring2_3-N1`, `scoring2_4-N2`, `scoring2_5-N3`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `scoring2_1-W` | 0 | Wake, scorer 2 |
+  | `scoring2_3-N1` | 1 | N1 sleep, scorer 2 |
+  | `scoring2_4-N2` | 2 | N2 sleep, scorer 2 |
+  | `scoring2_5-N3` | 3 | N3 sleep, scorer 2 |
+  | `scoring2_2-REM` | 4 | REM sleep, scorer 2 |
+- **Evidence**:
+  - OpenNeuro ds005185 README — PSG nights are sessions 1-4 and each PSG night has an additional scoring acquisition event file.
+  - OpenNeuro `task-sleep_events.json` — `Scoring2` defines manual sleep scoring by scorer 2 with Wake, REM, N1, N2, N3, Artefact, and Unscored levels.
+  - Full official S3 audit — 80 scorer-2 scoring files; all scoring rows have `duration = 30`.
+  - 10.1038/s41597-025-04579-8 — Data descriptor states EESM19 PSG recordings were manually scored twice and scorings are included as `.tsv` event files.
+  - 10.1038/s41598-019-53115-3 — First EESM19 publication supports whole-night ear-EEG sleep-stage analysis.
+- **Notes**: `scoring2_7-Artefact` is excluded from target events. Scorer 2 is kept separate from scorer 1; no scorer merging or adjudication is assumed.
+
+### Potential Task 1: Age regression from sleep EEG
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 30 s, overlap = 0.0, target_events = []
+- **Label Route**: `info`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Y Mapping Notes |
+  |---|---|
+  | `subject_age` | no mapping; numeric age in years, range 22-36 |
+- **Evidence**:
+  - OpenNeuro ds005185 `participants.tsv` and `participants.json` — age is available for all 20 participants and is defined as age in 2019.
+- **Notes**: Subject-level metadata task, not a core published sleep-staging benchmark. Segmenting EEG does not increase the number of independent subject-level age labels.
+
+### Potential Task 2: Sex classification from sleep EEG
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 30 s, overlap = 0.0, target_events = []
+- **Label Route**: `info`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Y Mapping Notes |
+  |---|---|
+  | `subject_sex` | f -> 0; m -> 1 |
+- **Evidence**:
+  - OpenNeuro ds005185 `participants.tsv` and `participants.json` — sex is complete for all 20 participants; distribution is 13 f / 7 m.
+- **Notes**: Subject-level metadata task, not a core published sleep-staging benchmark.
 
 ## Data Quality Notes
 
-- Sleep stage labels (W/N1/N2/N3/REM) are not present in raw EEG event markers and must be extracted from PSG annotation sidecar files; these were available in the original dataset but are not reflected in the current event structure scan.
-- The `device` info field is completely missing across all files, limiting hardware-specific analyses.
+- Sleep stage labels (W/N1/N2/N3/REM) are not present in raw EEG event markers and must be extracted from PSG annotation sidecar files.
 - Danish-language event annotations dominate the event structure, which may require translation for broader usability; multiple spelling variants exist (e.g., `Vågen` vs `vågen`, `Tog propper ud` vs `tog propper ud`).
 - ASSR task events (event_4 through event_9) appear in the scan with low counts but their provenance cannot be verified from events.tsv files, creating uncertainty for task construction.
 - The extremely high count of `trigger` events (30,726) relative to all other events suggests dense synchronization pulses that may need downsampling or exclusion during epoching.
@@ -235,4 +241,4 @@ Naturalistic multi-night sleep monitoring using ear-EEG and polysomnography (PSG
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: completed

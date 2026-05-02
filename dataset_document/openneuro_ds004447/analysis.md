@@ -1,7 +1,7 @@
 # The BMI-HDEEG dataset 3
 
 **Dataset**: `openneuro_ds004447` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004447
-**Category**: Action/Output | **Subjects**: 30 | **Files (Completed)**: 418 | **Channels**: 130 | **Sampling Rate**: 1000 Hz | **Manual Review**:
+**Category**: Action/Output | **Subjects**: 22 | **Files (Completed)**: 418 | **Channels**: 130 | **Sampling Rate**: 1000 Hz | **Manual Review**: Yikai Dong
 
 ## Paradigm
 
@@ -23,6 +23,7 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
 | `event_3-task` | 910 | event | raw | Task/motor imagery instruction onset in 4-phase blocks; trigger value 3, instruction `task`, corresponding to right-finger kinesthetic motor imagery/SMR-ERD control. |
 | `event_4-interval` | 910 | event | raw | Interval/blank instruction onset in 4-phase blocks; trigger value 4, instruction `interval`, used as the post-task blank/break phase. |
 
+
 > Event IDs are emitted as `event_<value>-<instruction>` because raw trigger value 2 is reused with different meanings (`ready` in 4-phase blocks and `task` in 2-phase blocks). Onsets are converted from the events.tsv millisecond unit to MNE seconds by the kernel.
 
 ### Info
@@ -31,7 +32,7 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
 |---|---|---|
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
-| `device` | complete | N/A |
+| `device` | complete | EEG sidecar reports Manufacturer = Magstim EGI, ManufacturersModelName = GES400, SamplingFrequency = 1000, and EEGChannelCount = 129. |
 | `amplifier` | complete | e.g. GES400 |
 | `cap` | complete | e.g. Magstim EGI Hydrocel Geodesic Sensor Net |
 | `dataset` | complete | e.g. openneuro_ds004447 |
@@ -51,147 +52,101 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
 | `subject_id` | complete | e.g. sub-001, sub-002, sub-003 |
 | `task` | complete | e.g. smrbmi |
 
+
 ## Tasks
 
-### Classical Task 1: 2-class motor preparation vs execution
+### Classical Task 1: Rest vs right-hand motor imagery state classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s, tmax = 2 s, target_events = [`event_2`, `event_3`]`
+- **Epoch Parameters**: tmin = 0 s, tmax = 2 s, target_events = [`event_1-rest`, `event_2-task`, `event_3-task`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
-  | event_2 | 0 | task phase (Schema B: training sessions) |
-  | event_3 | 1 | rest phase (Schema B: training sessions) |
+  |---|---|---|
+  | `event_1-rest` | 0 | rest / relaxation phase |
+  | `event_2-task` | 1 | right-hand motor imagery task phase in 2-phase training sessions |
+  | `event_3-task` | 1 | right-hand motor imagery task phase in 4-phase assessment sessions |
 - **Evidence**:
-  - 10.1038/s41597-023-02260-6 — Paper explicitly uses tmin=0s, tmax=2s for ready vs task comparison with C3-targeted ERD detection in 30 participants with 128-channel EEG at 1000 Hz
-  - 10.1109/tnsre.2024.3365197 — Follow-up analysis using same epoching parameters for motor preparation vs execution discrimination
-- **Notes**: The original paper's terminology conflates schemas: their "ready" maps to event_6 (assessment sessions only, 91 events) and "task" maps to event_4 (assessment, 1237 events) OR event_2 (training, 5090 events). The locked meanings reveal event_2=task and event_3=rest in Schema B (training sessions, dominant data volume). We emit a grounded rest-vs-task discrimination using the dominant Schema B data (event_2 vs event_3), which captures the BCI's core rest-task state discrimination with substantial trial count (5090 vs 3270). This is NOT the paper's exact "preparation vs execution" mapping (which would require event_6 vs event_4, limited to 91+1237 assessment trials), but is the most statistically viable and schema-honest classification task from this dataset. The event_2=task label represents the active motor execution state; event_3=rest represents the resting baseline state.
+  - 10.1038/s41597-023-02260-6 — The data descriptor describes Dataset 3 as a sensorimotor rhythm-based BCI dataset using right-hand motor imagery and SMR-ERD control.
+  - OpenNeuro ds004447 `events.tsv` — Public event files contain `rest` and `task` instructions; trigger value 2 is schema-dependent and must be disambiguated by instruction.
+  - https://github.com/Junichi-Ushiba-Laboratory/pj-hd-smrbmi/blob/main/helper_analysis_EEG.m — Sample analysis code labels Dataset 3 windows as rest/task.
+- **Notes**: This is the most defensible classical task because it matches the dataset's core SMR-ERD BCI contrast: rest versus right-hand motor imagery. It replaces the unsupported "motor preparation vs execution" formulation. `tmax = 2 s` is a conservative implementation window and is not claimed as a verbatim paper parameter.
 
-### Classical Task 2: Ready vs Task State Classification (Schema A Assessment)
+### Potential Task 1: Ready vs task state classification in 4-phase assessment sessions
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s, tmax = 2 s, target_events = [`event_6`, `event_4`]`
+- **Epoch Parameters**: tmin = 0 s, tmax = 2 s, target_events = [`event_2-ready`, `event_3-task`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
-  | event_6 | 0 | ready |
-  | event_4 | 1 | task |
+  |---|---|---|
+  | `event_2-ready` | 0 | ready / preparation instruction in 4-phase assessment sessions |
+  | `event_3-task` | 1 | right-hand motor imagery task instruction in 4-phase assessment sessions |
 - **Evidence**:
-  - 10.1038/s41597-023-02260-6 — Schema A assessment sessions (ses-01, ses-07, ses-13, ses-19) contain event_6 (ready, 91 events) and event_4 (task, 1237 events); ready phase has 2s duration per events.tsv, supporting tmax=2s for preparation-execution comparison
-- **Notes**: Classification of trial phase: ready (preparation) versus task (execution) in assessment sessions. Both classes are phase markers, not motor imagery classes. The 2-second epoch window captures the full ready period and early task period, matching the paper's analysis approach for motor preparation vs motor execution comparison.
+  - OpenNeuro ds004447 `events.tsv` — 4-phase sessions contain value 2 with instruction `ready` and value 3 with instruction `task`.
+- **Notes**: This is data-supported but should remain a Potential Task. Current evidence confirms the event structure, but does not support treating ready-vs-task as the primary published benchmark.
 
-### Potential Task 1: Rest vs Task State Classification (Schema B)
+### Potential Task 2: Four-state instruction classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 2 s, target_events = [`event_2`, `event_3`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 2 s, target_events = [`event_1-rest`, `event_2-ready`, `event_2-task`, `event_3-task`, `event_4-interval`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
-  | event_2 | 0 | task |
-  | event_3 | 1 | rest |
+  |---|---|---|
+  | `event_1-rest` | 0 | rest / relaxation instruction |
+  | `event_2-ready` | 1 | ready / preparation instruction in 4-phase assessment sessions |
+  | `event_2-task` | 2 | right-hand motor imagery task instruction in 2-phase training sessions |
+  | `event_3-task` | 2 | right-hand motor imagery task instruction in 4-phase assessment sessions |
+  | `event_4-interval` | 3 | interval / blank instruction in 4-phase assessment sessions |
 - **Evidence**:
-  - 10.1038/s41597-023-02260-6 — Schema B (training sessions, ses-02-06, ses-08-12, ses-14-18) contains 5090 event_2 (task) and 3270 event_3 (rest) events across 15 sessions per subject; locked meanings confirm event_2=task and event_3=rest in Schema B
-- **Notes**: Fundamental SMR-ERD BCI discrimination: rest state (no ERD) vs task state (motor imagery producing ERD). Schema B is the dominant data schema with the majority of events. The 0-2s window captures the early task execution period while avoiding transition overlap, as task duration varies 5-6s per events.tsv.
+  - OpenNeuro ds004447 `events.tsv` — Public event files expose `rest`, `ready`, `task`, and `interval` instructions.
+- **Notes**: This task classifies instruction/phase state rather than motor-imagery class. Because `ready` and `interval` occur only in 4-phase sessions, downstream use should report schema imbalance.
 
-### Potential Task 2: 4-class trial phase classification (Schema A)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s *, tmax = 2 s *, target_events = [`event_1`, `event_4`, `event_5`, `event_6`]`
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event ID | y | Meaning |
-  |----------|---|---------|
-  | event_1 | 0 | rest |
-  | event_6 | 1 | ready |
-  | event_4 | 2 | task |
-  | event_5 | 3 | interval |
-- **Evidence**:
-- **Notes**: Epoch parameters inferred from standard BCI epoching practice and the constraint that ready phase (event_6) is only 2s long, making tmax=2s the safe upper bound to capture all phases without exceeding the shortest duration. Severe class imbalance exists: ready (91 events) vs task/interval (~1237 each) vs rest (~327). This task classifies trial phase state in assessment sessions (ses-01, ses-07, ses-13, ses-19) where Schema A is used.
-
-### Potential Task 3: 3-class rest vs ready vs task (Schema A)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s *, tmax = 2 s *, target_events = [`event_1`, `event_6`, `event_4`]
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event ID | y | Meaning |
-  |----------|---|---------|
-  | `event_1` | 0 | rest |
-  | `event_6` | 1 | ready |
-  | `event_4` | 2 | task |
-- **Evidence**:
-  - events.tsv (sub-001_ses-01) — Schema A assessment sessions show value 1='rest', value 2='ready', value 3='task' with durations 5s, 2s, 6s respectively; ready phase is 2s duration supporting tmax=2s window
-  - events.json — 'value' column defined as 'The code (EEG Marker or Trigger value) associated with an event', 'instruction' column describes task content
-- **Notes**: Task discriminates three cognitive-motor states from assessment sessions only (ses-01, ses-07, ses-13, ses-19). event_1 (rest, 327 events), event_6 (ready, 91 events), and event_4 (task, 1237 events) are phase markers not MI class labels, forming a valid state detection task. Imbalanced classes with ready being scarce; excludes event_5 (interval) to focus on progression from rest through preparation to execution. tmin/tmax inferred from classical reference and ready phase duration.
-
-### Potential Task 4: Age Regression from EEG
+### Potential Task 3: Age regression from EEG segments
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Epoch Parameters**: segment_length = 2 s, overlap = 1, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 18.0–27.0 (years) | N=30 subjects; narrow 9-year span may limit predictive signal |
+  | Info Field | Y Mapping Notes |
+  |---|---|
+  | `subject_age` | no mapping; numeric age in years, range 19-27 for the 22 publicly available EEG subjects |
 - **Evidence**:
-  - participants.tsv — age column complete for all 30 subjects (range 18–27 years)
-- **Notes**: Segmentation-based subject-level regression. No event structure needed; fixed 2-second windows with 50% overlap provide multiple samples per recording while preserving frequency resolution at 1000 Hz sampling rate. Age is a native participants.tsv column (B3 archetype, Meta Level = raw).
+  - OpenNeuro ds004447 `participants.tsv` — Age metadata is available; only `sub-001` to `sub-022` have public EEG data directories.
+- **Notes**: Subject-level metadata task. It is technically implementable but not the core BCI benchmark.
 
-### Potential Task 5: Gender Classification from EEG
+### Potential Task 4: Sex classification from EEG segments
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5, target_events = []`
+- **Epoch Parameters**: segment_length = 2 s, overlap = 1, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `gender`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | gender | female | 0 | female |
-  | gender | male | 1 | male |
+  | Info Field | Y Mapping Notes |
+  |---|---|
+  | `subject_sex` | female -> 0; male -> 1 |
 - **Evidence**:
-  - participants.tsv — N=30 subjects with gender column: 5 female, 25 male (complete, categorical)
-- **Notes**: Subject-level trait prediction via fixed-window EEG segmentation. Severe class imbalance (5:25) but technically valid binary classification with ≥2 distinct classes. 2-second windows with 50% overlap are inferred defaults for subject-level classification tasks where no trial structure is needed.
+  - OpenNeuro ds004447 `participants.tsv` — Sex metadata is available; among the 22 publicly available EEG subjects the distribution is 3 female / 19 male.
+- **Notes**: Technically valid binary metadata task, but strongly imbalanced and not central to the BCI paradigm.
 
-### Potential Task 6: handedness classification from EEG
+### Potential Task 5: Handedness classification from EEG segments
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5, target_events = []
+- **Epoch Parameters**: segment_length = 2 s, overlap = 1, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `handedness`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | handedness | left | 0 | left-handed |
-  | handedness | right | 1 | right-handed |
+  | Info Field | Y Mapping Notes |
+  |---|---|
+  | `handedness` | left -> 0; right -> 1 |
 - **Evidence**:
-- **Notes**: Binary classification of subject handedness from segmented resting/task EEG. Extremely imbalanced dataset (1 left-handed vs 29 right-handed subjects). The single left-handed subject may be an outlier, making this task likely not learnable in practice. Included per soft guideline favoring inclusion of technically valid tasks. Segmentation parameters inferred from default subject-level classification settings.
-
-### Potential Task 7: Continuous EEG Segmentation with Age Label
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Label Field**: `age`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 18.0–27.0 (years) | Subject chronological age from participants.tsv; used as continuous regression target for subject trait prediction |
-- **Evidence**:
-  - participants.tsv — age column complete for N=30 subjects, range 18.0–27.0 years, sample values [22, 23, 24]
-- **Notes**: Archetype C (segmentation + info-native). Uses fixed-length 2-second non-overlapping windows (50% overlap) from continuous EEG without event locking, paired with subject age as regression target. Suitable for self-supervised pretraining or contrastive learning with age as downstream biomarker. Meta Level is raw because age is a native participants.tsv column requiring no kernel computation.
+  - OpenNeuro ds004447 `participants.tsv` — Handedness metadata is available; among the 22 publicly available EEG subjects the distribution is 1 left / 21 right.
+- **Notes**: Satisfies the two-class requirement but is extremely imbalanced; treat as an edge-case metadata task.
 
 ## Data Quality Notes
 
@@ -207,4 +162,4 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: completed
