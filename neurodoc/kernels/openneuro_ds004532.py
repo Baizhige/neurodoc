@@ -25,7 +25,7 @@ import mne
 # All fields set to "unknown" per KERNEL_RULEBOOK.md §11.
 # Source: analysis.md Info field — subject_age and subject_sex are missing.
 # Annotator: LLM, 2026-01-01
-# Note: LLM 推断，需人类复核
+# Note: inferred by LLM, needs human review
 _SUBJECT_DICT: Dict[str, Dict[str, str]] = {
     # Subject info not available in dataset; all fields "unknown".
 }
@@ -37,7 +37,7 @@ _SUBJECT_DICT: Dict[str, Dict[str, str]] = {
 # Mapping to standard MNE names (e.g., "Fz") before set_montage().
 # Source: BrainVision recording setup common in this dataset type.
 # Annotator: LLM, 2026-01-01
-# Note: LLM 推断，需人类复核
+# Note: inferred by LLM, needs human review
 _CHANNEL_RENAME_MAP: Dict[str, str] = {
     "EEG Fp1": "Fp1",
     "EEG Fp2": "Fp2",
@@ -113,7 +113,7 @@ _ADMIN_CODES = {"S  8", "S  9", "S  8 ", "S  9 ", "8", "9"}
 # Event code mapping: raw BrainVision codes -> canonical event labels.
 # Source: analysis.md Tasks section (event code mapping inferred from count patterns).
 # Annotator: LLM, 2026-01-01
-# Note: LLM 推断，需人类复核
+# Note: inferred by LLM, needs human review
 _EVENT_CODE_MAP: Dict[str, str] = {
     "S  1": "Trn Stim",    # Training stimulus onset
     "S  2": "Tst Stim",    # Test stimulus onset
@@ -198,7 +198,7 @@ class OpenNeuroDS004532Kernel:
                 "age": subject_info.get("age", "unknown"),
                 "sex": subject_info.get("sex", "unknown"),
                 "amplifier": "BrainAmp",  # BrainVision system
-                "cap": "unknown",          # LLM 推断，需人类复核
+                "cap": "unknown",          # inferred by LLM, needs human review
                 "handedness": "unknown",
             },
         }

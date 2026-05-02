@@ -29,9 +29,9 @@ import pandas as pd
 # amplifier information not explicitly stated in public documentation
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     f"sub-{str(i).zfill(2)}": {
-        "age": "unknown",  # LLM 推断，需人类复核
-        "sex": "unknown",  # LLM 推断，需人类复核
-        "handedness": "unknown",  # LLM 推断，需人类复核
+        "age": "unknown",  # inferred by LLM, needs human review
+        "sex": "unknown",  # inferred by LLM, needs human review
+        "handedness": "unknown",  # inferred by LLM, needs human review
     }
     for i in range(1, 21)
 }

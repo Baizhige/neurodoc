@@ -21,11 +21,11 @@ import mne
 # DOI 10.1109/EMBC46164.2021.9629771
 # "The EEG signals were acquired with a g.USBamp amplifier (gtec, Graz, Austria)
 #  and an electrode cap with 8 active electrodes."
-# Annotator: LLM, 2026-04-08 (LLM 推断，需人类复核)
+# Annotator: LLM, 2026-04-08 (inferred by LLM, needs human review)
 _DEVICE_METADATA: Dict[str, Any] = {
     "amplifier": "g.USBamp",  # gtec Graz, Austria
-    "cap": "Ag/AgCl active electrode cap",  # LLM 推断，需人类复核
-    "handedness": "unknown",  # No handedness info in公开文档
+    "cap": "Ag/AgCl active electrode cap",  # inferred by LLM, needs human review
+    "handedness": "unknown",
 }
 
 # ---- Event mapping ----------------------------------------------------
@@ -164,7 +164,7 @@ class OpenNeuroDS004745Kernel:
         # ---- 3. Channel rename (8-channel standard 1020) -----------------
         # Source: g.USBamp 8-channel cap — standard positions
         # Channel order (from reference paper): Fz, Cz, Pz, POz, O1, O2, P3, P4
-        # Annotator: LLM, 2026-04-08 (LLM 推断，需人类复核)
+        # Annotator: LLM, 2026-04-08 (inferred by LLM, needs human review)
         CHANNEL_RENAME_MAP: Dict[str, str] = {
             "EEG1": "Fz",
             "EEG2": "Cz",

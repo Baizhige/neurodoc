@@ -161,7 +161,7 @@ class NeumaKernel:
 
         # Subject information (from dataset - all missing)
         # Source: Dataset documentation (participants.tsv not available)
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         subject_id = row.get("subject_id", "unknown")
         age = "unknown"  # Not provided in dataset
         sex = "unknown"  # Not provided in dataset
@@ -170,12 +170,12 @@ class NeumaKernel:
         # Amplifier information
         # Source: DOI 10.1038/s41597-023-02392-9 (NeuMa paper)
         # The paper mentions "19 EEG channels" but actual data has 6.
-        # Specific amplifier model not documented. LLM 推断，需人类复核
+        # Specific amplifier model not documented. inferred by LLM, needs human review
         amplifier = "unknown"
 
         # Cap information
         # Source: DOI 10.1038/s41597-023-02392-9
-        # Not specified in documentation. LLM 推断，需人类复核
+        # Not specified in documentation. inferred by LLM, needs human review
         cap = "unknown"
 
         description_dict = {

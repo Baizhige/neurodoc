@@ -129,7 +129,7 @@ class TuhEegEpilepsyKernel:
             epilepsy_binary = 0.0
         else:
             # Fallback: try to infer from any parent directory name
-            # LLM 推断，需人类复核
+            # inferred by LLM, needs human review
             epilepsy_desc = "unknown"
             epilepsy_binary = np.nan
 
@@ -147,7 +147,7 @@ class TuhEegEpilepsyKernel:
             sex_str = "unknown"
 
         # Age not available in raw files for this dataset
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         description_dict = {
             "original_description": raw.info.get("description", ""),
             "eegunity_description": {

@@ -17,7 +17,7 @@ import mne
 import pandas as pd
 
 
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 # Source: Dataset documentation / paper indicates standard 32-channel EEG cap
 # Annotator: LLM, 2026-04-08
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {}
@@ -74,7 +74,7 @@ def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
     """Build rename map for non-standard channel names to standard 10-20 names.
     
     Source: Standard 10-20 system electrode naming convention
-    Annotator: LLM, 2026-04-08 - 需人类复核
+    Annotator: LLM, 2026-04-08 - needs human review
     """
     rename_map: Dict[str, str] = {}
     existing_names = set(raw.ch_names)
@@ -190,8 +190,8 @@ class OpenNeuroDS006801Kernel:
             "eegunity_description": {
                 "age": subject_info["age"],
                 "sex": subject_info["sex"],
-                "amplifier": "unknown",  # LLM 推断，需人类复核 - 需从数据集文档确认
-                "cap": "unknown",  # LLM 推断，需人类复核 - 需从数据集文档确认
+                "amplifier": "unknown",
+                "cap": "unknown",
                 "handedness": subject_info["handedness"],
             },
         }

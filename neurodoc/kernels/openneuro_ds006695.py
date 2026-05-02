@@ -28,7 +28,7 @@ import pandas as pd
 # Forehead EEG patch typically uses 3 channels. Based on standard 10-20
 # system forehead positions and common forehead patch configurations.
 # Source: Paper 10.3389/frsle.2024.1349537, Figure 1 (forehead electrode placement)
-# Annotator: LLM, 2026-01-15 (LLM 推断，需人类复核)
+# Annotator: LLM, 2026-01-15 (inferred by LLM, needs human review)
 _CHANNEL_RENAME_MAP: Dict[str, str] = {
     "Fp1": "Fp1",   # Left forehead
     "Fp2": "Fp2",   # Right forehead
@@ -51,7 +51,7 @@ _CHANNEL_RENAME_MAP: Dict[str, str] = {
 # Age and sex information may be available in participants.tsv on OpenNeuro.
 # If not available, fields remain "unknown".
 # Source: OpenNeuro participants.tsv (if available)
-# Annotator: LLM, 2026-01-15 (LLM 推断，需人类复核)
+# Annotator: LLM, 2026-01-15 (inferred by LLM, needs human review)
 _SUBJECT_DICT: Dict[str, Dict[str, str]] = {}
 # Note: Subject information should be populated from dataset's participants.tsv
 # at runtime. Placeholder structure provided for kernel framework.
@@ -62,7 +62,7 @@ _SUBJECT_DICT: Dict[str, Dict[str, str]] = {}
 # Sleep stage labels (Wake/N1/N2/N3/REM) are stored in external PSG hypnogram
 # files. The mapping follows AASM standard scoring:
 # Source: AASM Manual for the Scoring of Sleep and Associated Events
-# Annotator: LLM, 2026-01-15 (LLM 推断，需人类复核)
+# Annotator: LLM, 2026-01-15 (inferred by LLM, needs human review)
 _SLEEP_STAGE_MAP: Dict[str, int] = {
     "Wake": 0,
     "N1": 1,
@@ -442,8 +442,8 @@ class OpenNeuroDS006695Kernel:
             "eegunity_description": {
                 "age": subject_info.get("age", "unknown"),
                 "sex": subject_info.get("sex", "unknown"),
-                "amplifier": "forehead EEG patch device",  # LLM 推断，需人类复核
-                "cap": "3-channel forehead patch",  # LLM 推断，需人类复核
+                "amplifier": "forehead EEG patch device",  # inferred by LLM, needs human review
+                "cap": "3-channel forehead patch",  # inferred by LLM, needs human review
                 "handedness": "unknown",
             },
         }

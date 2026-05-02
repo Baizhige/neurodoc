@@ -28,7 +28,7 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     # Note: participants.tsv exists in BIDS dataset; age/sex will be loaded dynamically
     # from participants.tsv if available. Fallback values below for safety.
 }
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 
 # =============================================================================
 # Device Metadata
@@ -36,10 +36,10 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
 # Source: OpenNeuro ds004315 dataset_description.json and common practices
 # Annotator: LLM, 2026-04-08
 _DEVICE_INFO = {
-    "amplifier": "BrainAmp",  # LLM 推断，需人类复核 - typical for BrainVision format on OpenNeuro
-    "cap": "Ag/AgCl",  # LLM 推断，需人类复核
+    "amplifier": "BrainAmp",  # inferred by LLM, needs human review - typical for BrainVision format on OpenNeuro
+    "cap": "Ag/AgCl",  # inferred by LLM, needs human review
 }
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 
 # =============================================================================
 # Channel Mapping
@@ -65,7 +65,7 @@ _EEG_1020_CHANNELS = [
     "PO5", "PO1", "PO2", "PO6",
     "O9", "O10",
 ]
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 
 
 def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:

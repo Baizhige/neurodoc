@@ -45,7 +45,6 @@ _REQUIRED_INFO_FIELDS = [
 # =============================================================================
 # Source: BrainVision standard 32-channel cap layout for internal attention study
 # Annotator: LLM inferred from BIDS eeg.json and standard BrainAmp 32ch setup, 2026-04-08
-# 由 LLM 推断，需人类复核
 _CHANNEL_RENAME_MAP = {
     "Fp1": ["Fp1"],
     "Fp2": ["Fp2"],
@@ -273,7 +272,7 @@ class OpenNeuroDS002691Kernel:
             "age": str(age) if age != "unknown" else "unknown",
             "sex": sex,
             "amplifier": "BrainAmp",  # Source: BrainVision format implies BrainAmp
-            "cap": "Ag/AgCl",  # Source: Standard BrainAmp 32ch cap, 由 LLM 推断，需人类复核
+            "cap": "Ag/AgCl",
             "handedness": "unknown",  # Not in participants.tsv
         }
         

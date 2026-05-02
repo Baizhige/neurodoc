@@ -22,7 +22,7 @@ import pandas as pd
 
 # Standard 128-channel layout for infant high-density EEG caps.
 # Source: BrainVision "Infant" montage (actiCAP 128ch infant layout)
-# Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
 _INFANT_128_CHANNEL_LIST = [
     "Fp1", "Fpz", "Fp2",
     "AF9", "AF7", "AF5", "AF3", "AFz", "AF4", "AF6", "AF8", "AF10",
@@ -48,7 +48,7 @@ _INFANT_128_CHANNEL_LIST = [
 
 # Actually use a cleaner 128-channel list based on standard 10-10 extended
 # Source: 10-5 system 128 channel layout (modified for infant caps)
-# Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
 _STANDARD_128CH = [
     "Fp1", "Fpz", "Fp2",
     "AF9", "AF7", "AF5", "AF3", "AFz", "AF4", "AF6", "AF8", "AF10",
@@ -81,7 +81,7 @@ def _build_channel_rename_map(raw_ch_names: list) -> Dict[str, str]:
     - BIDS: "EEG 001", "EEG-001" -> standard name
 
     Source: BrainVision actiCAP 128ch infant electrode layout documentation
-    Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+    Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
     """
     rename_map: Dict[str, str] = {}
     used_targets = set()

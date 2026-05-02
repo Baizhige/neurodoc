@@ -22,12 +22,12 @@ import pandas as pd
 
 # Source: Paper DOI 10.3758/s13415-021-00950-5, Methods section
 # "EEG was recorded using a 64-channel BrainVision system"
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _AMPLIFIER = "BrainVision Recorder"
 
 # Source: Paper DOI 10.3758/s13415-021-00950-5, Methods section
 # Standard Ag/AgCl electrodes used
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _CAP = "Ag/AgCl"
 
 # Required info fields from participants.tsv

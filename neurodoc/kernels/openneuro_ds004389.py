@@ -79,7 +79,7 @@ _ALL_EVENT_IDS: Dict[str, int] = {
 # - EOG: eye movement (if present)
 
 # Source: Dataset paradigm description and typical SEP recording setups
-# Annotator: LLM, 2026-04-08 (需人类复核)
+# Annotator: LLM, 2026-04-08 (needs human review)
 _EEG_CHANNEL_COUNT = 64      # Standard 10-20 system scalp electrodes
 _EMG_CHANNEL_COUNT = 8       # Limb EMG channels
 _ESG_CHANNEL_COUNT = 10      # Epidural spinal cord electrodes
@@ -92,7 +92,7 @@ _OTHER_CHANNEL_COUNT = 4     # Reference, ground, stimulus trigger, etc.
 # ============================================================================
 
 # Source: Dataset description mentions 26 subjects, ages 22-45 typically
-# Annotator: LLM, 2026-04-08 (需人类复核)
+# Annotator: LLM, 2026-04-08 (needs human review)
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     f"sub-{str(i).zfill(2)}": {
         "age": "22-45",      # Range from typical SEP study populations
@@ -277,7 +277,7 @@ def _get_subject_info(subject_id: str) -> Dict[str, str]:
             "handedness": info.get("handedness", "unknown"),
         }
     
-    # LLM 推断，需人类复核
+    # inferred by LLM, needs human review
     return {
         "age": "unknown",
         "sex": "unknown",
@@ -334,7 +334,7 @@ class OpenNeuroDS004389Kernel:
 
         # Build eegunity_description
         # Source: Dataset description and typical SEP recording equipment
-        # Annotator: LLM, 2026-04-08 (需人类复核)
+        # Annotator: LLM, 2026-04-08 (needs human review)
         description_dict = {
             "original_description": original_description,
             "eegunity_description": {

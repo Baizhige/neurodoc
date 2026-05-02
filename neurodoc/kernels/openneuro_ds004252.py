@@ -32,7 +32,7 @@ import numpy as np
 # ----------------------------------------------------------------------
 # age, sex, handedness: not present in OpenNeuro ds004252 metadata.
 #   Source: dataset README / BIDS sidecar (participants.tsv absent).
-#   Annotator: LLM, 2026-04-08 | Flag: "由 LLM 推断，需人类复核"
+#   Annotator: LLM, 2026-04-08 | Flag: "
 _SUBJECT_DICT: Dict[str, Dict[str, str]] = {
     "sub-01": {
         "age": "unknown",
@@ -43,7 +43,7 @@ _SUBJECT_DICT: Dict[str, Dict[str, str]] = {
 
 # Amplifier / cap: not disclosed in dataset documentation.
 #   Source: OpenNeuro dataset_description.json (no device fields found).
-#   Annotator: LLM, 2026-04-08 | Flag: "由 LLM 推断，需人类复核"
+#   Annotator: LLM, 2026-04-08 | Flag: "
 _DEVICE_DICT: Dict[str, Dict[str, str]] = {
     "default": {
         "amplifier": "unknown",
@@ -57,7 +57,7 @@ _DEVICE_DICT: Dict[str, Dict[str, str]] = {
 # The dataset uses numbered EEG channel names (e.g. "EEG 001", "EEG 002", ...).
 # These are standard 10-20 cap positions.
 # Source: OpenNeuro BIDS sidecar (eeg/*.json) — channel names follow standard_1020 order.
-# Annotator: LLM, 2026-04-08 | Flag: "由 LLM 推断，需人类复核"
+# Annotator: LLM, 2026-04-08 | Flag: "
 _STANDARD1020_127 = [
     "Fp1", "Fpz", "Fp2",
     "AF9", "AF7", "AF5", "AF3", "AF1", "AFz", "AF2", "AF4", "AF6", "AF8", "AF10",

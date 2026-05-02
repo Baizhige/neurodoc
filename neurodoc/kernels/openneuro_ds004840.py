@@ -288,7 +288,7 @@ class OpenNeuroDS004840Kernel:
         
         # Build eegunity_description
         # Device info: not available in dataset metadata
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         original_desc = raw.info.get("description", "")
         if original_desc is None:
             original_desc = ""
@@ -296,9 +296,9 @@ class OpenNeuroDS004840Kernel:
         eegunity_description = {
             "age": str(age) if age != "unknown" else "unknown",
             "sex": sex,
-            "amplifier": "unknown",  # LLM 推断，需人类复核
-            "cap": "unknown",  # LLM 推断，需人类复核
-            "handedness": "unknown",  # LLM 推断，需人类复核
+            "amplifier": "unknown",  # inferred by LLM, needs human review
+            "cap": "unknown",  # inferred by LLM, needs human review
+            "handedness": "unknown",  # inferred by LLM, needs human review
         }
         
         # Add required info fields

@@ -26,7 +26,7 @@ import pandas as pd
 # The dataset contains 67 EEG channels from a BrainVision system.
 # Standard 10-20 extended montage (BioSemi-style naming convention).
 # Source: Paper analysis / dataset documentation indicates high-density 64+ channel setup
-# Annotator: LLM, 2026-04-08 - LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08 - inferred by LLM, needs human review
 
 # BioSemi 64-channel layout (common for BrainVision high-density systems)
 _BIOSEMI_64_CHANNELS = [
@@ -103,7 +103,7 @@ def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
 # =============================================================================
 # BrainVision events: Stimulus/S X (with varying whitespace)
 # Map to canonical event labels
-# Annotator: LLM, 2026-04-08 - LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08 - inferred by LLM, needs human review
 
 _STIMULUS_CODE_MAP = {
     "S  1": "Stimulus/S  1",
@@ -168,13 +168,13 @@ def _normalize_stimulus_code(description: str) -> str:
 # Subject Info
 # =============================================================================
 # Age and sex information not available in dataset metadata
-# Annotator: LLM, 2026-04-08 - LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08 - inferred by LLM, needs human review
 
 _SUBJECT_INFO_FALLBACK = {
     "age": "unknown",
     "sex": "unknown",
-    "amplifier": "BrainVision",  # LLM 推断，需人类复核 - Based on BrainVision system mentioned in dataset
-    "cap": "unknown",  # LLM 推断，需人类复核 - High-density cap type not specified
+    "amplifier": "BrainVision",  # inferred by LLM, needs human review - Based on BrainVision system mentioned in dataset
+    "cap": "unknown",  # inferred by LLM, needs human review - High-density cap type not specified
     "handedness": "unknown",
 }
 

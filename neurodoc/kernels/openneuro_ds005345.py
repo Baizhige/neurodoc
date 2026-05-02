@@ -84,9 +84,9 @@ def _extract_subject_info(row, dataset_path: str) -> Dict[str, Any]:
     
     # Defaults for missing metadata
     return {
-        "age": "unknown",  # LLM 推断，需人类复核
-        "sex": "unknown",  # LLM 推断，需人类复核
-        "handedness": "unknown",  # LLM 推断，需人类复核
+        "age": "unknown",  # inferred by LLM, needs human review
+        "sex": "unknown",  # inferred by LLM, needs human review
+        "handedness": "unknown",  # inferred by LLM, needs human review
     }
 
 

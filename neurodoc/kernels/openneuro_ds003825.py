@@ -76,7 +76,7 @@ class THINGSEEGKernel:
         10-20 system names.
 
         Source: Standard 10-20 system electrode naming convention.
-        Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+        Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
         """
         ch_names = raw.ch_names
         n_channels = len(ch_names)
@@ -130,7 +130,7 @@ class THINGSEEGKernel:
         channel names don't match the standard montage.
 
         Source: mne.channels.standard_montage
-        Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+        Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
         """
         try:
             # Try standard 1020 montage first
@@ -155,7 +155,7 @@ class THINGSEEGKernel:
         the standardized event mapping.
 
         Source: analysis.md - Event Structure table
-        Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+        Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
         """
         try:
             events, event_id = mne.events_from_annotations(raw, verbose=False)
@@ -211,7 +211,7 @@ class THINGSEEGKernel:
         (amplifier, cap) are not available in this dataset.
 
         Source: Dataset documentation (missing fields noted)
-        Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+        Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
         """
         original_desc = raw.info.get("description", "")
 

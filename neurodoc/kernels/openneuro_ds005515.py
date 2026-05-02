@@ -19,7 +19,7 @@ import pandas as pd
 #
 # Source: HBN dataset README / publication (Alexander et al., 2017, Scientific Data;
 # DOI: 10.1038/sdata.2017.40) — "128-channel Hydrocel Geodesic Sensor Net".
-# Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
 # ------------------------------------------------------------------
 _EEG_129_CHANNELS = [
     "Fp1", "Fpz", "Fp2",
@@ -41,7 +41,7 @@ _EEG_129_CHANNELS = [
 # HBN BIDS EEG channels follow EGI Hydrocel naming: E1..E129 or "EEG 001".."EEG 129"
 # We map EGI channel numbers to standard_129 positions.
 # Source: HBN BIDS specification, EGI Hydrocel 129-channel net layout
-# Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
 _EGI_TO_STANDARD_MAP: Dict[str, str] = {}
 _STANDARD_129_LIST = [
     "Fp1", "Fpz", "Fp2",
@@ -83,7 +83,7 @@ _SPECIAL_CHANNEL_TYPES = {
 # ------------------------------------------------------------------
 # Subject metadata cache
 # Source: HBN participants.tsv (openneuro_ds005515/participants.tsv)
-# Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
 # ------------------------------------------------------------------
 _SUBJECT_METADATA_CACHE: Dict[str, Dict[str, str]] = {}
 
@@ -207,7 +207,7 @@ def _remap_annotations(raw: mne.io.BaseRaw) -> None:
 # ------------------------------------------------------------------
 # Subject dict — sourced from participants.tsv
 # Source: openneuro_ds005515/participants.tsv
-# Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
 # ------------------------------------------------------------------
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {}
 
@@ -259,19 +259,19 @@ class HBNKernel:
         if age_raw and str(age_raw).lower() not in ["n/a", "nan", "unknown", ""]:
             age_str = str(age_raw).strip()
         else:
-            age_str = "unknown"  # LLM 推断，需人类复核
+            age_str = "unknown"  # inferred by LLM, needs human review
 
         # Normalise sex to lowercase
         sex_map = {"m": "male", "f": "female", "male": "male", "female": "female",
                    "M": "male", "F": "female", "Male": "male", "Female": "female"}
-        sex_str = sex_map.get(str(sex_raw).strip(), "unknown")  # LLM 推断，需人类复核
+        sex_str = sex_map.get(str(sex_raw).strip(), "unknown")  # inferred by LLM, needs human review
 
         # Amplifier / cap — sourced from HBN publications
         # Source: Alexander et al. 2017 (DOI: 10.1038/sdata.2017.40); Agriscan description
         # "129-channel Hydrocel Geodesic Sensor Net (EGI)" connected to "BioSemi ActiveTwo"
-        amplifier_str = "BioSemi ActiveTwo"  # LLM 推断，需人类复核
-        cap_str = "EGI Hydrocel Geodesic Sensor Net (128-channel)"  # LLM 推断，需人类复核
-        handedness_str = "unknown"  # LLM 推断，需人类复核
+        amplifier_str = "BioSemi ActiveTwo"  # inferred by LLM, needs human review
+        cap_str = "EGI Hydrocel Geodesic Sensor Net (128-channel)"  # inferred by LLM, needs human review
+        handedness_str = "unknown"  # inferred by LLM, needs human review
 
         # ── Build description JSON ─────────────────────────────────
         original_desc = raw.info.get("description", "") or ""

@@ -22,7 +22,7 @@ import pandas as pd
 
 
 # Source: Dataset descriptor paper DOI 10.1038/s41597-022-01536-7
-# Annotator: LLM, 2026-04-09 — 推断，需人类复核
+# Annotator: LLM, 2026-04-09
 # The paper describes 10 healthy subjects but does not provide individual age/sex.
 # participants.tsv in the dataset lacks age/sex columns.
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {}
@@ -31,7 +31,7 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {}
 # Channel mapping for 137-channel Biosemi ActiveTwo system
 # Source: Biosemi 137-channel cap documentation; standard naming convention
 # for Biosemi extended 10-20 system with additional electrodes.
-# Annotator: LLM, 2026-04-09 — 推断，需人类复核
+# Annotator: LLM, 2026-04-09
 # The dataset uses Biosemi's standard 137-channel naming. MNE may load these
 # as generic labels or numbers; we ensure standard Biosemi names are used.
 _BIOSEMI_137_CHANNELS = [
@@ -303,8 +303,8 @@ class OpenNeuroDS003626Kernel:
         eegunity_description = {
             "age": participant_info.get("age", "unknown"),
             "sex": participant_info.get("sex", "unknown"),
-            "amplifier": "Biosemi ActiveTwo",  # LLM 推断，需人类复核
-            "cap": "Biosemi 137-channel ActiveTwo cap",  # LLM 推断，需人类复核
+            "amplifier": "Biosemi ActiveTwo",  # inferred by LLM, needs human review
+            "cap": "Biosemi 137-channel ActiveTwo cap",  # inferred by LLM, needs human review
             "handedness": participant_info.get("handedness", "unknown"),
         }
         
@@ -331,7 +331,7 @@ class OpenNeuroDS003626Kernel:
         try:
             montage = mne.channels.make_standard_montage("biosemi128")
             # For 137 channels, we use standard_1025 or biosemi128 as approximation
-            # LLM 推断，需人类复核
+            # inferred by LLM, needs human review
             raw.set_montage(montage, match_case=False, match_alias=True, on_missing="ignore")
         except Exception:
             try:

@@ -21,7 +21,7 @@ import numpy as np
 
 # Standard 10-20 montage for 19 channels
 # Source: DOI 10.1038/s41597-020-0507-6 - confirms 19-channel EEG with standard 10-20 layout
-# Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
 _STANDARD_19_CHANNELS = [
     "Fp1", "Fp2", "F7", "F3", "Fz", "F4", "F8",
     "T7", "C3", "Cz", "C4", "T8",
@@ -34,7 +34,7 @@ def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
     """Build a rename map for standard 10-20 channel names.
 
     Source: Standard 10-20 system, common variants in EDF/BIDS exports
-    Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+    Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
     """
     alias_groups = [
         ("Fp1", ["Fp1", "EEG-Fp1", "Fp 1", "FP1"]),
@@ -198,7 +198,7 @@ class OpenNeuroDS002721Kernel:
                 if montage_chs:
                     raw.set_montage(montage, on_missing="ignore")
             except Exception:
-                pass  # LLM 推断，需人类复核: montage may fail, continue without
+                pass  # inferred by LLM, needs human review: montage may fail, continue without
 
         # --- 2. Read participants.tsv for subject info ---
         # Find participants.tsv by walking up from file_path
@@ -277,7 +277,7 @@ class OpenNeuroDS002721Kernel:
                             else:
                                 extra_fields[field] = "unknown"
             except Exception:
-                pass  # LLM 推断，需人类复核: participants.tsv read failed
+                pass  # inferred by LLM, needs human review: participants.tsv read failed
 
         # --- 3. Handle events from events.tsv ---
         # Always load events from events.tsv for this dataset; EDF files do not carry triggers

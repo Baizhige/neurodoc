@@ -50,7 +50,7 @@ import scipy.io as sio
 # Paper: Zheng & Lu, 2015. "Investigating Critical Frequency Bands and Channels 
 #        for EEG-Based Emotion Recognition with Deep Neural Networks"
 #        IEEE Transactions on Autonomous Mental Development
-# Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08
 # ---------------------------------------------------------------------------
 _NEUROSCAN_62_RENAME_MAP: Dict[str, str] = {
     # Frontal polar
@@ -140,7 +140,7 @@ _NEUROSCAN_62_RENAME_MAP: Dict[str, str] = {
 # Event codes from NeuroScan .cnt files (KeyPad responses)
 # Source: SEED dataset documentation and observed event structure
 # These are raw marker codes embedded in the continuous EEG files
-# Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08
 _KEYPAD_EVENT_MAP: Dict[int, str] = {
     1: "KeyPad Response 1",
     4: "KeyPad Response 4",
@@ -549,14 +549,14 @@ class SEEDKernel:
         # SEED dataset: 15 subjects, age/sex not publicly disclosed
         # Device: ESI NeuroScan system with Neuroscan cap
         # Source: Zheng & Lu, 2015 paper and dataset website
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         description_dict = {
             "original_description": raw.info.get("description", "") or "",
             "eegunity_description": {
                 "age": "unknown",
                 "sex": "unknown",
-                "amplifier": "ESI NeuroScan",  # LLM 推断，需人类复核
-                "cap": "Neuroscan 62-channel",  # LLM 推断，需人类复核
+                "amplifier": "ESI NeuroScan",  # inferred by LLM, needs human review
+                "cap": "Neuroscan 62-channel",  # inferred by LLM, needs human review
                 "handedness": "unknown",
             }
         }

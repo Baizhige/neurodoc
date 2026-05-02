@@ -31,7 +31,7 @@ import pandas as pd
 
 # Event mapping confirmed from task-Experiment_events.json and paper evidence
 # Annotator: LLM, 2026-04-08, inferred from dataset documentation and published papers
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _EVENT_MAP: Dict[int, str] = {
     1: "STATUS_marker",
     2: "auditory_non-omission",
@@ -45,7 +45,7 @@ _EVENT_MAP: Dict[int, str] = {
 # Standard 10-20 system with 32 electrode positions
 # Source: BioSemi 32-channel standard montage documentation
 # Annotator: LLM, 2026-04-08, inferred from BioSemi standard specifications
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _CHANNEL_RENAME_MAP: Dict[str, str] = {
     "EEG-Fp1": "Fp1",
     "EEG-Fp2": "Fp2",

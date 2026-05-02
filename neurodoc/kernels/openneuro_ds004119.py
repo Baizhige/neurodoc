@@ -229,11 +229,11 @@ class OpenNeuroDS004119Kernel:
         description_dict = {
             "original_description": original_desc,
             "eegunity_description": {
-                "age": "unknown",  # LLM 推断，需人类复核
-                "sex": "unknown",  # LLM 推断，需人类复核
-                "amplifier": "BioSemi 256-channel",  # LLM 推断，需人类复核
-                "cap": "Ag/AgCl",  # LLM 推断，需人类复核
-                "handedness": "unknown",  # LLM 推断，需人类复核
+                "age": "unknown",  # inferred by LLM, needs human review
+                "sex": "unknown",  # inferred by LLM, needs human review
+                "amplifier": "BioSemi 256-channel",  # inferred by LLM, needs human review
+                "cap": "Ag/AgCl",  # inferred by LLM, needs human review
+                "handedness": "unknown",  # inferred by LLM, needs human review
             },
         }
         raw.info["description"] = json.dumps(description_dict)

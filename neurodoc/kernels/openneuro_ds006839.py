@@ -29,7 +29,7 @@ import pandas as pd
 # Channel rename map (standard_1020 based on 29-channel VR setup)
 # Source: Dataset README / paper reference (DOI: 10.3389/fnins.2025.1476264)
 # Annotator: LLM, 2026-04-08
-# Note: LLM 推断，需人类复核 - confirm exact channel layout from official cap layout
+# Note: inferred by LLM, needs human review - confirm exact channel layout from official cap layout
 # =============================================================================
 _EEG_CHANNEL_RENAME_MAP: Dict[str, str] = {
     "Fp1": "Fp1",
@@ -243,8 +243,8 @@ class OpenNeuroDS006839Kernel:
                 # Amplifier/cap from dataset documentation (VR EEG system)
                 # Source: OpenNeuro DS006839 README / hardware specs
                 # Annotator: LLM, 2026-04-08
-                "amplifier": "unknown",  # LLM 推断，需人类复核
-                "cap": "unknown",       # LLM 推断，需人类复核
+                "amplifier": "unknown",  # inferred by LLM, needs human review
+                "cap": "unknown",       # inferred by LLM, needs human review
                 "age": subject_info.get("age", "unknown"),
                 "sex": subject_info.get("sex", "unknown"),
                 "handedness": subject_info.get("handedness", "unknown"),

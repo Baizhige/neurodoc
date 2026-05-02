@@ -42,7 +42,7 @@ _REQUIRED_INFO_FIELDS: List[str] = [
 # =============================================================================
 # Channel rename map: BrainVision names -> standard 10-20
 # Source: Dataset README and BrainVision standard 64-channel actiCAP layout
-# Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
 # =============================================================================
 _CHANNEL_RENAME_MAP: Dict[str, str] = {
     # EEG channels
@@ -108,7 +108,7 @@ _CHANNEL_TYPES: Dict[str, str] = {
 # =============================================================================
 # Event code mapping (numeric -> human-readable description)
 # Source: analysis.md Event Structure table and dataset documentation
-# Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
 # =============================================================================
 _EVENT_CODE_MAP: Dict[int, str] = {
     1: "auditory stimulus onset marker",
@@ -445,7 +445,7 @@ class OpenNeuroDS003690Kernel:
             "sex": sex,
             "handedness": handedness,
             "amplifier": "BrainAmp",  # Source: paper DOI 10.1016/j.neuroimage.2019.06.004
-            "cap": "actiCAP 64Ch",     # LLM 推断，需人类复核
+            "cap": "actiCAP 64Ch",     # inferred by LLM, needs human review
         }
         
         # Add required info fields from participants.tsv

@@ -138,8 +138,8 @@ class DS003775Kernel:
         eegunity_desc: Dict[str, str] = {
             "age": "unknown",
             "sex": "unknown",
-            "amplifier": "unknown",  # LLM 推断，需人类复核
-            "cap": "unknown",  # LLM 推断，需人类复核
+            "amplifier": "unknown",  # inferred by LLM, needs human review
+            "cap": "unknown",  # inferred by LLM, needs human review
             "handedness": "unknown",
         }
         
@@ -192,8 +192,8 @@ class DS003775Kernel:
         # Device info from dataset documentation
         # Source: Dataset descriptor paper (10.1016/j.dib.2022.108647)
         # Annotator: LLM, 2026-04-08; needs human verification
-        eegunity_desc["amplifier"] = "BrainAmp"  # LLM 推断，需人类复核
-        eegunity_desc["cap"] = "Ag/AgCl"  # LLM 推断，需人类复核
+        eegunity_desc["amplifier"] = "BrainAmp"  # inferred by LLM, needs human review
+        eegunity_desc["cap"] = "Ag/AgCl"  # inferred by LLM, needs human review
         
         # Set description
         description_dict = {

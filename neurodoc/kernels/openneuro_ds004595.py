@@ -78,7 +78,7 @@ def _get_subject_info(udataset, row) -> Dict[str, str]:
 # =============================================================================
 # Channel Renaming
 # Source: 64-channel EEG cap layout (inferred from 66 total channels)
-# Annotator: LLM 推断，需人类复核
+# Annotator: inferred by LLM, needs human review
 # =============================================================================
 # Standard 64-channel layout + 2 EOG channels
 _STANDARD_1020_CHANNELS = [
@@ -194,22 +194,22 @@ _EVENT_MAP = {
     "S105": "novel cue: order 5",
     "S106": "novel cue: order 6",
     # Feedback valence events
-    "S200": "feedback: win",      # LLM 推断，需人类复核
-    "S201": "feedback: loss",     # LLM 推断，需人类复核
+    "S200": "feedback: win",      # inferred by LLM, needs human review
+    "S201": "feedback: loss",     # inferred by LLM, needs human review
     # Response events
     "R  6": "response: left arm",
     "R 12": "response: right arm",
     # Task structure events (cue-related)
-    "S  1": "cue: alcohol",       # LLM 推断，需人类复核
-    "S  2": "cue: neutral",       # LLM 推断，需人类复核
-    "S  3": "choice display",     # LLM 推断，需人类复核
-    "S  4": "choice display",     # LLM 推断，需人类复核
-    "S  5": "trial: start",       # LLM 推断，需人类复核
-    "S  6": "trial: baseline",    # LLM 推断，需人类复核
-    "S  7": "trial: end",         # LLM 推断，需人类复核
-    "S  8": "instruction",        # LLM 推断，需人类复核
-    "S  9": "break start",        # LLM 推断，需人类复核
-    "S 10": "break end",          # LLM 推断，需人类复核
+    "S  1": "cue: alcohol",       # inferred by LLM, needs human review
+    "S  2": "cue: neutral",       # inferred by LLM, needs human review
+    "S  3": "choice display",     # inferred by LLM, needs human review
+    "S  4": "choice display",     # inferred by LLM, needs human review
+    "S  5": "trial: start",       # inferred by LLM, needs human review
+    "S  6": "trial: baseline",    # inferred by LLM, needs human review
+    "S  7": "trial: end",         # inferred by LLM, needs human review
+    "S  8": "instruction",        # inferred by LLM, needs human review
+    "S  9": "break start",        # inferred by LLM, needs human review
+    "S 10": "break end",          # inferred by LLM, needs human review
     # Admin / marker events
     "S 99": "admin: marker-99",
     "S199": "admin: marker-199",
@@ -239,11 +239,11 @@ def _remap_annotations(raw: mne.io.BaseRaw) -> mne.Annotations:
 
 # =============================================================================
 # Dataset Metadata
-# Source: DOI 10.5334/cpsy.96 | Annotator: LLM 推断，需人类复核
+# Source: DOI 10.5334/cpsy.96 | Annotator: inferred by LLM, needs human review
 # =============================================================================
 _DATASET_METADATA = {
-    "amplifier": "BrainAmp",      # LLM 推断，需人类复核
-    "cap": "Ag/AgCl",             # LLM 推断，需人类复核
+    "amplifier": "BrainAmp",      # inferred by LLM, needs human review
+    "cap": "Ag/AgCl",             # inferred by LLM, needs human review
 }
 
 

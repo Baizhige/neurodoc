@@ -33,14 +33,14 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
 # "BrainAmp system" mentioned in paper methodology
 # Annotator: Human, 2026-04-08 (from paper)
 _DEVICE_INFO = {
-    "amplifier": "BrainAmp",  # LLM 推断，需人类复核
-    "cap": "Ag/AgCl",        # LLM 推断，需人类复核
+    "amplifier": "BrainAmp",  # inferred by LLM, needs human review
+    "cap": "Ag/AgCl",        # inferred by LLM, needs human review
 }
 
 # Standard 10-20 channel mapping for 31-channel system
 # Based on BrainAmp 32-channel cap layout (31 EEG + 1 reference)
 # Source: BrainAmp standard montage configuration
-# Annotator: LLM, 2026-04-08 (standard 10-20 layout assumption), 需人类复核
+# Annotator: LLM, 2026-04-08 (standard 10-20 layout assumption), needs human review
 _EEG_CHANNEL_NAMES_STANDARD = {
     "Fp1", "Fp2", "F7", "F3", "Fz", "F4", "F8",
     "FC5", "FC3", "FC1", "FCz", "FC2", "FC4", "FC6",

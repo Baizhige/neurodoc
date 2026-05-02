@@ -21,13 +21,13 @@ import pandas as pd
 
 
 # Source: Dataset documentation and paper references
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {}
 # No participant metadata available in dataset; all fields set to unknown
 
 # 74-channel standard 10-20 system mapping
 # Source: standard_1020 montage with extended 10-10 positions
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _STANDARD_1024_CHANNELS = [
     "Fp1", "Fpz", "Fp2",
     "AF7", "AF3", "AFz", "AF4", "AF8",
@@ -104,7 +104,7 @@ def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
     """Build a rename map for non-standard channel names to standard 10-20 names.
     
     Source: Dataset documentation, standard electrode naming conventions
-    LLM 推断，需人类复核
+    inferred by LLM, needs human review
     """
     rename_map: Dict[str, str] = {}
     existing_names = set(raw.ch_names)

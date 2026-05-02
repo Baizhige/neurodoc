@@ -31,7 +31,7 @@ import pandas as pd
 
 # Standard 63-channel mapping for this dataset (EEG- prefix to standard 10-20)
 # Source: BIDS channel info and standard 10-20 layout
-# Annotator: LLM, 2026-04-08; 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08;
 _STANDARD_63_CHANNEL_MAP = {
     "Fp1": "EEG-Fp1",
     "Fpz": "EEG-Fpz",

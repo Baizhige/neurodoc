@@ -37,7 +37,7 @@ MANDATORY requirements — violating any will cause rejection:
    })
 4. age is always a STRING (e.g. "22", not 22)
 5. sex is always lowercase: "male" / "female" / "unknown"
-6. Inferred values: add comment  # LLM 推断，需人类复核
+6. Inferred values: add comment  # inferred by LLM, needs human review
 7. Channel rename BEFORE set_montage()
 8. When `required_info_fields` is non-empty in kernel_requirements, the kernel MUST read
    the listed columns from participants.tsv for the current subject and include them as

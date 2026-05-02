@@ -30,8 +30,8 @@ import pandas as pd
 # =============================================================================
 
 # Source: Paper DOI 10.1038/sdata.2015.1 - Wakeman & Henson face dataset
-# LLM 推断，需人类复核: Age range 22-45 based on typical young adult subject pool
-# LLM 推断，需人类复核: Device is likely Elekta/BTi MEG system with EEG
+# inferred by LLM, needs human review: Age range 22-45 based on typical young adult subject pool
+# inferred by LLM, needs human review: Device is likely Elekta/BTi MEG system with EEG
 _SUBJECT_METADATA: Dict[str, Dict[str, str]] = {
     # Subjects were healthy adults; specific demographics from participants.tsv
     # will override these defaults when available
@@ -39,14 +39,14 @@ _SUBJECT_METADATA: Dict[str, Dict[str, str]] = {
 
 # EEG channel count in MEEG dataset - isolate from 395 total channels
 # Source: Dataset documentation / paper
-# LLM 推断，需人类复核: Approximately 70 EEG channels in standard 1020 layout
+# inferred by LLM, needs human review: Approximately 70 EEG channels in standard 1020 layout
 _EEG_CHANNEL_COUNT_APPROX: int = 70
 
 # Amplifier/device information
 # Source: Wakeman & Henson paper DOI 10.1038/sdata.2015.1
-# LLM 推断，需人类复核: Elekta Neuromag MEG system with EEG acquisition
-_AMPLIFIER: str = "Elekta Neuromag"  # LLM 推断，需人类复核
-_CAP: str = "Ag/AgCl"  # LLM 推断，需人类复核 - standard EEG cap
+# inferred by LLM, needs human review: Elekta Neuromag MEG system with EEG acquisition
+_AMPLIFIER: str = "Elekta Neuromag"  # inferred by LLM, needs human review
+_CAP: str = "Ag/AgCl"  # inferred by LLM, needs human review - standard EEG cap
 
 # =============================================================================
 # Face Stimulus Event Mapping

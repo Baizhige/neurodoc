@@ -31,8 +31,8 @@ eegunity_description = {
 # Device metadata from dataset documentation (paper DOI: 10.1038/s41597-020-0507-6)
 # Annotator: LLM, 2026-04-08, source: official dataset descriptor paper
 _DATASET_DEVICE_INFO = {
-    "amplifier": "BrainAmp MR plus",  # LLM 推断，需人类复核
-    "cap": "Ag/AgCl",  # LLM 推断，需人类复核 - standard EEG cap material
+    "amplifier": "BrainAmp MR plus",  # inferred by LLM, needs human review
+    "cap": "Ag/AgCl",  # inferred by LLM, needs human review - standard EEG cap material
 }
 
 # Standard 10-20 channel mapping for 47-channel EEG-fMRI setup
@@ -124,8 +124,8 @@ _EVENT_RAW_MAP = {
     1285: "mri_sync_end",  # BrainVision MRI sync code (end marker)
     265: "synthetic_music_onset",  # Synthetic music condition trial onset
     34053: "hardware_marker",  # BrainVision hardware code
-    46: "affective_valence",  # FEELTRACE valence marker - LLM 推断，需人类复核
-    9: "affective_arousal",  # FEELTRACE arousal marker - LLM 推断，需人类复核
+    46: "affective_valence",  # FEELTRACE valence marker - inferred by LLM, needs human review
+    9: "affective_arousal",  # FEELTRACE arousal marker - inferred by LLM, needs human review
     767: "trial_boundary",  # Unknown trial boundary marker
 }
 

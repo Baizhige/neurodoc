@@ -67,8 +67,8 @@ def _build_default_channel_names(n_channels: int) -> List[str]:
     - 2 channels for medianus (left/right C3/C4 area)
     - 2 channels for tibial (Cz area or referenced)
 
-    Source: Clinical SEP convention (LLM inferred, need human复核)
-    # LLM 推断，需人类复核
+    Source: Clinical SEP convention (LLM inferred, needs human review)
+    # inferred by LLM, needs human review
     """
     if n_channels == 4:
         return ["C3", "C4", "Cz", "REF"]
@@ -87,8 +87,8 @@ def _rename_channels_if_needed(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
     - Numeric EEG-0, EEG-1, etc.
     - Other non-standard naming
 
-    Source: Kernel inference (LLM 推断，需人类复核)
-    # LLM 推断，需人类复核
+    Source: Kernel inference (inferred by LLM, needs human review)
+    # inferred by LLM, needs human review
     """
     rename_map: Dict[str, str] = {}
     for ch_name in raw.ch_names:
@@ -212,7 +212,7 @@ class OpenNeuroDS004381Kernel:
         # Annotator: LLM, 2026-04-08
         sfreq = raw.info["sfreq"]
         if sfreq >= 10000:
-            amplifier = "high-resolution intraoperative amplifier (20kHz)"  # LLM 推断，需人类复核
+            amplifier = "high-resolution intraoperative amplifier (20kHz)"  # inferred by LLM, needs human review
         else:
             amplifier = "unknown"
 
@@ -224,7 +224,7 @@ class OpenNeuroDS004381Kernel:
                 "sex": subject_info.get("sex", "unknown").lower()
                 if subject_info.get("sex") else "unknown",
                 "amplifier": amplifier,
-                "cap": "invasive / sterile surgical setup",  # LLM 推断，需人类复核
+                "cap": "invasive / sterile surgical setup",  # inferred by LLM, needs human review
                 "handedness": subject_info.get("handedness", "unknown"),
             },
         }

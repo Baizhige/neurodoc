@@ -56,29 +56,29 @@ KERNEL_ID = "openneuro_ds001971"
 # Source: Derived from dataset documentation and paper (DOI: 10.1038/s41597-019-0223-2)
 # The mapping combines explicit codes from the data descriptor with inferred stream variants.
 # Annotator: LLM, 2026-04-08
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _EVENT_LABEL_MAP: Dict[int, str] = {
     100: "PreferredCadence",
-    101: "PreferredCadence_stream2",   # LLM 推断，需人类复核
-    103: "PreferredCadence_stream3",   # LLM 推断，需人类复核
-    109: "PreferredCadence_stream4",   # LLM 推断，需人类复核
+    101: "PreferredCadence_stream2",   # inferred by LLM, needs human review
+    103: "PreferredCadence_stream3",   # inferred by LLM, needs human review
+    109: "PreferredCadence_stream4",   # inferred by LLM, needs human review
     113: "AdvanceTempo",
     114: "DelayTempo",
     119: "UncuedWalking",
-    151: "UncuedWalking_stream2",       # LLM 推断，需人类复核
-    153: "UncuedWalking_stream3",      # LLM 推断，需人类复核
-    159: "UncuedWalking_stream4",      # LLM 推断，需人类复核
-    171: "Walking_event_171",          # LLM 推断，需人类复核 - gait cycle marker phase A
-    200: "PreferredCadence_stream5",   # LLM 推断，需人类复核
-    201: "PreferredCadence_stream6",   # LLM 推断，需人类复核
-    203: "PreferredCadence_stream7",   # LLM 推断，需人类复核
-    209: "PreferredCadence_stream8",   # LLM 推断，需人类复核
-    251: "UncuedWalking_stream5",      # LLM 推断，需人类复核
-    253: "UncuedWalking_stream6",      # LLM 推断，需人类复核
-    259: "UncuedWalking_stream7",      # LLM 推断，需人类复核
-    271: "Walking_event_271",          # LLM 推断，需人类复核 - gait cycle marker phase B
-    333: "AdvanceTempo_stream2",       # LLM 推断，需人类复核
-    444: "DelayTempo_stream2",         # LLM 推断，需人类复核
+    151: "UncuedWalking_stream2",       # inferred by LLM, needs human review
+    153: "UncuedWalking_stream3",      # inferred by LLM, needs human review
+    159: "UncuedWalking_stream4",      # inferred by LLM, needs human review
+    171: "Walking_event_171",          # inferred by LLM, needs human review - gait cycle marker phase A
+    200: "PreferredCadence_stream5",   # inferred by LLM, needs human review
+    201: "PreferredCadence_stream6",   # inferred by LLM, needs human review
+    203: "PreferredCadence_stream7",   # inferred by LLM, needs human review
+    209: "PreferredCadence_stream8",   # inferred by LLM, needs human review
+    251: "UncuedWalking_stream5",      # inferred by LLM, needs human review
+    253: "UncuedWalking_stream6",      # inferred by LLM, needs human review
+    259: "UncuedWalking_stream7",      # inferred by LLM, needs human review
+    271: "Walking_event_271",          # inferred by LLM, needs human review - gait cycle marker phase B
+    333: "AdvanceTempo_stream2",       # inferred by LLM, needs human review
+    444: "DelayTempo_stream2",         # inferred by LLM, needs human review
     999: "admin: marker-999",
 }
 

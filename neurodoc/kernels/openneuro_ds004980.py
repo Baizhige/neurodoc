@@ -28,18 +28,18 @@ import pandas as pd
 # Source: OpenNeuro dataset_description.json and paper DOI:10.1111/ejn.16461
 # The paper mentions "Brain Products" equipment; specific amplifier model not 
 # explicitly stated in available documentation.
-# Annotator: LLM, 2026-04-08 - 需人类复核
+# Annotator: LLM, 2026-04-08 - needs human review
 # =============================================================================
 _DEVICE_INFO = {
-    "amplifier": "Brain Products",  # LLM 推断，需人类复核
-    "cap": "Ag/AgCl",               # LLM 推断，需人类复核 - standard for Brain Products
+    "amplifier": "Brain Products",  # inferred by LLM, needs human review
+    "cap": "Ag/AgCl",               # inferred by LLM, needs human review - standard for Brain Products
 }
 
 # =============================================================================
 # Channel Mapping for Brain Products standard 64-channel cap
 # Source: Brain Products standard 10-10 system 64-channel layout
 # This matches typical ActiCap 64-channel configuration used with Brain Products
-# Annotator: LLM, 2026-04-08 - 需人类复核 against actual channel names in data
+# Annotator: LLM, 2026-04-08 - needs human review against actual channel names in data
 # =============================================================================
 _BRAIN_PRODUCTS_64_MAP: Dict[str, str] = {
     # Common Brain Products numbering to 10-10 names

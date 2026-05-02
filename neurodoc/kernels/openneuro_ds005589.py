@@ -58,7 +58,7 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
 }
 
 # Annotator: LLM, 2026-04-10
-# 133 channels = 128 EEG + 3 EOG + 2 mastoid references (推测，需人类复核)
+# 133 channels = 128 EEG + 3 EOG + 2 mastoid references (
 # Standard 128-channel layout using BrainVision/mne-python standard montage
 _STANDARD_128_CHANNELS = [
     "Fp1", "Fp2", "F7", "F3", "Fz", "F4", "F8", "FC5", "FC1", "FC2", "FC6",
@@ -306,8 +306,8 @@ class OpenNeuroDS005589Kernel:
             "eegunity_description": {
                 "age": subject_info.get("age", "unknown"),
                 "sex": subject_info.get("sex", "unknown"),
-                "amplifier": "unknown",  # Annotator: LLM, 2026-04-10 (需人类复核)
-                "cap": "unknown",  # Annotator: LLM, 2026-04-10 (需人类复核)
+                "amplifier": "unknown",  # Annotator: LLM, 2026-04-10 (needs human review)
+                "cap": "unknown",  # Annotator: LLM, 2026-04-10 (needs human review)
                 "handedness": subject_info.get("handedness", "unknown"),
             },
         }

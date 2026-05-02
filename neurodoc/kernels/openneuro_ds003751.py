@@ -23,7 +23,7 @@ import pandas as pd
 # Annotator: LLM, 2026-04-08
 # Source: Dataset documentation and paper - 132-channel EEG system
 # Amplifier and cap information not explicitly stated in available docs
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     f"sub-{str(i).zfill(2)}": {"sex": "unknown", "age": "unknown", "handedness": "unknown"}
     for i in range(1, 41)
@@ -32,9 +32,9 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
 # Annotator: LLM, 2026-04-08
 # Source: Paper indicates standard electrode placement system
 # 132 channels suggest extended 10-10 or 10-5 system montage
-# LLM 推断，需人类复核
-_AMPLIFIER = "unknown"  # LLM 推断，需人类复核
-_CAP = "unknown"  # LLM 推断，需人类复核
+# inferred by LLM, needs human review
+_AMPLIFIER = "unknown"  # inferred by LLM, needs human review
+_CAP = "unknown"  # inferred by LLM, needs human review
 
 # Event ID mapping based on analysis.md
 _EVENT_MAP = {
@@ -75,7 +75,7 @@ def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
 
     Annotator: LLM, 2026-04-08
     Source: Standard 10-10 and 10-5 electrode naming conventions
-    LLM 推断，需人类复核
+    inferred by LLM, needs human review
     """
     rename_map: Dict[str, str] = {}
     existing_names = set(raw.ch_names)
@@ -161,7 +161,7 @@ def _set_eeg_channel_types(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
 
     Annotator: LLM, 2026-04-08
     Source: Dataset description - ECG and EMG channels present
-    LLM 推断，需人类复核
+    inferred by LLM, needs human review
     """
     # Detect EOG, ECG, EMG channels by common naming patterns
     eog_patterns = ["EOG", "VEOG", "HEOG", "eog", "veog", "heog"]

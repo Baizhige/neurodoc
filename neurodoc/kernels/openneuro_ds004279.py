@@ -23,7 +23,7 @@ _STANDARD_MONTAGE = "standard_1020"
 
 # Device metadata - amplifier and cap not specified in dataset
 # Source: dataset_description.json and papers do not specify device
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _DEVICE_AMPLIFIER = "unknown"
 _DEVICE_CAP = "unknown"
 

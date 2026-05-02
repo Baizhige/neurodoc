@@ -411,8 +411,8 @@ class EESM23Kernel:
         eegunity_desc = {
             "age": subject_info["age"],
             "sex": subject_info["sex"],
-            "amplifier": "unknown",  # LLM 推断，需人类复核: device info not in BIDS sidecars
-            "cap": "unknown",  # LLM 推断，需人类复核: ear-EEG uses custom in-ear electrodes, not standard cap
+            "amplifier": "unknown",  # inferred by LLM, needs human review: device info not in BIDS sidecars
+            "cap": "unknown",  # inferred by LLM, needs human review: ear-EEG uses custom in-ear electrodes, not standard cap
             "handedness": subject_info["handedness"],
         }
         

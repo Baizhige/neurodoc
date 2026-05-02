@@ -266,14 +266,14 @@ class OpenNeuroDS005403Kernel:
         events_df = _load_events_df(events_path)
 
         # Update description with metadata
-        # LLM 推断，需人类复核: amplifier and cap values inferred from dataset documentation
+        # inferred by LLM, needs human review: amplifier and cap values inferred from dataset documentation
         description_dict = {
             "original_description": raw.info.get("description", "") or "",
             "eegunity_description": {
                 "age": subject_info.get("age", "unknown"),
                 "sex": subject_info.get("sex", "unknown"),
-                "amplifier": "BrainAmp",  # LLM 推断，需人类复核
-                "cap": "Ag/AgCl",  # LLM 推断，需人类复核
+                "amplifier": "BrainAmp",  # inferred by LLM, needs human review
+                "cap": "Ag/AgCl",  # inferred by LLM, needs human review
                 "handedness": subject_info.get("handedness", "unknown"),
                 "dataset": "openneuro-ds005403",
                 "paradigm": "delayed_auditory_feedback",

@@ -24,9 +24,9 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     # All subject info unavailable in public BIDS files; set as unknown.
     # Human reviewers should populate from paper supplementary materials.
     f"sub-{i:02d}": {
-        "age": "unknown",  # LLM 推断，需人类复核
-        "sex": "unknown",  # LLM 推断，需人类复核
-        "handedness": "unknown",  # LLM 推断，需人类复核
+        "age": "unknown",  # inferred by LLM, needs human review
+        "sex": "unknown",  # inferred by LLM, needs human review
+        "handedness": "unknown",  # inferred by LLM, needs human review
     }
     for i in range(1, 24)
 }
@@ -35,8 +35,8 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
 # 64-channel MR-compatible EEG cap; amplifier likely BrainAmp MR plus or equivalent.
 # Annotator: LLM, 2026-04-08
 _DEVICE_INFO = {
-    "amplifier": "unknown",  # LLM 推断，需人类复核
-    "cap": "unknown",  # LLM 推断，需人类复核
+    "amplifier": "unknown",  # inferred by LLM, needs human review
+    "cap": "unknown",  # inferred by LLM, needs human review
 }
 
 # Standard 64-channel layout for MR-compatible EEG caps.

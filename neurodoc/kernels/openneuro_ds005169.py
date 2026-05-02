@@ -411,7 +411,7 @@ class OpenNeuroDS005169Kernel:
         if self._participants_info and subject_id in self._participants_info:
             subject_info = self._participants_info[subject_id]
         else:
-            # LLM 推断，需人类复核
+            # inferred by LLM, needs human review
             subject_info = {
                 "age": "unknown",
                 "sex": "unknown",
@@ -419,11 +419,11 @@ class OpenNeuroDS005169Kernel:
             }
         
         # Determine amplifier from file metadata or dataset description
-        # LLM 推断，需人类复核 - typically intracranial EEG systems
+        # inferred by LLM, needs human review - typically intracranial EEG systems
         amplifier = "unknown"
         
         # Determine cap type for intracranial EEG
-        # LLM 推断，需人类复核 - intracranial uses depth/grid electrodes
+        # inferred by LLM, needs human review - intracranial uses depth/grid electrodes
         cap = "unknown"
         
         # Update raw.info["description"] with eegunity_description

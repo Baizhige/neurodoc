@@ -331,7 +331,7 @@ class OpenNeuroDS003195Kernel:
         # -------------------------------------------------------------------
         # Age is missing in this dataset per analysis.md
         # Device info missing in accessible metadata
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         original_desc = raw.info.get("description", "") or ""
         
         eegunity_desc: Dict[str, str] = {

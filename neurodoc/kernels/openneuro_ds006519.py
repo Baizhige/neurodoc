@@ -239,14 +239,14 @@ class OpenNeuroDS006519Kernel:
         # Build eegunity_description
         # Amplifier/cap: intracranial EEG - typically unknown or patient-specific
         # Source: dataset documentation indicates intracranial electrode arrays
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         description_dict = {
             "original_description": original_desc,
             "eegunity_description": {
                 "age": subject_info.get("age", "unknown"),
                 "sex": subject_info.get("sex", "unknown"),
-                "amplifier": "unknown",  # LLM 推断，需人类复核
-                "cap": "intracranial",  # LLM 推断，需人类复核
+                "amplifier": "unknown",  # inferred by LLM, needs human review
+                "cap": "intracranial",  # inferred by LLM, needs human review
                 "handedness": subject_info.get("handedness", "unknown"),
             },
         }

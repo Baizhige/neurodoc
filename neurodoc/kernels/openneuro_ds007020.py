@@ -26,9 +26,9 @@ import pandas as pd
 # Annotator: LLM, 2026-04-08
 # Source: Paper DOI 10.1016/j.prdoa.2025.100409 - "94 PD patients (22 deceased, 72 living)"
 # Age range: typical PD population, paper mentions mean age but exact values in participants.tsv
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _AMPLIFIER = "unknown"
-_CAP = "Ag/AgCl"  # LLM 推断，需人类复核
+_CAP = "Ag/AgCl"  # inferred by LLM, needs human review
 
 # Standard 10-20 system 64-channel names (excluding VEOG/HEOG for standard set)
 # Based on 63 EEG channels mentioned in analysis.md
@@ -189,7 +189,7 @@ def _get_mortality_label(row: pd.Series, subject_id: str) -> Optional[str]:
     Mortality labels (deceased/living) are derived from clinical follow-up metadata.
     Source: participants.tsv (3-year mortality outcome column)
     Annotator: LLM, 2026-04-08
-    LLM 推断，需人类复核
+    inferred by LLM, needs human review
     """
     # Common column names for mortality/outcome
     outcome_cols = [
@@ -217,7 +217,7 @@ def _create_super_meta_annotations(
     """Create super meta annotations for mortality classification.
     
     Annotator: LLM, 2026-04-08
-    LLM 推断，需人类复核
+    inferred by LLM, needs human review
     """
     # If we have mortality label, create annotation for entire recording
     if mortality_label is not None:

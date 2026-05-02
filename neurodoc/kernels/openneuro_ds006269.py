@@ -20,7 +20,7 @@ import pandas as pd
 
 # Subject metadata extracted from participants.tsv
 # Source: openneuro_ds006269/participants.tsv
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _GENOTYPE_MAP: Dict[str, int] = {}
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {}
 
@@ -166,8 +166,8 @@ class OpenNeuroDS006269Kernel:
             "eegunity_description": {
                 "age": subject_info.get("age", "unknown"),
                 "sex": subject_info.get("sex", "unknown"),
-                "amplifier": "unknown",  # LLM 推断，需人类复核
-                "cap": "unknown",  # LLM 推断，需人类复核
+                "amplifier": "unknown",  # inferred by LLM, needs human review
+                "cap": "unknown",  # inferred by LLM, needs human review
                 "handedness": handedness,
             },
         }
@@ -242,7 +242,7 @@ class OpenNeuroDS006269Kernel:
         This attempts to standardize based on common rat EEG conventions.
 
         Source: General rat EEG electrode placement conventions
-        LLM 推断，需人类复核
+        inferred by LLM, needs human review
         """
         rename_map = {}
         eeg_channels = []

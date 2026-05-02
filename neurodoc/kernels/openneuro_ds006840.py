@@ -24,7 +24,7 @@ import mne
 
 # Standard 10-20 channel names for 29-channel EEG cap
 # Source: dataset documentation and standard_1020 montage
-# Annotator: LLM, 2026-04-08, 需人类复核
+# Annotator: LLM, 2026-04-08, needs human review
 _STANDARD_1020_CHANNELS = [
     "Fp1", "Fpz", "Fp2",
     "F7", "F3", "Fz", "F4", "F8",
@@ -38,7 +38,7 @@ _STANDARD_1020_CHANNELS = [
 
 # Event code mapping from raw BrainVision annotations to canonical names
 # Source: analysis.md event structure, verified against OpenNeuro metadata
-# Annotator: LLM, 2026-04-08, 需人类复核
+# Annotator: LLM, 2026-04-08, needs human review
 _EVENT_MAP = {
     "Stimulus/S  1": "execution",
     "Stimulus/S  2": "incongruent_trial",
@@ -151,7 +151,7 @@ def _extract_subject_info(row) -> Dict[str, str]:
 
     # Check for participants.tsv data in row attributes
     # Source: OpenNeuro participants.tsv
-    # Annotator: LLM, 2026-04-08, 需人类复核
+    # Annotator: LLM, 2026-04-08, needs human review
     age = str(row.get("age", "unknown"))
     sex = str(row.get("sex", "unknown")).lower()
     handedness = str(row.get("handedness", "unknown")).lower()
@@ -280,13 +280,13 @@ class OpenNeuroDS006840Kernel:
         # Step 7: Build eegunity_description
         # Amplifier info from dataset documentation
         # Source: OpenNeuro dataset_description.json
-        # Annotator: LLM, 2026-04-08, 需人类复核
-        amplifier = "BrainAmp"  # LLM 推断，需人类复核
+        # Annotator: LLM, 2026-04-08, needs human review
+        amplifier = "BrainAmp"  # inferred by LLM, needs human review
 
         # Cap info - standard 10-20 cap
         # Source: Dataset documentation and paradigm description
-        # Annotator: LLM, 2026-04-08, 需人类复核
-        cap = "Ag/AgCl"  # LLM 推断，需人类复核
+        # Annotator: LLM, 2026-04-08, needs human review
+        cap = "Ag/AgCl"  # inferred by LLM, needs human review
 
         original_desc = raw.info.get("description", "")
 

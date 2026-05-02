@@ -15,9 +15,9 @@ import pandas as pd
 # Source: OpenNeuro ds004264 dataset_description.json
 # DOI: https://doi.org/10.18112/openneuro.ds004264.v1.1.0
 # EEG 32-channel system with trigger channel
-# Annotator: LLM, 2026-04-08 (需人类复核)
+# Annotator: LLM, 2026-04-08 (needs human review)
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
-    "01": {"sex": "unknown", "age": "unknown"},  # LLM 推断，需人类复核
+    "01": {"sex": "unknown", "age": "unknown"},  # inferred by LLM, needs human review
     "02": {"sex": "unknown", "age": "unknown"},
     "03": {"sex": "unknown", "age": "unknown"},
     "04": {"sex": "unknown", "age": "unknown"},
@@ -44,7 +44,7 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
 # Source: OpenNeuro ds004264 README and paper
 # Paper: https://doi.org/10.1016/j.neunet.2023.06.015 (ship steering EEG study)
 # Based on 32-channel EEG cap with trigger channel
-# Annotator: LLM, 2026-04-08 (需人类复核)
+# Annotator: LLM, 2026-04-08 (needs human review)
 _CHANNEL_RENAME_MAP: Dict[str, str] = {
     "EEG000": "Fp1",
     "EEG001": "Fpz",
@@ -203,8 +203,8 @@ class OpenNeuroDs004264Kernel:
             "eegunity_description": {
                 "age": subject_info["age"],
                 "sex": subject_info["sex"],
-                "amplifier": "BrainAmp",  # LLM 推断，需人类复核
-                "cap": "Ag/AgCl",  # LLM 推断，需人类复核
+                "amplifier": "BrainAmp",  # inferred by LLM, needs human review
+                "cap": "Ag/AgCl",  # inferred by LLM, needs human review
                 "handedness": "unknown",
             },
         }

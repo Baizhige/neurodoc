@@ -23,7 +23,7 @@ import pandas as pd
 # =============================================================================
 # Source: ERP CORE electrode layout (Kappenman et al. 2021, Neuroimage)
 # 31 EEG channels + 4 EOG channels → standard 1020 montage
-# Annotator: LLM, 2026-04-08, 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08,
 _EEG_CHANNEL_RENAME_MAP = {
     "Fp1": "Fp1",
     "Fp2": "Fp2",
@@ -107,9 +107,9 @@ def _get_subject_info(row: Dict[str, Any], dataset_root: str) -> Dict[str, str]:
 
     # Default values when not found
     return {
-        "age": "unknown",  # LLM 推断，需人类复核
-        "sex": "unknown",  # LLM 推断，需人类复核
-        "handedness": "unknown",  # LLM 推断，需人类复核
+        "age": "unknown",  # inferred by LLM, needs human review
+        "sex": "unknown",  # inferred by LLM, needs human review
+        "handedness": "unknown",  # inferred by LLM, needs human review
     }
 
 
@@ -213,14 +213,14 @@ class OpenNeuroDS006018Kernel:
         # Step 5: Build eegunity_description
         # ERP CORE uses BrainAmp amplifiers with Ag/AgCl caps
         # Source: Kappenman et al. (2021) ERP CORE paper
-        # Annotator: LLM, 2026-04-08, 由 LLM 推断，需人类复核
+        # Annotator: LLM, 2026-04-08,
         description_dict = {
             "original_description": raw.info.get("description", ""),
             "eegunity_description": {
                 "age": subject_info["age"],
                 "sex": subject_info["sex"],
-                "amplifier": "BrainAmp",  # LLM 推断，需人类复核
-                "cap": "Ag/AgCl",  # LLM 推断，需人类复核
+                "amplifier": "BrainAmp",  # inferred by LLM, needs human review
+                "cap": "Ag/AgCl",  # inferred by LLM, needs human review
                 "handedness": subject_info["handedness"],
             },
         }

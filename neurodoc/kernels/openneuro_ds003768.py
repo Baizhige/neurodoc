@@ -22,7 +22,7 @@ import numpy as np
 # Channel rename map for 32-channel EEG-fMRI cap
 # Source: BrainCap 32-channel layout (standard 10-20 system with 32 channels)
 # Annotator: LLM, 2026-04-08, inference from paper DOI: 10.1016/j.dib.2023.109059
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 # =============================================================================
 _32CHANNEL_RENAME_MAP = {
     "Fp1": "EEG Fp1",
@@ -129,7 +129,7 @@ def _apply_montage_32ch(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
 
     Source: Standard 10-20 system extended to 32 channels
     Annotator: LLM, 2026-04-08
-    LLM 推断，需人类复核
+    inferred by LLM, needs human review
     """
     try:
         # Try standard 32-channel montage

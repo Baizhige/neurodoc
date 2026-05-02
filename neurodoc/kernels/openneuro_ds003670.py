@@ -66,8 +66,8 @@ _STANDARD_35_CHANNEL_MAP = {
 # Default device info from dataset documentation
 # Source: openneuro dataset description
 # Annotator: LLM, 2026-01-15
-_DEFAULT_AMPLIFIER = "BrainAmp DC"  # LLM 推断，需人类复核
-_DEFAULT_CAP = "Ag/AgCl"  # LLM 推断，需人类复核
+_DEFAULT_AMPLIFIER = "BrainAmp DC"  # inferred by LLM, needs human review
+_DEFAULT_CAP = "Ag/AgCl"  # inferred by LLM, needs human review
 
 
 def _detect_stimulation_dose(events_df: pd.DataFrame) -> Dict[str, Any]:
@@ -144,9 +144,9 @@ def _build_subject_info(
         except Exception:
             pass
 
-    # LLM 推断，需人类复核
+    # inferred by LLM, needs human review
     if age == "unknown":
-        age = "unknown"  # LLM 推断，需人类复核
+        age = "unknown"  # inferred by LLM, needs human review
 
     return {"age": age, "sex": sex, "handedness": handedness}
 

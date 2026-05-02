@@ -25,10 +25,10 @@ import pandas as pd
 
 # ============================================================================
 # Device Metadata (from paper 10.1111/ejn.14965)
-# Annotator: LLM, 2026-04-08 — 需人类复核
+# Annotator: LLM, 2026-04-08 — needs human review
 # ============================================================================
 _AMPLIFIER = "BioSemi ActiveTwo"
-_CAP = "BioSemi 64-channel cap with standard 10-20 positions"  # LLM 推断，需人类复核
+_CAP = "BioSemi 64-channel cap with standard 10-20 positions"  # inferred by LLM, needs human review
 _HANDEDNESS = "unknown"  # not reported in available metadata
 
 # ============================================================================
@@ -37,7 +37,7 @@ _HANDEDNESS = "unknown"  # not reported in available metadata
 # Source: Dataset uses standard 10-20 extended 64-channel layout + 3 accelerometer
 # channels (x_dir, y_dir, z_dir) for gait event detection.
 # The 64 EEG channels follow standard naming; accelerometer channels are misc.
-# Annotator: LLM, 2026-04-08 — 需人类复核
+# Annotator: LLM, 2026-04-08 — needs human review
 
 # Standard 64-channel EEG names (standard_1020 extended)
 _STANDARD_EEG_CHANNELS = [

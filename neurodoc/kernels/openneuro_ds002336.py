@@ -20,7 +20,7 @@ import pandas as pd
 
 # Standard 10-20 64-channel layout for this dataset
 # Source: 10.1038/s41597-020-0498-3 (dataset descriptor), Table 1 and supplementary material
-# Annotator: LLM, 2026-04-08; 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08;
 _EEG_CHANNEL_MAP = {
     "EEG01": "Fp1", "EEG02": "Fp2", "EEG03": "F7", "EEG04": "F3",
     "EEG05": "Fz", "EEG06": "F4", "EEG07": "F8", "EEG08": "FC5",
@@ -229,9 +229,9 @@ class OpenNeuroDS002336Kernel:
 
         # Device info from paper: BrainAmp MR plus with BrainCap MR
         # Source: 10.1038/s41597-020-0498-3, Methods section
-        # LLM 推断，需人类复核
-        amplifier = "BrainAmp MR plus"  # LLM 推断，需人类复核
-        cap = "BrainCap MR (Ag/AgCl)"  # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
+        amplifier = "BrainAmp MR plus"  # inferred by LLM, needs human review
+        cap = "BrainCap MR (Ag/AgCl)"  # inferred by LLM, needs human review
         handedness = "unknown"  # not reported in participants.tsv
 
         eegunity_desc = {

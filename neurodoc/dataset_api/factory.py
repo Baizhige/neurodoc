@@ -127,7 +127,7 @@ def build_dataset_from_task(
     dry_run: bool = False,
     **loader_kwargs,
 ) -> Optional[BaseHDF5Dataset]:
-    """Dispatch task → Dataset class. With `dry_run=True`, validate args only.
+    """Dispatch task -> Dataset class. With `dry_run=True`, validate args only.
 
     Returns a constructed Dataset when `dry_run=False`, else `None`.
     Raises `DatasetDispatchError` with `.kind` in {schema, bad_target_def,
@@ -146,7 +146,7 @@ def build_dataset_from_task(
 
     if route == "misc":
         _require(ttype == "regression", "schema",
-                 "misc route is regression-only (rulebook §77条之六).",
+                 "misc route is regression-only (rulebook Article 77, clause 6).",
                  label_route=route, label_field=label_field)
         _require(bool(label_field), "schema",
                  "misc route requires non-empty label_field.",

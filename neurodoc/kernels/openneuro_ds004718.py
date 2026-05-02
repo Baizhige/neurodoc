@@ -406,7 +406,7 @@ class OpenNeuroDS004718Kernel:
             if sex:
                 subject_info["sex"] = str(sex).lower()
 
-        # LLM 推断，需人类复核 - amplifier and cap info from paper
+        # inferred by LLM, needs human review - amplifier and cap info from paper
         # Paper DOI 10.1038/s41597-024-03745-8 mentions "MRI-compatible EEG system"
         # but specific amplifier model not documented in dataset metadata
         # Annotator: LLM, 2025-01-15

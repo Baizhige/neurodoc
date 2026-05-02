@@ -32,7 +32,7 @@ import scipy.io as sio
 
 # Standard BioSemi 64-channel layout based on 10-20 system
 # Source: BioSemi ActiveTwo documentation; standard 10-20 layout
-# Annotator: LLM 推断，需人类复核
+# Annotator: inferred by LLM, needs human review
 _BIOSEMI_64_CH_NAMES = [
     'Fp1', 'AF7', 'AF3', 'F1', 'F3', 'F5', 'F7', 'FT7',
     'FC5', 'FC3', 'FC1', 'C1', 'C3', 'C5', 'T7', 'TP7',
@@ -48,7 +48,7 @@ _BIOSEMI_64_CH_NAMES = [
 # Source: analysis.md notes "64 channels plus additional auxiliary channels (total 73)"
 # The exact auxiliary channel names are not specified in the dataset documentation.
 # Common BioSemi auxiliary channels include EXG1-8 and GSR/ERG/etc.
-# Annotator: LLM 推断，需人类复核
+# Annotator: inferred by LLM, needs human review
 _AUX_CH_NAMES = [
     'EXG1', 'EXG2', 'EXG3', 'EXG4', 'EXG5', 'EXG6', 'EXG7', 'EXG8', 'Status'
 ]
@@ -187,7 +187,7 @@ class ZenodoDTUKernel:
                 "age": "unknown",
                 "sex": "unknown",
                 "amplifier": "BioSemi ActiveTwo",  # From analysis.md
-                "cap": "BioSemi",  # LLM 推断，需人类复核
+                "cap": "BioSemi",  # inferred by LLM, needs human review
                 "handedness": "unknown",
             }
         })
@@ -227,7 +227,7 @@ class ZenodoDTUKernel:
                 "age": "unknown",
                 "sex": "unknown",
                 "amplifier": "BioSemi ActiveTwo",
-                "cap": "BioSemi",  # LLM 推断，需人类复核
+                "cap": "BioSemi",  # inferred by LLM, needs human review
                 "handedness": "unknown",
             }
         })

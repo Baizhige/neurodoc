@@ -138,13 +138,13 @@ def _get_subject_metadata(dataset_path: str, subject_id: str) -> Dict[str, str]:
         return {
             "age": age,
             "sex": sex,
-            "handedness": "unknown",  # LLM 推断，需人类复核
+            "handedness": "unknown",  # inferred by LLM, needs human review
         }
     
     return {
         "age": "unknown",
         "sex": "unknown",
-        "handedness": "unknown",  # LLM 推断，需人类复核
+        "handedness": "unknown",  # inferred by LLM, needs human review
     }
 
 

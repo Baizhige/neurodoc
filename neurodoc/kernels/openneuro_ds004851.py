@@ -46,7 +46,7 @@ kernel_requirements = {
 # Subject Metadata
 # ============================================================================
 # Source: OpenNeuro ds004851 participants.tsv (read dynamically in apply)
-# LLM 推断，需人类复核 — fallback values if participants.tsv unavailable
+# inferred by LLM, needs human review — fallback values if participants.tsv unavailable
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     f"sub-{str(i).zfill(3)}": {"age": "unknown", "sex": "unknown", "handedness": "unknown"}
     for i in range(1, 66)
@@ -57,7 +57,7 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
 # ============================================================================
 # Source: 72-channel HD-EEG standard_1020 layout (inferred from dataset description)
 # Dataset uses standard 10-20 system with extended coverage
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _STANDARD_72_CHANNELS = [
     "Fp1", "Fpz", "Fp2",
     "AF3", "AF4",
@@ -384,7 +384,7 @@ class HIDKernel:
         # 4. Set amplifier and cap info
         # ------------------------------------------------------------------
         # Source: Dataset description — 72-channel HD-EEG at 2048 Hz
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         amplifier = "unknown"  # Not specified in available documentation
         cap = "unknown"        # Not specified in available documentation
         

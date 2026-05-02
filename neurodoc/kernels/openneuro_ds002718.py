@@ -43,9 +43,9 @@ _STANDARD_74_CHANNELS = [
 ]
 
 # Source: 10.1038/sdata.2015.1 - BrainAmp amplifier system
-# Annotator: LLM, 2026-04-08 (LLM 推断，需人类复核)
+# Annotator: LLM, 2026-04-08 (inferred by LLM, needs human review)
 _AMPLIFIER = "BrainAmp"
-_CAP_MATERIAL = "Ag/AgCl"  # LLM 推断，需人类复核
+_CAP_MATERIAL = "Ag/AgCl"  # inferred by LLM, needs human review
 
 
 def _load_participants_tsv(dataset_path: str) -> Dict[str, Dict[str, Any]]:

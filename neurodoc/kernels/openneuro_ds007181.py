@@ -34,7 +34,7 @@ STAGE_MAP = {
 }
 
 # Source: OpenNeuro ds007181 dataset description and typical PSG 24-channel montage
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _AMPLIFIER = "unknown"
 _CAP = "unknown"
 _HANDEDNESS = "unknown"

@@ -21,14 +21,14 @@ import numpy as np
 
 # PEERS dataset uses BrainVision system with 128 EEG channels + 1 external reference
 # Source: PEERS dataset documentation / paper supplementary materials
-# Annotator: LLM 推断，需人类复核
+# Annotator: inferred by LLM, needs human review
 _AMPLIFIER = "BrainAmp"
 _CAP = "Ag/AgCl"
 
 # Standard 10-20 system channel mapping for 128-channel system
 # PEERS uses standard 10-20 electrode placement
 # Source: Dataset README / paper methodology
-# Annotator: LLM 推断，需人类复核
+# Annotator: inferred by LLM, needs human review
 _STANDARD_1020_CHANNELS = [
     "Fp1", "Fpz", "Fp2",
     "AF9", "AF7", "AF5", "AF3", "AFz", "AF4", "AF8", "AF10",
@@ -56,7 +56,7 @@ _STANDARD_1020_CHANNELS = [
 
 # Event ID mapping for PEERS dataset
 # Source: PEERS dataset event documentation
-# Annotator: LLM 推断，需人类复核
+# Annotator: inferred by LLM, needs human review
 _EVENT_ID_MAP = {
     "WORD": 1,
     "REC_WORD": 2,
@@ -96,9 +96,9 @@ def _detect_subject_info(row) -> Dict[str, str]:
     # Default values - PEERS dataset does not provide subject age/sex in BIDS
     # Source: Dataset info field (subject_age: missing, subject_sex: missing)
     return {
-        "age": "unknown",  # LLM 推断，需人类复核
-        "sex": "unknown",  # LLM 推断，需人类复核
-        "handedness": "unknown",  # LLM 推断，需人类复核
+        "age": "unknown",  # inferred by LLM, needs human review
+        "sex": "unknown",  # inferred by LLM, needs human review
+        "handedness": "unknown",  # inferred by LLM, needs human review
     }
 
 

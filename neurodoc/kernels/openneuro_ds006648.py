@@ -32,7 +32,7 @@ import pandas as pd
 # Source: BioSemi ActiveTwo 64-channel cap documentation, standard 10-20 layout
 # https://www.biosemi.com/download/Cap_coords_all.xls
 # Annotator: LLM, 2026-04-08
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _BIOSEMI_64_CHANNEL_NAMES = [
     "Fp1", "AF7", "AF3", "F1", "F3", "F5", "F7", "FT7",
     "FC5", "FC3", "FC1", "C1", "C3", "C5", "T7", "TP7",

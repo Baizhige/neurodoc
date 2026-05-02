@@ -26,7 +26,7 @@ class OpenNeuroDS003944Kernel:
 
     # Standard 10-20 64-channel names expected in this dataset
     # Source: Dataset documentation / standard 10-20 system
-    # Annotator: LLM, 2026-04-08, # LLM 推断，需人类复核
+    # Annotator: LLM, 2026-04-08, # inferred by LLM, needs human review
     _STANDARD_64_CHANNELS = [
         "Fp1", "Fpz", "Fp2",
         "AF9", "AF7", "AF5", "AF3", "AF1", "AFz", "AF2", "AF4", "AF6", "AF8",
@@ -167,7 +167,7 @@ class OpenNeuroDS003944Kernel:
 
         # Fallback: try to infer from dataset metadata
         # Source: OpenNeuro DS003944 dataset_description.json
-        # Annotator: LLM, 2026-04-08, # LLM 推断，需人类复核
+        # Annotator: LLM, 2026-04-08, # inferred by LLM, needs human review
         if subject_info["amplifier"] == "unknown":
             subject_info["amplifier"] = "unknown"
 
@@ -198,7 +198,7 @@ class OpenNeuroDS003944Kernel:
         # Try to match existing channels to standard names
         # The dataset typically uses standard 10-20 naming
         # Source: Dataset documentation / paper references
-        # Annotator: LLM, 2026-04-08, # LLM 推断，需人类复核
+        # Annotator: LLM, 2026-04-08, # inferred by LLM, needs human review
 
         # Common aliases for 10-20 system channels
         alias_groups = [

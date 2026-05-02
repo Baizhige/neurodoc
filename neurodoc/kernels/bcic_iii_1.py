@@ -28,7 +28,7 @@ import numpy as np
 # Source: BCI Competition III official documentation, 64-channel extended 10-20 layout
 # https://www.bbci.de/competition/iii/download/
 # Annotator: LLM, 2026-04-08
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _BCIC_III_1_CHANNEL_NAMES = [
     "Fp1", "AFp1", "Fpz", "AFp2", "Fp2", "AF7", "AF3", "AFz", "AF4", "AF8",
     "FAF5", "FAF1", "FAF2", "FAF6", "F7", "F5", "F3", "F1", "Fz", "F2",
@@ -132,7 +132,7 @@ class BCICIII1Kernel:
 
         # Set montage for standard 10-20 layout
         # Source: standard_1020 for 64-channel extended 10-20
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         try:
             montage = mne.channels.make_standard_montage("standard_1020")
             # Pick only channels that exist in both raw and montage
@@ -147,7 +147,7 @@ class BCICIII1Kernel:
 
         # Update description with metadata
         # No demographic info available for this dataset
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         description_dict = {
             "original_description": raw.info.get("description", ""),
             "eegunity_description": {

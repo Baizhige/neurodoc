@@ -280,8 +280,8 @@ class OpenNeuroDS004348Kernel:
         # Device info - from dataset documentation
         # Source: analysis.md and dataset README
         # Annotator: LLM, 2026-04-08
-        amplifier = "unknown"  # LLM 推断，需人类复核
-        cap = "unknown"  # LLM 推断，需人类复核 (ear-EEG custom electrodes)
+        amplifier = "unknown"  # inferred by LLM, needs human review
+        cap = "unknown"  # inferred by LLM, needs human review (ear-EEG custom electrodes)
         handedness = "unknown"  # Not in participants.tsv
         
         eegunity_description = {

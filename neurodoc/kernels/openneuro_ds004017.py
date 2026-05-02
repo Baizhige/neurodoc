@@ -22,8 +22,8 @@ import numpy as np
 # Hardware: Brain Products BrainAmp MR plus amplifier
 # Cap: 64-channel ActiCAP with Ag/AgCl electrodes
 # Annotator: LLM, 2026-04-08
-_AMPLIFIER = "BrainAmp MR plus"  # LLM 推断，需人类复核
-_CAP = "ActiCAP Ag/AgCl"  # LLM 推断，需人类复核
+_AMPLIFIER = "BrainAmp MR plus"  # inferred by LLM, needs human review
+_CAP = "ActiCAP Ag/AgCl"  # inferred by LLM, needs human review
 
 # Standard 10-20 channel mapping for 64-channel system
 # Source: Brain Products / standard_1020 extended montage
@@ -210,11 +210,11 @@ class OpenNeuroDS004017Kernel:
         description_dict = {
             "original_description": original_desc if original_desc else "",
             "eegunity_description": {
-                "age": "unknown",  # LLM 推断，需人类复核
-                "sex": "unknown",  # LLM 推断，需人类复核
+                "age": "unknown",  # inferred by LLM, needs human review
+                "sex": "unknown",  # inferred by LLM, needs human review
                 "amplifier": _AMPLIFIER,
                 "cap": _CAP,
-                "handedness": "unknown",  # LLM 推断，需人类复核
+                "handedness": "unknown",  # inferred by LLM, needs human review
             },
         }
         raw.info["description"] = json.dumps(description_dict)

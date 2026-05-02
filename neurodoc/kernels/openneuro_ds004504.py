@@ -25,7 +25,7 @@ import pandas as pd
 
 # Standard 19-channel 10-20 system used in this dataset
 # Source: Dataset descriptor paper (10.3390/data8060095) — 19 channels, 10-20 system
-# Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08
 _STANDARD_19_CHANNELS = [
     "Fp1", "Fp2",  # prefrontal
     "F7", "F3", "Fz", "F4", "F8",  # frontal
@@ -36,7 +36,7 @@ _STANDARD_19_CHANNELS = [
 
 # Channel rename map for common non-standard naming variants
 # Source: 10-20 international system standard names
-# Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08
 _CHANNEL_RENAME_MAP = {
     # Temporal channels: older 10-20 vs newer 10-10 nomenclature
     "T7": "T3",
@@ -239,9 +239,9 @@ class OpenNeuroDS004504Kernel:
         
         # Device metadata — from dataset descriptor paper
         # Source: 10.3390/data8060095 — BrainAmp amplifier, Ag/AgCl cap
-        # Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
-        amplifier = "BrainAmp"  # LLM 推断，需人类复核
-        cap = "Ag/AgCl"  # LLM 推断，需人类复核
+        # Annotator: LLM, 2026-04-08
+        amplifier = "BrainAmp"  # inferred by LLM, needs human review
+        cap = "Ag/AgCl"  # inferred by LLM, needs human review
         handedness = "unknown"  # Not provided in participants.tsv
         
         # Channel renaming to standard 10-20 names

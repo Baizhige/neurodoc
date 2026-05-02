@@ -28,12 +28,12 @@ import numpy as np
 # No participants.tsv available; all demographic fields unknown.
 # Source: analysis.md notes "No age or sex information available"
 # Annotator: LLM, 2026-04-08
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 
 # BioSemi ActiveTwo with 256-channel ultra-high-density cap
 # Source: analysis.md "BioSemi ActiveTwo, Ag/AgCl"
 # Annotator: LLM, 2026-04-08
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 
 # Standard BioSemi 256-channel naming pattern: A1-A32, B1-B32, C1-C32, D1-D32,
 # E1-E32, F1-F32, G1-G32, H1-H32
@@ -41,7 +41,7 @@ import numpy as np
 # If the raw has non-standard names, they would need mapping here.
 # Source: BioSemi ActiveTwo 256-channel cap documentation
 # Annotator: LLM, 2026-04-08
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 
 # Filename pattern: S{N}_AAD_{trial}{L/R}.dap
 # Examples: S1_AAD_1L.dap, S2_AAD_3R.dap
@@ -80,7 +80,7 @@ class ZenodoUHDKernel:
             elif "R.DAP" in basename or "_R." in basename or "1R." in basename:
                 attended_event = "attend_right"
             else:
-                attended_event = "unknown"  # LLM 推断，需人类复核
+                attended_event = "unknown"  # inferred by LLM, needs human review
 
         # Create whole-trial annotation
         # Each file is one trial; annotation spans entire recording
@@ -176,8 +176,8 @@ class ZenodoUHDKernel:
         eegunity_description = {
             "age": "unknown",
             "sex": "unknown",
-            "amplifier": "BioSemi ActiveTwo",  # LLM 推断，需人类复核
-            "cap": "Ag/AgCl",  # LLM 推断，需人类复核
+            "amplifier": "BioSemi ActiveTwo",  # inferred by LLM, needs human review
+            "cap": "Ag/AgCl",  # inferred by LLM, needs human review
             "handedness": "unknown",
         }
 

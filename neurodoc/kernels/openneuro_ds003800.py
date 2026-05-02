@@ -335,7 +335,7 @@ class OpenNeuroDS003800Kernel:
         # Age: from participants.tsv or unknown
         age = participants_info.get("Age", "unknown")
         if age == "unknown":
-            age = "unknown"  # LLM 推断，需人类复核
+            age = "unknown"  # inferred by LLM, needs human review
         
         # Sex: from participants.tsv Gender column, lowercase
         sex = participants_info.get("Gender", "unknown").lower()
@@ -344,10 +344,10 @@ class OpenNeuroDS003800Kernel:
         
         # Device info: not available in dataset metadata
         # Source: Dataset descriptor (DOI: 10.1016/j.dib.2022.107839) - no device specified
-        # LLM 推断，需人类复核
-        amplifier = "unknown"  # LLM 推断，需人类复核
-        cap = "unknown"  # LLM 推断，需人类复核
-        handedness = "unknown"  # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
+        amplifier = "unknown"  # inferred by LLM, needs human review
+        cap = "unknown"  # inferred by LLM, needs human review
+        handedness = "unknown"  # inferred by LLM, needs human review
         
         # Build description dict
         original_desc = raw.info.get("description", "")

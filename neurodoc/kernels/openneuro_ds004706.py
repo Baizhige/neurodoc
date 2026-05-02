@@ -23,7 +23,7 @@ import numpy as np
 # Subject metadata
 # ============================================================================
 # Source: Dataset description states subject_age and subject_sex are missing.
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     # All subjects have unknown age/sex per dataset documentation
 }
@@ -34,7 +34,7 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
 # Source: High-density 137-channel EEG with 2048 Hz sampling suggests
 # BrainProducts system (e.g., BrainAmp DC). Paper mentions "EEG data were
 # recorded using a 128-channel ..." - specific system needs verification.
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _DEVICE_AMPLIFIER = "unknown"  # Needs confirmation from paper/methodology
 _DEVICE_CAP = "unknown"  # Ag/AgCl or similar, needs confirmation
 _HANDEDNESS = "unknown"  # Not provided in dataset
@@ -45,7 +45,7 @@ _HANDEDNESS = "unknown"  # Not provided in dataset
 # ============================================================================
 # Source: 137-channel system likely follows standard_1020 or extended layout.
 # Channel naming convention unknown from available documentation.
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
     """Build rename map for non-standard channel names.
 

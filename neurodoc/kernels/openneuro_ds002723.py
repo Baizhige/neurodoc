@@ -230,15 +230,15 @@ class OpenNeuroDS002723Kernel:
         subject_info = _extract_subject_info(dataset_path, subject_id)
 
         # Build eegunity_description
-        # Device info from dataset documentation - LLM 推断，需人类复核
+        # Device info from dataset documentation - inferred by LLM, needs human review
         description_dict = {
             "original_description": original_description,
             "eegunity_description": {
                 "age": subject_info.get("age", "unknown"),
                 "sex": subject_info.get("sex", "unknown"),
-                "amplifier": "unknown",  # LLM 推断，需人类复核
-                "cap": "unknown",  # LLM 推断，需人类复核
-                "handedness": "unknown",  # LLM 推断，需人类复核
+                "amplifier": "unknown",  # inferred by LLM, needs human review
+                "cap": "unknown",  # inferred by LLM, needs human review
+                "handedness": "unknown",  # inferred by LLM, needs human review
             },
         }
         raw.info["description"] = json.dumps(description_dict)

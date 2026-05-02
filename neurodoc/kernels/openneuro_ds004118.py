@@ -35,7 +35,7 @@ import numpy as np
 
 # BioSemi 266-channel standard naming (10-20 system extended)
 # Source: BioSemi channel naming convention for high-density caps
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _BIOSEMI_266_CHANNELS = {
     "Fp1", "Fpz", "Fp2",
     "AF9", "AF7", "AF5", "AF3", "AF1", "AFz", "AF2", "AF4", "AF6", "AF8",
@@ -138,7 +138,7 @@ def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
     - Full BioSemi names
     - Numerical indices
 
-    Source: BioSemi electrode naming; LLM 推断，需人类复核
+    Source: BioSemi electrode naming; inferred by LLM, needs human review
     """
     rename_map: Dict[str, str] = {}
     existing = set(raw.ch_names)
@@ -159,7 +159,7 @@ def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
             num = int(match.group(1))
             # BioSemi ordering maps to standard positions
             # This is a simplified mapping; full mapping requires BCIT documentation
-            # LLM 推断，需人类复核
+            # inferred by LLM, needs human review
             continue
 
         # Pattern: Already standard 10-20 names (may have prefixes)
@@ -222,8 +222,8 @@ class BCITCalibrationDrivingKernel:
     """
 
     KERNEL_ID: str = "openneuro-ds004118-stage1"
-    amplifier: str = "BioSemi"  # LLM 推断，需人类复核
-    cap: str = "BioSemi 10-20 system (266ch)"  # LLM 推断，需人类复核
+    amplifier: str = "BioSemi"  # inferred by LLM, needs human review
+    cap: str = "BioSemi 10-20 system (266ch)"  # inferred by LLM, needs human review
 
     def apply(self, udataset, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
         """Apply stage1 preprocessing to BCIT calibration driving data.
@@ -278,7 +278,7 @@ class BCITCalibrationDrivingKernel:
 
         # Build eegunity_description
         # Age/sex/handedness unknown from dataset metadata
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         description_dict = {
             "original_description": original_desc if original_desc else "",
             "eegunity_description": {

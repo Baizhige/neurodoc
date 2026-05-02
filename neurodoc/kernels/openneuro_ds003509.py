@@ -22,7 +22,7 @@ import pandas as pd
 
 
 # Annotator: LLM, 2026-04-08
-# Amplifier info: LLM 推断，需人类复核
+# Amplifier info: inferred by LLM, needs human review
 # Based on 67 channels and 500 Hz sampling typical of BrainAmp systems
 # Source: dataset hardware specifications not explicitly stated
 _SUBJECT_DICT = {

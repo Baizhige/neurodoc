@@ -237,7 +237,7 @@ class OpenNeuroDs003602Kernel:
         # =====================================================================
         # 2. Build eegunity_description
         # =====================================================================
-        # Amplifier/cap: inferred from dataset documentation (LLM 推断，需人类复核)
+        # Amplifier/cap: inferred from dataset documentation (inferred by LLM, needs human review)
         # This dataset used a BrainVision system with Ag/AgCl electrodes
         # Source: OpenNeuro dataset documentation, 2026-04-08
         original_desc = raw.info.get("description", "")
@@ -247,8 +247,8 @@ class OpenNeuroDs003602Kernel:
             "eegunity_description": {
                 "age": subject_meta.get("age", "unknown"),
                 "sex": subject_meta.get("sex", "unknown"),
-                "amplifier": "BrainVision",  # LLM 推断，需人类复核
-                "cap": "Ag/AgCl",  # LLM 推断，需人类复核
+                "amplifier": "BrainVision",  # inferred by LLM, needs human review
+                "cap": "Ag/AgCl",  # inferred by LLM, needs human review
                 "handedness": subject_meta.get("handedness", "unknown"),
             },
         }

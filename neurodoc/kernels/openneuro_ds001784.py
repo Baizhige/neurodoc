@@ -73,7 +73,7 @@ _EVENT_ID_MAP: Dict[str, int] = {
 # =============================================================================
 # Channel Rename Map for 64-65 Channel Standard Systems
 # Source: Widge et al. 2019 Nature Communications, 65-channel extended 10-20 layout
-# Annotator: LLM, 2026-04-08 — by LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
 # =============================================================================
 _CHANNEL_ALIAS_GROUPS: List[List[str]] = [
     ["Fp1", "FP1", "fp1", "EEG-Fp1"],
@@ -308,10 +308,10 @@ class OpenNeuroDS001784Kernel:
         # ---------------------------------------------------------------------
         # 4. Device metadata
         # Source: Widge et al. 2019 Nature Communications — 65-channel BioSemi ActiveTwo
-        # Annotator: LLM, 2026-04-08 — by LLM 推断，需人类复核
+        # Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
         # ---------------------------------------------------------------------
-        amplifier = "BioSemi ActiveTwo"  # LLM 推断，需人类复核
-        cap = "BioSemi 64-channel with external CMS/DRL"  # LLM 推断，需人类复核
+        amplifier = "BioSemi ActiveTwo"  # inferred by LLM, needs human review
+        cap = "BioSemi 64-channel with external CMS/DRL"  # inferred by LLM, needs human review
         
         # ---------------------------------------------------------------------
         # 5. Handedness (not reported in dataset, set to unknown)

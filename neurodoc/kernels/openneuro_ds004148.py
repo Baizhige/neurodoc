@@ -52,10 +52,10 @@ _REQUIRED_INFO_FIELDS = [
 # Age range 18-45 derived from dataset paper (DOI: 10.1038/s41597-022-01607-9)
 # Annotator: LLM, 2026-04-08
 _DEFAULT_AGE = "18-45"
-_DEFAULT_SEX = "unknown"  # LLM 推断，需人类复核
-_DEFAULT_AMPLIFIER = "unknown"  # LLM 推断，需人类复核
-_DEFAULT_CAP = "unknown"  # LLM 推断，需人类复核
-_DEFAULT_HANDEDNESS = "unknown"  # LLM 推断，需人类复核
+_DEFAULT_SEX = "unknown"  # inferred by LLM, needs human review
+_DEFAULT_AMPLIFIER = "unknown"  # inferred by LLM, needs human review
+_DEFAULT_CAP = "unknown"  # inferred by LLM, needs human review
+_DEFAULT_HANDEDNESS = "unknown"  # inferred by LLM, needs human review
 
 
 def _extract_subject_id_from_path(file_path: str) -> Optional[str]:

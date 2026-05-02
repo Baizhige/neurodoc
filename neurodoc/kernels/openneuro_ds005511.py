@@ -269,8 +269,8 @@ class HBNEEGKernel:
             "eegunity_description": {
                 "age": age,
                 "sex": sex,
-                "amplifier": "BioSemi ActiveTwo",  # LLM 推断，需人类复核
-                "cap": "Ag/AgCl",  # LLM 推断，需人类复核
+                "amplifier": "BioSemi ActiveTwo",  # inferred by LLM, needs human review
+                "cap": "Ag/AgCl",  # inferred by LLM, needs human review
                 "handedness": handedness,
             },
         }

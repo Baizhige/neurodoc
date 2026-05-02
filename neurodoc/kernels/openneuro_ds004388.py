@@ -22,15 +22,15 @@ import mne
 import numpy as np
 
 
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 # Amplifier info based on paper references for spinal cord SEP studies
 _AMPLIFIER = "unknown"
 
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 # Cap info - epidural spinal cord ESG electrodes mentioned, EEG likely standard
 _CAP = "unknown"
 
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 # No handedness info in dataset description
 _HANDEDNESS = "unknown"
 
@@ -69,7 +69,7 @@ def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
     - MISC trigger/stim channels
     
     Source: Standard 10-20 system for EEG, paper descriptions for ESG/EMG channels.
-    LLM 推断，需人类复核 - channel naming conventions.
+    inferred by LLM, needs human review - channel naming conventions.
     """
     rename_map: Dict[str, str] = {}
     existing_names = set(raw.ch_names)
@@ -298,12 +298,12 @@ class openneuro_ds004388_Kernel:
         original_desc = raw.info.get("description", "")
         
         # Build eegunity_description
-        # LLM 推断，需人类复核 - age and sex unknown from dataset
+        # inferred by LLM, needs human review - age and sex unknown from dataset
         description_dict = {
             "original_description": original_desc,
             "eegunity_description": {
-                "age": "unknown",  # LLM 推断，需人类复核
-                "sex": "unknown",  # LLM 推断，需人类复核
+                "age": "unknown",  # inferred by LLM, needs human review
+                "sex": "unknown",  # inferred by LLM, needs human review
                 "amplifier": _AMPLIFIER,
                 "cap": _CAP,
                 "handedness": _HANDEDNESS,

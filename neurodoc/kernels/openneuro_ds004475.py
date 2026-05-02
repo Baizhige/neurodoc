@@ -28,7 +28,7 @@ import numpy as np
 # This list represents EEG, EOG, reference, and ground channels identified by
 # standard naming patterns.
 # Source: Pattern-based classification from standard_1020 naming conventions
-# Annotator: LLM, 2026-04-10, # LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-10, # inferred by LLM, needs human review
 _EEG_COMPATIBLE_PATTERNS: List[re.Pattern] = [
     re.compile(r"^(?:EEG|EOG|ECG|EMG)\s*[-_]?\d*$", re.IGNORECASE),
     re.compile(r"^(?:F|C|P|O|T)\d*[a-z]?$", re.IGNORECASE),
@@ -193,7 +193,7 @@ def _process_annotations(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
 # Amplifier and cap information not documented.
 # All values set to "unknown" per kernel rulebook.
 # Source: Dataset analysis.md Info field
-# Annotator: LLM, 2026-04-10, # LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-10, # inferred by LLM, needs human review
 _SUBJECT_METADATA_DEFAULTS: Dict[str, Any] = {
     "age": "unknown",
     "sex": "unknown",
@@ -234,7 +234,7 @@ class OpenNeuroDS004475Kernel:
         # Build eegunity_description
         # All values are "unknown" since dataset lacks subject metadata
         # Source: Dataset analysis.md Info table
-        # Annotator: LLM, 2026-04-10, # LLM 推断，需人类复核
+        # Annotator: LLM, 2026-04-10, # inferred by LLM, needs human review
         eegunity_description = {
             "age": _SUBJECT_METADATA_DEFAULTS["age"],
             "sex": _SUBJECT_METADATA_DEFAULTS["sex"],

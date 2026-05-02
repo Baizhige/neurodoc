@@ -29,7 +29,7 @@ import pandas as pd
 
 # Standard 10-20 73-channel layout for BrainCap72 / extended montage
 # Source: Brain Products standard 72-channel cap with FCz, AFz, CPz, POz extensions
-# Annotator: LLM 推断，需人类复核
+# Annotator: inferred by LLM, needs human review
 _STANDARD_73_CHANNELS = [
     "Fp1", "Fpz", "Fp2",
     "AF7", "AF3", "AFz", "AF4", "AF8",
@@ -97,7 +97,7 @@ def _detect_paradigm(file_name: str) -> Optional[str]:
 
 # Event code to description mapping based on analysis.md event structure
 # Source: analysis.md Event Structure table, paper 10.1038/s41398-021-01562-w
-# Annotator: LLM 推断，需人类复核
+# Annotator: inferred by LLM, needs human review
 _EVENT_CODE_MAP = {
     130816: "admin: marker-130816",
     131070: "admin: marker-131070",
@@ -493,9 +493,9 @@ class OpenNeuroDS003638Kernel:
             "age": str(age) if age != "unknown" else "unknown",
             "sex": sex,
             "amplifier": "BrainAmp DC",  # Source: BrainVision format, standard Brain Products amplifier
-            # LLM 推断，需人类复核
+            # inferred by LLM, needs human review
             "cap": "BrainCap 64ch with 8 externals",  # Source: 73 channels suggests 64+8+1 reference setup
-            # LLM 推断，需人类复核
+            # inferred by LLM, needs human review
             "handedness": "unknown",  # Not in participants.tsv, not reported in paper abstract
             "UH2_ID": str(uh2_id),
         }

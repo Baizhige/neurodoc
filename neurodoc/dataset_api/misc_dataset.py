@@ -1,7 +1,7 @@
-"""MISCDataset — torch Dataset for Label Route = misc tasks.
+"""MISCDataset - torch Dataset for Label Route = misc tasks.
 
 Requires HDF5 v2.1+ with a `/misc_meta/<misc_channel>` dataset of shape (N,).
-Task Type is fixed to regression (per rulebook §77条之六).
+Task Type is fixed to regression (per rulebook Article 77, clause 6).
 """
 from __future__ import annotations
 

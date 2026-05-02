@@ -20,14 +20,14 @@ import numpy as np
 import pandas as pd
 
 
-# Annotator: LLM, 2026-04-09 — 需要人类复核
+# Annotator: LLM, 2026-04-09 — needs human review
 # Source: Dataset README and paper 10.1523/ENEURO.0207-18.2018
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     # 30 participants, 18–45 years, right-handed
     # Exact individual data not publicly released; values inferred from paper
 }
 
-# Annotator: LLM, 2026-04-09 — 需要人类复核
+# Annotator: LLM, 2026-04-09 — needs human review
 # Source: 10.1016/j.dib.2021.107635 — Dataset paper
 _DEVICE_INFO = {
     "amplifier": "BrainAmp MR plus",  # From dataset description
@@ -194,7 +194,7 @@ class OpenNeuroDS003739Kernel:
                 pass
 
         # Apply device metadata
-        # Annotator: LLM, 2026-04-09 — 需要人类复核
+        # Annotator: LLM, 2026-04-09 — needs human review
         amplifier = _DEVICE_INFO.get("amplifier", "unknown")
         cap = _DEVICE_INFO.get("cap", "unknown")
 
@@ -317,7 +317,7 @@ class OpenNeuroDS003739Kernel:
             )
 
         # Set montage if standard 10-20 channels detected
-        # Annotator: LLM, 2026-04-09 — 需要人类复核
+        # Annotator: LLM, 2026-04-09 — needs human review
         # Source: Paper indicates standard EEG cap; 149 channels suggests high-density
         try:
             standard_chs = [ch for ch in raw.ch_names if ch in mne.channels.make_standard_montage("standard_1020").ch_names]

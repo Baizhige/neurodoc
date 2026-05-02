@@ -23,7 +23,7 @@ from kernels.openneuro_specific._base import OpenNeuroBaseKernel
 
 # Channel naming for 32-channel infant EEG cap.
 # Source: Dataset documentation / paper methodology (32-channel infant cap layout)
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _EEG_CHANNEL_RENAME_MAP = {
     "EEG-1": "Fp1",
     "EEG-2": "Fpz",
@@ -130,7 +130,7 @@ class OpenNeuroDS005106Kernel(OpenNeuroBaseKernel):
 
         # Update description with eegunity_description metadata.
         # Age: infants (specific age range unknown from dataset documentation)
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         description_dict = {
             "original_description": original_desc if original_desc else "",
             "eegunity_description": {

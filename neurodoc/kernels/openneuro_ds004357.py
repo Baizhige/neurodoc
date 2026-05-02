@@ -23,9 +23,9 @@ import pandas as pd
 
 # Source: Paper DOI 10.1038/s41598-025-27703-5 (Methods section)
 # "EEG was recorded from 128 channels using a BrainAmp MR plus amplifier"
-# "Ag/AgCl electrode cap" - LLM 推断，需人类复核
+# "Ag/AgCl electrode cap" - inferred by LLM, needs human review
 _AMPLIFIER = "BrainAmp MR plus"
-_CAP = "Ag/AgCl"  # LLM 推断，需人类复核
+_CAP = "Ag/AgCl"  # inferred by LLM, needs human review
 
 # Required info fields from participants.tsv
 _REQUIRED_INFO_FIELDS = ["Age", "Gender", "Handedness"]

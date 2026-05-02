@@ -317,11 +317,11 @@ class OpenNeuroDS002720Kernel:
         else:
             sex = "unknown"
 
-        # Device info from paper - LLM inferred,需人类复核
+        # Device info from paper - LLM inferred,needs human review
         # Source: DOI 10.1038/s41597-020-0507-6 mentions "19-channel EEG"
         # Specific amplifier model not explicitly stated in available documentation
-        amplifier = "unknown"  # LLM 推断，需人类复核
-        cap = "unknown"  # LLM 推断，需人类复核 - standard 10-20 cap assumed
+        amplifier = "unknown"  # inferred by LLM, needs human review
+        cap = "unknown"  # inferred by LLM, needs human review - standard 10-20 cap assumed
         handedness = "unknown"  # Not in participants.tsv for this dataset
 
         # Build required info fields dict

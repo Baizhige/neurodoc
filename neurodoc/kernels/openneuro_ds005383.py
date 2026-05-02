@@ -22,7 +22,7 @@ import numpy as np
 
 # Standard 10-20 channel names for 30-channel EEG cap (BioSemi compatible)
 # Source: BioSemi 64-channel layout documentation, mapped to 30-channel subset
-# Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
 _30CHANNEL_STANDARD_NAMES = [
     "Fp1", "Fpz", "Fp2",
     "F7", "F3", "Fz", "F4", "F8",
@@ -297,8 +297,8 @@ class OpenNeuroDs005383Kernel:
             "eegunity_description": {
                 "age": subject_meta.get("age", "unknown"),
                 "sex": subject_meta.get("sex", "unknown"),
-                "amplifier": "unknown",  # BIDS sidecar not parsed; LLM 推断，需人类复核
-                "cap": "unknown",  # BIDS sidecar not parsed; LLM 推断，需人类复核
+                "amplifier": "unknown",  # BIDS sidecar not parsed; inferred by LLM, needs human review
+                "cap": "unknown",  # BIDS sidecar not parsed; inferred by LLM, needs human review
                 "handedness": subject_meta.get("handedness", "unknown"),
             },
         }

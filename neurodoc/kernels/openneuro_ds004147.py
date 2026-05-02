@@ -190,8 +190,8 @@ class OpenNeuroDS004147Kernel:
             "eegunity_description": {
                 "age": info_fields.get("age", "unknown"),
                 "sex": info_fields.get("sex", "unknown"),
-                "amplifier": "BrainAmp",  # LLM 推断，需人类复核 - typical for this dataset
-                "cap": "Ag/AgCl",  # LLM 推断，需人类复核 - standard BrainVision cap
+                "amplifier": "BrainAmp",  # inferred by LLM, needs human review - typical for this dataset
+                "cap": "Ag/AgCl",  # inferred by LLM, needs human review - standard BrainVision cap
                 "handedness": info_fields.get("handedness", "unknown"),
             }
         }

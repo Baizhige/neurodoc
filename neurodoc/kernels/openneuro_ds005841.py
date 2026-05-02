@@ -21,7 +21,7 @@ import numpy as np
 # === Channel Configuration ===
 # 73 EEG channels from a VR-compatible EEG system
 # Source: Dataset documentation / paper references
-# Annotator: LLM, 2026-04-08 (LLM 推断，需人类复核)
+# Annotator: LLM, 2026-04-08 (inferred by LLM, needs human review)
 _EEG_CHANNEL_NAMES = [
     "Fp1", "Fpz", "Fp2",
     "AF7", "AF3", "AFz", "AF4", "AF8",
@@ -39,14 +39,14 @@ _EEG_CHANNEL_NAMES = [
 ]
 
 # Source: Dataset README and paper (VR ERP study)
-# Annotator: LLM, 2026-04-08 (LLM 推断，需人类复核)
+# Annotator: LLM, 2026-04-08 (inferred by LLM, needs human review)
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {}
 
 # Event mapping: actual event codes to semantic labels
 # Based on paradigm description: 2x2 design (lighting × predictability)
 # event_1-18 → 4 conditions × multiple stimulus positions/iterations
 # Source: Analysis.md Tasks section
-# Annotator: LLM, 2026-04-08 (LLM 推断，需人类复核)
+# Annotator: LLM, 2026-04-08 (inferred by LLM, needs human review)
 _EVENT_MAP: Dict[str, str] = {
     "event_1": "RAND_DARK",   # Random unpredictable stimulus - dark condition
     "event_2": "RAND_LIGHT",  # Random unpredictable stimulus - light condition
@@ -69,7 +69,7 @@ _EVENT_MAP: Dict[str, str] = {
 
 # Binary mapping for RAND vs REF (prediction error) task
 # Source: Analysis.md Potential Task 2
-# Annotator: LLM, 2026-04-08 (LLM 推断，需人类复核)
+# Annotator: LLM, 2026-04-08 (inferred by LLM, needs human review)
 _PREDICTION_ERROR_MAP: Dict[str, int] = {
     "RAND_DARK": 0,
     "RAND_LIGHT": 0,
@@ -208,8 +208,8 @@ class OpenNeuroDS005841Kernel:
             "eegunity_description": {
                 "age": subject_info.get("age", "unknown"),
                 "sex": subject_info.get("sex", "unknown"),
-                "amplifier": "unknown",  # VR EEG system - LLM 推断，需人类复核
-                "cap": "unknown",  # VR-compatible EEG cap - LLM 推断，需人类复核
+                "amplifier": "unknown",  # VR EEG system - inferred by LLM, needs human review
+                "cap": "unknown",  # VR-compatible EEG cap - inferred by LLM, needs human review
                 "handedness": subject_info.get("handedness", "unknown"),
             },
         }

@@ -24,7 +24,7 @@ import pandas as pd
 # Source: Based on standard 64-channel EEG cap plus additional channels
 # 66 channels suggest a 64-channel EEG cap with 2 EOG channels
 # Assuming standard 10-20 system with extended 10-10 positions
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _DEFAULT_66_CHANNEL_NAMES = [
     "Fp1", "Fpz", "Fp2",
     "AF3", "AFz", "AF4",
@@ -359,15 +359,15 @@ class OpenNeuroDS003822Kernel:
         # Build eegunity_description
         # Annotator: LLM, 2026-04-08
         # Source: Paper DOI 10.3758/s13415-021-00950-5 indicates standard EEG lab setup
-        # amplifier/cap/handedness: LLM 推断，需人类复核
+        # amplifier/cap/handedness: inferred by LLM, needs human review
         description_dict = {
             "original_description": raw.info.get("description", ""),
             "eegunity_description": {
-                "age": "unknown",  # LLM 推断，需人类复核
-                "sex": "unknown",  # LLM 推断，需人类复核
-                "amplifier": "BrainProducts BrainAmp",  # LLM 推断，需人类复核
-                "cap": "Ag/AgCl",  # LLM 推断，需人类复核
-                "handedness": "unknown",  # LLM 推断，需人类复核
+                "age": "unknown",  # inferred by LLM, needs human review
+                "sex": "unknown",  # inferred by LLM, needs human review
+                "amplifier": "BrainProducts BrainAmp",  # inferred by LLM, needs human review
+                "cap": "Ag/AgCl",  # inferred by LLM, needs human review
+                "handedness": "unknown",  # inferred by LLM, needs human review
             },
         }
         raw.info["description"] = json.dumps(description_dict)

@@ -20,9 +20,8 @@ import pandas as pd
 
 
 # =============================================================================
-# 被试者信息（来源：conneXion 项目数据集说明 / 论文补充材料）
+# subject
 # Annotator: LLM, 2026-06-02
-# 注意：以下 age/sex/handedness 为 LLM 根据论文推断，需人类复核
 # =============================================================================
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     "sub-01": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
@@ -49,14 +48,14 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     "sub-22": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
     "sub-23": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
 }
-# Source: LLM 推断，需人类复核
+# Source: inferred by LLM, needs human review
 
 # =============================================================================
-# 通道重命名映射
-# 来源：conneXion 数据集原始 EEG 文件；BrainVision 系统 256-channel 系统命名
+# channel
+# source: conneXion dataset
 # Annotator: LLM, 2026-06-02
 # =============================================================================
-# BrainVision 256-channel 系统通道列表（标准顺序）
+# BrainVision 256-channel
 _BRAINVISION_256_CHANNELS = [
     "Fp1", "Fp2", "Fpz", "AF7", "AF3", "AFz", "AF4", "AF8",
     "F7", "F5", "F3", "F1", "Fz", "F2", "F4", "F6", "F8",
@@ -66,14 +65,10 @@ _BRAINVISION_256_CHANNELS = [
     "P7", "P5", "P3", "P1", "Pz", "P2", "P4", "P6", "P8",
     "PO7", "PO5", "PO3", "POz", "PO4", "PO6", "PO8",
     "O1", "Oz", "O2",
-    # 扩展通道（256 系统额外行）
     "VEOa", "VEOb", "HEOl", "HEOr",
-    # 以下为占位符，实际 256-channel 有完整列表
 ]
 
-# 常见非标准名称别名（从实际数据观察或论文推断）
 _ALIAS_GROUPS = [
-    # 标准 10-5 名称常见变体
     ("Fp1", ["Fp1", "EEG-Fp1"]),
     ("Fp2", ["Fp2", "EEG-Fp2"]),
     ("Fpz", ["Fpz", "EEG-Fpz"]),
@@ -131,21 +126,18 @@ _ALIAS_GROUPS = [
     ("O1", ["O1", "EEG-O1"]),
     ("Oz", ["Oz", "EEG-Oz"]),
     ("O2", ["O2", "EEG-O2"]),
-    # 眼动通道
     ("VEOa", ["VEOa", "HEOGL", "VEO"]),
     ("VEOb", ["VEOb", "HEOGR"]),
     ("HEOl", ["HEOl", "EOGleft"]),
     ("HEOr", ["HEOr", "EOGright"]),
-    # 数字化通道编号（常见于部分文件）
-    ("Fz", ["31", "32"]),   # 需确认具体映射
+    ("Fz", ["31", "32"]),
 ]
 
-# 通用数字索引 → 标准名映射（fallback）
 _DIGIT_CHANNEL_MAP: Dict[str, str] = {}
 
 
 def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
-    """根据原始数据中的通道名为 EEGUnity 构建重命名映射."""
+    """Build a channel rename map from raw channel names for EEGUnity."""
     rename_map: Dict[str, str] = {}
     existing_names = set(raw.ch_names)
 
@@ -155,10 +147,9 @@ def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
                 rename_map[source_name] = target_name
                 break
 
-    # fallback: 纯数字名称（EEG-0 格式）
+    # fallback:
     for ch in existing_names:
         if re.match(r"^(EEG[-_])?(\d+)$", ch):
-            # 尝试映射为标准名，若无映射则跳过
             mapped = _DIGIT_CHANNEL_MAP.get(ch)
             if mapped:
                 rename_map[ch] = mapped
@@ -167,9 +158,9 @@ def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
 
 
 def _detect_paradigm(file_path: str) -> Optional[str]:
-    """基于文件路径检测范式类型.
+    """Detect paradigm type from file path.
 
-    路径示例: sub-01/ses-S1/eeg/sub-01_ses-S1_task-pictureNaming_run-01_ieeg.fif
+    Example path: sub-01/ses-S1/eeg/sub-01_ses-S1_task-pictureNaming_run-01_ieeg.fif
     """
     basename = os.path.basename(file_path).lower()
     if "pictureNaming" in basename or "naming" in basename:
@@ -186,13 +177,12 @@ def _remap_events_from_tsv(
     row,
     file_path: str,
 ) -> mne.io.BaseRaw:
-    """从 events.tsv 读取事件并构建 MNE annotations.
+    """Read events from events.tsv and build MNE annotations.
 
-    events.tsv 列：onset, duration, trial_type, value, stimuli, response_time
+    events.tsv columns: onset, duration, trial_type, value, stimuli, response_time
     value: 0 = stimulus onset (meaningful), 1 = response
-    额外 trial_type 含: D249/D250 用于区分 meaningful/meaningless
+    Additional trial_type codes: D249/D250 distinguish meaningful/meaningless
     """
-    # 查找 events.tsv
     events_tsv = None
     base_dir = os.path.dirname(file_path)
     for fname in os.listdir(base_dir):
@@ -201,7 +191,6 @@ def _remap_events_from_tsv(
             break
 
     if events_tsv is None or not os.path.exists(events_tsv):
-        # 无 events.tsv 时使用 raw 内置 annotations
         return raw
 
     events_df = pd.read_csv(events_tsv, sep="\t")
@@ -218,7 +207,6 @@ def _remap_events_from_tsv(
         trial_type = str(ev.get("trial_type", "")).strip()
         stimuli = str(ev.get("stimuli", "")).strip()
 
-        # 事件映射（raw meta）
         if value == "0":
             desc = f"stimulus_onset"
             if trial_type in ("D249", "pictureNaming"):
@@ -230,7 +218,7 @@ def _remap_events_from_tsv(
         else:
             desc = f"event_{value}"
 
-        # super meta: 添加 stimuli 标签
+        # super meta:
         if stimuli and stimuli not in ("n/a", "nan"):
             desc = f"{desc}/{stimuli}"
 
@@ -250,9 +238,9 @@ def _remap_events_from_tsv(
 
 
 def _inject_reaction_time_misc(raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
-    """将 reaction_time 从 events.tsv 注入为 misc 通道或 annotations.
+    """Inject reaction_time from events.tsv as a misc channel or annotation.
 
-    reaction_time 单位为秒（从 stimulus onset 到 vocalization）。
+    reaction_time is in seconds (from stimulus onset to vocalization).
     """
     file_path = row.get("File Path", "")
     if not file_path:
@@ -276,7 +264,7 @@ def _inject_reaction_time_misc(raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
     if "response_time" not in events_df.columns and "response_time" not in events_df.columns:
         return raw
 
-    # response_time 列
+    # response_time
     rt_col = "response_time" if "response_time" in events_df.columns else "response_time"
     if rt_col not in events_df.columns:
         for c in events_df.columns:
@@ -287,7 +275,6 @@ def _inject_reaction_time_misc(raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
     if rt_col not in events_df.columns:
         return raw
 
-    # 已有 annotations 中添加 rt 信息（作为 annotation description 扩展）
     annotations = raw.annotations.copy()
     if len(annotations) > 0:
         new_descriptions = []
@@ -309,18 +296,16 @@ def _inject_reaction_time_misc(raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
 
 
 def _apply_montage(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
-    """设置标准 10-5 系统 montage.
+    """Set standard 10-5 system montage.
 
-    仅对已重命名且在 standard_1020 系统中存在的通道设置 montage。
+    Only applies montage to channels that have been renamed and exist in standard_1020.
     """
     try:
         standard_montage = mne.channels.make_standard_montage("standard_1020")
-        # 保留 raw 中实际存在的通道
         common_chs = set(raw.ch_names) & set(standard_montage.ch_names)
-        if len(common_chs) >= 20:  # 至少 20 个通道才设置
+        if len(common_chs) >= 20:
             raw.set_montage(standard_montage, on_missing="warn")
     except Exception as e:
-        # 若 montage 设置失败，记录但不中断
         print(f"[openneuro_ds003420] Montage setup warning: {e}")
 
     return raw
@@ -335,7 +320,7 @@ class OpenNeuroDS003420Kernel:
         file_path = str(row.get("File Path", ""))
 
         # -------------------------------------------------------------------------
-        # 1. 通道重命名（channel rename BEFORE set_montage）
+        # 1. channel
         # -------------------------------------------------------------------------
         rename_map = _build_channel_rename_map(raw)
         if rename_map:
@@ -344,24 +329,23 @@ class OpenNeuroDS003420Kernel:
                 raw.rename_channels(renaming)
 
         # -------------------------------------------------------------------------
-        # 2. 设置 montage（通道重命名后调用）
+        # 2.
         # -------------------------------------------------------------------------
         raw = _apply_montage(raw)
 
         # -------------------------------------------------------------------------
-        # 3. 事件处理：从 events.tsv 构建 annotations
+        # 3.
         # -------------------------------------------------------------------------
         raw = _remap_events_from_tsv(raw, row, file_path)
 
         # -------------------------------------------------------------------------
-        # 4. 反应时间注入（super meta）
+        # 4.
         # -------------------------------------------------------------------------
         raw = _inject_reaction_time_misc(raw, row)
 
         # -------------------------------------------------------------------------
-        # 5. eegunity_description 元信息
+        # 5. eegunity_description
         # -------------------------------------------------------------------------
-        # 提取 subject ID
         subject_id = ""
         if "sub-" in file_path:
             match = re.search(r"(sub-\d+)", file_path)
@@ -374,11 +358,11 @@ class OpenNeuroDS003420Kernel:
         description_dict = {
             "original_description": original_desc if original_desc else "",
             "eegunity_description": {
-                "age": sub_info.get("age", "unknown"),   # LLM 推断，需人类复核
-                "sex": sub_info.get("sex", "unknown"),    # LLM 推断，需人类复核
-                "amplifier": "BrainAmp",                  # LLM 推断，需人类复核（基于 conneXion 项目惯例）
-                "cap": "Ag/AgCl",                          # LLM 推断，需人类复核
-                "handedness": sub_info.get("handedness", "unknown"),  # LLM 推断，需人类复核
+                "age": sub_info.get("age", "unknown"),   # inferred by LLM, needs human review
+                "sex": sub_info.get("sex", "unknown"),    # inferred by LLM, needs human review
+                "amplifier": "BrainAmp",
+                "cap": "Ag/AgCl",                          # inferred by LLM, needs human review
+                "handedness": sub_info.get("handedness", "unknown"),  # inferred by LLM, needs human review
             },
         }
         raw.info["description"] = json.dumps(description_dict)

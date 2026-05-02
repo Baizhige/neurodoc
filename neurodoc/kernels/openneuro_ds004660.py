@@ -35,7 +35,7 @@ import pandas as pd
 # Channel rename map
 # Based on: OpenNeuro ds004660 channel naming convention (EEG-01..EEG-38)
 # Standard 1020 positions. Annotated by LLM, 2026-04-08
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 # ---------------------------------------------------------------------------
 _CHANNEL_RENAME_MAP: Dict[str, str] = {
     "EEG-01": "Fp1",

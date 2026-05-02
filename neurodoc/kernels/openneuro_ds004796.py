@@ -23,37 +23,37 @@ import pandas as pd
 
 
 # =============================================================================
-# 被试者元信息硬编码（数据集级别默认值）
+# subject
 # =============================================================================
 
 # Source: DOI 10.1038/s41597-024-03106-5 (PEARL-Neuro paper)
 # "healthy middle-aged adults (50–63 years)" → age range string
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _SUBJECT_AGE_RANGE: str = "50-63"
 
 # Source: DOI 10.1038/s41597-024-03106-5
 # "healthy middle-aged adults" → sex distribution unknown at dataset level
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _SUBJECT_SEX_DEFAULT: str = "unknown"
 
 # Source: DOI 10.1038/s41597-024-03106-5
 # 127-channel EEG system used for PEARL-Neuro data collection
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _AMPLIFIER: str = "unknown"
 
 # Source: DOI 10.1038/s41597-024-03106-5
 # High-density EEG cap used in PEARL-Neuro study
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _CAP: str = "unknown"
 
 # Source: DOI 10.1038/s41597-024-03106-5
 # Handedness information not explicitly stated in available documentation
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _HANDEDNESS: str = "unknown"
 
 
 # =============================================================================
-# 通道重映射
+# channel
 # =============================================================================
 
 # PEARL-Neuro uses 127-channel EEG cap based on standard_1020 system.
@@ -61,7 +61,7 @@ _HANDEDNESS: str = "unknown"
 # No renaming needed for standard channels, but we handle potential non-standard names.
 # Source: Dataset documentation / paper 10.1038/s41597-024-03106-5
 # Annotator: LLM, 2025-01-01
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 
 # Common non-standard channel name patterns that might appear in raw data
 _CHANNEL_RENAME_PATTERNS: Dict[str, str] = {
@@ -159,7 +159,6 @@ def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
 
 
 # =============================================================================
-# 事件映射（范式前缀约定）
 # =============================================================================
 
 # The dataset contains two paradigms: MSIT and Sternberg
@@ -167,7 +166,7 @@ def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
 # We use paradigm prefix to disambiguate
 # Source: task-msit_events.json and task-sternberg_events.json in dataset
 # Annotator: LLM, 2025-01-01
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 
 _MSIT_EVENT_MAP: Dict[str, str] = {
     "S  1": "MSIT: response_button_1",
@@ -223,7 +222,7 @@ def _get_paradigm_event_map(paradigm: Optional[str]) -> Dict[str, str]:
 
 
 # =============================================================================
-# participants.tsv 列名
+# participants.tsv
 # =============================================================================
 
 # Required info fields from kernel requirements

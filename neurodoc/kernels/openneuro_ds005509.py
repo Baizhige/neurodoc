@@ -18,7 +18,7 @@ HBN paradigm summary:
   - Symbol search
   - Naturalistic movie watching
 
-Author: LLM (inferrer), 2026-04-08 — 需人类复核
+Author: LLM (inferrer), 2026-04-08 — needs human review
 """
 
 from __future__ import annotations
@@ -63,7 +63,7 @@ _REQUIRED_DERIVED_MISC: List[str] = []
 # HBN uses BioSemi 128-channel cap + CMS/DRL reference = 129 channels.
 # Standard 10-20 positions with extended coverage.
 # Ref: BioSemi ActiveTwo 128-channel ABC layout; HBN data description
-# Annotator: LLM (inferrer), 2026-04-08 — 需人类复核
+# Annotator: LLM (inferrer), 2026-04-08 — needs human review
 # ============================================================================
 
 # HBN channels are typically named with standard 10-20 labels already,
@@ -362,10 +362,10 @@ class HBNRelease5Kernel:
             "sex": sex,
             # HBN uses BioSemi ActiveTwo amplifier
             # Ref: Alexander et al. 2017, HBN data description
-            # Annotator: LLM (inferrer), 2026-04-08 — 需人类复核
+            # Annotator: LLM (inferrer), 2026-04-08 — needs human review
             "amplifier": "BioSemi ActiveTwo",
             # BioSemi uses Ag/AgCl active electrodes
-            # Annotator: LLM (inferrer), 2026-04-08 — 需人类复核
+            # Annotator: LLM (inferrer), 2026-04-08 — needs human review
             "cap": "BioSemi 128-channel Ag/AgCl active electrode cap",
             "handedness": "unknown",  # Not consistently available in HBN
         }
@@ -381,7 +381,7 @@ class HBNRelease5Kernel:
             else:
                 eegunity_description[field] = "unknown"
 
-        # LLM 推断，需人类复核: handedness from EHQ total if available
+        # inferred by LLM, needs human review: handedness from EHQ total if available
         # EHQ (Edinburgh Handedness Questionnaire) total can indicate handedness
         ehq_total = eegunity_description.get("ehq_total", "unknown")
         if ehq_total != "unknown":
@@ -389,9 +389,9 @@ class HBNRelease5Kernel:
                 ehq_score = float(ehq_total)
                 # EHQ ranges -100 (fully left) to +100 (fully right)
                 if ehq_score > 0:
-                    eegunity_description["handedness"] = "right"  # LLM 推断，需人类复核
+                    eegunity_description["handedness"] = "right"  # inferred by LLM, needs human review
                 elif ehq_score < 0:
-                    eegunity_description["handedness"] = "left"  # LLM 推断，需人类复核
+                    eegunity_description["handedness"] = "left"  # inferred by LLM, needs human review
             except (ValueError, TypeError):
                 pass
 
@@ -454,7 +454,7 @@ class HBNRelease5Kernel:
                     montage = mne.channels.make_standard_montage("biosemi128")
                     raw.set_montage(montage, match_case=False, on_missing="warn")
                 except Exception:
-                    # LLM 推断，需人类复核: skip montage if no good match
+                    # inferred by LLM, needs human review: skip montage if no good match
                     pass
         except Exception:
             # Montage setting failed, continue without

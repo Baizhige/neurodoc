@@ -30,13 +30,13 @@ _REQUIRED_INFO_FIELDS = ["handedness"]
 # Source: paper DOI 10.1016/j.neuropsychologia.2012.10.003
 # Device: Brain Products BrainAmp MR plus
 # Cap: standard 10-20 with Ag/AgCl electrodes
-# Annotator: LLM 推断，需人类复核
+# Annotator: inferred by LLM, needs human review
 _AMPLIFIER = "BrainAmp MR plus"
 _CAP = "Ag/AgCl"
 
 # Source: BrainVision standard 64-channel layout for this dataset
 # Channel names follow standard 10-20 system with some extended positions
-# Annotator: LLM 推断，需人类复核
+# Annotator: inferred by LLM, needs human review
 _EEG_CHANNEL_ALIASES: List[List[str]] = [
     ["Fp1", "Fp 1", "EEG Fp1", "1"],
     ["AF7", "AF7", "EEG AF7", "2"],
@@ -106,17 +106,17 @@ _EEG_CHANNEL_ALIASES: List[List[str]] = [
 
 # EOG channel patterns
 # Source: dataset description - includes EOG channels
-# Annotator: LLM 推断，需人类复核
+# Annotator: inferred by LLM, needs human review
 _EOG_CHANNELS = ["EOG1", "EOG2", "EOG3", "EOG4", "HEOG", "VEOG", "EOG"]
 
 # EMG channel patterns
 # Source: dataset description - includes EMG channels for facial muscle recording
-# Annotator: LLM 推断，需人类复核
+# Annotator: inferred by LLM, needs human review
 _EMG_CHANNELS = ["EMG1", "EMG2", "EMG3", "EMG4", "EMG"]
 
 # Other non-EEG channels
 # Source: dataset description
-# Annotator: LLM 推断，需人类复核
+# Annotator: inferred by LLM, needs human review
 _MISC_CHANNELS = ["Trigger", "Status", "MKR", "MKR2"]
 
 

@@ -68,10 +68,10 @@ _EVENT_MAP = {
 # Condition mapping based on conneXion project documentation
 # Stimulus category classification: 0 vs 1 may correspond to different categories
 # (e.g., animals vs tools based on events.tsv stimuli column)
-# Annotator: LLM 推断，需人类复核
+# Annotator: inferred by LLM, needs human review
 _CONDITION_LABELS = {
-    "1": "visual_object_naming",  # LLM 推断，需人类复核
-    "0": "rest_or_baseline",       # LLM 推断，需人类复核
+    "1": "visual_object_naming",  # inferred by LLM, needs human review
+    "0": "rest_or_baseline",       # inferred by LLM, needs human review
 }
 
 
@@ -407,9 +407,9 @@ class OpenNeuroDS003421Kernel:
         # --- Update description with metadata ---
         # Infer metadata from subject ID and dataset documentation
         # Source: conneXion project documentation, LLM inference
-        age_value = "unknown"  # LLM 推断，需人类复核
-        sex_value = "unknown"   # LLM 推断，需人类复核
-        handedness_value = "unknown"  # LLM 推断，需人类复核
+        age_value = "unknown"  # inferred by LLM, needs human review
+        sex_value = "unknown"   # inferred by LLM, needs human review
+        handedness_value = "unknown"  # inferred by LLM, needs human review
         
         # Try to parse subject info from subject ID if available
         # e.g., sub-01 -> 01
@@ -419,15 +419,15 @@ class OpenNeuroDS003421Kernel:
                 subj_num = int(match.group(1))
                 # Dataset has 20 subjects (sub-01 to sub-20)
                 # Paper may specify demographics, but not extracted yet
-                # LLM 推断，需人类复核
+                # inferred by LLM, needs human review
         
         description_dict = {
             "original_description": str(original_description),
             "eegunity_description": {
                 "age": age_value,
                 "sex": sex_value,
-                "amplifier": "EGI Geodesic EEG System",  # LLM 推断，需人类复核
-                "cap": "HydroCel Geodesic Sensor Net (257ch)",  # LLM 推断，需人类复核
+                "amplifier": "EGI Geodesic EEG System",  # inferred by LLM, needs human review
+                "cap": "HydroCel Geodesic Sensor Net (257ch)",  # inferred by LLM, needs human review
                 "handedness": handedness_value,
             },
         }

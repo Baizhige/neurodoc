@@ -54,13 +54,13 @@ _EVENT_CODE_MAP: Dict[str, str] = {
 # Extended mapping for all observed events (from analysis.md)
 _EXTENDED_EVENT_CODE_MAP: Dict[str, str] = {
     # Session management
-    "1111001": "session_start",       # LLM 推断，需人类复核
-    "1111002": "session_end",         # LLM 推断，需人类复核
+    "1111001": "session_start",       # inferred by LLM, needs human review
+    "1111002": "session_end",         # inferred by LLM, needs human review
     # Driving states (raw meta)
     "1310001": "driving_state_manual",
     "2310001": "driving_state_adaptive_cruise",
     "2310002": "driving_state_manual",
-    "2512001": "driving_state_adaptive_cruise_extended",  # LLM 推断，需人类复核
+    "2512001": "driving_state_adaptive_cruise_extended",  # inferred by LLM, needs human review
     "2552001": "driving_state_stopped",
     "2562001": "driving_state_slow",
     "2572001": "driving_state_normal",
@@ -71,9 +71,9 @@ _EXTENDED_EVENT_CODE_MAP: Dict[str, str] = {
     "3110002": "partial_automation_active_alt",
     "4111101": "full_automation_active",
     # Automation events
-    "2412211": "handoff_to_automation",   # LLM 推断，需人类复核
-    "2744321": "automation_sustained",    # LLM 推断，需人类复核
-    "2793031": "trust_event_extended",     # LLM 推断，需人类复核
+    "2412211": "handoff_to_automation",   # inferred by LLM, needs human review
+    "2744321": "automation_sustained",    # inferred by LLM, needs human review
+    "2793031": "trust_event_extended",     # inferred by LLM, needs human review
     "1410001": "manual_control_onset",
     "1410002": "manual_control_offset",
 }
@@ -110,7 +110,7 @@ _TASK3_TRUST_EVENT_MAPPING: Dict[str, int] = {
 # ============================================================================
 # Source: OpenNeuro dataset participants.tsv
 # Format: sub-XXX with age/sex columns
-# Annotator: LLM, 2026-04-08 - 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08
 
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     # All subjects set to unknown - actual data from participants.tsv
@@ -123,7 +123,7 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
 # ============================================================================
 # Source: Dataset documentation / paper
 # 72-channel EEG with extended coverage
-# Annotator: LLM, 2026-04-08 - 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08
 
 _STANDARD_1020_CHANNELS = [
     "FP1", "FPZ", "FP2",
@@ -177,7 +177,7 @@ def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
     - Prefix/suffix variants
     
     Source: Dataset channel configuration documentation
-    Annotator: LLM, 2026-04-08 - 由 LLM 推断，需人类复核
+    Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
     """
     rename_map: Dict[str, str] = {}
     existing = set(raw.ch_names)
@@ -445,11 +445,11 @@ class OpenNeuroDS004844Kernel:
         description_dict = {
             "original_description": str(original_desc) if original_desc else "",
             "eegunity_description": {
-                "age": subject_info.get("age", "unknown"),      # LLM 推断，需人类复核
-                "sex": subject_info.get("sex", "unknown"),      # LLM 推断，需人类复核
-                "amplifier": "unknown",                          # LLM 推断，需人类复核
-                "cap": "unknown",                                # LLM 推断，需人类复核
-                "handedness": subject_info.get("handedness", "unknown"),  # LLM 推断，需人类复核
+                "age": subject_info.get("age", "unknown"),      # inferred by LLM, needs human review
+                "sex": subject_info.get("sex", "unknown"),      # inferred by LLM, needs human review
+                "amplifier": "unknown",                          # inferred by LLM, needs human review
+                "cap": "unknown",                                # inferred by LLM, needs human review
+                "handedness": subject_info.get("handedness", "unknown"),  # inferred by LLM, needs human review
             },
             "dataset_info": {
                 "dataset_id": "ds004844",

@@ -28,13 +28,11 @@ import scipy.io as sio
 # No age/sex information available in this dataset.
 # All subjects are described as "normal-hearing" adults.
 # Annotator: LLM, 2026-04-08
-# 由 LLM 推断，需人类复核
 
 # Channel layout: 64 channels + 2 mastoid references
 # Standard 10-20 system with mastoids (M1, M2)
 # Source: Dataset documentation and typical SiN AAD setups
 # Annotator: LLM, 2026-04-08
-# 由 LLM 推断，需人类复核
 _CHANNEL_NAMES = [
     "Fp1", "Fp2", "F7", "F3", "Fz", "F4", "F8", "FC5", "FC1", "FC2", "FC6",
     "T7", "C3", "Cz", "C4", "T8", "TP9", "CP5", "CP1", "CP2", "CP6", "TP10",

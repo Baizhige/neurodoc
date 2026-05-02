@@ -30,8 +30,8 @@ _SUBJECT_DICT: Dict[str, Dict[str, str]] = {
 # Amplifier information from SCCN lab standard equipment
 # Source: SCCN lab equipment documentation; 10.1016/j.neuroimage.2005.04.014
 # Annotator: LLM, 2026-04-08
-_AMPLIFIER = "BrainAmp"  # LLM 推断，需人类复核
-_CAP = "Ag/AgCl"  # LLM 推断，需人类复核
+_AMPLIFIER = "BrainAmp"  # inferred by LLM, needs human review
+_CAP = "Ag/AgCl"  # inferred by LLM, needs human review
 
 
 # SCCN 71-channel system channel mapping
@@ -250,8 +250,8 @@ class OpenNeuroDS004117Kernel:
             subject_meta.update(loaded_meta)
 
         # Get age and sex
-        age = subject_meta.get("age", "unknown")  # LLM 推断，需人类复核
-        sex = subject_meta.get("sex", "unknown")  # LLM 推断，需人类复核
+        age = subject_meta.get("age", "unknown")  # inferred by LLM, needs human review
+        sex = subject_meta.get("sex", "unknown")  # inferred by LLM, needs human review
 
         # Original description
         original_description = raw.info.get("description", "")
@@ -264,7 +264,7 @@ class OpenNeuroDS004117Kernel:
                 "sex": str(sex).lower() if sex != "unknown" else "unknown",
                 "amplifier": _AMPLIFIER,
                 "cap": _CAP,
-                "handedness": "unknown",  # LLM 推断，需人类复核
+                "handedness": "unknown",  # inferred by LLM, needs human review
             },
         }
         raw.info["description"] = json.dumps(description_dict)

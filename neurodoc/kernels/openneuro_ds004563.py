@@ -22,23 +22,23 @@ import numpy as np
 # Annotator: Human, extracted from dataset
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     f"sub-{str(i).zfill(2)}": {
-        "sex": "unknown",  # LLM 推断，需人类复核 - check participants.tsv
-        "age": "unknown",  # LLM 推断，需人类复核 - check participants.tsv
-        "handedness": "unknown",  # LLM 推断，需人类复核 - check participants.tsv
+        "sex": "unknown",  # inferred by LLM, needs human review - check participants.tsv
+        "age": "unknown",  # inferred by LLM, needs human review - check participants.tsv
+        "handedness": "unknown",  # inferred by LLM, needs human review - check participants.tsv
     }
     for i in range(1, 30)
 }
 
 # Channel rename map - standard 64-channel EEG setup
 # Source: OpenNeuro dataset channel information / standard_1020
-# Annotator: LLM, 需人类复核
+# Annotator: LLM, needs human review
 _CHANNEL_RENAME_MAP: Dict[str, str] = {
     f"EEG-{str(i).zfill(2)}": f"EEG-{str(i).zfill(3)}" for i in range(1, 65)
 }
 
 # Standard 64-channel cap mapping (extended 10-20 system)
 # Source: standard_1020 montage / OpenNeuro electrode coordinate file
-# Annotator: LLM, 需人类复核
+# Annotator: LLM, needs human review
 _STANDARD_64_CHANNEL_MAP = {
     "Fp1": "Fp1", "Fpz": "Fpz", "Fp2": "Fp2",
     "F7": "F7", "F3": "F3", "Fz": "Fz", "F4": "F4", "F8": "F8",
@@ -169,8 +169,8 @@ class OpenNeuroDS004563Kernel:
             "eegunity_description": {
                 "age": subject_info.get("age", "unknown"),
                 "sex": subject_info.get("sex", "unknown").lower(),
-                "amplifier": "unknown",  # LLM 推断，需人类复核 - check dataset_description.json
-                "cap": "unknown",  # LLM 推断，需人类复核 - check dataset documentation
+                "amplifier": "unknown",  # inferred by LLM, needs human review - check dataset_description.json
+                "cap": "unknown",  # inferred by LLM, needs human review - check dataset documentation
                 "handedness": subject_info.get("handedness", "unknown"),
             },
         }

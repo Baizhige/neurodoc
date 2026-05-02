@@ -346,9 +346,9 @@ def _load_participant_info(row: Dict[str, Any]) -> Dict[str, str]:
     
     # Default values - LLM inferred, needs human review
     return {
-        'age': 'unknown',  # LLM 推断，需人类复核
-        'sex': 'unknown',  # LLM 推断，需人类复核
-        'handedness': 'unknown',  # LLM 推断，需人类复核
+        'age': 'unknown',  # inferred by LLM, needs human review
+        'sex': 'unknown',  # inferred by LLM, needs human review
+        'handedness': 'unknown',  # inferred by LLM, needs human review
     }
 
 
@@ -454,8 +454,8 @@ class OpenNeuroDS004477Kernel:
             "eegunity_description": {
                 "age": participant_info.get('age', 'unknown'),
                 "sex": participant_info.get('sex', 'unknown'),
-                "amplifier": "unknown",  # LLM 推断，需人类复核 (2048 Hz suggests research-grade)
-                "cap": "unknown",  # LLM 推断，需人类复核 (80 channels suggests extended cap)
+                "amplifier": "unknown",  # inferred by LLM, needs human review (2048 Hz suggests research-grade)
+                "cap": "unknown",  # inferred by LLM, needs human review (80 channels suggests extended cap)
                 "handedness": participant_info.get('handedness', 'unknown'),
             }
         }

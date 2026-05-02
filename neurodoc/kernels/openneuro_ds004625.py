@@ -42,7 +42,7 @@ _CAP: str = "BioSemi 256-channel Ag/AgCl"
 # High-density channel naming — BioSemi 256-channel naming convention
 # ---------------------------------------------------------------------------
 # Source: BioSemi 256-channel cap layout documentation
-# Annotator: LLM, 2025-01-15 — 由 LLM 推断，需人类复核
+# Annotator: LLM, 2025-01-15
 _BIOSEMI_256_MAP: Dict[str, str] = {
     # Standard 10-20
     "Fp1": "Fp1", "Fpz": "Fpz", "Fp2": "Fp2",
