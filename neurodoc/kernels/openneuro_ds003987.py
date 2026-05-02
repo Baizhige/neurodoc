@@ -424,8 +424,8 @@ class OpenNeuroDs003987Kernel:
         eegunity_description = {
             "age": age,
             "sex": sex,
-            "amplifier": "unknown",  # LLM 推断，需人类复核 - not specified in BIDS, paper mentions BrainAmp but need verification
-            "cap": "unknown",  # LLM 推断，需人类复核 - 71-channel system, likely custom or extended 10-20
+            "amplifier": "unknown",  # inferred by LLM, needs human review - not specified in BIDS, paper mentions BrainAmp but need verification
+            "cap": "unknown",  # inferred by LLM, needs human review - 71-channel system, likely custom or extended 10-20
             "handedness": "unknown",  # not in participants.tsv
             "Sess1_Drug": sess1_drug,
             "Sess2_Drug": sess2_drug,

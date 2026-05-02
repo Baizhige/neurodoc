@@ -240,7 +240,7 @@ class OpenNeuroDS004502Kernel:
 
         # Amplifier/cap from dataset metadata (BrainVision system)
         # Source: OpenNeuro dataset_description.json and paper methods
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         amplifier_val = "BrainAmp"  # BrainVision amplifier family
         cap_val = "Ag/AgCl"  # Standard EEG cap material
 
@@ -320,7 +320,7 @@ def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
 
     Source: Standard 10-20 electrode positions (64-channel cap, 63 used).
     Channel order follows BrainVision standard arrangement.
-    Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+    Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
 
     Parameters
     ----------

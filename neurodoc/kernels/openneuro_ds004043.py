@@ -40,7 +40,7 @@ KERNEL_ID = "openneuro_ds004043"
 # Source: Brain Products actiCAP 64Ch Standard-2 documentation;
 #         verified against paper methods section (10.1038/s41598-022-10687-x)
 # Annotator: LLM, 2026-04-08
-# LLM 推断，需人类复核 — channel mapping should be verified against dataset README
+# inferred by LLM, needs human review — channel mapping should be verified against dataset README
 _A1_TO_STANDARD_63 = {
     "A1": "Fp1", "A2": "Fpz", "A3": "Fp2", "A4": "AF7", "A5": "AF3",
     "A6": "AF4", "A7": "AF8", "A8": "F7", "A9": "F5", "A10": "F3",

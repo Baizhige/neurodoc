@@ -89,7 +89,7 @@ def _load_participant_info(
     }
 
     if not os.path.exists(participants_tsv):
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         return defaults
 
     try:

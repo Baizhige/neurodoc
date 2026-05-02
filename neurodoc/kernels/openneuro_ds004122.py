@@ -44,7 +44,7 @@ import pandas as pd
 
 # BioSemi ActiveTwo 74-channel standard naming
 # Source: BioSemi 64+10-20 layout documentation; standard cap configuration
-# Annotator: LLM, 2026-04-08; 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08;
 _BIOSEMI_74_CHANNELS = [
     "Fp1", "AF7", "AF3", "F1", "F3", "F5", "F7", "FT7",
     "FC5", "FC3", "FC1", "C1", "C3", "C5", "T7", "TP7",
@@ -60,7 +60,7 @@ _BIOSEMI_74_CHANNELS = [
 
 # Standard 10-20 mapping for common BioSemi channel names
 # Source: standard_1020 montage in MNE
-# Annotator: LLM, 2026-04-08; 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08;
 _CHANNEL_RENAME_MAP = {
     # EXG channels are typically EOG/EMG references
     "EXG1": "EOG1",

@@ -24,7 +24,7 @@ import numpy as np
 
 # Channel mapping for the 65-channel system used in this study.
 # Source: Validated Touch-Video Database documentation (DOI: 10.1038/s41597-026-06714-5)
-# Annotator: LLM, 2026-04-08 (由 LLM 推断，需人类复核)
+# Annotator: LLM, 2026-04-08 (
 _65CH_CHANNEL_RENAME_MAP: Dict[str, str] = {
     "EEG 001": "FP1",   "EEG 002": "FP2",
     "EEG 003": "F7",    "EEG 004": "F3",   "EEG 005": "FZ",   "EEG 006": "F4",   "EEG 007": "F8",
@@ -119,11 +119,11 @@ class OpenNeuroDs005662Kernel:
         description_dict = {
             "original_description": str(original_desc),
             "eegunity_description": {
-                "amplifier": "unknown",  # LLM 推断，需人类复核
-                "cap": "unknown",        # LLM 推断，需人类复核
-                "age": "unknown",        # LLM 推断，需人类复核
-                "sex": "unknown",        # LLM 推断，需人类复核
-                "handedness": "unknown", # LLM 推断，需人类复核
+                "amplifier": "unknown",  # inferred by LLM, needs human review
+                "cap": "unknown",        # inferred by LLM, needs human review
+                "age": "unknown",        # inferred by LLM, needs human review
+                "sex": "unknown",        # inferred by LLM, needs human review
+                "handedness": "unknown", # inferred by LLM, needs human review
             },
         }
         raw.info["description"] = json.dumps(description_dict)

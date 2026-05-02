@@ -27,7 +27,7 @@ import numpy as np
 # FC5, FC3, FC1, FCz, FC2, FC4, FC6, T7, C5, C3, C1, Cz, C2, C4, C6, T8,
 # CP5, CP3, CP1, CPz, CP2, CP4, CP6, P7, P5, P3, P1, Pz, P2, P4, P6, P8,
 # PO9, PO7, PO3, POz, PO4, PO8, PO10, O1, Oz, O2, plus special channels.
-# Annotator: LLM, 2026-04-08; LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08; inferred by LLM, needs human review
 _CHANNEL_RENAME_MAP: Dict[str, str] = {
     "1": "FP1",
     "2": "FP2",
@@ -96,7 +96,7 @@ _CHANNEL_RENAME_MAP: Dict[str, str] = {
 }
 
 # Subject metadata: all fields unknown since participants.tsv not confirmed.
-# Annotator: LLM, 2026-04-08; LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08; inferred by LLM, needs human review
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {}
 
 # Raw event annotation mapping (Stimulus/S XX codes).
@@ -247,7 +247,7 @@ class OpenNeuroDS005406Kernel:
         # Amplifier and cap: inferred from paradigm documentation.
         # Source: Paper DOI 10.1101/2024.05.10.593473 suggests standard
         # EEG lab equipment; exact model not specified in available materials.
-        # Annotator: LLM, 2026-04-08; LLM 推断，需人类复核
+        # Annotator: LLM, 2026-04-08; inferred by LLM, needs human review
         amplifier = "unknown"
         cap = "unknown"
 

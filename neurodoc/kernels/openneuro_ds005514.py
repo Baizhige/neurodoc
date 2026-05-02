@@ -608,7 +608,7 @@ class HBNKernel:
                     handedness = 'unknown'
             except (ValueError, TypeError):
                 handedness = 'unknown'
-        # LLM 推断，需人类复核: ehq_total > 0 suggests right-handed, < 0 left-handed
+        # inferred by LLM, needs human review: ehq_total > 0 suggests right-handed, < 0 left-handed
         # based on Edinburgh Handedness Inventory scoring convention
         
         # Build extra info dict (all required info fields as strings)

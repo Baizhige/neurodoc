@@ -405,9 +405,9 @@ class OpenNeuroDS003702Kernel:
         # --- Device metadata (inferred from dataset documentation) ---
         # Source: Data descriptor paper DOI 10.1016/j.dib.2022.107827
         # 64-channel BrainVision/BrainAmp system at 500 Hz
-        # LLM 推断，需人类复核
-        amplifier = "BrainAmp"  # LLM 推断，需人类复核
-        cap = "Ag/AgCl"  # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
+        amplifier = "BrainAmp"  # inferred by LLM, needs human review
+        cap = "Ag/AgCl"  # inferred by LLM, needs human review
         
         # --- Build eegunity_description ---
         eegunity_description = {

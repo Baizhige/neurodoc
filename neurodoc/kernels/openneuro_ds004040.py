@@ -43,9 +43,9 @@ _BLOCK_DURATION_S = 300.0  # 5 minutes per block
 
 # Source: openneuro_ds004040 dataset_description.json and README
 # Amplifier: BrainProducts BrainAmp (common in EEG research, inferred from dataset context)
-# Annotator: LLM, 2026-04-08 (LLM 推断，需人类复核)
-_AMPLIFIER = "BrainAmp"  # LLM 推断，需人类复核
-_CAP = "Ag/AgCl"  # Standard EEG cap material; LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08 (inferred by LLM, needs human review)
+_AMPLIFIER = "BrainAmp"  # inferred by LLM, needs human review
+_CAP = "Ag/AgCl"  # Standard EEG cap material; inferred by LLM, needs human review
 
 
 def _parse_subject_id(file_path: str) -> Optional[str]:

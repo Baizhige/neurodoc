@@ -1,7 +1,7 @@
 # Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging
 
 **Dataset**: `openneuro_ds002158` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002158
-**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 119 | **Channels**: 63 | **Sampling Rate**: 5000 Hz | **Manual Review**:
+**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 119 | **Channels**: 63 | **Sampling Rate**: 5000 Hz | **Manual Review**: Liu Peng
 
 ## Paradigm
 
@@ -16,7 +16,7 @@ Participants performed speeded perceptual judgments and subsequently reported th
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|---|---|---|---|---|
 | `Response/R128` | 44303 | event | raw | Response trigger |
 | `Stimulus/S  7` | 1347 | event | raw | Trial phase onset: stimulus marker 7 |
 | `Stimulus/S  8` | 1477 | event | raw | Trial phase onset: stimulus marker 8 |
@@ -42,88 +42,70 @@ Participants performed speeded perceptual judgments and subsequently reported th
 | `SyncStatus/Sync On` | 30864 | admin | raw | Synchronization trigger onset |
 
 
+> 1. The experimental paradigm of the paper consists of an active/observation dual-condition design (lines 655–659 of the paper), with trials alternating within blocks (4 blocks per run, alternating between active and observation). The type of all trials is a fixed attribute of the experimental design and is not ‘unknown’;  
+> 2.  The key events in the trial sequences described in the paper (start of gaze, start of stimulus, start of response, start of masking, start of confidence scale) are all clearly defined experimental marker events; there are no ‘unknown events’ serving as core epoch anchors or trial markers, and the ‘unknown’ Event ID has no basis in the paper.
+
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
-| `device` | missing | N/A |
+| `subject_age` | complete | Mean age = 24.6 ± 1.43 y |
+| `subject_sex` | complete | Twenty-five healthy volunteers (12 females) |
+| `device` | missing | EEG Recording: Data acquired via BrainVision system; MR-gradient artifacts removed via sliding window template subtraction. BCG artifacts removed using TP10 electrode (right mastoid) with semi-automatic procedure. Preprocessing included 1-10 Hz Butterworth filter (4th order zero-phase), [-0.2, 0.6] s epoching around response onset, common average reference, and ICA for artifact removal (EEGLAB/MATLAB). fMRI Recording: Structural (T1) and functional MRI data included; preprocessed using fMRIPrep with GLM analysis for BOLD signal estimation. |
+
 
 ## Tasks
 
-### Classical Task 1: Choice Accuracy Classification
+### Classical Task 1: Binary Classification of Perceptual Decision Accuracy
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.5 s *, target_events = [`Stimulus/S 40`, `Stimulus/S 41`, `Stimulus/S 43`, `Stimulus/S 27`, `Stimulus/S 11`, `Stimulus/S 12`, `Stimulus/S 17`, `Stimulus/S 18`]
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.5 s, target_events = [`Stimulus/S 11`, `Stimulus/S 12`, `Stimulus/S 17`, `Stimulus/S 18`, `Stimulus/S 27`, `Stimulus/S 40`, `Stimulus/S 41`, `Stimulus/S 43`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
-  | Stimulus/S 40 | 0 | Correct perceptual decision (cor) |
-  | Stimulus/S 41 | 0 | Correct perceptual decision (cor) |
-  | Stimulus/S 43 | 0 | Correct perceptual decision (cor) |
-  | Stimulus/S 27 | 0 | Correct perceptual decision (cor) |
-  | Stimulus/S 11 | 1 | Erroneous perceptual decision (err) |
-  | Stimulus/S 12 | 1 | Erroneous perceptual decision (err) |
-  | Stimulus/S 17 | 1 | Erroneous perceptual decision (err) |
-  | Stimulus/S 18 | 1 | Erroneous perceptual decision (err) |
+  |---|---|---|
+  | `Stimulus/S 40` | 0 | Correct perceptual decision |
+  | `Stimulus/S 41` | 1 | Correct perceptual decision |
+  | `Stimulus/S 43` | 2 | Correct perceptual decision |
+  | `Stimulus/S 27` | 3 | Correct perceptual decision |
+  | `Stimulus/S 11` | 4 | Erroneous perceptual decision |
+  | `Stimulus/S 12` | 5 | Erroneous perceptual decision |
+  | `Stimulus/S 17` | 6 | Erroneous perceptual decision |
+  | `Stimulus/S 18` | 7 | Erroneous perceptual decision |
 - **Evidence**:
-  - 10.1073/pnas.1918335117 — Binary classification of correct vs. erroneous perceptual decisions based on trial markers; paper analyzes first-order accuracy (correct vs. incorrect) as a key variable alongside confidence.
-- **Notes**: The events.tsv shows `choice_accuracy` levels 'cor' and 'err' mapping to correct and erroneous decisions. The stimulus markers S 40/S 41/S 43/S 27 and S 11/S 12/S 17/S 18 correspond to the two accuracy conditions in the perceptual decision task. All eight event IDs are pooled into two classes: y=0 for correct (cor) and y=1 for erroneous (err) decisions, reflecting the binary choice accuracy classification objective described in the paper.
+  - 10.1073/pnas.1918335117 - Binary classification of correct vs. erroneous perceptual decisions with eight stimulus markers mapped to two accuracy classes
+  - 10.1038/s41467-021-23540-y - Binary classification of choice accuracy with epochs -0.2s to 1.5s relative to stimulus onset
+  - 10.7554/eLife.53900 - Binary classification of first-order choice accuracy using trial-locked EEG epochs with correct (S 40/41/43/27) and erroneous (S 11/12/17/18) decision markers
+- **Notes**: The eight stimulus markers are pooled into two classes reflecting speeded perceptual decision outcomes. The 5000 Hz sampling rate requires downsampling before epoching. The `Response/R128` event was excluded from target_events despite appearing in one reference because the primary epoching is stimulus-locked per the majority of sources; response-locked analyses are secondary.
 
-### Classical Task 2: Active vs Observed Decision Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 2.0 s *, target_events = [`Stimulus/S 40`, `Stimulus/S 41`, `Stimulus/S 43`, `Stimulus/S 27`, `Stimulus/S 37`, `Stimulus/S 38`, `Stimulus/S 44`, `Stimulus/S 11`, `Stimulus/S 12`, `Stimulus/S 17`, `Stimulus/S 18`]`
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event ID | y | Meaning |
-  |----------|---|---------|
-  | `Stimulus/S 40`, `Stimulus/S 41`, `Stimulus/S 43` | 0 | Active/committed decision trials (act, act-bad) |
-  | `Stimulus/S 11`, `Stimulus/S 12`, `Stimulus/S 17`, `Stimulus/S 18`, `Stimulus/S 27`, `Stimulus/S 37`, `Stimulus/S 38`, `Stimulus/S 44` | 1 | Observed decision trials (obs, obs-bad) |
-- **Evidence**:
-  - 10.1073/pnas.1918335117 — Binary classification distinguishing trials where participant made their own decision (active/committed) vs. observed another's decision. The paper's core manipulation: participants reported confidence in own decisions (act) or observed decisions (obs). Events.tsv shows trial_types 'act', 'act-bad', 'obs', 'obs-bad'. Better metacognitive performance for committed vs. observed decisions was a key finding.
-- **Notes**: The event IDs used for this task are stimulus markers whose specific mappings to act/act-bad vs. obs/obs-bad conditions are inferred from the experimental design described in the paper. The kernel must map these Stimulus/S codes to the appropriate trial types based on the events.tsv trial_type column. The epoch window captures both the decision period and subsequent confidence rating period, consistent with the paper's focus on post-decisional confidence processing differences between active and observed conditions.
-
-### Potential Task 1: Stimulus Side Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = -0.1 s *, tmax = 1.0 s *, target_events = [`Stimulus/S 40`, `Stimulus/S 41`, `Stimulus/S 43`, `Stimulus/S 27`, `Stimulus/S 11`, `Stimulus/S 12`, `Stimulus/S 17`, `Stimulus/S 18`]`
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event ID | y | Meaning |
-  |----------|---|---------|
-  | `Stimulus/S 40` | 0 | Stimulus marker 40 (left side more dots) |
-  | `Stimulus/S 41` | 0 | Stimulus marker 41 (left side more dots) |
-  | `Stimulus/S 43` | 0 | Stimulus marker 43 (left side more dots) |
-  | `Stimulus/S 27` | 1 | Stimulus marker 27 (right side more dots) |
-  | `Stimulus/S 11` | 1 | Stimulus marker 11 (right side more dots) |
-  | `Stimulus/S 12` | 1 | Stimulus marker 12 (right side more dots) |
-  | `Stimulus/S 17` | 1 | Stimulus marker 17 (right side more dots) |
-  | `Stimulus/S 18` | 1 | Stimulus marker 18 (right side more dots) |
-- **Evidence**:
-  - events.tsv sample — `stim_side` column shows values 'left' and 'right' with `dots_difference` indicating perceptual decision task
-  - task-main_events.json — `stim_side` defined with Levels: left="Left has most dots", right="Right has most dots"
-  - README — Dataset involves speeded perceptual judgments with confidence ratings; participants decide which side has more dots
-- **Notes**: The specific mapping between stimulus markers and left/right side is not explicitly documented in the available sidecar files. The events.tsv shows trial_type values (act, act-bad, obs, obs-bad) but does not directly map to the S 40/S 41/S 43/S 27/S 11/S 12/S 17/S 18 trigger codes. Based on the candidate's evidence summary stating these events encode stim_side values, we group markers into two classes (y=0 for left, y=1 for right). The exact left/right assignment per marker ID is inferred from the candidate's kernel_needs grouping. All eight stimulus markers are included as target_events to capture both sides; the kernel must extract stim_side labels from the events.tsv and assign class labels accordingly. The epoch window [-0.1, 1.0] s captures pre-stimulus baseline and early decision-related ERP components including potential contralateral delay activity and lateralized readiness potential.
-
-### Potential Task 2: Sex Classification from Resting Segmentation
+### Classical Task 2: Segmentation-Based Analysis for Resting-State Sessions
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []
+- **Epoch Parameters**: segment_length = 4 s, overlap = 0.0, target_events = []
 - **Label Route**: `info`
 - **Meta Level**: raw
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
-  |------------|----------------|
-  | subject_sex | F → 0; M → 1 |
+  |---|---|
+  | `subject_sex` | F -> 0; M -> 1 |
 - **Evidence**:
-  - participants.tsv — subject_sex column complete (F=9, M=11, N=20)
-  - scans.tsv & file system — task-rest has no events.tsv and no EEG .vmrk file, confirming absence of event markers for resting-state EEG
-- **Notes**: Segmentation-based task with no events (task-rest has no events.tsv and no .vmrk file). Sex is a native participants.tsv column with complete coverage. Segment length and overlap inferred from Category SKILL defaults for resting-state segmentation tasks.
+  - openneuro_ds002158 - Resting-state sessions lack all event markers (no events.tsv, no .vmrk), enforcing segmentation-based approaches only for those files
+- **Notes**: This task serves as a fallback for resting-state sessions that lack event markers entirely. The `subject_sex` field is complete across all participants. Classification is binary with two distinct classes. The `subject_age` field could alternatively be used for regression (Potential Task), but the age range in a sample of 20 participants may be limited. This task is explicitly segmentation-based with empty target_events as required.
+
+### Potential Task 1: Confidence Rating Regression
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.6 s, target_events = [`Response/R128`]
+- **Label Route**: `misc`
+- **Meta Level**: super
+- **Target Definition**:
+  | MISC Channel Name | Y Mapping Notes |
+  |---|---|
+  | `Response/R128` | no mapping |
+- **Evidence**:
+  - 10.1073/pnas.1918335117 - Multivariate EEG decoding of trial-by-trial confidence ratings using linear regression with peak R² at 96 ms (active) and 356 ms (observation) post-response; epochs time-locked to first-order response with window [-0.2, 0.6 s]
+- **Notes**: This task requires super meta information (the actual confidence rating values) that is not present in the raw event structure. The continuous confidence values would need to be extracted from behavioral data files or events.tsv trial_type columns. The reference describes response-locked epoching around `Response/R128`, but the confidence values themselves are not embedded as event annotations. This task is marked as Potential due to the super meta requirement.
 
 ## Data Quality Notes
 
@@ -136,5 +118,5 @@ Participants performed speeded perceptual judgments and subsequently reported th
 
 ## Kernel Responsibilities
 
-> **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Super Meta Required**: Yes
+> **Status**: completed

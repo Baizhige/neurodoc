@@ -31,7 +31,7 @@ import pandas as pd
 
 # Mapping from Stimulus codes (S  x) to readable event labels
 # Source: events.tsv column 'value' + events structure from analysis.md
-# Annotator: LLM, 2026-04-10 (需人类复核)
+# Annotator: LLM, 2026-04-10 (needs human review)
 _EVENT_CODE_MAP = {
     "S  1": "Instr: Choose",     # Instruction: volitional choice trial
     "S  2": "Right Button Choice",  # Right-hand response
@@ -255,8 +255,8 @@ def _get_subject_metadata(row, dataset_path: str) -> Dict[str, str]:
     
     # Default values if not found
     return {
-        "age": "unknown",      # LLM 推断，需人类复核
-        "sex": "unknown",      # LLM 推断，需人类复核
+        "age": "unknown",      # inferred by LLM, needs human review
+        "sex": "unknown",      # inferred by LLM, needs human review
         "handedness": "unknown",
         "amplifier": "unknown",
         "cap": "unknown",

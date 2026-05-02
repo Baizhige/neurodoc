@@ -29,7 +29,7 @@ import pandas as pd
 
 # Standard 64-channel names for BrainVision MR-compatible EEG cap
 # Source: BrainVision ActiChamp/BrainAmp MR plus standard 64-channel layout
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _64CH_STANDARD_NAMES = [
     "Fp1", "Fpz", "Fp2",
     "AF7", "AF3", "AFz", "AF4", "AF8",
@@ -43,7 +43,7 @@ _64CH_STANDARD_NAMES = [
 ]
 
 # BrainVision vendor channel naming patterns
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _VENDOR_CHANNEL_PATTERNS = [
     "EEG {:03d}",   # "EEG 001", "EEG 002", ...
     "EEG{:03d}",    # "EEG001", "EEG002", ...
@@ -288,9 +288,9 @@ class OpenNeuroDS002338Kernel:
 
         # Device info from dataset documentation
         # Source: 10.1038/s41597-020-0498-3, BrainVision BrainAmp MR plus
-        # LLM 推断，需人类复核
-        amplifier = "BrainAmp MR plus"  # LLM 推断，需人类复核
-        cap = "Ag/AgCl"  # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
+        amplifier = "BrainAmp MR plus"  # inferred by LLM, needs human review
+        cap = "Ag/AgCl"  # inferred by LLM, needs human review
         handedness = "unknown"  # Not available in participants.tsv
 
         eegunity_description = {

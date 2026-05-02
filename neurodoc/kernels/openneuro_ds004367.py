@@ -52,7 +52,7 @@ _DERIVED_MISC_CHANNELS: List[str] = []
 # Subject metadata fallback
 # Source: Paper DOI 10.1101/2022.10.19.22281249 - "22–45 years" age range
 # Annotator: LLM, 2026-04-08
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 # ============================================================================
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     f"{i:02d}": {"sex": "unknown", "age": "22-45", "handedness": "unknown"}
@@ -64,7 +64,7 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
 # Channel rename map: BioSemi 64+4 convention -> standard names
 # Source: BioSemi 64-channel extended 10-20 layout with 4 auxiliary channels
 # Annotator: LLM, 2026-04-08
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 # ============================================================================
 _BIOSEMI_64_RENAME: Dict[str, str] = {
     # Standard BioSemi 64 names if present

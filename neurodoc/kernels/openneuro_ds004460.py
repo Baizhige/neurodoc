@@ -61,7 +61,7 @@ def _detect_condition_from_path(file_path: str) -> Optional[str]:
     Files containing 'joy' or 'joystick' → joystick-controlled rotation (joyR)
 
     Source: Dataset file naming pattern
-    Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+    Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
     """
     basename = os.path.basename(file_path).lower()
     if "phys" in basename or "bod" in basename:
@@ -77,7 +77,7 @@ def _detect_condition_from_sidecar(
     """Detect condition from run-level sidecar JSON if path-based detection fails.
 
     Source: OpenNeuro dataset structure
-    Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+    Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
     """
     # Try to find sidecar JSON in the same directory
     directory = os.path.dirname(file_path)
@@ -104,13 +104,13 @@ def _get_condition(file_path: str, root_dir: str) -> str:
     If detection fails, defaults to "physR" and logs a warning.
 
     Source: DOI 10.1038/s41598-021-97749-8 — physical vs joystick conditions
-    Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+    Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
     """
     cond = _detect_condition_from_path(file_path)
     if cond is None:
         cond = _detect_condition_from_sidecar(file_path, root_dir)
     if cond is None:
-        cond = "physR"  # fallback — LLM 推断，需人类复核
+        cond = "physR"  # fallback — inferred by LLM, needs human review
     return cond
 
 
@@ -163,7 +163,7 @@ def _parse_object_fade_direction(
         0 for fade-in, 1 for fade-out.
 
     Source: Dataset paradigm — object sphere onset/offset events
-    Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+    Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
     """
     sfreq = raw.info["sfreq"]
     start_sample = max(0, int((event_onset) * sfreq))
@@ -212,7 +212,7 @@ def _parse_wii_button_vs_response(description: str) -> int:
 def _infer_sex_from_subject_id(subject_id: str) -> str:
     """Infer sex from subject ID if pattern is available.
 
-    Source: LLM 推断，需人类复核
+    Source: inferred by LLM, needs human review
     Annotator: LLM, 2026-04-08
     """
     # No pattern detected from available metadata
@@ -231,7 +231,7 @@ def _build_standard_160_channel_rename_map() -> Dict[str, str]:
     This covers the most likely naming scheme for a 160-channel dense array.
 
     Source: Standard 10-10 system electrode positions; DOI 10.1038/s41598-021-97749-8
-    Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+    Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
     """
     rename_map: Dict[str, str] = {}
 
@@ -274,7 +274,7 @@ def _rename_channels(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
     """Rename non-standard channel names to standard 10-10 names.
 
     Source: DOI 10.1038/s41598-021-97749-8 — 160-channel dense array
-    Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+    Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
     """
     rename_map = _build_standard_160_channel_rename_map()
     existing_names = set(raw.ch_names)
@@ -362,14 +362,14 @@ class OpenNeuroDS004460Kernel:
 
         # Amplifier and cap from reference paper
         # Source: DOI 10.1038/s41598-021-97749-8 — 160-channel dense array system
-        # Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+        # Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
         description_dict = {
             "original_description": original_desc,
             "eegunity_description": {
                 "age": subject_meta.get("age", "unknown"),
                 "sex": subject_meta.get("sex", "unknown"),
-                "amplifier": "unknown",  # LLM 推断，需人类复核
-                "cap": "unknown",  # LLM 推断，需人类复核
+                "amplifier": "unknown",  # inferred by LLM, needs human review
+                "cap": "unknown",  # inferred by LLM, needs human review
                 "handedness": subject_meta.get("handedness", "unknown"),
             },
         }

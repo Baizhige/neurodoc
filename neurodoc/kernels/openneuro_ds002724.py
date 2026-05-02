@@ -152,8 +152,8 @@ class DS002724Kernel:
         description_dict = {
             "original_description": raw.info.get("description", ""),
             "eegunity_description": {
-                "amplifier": "BrainAmp",  # Source: Daly et al. 2020 - LLM 推断，需人类复核
-                "cap": "Ag/AgCl",  # Source: Daly et al. 2020 - LLM 推断，需人类复核
+                "amplifier": "BrainAmp",  # Source: Daly et al. 2020 - inferred by LLM, needs human review
+                "cap": "Ag/AgCl",  # Source: Daly et al. 2020 - inferred by LLM, needs human review
                 "age": subject_info["age"],
                 "sex": subject_info["sex"],
                 "handedness": subject_info["handedness"],

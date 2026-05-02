@@ -25,7 +25,7 @@ import pandas as pd
 # Metadata: Subject information
 # ============================================================================
 # Source: OpenNeuro ds006104 participants.tsv
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     f"sub-{str(i).zfill(2)}": {
         "age": "unknown",
@@ -40,10 +40,10 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
 # ============================================================================
 # Source: DOI 10.1038/s41597-025-05187-2 - "EEG was recorded using a 64-channel
 # ActiChamp system (Brain Products, Gilching, Germany)"
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _DEVICE_INFO = {
-    "amplifier": "Brain Products ActiChamp",  # LLM 推断，需人类复核
-    "cap": "Ag/AgCl",  # LLM 推断，需人类复核
+    "amplifier": "Brain Products ActiChamp",  # inferred by LLM, needs human review
+    "cap": "Ag/AgCl",  # inferred by LLM, needs human review
 }
 
 # ============================================================================

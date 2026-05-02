@@ -23,7 +23,7 @@ import pandas as pd
 
 # Standard 10-20 system with 49 channels (extended cap)
 # Source: Extended 10-20 system for 64-channel caps, standard ordering
-# Annotator: LLM, 2026-04-08, # LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08, # inferred by LLM, needs human review
 _49_CHANNEL_NAMES = [
     "FP1", "FPZ", "FP2",
     "AF7", "AF3", "AF4", "AF8",
@@ -151,7 +151,7 @@ class OpenNeuroDS003516Kernel:
 
         # LLM inference fallback if metadata unavailable
         # Source: Dataset description (25 subjects, ages ~22-35)
-        # Annotator: LLM, 2026-04-08, # LLM 推断，需人类复核
+        # Annotator: LLM, 2026-04-08, # inferred by LLM, needs human review
         if age == "unknown" or not age:
             age = "unknown"
 

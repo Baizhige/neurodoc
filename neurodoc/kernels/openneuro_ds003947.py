@@ -28,7 +28,7 @@ import pandas as pd
 
 # Standard 10-20 64-channel layout used in this dataset
 # Source: OpenNeuro ds003947 dataset documentation, 64-channel BrainVision actiChamp
-# Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
 _CHANNEL_NAMES_64 = [
     "Fp1", "Fp2", "F7", "F3", "Fz", "F4", "F8", "FC5",
     "FC1", "FC2", "FC6", "T7", "C3", "Cz", "C4", "T8",
@@ -162,9 +162,9 @@ class OpenNeuroDS003947Kernel:
 
         # Determine amplifier and cap from dataset documentation
         # Source: 10.1038/s41598-024-66110-0 — BrainVision actiChamp, Ag/AgCl electrodes
-        # Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
-        amplifier = "BrainProducts actiChamp"  # LLM 推断，需人类复核
-        cap = "Ag/AgCl"  # LLM 推断，需人类复核
+        # Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
+        amplifier = "BrainProducts actiChamp"  # inferred by LLM, needs human review
+        cap = "Ag/AgCl"  # inferred by LLM, needs human review
 
         # Build eegunity_description with required info fields
         eegunity_desc = {

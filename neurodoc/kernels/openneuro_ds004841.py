@@ -152,13 +152,13 @@ class OpenNeuroDS004841Kernel:
     
     # Subject metadata (from dataset documentation)
     # Source: Dataset README and publications (DOI: 10.1007/s12559-023-10179-8)
-    # Age range: 22-45 (LLM 推断，需人类复核)
-    # Sex distribution: mixed (LLM 推断，需人类复核)
+    # Age range: 22-45 (inferred by LLM, needs human review)
+    # Sex distribution: mixed (inferred by LLM, needs human review)
     _subject_dict: Dict[str, Dict[str, str]] = field(default_factory=lambda: {
         f"sub-{i:02d}": {
-            "age": "unknown",      # LLM 推断，需人类复核
-            "sex": "unknown",      # LLM 推断，需人类复核
-            "handedness": "unknown",  # LLM 推断，需人类复核
+            "age": "unknown",      # inferred by LLM, needs human review
+            "sex": "unknown",      # inferred by LLM, needs human review
+            "handedness": "unknown",  # inferred by LLM, needs human review
         }
         for i in range(1, 12)  # 11 subjects
     })
@@ -201,8 +201,8 @@ class OpenNeuroDS004841Kernel:
             "eegunity_description": {
                 "age": subject_meta["age"],
                 "sex": subject_meta["sex"],
-                "amplifier": "unknown",      # LLM 推断，需人类复核
-                "cap": "unknown",            # LLM 推断，需人类复核
+                "amplifier": "unknown",      # inferred by LLM, needs human review
+                "cap": "unknown",            # inferred by LLM, needs human review
                 "handedness": subject_meta["handedness"],
             },
         }

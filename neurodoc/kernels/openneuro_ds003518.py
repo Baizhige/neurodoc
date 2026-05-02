@@ -42,7 +42,7 @@ _REQUIRED_DERIVED_MISC = ["feedback_value", "response_time"]
 # Standard 64-channel extended 10-20 layout used in this dataset
 # Source: BrainVision standard 64-channel cap, common in conflict/RL EEG studies
 # Annotator: LLM inferred from dataset documentation and standard practices, 2026-04-08
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _STANDARD_64_CHANNELS = [
     "Fp1", "Fpz", "Fp2",
     "AF7", "AF3", "AFz", "AF4", "AF8",
@@ -59,7 +59,7 @@ _STANDARD_64_CHANNELS = [
 # BrainVision/EEGLAB common aliases to standard 10-20 names
 # Source: Standard BrainVision 64-channel naming conventions
 # Annotator: LLM, 2026-04-08
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _CHANNEL_ALIASES: Dict[str, List[str]] = {
     "Fp1": ["Fp1", "EEG Fp1", "EEG-Fp1", "FP1"],
     "Fpz": ["Fpz", "EEG Fpz", "EEG-Fpz", "FPz"],

@@ -60,7 +60,7 @@ _ADMIN_EVENTS = {"empty", "boundary", "S  1"}
 
 # Amplifier information - Source: DOI 10.1038/s41598-021-01772-8 indicates
 # "BioSemi ActiveTwo" system used for mobile EEG recording
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _AMPLIFIER = "BioSemi ActiveTwo"
 _CAP = "Ag/AgCl"  # Active electrodes typically use Ag/AgCl
 
@@ -87,7 +87,7 @@ def _detect_subject_info(dataset_path: str, subject_id: str) -> Dict[str, str]:
                     if "age" in df.columns:
                         age_val = row["age"].values[0]
                         if pd.notna(age_val):
-                            info["age"] = str(int(float(age_val)))  # LLM 推断，需人类复核
+                            info["age"] = str(int(float(age_val)))  # inferred by LLM, needs human review
                         else:
                             info["age"] = "unknown"
                     else:
@@ -129,7 +129,7 @@ def _detect_subject_info(dataset_path: str, subject_id: str) -> Dict[str, str]:
         except Exception:
             pass
     
-    # Default values if not found - LLM 推断，需人类复核
+    # Default values if not found - inferred by LLM, needs human review
     return {
         "age": "unknown",
         "sex": "unknown",
@@ -147,14 +147,14 @@ def _rename_channels_bids(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
     numeric codes (e.g., "EEG-001") to standard names based on the BioSemi
     32-channel + 3 EOG setup.
     
-    LLM 推断，需人类复核 - channel naming convention
+    inferred by LLM, needs human review - channel naming convention
     """
     ch_names = raw.ch_names
     rename_map = {}
     
     # Standard BioSemi 32-channel layout for Runabout study
     # BioSemi uses naming like A1-A32 for electrode positions
-    # LLM 推断，需人类复核
+    # inferred by LLM, needs human review
     biosemi_standard = [
         "Fp1", "AFp3", "AFp1", "AFp2", "AFp4", "AFp5", "AFp6", "AFz",
         "Fpz", "Fp2", "AF7", "AF3", "AF4", "AF8", "F9", "F7", "F5", "F3",

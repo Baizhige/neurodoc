@@ -25,7 +25,7 @@ import pandas as pd
 
 
 # Source: dataset README / published paper (DOI 10.1038/s41597-024-03268-2)
-# Standard 10-20 61-channel system with EOG.  LLM 推断，需人类复核
+# Standard 10-20 61-channel system with EOG.  inferred by LLM, needs human review
 _CHANNEL_RENAME_MAP: Dict[str, str] = {
     "Fp1": "Fp1",
     "Fp2": "Fp2",
@@ -90,7 +90,7 @@ _CHANNEL_RENAME_MAP: Dict[str, str] = {
 }
 
 # Standard 10-20 EEG channels for montage.
-# Source: dataset publication (DOI 10.1038/s41597-024-03268-2).  LLM 推断，需人类复核
+# Source: dataset publication (DOI 10.1038/s41597-024-03268-2).  inferred by LLM, needs human review
 _STANDARD_EEG_CHANNELS: List[str] = [
     "Fp1", "Fp2", "Fpz",
     "F7", "F3", "Fz", "F4", "F8",

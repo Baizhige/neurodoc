@@ -24,7 +24,7 @@ _REQUIRED_INFO_FIELDS = ["birth_year", "diagnosis", "gender", "loneliness"]
 # Standard 10-20 channel names for 73-channel setup
 # Source: dataset uses standard extended 10-20 cap with 64 EEG + 9 EOG/other channels
 # Annotator: LLM inferred from BIDS structure and channel count, 2026-04-08
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _STANDARD_EEG_73 = [
     "Fp1", "Fpz", "Fp2", "AF7", "AF3", "AFz", "AF4", "AF8",
     "F7", "F5", "F3", "F1", "Fz", "F2", "F4", "F6", "F8",
@@ -38,7 +38,7 @@ _STANDARD_EEG_73 = [
 ]
 
 # Extended channels beyond standard 64 (EOG, reference, etc.)
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _EXTENDED_CHANNELS = [
     "VEOG_lower", "VEOG_upper", "HEOG_left", "HEOG_right",
     "M1", "M2", "Cz_REF", "FCz_REF", "STI 014"
@@ -160,7 +160,7 @@ def _build_eegunity_description(raw: mne.io.BaseRaw, file_path: str) -> str:
         "age": age,
         "sex": sex,
         "amplifier": "unknown",  # Not documented in dataset
-        "cap": "Ag/AgCl",  # Standard for research EEG; LLM 推断，需人类复核
+        "cap": "Ag/AgCl",  # Standard for research EEG; inferred by LLM, needs human review
         "handedness": "unknown",  # Not in participants.tsv
     }
     

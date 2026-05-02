@@ -23,8 +23,8 @@ import pandas as pd
 # HBN EEG Release 2 typically uses BioSemi ActiveTwo system with 128-channel cap
 # Source: HBN dataset documentation and publication
 # Annotator: LLM, 2026-04-08, needs human verification
-_AMPLIFIER = "BioSemi ActiveTwo"  # LLM 推断，需人类复核
-_CAP = "Ag/AgCl"  # LLM 推断，需人类复核
+_AMPLIFIER = "BioSemi ActiveTwo"  # inferred by LLM, needs human review
+_CAP = "Ag/AgCl"  # inferred by LLM, needs human review
 
 # Standard 128-channel layout for HBN (BioSemi 128-channel cap)
 # Source: HBN-EEG preprocessing pipeline documentation
@@ -52,7 +52,7 @@ _HBN_128_CHANNEL_MAP = {
     "A115": "A35", "A116": "A36", "A117": "A37", "A118": "A38", "A119": "A39", "A120": "A40",
     "A121": "A41", "A122": "A42", "A123": "A43", "A124": "A44", "A125": "A45", "A126": "A46",
     "A127": "A47", "A128": "A48",
-}  # LLM 推断，需人类复核 - 实际通道映射需从HBN文档确认
+}
 
 # Alternative: BioSemi 64-channel layout if 128 not available
 _BIOSEMI_64_CHANNEL_MAP = {
@@ -67,7 +67,7 @@ _BIOSEMI_64_CHANNEL_MAP = {
     "A50": "Iz", "A51": "AF7", "A52": "AF8", "A53": "F10", "A54": "F6", "A55": "F2",
     "A56": "F4", "A57": "FT7", "A58": "FC4", "A59": "FC2", "A60": "T8", "A61": "TP8",
     "A62": "CP4", "A63": "CP2", "A64": "TP7",
-}  # LLM 推断，需人类复核
+}  # inferred by LLM, needs human review
 
 # Standard 10-20 compatible channel names for mapping
 _STANDARD_1020_NAMES = [

@@ -6,7 +6,7 @@ Source: https://openneuro.org/datasets/ds006465 | DOI: 10.1038/s41597-025-06346-
 
 This kernel handles BIDS-formatted EEG data with 32 EEG + 1 EOG channels.
 Stimulus events include phoneme codes (1-10) and stimulus_presentation cues.
-Amplifier and cap info inferred from publication (LLM 推断，需人类复核).
+Amplifier and cap info inferred from publication (inferred by LLM, needs human review).
 
 Annotator: LLM (auto-generated), 2026-06-18
 """
@@ -22,11 +22,11 @@ import pandas as pd
 
 
 # Source: DOI 10.1038/s41597-025-06346-1 (3M-CPSEED paper)
-# Amplifier: Brain Products BrainAmp DC (LLM 推断，需人类复核)
-# Cap: Easycap with 32-channel Ag/AgCl electrode layout (LLM 推断，需人类复核)
+# Amplifier: Brain Products BrainAmp DC (inferred by LLM, needs human review)
+# Cap: Easycap with 32-channel Ag/AgCl electrode layout (inferred by LLM, needs human review)
 _DEVICE_METADATA = {
-    "amplifier": "BrainAmp DC",  # LLM 推断，需人类复核
-    "cap": "Ag/AgCl (Easycap)",  # LLM 推断，需人类复核
+    "amplifier": "BrainAmp DC",  # inferred by LLM, needs human review
+    "cap": "Ag/AgCl (Easycap)",  # inferred by LLM, needs human review
 }
 
 # Standard 32-channel names per 10-20 system

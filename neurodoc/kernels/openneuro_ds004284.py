@@ -44,8 +44,8 @@ import pandas as pd
 # https://doi.org/10.1038/s41598-023-41613-4
 # Annotator: LLM, 2026-04-08
 _DATASET_INFO = {
-    "amplifier": "EGI Net Amps 300",  # LLM 推断，需人类复核
-    "cap": "EGI Hydrocel GSN 128",  # LLM 推断，需人类复核
+    "amplifier": "EGI Net Amps 300",  # inferred by LLM, needs human review
+    "cap": "EGI Hydrocel GSN 128",  # inferred by LLM, needs human review
 }
 
 # Required info fields from participants.tsv to include in eegunity_description

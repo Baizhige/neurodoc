@@ -55,7 +55,7 @@ def _apply_channel_standardization(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
     This function maps them to standard 10-20 electrode nomenclature.
     
     Source: Standard 10-20 cap layout for 64-channel system (extended).
-    Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+    Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
     """
     ch_names = raw.ch_names
     
@@ -228,15 +228,15 @@ class OpenNeuroDS004603Kernel:
         # Write eegunity_description
         # All fields default to "unknown" since dataset lacks subject metadata.
         # Source: analysis.md - Info table shows age/sex/device as "missing".
-        # Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+        # Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
         description_dict = {
             "original_description": original_description,
             "eegunity_description": {
-                "age": "unknown",       # LLM 推断，需人类复核
-                "sex": "unknown",       # LLM 推断，需人类复核
-                "amplifier": "unknown", # LLM 推断，需人类复核
-                "cap": "unknown",       # LLM 推断，需人类复核
-                "handedness": "unknown",  # LLM 推断，需人类复核
+                "age": "unknown",       # inferred by LLM, needs human review
+                "sex": "unknown",       # inferred by LLM, needs human review
+                "amplifier": "unknown", # inferred by LLM, needs human review
+                "cap": "unknown",       # inferred by LLM, needs human review
+                "handedness": "unknown",  # inferred by LLM, needs human review
             },
         }
         raw.info["description"] = json.dumps(description_dict)

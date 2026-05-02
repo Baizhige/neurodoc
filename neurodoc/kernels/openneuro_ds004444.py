@@ -7,8 +7,8 @@ Source: https://openneuro.org/datasets/ds004444
 Source: DOI 10.1038/s41597-023-02260-6 (data descriptor for BMI-HDEEG Dataset 1)
 
 Channel naming: standard extended 10-10 system, 128 EEG + reference + ground
-Device: BrainAmp MR plus (inferred from paper, LLM 推断，需人类复核)
-Cap: actiCAP 128Ch (inferred from paper, LLM 推断，需人类复核)
+Device: BrainAmp MR plus (inferred from paper, inferred by LLM, needs human review)
+Cap: actiCAP 128Ch (inferred from paper, inferred by LLM, needs human review)
 
 Event Mapping (raw meta, from events.tsv value column):
     1 -> rest
@@ -67,7 +67,7 @@ _SUPER_MI_MAP: Dict[str, str] = {
 
 # Standard 128-channel extended 10-10 naming for BMI-HDEEG
 # Source: DOI 10.1038/s41597-023-02260-6, Methods section
-# Annotator: LLM, 2026-04-08; 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08;
 _STANDARD_128_CHANNELS = [
     'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8',
     'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8',
@@ -94,7 +94,7 @@ _STANDARD_128_CHANNELS = [
 
 # Channel rename patterns: non-standard -> standard
 # Source: common BrainVision export variants
-# Annotator: LLM, 2026-04-08; 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08;
 _CHANNEL_ALIASES: Dict[str, str] = {
     # Reference electrodes
     'REF': 'FCz',

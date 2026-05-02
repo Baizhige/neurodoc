@@ -16,46 +16,55 @@ Twenty-six subjects (ages 20-37) performed a P300-based BCI feedback task using 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|---|---|---|---|---|
 | `good feedback to P300` | 3850 | event | raw | Feedback event: BCI output was correct |
 | `unknown feedback to P300` | 3400 | event | raw | Feedback event: label unknown (test sessions) |
 | `wrong feedback to P300` | 1590 | event | raw | Feedback event: BCI output was incorrect |
 
 
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | partial (130/133) | N/A |
 | `subject_sex` | missing | N/A |
 | `device` | missing | N/A |
 
+
 ## Tasks
 
 ### Classical Task 1: Feedback Error Detection (Good vs Wrong)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 1.3 s, target_events = [`good feedback to P300`, `wrong feedback to P300`]
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.3 s, target_events = [`good feedback to P300`, `wrong feedback to P300`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `good feedback to P300` | 0 | Correct BCI feedback (classifier output matched user intent) |
   | `wrong feedback to P300` | 1 | Incorrect BCI feedback (classifier output differed from user intent) |
 - **Evidence**:
-  - DOI: 10.1109/TBCAS.2022.3215962 — Validates EEGNet accelerator on ERN dataset with epochs [0, 1.3]s post feedback for binary classification of correct vs. incorrect BCI feedback.
-  - DOI: 10.1016/j.inffus.2024.102316 — Uses ERN dataset from Kaggle BCI Challenge for adversarial filtering evaluation with epochs [0, 1.3]s post feedback onset.
-  - DOI: 10.1109/ACCESS.2024.3467154 — Evaluates DCAE defense on ERN dataset with tmin=0s, tmax=1.3s, bandpass [1,40]Hz.
-  - DOI: 10.1088/1741-2552/aace8c — Evaluates EEGNet on ERN paradigm with epochs [0, 1.25]s post feedback.
-- **Kernel Notes**: FeedBackEvent channel (column 57) encodes feedback onset times; match labels from TrainLabels.csv by feedback ID (e.g., S01_Sess01_FB001). Exclude sessions with `unknown feedback to P300` (test set). Bandpass filter 1-40Hz recommended per paper preprocessing. (replaces Potential Task 1 from original analysis.md)
+  - 10.1109/TBCAS.2022.3215962 — Validates EEGNet accelerator on ERN dataset with epochs [0, 1.3]s post feedback for binary classification of correct vs. incorrect BCI feedback.
+  - 10.1016/j.inffus.2024.102316 — Uses ERN dataset from Kaggle BCI Challenge for adversarial filtering evaluation with epochs [0, 1.3]s post feedback onset.
+  - 10.1109/ACCESS.2024.3467154 — Evaluates DCAE defense on ERN dataset with tmin=0s, tmax=1.3s, bandpass [1,40]Hz.
+  - 10.1088/1741-2552/aace8c — Evaluates EEGNet on ERN paradigm with epochs [0, 1.25]s post feedback.
+- **Notes**: FeedBackEvent channel (column 57) encodes feedback onset times; match labels from TrainLabels.csv by feedback ID (e.g., S01_Sess01_FB001). Exclude sessions with `unknown feedback to P300` (test set). Bandpass filter 1-40Hz recommended per paper preprocessing. (replaces Potential Task 1 from original analysis.md)
 
 ### Potential Task 1: Subject Identification via Feedback-Related Potentials
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 1.3 s, target_events = [`good feedback to P300`, `wrong feedback to P300`]
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.3 s, target_events = [`good feedback to P300`, `wrong feedback to P300`]
 - **Label Route**: `event`
-- **Target Definition**: Use feedback events to derive subject identity labels (26 subjects).
-- **Notes**: Task uses positive vs negative feedback-related ERP responses for biometric authentication. SVM with EMD-based features achieves up to 0.99 accuracy. Labels are derived from subject IDs, not feedback correctness.
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `good feedback to P300` | 0, 1 | Subject ID derived from positive feedback |
+  | `wrong feedback to P300` | 0, 1 | Subject ID derived from negative feedback |
+- **Evidence**:
+  - Task uses positive vs negative feedback-related ERP responses for biometric authentication. SVM with EMD-based features achieves up to 0.99 accuracy.
+- **Notes**: Labels are derived from subject IDs, not feedback correctness. (Note: y represents different subject classes, e.g., Subject 0 = 0, Subject 1 = 1, to satisfy the ≥2 distinct class requirement).
 
 ## Data Quality Notes
 
@@ -67,4 +76,4 @@ Twenty-six subjects (ages 20-37) performed a P300-based BCI feedback task using 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: completed

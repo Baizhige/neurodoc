@@ -34,7 +34,7 @@ import pandas as pd
 # =============================================================================
 # Source: Standard 10-20 electrode placement system, 64-channel layout
 # Annotator: LLM, 2026-04-08 (inferred from standard 64-channel cap naming)
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _EEG_CHANNEL_MAP: Dict[str, list] = {
     "Fp1": ["Fp1", "EEG-Fp1"],
     "Fp2": ["Fp2", "EEG-Fp2"],

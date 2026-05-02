@@ -30,12 +30,12 @@ import pandas as pd
 # BioSemi ActiveTwo amplifier
 # Source: BCIT lab documentation, BioSemi ActiveTwo specifications
 # Annotator: LLM, 2026-04-08
-_AMPLIFIER = "BioSemi ActiveTwo"  # LLM 推断，需人类复核
+_AMPLIFIER = "BioSemi ActiveTwo"  # inferred by LLM, needs human review
 
 # BioSemi standard cap uses Ag/AgCl sintered electrodes
 # Source: BioSemi ActiveTwo product specifications
 # Annotator: LLM, 2026-04-08
-_CAP = "Ag/AgCl"  # LLM 推断，需人类复核
+_CAP = "Ag/AgCl"  # inferred by LLM, needs human review
 
 
 # ----------------------------------------------------------------------

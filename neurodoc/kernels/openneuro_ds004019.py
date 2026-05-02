@@ -20,7 +20,7 @@ import numpy as np
 
 # EGI 128-channel HydroCel mapping to standard 10-20 positions
 # Source: EGI HydroCel Geodesic Sensor Net technical specifications
-# Annotator: LLM, 2026-01-15 - LLM 推断，需人类复核
+# Annotator: LLM, 2026-01-15 - inferred by LLM, needs human review
 _EGI_CHANNEL_MAP: Dict[str, str] = {
     # Standard 10-20 locations from EGI E1-E128
     "E1": "Fp1", "E2": "AF7", "E3": "AF3", "E4": "AFz", "E5": "AF4", "E6": "AF8",
@@ -49,7 +49,7 @@ _NON_EEG_CHANNELS: Dict[str, str] = {
 
 # Default subject metadata (ages 9-10 preteens from paper)
 # Source: Paper DOI 10.3389/fnhum.2022.760234 - Table 1 demographic characteristics
-# Annotator: LLM, 2026-01-15 - LLM 推断，需人类复核
+# Annotator: LLM, 2026-01-15 - inferred by LLM, needs human review
 _DEFAULT_SUBJECT_AGE: str = "9-10"
 _DEFAULT_SUBJECT_SEX: str = "unknown"
 _DEFAULT_SUBJECT_HAND: str = "unknown"

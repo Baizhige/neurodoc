@@ -1,7 +1,7 @@
 # A dataset recorded during development of an affective brain-computer music interface: calibration session
 
 **Dataset**: `openneuro_ds002722` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002722
-**Category**: High-level Mental | **Subjects**: 19 | **Files (Completed)**: 94 | **Channels**: 37 | **Sampling Rate**: 1000 Hz | **Manual Review**: 
+**Category**: High-level Mental | **Subjects**: 19 | **Files (Completed)**: 94 | **Channels**: 37 | **Sampling Rate**: 1000 Hz | **Manual Review**: Mingze Tang
 
 ## Paradigm
 
@@ -145,7 +145,7 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 ### Classical Task 1: 9-Class Affective State Classification (Valence × Arousal)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 21.0 s, overlap = 0.0, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -167,7 +167,7 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 ### Classical Task 2: 3-Class Valence Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 21.0 s, overlap = 0.0, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -188,7 +188,7 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 ### Classical Task 3: 3-Class Arousal Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 21.0 s, overlap = 0.0, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -209,7 +209,7 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 ### Potential Task 1: Continuous Valence Regression from FEELTRACE
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 21.0 s, overlap = 0.0, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
 - **Label Route**: `misc`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -224,7 +224,7 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 ### Potential Task 2: Continuous Arousal Regression from FEELTRACE
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 21.0 s, overlap = 0.0, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
 - **Label Route**: `misc`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -239,7 +239,7 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 ### Potential Task 3: GSR-Based Arousal Regression
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 21.0 s, overlap = 0.0, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
 - **Label Route**: `misc`
 - **Meta Level**: super
 - **Target Definition**:
@@ -254,7 +254,7 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 ### Potential Task 4: Subject Sex Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: target_events = []
+- **Epoch Parameters**: segment_length = 10.0 s, overlap = 0.0, target_events = []
 - **Label Route**: `info`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -269,7 +269,7 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 ### Potential Task 5: Music Stimulus Identification (90-Class)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: target_events = [`101`, `102`, `103`, `104`, `105`, `106`, `107`, `108`, `109`, `110`, `113`, `114`, `115`, `116`, `117`, `118`, `119`, `120`, `121`, `122`, `125`, `126`, `127`, `128`, `129`, `130`, `131`, `132`, `133`, `134`, `137`, `138`, `139`, `140`, `141`, `142`, `143`, `144`, `145`, `146`, `149`, `150`, `151`, `152`, `153`, `154`, `155`, `156`, `157`, `158`, `161`, `162`, `163`, `164`, `165`, `166`, `167`, `168`, `169`, `170`, `173`, `174`, `175`, `176`, `177`, `178`, `179`, `180`, `181`, `182`, `185`, `186`, `187`, `188`, `189`, `190`, `191`, `192`, `193`, `194`, `197`, `198`, `199`, `200`, `201`, `202`, `203`, `204`, `205`, `206`]
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 21.0 s, overlap = 0.0, target_events = [`101`, `102`, `103`, `104`, `105`, `106`, `107`, `108`, `109`, `110`, `113`, `114`, `115`, `116`, `117`, `118`, `119`, `120`, `121`, `122`, `125`, `126`, `127`, `128`, `129`, `130`, `131`, `132`, `133`, `134`, `137`, `138`, `139`, `140`, `141`, `142`, `143`, `144`, `145`, `146`, `149`, `150`, `151`, `152`, `153`, `154`, `155`, `156`, `157`, `158`, `161`, `162`, `163`, `164`, `165`, `166`, `167`, `168`, `169`, `170`, `173`, `174`, `175`, `176`, `177`, `178`, `179`, `180`, `181`, `182`, `185`, `186`, `187`, `188`, `189`, `190`, `191`, `192`, `193`, `194`, `197`, `198`, `199`, `200`, `201`, `202`, `203`, `204`, `205`, `206`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -382,4 +382,4 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 ## Kernel Responsibilities
 
 > **Super Meta Required**: Yes
-> **Status**: wait_manual_review
+> **Status**: completed

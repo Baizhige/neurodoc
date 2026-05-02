@@ -33,7 +33,7 @@ import pandas as pd
 # Standard 64-channel extended 10-20 layout used by this dataset
 # Source: BIDS channels.tsv + standard 10-20 system for 64 channels
 # Annotator: LLM, 2026-04-08
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _NOD_EEG_CHANNEL_NAMES = [
     "Fp1", "AF7", "AF3", "F1", "F3", "F5", "F7", "FT7",
     "FC5", "FC3", "FC1", "C1", "C3", "C5", "T7", "TP7",
@@ -49,7 +49,7 @@ _NOD_EEG_CHANNEL_NAMES = [
 # The EDF files may have channels named with "EEG " prefix or similar
 # Source: BIDS channels.tsv sidecar pattern for this dataset
 # Annotator: LLM, 2026-04-08
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _BIDS_CHANNEL_PATTERNS = [
     "EEG Fp1", "EEG AF7", "EEG AF3", "EEG F1", "EEG F3", "EEG F5", "EEG F7", "EEG FT7",
     "EEG FC5", "EEG FC3", "EEG FC1", "EEG C1", "EEG C3", "EEG C5", "EEG T7", "EEG TP7",

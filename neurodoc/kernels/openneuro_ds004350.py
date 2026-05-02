@@ -22,11 +22,11 @@ import pandas as pd
 # Annotator: LLM, 2026-04-08
 # Source: Dataset README / paper descriptions
 # Amplifier inferred from common EEG labs using 64-channel systems at 256 Hz
-_DEVICE_AMPLIFIER = "unknown"  # LLM 推断，需人类复核
+_DEVICE_AMPLIFIER = "unknown"  # inferred by LLM, needs human review
 
 # Annotator: LLM, 2026-04-08
 # Source: Standard EEG research practice for cognitive paradigms
-_CAP_MATERIAL = "unknown"  # LLM 推断，需人类复核
+_CAP_MATERIAL = "unknown"  # inferred by LLM, needs human review
 
 
 def _load_subject_info(dataset_root: str) -> Dict[str, Dict[str, str]]:
@@ -106,7 +106,7 @@ def _build_channel_rename_map_64(raw: mne.io.BaseRaw) -> Dict[str, str]:
 
     # Standard 64-channel extended 10-20 layout
     # Source: BrainCap 64 channel layout (common in neurofeedback studies)
-    # Annotator: LLM, 2026-04-08; LLM 推断，需人类复核
+    # Annotator: LLM, 2026-04-08; inferred by LLM, needs human review
     _STANDARD_64_NAMES = [
         "Fp1", "Fpz", "Fp2", "AF7", "AF3", "AF4", "AF8", "F7",
         "F5", "F3", "F1", "Fz", "F2", "F4", "F6", "F8",

@@ -137,7 +137,7 @@ A continuous visual oddball / selective-attention task recorded with 256-channel
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_sex` | M -> 0; F -> 1 |
+  | `subject_sex` | F -> 0; M -> 1 |
 - **Evidence**:
   - participants.tsv — N=2 subjects with gender field: 1 female (sub-001), 1 male (sub-002)
 - **Notes**: Segment-based approach required since no discriminating event structure exists for this subject-level label. 10-second non-overlapping segments at 256 Hz yield 2560 samples per segment. Only 2 subjects are available, with 1 subject per class; this is an extremely weak proof-of-concept subject-trait decoding task and will likely be filtered out downstream.

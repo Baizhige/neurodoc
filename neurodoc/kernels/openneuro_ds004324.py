@@ -22,8 +22,8 @@ import pandas as pd
 # Default values when not available from participants.tsv
 # Source: analysis.md Info section - "subject_age: missing", "subject_sex: missing"
 # Annotator: LLM, 2026-04-08
-_DEFAULT_AMPLIFIER = "unknown"  # LLM 推断，需人类复核
-_DEFAULT_CAP = "unknown"        # LLM 推断，需人类复核
+_DEFAULT_AMPLIFIER = "unknown"  # inferred by LLM, needs human review
+_DEFAULT_CAP = "unknown"        # inferred by LLM, needs human review
 
 
 def _load_participants_tsv(bids_dir: str) -> Optional[pd.DataFrame]:
@@ -111,7 +111,7 @@ def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
     """Build channel rename map for standard 10-20 naming.
 
     Source: Dataset description - 38 channels likely standard 10-20 cap
-    Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+    Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
     """
     rename_map: Dict[str, str] = {}
     ch_names = raw.ch_names

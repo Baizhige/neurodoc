@@ -38,7 +38,7 @@ import pandas as pd
 # Source: OpenNeuro ds006921 dataset, 128-channel layout
 # https://openneuro.org/datasets/ds006921
 # Annotator: LLM, 2026-04-08
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _DS006921_CHANNEL_NAMES_128 = [
     "Fp1", "Fpz", "Fp2", "AF7", "AF3", "AFz", "AF4", "AF8",
     "F7", "F5", "F3", "F1", "Fz", "F2", "F4", "F6", "F8",

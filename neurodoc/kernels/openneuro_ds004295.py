@@ -32,8 +32,8 @@ import pandas as pd
 _DATASET_INFO = {
     "name": "Reward Gain and Punishment Avoidance Reversal Learning",
     "doi": "10.1111/psyp.14235",
-    "amplifier": "BrainAmp",  # LLM 推断，需人类复核
-    "cap": "Ag/AgCl",  # LLM 推断，需人类复核
+    "amplifier": "BrainAmp",  # inferred by LLM, needs human review
+    "cap": "Ag/AgCl",  # inferred by LLM, needs human review
 }
 
 # Annotator: LLM, 2026-04-08
@@ -279,7 +279,7 @@ class OpenNeuroDS004295Kernel:
                 "sex": subject_info.get("sex", "unknown"),
                 "amplifier": _DATASET_INFO.get("amplifier", "unknown"),
                 "cap": _DATASET_INFO.get("cap", "unknown"),
-                "handedness": "unknown",  # LLM 推断，需人类复核
+                "handedness": "unknown",  # inferred by LLM, needs human review
             },
         }
         raw.info["description"] = json.dumps(description_dict)

@@ -48,7 +48,7 @@ kernel_requirements = {
     "derived_misc_channels": [],
 }
 
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 # Source: OpenNeuro dataset description; single aggregated file with no subject-level separation
 # No participants.tsv metadata available for age/sex/device
 _SUBJECT_DICT: Dict[str, Dict[str, str]] = {

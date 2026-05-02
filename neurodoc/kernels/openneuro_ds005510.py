@@ -22,11 +22,11 @@ import mne
 # Default subject info when not available from participants.tsv
 _DEFAULT_SUBJECT_INFO: Dict[str, Dict[str, str]] = {
     "default": {
-        "age": "unknown",  # LLM 推断，需人类复核
+        "age": "unknown",  # inferred by LLM, needs human review
         "sex": "unknown",
         "handedness": "unknown",
-        "amplifier": "BrainAmp",  # LLM 推断，需人类复核
-        "cap": "Ag/AgCl",  # LLM 推断，需人类复核
+        "amplifier": "BrainAmp",  # inferred by LLM, needs human review
+        "cap": "Ag/AgCl",  # inferred by LLM, needs human review
     }
 }
 

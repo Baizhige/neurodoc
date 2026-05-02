@@ -38,7 +38,7 @@ import pandas as pd
 # Static metadata
 # =============================================================================
 # Device info from paper methods: Brain Products system with 64-channel cap
-# Source: 10.1007/s10548-019-00725-9 Methods section — LLM 推断，需人类复核
+# Source: 10.1007/s10548-019-00725-9 Methods section — inferred by LLM, needs human review
 _DEVICE_INFO: Dict[str, str] = {
     "amplifier": "BrainAmp",
     "cap": "Ag/AgCl",
@@ -46,7 +46,7 @@ _DEVICE_INFO: Dict[str, str] = {
 
 # Standard 64-channel 10-20 layout rename map
 # Source: Standard extended 10-20 system for 64-channel caps
-# Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
 _CHANNEL_RENAME_MAP: Dict[str, str] = {
     # Frontal
     "Fp1": "Fp1",
@@ -127,7 +127,7 @@ _CHANNEL_RENAME_MAP: Dict[str, str] = {
 
 # BIDS event value to canonical event ID mapping
 # Source: analysis.md Event Structure table
-# Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
 _EVENT_VALUE_TO_ID: Dict[int, str] = {
     1: "event_1",    # Cue: left
     2: "event_2",    # Cue: right

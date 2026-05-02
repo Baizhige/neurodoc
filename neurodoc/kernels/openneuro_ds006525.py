@@ -23,12 +23,12 @@ import pandas as pd
 # === Subject metadata ===
 # Source: Dataset documentation and reference papers
 # Annotator: LLM, 2026-04-08
-# Note: All fields marked as LLM推断，需人类复核
+# Note: All fields marked as inferred by LLM, needs human review
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     f"sub-{str(i).zfill(2)}": {
-        "age": "unknown",  # LLM 推断，需人类复核
-        "sex": "unknown",  # LLM 推断，需人类复核
-        "handedness": "unknown",  # LLM 推断，需人类复核
+        "age": "unknown",  # inferred by LLM, needs human review
+        "sex": "unknown",  # inferred by LLM, needs human review
+        "handedness": "unknown",  # inferred by LLM, needs human review
     }
     for i in range(1, 35)
 }
@@ -37,7 +37,7 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
 # Source: Standard 128-channel layout (BioSemi ActiveTwo or similar 128-chan cap)
 # The dataset uses standard 1020 extension with additional channels
 # Annotator: LLM, 2026-04-08
-# Note: LLM 推断，需人类复核
+# Note: inferred by LLM, needs human review
 _EEG_CHANNEL_RENAME_MAP: Dict[str, str] = {
     # Standard 10-20 positions
     "Fp1": "EEG-Fp1",
@@ -168,8 +168,8 @@ class OpenNeuroDS006525Kernel:
         eegunity_desc = {
             "age": subject_info.get("age", "unknown"),
             "sex": subject_info.get("sex", "unknown"),
-            "amplifier": "unknown",  # LLM 推断，需人类复核
-            "cap": "unknown",        # LLM 推断，需人类复核
+            "amplifier": "unknown",  # inferred by LLM, needs human review
+            "cap": "unknown",        # inferred by LLM, needs human review
             "handedness": subject_info.get("handedness", "unknown"),
         }
 

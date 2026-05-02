@@ -129,13 +129,13 @@ class InnerSpeechKernel:
         # LLM inference from dataset description - needs human verification
         # Source: DOI 10.1038/s41597-023-02286-w - typical age range reported
         if info["age"] == "unknown":
-            info["age"] = "unknown"  # LLM 推断，需人类复核
+            info["age"] = "unknown"  # inferred by LLM, needs human review
 
         # BrainCap MR is standard for EEG-fMRI studies
         if info["amplifier"] == "unknown":
-            info["amplifier"] = "BrainAmp MR plus"  # LLM 推断，需人类复核
+            info["amplifier"] = "BrainAmp MR plus"  # inferred by LLM, needs human review
         if info["cap"] == "unknown":
-            info["cap"] = "BrainCap MR 64-channel (Ag/AgCl)"  # LLM 推断，需人类复核
+            info["cap"] = "BrainCap MR 64-channel (Ag/AgCl)"  # inferred by LLM, needs human review
 
         return info
 

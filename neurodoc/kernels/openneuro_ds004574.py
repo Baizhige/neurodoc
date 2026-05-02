@@ -20,7 +20,7 @@ import mne
 
 # Standard 64-channel montage mapping (based on standard_1005)
 # Channels are typically named as EEG001-EEG064 in BrainVision format
-# LLM 推断，需人类复核 - 需要确认实际通道命名格式
+# inferred by LLM, needs human review
 _EEG_CHANNEL_RENAME_MAP: Dict[str, str] = {
     "EEG001": "Fp1",
     "EEG002": "Fpz",
@@ -181,7 +181,7 @@ class OpenNeuroDS004574Kernel:
     
     KERNEL_ID: str = "openneuro-ds004574-stage1"
     
-    # Subject metadata - LLM 推断，需人类复核
+    # Subject metadata - inferred by LLM, needs human review
     # Source: Dataset README / paper not explicitly stating demographics
     # All values set to "unknown" per KERNEL_RULEBOOK requirements
     _SUBJECT_METADATA: Dict[str, Dict[str, str]] = field(default_factory=lambda: {
@@ -212,7 +212,7 @@ class OpenNeuroDS004574Kernel:
             return self._SUBJECT_METADATA[subject_id].copy()
         
         # Return default unknown values
-        # LLM 推断，需人类复核 - 如果有participants.tsv可用，应从此处读取
+        # inferred by LLM, needs human review
         return {
             "age": "unknown",
             "sex": "unknown",
@@ -268,8 +268,8 @@ class OpenNeuroDS004574Kernel:
     def _set_device_info(self, raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
         """Set device information in raw.info.
         
-        LLM 推断，需人类复核 - 需要确认实际使用的放大器型号
-        Source: OpenNeuro dataset_description.json 或采集论文
+        inferred by LLM, needs human review - confirm actual amplifier model used
+        Source: OpenNeuro dataset_description.json or acquisition paper
         
         Returns
         -------
@@ -277,9 +277,9 @@ class OpenNeuroDS004574Kernel:
             Raw object with updated device info.
         """
         # Common EEG amplifiers used in cross-modal studies
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         raw.info["device_info"] = {
-            "type": "unknown",  # LLM 推断，需人类复核
+            "type": "unknown",  # inferred by LLM, needs human review
             "manufacturer": "unknown",
         }
         
@@ -309,8 +309,8 @@ class OpenNeuroDS004574Kernel:
             "eegunity_description": {
                 "age": subject_info["age"],
                 "sex": subject_info["sex"],
-                "amplifier": "unknown",  # LLM 推断，需人类复核
-                "cap": "unknown",  # LLM 推断，需人类复核
+                "amplifier": "unknown",  # inferred by LLM, needs human review
+                "cap": "unknown",  # inferred by LLM, needs human review
                 "handedness": subject_info["handedness"],
             },
         }

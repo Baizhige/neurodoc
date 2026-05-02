@@ -444,8 +444,8 @@ class OpenNeuroDS004200Kernel:
             "eegunity_description": {
                 "age": subject_info.get("age", "unknown"),
                 "sex": subject_info.get("sex", "unknown").lower(),
-                "amplifier": "unknown",  # LLM 推断，需人类复核
-                "cap": "unknown",  # LLM 推断，需人类复核
+                "amplifier": "unknown",  # inferred by LLM, needs human review
+                "cap": "unknown",  # inferred by LLM, needs human review
                 "handedness": subject_info.get("handedness", "unknown"),
             },
         }

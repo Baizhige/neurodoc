@@ -22,7 +22,7 @@ import mne
 
 # Channel mapping for 8-channel EEG cap.
 # Source: paper DOI 10.1038/s41597-025-05387-w (ArEEG paper) — 8-channel EEG cap layout.
-# Annotator: LLM, 2026-04-09 — LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-09 — inferred by LLM, needs human review
 _CHANNEL_RENAME_MAP = {
     "Ch1": "Fp1",
     "Ch2": "Fp2",
@@ -140,9 +140,9 @@ class ArEEGKernel:
             sex = subj_info["sex"]
             handedness = subj_info["handedness"]
         else:
-            age = "unknown"  # LLM 推断，需人类复核
-            sex = "unknown"  # LLM 推断，需人类复核
-            handedness = "unknown"  # LLM 推断，需人类复核
+            age = "unknown"  # inferred by LLM, needs human review
+            sex = "unknown"  # inferred by LLM, needs human review
+            handedness = "unknown"  # inferred by LLM, needs human review
 
         # Build description dict
         description_dict = {
@@ -150,8 +150,8 @@ class ArEEGKernel:
             "eegunity_description": {
                 "age": age,
                 "sex": sex,
-                "amplifier": "unknown",  # LLM 推断，需人类复核 (ArEEG paper DOI 10.1038/s41597-025-05387-w does not specify amplifier model)
-                "cap": "unknown",  # LLM 推断，需人类复核
+                "amplifier": "unknown",  # inferred by LLM, needs human review (ArEEG paper DOI 10.1038/s41597-025-05387-w does not specify amplifier model)
+                "cap": "unknown",  # inferred by LLM, needs human review
                 "handedness": handedness,
             },
         }

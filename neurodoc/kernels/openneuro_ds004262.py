@@ -14,7 +14,7 @@ import pandas as pd
 
 
 # Standard 10-20 system channel names expected for this 31-channel dataset
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 # Source: Paper references indicate standard EEG cap with 31 channels
 _STANDARD_CHANNEL_NAMES = [
     "Fp1", "Fpz", "Fp2",

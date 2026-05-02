@@ -22,7 +22,7 @@ import pandas as pd
 
 # Subject metadata from participants.tsv
 # Source: participants.tsv in dataset root
-# Annotator: LLM, 2026-04-08, 需要人类复核
+# Annotator: LLM, 2026-04-08, needs human review
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {}
 
 # Event code to human-readable label mapping for feedback outcomes
@@ -61,7 +61,7 @@ _RESPONSE_EVENT_MAP: Dict[str, str] = {
 # BioSemi default channel naming may include non-standard names
 # Standard 1020 cap has 64 EEG channels + 2 EOG
 # Source: BioSemi electrode layout documentation
-# Annotator: LLM, 2026-04-08, 需要人类复核
+# Annotator: LLM, 2026-04-08, needs human review
 _STANDARD_EEG_CHANNELS = {
     "Fp1", "Fp2", "Fz", "F3", "F4", "F7", "F8",
     "FCz", "FC3", "FC4", "FC1", "FC2", "FC5", "FC6",
@@ -280,15 +280,15 @@ class OpenNeuroDS003458Kernel:
         # Amplifier: BioSemi system (from dataset documentation)
         # Cap: Ag/AgCl (BioSemi standard)
         # Source: OpenNeuro ds003458 dataset description
-        # Annotator: LLM, 2026-04-08, 需要人类复核
+        # Annotator: LLM, 2026-04-08, needs human review
         description_dict = {
             "original_description": original_desc if original_desc else "",
             "eegunity_description": {
                 "age": subject_info["age"],
                 "sex": subject_info["sex"],
-                "amplifier": "BioSemi",  # LLM 推断，需人类复核
-                "cap": "Ag/AgCl",  # LLM 推断，需人类复核
-                "handedness": "unknown",  # LLM 推断，需人类复核
+                "amplifier": "BioSemi",  # inferred by LLM, needs human review
+                "cap": "Ag/AgCl",  # inferred by LLM, needs human review
+                "handedness": "unknown",  # inferred by LLM, needs human review
             },
         }
         raw.info["description"] = json.dumps(description_dict)

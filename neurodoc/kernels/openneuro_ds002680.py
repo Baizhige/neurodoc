@@ -21,7 +21,7 @@ import pandas as pd
 # Standard 10-20 channel names for 31-channel cap used in this dataset
 # Source: BIDS sidecar eeg.json and standard 10-20 layout for 31 channels
 # Cz is typically the reference, leaving 31 active channels
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _CHANNEL_STANDARD_NAMES = [
     "Fp1", "Fp2", "F7", "F3", "Fz", "F4", "F8",
     "T7", "C3", "Cz", "C4", "T8",
@@ -33,7 +33,7 @@ _CHANNEL_STANDARD_NAMES = [
 ]
 
 # Mapping from common alternate names to standard 10-20 names
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _CHANNEL_RENAME_ALIASES: Dict[str, str] = {
     # EEG prefixed variants
     "EEG-Fp1": "Fp1", "EEG-Fp2": "Fp2",

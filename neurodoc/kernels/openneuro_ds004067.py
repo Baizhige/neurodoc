@@ -21,7 +21,7 @@ Classical Tasks Supported:
 4. Full Trial Information Processing Pipeline
 
 Note: 63-channel EEG recorded at 2000 Hz from BrainAmp amplifier.
-       LLM 推断，需人类复核 for device-specific metadata.
+       inferred by LLM, needs human review for device-specific metadata.
 """
 
 from __future__ import annotations
@@ -38,7 +38,7 @@ import pandas as pd
 # ---------------------------------------------------------------------------
 # Subject Metadata
 # Source: participants.tsv (BIDS sidecar from OpenNeuro)
-# Annotator: LLM, 2026-04-08 — 需人类复核
+# Annotator: LLM, 2026-04-08 — needs human review
 # ---------------------------------------------------------------------------
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     # Format: "sub-XXX": {"age": str, "sex": str, "handedness": str}
@@ -109,7 +109,7 @@ def _load_subject_metadata(dataset_root: str) -> Dict[str, Dict[str, Any]]:
 # Channel Rename Map
 # Source: Standard 64-channel BrainCap (62 EEG + 2 EOG)
 # 63 channels used in this dataset (possibly missing some standard positions)
-# Annotator: LLM, 2026-04-08 — 需人类复核
+# Annotator: LLM, 2026-04-08 — needs human review
 # ---------------------------------------------------------------------------
 _EEG_CHANNEL_NAMES = {
     "Fp1", "Fp2", "Fpz", "F7", "F3", "Fz", "F4", "F8",
@@ -373,7 +373,7 @@ def _map_event_value(value: str) -> str:
 # ---------------------------------------------------------------------------
 # Super Meta Label Definitions
 # Source: analysis.md Tasks section
-# Annotator: LLM, 2026-04-08 — 需人类复核
+# Annotator: LLM, 2026-04-08 — needs human review
 # ---------------------------------------------------------------------------
 
 # Task 1: Photo Valence Classification
@@ -504,9 +504,9 @@ class OpenNeuroDS004067Kernel:
         # Step 5: Set Description (eegunity_description)
         # -----------------------------------------------------------------
         # Amplifier: BrainAmp (inferred from 2000Hz sampling rate typical for BrainAmp)
-        # Source: LLM 推断，需人类复核
-        amplifier = "BrainAmp"  # LLM 推断，需人类复核
-        cap = "Ag/AgCl"  # LLM 推断，需人类复核
+        # Source: inferred by LLM, needs human review
+        amplifier = "BrainAmp"  # inferred by LLM, needs human review
+        cap = "Ag/AgCl"  # inferred by LLM, needs human review
 
         original_desc = raw.info.get("description", "")
 

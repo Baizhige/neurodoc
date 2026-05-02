@@ -20,7 +20,7 @@ Source: https://openneuro.org/datasets/ds006777
 DOI:    https://doi.org/10.18112/openneuro.ds006777.v1.0.0
 
 Channel layout: assumed standard_1020 as per BIDS convention.
-  LLM 推断，需人类复核 — if non-standard rename map is required, update
+  inferred by LLM, needs human review — if non-standard rename map is required, update
   _CHANNEL_RENAME_MAP below after consulting the dataset's electrode file.
 """
 
@@ -45,7 +45,7 @@ _STIM_LABELS: set[str] = {"Audiovisual_stim", "Auditory_stim", "Visual_stim"}
 _RESPONSE_LABEL: str = "Response_button"
 
 # Lower-case normalisation map for annotation descriptions
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _LABEL_NORM: dict[str, str] = {
     "response_button": "Response_button",
     "visual_stim": "Visual_stim",
@@ -54,13 +54,13 @@ _LABEL_NORM: dict[str, str] = {
 }
 
 # Reaction-time validity window (ms)
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _RT_MIN_MS: float = 50.0
 _RT_MAX_MS: float = 2000.0
 
 # Channel rename map: raw name → standard_1020 name.
 # Populate if actual channel names deviate from standard_1020.
-# LLM 推断，需人类复核 — verify against dataset electrode documentation.
+# inferred by LLM, needs human review — verify against dataset electrode documentation.
 _CHANNEL_RENAME_MAP: dict[str, str] = {}
 
 
@@ -152,7 +152,7 @@ class DS006777Kernel:
     def _normalise_annotations(self, raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
         """Normalise annotation description strings to canonical labels.
 
-        LLM 推断，需人类复核
+        inferred by LLM, needs human review
         """
         if raw.annotations is None or len(raw.annotations) == 0:
             return raw
@@ -181,7 +181,7 @@ class DS006777Kernel:
         stimulus onset sample and NaN everywhere else.
 
         Derivation metadata: unit=ms, version=1.0, source=event_pairing
-        LLM 推断，需人类复核
+        inferred by LLM, needs human review
         """
         sfreq = raw.info["sfreq"]
         n_times = raw.n_times
@@ -332,7 +332,7 @@ class DS006777Kernel:
     def _standardise_channels(self, raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
         """Apply _CHANNEL_RENAME_MAP and set montage to standard_1020.
 
-        LLM 推断，需人类复核 — verify that actual channel names match the map.
+        inferred by LLM, needs human review — verify that actual channel names match the map.
         """
         if _CHANNEL_RENAME_MAP:
             rename_map = {v: k for k, v in _CHANNEL_RENAME_MAP.items()}

@@ -22,13 +22,13 @@ import numpy as np
 # EGI 256-channel HydroCell naming convention
 # Channels are named E1, E2, ..., E256 in the raw data
 # Source: EGI HydroCell 256-channel System documentation
-# Annotator: LLM, 2026-04-08 (LLM 推断，需人类复核)
+# Annotator: LLM, 2026-04-08 (inferred by LLM, needs human review)
 _EGI_256_CHANNEL_NAMES = [f"E{i}" for i in range(1, 257)]
 
 # Standard 10-20 extended positions for 256-channel EGI systems
 # Maps EGI channel index to approximate standard electrode name
 # Source: EGI 256-channel HydroCell Montage mapping
-# Annotator: LLM, 2026-04-08 (LLM 推断，需人类复核)
+# Annotator: LLM, 2026-04-08 (inferred by LLM, needs human review)
 _EGI_TO_STANDARD_256 = {
     "E1": "Fpz", "E2": "Fp1", "E3": "AFp1", "E4": "AFp3", "E5": "AF5",
     "E6": "AFz", "E7": "AF1", "E8": "AF2", "E9": "AF4", "E10": "AF6",
@@ -136,7 +136,7 @@ def _detect_paradigm(file_path: str) -> str:
     """
     # For ds002791, all files belong to the Visual Object Naming paradigm
     # Source: Dataset description, openneuro.org/datasets/ds002791
-    # Annotator: LLM, 2026-04-08 (LLM 推断，需人类复核)
+    # Annotator: LLM, 2026-04-08 (inferred by LLM, needs human review)
     base_name = os.path.basename(file_path).lower()
     
     if 'obj' in base_name or 'visual' in base_name or 'naming' in base_name:
@@ -217,7 +217,7 @@ class OpenNeuroDS002791Kernel:
     
     # Event mapping for trigger IDs
     # Source: Dataset documentation / event structure
-    # Annotator: LLM, 2026-04-08 (LLM 推断，需人类复核)
+    # Annotator: LLM, 2026-04-08 (inferred by LLM, needs human review)
     _EVENT_MAP: Dict[str, str] = field(default_factory=lambda: {
         "D249": "visual_object_trigger_type1",
         "D250": "visual_object_trigger_type2",
@@ -275,7 +275,7 @@ class OpenNeuroDS002791Kernel:
         # Step 2: Set montage for spatial positioning
         # Use standard 1020 as base, then apply 256-channel positions
         # Source: EGI HydroCell 256-channel System
-        # Annotator: LLM, 2026-04-08 (LLM 推断，需人类复核)
+        # Annotator: LLM, 2026-04-08 (inferred by LLM, needs human review)
         try:
             # Try to set montage with standard 1020 positions
             montage = mne.channels.make_standard_montage('standard_1020')
@@ -308,7 +308,7 @@ class OpenNeuroDS002791Kernel:
         
         # Step 4: Set device and subject metadata
         # Source: Dataset documentation and EGI HydroCell specifications
-        # Annotifier: LLM, 2026-04-08 (LLM 推断，需人类复核)
+        # Annotifier: LLM, 2026-04-08 (inferred by LLM, needs human review)
         description_dict = {
             "original_description": raw.info.get("description", ""),
             "eegunity_description": {

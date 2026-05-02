@@ -129,7 +129,7 @@ def _detect_paradigm(file_path: str) -> str:
 # Subject Information
 # ============================================================================
 # Source: Dataset does not provide participant demographics in accessible format
-# LLM inference标注 - needs human verification
+# LLM inference
 
 _SUBJECT_INFO: Dict[str, Dict[str, str]] = {
     # All subjects have unknown demographics
@@ -158,7 +158,7 @@ def _get_subject_info(subject_id: str) -> Dict[str, str]:
             return _SUBJECT_INFO[key]
     
     # Default unknown values
-    # LLM 推断，需人类复核
+    # inferred by LLM, needs human review
     return {
         "age": "unknown",
         "sex": "unknown",
@@ -170,7 +170,7 @@ def _get_subject_info(subject_id: str) -> Dict[str, str]:
 # Channel Name Standardization
 # ============================================================================
 # Source: Standard 64-channel EEG cap (10-20 system) with 63 channels
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 # Typical 64-channel setup:Fp1, Fp2, F7, F3, Fz, F4, F8, T7, C3, Cz, C4, T8,
 # P7, P3, Pz, P4, P8, PO9, O1, Oz, O2, PO10, F1, F2, F5, F6, FT7, FC3, FC4,
 # FT8, TP7, CP3, CP4, TP8, P1, P2, P5, P6, PO3, PO4, POz, F9, F10, T9, T10,
@@ -460,14 +460,14 @@ class OpenNeuroDS005586Kernel:
         """
         original_desc = raw.info.get("description", "")
         
-        # LLM 推断，需人类复核 - amplifier and cap info from typical EEG lab setup
+        # inferred by LLM, needs human review - amplifier and cap info from typical EEG lab setup
         description_dict = {
             "original_description": original_desc if original_desc else "",
             "eegunity_description": {
                 "age": subject_info.get("age", "unknown"),
                 "sex": subject_info.get("sex", "unknown"),
-                "amplifier": "unknown",  # LLM 推断，需人类复核
-                "cap": "unknown",  # LLM 推断，需人类复核
+                "amplifier": "unknown",  # inferred by LLM, needs human review
+                "cap": "unknown",  # inferred by LLM, needs human review
                 "handedness": subject_info.get("handedness", "unknown"),
             },
         }

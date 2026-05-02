@@ -57,7 +57,7 @@ _DERIVED_MISC_SPECS = [
 
 # BrainVision channel naming to standard 10-20
 # Source: BrainAmp standard 64-channel cap, extended 10-20 system
-# Annotator: LLM 推断，需人类复核, 2026-04-08
+# Annotator: inferred by LLM, needs human review, 2026-04-08
 _CHANNEL_RENAME_MAP: Dict[str, str] = {
     # Lowercase variants to standard uppercase
     "fp1": "Fp1",

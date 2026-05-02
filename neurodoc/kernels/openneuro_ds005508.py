@@ -23,12 +23,12 @@ import pandas as pd
 # ============================================================================
 # HARDWARE & CAP METADATA (known from dataset documentation)
 # ============================================================================
-# Amplifier: BrainAmp Series (Brain Products) - LLM 推断，需人类复核
-# Cap: ActiveTwo system with 128-channel EEG cap (Ag/AgCl) - LLM 推断，需人类复核
-# Reference: Alexander et al. (2022) NeuroImage 119348 - LLM 推断，需人类复核
+# Amplifier: BrainAmp Series (Brain Products) - inferred by LLM, needs human review
+# Cap: ActiveTwo system with 128-channel EEG cap (Ag/AgCl) - inferred by LLM, needs human review
+# Reference: Alexander et al. (2022) NeuroImage 119348 - inferred by LLM, needs human review
 
-_DATASET_AMPLIFIER = "BrainAmp Series"  # LLM 推断，需人类复核
-_DATASET_CAP = "ActiveTwo 128-channel (Ag/AgCl)"  # LLM 推断，需人类复核
+_DATASET_AMPLIFIER = "BrainAmp Series"  # inferred by LLM, needs human review
+_DATASET_CAP = "ActiveTwo 128-channel (Ag/AgCl)"  # inferred by LLM, needs human review
 
 
 # ============================================================================

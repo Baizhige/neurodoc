@@ -63,7 +63,7 @@ _EVENT_CODE_MAP: Dict[str, str] = {
 # Standard 10-20 channel names for 74-channel BCIT montage
 # Source: BCIT dataset documentation, standard extended 10-20 system with additional
 # peripheral channels for driving research (EOG, EMG, etc.)
-# Annotator: LLM 推断，需人类复核
+# Annotator: inferred by LLM, needs human review
 _CHANNEL_NAMES_74: List[str] = [
     # Standard 10-20 EEG channels (64 channels)
     "Fp1", "Fp2", "F7", "F3", "Fz", "F4", "F8", "FC5", "FC1", "FC2", "FC6",

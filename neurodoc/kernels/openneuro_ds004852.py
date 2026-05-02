@@ -25,12 +25,12 @@ import numpy as np
 import pandas as pd
 
 
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 # Based on OpenNeuro ds004852 dataset_description.json and README
 # Device info from typical BrainVision setups in military/cognitive research
 # Annotator: LLM, 2026-04-08
-_AMPLIFIER = "BrainAmp MR plus"  # LLM 推断，需人类复核
-_CAP = "Ag/AgCl"  # LLM 推断，需人类复核
+_AMPLIFIER = "BrainAmp MR plus"  # inferred by LLM, needs human review
+_CAP = "Ag/AgCl"  # inferred by LLM, needs human review
 
 # Required info fields from participants.tsv to include in eegunity_description
 kernel_requirements = {

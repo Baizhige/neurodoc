@@ -29,11 +29,11 @@ import pandas as pd
 # Handedness: Not documented in available metadata
 _SUBJECT_DEFAULT: Dict[str, Dict[str, str]] = {
     "default": {
-        "age": "unknown",  # LLM 推断，需人类复核
-        "sex": "unknown",  # LLM 推断，需人类复核
-        "amplifier": "unknown",  # LLM 推断，需人类复核
-        "cap": "unknown",  # LLM 推断，需人类复核
-        "handedness": "unknown",  # LLM 推断，需人类复核
+        "age": "unknown",  # inferred by LLM, needs human review
+        "sex": "unknown",  # inferred by LLM, needs human review
+        "amplifier": "unknown",  # inferred by LLM, needs human review
+        "cap": "unknown",  # inferred by LLM, needs human review
+        "handedness": "unknown",  # inferred by LLM, needs human review
     }
 }
 

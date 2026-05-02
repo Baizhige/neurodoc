@@ -24,8 +24,8 @@ import pandas as pd
 # High-density EEG setup with 128 EEG channels + 2 EOG channels
 # Standard 10-20 electrode naming convention with extended coverage
 # Annotator: LLM, 2026-04-08
-_AMPLIFIER = "BrainAmp"  # LLM 推断，需人类复核
-_CAP_MATERIAL = "Ag/AgCl"  # LLM 推断，需人类复核
+_AMPLIFIER = "BrainAmp"  # inferred by LLM, needs human review
+_CAP_MATERIAL = "Ag/AgCl"  # inferred by LLM, needs human review
 
 # Required info fields from participants.tsv
 _REQUIRED_INFO_FIELDS = ["age", "gender", "handedness"]
@@ -113,7 +113,7 @@ def _build_channel_rename_map_130ch(raw: mne.io.BaseRaw) -> Dict[str, str]:
     Mapping from potential BIDS-standard names to standard 10-20 names.
 
     Source: Paper DOI 10.1038/s41597-023-02260-6
-    Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+    Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
     """
     existing_names = list(raw.ch_names)
     rename_map: Dict[str, str] = {}

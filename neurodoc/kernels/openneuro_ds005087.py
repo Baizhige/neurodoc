@@ -36,7 +36,7 @@ _DEFAULT_CAP = "unknown"
 
 # Channel mapping for BrainVision standard 64-channel layout
 # Source: OpenNeuro ds005087 electrode layout; standard 10-10 system with 63 EEG + 1 ref
-# Annotator: LLM, 2026-04-08; 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08;
 _CHANNEL_RENAME_MAP = {
     # BrainVision default names -> standard 10-10 names
     "1": "Fp1",

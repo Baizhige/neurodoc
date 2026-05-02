@@ -24,7 +24,7 @@ import pandas as pd
 # Source: Dataset does not include participants.tsv with demographic info.
 # All values inferred from general study description (mTBI patients, healthy controls).
 # Age range from paper: 18-65 years (majority in 20s-40s).
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     # Subject IDs are sub-001 through sub-062
     # Specific demographic data not available in BIDS sidecar
@@ -36,7 +36,7 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
 # =============================================================================
 # Source: BrainVision format with 64-channel setup.
 # Standard 64-channel layout with Cz as reference.
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _EEG_CHANNEL_RENAMES: Dict[str, str] = {
     "Fp1": "Fp1",
     "Fp2": "Fp2",
@@ -184,13 +184,13 @@ class OpenNeuroDS003522Kernel:
             original_desc = json.dumps(original_desc)
 
         # Infer subject info from study context if not in subject dict
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         age = subject_info.get("age", "unknown")
         sex = subject_info.get("sex", "unknown")
         handedness = subject_info.get("handedness", "unknown")
 
         # Amplifier info from BrainVision system
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         amplifier = "BrainVision"
         cap = "Ag/AgCl"  # Standard for EEG studies
 

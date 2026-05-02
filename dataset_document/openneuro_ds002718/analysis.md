@@ -1,7 +1,7 @@
 # Face processing EEG dataset for EEGLAB
 
 **Dataset**: `openneuro_ds002718` | **Year**: 2015 | **URL**: https://openneuro.org/datasets/ds002718
-**Category**: High-level Mental | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 74 | **Sampling Rate**: 250 Hz | **Manual Review**:
+**Category**: High-level Mental | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 74 | **Sampling Rate**: 250 Hz | **Manual Review**: Jun Li
 
 ## Paradigm
 
@@ -16,7 +16,7 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|---|---|---|---|---|
 | `boundary` | 90 | admin | raw | Run boundary marker indicating boundary between merged runs |
 | `famous_new` | 2700 | event | raw | Initial presentation of famous face |
 | `famous_second_early` | 1313 | event | raw | Immediate repeated presentation of famous face |
@@ -34,23 +34,25 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 
 
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | complete | N/A |
 | `subject_sex` | partial (13/18) | N/A |
 | `device` | missing | N/A |
 
+
 ## Tasks
 
 ### Classical Task 1: 3-class face category classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`famous_new`, `unfamiliar_new`, `scrambled_new`]`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`famous_new`, `scrambled_new`, `unfamiliar_new`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
+  |---|---|---|
   | `famous_new` | 0 | Initial presentation of famous face |
   | `unfamiliar_new` | 1 | Initial presentation of unfamiliar face |
   | `scrambled_new` | 2 | Initial presentation of scrambled face |
@@ -62,12 +64,12 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 ### Potential Task 1: 9-class face presentation type classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`famous_new`, `famous_second_early`, `famous_second_late`, `scrambled_new`, `scrambled_second_early`, `scrambled_second_late`, `unfamiliar_new`, `unfamiliar_second_early`, `unfamiliar_second_late`]`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`famous_new`, `famous_second_early`, `famous_second_late`, `scrambled_new`, `scrambled_second_early`, `scrambled_second_late`, `unfamiliar_new`, `unfamiliar_second_early`, `unfamiliar_second_late`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
+  |---|---|---|
   | `famous_new` | 0 | Initial presentation of famous face |
   | `famous_second_early` | 1 | Immediate repeated presentation of famous face |
   | `famous_second_late` | 2 | Delayed repeated presentation of famous face |
@@ -84,15 +86,21 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 ### Potential Task 2: 3-class face repetition status classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`famous_new`, `unfamiliar_new`, `scrambled_new`, `famous_second_early`, `unfamiliar_second_early`, `scrambled_second_early`, `famous_second_late`, `unfamiliar_second_late`, `scrambled_second_late`]
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`famous_new`, `famous_second_early`, `famous_second_late`, `scrambled_new`, `scrambled_second_early`, `scrambled_second_late`, `unfamiliar_new`, `unfamiliar_second_early`, `unfamiliar_second_late`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
-  | `famous_new`, `unfamiliar_new`, `scrambled_new` | 0 | New face presentation (first occurrence) |
-  | `famous_second_early`, `unfamiliar_second_early`, `scrambled_second_early` | 1 | Early/immediate repetition |
-  | `famous_second_late`, `unfamiliar_second_late`, `scrambled_second_late` | 2 | Late/delayed repetition |
+  |---|---|---|
+  | `famous_new` | 0 | New face presentation (first occurrence) |
+  | `unfamiliar_new` | 0 | New face presentation (first occurrence) |
+  | `scrambled_new` | 0 | New face presentation (first occurrence) |
+  | `famous_second_early` | 1 | Early/immediate repetition |
+  | `unfamiliar_second_early` | 1 | Early/immediate repetition |
+  | `scrambled_second_early` | 1 | Early/immediate repetition |
+  | `famous_second_late` | 2 | Late/delayed repetition |
+  | `unfamiliar_second_late` | 2 | Late/delayed repetition |
+  | `scrambled_second_late` | 2 | Late/delayed repetition |
 - **Evidence**:
   - task-FaceRecognition_events.json — Defines trial_type levels: new (famous_new/unfamiliar_new/scrambled_new), early repeat (famous_second_early/unfamiliar_second_early/scrambled_second_early), late repeat (famous_second_late/unfamiliar_second_late/scrambled_second_late) with explicit descriptions of initial, immediate repeated, and delayed repeated presentations
   - events.tsv samples — Confirm event values and face_type columns distinguish face categories; event_type='faces' for all stimulus presentations
@@ -101,12 +109,12 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 ### Potential Task 3: Famous vs Unfamiliar Face Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`famous_new`, `famous_second_early`, `famous_second_late`, `unfamiliar_new`, `unfamiliar_second_early`, `unfamiliar_second_late`]`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`famous_new`, `famous_second_early`, `famous_second_late`, `unfamiliar_new`, `unfamiliar_second_early`, `unfamiliar_second_late`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
+  |---|---|---|
   | `famous_new` | 0 | Famous face (initial presentation) |
   | `famous_second_early` | 0 | Famous face (immediate repeat) |
   | `famous_second_late` | 0 | Famous face (delayed repeat) |
@@ -122,12 +130,12 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 ### Potential Task 4: 4-class symmetry judgment classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s *, tmax = 1.0 s *, target_events = [`left_sym`, `left_nonsym`, `right_sym`, `right_nonsym`]
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [`left_nonsym`, `left_sym`, `right_nonsym`, `right_sym`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
+  |---|---|---|
   | `left_sym` | 0 | Left button press, more symmetric |
   | `left_nonsym` | 1 | Left button press, less symmetric |
   | `right_sym` | 2 | Right button press, more symmetric |
@@ -141,16 +149,16 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 ### Potential Task 5: 2-class symmetry response classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s *, tmax = 1.0 s *, target_events = [`left_sym`, `left_nonsym`, `right_sym`, `right_nonsym`]
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [`left_nonsym`, `left_sym`, `right_nonsym`, `right_sym`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
-  | left_sym | 0 | more symmetric response |
-  | right_sym | 0 | more symmetric response |
-  | left_nonsym | 1 | less symmetric response |
-  | right_nonsym | 1 | less symmetric response |
+  |---|---|---|
+  | `left_sym` | 0 | more symmetric response |
+  | `right_sym` | 0 | more symmetric response |
+  | `left_nonsym` | 1 | less symmetric response |
+  | `right_nonsym` | 1 | less symmetric response |
 - **Evidence**:
   - task-FaceRecognition_events.json — trial_type Levels define left_sym/right_sym as "more symmetric face" and left_nonsym/right_nonsym as "less symmetric face"
   - eeg.json TaskDescription — participants pressed one of two keys based on symmetry judgment ('more' or 'less symmetric' than average), with left/right assignment counter-balanced across participants
@@ -161,14 +169,16 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 ### Potential Task 6: 2-class motor response laterality
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = -0.5 s *, tmax = 0.5 s *, target_events = [`left_sym`, `left_nonsym`, `right_sym`, `right_nonsym`]`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 0.5 s, target_events = [`left_nonsym`, `left_sym`, `right_nonsym`, `right_sym`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
-  | left_sym, left_nonsym | 0 | Left hand motor response |
-  | right_sym, right_nonsym | 1 | Right hand motor response |
+  |---|---|---|
+  | `left_sym` | 0 | Left hand motor response |
+  | `left_nonsym` | 0 | Left hand motor response |
+  | `right_sym` | 1 | Right hand motor response |
+  | `right_nonsym` | 1 | Right hand motor response |
 - **Evidence**:
   - task-FaceRecognition_events.json — Defines `left_sym` and `left_nonsym` as left button presses, `right_sym` and `right_nonsym` as right button presses; all button presses use values 256 (left) and 4096 (right) with counterbalanced semantic labels across subjects.
   - events.tsv sample (sub-002) — Confirms `left_nonsym` and `right_sym` events present with value 256 and 4096 respectively, event_type='button_press'.
@@ -178,12 +188,12 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 ### Potential Task 7: face vs scrambled classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`famous_new`, `famous_second_early`, `famous_second_late`, `unfamiliar_new`, `unfamiliar_second_early`, `unfamiliar_second_late`, `scrambled_new`, `scrambled_second_early`, `scrambled_second_late`]`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`famous_new`, `famous_second_early`, `famous_second_late`, `scrambled_new`, `scrambled_second_early`, `scrambled_second_late`, `unfamiliar_new`, `unfamiliar_second_early`, `unfamiliar_second_late`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
+  |---|---|---|
   | `famous_new` | 0 | intact face (famous, first presentation) |
   | `famous_second_early` | 0 | intact face (famous, immediate repeat) |
   | `famous_second_late` | 0 | intact face (famous, delayed repeat) |
@@ -201,58 +211,30 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 ### Potential Task 8: Age Regression from EEG
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.0 *, target_events = []`
+- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0, target_events = []
 - **Label Route**: `info`
 - **Meta Level**: raw
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
-  |------------|-----------------|
+  |---|---|
   | `subject_age` | no mapping |
 - **Evidence**:
-  - participants.tsv — `subject_age` column with values 23–31 years, partial completeness (13/18 subjects)
+  - participants.tsv — age column with values 23–31 years, partial completeness (13/18 subjects)
 - **Notes**: Segmentation-based subject-level trait prediction. Non-overlapping 2-second windows from continuous EEG are used to predict subject age. No event alignment needed; the full continuous recording is segmented. Age is a native participants.tsv column (B3 archetype, raw meta level). Subjects with missing age data will be excluded by the kernel.
 
 ### Potential Task 9: Gender Classification from EEG
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.0 *, target_events = []
+- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0, target_events = []
 - **Label Route**: `info`
 - **Meta Level**: raw
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
-  |------------|-----------------|
-  | `subject_sex` | M -> 0; F -> 1 |
+  |---|---|
+  | `subject_sex` | F -> 0; M -> 1 |
 - **Evidence**:
-  - participants.tsv — 13 subjects with gender data (7 M, 6 F), 5 subjects with n/a excluded
+
 - **Notes**: Subject-level binary classification using 2-second non-overlapping windows of continuous EEG. Gender is a native participants.tsv column with partial coverage (13/18 subjects: 7 M, 6 F). The kernel does not need to derive any new channels; labels are read directly from the BIDS participants sidecar.
-
-### Potential Task 10: continuous face viewing with age labels
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.5 *, target_events = []`
-- **Label Route**: `info`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Y Mapping Notes |
-  |------------|-----------------|
-  | `subject_age` | no mapping |
-- **Evidence**:
-  - participants.tsv — `subject_age` values 23–31 years; 5/18 subjects missing age data (sub-004, sub-006, sub-007, sub-008, sub-019)
-- **Notes**: Segmentation-based regression task using sliding 2-second windows with 50% overlap over continuous EEG recordings during naturalistic face viewing. No event-locked epochs; each window inherits the subject-level age label from participants.tsv. The kernel must read the `subject_age` column from participants.tsv and assign it to all epochs extracted from that subject's recording. Subjects with missing age data (n/a in participants.tsv) must be excluded from training.
-
-### Potential Task 11: continuous face viewing with gender labels
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2.0 s *, overlap = 0.5 *, target_events = []
-- **Label Route**: `info`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Y Mapping Notes |
-  |------------|-----------------|
-  | `subject_sex` | M -> 0; F -> 1 |
-- **Evidence**:
-  - participants.tsv — 13 subjects with gender data (7 M, 6 F), 5 subjects with n/a excluded
-- **Notes**: Segmentation-based classification using 2-second sliding windows with 50% overlap. Each window is labeled by the subject's gender from participants.tsv. This is a subject-level trait prediction task from continuous EEG during naturalistic face viewing. Archetype C with native info field; no kernel derivation needed.
 
 ## Data Quality Notes
 
@@ -265,4 +247,4 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_kernel_update
+> **Status**: completed

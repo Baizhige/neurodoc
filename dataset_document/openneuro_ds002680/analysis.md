@@ -155,7 +155,7 @@ Participants performed two alternating visual go/no-go tasks: an animal categori
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_sex` | M -> 0; F -> 1 |
+  | `subject_sex` | F -> 0; M -> 1 |
 - **Evidence**:
   - participants.tsv — Include the gender of the subjects
 - **Notes**: Segmentation-based biometric classification using 2-second overlapping EEG segments (50% overlap) from continuous recordings. Subject gender labels are drawn from participants.tsv, with balanced classes (7F, 7M across 14 subjects). No event structure required; segments are extracted uniformly across the continuous recording. Epoch parameters inferred from standard segmentation defaults for subject-level biometric tasks.

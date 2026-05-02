@@ -24,7 +24,7 @@ _AMPLIFIER = "BrainAmp"
 _CAP = "actiCAP 32-channel Ag/AgCl"
 
 # Standard 32-channel 10-10 system names used by actiCAP for this dataset
-# Annotator: LLM, 2026-04-08 - LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08 - inferred by LLM, needs human review
 _EEG_CHANNEL_NAMES = [
     "FP1", "F7", "F3", "Fz", "F4", "F8", "FC5", "FC1", "FC2", "FC6",
     "T7", "C3", "Cz", "C4", "T8", "CP5", "CP1", "CP2", "CP6",
@@ -58,7 +58,7 @@ def _apply_channel_renaming(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
     BrainVision files from this dataset may use generic names like 'EEG001'.
     Renamed to standard names BEFORE set_montage() is called.
 
-    Annotator: LLM, 2026-04-08 - LLM 推断，需人类复核
+    Annotator: LLM, 2026-04-08 - inferred by LLM, needs human review
     Source: Inferring standard 32-channel actiCAP layout from dataset metadata
     """
     current_names = raw.ch_names
@@ -159,7 +159,7 @@ class OpenNeuroDS007172Kernel:
 
         # Step 4: Build eegunity_description
         # Subject metadata: try to infer from dataset publications
-        # Annotator: LLM, 2026-04-08 - LLM 推断，需人类复核
+        # Annotator: LLM, 2026-04-08 - inferred by LLM, needs human review
         subject_info: Dict[str, str] = {
             "age": "unknown",
             "sex": "unknown",

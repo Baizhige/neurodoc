@@ -57,7 +57,7 @@ _COMBINED_EVENT_MAP: Dict[str, int] = {v: k for k, v in _EVENT_CODE_MAP.items()}
 _COMBINED_EVENT_MAP.update({v: k for k, v in _ADMIN_CODE_MAP.items()})
 
 # Subject metadata (if available from participants.tsv or dataset)
-# Source: LLM 推断，需人类复核
+# Source: inferred by LLM, needs human review
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {}
 
 # Channel mapping if needed (standard 1020 system, 64 EEG + 1 reference)
@@ -161,7 +161,7 @@ def _get_subject_metadata(subject_id: str, dataset_root: str) -> Dict[str, str]:
     if subject_id in participants:
         return participants[subject_id]
     
-    # LLM 推断，需人类复核
+    # inferred by LLM, needs human review
     return {
         "age": "unknown",
         "sex": "unknown",
@@ -213,9 +213,9 @@ class OpenNeuroDS003517Kernel:
             "eegunity_description": {
                 "age": subject_meta.get("age", "unknown"),
                 "sex": subject_meta.get("sex", "unknown").lower() if subject_meta.get("sex") else "unknown",
-                "amplifier": "unknown",  # LLM 推断，需人类复核
-                "cap": "unknown",  # LLM 推断，需人类复核
-                "handedness": "unknown",  # LLM 推断，需人类复核
+                "amplifier": "unknown",  # inferred by LLM, needs human review
+                "cap": "unknown",  # inferred by LLM, needs human review
+                "handedness": "unknown",  # inferred by LLM, needs human review
             }
         }
         raw.info["description"] = json.dumps(description_dict)

@@ -7,9 +7,9 @@ Channels: 63 EEG + 1+ trigger channels
 Sampling Rate: 500 Hz
 
 Note on metadata:
-- age/sex/handedness not in original data; set to "unknown" (LLM 推断，需人类复核)
-- amplifier inferred from dataset documentation as BrainAmp (LLM 推断，需人类复核)
-- cap inferred as Ag/AgCl gel-based (LLM 推断，需人类复核)
+- age/sex/handedness not in original data; set to "unknown" (inferred by LLM, needs human review)
+- amplifier inferred from dataset documentation as BrainAmp (inferred by LLM, needs human review)
+- cap inferred as Ag/AgCl gel-based (inferred by LLM, needs human review)
 """
 
 from __future__ import annotations

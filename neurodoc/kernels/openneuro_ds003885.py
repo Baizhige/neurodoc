@@ -26,10 +26,10 @@ import numpy as np
 # Subject Information
 # =============================================================================
 # Source: Dataset README / paper DOI 10.1016/j.neuroimage.2022.119517
-# "24 participants (12 female, age range 18-35)" — LLM 推断，需人类复核
+# "24 participants (12 female, age range 18-35)" — inferred by LLM, needs human review
 _AGE_RANGE = "18-35"
-_AMPLIFIER = "BrainAmp"  # LLM 推断，需人类复核
-_CAP = "Ag/AgCl"         # LLM 推断，需人类复核
+_AMPLIFIER = "BrainAmp"  # inferred by LLM, needs human review
+_CAP = "Ag/AgCl"         # inferred by LLM, needs human review
 _HANDEDNESS = "unknown"  # No handedness info in analysis.md
 
 
@@ -39,7 +39,7 @@ _HANDEDNESS = "unknown"  # No handedness info in analysis.md
 # Source: Standard 128-channel montage (EGI HydroCel or similar 128-channel cap)
 # The data uses generic channel names like EEG001-EEG128 plus EOG channels.
 # This mapping renames to standard 10-5 system positions.
-# Annotator: LLM, 2026-04-08 — LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
 _EEG_CHANNEL_RENAME_MAP = {
     # Standard 10-20 positions (subset used in many 128-channel caps)
     "EEG001": "Fp1", "EEG002": "Fpz", "EEG003": "Fp2",

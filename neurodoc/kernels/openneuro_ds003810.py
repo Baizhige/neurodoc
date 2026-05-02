@@ -40,7 +40,7 @@ kernel_requirements = {
 # Original EDF files use EEG-0..EEG-14. Mapping inferred from standard 10-20
 # layout for low-cost consumer-grade EEG with frontocentral coverage optimized
 # for motor imagery BCI.
-# Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
 _CHANNEL_RENAME_MAP: Dict[str, str] = {
     "EEG-0": "Fp1",
     "EEG-1": "Fp2",
@@ -64,8 +64,8 @@ _CHANNEL_RENAME_MAP: Dict[str, str] = {
 # =============================================================================
 # Source: Papers describe "low-cost consumer-grade EEG system" but specific
 # model (Muse, OpenBCI, etc.) is not explicitly stated in available documentation.
-# Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
-_AMPLIFIER: str = "low-cost consumer-grade EEG"  # LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
+_AMPLIFIER: str = "low-cost consumer-grade EEG"  # inferred by LLM, needs human review
 _CAP: str = "unknown"
 
 

@@ -9,7 +9,7 @@ Participants used EEG self-regulation to control the tempo of music in a tempo-b
 
 ## File Scan Result
 
-> **Kernel SHA256**: `ebc8108fe8d4e055bcec1d19676f2b228af0595909a5042752c27eda2447188d`
+> **Kernel SHA256**: `f8ccabb74f55b6325ba81c0083fcd40a7776d77052a73c4c34fbbad4f06e3208`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -17,8 +17,8 @@ Participants used EEG self-regulation to control the tempo of music in a tempo-b
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |---|---|---|---|---|
-| `1` | 1353 | event | raw | Lower alpha: participants instructed to lower their alpha levels to modulate the position of an on-screen cue or the tempo of some music |
-| `2` | 1358 | event | raw | Raise alpha: participants instructed to increase their alpha levels to modulate the position of an on-screen cue or the tempo of some music |
+| `1` | 1275 | event | raw | Lower alpha condition: participants are instructed to lower their alpha levels to modulate the tempo of music |
+| `2` | 1250 | event | raw | Raise alpha condition: participants are instructed to increase their alpha levels to modulate the tempo of music |
 
 
 ### Info
@@ -35,7 +35,7 @@ Participants used EEG self-regulation to control the tempo of music in a tempo-b
 ### Classical Task 1: 2-class alpha-state BCMI classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 20 s, overlap = 0, target_events = [`1`, `2`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 20 s, overlap = 0.0, target_events = [`1`, `2`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -58,13 +58,13 @@ Participants used EEG self-regulation to control the tempo of music in a tempo-b
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_sex` | M -> 0; F -> 1 |
+  | `subject_sex` | F -> 0; M -> 1 |
 - **Evidence**:
   - participants.tsv — sex field complete for all 18 subjects with class imbalance (M=14, F=4)
 - **Notes**: Continuous EEG segmentation (4s windows, 50% overlap) applied across all BCMI runs per subject. Binary classification of subject sex from resting/task-continuous EEG. Class imbalance present (M=14, F=4 out of 18 subjects). The segment_length and overlap values are standard defaults for continuous EEG segmentation with no task-specific reference guidance. This is a weak subject-trait task compared with the explicit alpha-state labels available in the event tables.
 
 ### Potential Task 2: Binned-Age Classification from EEG Segments
-- **Task Type**: classification
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s, overlap = 0.5, target_events = []
 - **Label Route**: `info`

@@ -12,8 +12,8 @@ Source  : https://openneuro.org/datasets/ds006647
 DOI     : https://doi.org/10.18112/openneuro.ds006647.v1.0.1
 Paper   : https://doi.org/10.1038/s41597-025-06189-w
 
-Amplifier : BioSemi ActiveTwo               # LLM 推断，需人类复核
-Cap       : BioSemi 64-ch Ag/AgCl sintered  # LLM 推断，需人类复核
+Amplifier : BioSemi ActiveTwo               # inferred by LLM, needs human review
+Cap       : BioSemi 64-ch Ag/AgCl sintered  # inferred by LLM, needs human review
 
 Raw-meta event label map (65280-65288 → string description):
   All nine trigger codes are preserved as their numeric string; downstream
@@ -34,7 +34,7 @@ import pandas as pd
 
 # ---------------------------------------------------------------------------
 # Raw-meta event label map
-# Source: analysis.md § Event Structure; LLM 推断，需人类复核
+# Source: analysis.md § Event Structure; inferred by LLM, needs human review
 # ---------------------------------------------------------------------------
 _EVENT_LABEL_MAP: Dict[int, str] = {
     65280: "65280",
@@ -50,7 +50,7 @@ _EVENT_LABEL_MAP: Dict[int, str] = {
 
 # ---------------------------------------------------------------------------
 # BioSemi 64-channel standard cap — A/B legacy naming → standard 10-20 names
-# Source: BioSemi website cap layout chart; LLM 推断，需人类复核
+# Source: BioSemi website cap layout chart; inferred by LLM, needs human review
 # ---------------------------------------------------------------------------
 _BIOSEMI64_ORDERED: tuple = (
     "Fp1", "AF7", "AF3", "F1",  "F3",  "F5",  "F7",
@@ -74,7 +74,7 @@ def _build_ab_rename_map(ch_names: list) -> Dict[str, str]:
     rather than the standard 10-20 identifiers. This function builds the
     rename dict only for channels that are actually present.
 
-    Source: BioSemi ActiveTwo hardware documentation; LLM 推断，需人类复核
+    Source: BioSemi ActiveTwo hardware documentation; inferred by LLM, needs human review
     """
     rename: Dict[str, str] = {}
     existing = set(ch_names)
@@ -291,8 +291,8 @@ class OpenNeuroDS006647Kernel:
             "eegunity_description": {
                 "age": subj["age"],
                 "sex": subj["sex"],
-                "amplifier": "BioSemi ActiveTwo",   # LLM 推断，需人类复核
-                "cap": "BioSemi 64-ch Ag/AgCl sintered electrodes",  # LLM 推断，需人类复核
+                "amplifier": "BioSemi ActiveTwo",   # inferred by LLM, needs human review
+                "cap": "BioSemi 64-ch Ag/AgCl sintered electrodes",  # inferred by LLM, needs human review
                 "handedness": subj["handedness"],
             },
         })
@@ -300,7 +300,7 @@ class OpenNeuroDS006647Kernel:
         # ------------------------------------------------------------------
         # 3. Channel renaming BEFORE set_montage
         # Handle legacy A1-A32 / B1-B32 BioSemi channel naming if present.
-        # Source: BioSemi hardware documentation; LLM 推断，需人类复核
+        # Source: BioSemi hardware documentation; inferred by LLM, needs human review
         # ------------------------------------------------------------------
         rename_map = _build_ab_rename_map(raw.ch_names)
         if rename_map:
@@ -308,7 +308,7 @@ class OpenNeuroDS006647Kernel:
 
         # ------------------------------------------------------------------
         # 4. Set montage (biosemi64 → fallback standard_1020)
-        # Source: BioSemi 64-channel standard cap layout; LLM 推断，需人类复核
+        # Source: BioSemi 64-channel standard cap layout; inferred by LLM, needs human review
         # ------------------------------------------------------------------
         try:
             montage = mne.channels.make_standard_montage("biosemi64")

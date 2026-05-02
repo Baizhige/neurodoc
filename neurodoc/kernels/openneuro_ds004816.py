@@ -350,12 +350,12 @@ class OpenNeuroDS004816Kernel:
         sex_str = _normalize_sex(sex_raw)
 
         # amplifier and cap: unknown for this dataset (no device info in BIDS)
-        # LLM 推断，需人类复核
-        amplifier_str = "unknown"  # LLM 推断，需人类复核 - no device info in BIDS sidecars
-        cap_str = "unknown"  # LLM 推断，需人类复核 - standard cap assumed but not specified
+        # inferred by LLM, needs human review
+        amplifier_str = "unknown"  # inferred by LLM, needs human review - no device info in BIDS sidecars
+        cap_str = "unknown"  # inferred by LLM, needs human review - standard cap assumed but not specified
 
         # handedness: not in participants.tsv, check if available
-        handedness_str = "unknown"  # LLM 推断，需人类复核 - not in required fields
+        handedness_str = "unknown"  # inferred by LLM, needs human review - not in required fields
 
         # Build extra info from participants.tsv
         extra_info = {}

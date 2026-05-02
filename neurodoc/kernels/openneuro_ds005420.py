@@ -19,7 +19,7 @@ import mne
 
 
 # Source: Dataset documentation and reference paper (DOI: 10.1109/UBMK67458.2025.11207051)
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _AMPLIFIER = "unknown"  # Not explicitly stated in available documentation
 _CAP = "unknown"  # 20-channel system, specific cap type not confirmed
 _HANDEDNESS = "unknown"  # Not provided in dataset metadata
@@ -117,7 +117,7 @@ def _build_channel_rename_map(ch_names: list) -> Dict[str, str]:
     The dataset uses standard 10-20 nomenclature but may have variations
     in channel naming (e.g., 'EEG Fp1' vs 'Fp1').
     
-    Source: Dataset channel configuration, LLM 推断，需人类复核
+    Source: Dataset channel configuration, inferred by LLM, needs human review
     """
     rename_map: Dict[str, str] = {}
     

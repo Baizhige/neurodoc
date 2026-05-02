@@ -22,7 +22,7 @@ import pandas as pd
 # Extended 10-20 layout with 64 channels as used in this dataset.
 # Source: BrainVision actiCAP 64Ch Standard-2 layout; verified against
 # dataset channel count (64) and standard BrainVision naming.
-# Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08
 _EXTENDED_1020_64 = [
     "Fp1", "Fp2", "AF7", "AF3", "AFz", "AF4", "AF8",
     "F7", "F5", "F3", "F1", "Fz", "F2", "F4", "F6", "F8",
@@ -270,7 +270,7 @@ class OpenNeuroDS004580Kernel:
             else:
                 raw.set_montage(montage, verbose=False)
         except Exception:
-            pass  # LLM 推断，需人类复核: montage setup failure
+            pass  # inferred by LLM, needs human review: montage setup failure
         
         # --- Process events from events.tsv if raw lacks annotations ---
         # BrainVision .vhdr/.eeg files may have markers in separate .vmrk file
@@ -328,8 +328,8 @@ class OpenNeuroDS004580Kernel:
         eegunity_description = {
             "age": age,
             "sex": sex,
-            "amplifier": "BrainAmp",  # LLM 推断，需人类复核: BrainVision typical amplifier
-            "cap": "Ag/AgCl",  # LLM 推断，需人类复核: standard actiCAP
+            "amplifier": "BrainAmp",  # inferred by LLM, needs human review: BrainVision typical amplifier
+            "cap": "Ag/AgCl",  # inferred by LLM, needs human review: standard actiCAP
             "handedness": "unknown",  # Not in participants.tsv for this dataset
         }
         

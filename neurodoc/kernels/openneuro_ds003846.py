@@ -23,7 +23,7 @@ import pandas as pd
 
 # Device metadata - source: paper DOI 10.3389/fnrgo.2024.1411305
 # Exact amplifier and cap type not specified in available documentation
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _DEVICE_AMPLIFIER: str = "unknown"
 _DEVICE_CAP: str = "unknown"  # 64-channel setup, exact type not specified
 
@@ -84,7 +84,7 @@ class OpenneuroDs003846Kernel:
         numbered channels. Map to standard 10-20 names for 64-channel setup.
 
         Source: Standard 10-20 64-channel layout
-        # LLM 推断，需人类复核 - exact mapping requires dataset documentation verification.
+        # inferred by LLM, needs human review - exact mapping requires dataset documentation verification.
         """
         rename_map: Dict[str, str] = {}
 
@@ -148,7 +148,7 @@ class OpenneuroDs003846Kernel:
         """Set standard 10-20 montage if channels match standard layout.
 
         Source: standard_1020 montage from MNE
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         """
         try:
             # Check if we have mostly standard 10-20 channel names

@@ -21,7 +21,7 @@ import pandas as pd
 
 # Annotator: LLM, 2026-04-08
 # Source: Dataset description (standard 64-channel EEG cap)
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _DEVICE_INFO = {
     "amplifier": "unknown",
     "cap": "Ag/AgCl",

@@ -20,7 +20,7 @@ import mne
 
 # === Subject metadata ===
 # Source: extracted from participants.tsv (BIDS)
-# Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     "01": {"sex": "unknown", "age": "unknown", "handedness": "unknown"},
     "02": {"sex": "unknown", "age": "unknown", "handedness": "unknown"},
@@ -46,7 +46,7 @@ _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
 
 # Device metadata - inferred from paradigm description (electrical stimulation setup)
 # Source: paper DOI 10.1523/JNEUROSCI.1116-23.2023, analysis.md
-# Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
 _DEVICE_METADATA = {
     "amplifier": "unknown",
     "cap": "unknown",
@@ -56,7 +56,7 @@ _DEVICE_METADATA = {
 # === Channel mapping ===
 # OpenNeuro ds004561 uses standard 64-channel setup
 # Source: dataset description, electrode cap documentation
-# Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
 _EEG_64_CHANNEL_STANDARD = [
     "Fp1", "Fpz", "Fp2",
     "F7", "F3", "Fz", "F4", "F8",

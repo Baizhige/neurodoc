@@ -131,9 +131,9 @@ def _get_dataset_device_info(dataset_root: str) -> Dict[str, str]:
         Dictionary with amplifier, cap, and reference information.
     """
     device_info = {
-        "amplifier": "EGI Geodesic EEG System",  # LLM 推断，需人类复核
-        "cap": "Geodesic HydroCel 128-channel",  # LLM 推断，需人类复核
-        "reference": "vertex (Cz)",  # LLM 推断，需人类复核
+        "amplifier": "EGI Geodesic EEG System",  # inferred by LLM, needs human review
+        "cap": "Geodesic HydroCel 128-channel",  # inferred by LLM, needs human review
+        "reference": "vertex (Cz)",  # inferred by LLM, needs human review
     }
 
     # Try to read dataset_description.json
@@ -174,7 +174,7 @@ def _get_subject_metadata(
         return {
             "age": meta.get("age", _SUBJECT_AGE_RANGE),
             "sex": meta.get("sex", "unknown"),
-            "handedness": meta.get("handedness", "unknown"),  # LLM 推断，需人类复核
+            "handedness": meta.get("handedness", "unknown"),  # inferred by LLM, needs human review
         }
 
     # Fallback to defaults

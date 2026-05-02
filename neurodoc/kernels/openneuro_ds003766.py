@@ -25,13 +25,13 @@ import pandas as pd
 
 
 # =============================================================================
-# 通道重命名映射
+# channel
 # =============================================================================
 # Source: EGI 128-channel HydroCel Geodesic Sensor Net standard naming
 # The dataset uses EGI's default naming (E1, E2, ... E128) which needs mapping
 # to standard 10-20 equivalents for MNE montage compatibility.
 # Reference: EGI HydroCel 128 Channel Layout, Geodesic Sensor Net manual
-# Annotator: LLM 推断，需人类复核; 2026-04-08
+# Annotator: inferred by LLM, needs human review; 2026-04-08
 _EGI_128_TO_1020: Dict[str, str] = {
     # Standard 10-20 positions based on EGI 128 layout
     "E1": "E1",      # Keep non-standard names, will use custom montage approach
@@ -170,7 +170,7 @@ _EGI_128_TO_1020: Dict[str, str] = {
 # EGI 128 standard positions for creating a custom montage
 # Source: EGI HydroCel 128 Channel Layout coordinates
 # These are approximate spherical coordinates converted to cartesian
-# Annotator: LLM 推断，需人类复核; 2026-04-08
+# Annotator: inferred by LLM, needs human review; 2026-04-08
 def _create_egi_128_montage() -> Optional[mne.channels.DigMontage]:
     """Create EGI 128-channel HydroCel montage.
     
@@ -186,17 +186,16 @@ def _create_egi_128_montage() -> Optional[mne.channels.DigMontage]:
     try:
         montage = mne.channels.make_standard_montage("EGI_256")
         # Subsample to 128 channels if needed - this is approximate
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         return None  # Fall back to no montage if exact match unavailable
     except (ValueError, RuntimeError):
         return None
 
 
 # =============================================================================
-# 事件映射
 # =============================================================================
 # Source: 10.1038/s41597-022-01538-5, sub-01_task-foodchoice_events.json sidecar
-# Annotator: LLM 推断，需人类复核; 2026-04-08
+# Annotator: inferred by LLM, needs human review; 2026-04-08
 
 def _get_event_map(paradigm: str) -> Dict[int, str]:
     """Get event map for specific paradigm.
@@ -258,7 +257,6 @@ def _get_event_map(paradigm: str) -> Dict[int, str]:
 
 
 # =============================================================================
-# 辅助函数
 # =============================================================================
 
 def _detect_paradigm(file_path: str) -> str:

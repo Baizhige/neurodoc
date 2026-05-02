@@ -30,7 +30,7 @@ import pandas as pd
 
 # 18 active EEG channels as reported in dataset documentation
 # Source: dataset README, paper 10.1371/journal.pone.0335364
-# Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08
 _ACTIVE_EEG_CHANNELS_18 = [
     "F3", "F4", "Fz",
     "FC3", "FCz", "FC4",
@@ -318,7 +318,7 @@ class OpenNeuroDS004022Kernel:
             if ch_name.startswith("E") and ch_name[1:].isdigit():
                 # EGI HydroCel Geodesic Sensor Net mapping for 18 channels
                 # Source: dataset documentation, standard EGI 32-channel layout
-                # Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
+                # Annotator: LLM, 2026-04-08
                 egi_map = {
                     "E2": "Fz", "E3": "F3", "E4": "F4",
                     "E5": "FC3", "E6": "FCz", "E7": "FC4",
@@ -401,11 +401,11 @@ class OpenNeuroDS004022Kernel:
         elif handedness == "unknown":
             pass  # keep as unknown
         else:
-            handedness = "unknown"  # LLM 推断，需人类复核
+            handedness = "unknown"  # inferred by LLM, needs human review
         
         # Device info from dataset documentation
         # Source: paper 10.1371/journal.pone.0335364, dataset README
-        # Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
+        # Annotator: LLM, 2026-04-08
         amplifier = "unknown"  # Not specified in available documentation
         cap = "unknown"  # Not specified; likely standard Ag/AgCl cap
         

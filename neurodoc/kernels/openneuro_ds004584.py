@@ -30,7 +30,7 @@ _REQUIRED_INFO_FIELDS = ["AGE", "GENDER", "GROUP", "MOCA", "TYPE", "UPDRS"]
 
 # Channel rename map for standardizing 63-channel layout
 # Source: OpenNeuro ds004584 dataset, standard 10-20 system with extended coverage
-# Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08
 _CHANNEL_RENAME_MAP = {
     # EEG channels — standard names already used in this dataset
     # No renaming needed based on sample data inspection

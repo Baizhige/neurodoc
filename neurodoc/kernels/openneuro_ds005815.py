@@ -17,7 +17,7 @@ The kernel handles:
 
 Channel mapping: The dataset uses EEG-0..EEG-29 numbering. Based on standard
 10-20 30-channel layouts and BIDS channel info, we map to standard names.
-Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
+Annotator: LLM, 2026-04-08 — inferred by LLM, needs human review
 """
 
 from __future__ import annotations
@@ -35,7 +35,7 @@ import pandas as pd
 # Standard 10-20 30-channel mapping for numbered EEG channels
 # Source: Standard 10-20 system for 30 channels, common in resting-state/task EEG
 # Dataset uses EEG-0 to EEG-29
-# Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08
 _EEG_CHANNEL_MAP: Dict[str, str] = {
     "EEG-0": "Fp1",
     "EEG-1": "Fp2",

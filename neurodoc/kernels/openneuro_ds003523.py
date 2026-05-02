@@ -277,11 +277,11 @@ def _extract_subject_metadata(participants_tsv_path: str, subject_id: str) -> Di
     # LLM inference for amplifier/cap based on dataset characteristics
     # Source: openneuro ds003523 dataset_description.json and README
     # This is a common EEG research setup - specific model needs verification
-    # LLM 推断，需人类复核
+    # inferred by LLM, needs human review
     if metadata["amplifier"] == "unknown":
-        metadata["amplifier"] = "unknown"  # LLM 推断，需人类复核
+        metadata["amplifier"] = "unknown"  # inferred by LLM, needs human review
     if metadata["cap"] == "unknown":
-        metadata["cap"] = "Ag/AgCl"  # LLM 推断，需人类复核
+        metadata["cap"] = "Ag/AgCl"  # inferred by LLM, needs human review
     
     return metadata
 

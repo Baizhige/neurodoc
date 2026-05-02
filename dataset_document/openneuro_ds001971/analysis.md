@@ -1,7 +1,7 @@
 # Audiocue walking study
 
 **Dataset**: `openneuro_ds001971` | **Year**: 2019 | **URL**: https://openneuro.org/datasets/ds001971
-**Category**: Complex Applied | **Subjects**: 18 | **Files (Completed)**: 273 | **Channels**: 115 | **Sampling Rate**: 512 Hz | **Manual Review**:
+**Category**: Complex Applied | **Subjects**: 18 | **Files (Completed)**: 273 | **Channels**: 115 | **Sampling Rate**: 512 Hz | **Manual Review**: Mingze Tang
 
 ## Paradigm
 
@@ -16,7 +16,7 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|---|---|---|---|---|
 | `AdvanceTempo` | 1154 | event | raw | Trial phase onset: AdvanceTempo (step advance pacing tempo condition) |
 | `AdvanceTempo_stream2` | 1154 | event | raw | Trial phase onset: AdvanceTempo stream 2 (step advance pacing tempo condition, auxiliary event stream) |
 | `DelayTempo` | 2368 | event | raw | Trial phase onset: DelayTempo (step delay pacing tempo condition) |
@@ -42,23 +42,25 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 
 
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
 | `subject_age` | complete | N/A |
 | `subject_sex` | complete | N/A |
 | `device` | missing | N/A |
 
+
 ## Tasks
 
 ### Classical Task 1: 3-class gait tempo condition classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s *, tmax = 10 s *, overlap = 0.5 *, target_events = [`AdvanceTempo`, `DelayTempo`, `PreferredCadence`]`
+- **Epoch Parameters**: tmin = 0 s, tmax = 10 s, overlap = 0.5, target_events = [`AdvanceTempo`, `DelayTempo`, `PreferredCadence`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
+  |---|---|---|
   | `AdvanceTempo` | 0 | Advance tempo shift (step shortening) |
   | `DelayTempo` | 1 | Delay tempo shift (step lengthening) |
   | `PreferredCadence` | 2 | Preferred cadence baseline walking |
@@ -70,12 +72,12 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 ### Classical Task 2: 2-class tempo shift direction classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: `tmin = -2 s *, tmax = 8 s *, overlap = 0.0, target_events = [`AdvanceTempo`, `DelayTempo`]`
+- **Epoch Parameters**: tmin = -2 s, tmax = 8 s, overlap = 0.0, target_events = [`AdvanceTempo`, `DelayTempo`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
+  |---|---|---|
   | `AdvanceTempo` | 0 | Step advance pacing tempo condition (faster tempo, step shortening) |
   | `DelayTempo` | 1 | Step delay pacing tempo condition (slower tempo, step lengthening) |
 - **Evidence**:
@@ -85,12 +87,12 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 ### Potential Task 1: Cued vs Uncued Walking Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: `tmin = 0 s *, tmax = 10 s *, overlap = 0.5, target_events = [`PreferredCadence`, `UncuedWalking`]`
+- **Epoch Parameters**: tmin = 0 s, tmax = 10 s, overlap = 0.5, target_events = [`PreferredCadence`, `UncuedWalking`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
+  |---|---|---|
   | `PreferredCadence` | 0 | Cued walking at preferred cadence with auditory metronome |
   | `UncuedWalking` | 1 | Uncued self-paced walking without auditory pacing |
 - **Evidence**:
@@ -103,41 +105,43 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 ### Potential Task 2: Standing Cue Lateralization Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`Walking_event_171`, `Walking_event_271`]
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`Walking_event_171`, `Walking_event_271`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
+  |---|---|---|
   | `Walking_event_171` | 0 | Cue during standing previously associated with right heel strike |
   | `Walking_event_271` | 1 | Cue during standing previously associated with left heel strike |
 - **Evidence**:
+
 - **Notes**: This task uses discrete auditory cue events (171/271) delivered during standing periods, not during active walking. The lateralized association comes from prior walking experience where these cues were paired with right/left heel strikes. The epoch window captures auditory evoked responses and early post-cue processing. Values marked with * are inferred from standard ERP paradigms for auditory cue processing.
 
 ### Potential Task 3: Heel Strike Lateralization During Uncued Walking
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: `tmin = -0.5 s *, tmax = 1.0 s *, target_events = [`UncuedWalking`]`
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [`UncuedWalking`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
-  | `UncuedWalking` (value 100) | 0 | Right heel strike during uncued walking |
-  | `UncuedWalking` (value 200) | 1 | Left heel strike during uncued walking |
+  |---|---|---|
+  | `UncuedWalking` | 0 | Right heel strike (Value 100) |
+  | `UncuedWalking` | 1 | Left heel strike (Value 200) |
 - **Evidence**:
-- **Notes**: The `UncuedWalking` trial_type events contain embedded trigger values 100 and 200 indicating right and left heel strikes respectively during uncued walking. The kernel must extract the `value` column from events.tsv within `UncuedWalking` trial segments to disambiguate the lateralization class. This is an event route (archetype A) with raw meta level since labels originate directly from native event IDs and their associated values.
+
+- **Notes**: The `UncuedWalking` trial_type events contain embedded trigger values. The kernel must extract the `value` column from events.tsv within `UncuedWalking` segments: value 100 -> y=0 (Right), value 200 -> y=1 (Left). This matches the structural parent ID `UncuedWalking` present in the Event Structure.
 
 ### Potential Task 4: Sex Classification from Walking EEG
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.0 *, target_events = []`
+- **Epoch Parameters**: segment_length = 10 s, overlap = 0.0, target_events = []
 - **Label Route**: `info`
 - **Meta Level**: raw
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
-  |------------|----------------|
-  | subject_sex | F -> 0; M -> 1 |
+  |---|---|
+  | `subject_sex` | F -> 0; M -> 1 |
 - **Evidence**:
   - participants.tsv — 20 subjects with complete sex information (F: 9, M: 11)
 - **Notes**: Binary classification of biological sex from EEG recorded during treadmill walking with auditory pacing. The 10-second non-overlapping segmentation provides multiple samples per subject while capturing locomotor dynamics. This is a B3 archetype using native participants.tsv column; no kernel derivation needed. The MoBI context with real-world movement may reveal sex differences in neural gait control.
@@ -145,13 +149,13 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 ### Potential Task 5: Age Regression from Walking EEG
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.0, target_events = []`
+- **Epoch Parameters**: segment_length = 10 s, overlap = 0.0, target_events = []
 - **Label Route**: `info`
 - **Meta Level**: raw
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
-  |------------|----------------|
-  | subject_age | no mapping |
+  |---|---|
+  | `subject_age` | no mapping |
 - **Evidence**:
   - participants.tsv — 20 subjects with age values (effective range 23–38 years); some entries are ranges (e.g., '18-38') requiring midpoint imputation or exclusion
 - **Notes**: Subject-level continuous regression task using segmentation to create multiple samples per participant. Age is a native participants.tsv column (archetype B3, Meta Level = raw). The 10-second window length is standard for Complex Applied biological state tasks with continuous EEG; overlap is 0 to ensure independent segments. Some entries encoded as ranges limit granularity but the 23-38 year span provides sufficient variability for regression analysis of neural correlates of gait control across young adulthood.
@@ -159,26 +163,27 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 ### Potential Task 6: Segmented Walking State with Sex Label
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []
+- **Epoch Parameters**: segment_length = 4 s, overlap = 0.5, target_events = []
 - **Label Route**: `info`
 - **Meta Level**: raw
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
-  |------------|----------------|
-  | subject_sex | F -> 0; M -> 1 |
+  |---|---|
+  | `subject_sex` | F -> 0; M -> 1 |
 - **Evidence**:
+
 - **Notes**: Archetype C with native info label (sex). The continuous walking recordings contain mixed event structures with multiple condition types and auxiliary streams, making a naturalistic segmentation approach appropriate. Arbitrary 4-second EEG segments are classified by subject-level sex, treating the entire walking session as a continuous brain state. The segment_length and overlap values are inferred from the candidate's epoch_hint as no canonical trial structure exists for this continuous MoBI paradigm.
 
 ### Potential Task 7: Segmented Walking State with Age Regression
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5, target_events = []
+- **Epoch Parameters**: segment_length = 4 s, overlap = 0.5, target_events = []
 - **Label Route**: `info`
 - **Meta Level**: raw
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
-  |------------|----------------|
-  | subject_age | no mapping |
+  |---|---|
+  | `subject_age` | no mapping |
 - **Evidence**:
   - participants.tsv — N=20, age=23.0–38.0, with some range entries (e.g., '18-38')
 - **Notes**: Archetype C with info-native label (age from participants.tsv). Segmentation is required because the walking protocol produces continuous, mixed-condition recordings without clean trial boundaries suitable for event-based epoching. The 4-second windows with 50% overlap maximize the number of segments per subject for robust age regression from locomotor EEG dynamics. Age serves as a biomarker target: neural signatures of gait adaptability and sensorimotor integration across the complex multi-condition protocol (cued/uncued walking, tempo shifts) may correlate with age-related differences in young adults (23–38 years). The kernel does not need to derive any channels; age is read directly from participants.tsv.
@@ -190,4 +195,4 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: completed

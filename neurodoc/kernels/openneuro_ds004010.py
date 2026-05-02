@@ -49,18 +49,18 @@ _EVENT_CODE_MAP = {
     66: "auditory attention block",
     77: "visual attention block",
     # Additional condition markers from required event IDs
-    200: "condition-200",  # LLM 推断，需人类复核 — likely sub-condition marker
-    201: "condition-201",  # LLM 推断，需人类复核
-    202: "condition-202",  # LLM 推断，需人类复核
-    203: "condition-203",  # LLM 推断，需人类复核
-    220: "condition-220",  # LLM 推断，需人类复核
-    221: "condition-221",  # LLM 推断，需人类复核
-    222: "condition-222",  # LLM 推断，需人类复核
-    223: "condition-223",  # LLM 推断，需人类复核
-    230: "condition-230",  # LLM 推断，需人类复核
-    231: "condition-231",  # LLM 推断，需人类复核
-    232: "condition-232",  # LLM 推断，需人类复核
-    233: "condition-233",  # LLM 推断，需人类复核
+    200: "condition-200",  # inferred by LLM, needs human review — likely sub-condition marker
+    201: "condition-201",  # inferred by LLM, needs human review
+    202: "condition-202",  # inferred by LLM, needs human review
+    203: "condition-203",  # inferred by LLM, needs human review
+    220: "condition-220",  # inferred by LLM, needs human review
+    221: "condition-221",  # inferred by LLM, needs human review
+    222: "condition-222",  # inferred by LLM, needs human review
+    223: "condition-223",  # inferred by LLM, needs human review
+    230: "condition-230",  # inferred by LLM, needs human review
+    231: "condition-231",  # inferred by LLM, needs human review
+    232: "condition-232",  # inferred by LLM, needs human review
+    233: "condition-233",  # inferred by LLM, needs human review
 }
 
 
@@ -202,9 +202,9 @@ class OpenNeuroDS004010Kernel:
 
         # Device info from dataset documentation
         # Source: OpenNeuro ds004010 dataset_description.json and README
-        # LLM 推断，需人类复核 — amplifier and cap info should be verified against dataset docs
-        amplifier = "BrainAmp"  # LLM 推断，需人类复核 — common for this lab, verify in dataset docs
-        cap = "Ag/AgCl"  # LLM 推断，需人类复核 — standard for 64-channel setups
+        # inferred by LLM, needs human review — amplifier and cap info should be verified against dataset docs
+        amplifier = "BrainAmp"  # inferred by LLM, needs human review — common for this lab, verify in dataset docs
+        cap = "Ag/AgCl"  # inferred by LLM, needs human review — standard for 64-channel setups
 
         # Build description
         eegunity_desc = {

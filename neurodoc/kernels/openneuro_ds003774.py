@@ -359,10 +359,10 @@ class MUSINGKernel:
         # =====================================================================
         # Amplifier info - typically BrainVision/BrainProducts for high-density
         # LLM inference, requires human verification
-        amplifier = "unknown"  # LLM 推断，需人类复核
+        amplifier = "unknown"  # inferred by LLM, needs human review
         
         # Cap info - typically wet Ag/AgCl for 128+ channel systems
-        cap = "unknown"  # LLM 推断，需人类复核
+        cap = "unknown"  # inferred by LLM, needs human review
         
         description_dict = {
             "original_description": raw.info.get("description", ""),

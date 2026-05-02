@@ -36,7 +36,7 @@ import pandas as pd
 
 # Hardcoded device metadata from dataset documentation and papers
 # Source: Kappenman et al. (2021), 10.1109/TNSRE.2020.3000971
-# Annotator: LLM 推断，需人类复核
+# Annotator: inferred by LLM, needs human review
 _DEVICE_INFO = {
     "amplifier": "BrainAmp DC",
     "cap": "Ag/AgCl custom phantom cap (264-channel)",

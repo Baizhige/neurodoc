@@ -212,14 +212,14 @@ class ZenodoSAAKernel:
 
         # Build eegunity_description
         # No participants.tsv available for this dataset; all demographic info unknown
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         description_dict = {
             "original_description": raw.info.get("description", "") or "",
             "eegunity_description": {
                 "age": "unknown",
                 "sex": "unknown",
-                "amplifier": "BioSemi ActiveTwo",  # LLM 推断，需人类复核
-                "cap": "Ag/AgCl",  # LLM 推断，需人类复核
+                "amplifier": "BioSemi ActiveTwo",  # inferred by LLM, needs human review
+                "cap": "Ag/AgCl",  # inferred by LLM, needs human review
                 "handedness": "unknown",
             },
         }

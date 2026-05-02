@@ -11,9 +11,9 @@ Paradigm: Working memory digit span with serial/simultaneous encoding,
 resting state (eyes open/closed), cartoon intersegment markers.
 
 Subject metadata (age/sex/handedness): Not available in dataset.
-All subject fields set to "unknown". # LLM 推断，需人类复核
+All subject fields set to "unknown". # inferred by LLM, needs human review
 Amplifier/Cap: Assumed standard EEG system based on 65-channel configuration.
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 """
 
 from __future__ import annotations
@@ -36,7 +36,7 @@ import numpy as np
 # T7, C3, Cz, C4, T8, CP3, CPz, CP4, P7, P3, Pz, P4, P8, PO3, POz, PO4, O1,
 # Oz, O2 + additional posterior-anterior chains.
 # Assumed 65-channel montage configuration based on standard high-density EEG.
-# Annotator: LLM, 2025-05-04  # LLM 推断，需人类复核
+# Annotator: LLM, 2025-05-04  # inferred by LLM, needs human review
 _EEG_CHANNEL_ORDER = [
     "Fp1", "Fp2", "F7", "F3", "Fz", "F4", "F8",
     "FC3", "FCz", "FC4", "T7", "C3", "Cz", "C4", "T8",
@@ -148,7 +148,7 @@ def _infer_channel_types(raw: mne.io.BaseRaw) -> Dict[str, str]:
 # Subject Metadata (all unknown - no participants.tsv with this info)
 # =============================================================================
 # Source: Dataset does not include participant demographics in accessible files.
-# Annotator: LLM, 2025-05-04  # LLM 推断，需人类复核
+# Annotator: LLM, 2025-05-04  # inferred by LLM, needs human review
 _SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
     "sub-01": {"sex": "unknown", "age": "unknown", "handedness": "unknown"},
     "sub-02": {"sex": "unknown", "age": "unknown", "handedness": "unknown"},
@@ -196,9 +196,9 @@ def _get_subject_id_from_path(file_path: str) -> Optional[str]:
 # =============================================================================
 # Source: 65-channel EEG + 1 ECG + 1 PPG configuration suggests a standard
 # research-grade amplifier system. Exact model not specified in dataset.
-# Annotator: LLM, 2025-05-04  # LLM 推断，需人类复核
-_AMPLIFIER = "unknown"  # LLM 推断，需人类复核
-_CAP_MATERIAL = "unknown"  # LLM 推断，需人类复核
+# Annotator: LLM, 2025-05-04  # inferred by LLM, needs human review
+_AMPLIFIER = "unknown"  # inferred by LLM, needs human review
+_CAP_MATERIAL = "unknown"  # inferred by LLM, needs human review
 
 
 @dataclass

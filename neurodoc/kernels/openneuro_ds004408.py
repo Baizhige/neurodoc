@@ -399,9 +399,9 @@ class OpenNeuroDS004408Kernel:
         # Device info from dataset documentation
         # Source: analysis.md, paper 10.1016/j.neuroimage.2020.117586
         # Annotator: LLM, 2025-01, requires human review
-        # LLM 推断，需人类复核
-        amplifier = "BioSemi ActiveTwo"  # LLM 推断，需人类复核
-        cap = "BioSemi 128-channel cap"  # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
+        amplifier = "BioSemi ActiveTwo"  # inferred by LLM, needs human review
+        cap = "BioSemi 128-channel cap"  # inferred by LLM, needs human review
         
         # Handle channel renaming BEFORE set_montage
         rename_map = _build_rename_map(raw)
@@ -421,7 +421,7 @@ class OpenNeuroDS004408Kernel:
                 montage = mne.channels.make_standard_montage("standard_1005")
                 raw.set_montage(montage, match_case=False, on_missing="warn")
             except Exception:
-                # LLM 推断，需人类复核
+                # inferred by LLM, needs human review
                 pass  # Skip montage if not available
         
         # Ensure all EEG channels have correct type

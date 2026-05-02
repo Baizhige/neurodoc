@@ -30,7 +30,7 @@ import pandas as pd
 # Source: Dataset README and BIDS structure
 # https://openneuro.org/datasets/ds004511
 # Annotator: LLM, 2026-04-08
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 
 # Standard 64-channel layout for this dataset based on BIDS channels.tsv
 # The dataset uses standard 10-20 extended system with 64 channels

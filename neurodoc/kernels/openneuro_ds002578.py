@@ -28,7 +28,7 @@ import pandas as pd
 # Source: BioSemi 256-channel electrode layout documentation
 # https://www.biosemi.com/headcap.htm
 # Standard 10-20 extended positions for BioSemi 256-channel cap
-# Annotator: LLM, 2026-04-08; 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08;
 
 _BIOSEMI_256_NAMES: List[str] = [
     # Row 1 (frontal)

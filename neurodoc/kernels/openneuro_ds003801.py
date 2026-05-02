@@ -34,7 +34,7 @@ import pandas as pd
 # ============================================================================
 # Source: TMSi Saga 32-channel system default mapping, 24 EEG channels
 # From dataset documentation and paper 10.1088/1741-2552/ac42b5
-# Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
 _CHANNEL_RENAME_MAP: Dict[str, str] = {
     "Ch 1": "Fp1",
     "Ch 2": "Fp2",
@@ -68,10 +68,10 @@ _CHANNEL_RENAME_MAP: Dict[str, str] = {
 # ============================================================================
 # Source: paper 10.1088/1741-2552/ac42b5, Section 2.1
 # "EEG was recorded using a TMSi Saga 32-channel amplifier..."
-# Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
 _AMPLIFIER = "TMSi Saga 32-channel"
 # Source: paper 10.1088/1741-2552/ac42b5, Ag/AgCl ring electrodes used
-# Annotator: LLM, 2026-04-08  # LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08  # inferred by LLM, needs human review
 _CAP = "Ag/AgCl"
 
 

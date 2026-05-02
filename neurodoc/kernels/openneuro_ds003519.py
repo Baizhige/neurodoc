@@ -61,7 +61,7 @@ _PARTICIPANT_DICT: Dict[str, Dict[str, Any]] = {
 # Channel configuration
 # Standard 64-channel EEG cap (BrainVision/montage-compatible)
 # Source: 10.3758/s13415-018-0584-6 - standard 64-channel EEG
-# Annotator: LLM, 2026-01-15, 需人类复核
+# Annotator: LLM, 2026-01-15, needs human review
 # =============================================================================
 _STANDARD_64_CHANNELS: List[str] = [
     "Fp1", "Fp2", "F7", "F3", "Fz", "F4", "F8", "FC5", "FC3", "FC1",

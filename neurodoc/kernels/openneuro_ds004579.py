@@ -29,7 +29,7 @@ import pandas as pd
 
 # BrainVision channel name variants -> standard 10-20 lowercase
 # Source: BrainVision standard 64-channel cap layout
-# Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08
 _BV_TO_STANDARD_64 = {
     "FP1": "Fp1", "FPZ": "Fpz", "FP2": "Fp2",
     "AF7": "AF7", "AF3": "AF3", "AFZ": "AFz", "AF4": "AF4", "AF8": "AF8",

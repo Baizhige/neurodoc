@@ -88,7 +88,6 @@ def _load_participants_tsv(dataset_path: str) -> Dict[str, Dict[str, str]]:
 # Source: Dataset uses EGI HydroCel Geodesic Sensor Net 256-channel system
 # Actual recorded channels: 219 (some channels disabled/removed)
 # Annotator: LLM (from EGI 256-channel naming convention), 2026-04-08
-# 由 LLM 推断，需人类复核
 # =============================================================================
 # EGI 256-channel naming uses E1, E2, ... E256
 # Standard 10-20 equivalents from EGI documentation
@@ -300,10 +299,9 @@ class OpenNeuroDS003004Kernel:
         # Source: Paper DOI 10.1016/j.neuroimage.2022.118873
         # "Electrical Geodesics Inc. (EGI) 256-channel system"
         # Annotator: LLM (from paper), 2026-04-08
-        # 由 LLM 推断，需人类复核
         return {
-            "amplifier": "EGI Net Amps 400",  # LLM 推断，需人类复核
-            "cap": "HydroCel Geodesic Sensor Net 256",  # LLM 推断，需人类复核
+            "amplifier": "EGI Net Amps 400",  # inferred by LLM, needs human review
+            "cap": "HydroCel Geodesic Sensor Net 256",  # inferred by LLM, needs human review
         }
 
     def _ensure_misc_channels(self, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:

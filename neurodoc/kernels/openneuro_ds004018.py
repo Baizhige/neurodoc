@@ -246,7 +246,7 @@ class OpenNeuroDS004018Kernel(OpenNeuroBaseKernel):
             except Exception:
                 pass
         
-        # LLM 推断，需人类复核
+        # inferred by LLM, needs human review
         amplifier = "unknown"  # Not specified in available metadata
         cap = "unknown"  # Not specified in available metadata
         

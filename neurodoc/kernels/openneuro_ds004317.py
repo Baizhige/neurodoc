@@ -85,8 +85,8 @@ _CANONICAL_EVENT_ID: Dict[str, int] = {
 # Source: Dataset README / paper DOI 10.1111/psyp.14276
 # Amplifier and cap info inferred from Brain Products system common in EEG labs.
 # Annotator: LLM, needs human verification
-_DEVICE_AMPLIFIER = "unknown"       # LLM 推断，需人类复核
-_DEVICE_CAP = "unknown"             # LLM 推断，需人类复核
+_DEVICE_AMPLIFIER = "unknown"       # inferred by LLM, needs human review
+_DEVICE_CAP = "unknown"             # inferred by LLM, needs human review
 
 # subject_age / subject_sex are MISSING in participants.tsv (confirmed via analysis.md)
 # All subjects default to "unknown"

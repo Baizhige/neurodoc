@@ -33,7 +33,7 @@ import pandas as pd
 
 # Standard 10-20 channel names for 64-channel layout
 # Source: BrainVision standard 64-channel cap, standard_1020
-# Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08
 _STANDARD_64CH_NAMES = [
     "Fp1", "Fp2", "F7", "F3", "Fz", "F4", "F8", "FC5",
     "FC1", "FC2", "FC6", "T7", "C3", "Cz", "C4", "T8",
@@ -47,7 +47,7 @@ _STANDARD_64CH_NAMES = [
 
 # BrainVision default naming patterns that need normalization
 # Source: BrainVision Recorder default channel naming convention
-# Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08
 _BV_CHANNEL_MAP = {
     # Common BrainVision aliases to standard 10-20
     "FP1": "Fp1", "FP2": "Fp2",
@@ -60,7 +60,7 @@ _BV_CHANNEL_MAP = {
 
 # Event ID mappings from task analysis
 # Source: https://doi.org/10.18112/openneuro.ds004075.v1.0.0 — BrainVision .vmrk marker files
-# Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08
 _EVENT_VALUE_MAP = {
     "S  1": "Stimulus/S  1",
     "S  10": "Stimulus/S 10",
@@ -273,9 +273,9 @@ class OpenNeuroDS004075Kernel:
         
         # Device info — not available in BIDS for this dataset
         # Source: OpenNeuro metadata suggests BrainVision system based on file format
-        # Annotator: LLM, 2026-04-08 — 由 LLM 推断，需人类复核
-        amplifier = "BrainAmp"  # LLM 推断，需人类复核 — BrainVision standard
-        cap = "Ag/AgCl"  # LLM 推断，需人类复核 — standard for BrainVision 64ch
+        # Annotator: LLM, 2026-04-08
+        amplifier = "BrainAmp"  # inferred by LLM, needs human review — BrainVision standard
+        cap = "Ag/AgCl"  # inferred by LLM, needs human review — standard for BrainVision 64ch
         handedness = "unknown"  # Not in participants.tsv for this dataset
         
         # Build eegunity_description

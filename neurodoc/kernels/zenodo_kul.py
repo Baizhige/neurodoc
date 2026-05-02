@@ -48,7 +48,7 @@ _LABEL_MAP = {1: "attended_left", 2: "attended_right"}
 
 # Standard BioSemi ActiveTwo 64-channel 10-20 layout names.
 # Source: BioSemi 64-channel cap documentation, standard 10-20 system.
-# Annotator: LLM, 2026-04-09 — 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-09
 _BIOSEMI_64_CH_NAMES = [
     "Fp1", "AF7", "AF3", "F1", "F3", "F5", "F7", "FT7",
     "FC5", "FC3", "FC1", "C1", "C3", "C5", "T7", "TP7",
@@ -194,7 +194,7 @@ class ZenodoKulKernel:
         # No participants.tsv for this dataset; all demographic info unknown
         # Device info from paper: BioSemi ActiveTwo, standard 10-20 layout
         # Source: Biesmans et al. (2017), DOI 10.1109/TBME.2019.2911728
-        # Annotator: LLM, 2026-04-09 — 由 LLM 推断，需人类复核
+        # Annotator: LLM, 2026-04-09
         original_desc = raw.info.get("description", "") if hasattr(raw, "info") else ""
 
         description_dict = {
@@ -202,8 +202,8 @@ class ZenodoKulKernel:
             "eegunity_description": {
                 "age": "unknown",
                 "sex": "unknown",
-                "amplifier": "BioSemi ActiveTwo",  # LLM 推断，需人类复核
-                "cap": "BioSemi 64-channel cap",   # LLM 推断，需人类复核
+                "amplifier": "BioSemi ActiveTwo",  # inferred by LLM, needs human review
+                "cap": "BioSemi 64-channel cap",   # inferred by LLM, needs human review
                 "handedness": "unknown",
             },
         }

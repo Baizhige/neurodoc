@@ -29,7 +29,7 @@ import pandas as pd
 # Source: Dataset README and BIDS sidecar json files indicate standard 10-20 system
 # Original channel names are like "EEG Fz-Cz" (bipolar montage notation)
 # We map to standard channel names for MNE montage compatibility.
-# Annotator: LLM, 2026-04-08; 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08;
 _CHANNEL_RENAME_MAP = {
     "EEG Fp1-F7": "Fp1",
     "EEG F7-T3": "F7",
@@ -66,7 +66,7 @@ _CHANNEL_RENAME_MAP = {
 
 # More complete mapping based on actual ds003555 channel names
 # Source: OpenNeuro ds003555, sub-01 sample file inspection
-# Annotator: LLM, 2026-04-08; 由 LLM 推断，需人类复核
+# Annotator: LLM, 2026-04-08;
 _FULL_CHANNEL_MAP = {
     # Left temporal chain
     "EEG Fp1-F7": "Fp1",

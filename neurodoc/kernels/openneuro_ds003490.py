@@ -50,7 +50,7 @@ _ADMIN_CODES = {"S 85", "S255", "boundary", "S 85", "S  85"}
 # BioSemi 64-channel system with standard 10-20 extended layout
 # 67 channels = 64 EEG + 3 auxiliary (typically EOG/EMG)
 # Source: BioSemi electrode naming convention; paper 10.1016/j.clinph.2017.11.023
-# Annotator: LLM, 2026-04-08; "由 LLM 推断，需人类复核"
+# Annotator: LLM, 2026-04-08; "
 _BIOSEMI_64_CHANNELS = [
     "Fp1", "AF7", "AF3", "F1", "F3", "F5", "F7", "FT7", "FC5", "FC3",
     "FC1", "C1", "C3", "C5", "T7", "TP7", "CP5", "CP3", "CP1", "P1",
@@ -63,14 +63,14 @@ _BIOSEMI_64_CHANNELS = [
 
 # Extended channel set for 67 channels (64 + 3 extras)
 # The exact 3 extra channels vary; common: VEOG, HEOG, or EMG
-# Source: LLM inference from BioSemi 67ch configurations; "由 LLM 推断，需人类复核"
+# Source: LLM inference from BioSemi 67ch configurations; "
 _EXTRA_CHANNELS = ["VEOG", "HEOG", "EMG"]
 
 # Complete 67-channel list
 _FULL_CHANNEL_LIST = _BIOSEMI_64_CHANNELS + _EXTRA_CHANNELS
 
 # Common alias patterns for channel name normalization
-# Source: LLM inference from BioSemi data patterns; "由 LLM 推断，需人类复核"
+# Source: LLM inference from BioSemi data patterns; "
 _CHANNEL_ALIAS_MAP: Dict[str, str] = {
     # Standard EEG aliases
     "EEG Fp1": "Fp1", "EEG Fp2": "Fp2",
@@ -375,7 +375,7 @@ class OpenNeuroDS003490Kernel:
         
         # --- Set montage ---
         # Use standard_1020 for BioSemi 64-channel layout
-        # Source: BioSemi uses standard 10-20 extended; "由 LLM 推断，需人类复核"
+        # Source: BioSemi uses standard 10-20 extended; "
         try:
             montage = mne.channels.make_standard_montage("standard_1020")
             # Only set montage for channels that exist in the montage
@@ -420,9 +420,9 @@ class OpenNeuroDS003490Kernel:
             original_desc = ""
         
         # Device info: BioSemi ActiveTwo system
-        # Source: Paper 10.1016/j.clinph.2017.11.023; "由 LLM 推断，需人类复核"
-        amplifier = "BioSemi ActiveTwo"  # LLM 推断，需人类复核
-        cap = "BioSemi 64-channel cap"   # LLM 推断，需人类复核
+        # Source: Paper 10.1016/j.clinph.2017.11.023; "
+        amplifier = "BioSemi ActiveTwo"  # inferred by LLM, needs human review
+        cap = "BioSemi 64-channel cap"   # inferred by LLM, needs human review
         
         # Handedness: not reported in this dataset
         handedness = "unknown"

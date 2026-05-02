@@ -21,17 +21,17 @@ import pandas as pd
 # Source: OpenNeuro ds007176 dataset_description.json
 # EEG amplifier information not explicitly stated in sidecars.
 # Annotator: LLM, 2026-04-10
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _AMPLIFIER_DEFAULT = "unknown"
 
 # Source: Based on 60-channel setup typical for resting-state EEG studies.
 # Annotator: LLM, 2026-04-10
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _CAP_DEFAULT = "Ag/AgCl"
 
 # Source: Dataset README indicates standard EEG cap without specific model.
 # Annotator: LLM, 2026-04-10
-# LLM 推断，需人类复核
+# inferred by LLM, needs human review
 _HANDEDNESS_MISSING_REASON = "Not collected in original study protocol"
 
 
