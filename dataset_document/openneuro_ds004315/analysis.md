@@ -1,8 +1,11 @@
 # Mood Manipulation and PST, Experiment 1
-**Manual Review**:
+
+**Dataset**: `openneuro_ds004315` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004315
+**Category**: High-level Mental | **Subjects**: 50 | **Files (Completed)**: 50 | **Channels**: 66 | **Sampling Rate**: 500 Hz | **Manual Review**:
+
 ## Paradigm
 
-(See existing draft)
+Fifty healthy adult participants completed a probabilistic selection task (PST) after a mood manipulation, with 25 participants assigned to a sad mood manipulation and 25 assigned to a neutral mood manipulation. The PST included a training phase in which participants learned stimulus-pair reward contingencies through probabilistic feedback, followed by a testing phase with learned and novel stimulus pairings. EEG was recorded continuously during the task using a 66-channel BrainVision/EEGLAB recording at 500 Hz. The paradigm supports feedback-locked analyses of reward and punishment processing, especially reward positivity (RewP) and feedback-related responses, as well as stimulus/response decoding during PST testing.
 
 ## File Scan Result
 

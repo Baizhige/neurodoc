@@ -1,8 +1,11 @@
 # Object Recognition in Healthy Aging (ORHA) - EEG
-**Manual Review**:
+
+**Dataset**: `openneuro_ds005363` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005363
+**Category**: Sensory/Response | **Subjects**: 43 | **Files (Completed)**: 43 | **Channels**: 64 | **Sampling Rate**: 1000 Hz | **Manual Review**:
+
 ## Paradigm
 
-(See existing draft)
+Younger adults and older adults completed a visual object-recognition EEG task designed to study how healthy aging affects high-level visual representations. Participants viewed images on a gray background with central fixation across eight runs. The stimulus set contained four object categories: faces, animals, places, and objects, with category-specific trigger ranges documented in the dataset README (`S1-S16`, `S17-S32`, `S33-S48`, `S49-S64`) plus catch-trial triggers (`S65-S69`). Continuous BrainVision EEG was recorded with 64 channels at 1000 Hz, enabling category-level decoding, animate/inanimate contrasts, and representational similarity analyses of exemplar-level object responses across younger and older groups.
 
 ## File Scan Result
 

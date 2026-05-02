@@ -9,16 +9,24 @@ Subjects performed a sustained vigilance task simulating advanced security guard
 
 ## File Scan Result
 
-> **Kernel SHA256**: `028fc78b6b65cf41623d2af88d02ee671c1e40caf0f318cd7f6b3b5a58498c4e`
+> **Kernel SHA256**: `fc7d06255994a42be4f5e3ec3ec67a288f37fd9ea2dc017e10991da7065dd324`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
+### Event Structure
+
+| Event ID | Count (total) | Type | Meta Level | Meaning |
+|---|---|---|---|---|
+
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
-| `device` | missing | N/A |
+| `age` | missing |  |
+| `amplifier` | complete | e.g. BioSemi ActiveTwo |
+| `cap` | complete | e.g. Ag/AgCl |
+| `handedness` | missing |  |
+| `sex` | missing |  |
 
 ## Tasks
 
