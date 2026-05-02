@@ -1,7 +1,7 @@
 # EEG Meditation Study
 
 **Dataset**: `openneuro_ds001787` | **Year**: 2018/2024 | **URL**: https://openneuro.org/datasets/ds001787
-**Category**: Biological State | **Subjects**: 24 | **Files (Completed)**: 40 | **Channels**: 80 | **Sampling Rate**: 256 Hz | **Manual Review**:
+**Category**: Biological State | **Subjects**: 24 | **Files (Completed)**: 40 | **Channels**: 80 | **Sampling Rate**: 256 Hz | **Manual Review**: Mingze Tang
 
 ## Paradigm
 
@@ -23,6 +23,7 @@ Twenty-four meditators (12 expert with ≥10 years daily practice, 12 novices) e
 | `254` | 5 | event | raw | BioSemi STATUS marker; administrative trigger not tied to a probe response |
 | `4` | 754 | event | raw | Response 2 to one of the probe questions |
 | `8` | 258 | event | raw | Response 3 to one of the probe questions |
+
 
 ### MISC Label Summary
 
@@ -55,18 +56,19 @@ Twenty-four meditators (12 expert with ≥10 years daily practice, 12 novices) e
 | `cap` | complete | e.g. BioSemi 64-channel cap |
 | `group` | complete | e.g. expert, novice |
 
+
 ## Tasks
 
 ### Potential Task 1: GSR amplitude regression from meditation EEG
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 10 s *, overlap = 0.0 *, target_events = []
+- **Epoch Parameters**: segment_length = 10 s, overlap = 0.0, target_events = []
 - **Label Route**: `misc`
 - **Meta Level**: raw
 - **Target Definition**:
   | MISC Channel Name | Y Mapping Notes |
-  |------------------|-----------------|
-  | GSR1 | no mapping |
+  |---|---|
+  | `GSR1` | no mapping |
 - **Evidence**:
   - 10.3389/fnins.2022.765585 — Reference paper explicitly analyzes ISA-GSR coupling during meditation; GSR1 and GSR2 are continuous native misc channels on the raw object (BioSemi ActiveTwo with 15 misc channels)
 - **Notes**: B1 archetype (native misc channel regression). GSR1 selected as primary GSR channel; GSR2 also available as redundant backup. Segment length of 10s inferred from paper's analysis of sustained meditation states (first 30s period after meditation onset), with non-overlapping windows for independent samples.
@@ -74,26 +76,27 @@ Twenty-four meditators (12 expert with ≥10 years daily practice, 12 novices) e
 ### Potential Task 2: Respiration-EEG Coupling Regression
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 10 s *, overlap = 0.0 *, target_events = []
+- **Epoch Parameters**: segment_length = 10 s, overlap = 0.0, target_events = []
 - **Label Route**: `misc`
 - **Meta Level**: raw
 - **Target Definition**:
   | MISC Channel Name | Y Mapping Notes |
-  |------------------|-----------------|
-  | Resp | no mapping |
+  |---|---|
+  | `Resp` | no mapping |
 - **Evidence**:
+
 - **Notes**: Native misc channel "Resp" is present in the BioSemi ActiveTwo channel set (confirmed in eeg.json: MiscChannelCount=15, and Resp appears in native misc channel catalog). The task uses 10-second non-overlapping windows to capture multiple respiratory cycles at typical resting rates (~12-20 breaths/min ≈ 3-5 s/cycle). The regression target is the continuous respiration signal amplitude, enabling investigation of EEG-respiration coupling during meditation practice.
 
 ### Potential Task 3: Temperature-EEG Regression
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 10 s *, overlap = 0.0 *, target_events = []
+- **Epoch Parameters**: segment_length = 10 s, overlap = 0.0, target_events = []
 - **Label Route**: `misc`
 - **Meta Level**: raw
 - **Target Definition**:
   | MISC Channel Name | Y Mapping Notes |
-  |------------------|-----------------|
-  | Temp | no mapping |
+  |---|---|
+  | `Temp` | no mapping |
 - **Evidence**:
   - `eeg.json` — BioSemi ActiveTwo recording with MiscChannelCount=15, confirming auxiliary channels including Temp
   - `README` — Meditation study with continuous recording; temperature as autonomic correlate of meditative state
@@ -102,13 +105,13 @@ Twenty-four meditators (12 expert with ≥10 years daily practice, 12 novices) e
 ### Potential Task 4: Plethysmography-EEG Regression
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 10 s *, overlap = 0.0 *, target_events = []
+- **Epoch Parameters**: segment_length = 10 s, overlap = 0.0, target_events = []
 - **Label Route**: `misc`
 - **Meta Level**: raw
 - **Target Definition**:
   | MISC Channel Name | Y Mapping Notes |
-  |------------------|-----------------|
-  | Plet | no mapping |
+  |---|---|
+  | `Plet` | no mapping |
 - **Evidence**:
   - [eeg.json, README] — Dataset includes native MISC channel `Plet` (plethysmography) among 15 misc channels; continuous recording during meditation task with ~2-minute interruption intervals for self-report.
 - **Notes**: Archetype B1: native misc channel `Plet` is directly available on the raw data as a continuous peripheral physiological recording. No kernel derivation needed. The 10-second segmentation windows are chosen to capture multiple cardiac cycles for stable cardiovascular-EEG coupling estimation.
@@ -120,4 +123,4 @@ Twenty-four meditators (12 expert with ≥10 years daily practice, 12 novices) e
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: completed

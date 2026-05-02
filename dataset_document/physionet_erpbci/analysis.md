@@ -1,7 +1,7 @@
 # ERP-Based Brain-Computer Interface Recordings
 
-**Dataset**: `physionet_erpbci` | **Year**: 2013 | **URL**: https://physionet.org/content/erpbci/1.0.0/
-**Category**: Action/Output | **Subjects**: 21 | **Files (Completed)**: 245 | **Channels**: 70 | **Sampling Rate**: 2048 Hz | **Manual Review**: Liu Peng
+**Dataset**: `physionet_erpbci` | **Year**: 2014 | **URL**: https://physionet.org/content/erpbci/1.0.0/
+**Category**: Action/Output | **Subjects**: 10 | **Files (Completed)**: 245 | **Channels**: 70 | **Sampling Rate**: 2048 Hz | **Manual Review**: Liu Peng
 
 ## Paradigm
 
@@ -16,7 +16,7 @@ Participants spelled characters using a standard 6x6 matrix speller while EEG wa
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|---|---|---|---|---|
 | `seen (column)` | 2391 | event | raw | Target column flash (attended character's column lit up) |
 | `seen (row)` | 2005 | event | raw | Target row flash (attended character's row lit up) |
 | `unseen (column)` | 11819 | event | raw | Non-target column flash |
@@ -24,42 +24,45 @@ Participants spelled characters using a standard 6x6 matrix speller while EEG wa
 
 
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
-| `device` | missing | N/A |
+| `subject_age` | missing | No subject age demographic information is publicly available in this dataset. |
+| `subject_sex` | missing | No subject sex demographic information is publicly available in this dataset. |
+| `device` | missing | Recordings collected via BioSemi ActiveTwo EEG system (2048 Hz sampling rate), with 64 EEG channels, 2 earlobe references, and 4 EOG channels; software re-referencing required for full CMRR. |
+
 
 ## Tasks
 
 ### Classical Task 1: P300 Target vs. Non-Target Classification in Matrix Speller
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [`seen (row)`, `seen (column)`, `unseen (row)`, `unseen (column)`]
+- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [`seen (column)`, `seen (row)`, `unseen (column)`, `unseen (row)`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `seen (row)` | 1 | Target row flash (attended character's row intensified) |
   | `seen (column)` | 1 | Target column flash (attended character's column intensified) |
   | `unseen (row)` | 0 | Non-target row flash |
   | `unseen (column)` | 0 | Non-target column flash |
 - **Evidence**:
-  - DOI: 10.13026/C2101S — Dataset page describes ERP-based BCI recordings from a P300 matrix speller paradigm where participants spell characters by focusing on target flashes; row/column intensifications can be classified as target (attended) or non-target.
-- **Kernel Notes**: Verify event ID mapping from events.tsv. Extract epochs centered on each row/column intensification event (±0.1/0.8s window). Combine `seen (row)` and `seen (column)` as positive class (y=1), `unseen (row)` and `unseen (column)` as negative class (y=0). EOG channels should be excluded from features. (replaces Potential Task 1 from original analysis.md)
+  - 10.13026/C2101S — Dataset page describes ERP-based BCI recordings from a P300 matrix speller paradigm where participants spell characters by focusing on target flashes; row/column intensifications can be classified as target (attended) or non-target.
+- **Notes**: Verify event ID mapping from events.tsv. Extract epochs centered on each row/column intensification event (±0.1/0.8s window). Combine `seen (row)` and `seen (column)` as positive class (y=1), `unseen (row)` and `unseen (column)` as negative class (y=0). EOG channels should be excluded from features. (replaces Potential Task 1 from original analysis.md)
 
 ### Potential Task 1: Row vs. Column P300 Speller Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [`seen (row)`, `seen (column)`]
+- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.8 s, target_events = [`seen (column)`, `seen (row)`]
 - **Label Route**: `event`
-- **Target Definition**: Distinguish whether target flash occurred in row or column for character-level decoding.
-
-| Event | y | Meaning |
-|-------|---|---------|
-| `seen (row)` | 0 | Target flash occurred in a row |
-| `seen (column)` | 1 | Target flash occurred in a column |
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `seen (row)` | 0 | Target flash occurred in a row |
+  | `seen (column)` | 1 | Target flash occurred in a column |
+- **Evidence**:
 
 - **Notes**: Use intersection of identified target row and target column to determine spelled character.
 
@@ -73,4 +76,4 @@ Participants spelled characters using a standard 6x6 matrix speller while EEG wa
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: completed

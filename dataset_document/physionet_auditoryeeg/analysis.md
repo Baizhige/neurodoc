@@ -1,7 +1,7 @@
 # Auditory EEG Dataset (Biometric Identification)
 
 **Dataset**: `physionet_auditoryeeg` | **Year**: 2021 | **URL**: https://physionet.org/content/auditory-eeg/1.0.0/
-**Category**: High-level Mental | **Subjects**: 19 | **Files (Completed)**: 205 | **Channels**: 13 | **Sampling Rate**: 200 Hz | **Manual Review**: Liu Peng
+**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 205 | **Channels**: 4 | **Sampling Rate**: 200 Hz |**Manual Review**: Liu Peng
 
 ## Paradigm
 
@@ -9,17 +9,16 @@ Nineteen subjects (s01-s20, one subject absent) aged 21-31 participated in a bio
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
-> **EEGUnity Version**: `N/A`
-> **Scan Type**: Sampled
+> **Kernel**: N/A
+> **SHA256**: N/A
 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
+|---|---|---|---|---|
 | `resting_eyes_open` | ~50 | event | raw | Resting state with eyes open (ex01) |
 | `resting_eyes_closed` | ~25 | event | raw | Resting state with eyes closed (ex02) |
-| `resting_eyes_open_noise_isolation` | ~50 | event | raw | Eyes open with acoustic isolation (ex04, ex06) |
+| `resting_eyes_open_noise_isolation` | ~50 | event | raw | Eyes open with acoustic isolation (ex06) |
 | `auditory_native_song_in_ear` | ~25 | event | raw | Native-language song via in-ear headphones (ex07) |
 | `auditory_nonnative_song_in_ear` | ~25 | event | raw | Non-native language song via in-ear headphones (ex08) |
 | `auditory_neutral_music_in_ear` | ~25 | event | raw | Neutral instrumental music via in-ear headphones (ex09) |
@@ -27,9 +26,8 @@ Nineteen subjects (s01-s20, one subject absent) aged 21-31 participated in a bio
 | `auditory_nonnative_song_bone` | ~25 | event | raw | Non-native song via bone-conduction headphones (ex11) |
 | `ex05` | ~19 | event | raw | Uncoded experiment (raw experiment code, exclude from classification) |
 
->
-> Each annotation spans the entire recording file. Counts are approximate.
 
+> Each annotation spans the entire recording file. Counts are approximate.
 
 ### MISC Label Summary
 
@@ -38,99 +36,100 @@ Nineteen subjects (s01-s20, one subject absent) aged 21-31 participated in a bio
 - **Candidate Labels**: Needs verification
 - **Kernel Note**: Document derivation logic, source fields, units, and version tags.
 
-
 ### Info
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
-| `device` | missing | N/A |
+| `subject_age` | missing | Age range: 21-31 years; mean age: 26.0 years |
+| `subject_sex` | missing | Male: 15; Female: 5 |
+| `device` | missing | The core recording device is an OpenBCI Ganglion Board, a 4-channel EEG acquisition system that samples data at 200 Hz. It uses Gold Cup electrodes placed at standard scalp positions (T7, F8, Cz, P4) with Ten20 conductive paste, and is operated via the OpenBCI GUI software. |
+
 
 ## Tasks
 
-### Classical Task 1: Biometric Identification (Subject Classification)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 5.0 s, overlap = 2.5 s
-- **Label Route**: `misc`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `biometric_identity` | 0-19 | Subject identifier (20 subjects, s01-s20) |
-- **Super Meta Notes**: Derived from raw event(s) by extracting subject ID from filename (e.g., s01_ex01.mat → subject 1). Kernel step: Parse subject ID from filename pattern `{subject}_ex{code}.mat` and assign numeric label 0-19.
-- **Evidence**:
-  - DOI: 10.13026/ps31-fc50 — PhysioNet dataset page describing EEG-based biometric identification with 20 subjects and resting-state/auditory stimulus recordings
-  - DOI: 10.1523/eneuro.0265.25.2025 — TriNet-MTL study training for biometric identification across 20 subjects using sliding window segmentation
-- **Kernel Notes**: Extract subject ID from filename using regex pattern. Files from subject 5 (ex05) may have missing data; verify subject count matches actual files. Use 5-second windows with 50% overlap as specified in the paper.
-
-### Classical Task 2: Stimulus Language Classification (Native vs Non-native)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 5.0 s, overlap = 2.5 s
-- **Label Route**: `misc`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `stimulus_language` | 0 | Native language song |
-  | `stimulus_language` | 1 | Non-native language song |
-- **Super Meta Notes**: Derived from raw event(s) [`auditory_native_song_in_ear`, `auditory_nonnative_song_in_ear`, `auditory_native_song_bone`, `auditory_nonnative_song_bone`]. Kernel step: Map native song events to label 0, non-native song events to label 1. Exclude neutral music events.
-- **Evidence**:
-  - DOI: 10.1523/eneuro.0265.25.2025 — TriNet-MTL study training for stimulus language classification (native vs non-native) using sliding window segmentation
-- **Kernel Notes**: Group auditory events by language type. Native songs include `auditory_native_song_in_ear` and `auditory_native_song_bone` (y=0). Non-native songs include `auditory_nonnative_song_in_ear` and `auditory_nonnative_song_bone` (y=1). Neutral music events should be excluded from this binary classification task.
-
-### Classical Task 3: Device Modality Classification (In-ear vs Bone Conduction)
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 5.0 s, overlap = 2.5 s
-- **Label Route**: `misc`
-- **Meta Level**: super
-- **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `device_modality` | 0 | In-ear headphones |
-  | `device_modality` | 1 | Bone-conduction headphones |
-- **Super Meta Notes**: Derived from raw event(s) [`auditory_native_song_in_ear`, `auditory_nonnative_song_in_ear`, `auditory_neutral_music_in_ear`, `auditory_native_song_bone`, `auditory_nonnative_song_bone`]. Kernel step: Map in-ear events to label 0, bone-conduction events to label 1.
-- **Evidence**:
-  - DOI: 10.1523/eneuro.0265.25.2025 — TriNet-MTL study training for device modality recognition (in-ear vs bone conduction) using sliding window segmentation
-- **Kernel Notes**: Classify based on headphone type. In-ear: `auditory_native_song_in_ear`, `auditory_nonnative_song_in_ear`, `auditory_neutral_music_in_ear` (y=0). Bone: `auditory_native_song_bone`, `auditory_nonnative_song_bone` (y=1). Resting-state events should be excluded from this task.
-
-### Classical Task 4: Auditory Condition Classification (6-class)
-- **Task Type**: classification
+### Classical Task 1: Resting State vs. Auditory Stimulus Classification
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 5.0 s *, overlap = 2.5 s *, target_events = [`auditory_native_song_in_ear`, `auditory_nonnative_song_in_ear`, `auditory_neutral_music_in_ear`, `auditory_native_song_bone`, `auditory_nonnative_song_bone`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`resting_eyes_open`, `resting_eyes_closed`, `resting_eyes_open_noise_isolation`, `auditory_native_song_in_ear`, `auditory_nonnative_song_in_ear`, `auditory_neutral_music_in_ear`, `auditory_native_song_bone`, `auditory_nonnative_song_bone`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `auditory_native_song_in_ear` | 0 | Native song, in-ear |
-  | `auditory_nonnative_song_in_ear` | 1 | Non-native song, in-ear |
-  | `auditory_neutral_music_in_ear` | 2 | Neutral music, in-ear |
-  | `auditory_native_song_bone` | 3 | Native song, bone-conduction |
-  | `auditory_nonnative_song_bone` | 4 | Non-native song, bone-conduction |
+  | Event ID | Value | Meaning |
+  |---|---|---|
+  | `resting_eyes_open` | 0 | Resting state eyes open |
+  | `resting_eyes_closed` | 1 | Resting state eyes closed |
+  | `resting_eyes_open_noise_isolation` | 2 | Resting eyes open with noise isolation |
+  | `auditory_native_song_in_ear` | 3 | Native song in-ear |
+  | `auditory_nonnative_song_in_ear` | 4 | Non-native song in-ear |
+  | `auditory_neutral_music_in_ear` | 5 | Neutral music in-ear |
+  | `auditory_native_song_bone` | 6 | Native song bone-conduction |
+  | `auditory_nonnative_song_bone` | 7 | Non-native song bone-conduction |
 - **Evidence**:
-  - DOI: 10.13026/ps31-fc50 — Dataset describes 6 auditory stimulus conditions (native/non-native/neutral × in-ear/bone)
-- **Kernel Notes**: Exclude `ex05` files (uncoded experiment codes). The 6-class task distinguishes both stimulus type and headphone modality. (replaces Potential Task 1 from original analysis.md)
+  - Event Structure table shows 8 distinct experimental conditions with event-level annotations spanning entire recordings
+  - Paradigm section describes multiple auditory stimulus conditions and resting-state conditions
+- **Notes**: `ex05` excluded due to uncoded raw experiment codes. Each annotation spans full recording file; long-event epoching with 30s windows captures sustained state. Primary dataset purpose is biometric identification, but condition classification is derivable from event labels.
 
-### Potential Task 1: Resting-State vs. Auditory Stimulus (epoch_by_long_event)
+### Classical Task 2: Resting State vs. Auditory Stimulus (Eyes-Open Conditions Only)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 5.0 s, overlap = 2.5 s, target_events = see Target Definition
+- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`resting_eyes_open`, `resting_eyes_open_noise_isolation`, `auditory_native_song_in_ear`, `auditory_nonnative_song_in_ear`, `auditory_neutral_music_in_ear`, `auditory_native_song_bone`, `auditory_nonnative_song_bone`]
 - **Label Route**: `event`
-- **Target Definition**: Event-to-label mapping table below.
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `resting_eyes_open` | 0 | Resting state eyes open baseline |
+  | `resting_eyes_open_noise_isolation` | 1 | Resting eyes open with noise isolation |
+  | `auditory_native_song_in_ear` | 2 | Native song in-ear |
+  | `auditory_nonnative_song_in_ear` | 3 | Non-native song in-ear |
+  | `auditory_neutral_music_in_ear` | 4 | Neutral music in-ear |
+  | `auditory_native_song_bone` | 5 | Native song bone-conduction |
+  | `auditory_nonnative_song_bone` | 6 | Non-native song bone-conduction |
+- **Evidence**:
+  - Event Structure table provides event IDs for all eyes-open conditions
+  - Paradigm notes eyes-open resting and all auditory conditions use comparable alertness state
+- **Notes**: Excludes `resting_eyes_closed` to control for eye-state confound, and excludes `ex05`. Useful for comparing auditory delivery methods while holding eye state constant.
 
-| Event | y | Meaning |
-|-------|---|---------|
-| `resting_eyes_open` | 0 | Resting state |
-| `resting_eyes_closed` | 0 | Resting state |
-| `auditory_native_song_in_ear` | 1 | Any auditory condition |
-| `auditory_nonnative_song_in_ear` | 1 | Any auditory condition |
-| `auditory_neutral_music_in_ear` | 1 | Any auditory condition |
-| `auditory_native_song_bone` | 1 | Any auditory condition |
-| `auditory_nonnative_song_bone` | 1 | Any auditory condition |
+### Potential Task 1: In-Ear vs. Bone-Conduction Headphone Comparison
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`auditory_native_song_in_ear`, `auditory_nonnative_song_in_ear`, `auditory_neutral_music_in_ear`, `auditory_native_song_bone`, `auditory_nonnative_song_bone`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `auditory_native_song_in_ear` | 0 | Native song in-ear |
+  | `auditory_nonnative_song_in_ear` | 1 | Non-native song in-ear |
+  | `auditory_neutral_music_in_ear` | 2 | Neutral music in-ear |
+  | `auditory_native_song_bone` | 3 | Native song bone-conduction |
+  | `auditory_nonnative_song_bone` | 4 | Non-native song bone-conduction |
+- **Evidence**:
+  - Paradigm explicitly contrasts in-ear vs. bone-conduction headphone delivery
+  - Event Structure contains matched stimulus types across both delivery methods
+- **Notes**: Neutral music bone-conduction condition (`ex12`) not present in event whitelist, so only 5 classes. Compares neural response to same/similar stimuli via different transduction pathways.
+
+### Classical Task 3: Binary Resting vs. Auditory Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`resting_eyes_open`, `resting_eyes_closed`, `resting_eyes_open_noise_isolation`, `auditory_native_song_in_ear`, `auditory_nonnative_song_in_ear`, `auditory_neutral_music_in_ear`, `auditory_native_song_bone`, `auditory_nonnative_song_bone`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `resting_eyes_open` | 0 | Resting (any state) |
+  | `resting_eyes_closed` | 1 | Resting (any state) |
+  | `resting_eyes_open_noise_isolation` | 2 | Resting (any state) |
+  | `auditory_native_song_in_ear` | 3 | Auditory stimulation |
+  | `auditory_nonnative_song_in_ear` | 4 | Auditory stimulation |
+  | `auditory_neutral_music_in_ear` | 5 | Auditory stimulation |
+  | `auditory_native_song_bone` | 6 | Auditory stimulation |
+  | `auditory_nonnative_song_bone` | 7 | Auditory stimulation |
+- **Evidence**:
+  - Paradigm describes two major condition classes: resting-state and auditory stimulus paradigms
+  - Event Structure provides sufficient counts for both super-classes
+- **Notes**: Collapses 8 conditions into 2 superordinate categories. Excludes `ex05`. Useful for simplest baseline task before finer-grained condition classification.
 
 ## Data Quality Notes
 
@@ -141,5 +140,5 @@ Nineteen subjects (s01-s20, one subject absent) aged 21-31 participated in a bio
 
 ## Kernel Responsibilities
 
-> **Super Meta Required**: Yes
-> **Status**: wait_kernel_update
+> **Super Meta Required**: No
+> **Status**: completed

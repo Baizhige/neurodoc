@@ -1,6 +1,6 @@
 # EEG During Mental Arithmetic Task
 
-**Dataset**: `physionet_eegmat` | **Year**: 2020 | **URL**: https://physionet.org/content/eegmat/1.0.0/
+**Dataset**: `physionet_eegmat` | **Year**: 2018 | **URL**: https://physionet.org/content/eegmat/1.0.0/
 **Category**: High-level Mental | **Subjects**: 36 | **Files (Completed)**: 72 | **Channels**: 23 | **Sampling Rate**: 500 Hz | **Manual Review**: Liu Peng
 
 ## Paradigm
@@ -16,70 +16,153 @@ Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly fema
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
-| `Background EEG;Count Quality: Bad` | 10 | event | raw | Resting-state recording, subject's arithmetic quality was Bad |
-| `Background EEG;Count Quality: Good` | 26 | event | raw | Resting-state recording, subject's arithmetic quality was Good |
-| `Mental Arithmetic Task EEG;Count Quality: Bad` | 10 | event | raw | Mental arithmetic recording, quality Bad |
-| `Mental Arithmetic Task EEG;Count Quality: Good` | 26 | event | raw | Mental arithmetic recording, quality Good |
+|---|---|---|---|---|
+| `Background EEG;Count Quality: Bad` | 12 | event | raw | Resting-state recording with poor arithmetic performance label |
+| `Background EEG;Count Quality: Good` | 24 | event | raw | Resting-state recording with good arithmetic performance label |
+| `Mental Arithmetic Task EEG;Count Quality: Bad` | 12 | event | raw | Mental arithmetic task recording with poor performance label |
+| `Mental Arithmetic Task EEG;Count Quality: Good` | 24 | event | raw | Mental arithmetic task recording with good performance label |
 
 
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
-| `device` | missing | N/A |
+| `subject_age` | complete | Age range: 16–26 years, mean age: approximately 18.33 years |
+| `subject_sex` | complete | Males (M): 8, females (F): 28, predominantly female |
+| `device` | missing | EEG was recorded using a 23-channel Neurocom monopolar system (XAI-MEDICA, Ukraine) with silver/silver chloride electrodes placed per the international 10–20 system, linked ear reference, 500 Hz sampling rate, 0.5–45 Hz bandpass filtering, 50 Hz notch filtering, and electrode impedance kept below 5 kΩ. |
+
 
 ## Tasks
 
-### Classical Task 1: Mental Arithmetic Task vs Resting State Classification
+### Classical Task 1: Mental Arithmetic vs Rest Classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 5.0 s *, overlap = 2.5 s *, target_events = [`Background EEG;Count Quality: Good`, `Background EEG;Count Quality: Bad`, `Mental Arithmetic Task EEG;Count Quality: Good`, `Mental Arithmetic Task EEG;Count Quality: Bad`]
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s, tmax = 60 s, target_events = [`Background EEG;Count Quality: Bad`, `Background EEG;Count Quality: Good`, `Mental Arithmetic Task EEG;Count Quality: Bad`, `Mental Arithmetic Task EEG;Count Quality: Good`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `Background EEG;Count Quality: Good` | 0 | Resting-state EEG |
-  | `Background EEG;Count Quality: Bad` | 0 | Resting-state EEG |
-  | `Mental Arithmetic Task EEG;Count Quality: Good` | 1 | Mental arithmetic task |
-  | `Mental Arithmetic Task EEG;Count Quality: Bad` | 1 | Mental arithmetic task |
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `Background EEG;Count Quality: Bad` | 0 | Resting-state, bad quality |
+  | `Background EEG;Count Quality: Good` | 1 | Resting-state, good quality |
+  | `Mental Arithmetic Task EEG;Count Quality: Bad` | 2 | Mental arithmetic, bad quality |
+  | `Mental Arithmetic Task EEG;Count Quality: Good` | 3 | Mental arithmetic, good quality |
 - **Evidence**:
-  - DOI: 10.13026/C2JQ1P — "The EEGMAT database contains 36 subjects with two 60-second EEG recordings each: background resting-state (_1.edf) and mental arithmetic task (_2.edf), with annotations encoding both condition type and count quality."
-- **Kernel Notes**: Parse event annotation prefix before semicolon to extract task label (Background vs Mental Arithmetic). Each recording is 60s long; sliding window epoching extracts overlapping 5s segments. (replaces Potential Task 1 from original analysis.md)
+  - Paradigm section describes two conditions: background resting-state (`_1.edf`) and mental arithmetic task (`_2.edf`)
+  - Event Structure table confirms four event types combining condition and count quality
+- **Notes**: Binary classification of cognitive state (rest vs mental arithmetic), collapsing across count quality. Long epochs (60s) assumed to capture full recording duration; adjust if actual durations differ.
 
-### Classical Task 2: Arithmetic Performance Quality Prediction
+### Classical Task 2: Mental Arithmetic Quality Classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 5.0 s *, overlap = 2.5 s *, target_events = [`Mental Arithmetic Task EEG;Count Quality: Good`, `Mental Arithmetic Task EEG;Count Quality: Bad`]
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s, tmax = 60 s, target_events = [`Mental Arithmetic Task EEG;Count Quality: Bad`, `Mental Arithmetic Task EEG;Count Quality: Good`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |---|---|---|
   | `Mental Arithmetic Task EEG;Count Quality: Bad` | 0 | Poor arithmetic performance |
   | `Mental Arithmetic Task EEG;Count Quality: Good` | 1 | Good arithmetic performance |
 - **Evidence**:
-  - DOI: 10.13026/C2JQ1P — "annotations encoding both condition type and count quality"
-  - DOI: 10.1038/s41598-026-36434-0 — "good counters show significantly increased synchronization (PC-entropy) in beta band during task vs rest, while poor counters show no significant changes"
-- **Kernel Notes**: Filter to Mental Arithmetic recordings only; parse suffix after semicolon for Count Quality label. Class imbalance expected (24 Good vs 12 Bad).
+  - Paradigm section states `Count quality` field rates arithmetic performance as Good or Bad
+  - Event Structure table shows 10 Bad and 26 Good mental arithmetic recordings
+- **Notes**: Classifies arithmetic performance quality during mental arithmetic task only. Excludes background recordings. Imbalanced classes (10 vs 26).
 
-### Classical Task 3: Mental Stress Classification During Arithmetic Task
+### Classical Task 3: Resting-State Quality Classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 5.0 s, overlap = 0.0 *, target_events = [`Mental Arithmetic Task EEG;Count Quality: Good`, `Mental Arithmetic Task EEG;Count Quality: Bad`]
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s, tmax = 60 s, target_events = [`Background EEG;Count Quality: Bad`, `Background EEG;Count Quality: Good`]
 - **Label Route**: `event`
-- **Meta Level**: super
-- **Super Meta Notes**: Derived from raw events [`Mental Arithmetic Task EEG;Count Quality: Good`, `Mental Arithmetic Task EEG;Count Quality: Bad`] by k-means clustering on log-band power features (delta, theta, alpha, beta). Kernel step: Extract log-band power features from 5s EEG segments, apply k-means (k=2), map clusters to High-stress/Low-stress labels based on posterior overlap with Count Quality. See DOI: 10.1109/wccest66994.2025.11389948
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `Mental Arithmetic Task EEG;Count Quality: Good` | 0 | Low-stress (good performers) |
-  | `Mental Arithmetic Task EEG;Count Quality: Bad` | 1 | High-stress (poor performers) |
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `Background EEG;Count Quality: Bad` | 0 | Poor arithmetic performance (rest) |
+  | `Background EEG;Count Quality: Good` | 1 | Good arithmetic performance (rest) |
 - **Evidence**:
-  - DOI: 10.1109/wccest66994.2025.11389948 — "classify mental stress levels (High-stress vs Low-stress) by segmenting EEG into 5-second epochs, applying k-means clustering on frequency band powers"
-- **Kernel Notes**: Segment Mental Arithmetic recordings into 5s non-overlapping windows; compute log-band power in delta, theta, alpha, beta bands; apply k-means clustering to derive stress labels.
+  - Paradigm section notes count quality is a behavioral label from `subject-info.csv`
+  - Event Structure table shows 10 Bad and 26 Good background recordings
+- **Notes**: Investigates whether arithmetic quality correlates with resting-state EEG patterns. Same subjects in both conditions, so quality label is subject-level. Imbalanced classes (10 vs 26).
+
+### Classical Task 4: Four-Way Condition-Quality Classification
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s, tmax = 60 s, target_events = [`Background EEG;Count Quality: Bad`, `Background EEG;Count Quality: Good`, `Mental Arithmetic Task EEG;Count Quality: Bad`, `Mental Arithmetic Task EEG;Count Quality: Good`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |---|---|---|
+  | `Background EEG;Count Quality: Bad` | 0 | Rest, bad quality |
+  | `Background EEG;Count Quality: Good` | 1 | Rest, good quality |
+  | `Mental Arithmetic Task EEG;Count Quality: Bad` | 2 | Task, bad quality |
+  | `Mental Arithmetic Task EEG;Count Quality: Good` | 3 | Task, good quality |
+- **Evidence**:
+  - Paradigm describes full 2x2 design: condition (rest/task) x quality (good/bad)
+  - Event Structure table provides all four combinations
+- **Notes**: Multi-class extension exploring interaction between cognitive state and performance quality. Very imbalanced (10/26/10/26). May require stratified sampling or class weighting.
+
+### Potential Task 1: Subject Age Regression from Mental Arithmetic
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s, tmax = 60 s, target_events = [`Mental Arithmetic Task EEG;Count Quality: Bad`, `Mental Arithmetic Task EEG;Count Quality: Good`]
+- **Label Route**: `info`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Y Mapping Notes |
+  |---|---|
+  | `subject_age` | no mapping |
+- **Evidence**:
+  - Paradigm section notes ages 16-26
+  - Info table confirms `subject_age` is complete
+- **Notes**: Predicts subject age from mental arithmetic EEG. Requires pairing event epochs with info metadata by subject ID. Age range is narrow (10 years), limiting regression difficulty.
+
+### Potential Task 2: Subject Sex Classification from Mental Arithmetic
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s, tmax = 60 s, target_events = [`Mental Arithmetic Task EEG;Count Quality: Bad`, `Mental Arithmetic Task EEG;Count Quality: Good`]
+- **Label Route**: `info`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Info Field | Y Mapping Notes |
+  |---|---|
+  | `subject_sex` | no mapping |
+- **Evidence**:
+  - Paradigm notes predominantly female subjects
+  - Info table confirms `subject_sex` is complete
+- **Notes**: Binary sex classification from mental arithmetic EEG. Predominantly female sample may cause class imbalance. Requires super meta pairing with subject info.
+
+### Potential Task 3: Continuous Quality Regression (Rest Condition)
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s, tmax = 4 s, overlap = 0.5, target_events = [`Background EEG;Count Quality: Bad`, `Background EEG;Count Quality: Good`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | Value | Meaning |
+  |---|---|---|
+  | `Background EEG;Count Quality: Bad` | 0 | Bad quality label |
+  | `Background EEG;Count Quality: Good` | 1 | Good quality label |
+- **Evidence**:
+  - Event Structure provides binary quality labels embedded in event descriptions
+  - Paradigm notes count quality is behavioral performance metric
+- **Notes**: Treats binary quality as pseudo-continuous regression target (0/1) using sliding windows. Alternative formulation of Task 3. Overlap creates more samples from limited data.
+
+### Potential Task 4: Continuous Quality Regression (Task Condition)
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s, tmax = 4 s, overlap = 0.5, target_events = [`Mental Arithmetic Task EEG;Count Quality: Bad`, `Mental Arithmetic Task EEG;Count Quality: Good`]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**:
+  | Event ID | Value | Meaning |
+  |---|---|---|
+  | `Mental Arithmetic Task EEG;Count Quality: Bad` | 0 | Bad quality label |
+  | `Mental Arithmetic Task EEG;Count Quality: Good` | 1 | Good quality label |
+- **Evidence**:
+  - Same evidence as Potential Task 3, applied to mental arithmetic condition
+  - Event Structure confirms task condition events with quality labels
+- **Notes**: Regression formulation of Task 2. Sliding window approach for more samples. Quality label is subject-level, so all windows from same subject share identical target.
 
 ## Data Quality Notes
 
@@ -90,5 +173,5 @@ Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly fema
 
 ## Kernel Responsibilities
 
-> **Super Meta Required**: Yes
-> **Status**: wait_manual_review
+> **Super Meta Required**: No
+> **Status**: completed
