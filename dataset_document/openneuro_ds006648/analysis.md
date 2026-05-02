@@ -1,7 +1,7 @@
 # Poetry Aesthetic and Creative Cognition EEG Dataset (ds006648)
 
 **Dataset**: `openneuro_ds006648` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006648
-**Category**: Poetry/Aesthetic Cognition | **Subjects**: 47 | **Files (Completed)**: 47 | **Channels**: 70 | **Sampling Rate**: 512 Hz | **Manual Review**:
+**Category**: High-level Mental| **Subjects**: 47 | **Files (Completed)**: 47 | **Channels**: 70 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 

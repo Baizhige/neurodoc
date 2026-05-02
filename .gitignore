@@ -3,6 +3,8 @@
 /.pdf_archive/
 /_archive/
 # Script/ stores per-machine runtime data and archives that should not sync via Git.
+/neuroaudit/config.json
+# neuroaudit/config.json stores local endpoint, model, key, and proxy settings.
 **/references/
 **/references/**
 

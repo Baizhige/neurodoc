@@ -1,7 +1,7 @@
 # PEARL-Neuro Database (Alzheimer's Risk Genes, Lifestyle, Neuroimaging)
 
 **Dataset**: `openneuro_ds004796` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004796
-**Category**: Clinical / Cognitive Neuroscience | **Subjects**: 192 | **Files (Completed)**: 192 | **Channels**: 64 | **Sampling Rate**: 1000 Hz | **Manual Review**:
+**Category**: High-level Mental| **Subjects**: 192 | **Files (Completed)**: 192 | **Channels**: 64 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 

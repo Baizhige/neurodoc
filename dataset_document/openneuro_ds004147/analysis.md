@@ -1,7 +1,7 @@
 # OpenNeuro ds004147: EEG during reinforcement learning with varying feedback validity
 
 **Dataset**: `openneuro_ds004147` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004147
-**Category**: reinforcement learning / value-based learning | **Subjects**: 12 | **Files (Completed)**: 12 | **Channels**: 64 | **Sampling Rate**: 500 Hz | **Manual Review**:
+**Category**: High-level Mental| **Subjects**: 12 | **Files (Completed)**: 12 | **Channels**: 64 | **Sampling Rate**: 500 Hz | **Manual Review**:
 
 ## Paradigm
 
