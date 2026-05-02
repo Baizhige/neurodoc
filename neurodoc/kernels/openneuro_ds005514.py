@@ -1,14 +1,20 @@
-"""HBN EEG (OpenNeuro ds005514) stage1 kernel for EEGUnity.
+"""OpenNeuro ds005514 (HBN EEG Release 9) kernel for EEGUnity.
 
-Healthy Brain Network (HBN) EEG Release 9 - large-scale multi-task developmental
-battery with resting-state, contrast detection, sequence learning, and other paradigms.
-129-channel EEG at 500 Hz.
+The HBN-EEG release is a multi-task developmental EEG battery. This kernel keeps
+native BIDS event names unchanged, exposes participant-level phenotype fields in
+``eegunity_description`` (including ``p_factor``), and adds two narrowly scoped
+derived labels for the contrast-change detection task:
 
-Source: https://openneuro.org/datasets/ds005514
-Reference: Alexander et al. (2022) NeuroImage 119348; 
-           DOI: 10.1016/j.neuroimage.2022.119348
-           Alexander et al. (2017) Scientific Data 4:170181;
-           DOI: 10.1038/sdata.2017.181
+* ``response_time`` misc channel: target-to-first-valid-button latency in
+  seconds, filled only from target onset to the matched response.
+* ``contrast_response_correct`` / ``contrast_response_incorrect`` annotations:
+  response-locked events derived from target side and response feedback.
+
+The original EEGLAB files already contain annotations, but the BIDS
+``events.tsv`` files are the authoritative source here because they include the
+behavioral columns imported by the HBN-EEG release. To avoid double-counting
+events during scans, this kernel replaces embedded annotations with sidecar
+events whenever the matching ``events.tsv`` file is available.
 """
 
 from __future__ import annotations
@@ -16,631 +22,560 @@ from __future__ import annotations
 import json
 import os
 import re
-from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from pathlib import Path
+from typing import Dict, Iterable, Optional, Tuple
 
 import mne
 import numpy as np
 import pandas as pd
 
 
-# ---------------------------------------------------------------------------
-# Constants / Look-up tables
-# ---------------------------------------------------------------------------
+DATASET_ID = "openneuro_ds005514"
+KERNEL_ID = DATASET_ID
 
-# HBN uses BrainAmp MR plus amplifiers with 128 EEG + 1 reference channel.
-# Source: HBN data dictionary / Alexander et al. (2017) Scientific Data
-# Annotator: Human, based on official HBN documentation
-AMPLIFIER = "BrainAmp MR plus"
-CAP = "Ag/AgCl"
+_CONTRAST_TASK = "contrastChangeDetection"
+_TARGET_TO_CORRECT_PRESS = {
+    "left_target": "left_buttonPress",
+    "right_target": "right_buttonPress",
+}
+_PRESS_LABELS = set(_TARGET_TO_CORRECT_PRESS.values())
+_DERIVED_CORRECT_EVENT = "contrast_response_correct"
+_DERIVED_INCORRECT_EVENT = "contrast_response_incorrect"
+_RESPONSE_TIME_CHANNEL = "response_time"
+_MAX_CONTRAST_RESPONSE_SEC = 2.5
 
-# Standard 10-20 129-channel layout used by HBN.
-# The raw files use "EEG Fp1" style names; we normalize to "Fp1" for MNE.
-# Source: HBN electrode layout documentation; 10-20 system extended to 129 ch
-# Annotator: Human, based on official HBN cap documentation, 2026-04-08
-_HBN_129_CHANNEL_MAP = {
-    "Fp1": "EEG Fp1",
-    "AFp1": "EEG AFp1",
-    "AFp2": "EEG AFp2",
-    "Fpz": "EEG Fpz",
-    "AF7": "EEG AF7",
-    "AF3": "EEG AF3",
-    "AF4": "EEG AF4",
-    "AF8": "EEG AF8",
-    "Fz": "EEG Fz",
-    "F1": "EEG F1",
-    "F2": "EEG F2",
-    "F3": "EEG F3",
-    "F4": "EEG F4",
-    "F5": "EEG F5",
-    "F6": "EEG F6",
-    "F7": "EEG F7",
-    "F8": "EEG F8",
-    "FT9": "EEG FT9",
-    "FT7": "EEG FT7",
-    "FC5": "EEG FC5",
-    "FC3": "EEG FC3",
-    "FC1": "EEG FC1",
-    "FCz": "EEG FCz",
-    "FC2": "EEG FC2",
-    "FC4": "EEG FC4",
-    "FC6": "EEG FC6",
-    "FT8": "EEG FT8",
-    "FT10": "EEG FT10",
-    "T7": "EEG T7",
-    "C5": "EEG C5",
-    "C3": "EEG C3",
-    "C1": "EEG C1",
-    "Cz": "EEG Cz",
-    "C2": "EEG C2",
-    "C4": "EEG C4",
-    "C6": "EEG C6",
-    "T8": "EEG T8",
-    "TP9": "EEG TP9",
-    "TP7": "EEG TP7",
-    "CP5": "EEG CP5",
-    "CP3": "EEG CP3",
-    "CP1": "EEG CP1",
-    "CPz": "EEG CPz",
-    "CP2": "EEG CP2",
-    "CP4": "EEG CP4",
-    "CP6": "EEG CP6",
-    "TP8": "EEG TP8",
-    "TP10": "EEG TP10",
-    "P9": "EEG P9",
-    "P7": "EEG P7",
-    "P5": "EEG P5",
-    "P3": "EEG P3",
-    "P1": "EEG P1",
-    "Pz": "EEG Pz",
-    "P2": "EEG P2",
-    "P4": "EEG P4",
-    "P6": "EEG P6",
-    "P8": "EEG P8",
-    "P10": "EEG P10",
-    "PO7": "EEG PO7",
-    "PO3": "EEG PO3",
-    "POz": "EEG POz",
-    "PO4": "EEG PO4",
-    "PO8": "EEG PO8",
-    "O1": "EEG O1",
-    "O2": "EEG O2",
-    "Oz": "EEG Oz",
-    "Iz": "EEG Iz",
-    "F9": "EEG F9",
-    "F10": "EEG F10",
-    "T9": "EEG T9",
-    "T10": "EEG T10",
-    "A1": "EEG A1",
-    "A2": "EEG A2",
-    "M1": "EEG M1",
-    "M2": "EEG M2",
-    "Cbl1": "EEG Cbl1",
-    "Cbl2": "EEG Cbl2",
-    "Cbl3": "EEG Cbl3",
-    "Cbl4": "EEG Cbl4",
-    "Cbl5": "EEG Cbl5",
-    "Cbl6": "EEG Cbl6",
-    "Cbl7": "EEG Cbl7",
-    "Cbl8": "EEG Cbl8",
-    "Cbl9": "EEG Cbl9",
-    "Cbl10": "EEG Cbl10",
-    "Cbl11": "EEG Cbl11",
-    "Cbl12": "EEG Cbl12",
-    "Cbl13": "EEG Cbl13",
-    "Cbl14": "EEG Cbl14",
-    "Cbl15": "EEG Cbl15",
-    "Cbl16": "EEG Cbl16",
-    "Cbl17": "EEG Cbl17",
-    "Cbl18": "EEG Cbl18",
-    "Cbl19": "EEG Cbl19",
-    "Cbl20": "EEG Cbl20",
-    "Cbl21": "EEG Cbl21",
-    "Cbl22": "EEG Cbl22",
-    "Cbl23": "EEG Cbl23",
-    "Cbl24": "EEG Cbl24",
-    "Cbl25": "EEG Cbl25",
-    "Cbl26": "EEG Cbl26",
-    "Cbl27": "EEG Cbl27",
-    "Cbl28": "EEG Cbl28",
-    "Cbl29": "EEG Cbl29",
-    "Cbl30": "EEG Cbl30",
-    "Cbl31": "EEG Cbl31",
-    "Cbl32": "EEG Cbl32",
-    "Cbl33": "EEG Cbl33",
-    "Cbl34": "EEG Cbl34",
-    "Cbl35": "EEG Cbl35",
-    "Cbl36": "EEG Cbl36",
-    "Cbl37": "EEG Cbl37",
-    "Cbl38": "EEG Cbl38",
-    "Cbl39": "EEG Cbl39",
-    "Cbl40": "EEG Cbl40",
-    "Cbl41": "EEG Cbl41",
-    "Cbl42": "EEG Cbl42",
-    "Cbl43": "EEG Cbl43",
-    "Cbl44": "EEG Cbl44",
-    "Cbl45": "EEG Cbl45",
-    "Cbl46": "EEG Cbl46",
-    "Cbl47": "EEG Cbl47",
-    "Cbl48": "EEG Cbl48",
-    "Cbl49": "EEG Cbl49",
-    "Cbl50": "EEG Cbl50",
-    "Cbl51": "EEG Cbl51",
-    "Cbl52": "EEG Cbl52",
-    "Cbl53": "EEG Cbl53",
-    "Cbl54": "EEG Cbl54",
-    "Cbl55": "EEG Cbl55",
-    "Cbl56": "EEG Cbl56",
-    "Cbl57": "EEG Cbl57",
-    "Cbl58": "EEG Cbl58",
-    "Cbl59": "EEG Cbl59",
-    "Cbl60": "EEG Cbl60",
-    "Cbl61": "EEG Cbl61",
-    "Cbl62": "EEG Cbl62",
-    "Cbl63": "EEG Cbl63",
-    "Cbl64": "EEG Cbl64",
-    "Cbl65": "EEG Cbl65",
-    "Cbl66": "EEG Cbl66",
-    "Cbl67": "EEG Cbl67",
-    "Cbl68": "EEG Cbl68",
-    "Cbl69": "EEG Cbl69",
-    "Cbl70": "EEG Cbl70",
-    "Cbl71": "EEG Cbl71",
-    "Cbl72": "EEG Cbl72",
-    "Cbl73": "EEG Cbl73",
-    "Cbl74": "EEG Cbl74",
-    "Cbl75": "EEG Cbl75",
-    "Cbl76": "EEG Cbl76",
-    "Cbl77": "EEG Cbl77",
-    "Cbl78": "EEG Cbl78",
-    "Cbl79": "EEG Cbl79",
-    "Cbl80": "EEG Cbl80",
-    "Cbl81": "EEG Cbl81",
-    "Cbl82": "EEG Cbl82",
-    "Cbl83": "EEG Cbl83",
-    "Cbl84": "EEG Cbl84",
-    "Cbl85": "EEG Cbl85",
-    "Cbl86": "EEG Cbl86",
-    "Cbl87": "EEG Cbl87",
-    "Cbl88": "EEG Cbl88",
-    "Cbl89": "EEG Cbl89",
-    "Cbl90": "EEG Cbl90",
-    "Cbl91": "EEG Cbl91",
-    "Cbl92": "EEG Cbl92",
-    "Cbl93": "EEG Cbl93",
-    "Cbl94": "EEG Cbl94",
-    "Cbl95": "EEG Cbl95",
-    "Cbl96": "EEG Cbl96",
-    "Cbl97": "EEG Cbl97",
-    "Cbl98": "EEG Cbl98",
-    "Cbl99": "EEG Cbl99",
-    "Cbl100": "EEG Cbl100",
-    "Cbl101": "EEG Cbl101",
-    "Cbl102": "EEG Cbl102",
-    "Cbl103": "EEG Cbl103",
-    "Cbl104": "EEG Cbl104",
-    "Cbl105": "EEG Cbl105",
-    "Cbl106": "EEG Cbl106",
-    "Cbl107": "EEG Cbl107",
-    "Cbl108": "EEG Cbl108",
-    "Cbl109": "EEG Cbl109",
-    "Cbl110": "EEG Cbl110",
-    "Cbl111": "EEG Cbl111",
-    "Cbl112": "EEG Cbl112",
-    "Cbl113": "EEG Cbl113",
-    "Cbl114": "EEG Cbl114",
-    "Cbl115": "EEG Cbl115",
-    "Cbl116": "EEG Cbl116",
-    "Cbl117": "EEG Cbl117",
-    "Cbl118": "EEG Cbl118",
-    "Cbl119": "EEG Cbl119",
-    "Cbl120": "EEG Cbl120",
-    "Cbl121": "EEG Cbl121",
-    "Cbl122": "EEG Cbl122",
-    "Cbl123": "EEG Cbl123",
-    "Cbl124": "EEG Cbl124",
-    "Cbl125": "EEG Cbl125",
-    "Cbl126": "EEG Cbl126",
-    "Cbl127": "EEG Cbl127",
-    "Cbl128": "EEG Cbl128",
+_PARTICIPANT_FIELDS = (
+    "release_number",
+    "sex",
+    "age",
+    "ehq_total",
+    "commercial_use",
+    "full_pheno",
+    "p_factor",
+    "attention",
+    "internalizing",
+    "externalizing",
+    "RestingState",
+    "DespicableMe",
+    "FunwithFractals",
+    "ThePresent",
+    "DiaryOfAWimpyKid",
+    "contrastChangeDetection_1",
+    "contrastChangeDetection_2",
+    "contrastChangeDetection_3",
+    "surroundSupp_1",
+    "surroundSupp_2",
+    "seqLearning6target",
+    "seqLearning8target",
+    "symbolSearch",
+)
+
+_CHANNEL_TYPE_MAP = {
+    "EEG": "eeg",
+    "EOG": "eog",
+    "ECG": "ecg",
+    "EMG": "emg",
+    "MISC": "misc",
+    "OTHER": "misc",
+    "TRIG": "stim",
+    "TRIGGER": "stim",
+    "STIM": "stim",
 }
 
-# Build reverse map: from raw name to standard name
-_RAW_TO_STANDARD = {v: k for k, v in _HBN_129_CHANNEL_MAP.items()}
+_DERIVED_EVENT_HINTS = {
+    _DERIVED_CORRECT_EVENT: {
+        "type": "event",
+        "meta_level": "super",
+        "meaning": "Button response was correct for the preceding contrast target",
+    },
+    _DERIVED_INCORRECT_EVENT: {
+        "type": "event",
+        "meta_level": "super",
+        "meaning": "Button response was incorrect for the preceding contrast target",
+    },
+}
 
-# Required info fields from participants.tsv
-_REQUIRED_INFO_FIELDS = [
-    "age", "attention", "ehq_total", "externalizing", 
-    "full_pheno", "internalizing", "p_factor", "sex"
-]
-
-# Required native misc channels (none for HBN - all events in annotations/events.tsv)
-_REQUIRED_NATIVE_MISC: List[str] = []
-
-# Required derived misc channels (none required by task synthesizer)
-_REQUIRED_DERIVED_MISC: List[str] = []
-
-
-# ---------------------------------------------------------------------------
-# Helper functions
-# ---------------------------------------------------------------------------
-
-def _get_subject_id_from_path(file_path: str) -> Optional[str]:
-    """Extract BIDS subject ID from file path."""
-    match = re.search(r'sub-([A-Za-z0-9]+)', file_path)
-    if match:
-        return match.group(0)  # e.g., "sub-NDARAC589YMB"
-    return None
+_DERIVED_MISC_HINTS = {
+    _RESPONSE_TIME_CHANNEL: {
+        "source": "derived (kernel)",
+        "meta_level": "super",
+        "notes": (
+            "Latency in seconds from left_target/right_target onset to the first "
+            "valid left_buttonPress/right_buttonPress in the same contrast trial"
+        ),
+    }
+}
 
 
-def _find_events_tsv(file_path: str) -> Optional[str]:
-    """Find the corresponding events.tsv file for a given EEG file."""
-    # BIDS pattern: sub-XXX_task-YYY[_run-ZZ]_eeg.<ext> -> sub-XXX_task-YYY[_run-ZZ]_events.tsv
-    base = file_path
-    
-    # Remove extension
-    for ext in ['.set', '.edf', '.bdf', '.eeg', '.vhdr', '.vmrk', '.fif']:
-        if base.endswith(ext):
-            base = base[:-len(ext)]
-            break
-    
-    # Check for _eeg suffix and replace with _events
-    if base.endswith('_eeg'):
-        events_path = base[:-4] + '_events.tsv'
-    else:
-        events_path = base + '_events.tsv'
-    
-    if os.path.exists(events_path):
-        return events_path
-    
-    # Try alternative: some files may have different naming
-    # Look in same directory for matching events.tsv
-    dir_path = os.path.dirname(file_path)
-    file_name = os.path.basename(file_path)
-    
-    # Extract sub and task from filename
-    sub_match = re.search(r'(sub-[A-Za-z0-9]+)', file_name)
-    task_match = re.search(r'(task-[a-zA-Z0-9]+)', file_name)
-    
-    if sub_match and task_match:
-        pattern = re.compile(
-            rf'{re.escape(sub_match.group(1))}_.*{re.escape(task_match.group(1))}.*_events\.tsv$'
-        )
-        for f in os.listdir(dir_path):
-            if pattern.match(f):
-                return os.path.join(dir_path, f)
-    
-    return None
+def _row_get(row, *keys: str) -> str:
+    if isinstance(row, (str, os.PathLike)):
+        return os.fspath(row)
+
+    for key in keys:
+        value = None
+        try:
+            value = row.get(key)
+        except AttributeError:
+            try:
+                value = row[key]
+            except Exception:
+                value = None
+        if value not in (None, ""):
+            return str(value)
+    return ""
 
 
-def _find_participants_tsv(file_path: str) -> Optional[str]:
-    """Find participants.tsv by walking up from file path."""
-    current_dir = os.path.dirname(file_path)
-    while current_dir and current_dir != os.path.dirname(current_dir):
-        participants_path = os.path.join(current_dir, 'participants.tsv')
-        if os.path.exists(participants_path):
-            return participants_path
-        current_dir = os.path.dirname(current_dir)
-    return None
+def _get_file_path(row) -> str:
+    return _row_get(row, "File Path", "file_path", "filepath", "path")
 
 
-def _read_participants_info(file_path: str) -> Dict[str, str]:
-    """Read subject info from participants.tsv."""
-    info = {}
-    participants_tsv = _find_participants_tsv(file_path)
-    
-    if participants_tsv is None:
-        return info
-    
+def _find_dataset_root(file_path: str) -> Optional[Path]:
+    current = Path(file_path).resolve().parent
+    while True:
+        if (current / "dataset_description.json").is_file():
+            return current
+        if current.parent == current:
+            return None
+        current = current.parent
+
+
+def _extract_subject_id(file_path: str) -> str:
+    match = re.search(r"(sub-[A-Za-z0-9]+)", file_path)
+    return match.group(1) if match else ""
+
+
+def _extract_entity(file_path: str, entity: str) -> str:
+    match = re.search(rf"(?:^|_){entity}-([^_./]+)", Path(file_path).name)
+    return match.group(1) if match else ""
+
+
+def _raw_prefix(file_path: str) -> str:
+    name = Path(file_path).name
+    for suffix in (
+        "_eeg.set",
+        "_eeg.fdt",
+        "_eeg.bdf",
+        "_eeg.edf",
+        "_eeg.vhdr",
+        "_eeg.eeg",
+        "_eeg.fif",
+    ):
+        if name.endswith(suffix):
+            return name[: -len(suffix)]
+    return Path(file_path).stem
+
+
+def _sidecar_path(file_path: str, suffix: str) -> Optional[Path]:
+    path = Path(file_path)
+    candidate = path.with_name(_raw_prefix(file_path) + suffix)
+    return candidate if candidate.is_file() else None
+
+
+def _events_tsv_path(file_path: str) -> Optional[Path]:
+    return _sidecar_path(file_path, "_events.tsv")
+
+
+def _channels_tsv_path(file_path: str) -> Optional[Path]:
+    return _sidecar_path(file_path, "_channels.tsv")
+
+
+def _file_eeg_json_path(file_path: str) -> Optional[Path]:
+    return _sidecar_path(file_path, "_eeg.json")
+
+
+def _task_eeg_json_path(root: Optional[Path], task: str) -> Optional[Path]:
+    if not root or not task:
+        return None
+    candidate = root / f"task-{task}_eeg.json"
+    return candidate if candidate.is_file() else None
+
+
+def _read_json(path: Optional[Path]) -> Dict[str, object]:
+    if not path:
+        return {}
     try:
-        df = pd.read_csv(participants_tsv, sep='\t')
+        with path.open("r", encoding="utf-8") as stream:
+            data = json.load(stream)
     except Exception:
-        return info
-    
-    subject_id = _get_subject_id_from_path(file_path)
-    if subject_id is None:
-        return info
-    
-    # Match subject_id - participants.tsv uses "sub-XXX" format
-    row = df[df['participant_id'] == subject_id]
-    if row.empty:
-        # Try without "sub-" prefix
-        short_id = subject_id.replace('sub-', '')
-        row = df[df['participant_id'] == short_id]
-    if row.empty:
-        # Try matching partial
-        for _, r in df.iterrows():
-            if subject_id in str(r.get('participant_id', '')):
-                row = pd.DataFrame([r])
-                break
-    
-    if row.empty:
-        return info
-    
-    row = row.iloc[0]
-    
-    for field in _REQUIRED_INFO_FIELDS:
-        val = row.get(field)
-        if pd.isna(val) or val is None:
-            info[field] = "unknown"
-        else:
-            info[field] = str(val)
-    
-    return info
+        return {}
+    return data if isinstance(data, dict) else {}
 
 
-def _normalize_sex(sex_val: str) -> str:
-    """Normalize sex to lowercase standard."""
-    sex_lower = str(sex_val).lower().strip()
-    if sex_lower in ('m', 'male', '1'):
-        return 'male'
-    elif sex_lower in ('f', 'female', '2'):
-        return 'female'
-    else:
-        return 'unknown'
-
-
-def _read_events_tsv(events_path: str) -> Optional[pd.DataFrame]:
-    """Read events.tsv file."""
+def _read_tsv(path: Optional[Path]) -> Optional[pd.DataFrame]:
+    if not path:
+        return None
     try:
-        df = pd.read_csv(events_path, sep='\t')
-        return df
+        return pd.read_csv(path, sep="\t", dtype=str, keep_default_na=False)
     except Exception:
         return None
 
 
-def _events_to_annotations(events_df: pd.DataFrame, sfreq: float) -> mne.Annotations:
-    """Convert BIDS events.tsv to MNE Annotations."""
-    if events_df is None or events_df.empty:
-        return mne.Annotations(onset=[], duration=[], description=[])
-    
-    # Required BIDS columns
-    onsets = events_df['onset'].values if 'onset' in events_df.columns else []
-    durations = events_df['duration'].values if 'duration' in events_df.columns else []
-    
-    # Description priority: trial_type > value > stim_type
-    if 'trial_type' in events_df.columns:
-        descriptions = events_df['trial_type'].astype(str).values
-    elif 'value' in events_df.columns:
-        descriptions = events_df['value'].astype(str).values
-    elif 'stim_type' in events_df.columns:
-        descriptions = events_df['stim_type'].astype(str).values
-    else:
-        descriptions = ['event'] * len(onsets)
-    
-    # Handle NaN durations
-    durations = np.array([d if pd.notna(d) else 0.0 for d in durations])
-    onsets = np.array([o if pd.notna(o) else 0.0 for o in onsets])
-    
-    # Filter out invalid rows
-    valid_mask = np.array([pd.notna(o) for o in events_df['onset']]) if 'onset' in events_df.columns else np.ones(len(onsets), dtype=bool)
-    
-    onsets = onsets[valid_mask]
-    durations = durations[valid_mask]
-    descriptions = descriptions[valid_mask]
-    
-    if len(onsets) == 0:
-        return mne.Annotations(onset=[], duration=[], description=[])
-    
-    # Ensure non-negative durations
-    durations = np.maximum(durations, 0.0)
-    
-    return mne.Annotations(
-        onset=onsets,
-        duration=durations,
-        description=descriptions.tolist() if hasattr(descriptions, 'tolist') else list(descriptions)
+def _missing(value: object) -> bool:
+    if value is None:
+        return True
+    text = str(value).strip()
+    return text == "" or text.lower() in {"nan", "none", "n/a", "na", "null"}
+
+
+def _clean_value(value: object) -> str:
+    return "" if _missing(value) else str(value).strip()
+
+
+def _read_participant_info(root: Optional[Path], subject_id: str) -> Dict[str, str]:
+    if not root or not subject_id:
+        return {}
+
+    participants_path = root / "participants.tsv"
+    participants = _read_tsv(participants_path)
+    if participants is None or "participant_id" not in participants.columns:
+        return {}
+
+    subject_short = subject_id.replace("sub-", "")
+    mask = (participants["participant_id"] == subject_id) | (
+        participants["participant_id"] == subject_short
     )
+    if not mask.any():
+        return {}
+
+    row = participants.loc[mask].iloc[0]
+    return {str(key): _clean_value(row.get(key)) for key in participants.columns}
 
 
-def _detect_paradigm(file_path: str) -> Optional[str]:
-    """Detect paradigm from BIDS filename."""
-    file_name = os.path.basename(file_path).lower()
-    
-    paradigm_map = {
-        'contrastchangedetection': 'contrastChangeDetection',
-        'contrastchange': 'contrastChangeDetection',
-        'restingstate': 'restingState',
-        'resting': 'restingState',
-        'sequencelearning': 'sequenceLearning',
-        'seqlearning': 'sequenceLearning',
-        'surroundsuppression': 'surroundSuppression',
-        'symbolsearch': 'symbolSearch',
-        'movie': 'movieWatching',
-        'videowatching': 'movieWatching',
+def _merged_eeg_json(root: Optional[Path], task: str, file_path: str) -> Dict[str, object]:
+    data: Dict[str, object] = {}
+    data.update(_read_json(_task_eeg_json_path(root, task)))
+    data.update(_read_json(_file_eeg_json_path(file_path)))
+    return data
+
+
+def _device_label(eeg_json: Dict[str, object]) -> str:
+    manufacturer = _clean_value(eeg_json.get("Manufacturer"))
+    model = _clean_value(eeg_json.get("ManufacturersModelName"))
+    if manufacturer and model:
+        return f"{manufacturer} {model}"
+    return manufacturer or model
+
+
+def _build_description(
+    file_path: str,
+    root: Optional[Path],
+    subject_info: Dict[str, str],
+    eeg_json: Dict[str, object],
+) -> Dict[str, str]:
+    task = _extract_entity(file_path, "task")
+    run = _extract_entity(file_path, "run")
+    subject_id = _extract_subject_id(file_path)
+
+    description: Dict[str, str] = {
+        "dataset": DATASET_ID,
+        "dataset_root": str(root) if root else "",
+        "subject_id": subject_id,
+        "task": task,
+        "run": run,
+        "age": subject_info.get("age", ""),
+        "sex": subject_info.get("sex", ""),
+        "device": _device_label(eeg_json),
+        "manufacturer": _clean_value(eeg_json.get("Manufacturer")),
+        "manufacturers_model_name": _clean_value(eeg_json.get("ManufacturersModelName")),
+        "eeg_reference": _clean_value(eeg_json.get("EEGReference")),
+        "recording_type": _clean_value(eeg_json.get("RecordingType")),
+        "sampling_frequency": _clean_value(eeg_json.get("SamplingFrequency")),
+        "power_line_frequency": _clean_value(eeg_json.get("PowerLineFrequency")),
     }
-    
-    for key, paradigm in paradigm_map.items():
-        if key in file_name:
-            return paradigm
-    
-    # Extract task-XXX from filename
-    task_match = re.search(r'task-([a-zA-Z0-9]+)', file_name)
-    if task_match:
-        return task_match.group(1)
-    
-    return None
+
+    for field in _PARTICIPANT_FIELDS:
+        if field in subject_info:
+            description[field] = subject_info[field]
+
+    return description
 
 
-# ---------------------------------------------------------------------------
-# Kernel class
-# ---------------------------------------------------------------------------
+def _set_channel_types_from_sidecar(raw: mne.io.BaseRaw, file_path: str) -> None:
+    channels = _read_tsv(_channels_tsv_path(file_path))
+    if channels is None or "name" not in channels.columns or "type" not in channels.columns:
+        return
 
-@dataclass
-class HBNKernel:
-    """Stage1 kernel for HBN EEG (OpenNeuro ds005514)."""
+    raw_names = set(raw.ch_names)
+    mapping: Dict[str, str] = {}
+    for _, row in channels.iterrows():
+        name = _clean_value(row.get("name"))
+        kind = _clean_value(row.get("type")).upper()
+        mapped = _CHANNEL_TYPE_MAP.get(kind)
+        if name in raw_names and mapped:
+            mapping[name] = mapped
 
-    KERNEL_ID: str = "hbn-stage1"
+    if not mapping:
+        return
 
-    def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
-        file_path = row["File Path"]
+    try:
+        raw.set_channel_types(mapping, on_unit_change="ignore")
+    except TypeError:
+        raw.set_channel_types(mapping)
 
-        # --- 1. Channel renaming (before set_montage) ---
-        rename_map = {}
-        for raw_name in raw.ch_names:
-            if raw_name in _RAW_TO_STANDARD:
-                standard_name = _RAW_TO_STANDARD[raw_name]
-                if raw_name != standard_name:
-                    rename_map[raw_name] = standard_name
-        
-        if rename_map:
-            raw.rename_channels(rename_map)
 
-        # Ensure any remaining "EEG XXX" style names are also mapped
-        remaining_renames = {}
-        for ch_name in raw.ch_names:
-            if ch_name in _RAW_TO_STANDARD and ch_name != _RAW_TO_STANDARD[ch_name]:
-                remaining_renames[ch_name] = _RAW_TO_STANDARD[ch_name]
-            # Handle case where channel might be named differently (e.g., without "EEG " prefix)
-            alt_name = "EEG " + ch_name
-            if ch_name not in _RAW_TO_STANDARD and alt_name in _RAW_TO_STANDARD:
-                # Already in standard form, keep as is
-                pass
-        
-        if remaining_renames:
-            raw.rename_channels(remaining_renames)
-
-        # Set channel types for known non-EEG channels
-        # HBN has EOG channels potentially; check for standard names
-        ch_types = {}
-        for ch_name in raw.ch_names:
-            upper = ch_name.upper()
-            if any(x in upper for x in ['EOG', 'EYE']):
-                ch_types[ch_name] = 'eog'
-            elif any(x in upper for x in ['ECG', 'EKG']):
-                ch_types[ch_name] = 'ecg'
-            elif ch_name.startswith('EMG'):
-                ch_types[ch_name] = 'emg'
-        
-        if ch_types:
-            raw.set_channel_types(ch_types)
-
-        # --- 2. Set montage ---
-        # Use standard_1020 which covers the 129-channel layout
+def _set_hbn_montage(raw: mne.io.BaseRaw) -> None:
+    # The per-file channels.tsv files name E1-E128 plus Cz, and task EEG JSON
+    # files identify the EGI 128-channel GSN system, so no channel renaming is
+    # needed before applying MNE's matching GSN montage.
+    try:
+        montage = mne.channels.make_standard_montage("GSN-HydroCel-129")
+        raw.set_montage(montage, match_case=False, match_alias=True, on_missing="ignore")
+    except TypeError:
         try:
-            montage = mne.channels.make_standard_montage('standard_1020')
-            # Pick only channels that exist in both raw and montage
-            montage_chs = set(montage.ch_names)
-            raw_chs = set(raw.ch_names)
-            common_chs = list(raw_chs & montage_chs)
-            if common_chs:
-                raw.set_montage(montage, on_missing='ignore')
+            montage = mne.channels.make_standard_montage("GSN-HydroCel-129")
+            raw.set_montage(montage, match_case=False, on_missing="ignore")
         except Exception:
-            # Montage setting failed, continue without
-            pass
+            return
+    except Exception:
+        return
 
-        # --- 3. Handle native misc channels ---
-        for misc_name in _REQUIRED_NATIVE_MISC:
-            if misc_name in raw.ch_names:
-                current_type = raw.get_channel_types(picks=[misc_name])[0]
-                if current_type != 'misc':
-                    raw.set_channel_types({misc_name: 'misc'})
 
-        # --- 4. Handle derived misc channels ---
-        for derived_name in _REQUIRED_DERIVED_MISC:
-            if derived_name in raw.ch_names:
-                continue  # Already exists
-            
-            # Create derived misc channel with zeros
-            data = np.zeros((1, len(raw.times)))
-            info = mne.create_info([derived_name], raw.info['sfreq'], ['misc'])
-            misc_raw = mne.io.RawArray(data, info)
-            raw.add_channels([misc_raw], force_update_info=True)
+def _normalize_label(value: object) -> str:
+    return _clean_value(value)
 
-        # --- 5. Events from events.tsv ---
-        # HBN .set files may have events, but we ensure events.tsv is also loaded
-        # to guarantee all events are present (per KERNEL_RULEBOOK)
-        events_tsv_path = _find_events_tsv(file_path)
-        
-        if events_tsv_path:
-            events_df = _read_events_tsv(events_tsv_path)
-            if events_df is not None and not events_df.empty:
-                # Check if raw already has meaningful annotations
-                existing_annotations = raw.annotations
-                has_meaningful_annotations = (
-                    existing_annotations is not None and 
-                    len(existing_annotations) > 0 and
-                    not all(desc in ('9999', 'boundary', '') for desc in existing_annotations.description)
-                )
-                
-                # Always add events.tsv annotations to ensure completeness
-                # For EEGLAB .set files, events may already be in the file
-                # We merge to ensure all events are present
-                tsv_annotations = _events_to_annotations(events_df, raw.info['sfreq'])
-                
-                if len(tsv_annotations) > 0:
-                    if has_meaningful_annotations:
-                        # Merge annotations
-                        all_onsets = list(existing_annotations.onset) + list(tsv_annotations.onset)
-                        all_durations = list(existing_annotations.duration) + list(tsv_annotations.duration)
-                        all_descriptions = list(existing_annotations.description) + list(tsv_annotations.description)
-                        
-                        # Sort by onset
-                        sorted_indices = np.argsort(all_onsets)
-                        merged = mne.Annotations(
-                            onset=[all_onsets[i] for i in sorted_indices],
-                            duration=[all_durations[i] for i in sorted_indices],
-                            description=[all_descriptions[i] for i in sorted_indices]
-                        )
-                        raw.set_annotations(merged)
-                    else:
-                        # Replace empty/boundary-only annotations
-                        raw.set_annotations(tsv_annotations)
 
-        # --- 6. Build eegunity_description ---
-        # Read participants.tsv info
-        participant_info = _read_participants_info(file_path)
-        
-        # Extract canonical fields
-        age = participant_info.get('age', 'unknown')
-        sex = _normalize_sex(participant_info.get('sex', 'unknown'))
-        
-        # Handedness: try to infer from ehq_total if available
-        handedness = 'unknown'
-        ehq_total = participant_info.get('ehq_total', 'unknown')
-        if ehq_total != 'unknown':
-            try:
-                ehq_val = float(ehq_total)
-                if ehq_val > 0:
-                    handedness = 'right'
-                elif ehq_val < 0:
-                    handedness = 'left'
-                else:
-                    handedness = 'unknown'
-            except (ValueError, TypeError):
-                handedness = 'unknown'
-        # inferred by LLM, needs human review: ehq_total > 0 suggests right-handed, < 0 left-handed
-        # based on Edinburgh Handedness Inventory scoring convention
-        
-        # Build extra info dict (all required info fields as strings)
-        extra_info = {}
-        for field in _REQUIRED_INFO_FIELDS:
-            if field in ('age', 'sex'):
-                continue  # Already handled as canonical fields
-            val = participant_info.get(field, 'unknown')
-            extra_info[field] = str(val) if val != 'nan' and val != 'None' else 'unknown'
+def _numeric_series(values: Iterable[object], default: float = 0.0) -> pd.Series:
+    return pd.to_numeric(pd.Series(list(values)), errors="coerce").fillna(default)
 
-        eegunity_description = {
-            "age": str(age) if age != 'nan' and age != 'None' else 'unknown',
-            "sex": sex,
-            "amplifier": AMPLIFIER,
-            "cap": CAP,
-            "handedness": handedness,
-        }
-        eegunity_description.update(extra_info)
 
-        original_desc = raw.info.get('description', '') or ''
-        if isinstance(original_desc, dict):
-            original_desc = json.dumps(original_desc)
-        elif not isinstance(original_desc, str):
-            original_desc = str(original_desc)
+def _prepare_events(events: Optional[pd.DataFrame]) -> Optional[pd.DataFrame]:
+    if events is None or events.empty or "onset" not in events.columns:
+        return None
 
-        description_dict = {
-            "original_description": original_desc,
-            "eegunity_description": eegunity_description,
-        }
-        raw.info["description"] = json.dumps(description_dict)
+    df = events.copy()
+    label_col = None
+    for candidate in ("trial_type", "value", "stim_type"):
+        if candidate in df.columns:
+            label_col = candidate
+            break
+    if label_col is None and "event_code" in df.columns:
+        label_col = "event_code"
+    if label_col is None:
+        return None
 
+    df["_label"] = df[label_col].map(_normalize_label)
+    df["_onset_sec"] = pd.to_numeric(df["onset"], errors="coerce")
+    if "duration" in df.columns:
+        df["_duration_sec"] = _numeric_series(df["duration"], default=0.0)
+    else:
+        df["_duration_sec"] = 0.0
+
+    df = df.dropna(subset=["_onset_sec"]).copy()
+    df = df[df["_label"] != ""].sort_values("_onset_sec").reset_index(drop=True)
+    return df if not df.empty else None
+
+
+def _valid_annotation_rows(
+    raw: mne.io.BaseRaw,
+    onsets: Iterable[float],
+    durations: Iterable[float],
+    descriptions: Iterable[str],
+) -> Tuple[list[float], list[float], list[str]]:
+    max_time = raw.n_times / raw.info["sfreq"]
+    valid_onsets: list[float] = []
+    valid_durations: list[float] = []
+    valid_descriptions: list[str] = []
+
+    for onset, duration, description in zip(onsets, durations, descriptions):
+        if onset < 0 or onset > max_time:
+            continue
+        valid_onsets.append(float(onset))
+        valid_durations.append(max(0.0, float(duration)))
+        valid_descriptions.append(str(description))
+    return valid_onsets, valid_durations, valid_descriptions
+
+
+def _events_to_annotations(
+    raw: mne.io.BaseRaw, events: Optional[pd.DataFrame]
+) -> Optional[mne.Annotations]:
+    if events is None or events.empty:
+        return None
+
+    onsets, durations, descriptions = _valid_annotation_rows(
+        raw,
+        events["_onset_sec"].astype(float),
+        events["_duration_sec"].astype(float),
+        events["_label"].astype(str),
+    )
+    if not onsets:
+        return None
+
+    return mne.Annotations(onset=onsets, duration=durations, description=descriptions)
+
+
+def _feedback_value(record: Dict[str, object]) -> str:
+    return _clean_value(record.get("feedback")).lower()
+
+
+def _is_valid_contrast_press(record: Dict[str, object], has_feedback: bool) -> bool:
+    if record["_label"] not in _PRESS_LABELS:
+        return False
+    if not has_feedback:
+        return True
+
+    feedback = _feedback_value(record)
+    return feedback in {"", "smiley_face", "sad_face"}
+
+
+def _press_correctness(target_label: str, press_record: Dict[str, object]) -> str:
+    feedback = _feedback_value(press_record)
+    if feedback == "smiley_face":
+        return _DERIVED_CORRECT_EVENT
+    if feedback == "sad_face":
+        return _DERIVED_INCORRECT_EVENT
+    if press_record["_label"] == _TARGET_TO_CORRECT_PRESS[target_label]:
+        return _DERIVED_CORRECT_EVENT
+    return _DERIVED_INCORRECT_EVENT
+
+
+def _build_contrast_derivatives(
+    events: Optional[pd.DataFrame], sfreq: float, n_times: int
+) -> Tuple[np.ndarray, Optional[mne.Annotations]]:
+    response_time = np.full((1, n_times), np.nan, dtype=float)
+    if events is None or events.empty:
+        return response_time, None
+
+    has_feedback = "feedback" in events.columns
+    records = events.to_dict("records")
+    derived_onsets: list[float] = []
+    derived_durations: list[float] = []
+    derived_descriptions: list[str] = []
+
+    for index, record in enumerate(records):
+        target_label = record["_label"]
+        if target_label not in _TARGET_TO_CORRECT_PRESS:
+            continue
+
+        target_onset = float(record["_onset_sec"])
+        press_record = None
+        for future in records[index + 1 :]:
+            future_label = future["_label"]
+            future_onset = float(future["_onset_sec"])
+
+            if future_label in _TARGET_TO_CORRECT_PRESS:
+                break
+            if future_onset - target_onset > _MAX_CONTRAST_RESPONSE_SEC:
+                break
+            if _is_valid_contrast_press(future, has_feedback):
+                press_record = future
+                break
+
+        if press_record is None:
+            continue
+
+        press_onset = float(press_record["_onset_sec"])
+        rt = press_onset - target_onset
+        if rt <= 0 or rt > _MAX_CONTRAST_RESPONSE_SEC:
+            continue
+
+        start = max(0, min(int(round(target_onset * sfreq)), n_times - 1))
+        stop = max(start + 1, min(int(round(press_onset * sfreq)), n_times))
+        response_time[0, start:stop] = rt
+
+        derived_onsets.append(press_onset)
+        derived_durations.append(0.0)
+        derived_descriptions.append(_press_correctness(target_label, press_record))
+
+    if not derived_onsets:
+        return response_time, None
+
+    derived_annotations = mne.Annotations(
+        onset=derived_onsets,
+        duration=derived_durations,
+        description=derived_descriptions,
+    )
+    return response_time, derived_annotations
+
+
+def _append_annotations(raw: mne.io.BaseRaw, annotations: Optional[mne.Annotations]) -> None:
+    if annotations is None or len(annotations) == 0:
+        return
+    if len(raw.annotations):
+        raw.set_annotations(raw.annotations + annotations)
+    else:
+        raw.set_annotations(annotations)
+
+
+def _add_response_time_channel(
+    raw: mne.io.BaseRaw, response_time: np.ndarray
+) -> Tuple[mne.io.BaseRaw, bool]:
+    if _RESPONSE_TIME_CHANNEL in raw.ch_names or not np.isfinite(response_time).any():
+        return raw, False
+
+    if not raw.preload:
+        raw.load_data(verbose="ERROR")
+
+    info = mne.create_info(
+        ch_names=[_RESPONSE_TIME_CHANNEL],
+        sfreq=raw.info["sfreq"],
+        ch_types=["misc"],
+    )
+    rt_raw = mne.io.RawArray(
+        response_time,
+        info,
+        first_samp=raw.first_samp,
+        verbose="ERROR",
+    )
+    if raw.info.get("meas_date") is not None:
+        rt_raw.set_meas_date(raw.info["meas_date"])
+
+    raw.add_channels([rt_raw], force_update_info=True)
+    return raw, True
+
+
+class OpenNeuroDS005514Kernel:
+    """Stage-1 kernel for OpenNeuro ds005514 (HBN EEG Release 9)."""
+
+    KERNEL_ID = KERNEL_ID
+    DATASET_NAME = DATASET_ID
+    DATASET_PATH = "openneuro/ds005514"
+
+    def apply(self, udataset, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
+        file_path = _get_file_path(row)
+        root = _find_dataset_root(file_path)
+        subject_id = _extract_subject_id(file_path)
+        task = _extract_entity(file_path, "task")
+
+        participant_info = _read_participant_info(root, subject_id)
+        eeg_json = _merged_eeg_json(root, task, file_path)
+        original_description = raw.info.get("description") or ""
+
+        _set_channel_types_from_sidecar(raw, file_path)
+        _set_hbn_montage(raw)
+
+        events = _prepare_events(_read_tsv(_events_tsv_path(file_path)))
+        sidecar_annotations = _events_to_annotations(raw, events)
+        if sidecar_annotations is not None:
+            raw.set_annotations(sidecar_annotations)
+
+        derived_event_hints: Dict[str, Dict[str, str]] = {}
+        derived_misc_hints: Dict[str, Dict[str, str]] = {}
+        if task == _CONTRAST_TASK:
+            response_time, contrast_annotations = _build_contrast_derivatives(
+                events, raw.info["sfreq"], raw.n_times
+            )
+            if contrast_annotations is not None:
+                _append_annotations(raw, contrast_annotations)
+                derived_event_hints = _DERIVED_EVENT_HINTS
+
+            raw, added_rt = _add_response_time_channel(raw, response_time)
+            if added_rt:
+                derived_misc_hints = _DERIVED_MISC_HINTS
+
+        raw.info["description"] = json.dumps(
+            {
+                "original_description": str(original_description),
+                "eegunity_description": _build_description(
+                    file_path, root, participant_info, eeg_json
+                ),
+                "eegunity_scan_hints": {
+                    "events": derived_event_hints,
+                    "misc_channels": derived_misc_hints,
+                },
+            },
+            ensure_ascii=False,
+        )
         return raw
 
 
-KERNEL = HBNKernel()
+KERNEL = OpenNeuroDS005514Kernel()

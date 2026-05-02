@@ -15,14 +15,7 @@ _TASK_BLOCKING_RULES = {
     "classification_y_zero_indexed_sequential",
     "derived_misc_requires_super_meta",
     "epoch_parameters_complete",
-    "info_label_field_in_info_section",
-    "info_label_field_in_participants",
-    "label_field_absent_for_event",
-    "label_field_required_for_nonevent",
     "label_route_no_deprecated",
-    "misc_classification_forbidden",
-    "misc_label_field_has_misc_channel",
-    "misc_label_field_in_misc_section",
     "no_mi_on_phase_markers",
     "segmentation_requires_empty_target_events",
     "segmentation_requires_nonevent_route",
@@ -38,13 +31,14 @@ _TASK_BLOCKING_RULES = {
 _TD_HEADERS: dict[tuple[str, str], list[str]] = {
     ("event", "classification"): ["Event ID", "y", "Meaning"],
     ("event", "regression"): ["Event ID", "Value", "Meaning"],
-    ("misc", "regression"): ["MISC Channel", "Value (unit)", "Notes"],
-    ("info", "classification"): ["Info Field", "Value", "y", "Meaning"],
-    ("info", "regression"): ["Info Field", "Range (unit)", "Notes"],
+    ("misc", "classification"): ["MISC Channel Name", "Y Mapping Notes"],
+    ("misc", "regression"): ["MISC Channel Name", "Y Mapping Notes"],
+    ("info", "classification"): ["Info Field", "Y Mapping Notes"],
+    ("info", "regression"): ["Info Field", "Y Mapping Notes"],
 }
 
 _GEN_SYSTEM = """\
-You are an EEG task documentation expert working in neuroaudit.
+You are an EEG task documentation expert working in NeuroAudit.
 
 You MUST stay inside the current audit document boundary:
 - Use ONLY the current analysis.md content and the per-reference extraction results.
@@ -64,23 +58,30 @@ Generate a complete replacement ## Tasks section that strictly follows the app +
 Hard rules:
 - Valid Label Route values: event | misc | info
 - Never output Annotation, STIM, MISC, Normal Task, or other deprecated labels.
-- Label Field is required iff Route in {misc, info}; forbidden for Route=event.
-- Route=misc is regression-only.
+- Do NOT output a `Label Field` bullet. It is deprecated for every route.
+- For misc/info routes, the label source is the first and only row of Target Definition.
+- Route=misc allows both classification and regression.
 - segmentation => target_events = [] and Route must not be event.
 - event-route target_events and Event ID rows must come only from the provided event whitelist.
-- misc-route Label Field and first TD column must come only from the provided MISC whitelist.
-- info-route Label Field and first TD column must come only from the provided Info whitelist.
-- One Label Field per task.
+- misc-route Target Definition source must come only from the provided MISC whitelist.
+- info-route Target Definition source must come only from the provided Info whitelist.
+- One task = one label source. Split multidimensional labels into separate tasks.
 - Classification y values must be 0-based sequential integers.
-- Classification must have at least 2 distinct classes.
+- Event-route classification must have at least 2 distinct classes.
 - Target Definition header must exactly match the canonical schema for Route x Task Type.
 
 Canonical Target Definition headers:
 - event + classification: | Event ID | y | Meaning |
 - event + regression: | Event ID | Value | Meaning |
-- misc + regression: | MISC Channel | Value (unit) | Notes |
-- info + classification: | Info Field | Value | y | Meaning |
-- info + regression: | Info Field | Range (unit) | Notes |
+- misc + classification: | MISC Channel Name | Y Mapping Notes |
+- misc + regression: | MISC Channel Name | Y Mapping Notes |
+- info + classification: | Info Field | Y Mapping Notes |
+- info + regression: | Info Field | Y Mapping Notes |
+
+For misc/info routes:
+- Target Definition must have exactly one data row.
+- `Y Mapping Notes` must explain value-to-y mapping for classification.
+- Use `no mapping` when y directly follows the source field or channel value.
 
 Epoch parameter minimums:
 - epoch_by_event_hdf5: tmin, tmax, target_events
@@ -100,7 +101,6 @@ Formatting requirements for tasks_section:
   - `Epoch Method`
   - `Epoch Parameters`
   - `Label Route`
-  - `Label Field`
   - `Meta Level`
   - `Target Definition`
   - `Evidence`
@@ -130,6 +130,21 @@ Canonical task skeleton:
   - 10.0000/example — concise evidence
 - **Notes**: optional notes
 
+Canonical misc/info example:
+### Potential Task 1: Example source-level label
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
+- **Epoch Parameters**: segment_length = 10 s, overlap = 0.5, target_events = []
+- **Label Route**: `misc`
+- **Meta Level**: super
+- **Target Definition**:
+  | MISC Channel Name | Y Mapping Notes |
+  |---|---|
+  | `misc:p_factor` | no mapping |
+- **Evidence**:
+  - none
+- **Notes**: optional notes
+
 Output JSON only:
 {
   "tasks_section": "## Tasks\\n\\n### Classical Task 1: ...",
@@ -149,9 +164,11 @@ You will receive:
 Repair rules:
 - Stay doc-only: never introduce any Event ID, MISC channel, or Info field outside the provided white lists.
 - Fix in place when possible: numbering, y renumbering, Label Route normalization, Target Definition header normalization, target_events cleanup.
+- Remove any legacy `Label Field` bullet; for misc/info routes, keep the source only in the first column of Target Definition.
+- misc/info Target Definition tables must use the two-column v1.0.0 schema and exactly one row.
 - Drop a task only if it cannot be grounded to the current document.
 - Keep Classical tasks before Potential tasks.
-- Classification y values must be 0-based sequential integers.
+- Event-route classification y values must be 0-based sequential integers.
 - segmentation must use target_events = [] and non-event route.
 
 Output JSON only:
@@ -572,42 +589,44 @@ def _canonical_td_rows(task: dict[str, Any]) -> list[list[str]]:
             meaning = row[2] if len(row) > 2 else ""
             out.append([label, second, meaning])
         return out
-    if route == "misc" and task_type == "regression":
-        out = []
+    if route in {"misc", "info"}:
+        header = [_clean_token(h).lower() for h in task.get("td_header", [])]
+        grouped: dict[str, list[str]] = {}
+        order: list[str] = []
+        fallback = _clean_token(task.get("label_field", ""))
+
         for row in rows:
-            label = row[0] if len(row) > 0 else task["label_field"]
-            second = row[1] if len(row) > 1 else ""
-            notes = row[2] if len(row) > 2 else ""
-            out.append([label, second, notes])
-        return out
-    if route == "info" and task_type == "classification":
-        out = []
-        for row in rows:
-            label = row[0] if len(row) > 0 else task["label_field"]
-            value = row[1] if len(row) > 1 else ""
-            y = row[2] if len(row) > 2 else ""
-            meaning = row[3] if len(row) > 3 else ""
-            out.append([label, value, y, meaning])
-        return out
-    if route == "info" and task_type == "regression":
-        out = []
-        for row in rows:
-            label = row[0] if len(row) > 0 else task["label_field"]
-            value = row[1] if len(row) > 1 else ""
-            notes = row[2] if len(row) > 2 else ""
-            out.append([label, value, notes])
-        return out
+            label = row[0] if len(row) > 0 else fallback
+            if not label:
+                continue
+
+            note = ""
+            if len(row) >= 2:
+                if len(row) == 2 or (len(header) >= 2 and header[1] == "y mapping notes"):
+                    note = row[1]
+                elif len(row) >= 4 and "y" in header:
+                    note = f"{row[1]} -> {row[2]}"
+                    if row[3]:
+                        note += f" ({row[3]})"
+                else:
+                    note = "; ".join(c for c in row[1:] if c)
+            note = note or "no mapping"
+
+            if label not in grouped:
+                grouped[label] = []
+                order.append(label)
+            if note not in grouped[label]:
+                grouped[label].append(note)
+
+        return [[label, "; ".join(grouped[label]) or "no mapping"] for label in order]
     return rows
 
 
 def _repair_classification_y(task: dict[str, Any], rows: list[list[str]]) -> list[list[str]]:
     route = task["label_route"]
-    if task["task_type"] != "classification" or route == "misc":
+    if task["task_type"] != "classification" or route != "event":
         return rows
-    if route == "info":
-        key_idx, y_idx = 1, 2
-    else:
-        key_idx, y_idx = 0, 1
+    key_idx, y_idx = 0, 1
     keys = [(_clean_token(row[key_idx]) if len(row) > key_idx else "") for row in rows]
     uniq: list[str] = []
     for key in keys:
@@ -634,12 +653,12 @@ def _normalize_task(task: dict[str, Any], grounding: dict[str, list[str]]) -> di
 
     task["title"] = task["title"].replace("Normal Task", "").strip() or "Unnamed task"
     task["label_route"] = _normalize_label_route(task["label_route"])
-    if task["label_route"] == "misc":
-        task["task_type"] = "regression"
+    if task["task_type"] not in {"classification", "regression"}:
+        return None
 
     rows = _canonical_td_rows(task)
     label_field = _clean_token(task["label_field"])
-    if task["label_route"] in {"misc", "info"} and not label_field and rows:
+    if task["label_route"] in {"misc", "info"} and rows:
         label_field = _clean_token(rows[0][0])
     task["label_field"] = label_field
 
@@ -671,16 +690,21 @@ def _normalize_task(task: dict[str, Any], grounding: dict[str, list[str]]) -> di
     elif task["label_route"] == "misc":
         if label_field not in misc_fields:
             return None
-        rows = [[label_field, row[1] if len(row) > 1 else "", row[2] if len(row) > 2 else ""] for row in rows] or [[label_field, "", ""]]
+        distinct_sources = {_clean_token(row[0]) for row in rows if row and _clean_token(row[0])}
+        if len(distinct_sources) > 1:
+            return None
+        notes = rows[0][1] if rows and len(rows[0]) > 1 else "no mapping"
+        rows = [[label_field, notes or "no mapping"]]
         if task["epoch_method"] == "epoch_by_segmentation_hdf5":
             task["target_events"] = []
     elif task["label_route"] == "info":
         if label_field not in info_fields:
             return None
-        if task["task_type"] == "classification":
-            rows = [[label_field, row[1] if len(row) > 1 else "", row[2] if len(row) > 2 else "", row[3] if len(row) > 3 else ""] for row in rows]
-        else:
-            rows = [[label_field, row[1] if len(row) > 1 else "", row[2] if len(row) > 2 else ""] for row in rows] or [[label_field, "", ""]]
+        distinct_sources = {_clean_token(row[0]) for row in rows if row and _clean_token(row[0])}
+        if len(distinct_sources) > 1:
+            return None
+        notes = rows[0][1] if rows and len(rows[0]) > 1 else "no mapping"
+        rows = [[label_field, notes or "no mapping"]]
         if task["epoch_method"] == "epoch_by_segmentation_hdf5":
             task["target_events"] = []
     else:
@@ -693,16 +717,14 @@ def _normalize_task(task: dict[str, Any], grounding: dict[str, list[str]]) -> di
         return None
 
     if task["task_type"] == "classification":
-        if task["label_route"] == "info":
-            class_values = [_clean_token(row[1]).lower() for row in rows if len(row) > 1 and _clean_token(row[1])]
-            banned_values = {"missing", "unknown", "n/a", "na", "none", "null"}
-            if not class_values or any(v in banned_values for v in class_values):
-                return None
-            classes = {_clean_token(row[2]) for row in rows if len(row) > 2 and _clean_token(row[2])}
-        else:
+        if task["label_route"] == "event":
             classes = {_clean_token(row[1]) for row in rows if len(row) > 1 and _clean_token(row[1])}
-        if len(classes) < 2:
-            return None
+            if len(classes) < 2:
+                return None
+        elif task["label_route"] in {"misc", "info"}:
+            notes = _clean_token(rows[0][1]) if rows and len(rows[0]) > 1 else ""
+            if not notes:
+                return None
 
     required = {
         "epoch_by_event_hdf5": ["tmin", "tmax"],
@@ -761,9 +783,6 @@ def _serialize_target_def(task: dict[str, Any]) -> str:
 
 
 def _serialize_task(task: dict[str, Any], number: int) -> str:
-    label_field_line = ""
-    if task["label_route"] in {"misc", "info"}:
-        label_field_line = f"\n- **Label Field**: `{task['label_field']}`"
     evidence_lines = task["evidence"] or []
     evidence_block = "\n".join(f"  {line}" if not line.startswith("  ") else line for line in evidence_lines)
     notes = task["notes"] or ""
@@ -773,7 +792,7 @@ def _serialize_task(task: dict[str, Any], number: int) -> str:
         f"- **Task Type**: {task['task_type']}\n"
         f"- **Epoch Method**: `{task['epoch_method']}`\n"
         f"- **Epoch Parameters**: {_serialize_epoch_params(task)}\n"
-        f"- **Label Route**: `{task['label_route']}`{label_field_line}\n"
+        f"- **Label Route**: `{task['label_route']}`\n"
         f"- **Meta Level**: {task['meta_level']}\n"
         f"- **Target Definition**:\n{_serialize_target_def(task)}\n"
         f"- **Evidence**:\n{evidence_block if evidence_block else '  - none'}\n"
@@ -836,11 +855,13 @@ def _grounding_errors(tasks_section: str, grounding: dict[str, list[str]]) -> li
             if bad_td:
                 errors.append(f"{title}: Target Definition Event IDs not grounded: {bad_td}")
         elif route == "misc":
-            if field and field not in misc_fields:
-                errors.append(f"{title}: misc Label Field '{field}' is not in current MISC grounding.")
+            source = field or (td_first_col[0] if td_first_col else "")
+            if source and source not in misc_fields:
+                errors.append(f"{title}: misc source '{source}' is not in current MISC grounding.")
         elif route == "info":
-            if field and field not in info_fields:
-                errors.append(f"{title}: info Label Field '{field}' is not in current Info grounding.")
+            source = field or (td_first_col[0] if td_first_col else "")
+            if source and source not in info_fields:
+                errors.append(f"{title}: info source '{source}' is not in current Info grounding.")
     return errors
 
 
@@ -916,7 +937,7 @@ def generate_tasks_phase2_strict(
                 "info_whitelist": [],
                 "reference_stats": {"input_extractions": len(extractions), "useful_extractions": 0},
             },
-            "generation_mode": "doc_only_v2_strict",
+            "generation_mode": "doc_only_rulebook_v1_0_strict",
         }
 
     useful = [e for e in extractions if e.get("classification") in {"relevant", "partial"}]
@@ -962,5 +983,5 @@ def generate_tasks_phase2_strict(
                 "useful_extractions": len(useful),
             },
         },
-        "generation_mode": "doc_only_v2_strict",
+        "generation_mode": "doc_only_rulebook_v1_0_strict",
     }

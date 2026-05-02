@@ -1,452 +1,471 @@
-# EEG Dataset `analysis.md` 文档生成与审核规则
+# NeuroAudit Rulebook for EEG Dataset `analysis.md`
 
-状态：草案 v0.6
+Version: 1.0.0
 
-最近确认：2026-04-18
+Status: stable archive
 
-变更摘要（v0.5 → v0.6）：
-- 明确 **epoch 提取** 与 **label 提取** 为两条相互独立的轴，每个 Task 都必须各自声明。
-- `Label Field` 从 `misc/info` 任务 schema 中移除；对应标签来源统一收敛到 `Target Definition` 首列（第77条之二、之三、之四）。
-- `misc` 路由允许 `classification` 与 `regression`，但每个 Task 仍只允许一个 misc channel（第77条之一、之四、之六）。
-- 新增“单目标任务”规则（第77条之五）：每个 Task 只允许一个 label source；多维度标签必须拆分为多个 Task。
-- 新增“分类任务 ≥2 类”规则（第77条之七）。
-- 新增“派生 misc → super meta”规则（第77条之八）：kernel 新创建的 misc channel 一律为 super meta，并建议在 Task 的 `Notes` 中记录派生步骤。
-- `### Info` 子节从固定三字段扩展为动态列出 `participants.tsv` 所有发现列（第57条之二修订），同时保留 `subject_age/subject_sex/device` 为必展示规范字段。
-- `Target Definition` 表格 schema 按 `Route × Task Type` 严格绑定（第77条之四）。
-- 新增第30条之三：`Manual Review` 仅由人类审核员填写；LLM 必须输出空白，生成流水线在后处理阶段强制清空。
+Released: 2026-05-02
 
-变更摘要（v0.4 → v0.5）：
-- 新增 `## File Scan Result` 顶层节，包含 Kernel 指纹 blockquote 与三个子节。
-- `## Event Structure` 和 `## MISC Label Summary` 降级为 `### Event Structure` / `### MISC Label Summary`，内容规则不变。
-- 新增 `### Info` 子节（第57条之一～之五），记录受试者与设备元信息完整性。
-- `Label Route` 重定义为监督信号来源，三值：`event / misc / info`（废止 `Annotation`/`STIM` 作为 Label Route 值）。
-- 新增第77条之二：`Label Route = info` 时的 Target Definition 格式规则。
+Baseline: draft v0.6, last confirmed 2026-04-18
 
-变更摘要（v0.3 → v0.4）：
-- `## Kernel Responsibilities` 节移至 `## Data Quality Notes` 之后。
-- `Event Structure` 下的 Event Type 图例行（`> **Event Type**: ...`）废止，不再要求在文档中声明枚举含义。
-- 第53条之一（说明性 Note）改为非强制，并明确禁止重复解释 Type 枚举。
+Audience: LLM review scripts, human reviewers, and maintainers
 
-变更摘要（v0.2 → v0.3）：
-- `Kernel Responsibilities Area` 大幅简化：废止 Type 1/2/3 模板文本、`Selected Mode`、`Why`、`Primary Label Routes`、`Web Reference Used for Decision`。
-- blockquote 元字段仅保留 `Super Meta Required`（Yes/No）与 `Status` 两个字段。
-- 新增 `Super Meta Required` 字段定义与判定规则（新第37条、第38条）。
+Scope: `analysis.md` files, and same-structure successor documents, under this repository's dataset directories.
 
-变更摘要（v0.1 → v0.2）：
-- `STIM Label Summary` 节废止；所有离散事件（含原 stim channel 来源）统一在 `Event Structure` 中登记。
-- `Event Structure.Type` 枚举简化为 `event` / `admin` 两类，废止 `short`、`long`、`rest`。
-- `target_events` 合法来源简化为唯一来源：`Event Structure` 中 `Type = event` 的条目。
-- `Label Route` 明确为 kernel 输出格式，与原始存储来源解耦。
-
-适用对象：LLM 审核脚本、人类审核员、维护者
-
-适用范围：本仓库内各数据集目录下的 `analysis.md` 及同结构版本文档
+This v1.0.0 document preserves the design logic of draft v0.6, translates it into English, normalizes terminology, and removes draft-facing phrasing. Any future design change must be recorded as a new rulebook version.
 
 ---
 
-# 第一编 总则
+## Legacy Version Archive
 
-## 第一章 目的与适用范围
+These entries are retained for auditability. They describe how the archived draft evolved before v1.0.0.
 
-### 第1条 目的
+### v1.0.0
 
-本规则用于统一 EEG 数据集 `analysis.md` 文档的生成、审核、修订与复核行为，使相关文档能够同时服务于以下目标：
+- Archives draft v0.6 as the stable English rulebook.
+- Keeps the existing schema, status values, label routes, target-definition rules, and migration boundaries unchanged.
+- Normalizes rule names, article labels, and reviewer-facing wording.
 
-1. 为人工审核员提供一致、明确、可执行的审核标准。
-2. 为 LLM 审核脚本提供稳定、可编程、可追溯的决策依据。
-3. 为后续 kernel、EEGUnity 导出与 HDF5 生产提供结构化实现依据。
+### v0.5 -> v0.6
 
-### 第2条 适用范围
+- Clarified that epoch extraction and label extraction are independent axes. Each task must declare both.
+- Removed `Label Field` from the `misc` and `info` task schema. Label source now lives in the first column of `Target Definition`.
+- Allowed `misc` routes for both `classification` and `regression`, while still allowing only one misc channel per task.
+- Added the single-target rule: one task may reference only one label source; multidimensional labels must be split into separate tasks.
+- Added the rule that classification tasks must contain at least two classes.
+- Added the derived-misc to super-meta rule: any kernel-created misc channel is super meta, and derivation steps should be recorded in task `Notes`.
+- Expanded `### Info` from three fixed fields to all discovered `participants.tsv` columns, while keeping `subject_age`, `subject_sex`, and `device` as mandatory canonical fields.
+- Bound `Target Definition` table schema strictly to `Label Route x Task Type`.
+- Added the automation rule that `Manual Review` is human-only. LLMs must leave it blank, and generation pipelines must clear accidental non-empty values.
 
-本规则适用于以下行为：
+### v0.4 -> v0.5
 
-1. 新建数据集文档。
-2. 修订既有数据集文档。
-3. 对 `Classical Task`、`Potential Task`、`Event Structure`、`Meta Area` 等核心栏目进行人工审核。
-4. 为后续 LLM 审核脚本编写判定规则、提示词规则与降级规则。
+- Added the top-level `## File Scan Result` section with a kernel fingerprint blockquote and three subsections.
+- Demoted `## Event Structure` and `## MISC Label Summary` to `### Event Structure` and `### MISC Label Summary`.
+- Added `### Info` for subject and device metadata completeness.
+- Redefined `Label Route` as the source of supervision signal with three values: `event`, `misc`, and `info`.
+- Deprecated `Annotation` and `STIM` as `Label Route` values.
+- Added `Label Route = info` target-definition rules.
 
-### 第3条 基本原则
+### v0.3 -> v0.4
 
-文档生成与审核应遵守以下原则：
+- Moved `## Kernel Responsibilities` after `## Data Quality Notes` in the document template.
+- Deprecated the event-type legend line under `Event Structure`.
+- Made explanatory notes under `Event Structure` optional and forbade repeating the enum definition there.
 
-1. 真实性优先。
-2. 数据优先于网页描述。
-3. 保守优于猜测。
-4. 可追溯优于简洁表述。
-5. 能落地实现优于理论上可想象的任务定义。
+### v0.2 -> v0.3
 
+- Simplified the Kernel Responsibilities area.
+- Deprecated Type 1/2/3 template text, `Selected Mode`, `Why`, `Primary Label Routes`, and `Web Reference Used for Decision`.
+- Kept only `Super Meta Required` and `Status` in the blockquote metadata.
+- Added rules for `Super Meta Required`.
 
-## 第二章 术语定义
+### v0.1 -> v0.2
 
-### 第4条 数据集文档
+- Deprecated `STIM Label Summary`.
+- Registered all discrete events, including events originally stored in stim channels, under `Event Structure`.
+- Simplified `Event Structure.Type` to `event` and `admin`.
+- Made `target_events` valid only when they come from `Event Structure` entries with `Type = event`.
+- Clarified that `Label Route` is a kernel output route, not the raw storage location.
 
-本规则所称“数据集文档”，是指单个数据集目录下的 `analysis.md` 或同结构后续版本文档。
+---
 
-### 第5条 Raw Meta
+# Part I. General Provisions
 
-`raw meta` 是指原始数据中已经直接存在、无需额外推导即可读取的标签、事件、码值、注释、字段或标记。包括但不限于：
+## Chapter 1. Purpose and Scope
 
-1. `events.tsv` 中的 `trial_type`、事件码、事件名称。
-2. trigger/stim 通道中的原始码值。
-3. 原始注释文件中的离散事件。
-4. 原始表格中直接存在的可用行为字段。
+### Article 1. Purpose
 
-### 第6条 Super Meta
+This rulebook standardizes generation, review, revision, and re-review of EEG dataset `analysis.md` documents so that they can:
 
-`super meta` 是指原始数据中不存在，必须通过程序、规则或人工逻辑进一步生成、映射、折叠、配对、聚合或连接后才能获得的标签或目标。包括但不限于：
+1. Provide human reviewers with consistent, explicit, actionable review standards.
+2. Provide LLM review scripts with stable, programmable, traceable decision rules.
+3. Provide structured implementation guidance for later kernels, EEGUnity exports, and HDF5 production.
 
-1. 反应事件。
-2. 多个原始类折叠后的二分类标签。
-3. 由文件名、受试者信息表、外部表格派生出的临床分组。
-4. 由多个事件配对得到的正确/错误、目标/非目标、快/慢等标签。
+### Article 2. Scope
 
-### 第7条 Kernel
+This rulebook applies to:
 
-`kernel` 是指后续用于解析原始数据、构造标签、路由标签并生成 EEGUnity 兼容输出的数据处理代码或数据加载逻辑。
+1. Creating new dataset documents.
+2. Revising existing dataset documents.
+3. Reviewing core areas such as `Classical Task`, `Potential Task`, `Event Structure`, and metadata.
+4. Writing later LLM review rules, prompt rules, and fallback rules.
 
-### 第8条 Label Route
+### Article 3. Core Principles
 
-`Label Route` 是指标签在 EEGUnity/MNE 兼容实现中的最终落地路径，而不等同于原始文件中天然存在的存储方式。包括：
+Document generation and review must follow these principles:
 
-1. `Annotation`：基于时间的标注对象，使用 `onset`、`duration`、`description` 描述事件或时间段；其本质不是 channel type。
-2. `STIM`：trigger/stim channel 路由，适用于以码值或触发脉冲形式表达的事件标签。
-3. `MISC`：misc channel 路由，适用于数值型辅助标签、连续量或不宜直接表示为事件名称的附属标签。
+1. Truthfulness first.
+2. Actual data has priority over web descriptions.
+3. Conservatism has priority over guessing.
+4. Traceability has priority over brevity.
+5. Implementable task definitions have priority over theoretically imaginable ones.
 
-> **已废止**：上述 `Annotation`、`STIM`、`MISC` 三值自 v0.4 起废止，不得在新文档中作为 `Label Route` 的取值使用。当前合法取值（`event`、`misc`、`info`）及其定义见第77条。本条保留仅供历史对照。
+## Chapter 2. Terms
 
-### 第9条 Task
+### Article 4. Dataset Document
 
-`Task` 是指文档中可直接指导 EEG 数据切窗、标签构造与监督学习配置的任务定义。
+A dataset document means the `analysis.md` file under a single dataset directory, or a same-structure successor version.
 
-### 第10条 Classical Task
+### Article 5. Raw Meta
 
-`Classical Task` 是指同时得到外部证据支持且能够被当前公开数据实际落地实现的核心任务。
+`raw meta` means labels, events, codes, annotations, fields, or markers that already exist in the raw data and can be read without additional derivation. Examples include:
 
-### 第11条 Potential Task
+1. `trial_type`, event codes, and event names in `events.tsv`.
+2. Raw codes in trigger or stim channels.
+3. Discrete events in raw annotation files.
+4. Directly available behavioral fields in raw tables.
 
-`Potential Task` 是指由数据本身支持、但外部证据不足以确认其为该数据集核心基准任务，或仅为推荐性、扩展性、派生性的任务。
+### Article 6. Super Meta
 
-### 第12条 Evidence
+`super meta` means labels or targets that do not directly exist in the raw data and must be generated, mapped, folded, paired, aggregated, joined, or otherwise derived by code, rules, or human logic. Examples include:
 
-`Evidence` 是指支撑任务成立、参数选择或文档判断的外部依据，包括：
+1. Response events.
+2. Binary labels folded from multiple raw classes.
+3. Clinical groups derived from filenames, participant tables, or external tables.
+4. Correct or incorrect, target or non-target, fast or slow, and similar labels derived by pairing multiple events.
 
-1. 数据集官方页面。
-2. 官方说明文档。
-3. 明确使用该数据集的论文。
-4. 其他权威来源。
+### Article 7. Kernel
 
+`kernel` means the later data-processing code or data-loading logic used to parse raw data, construct labels, route labels, and generate EEGUnity-compatible output.
 
-## 第三章 证据优先级与冲突处理
+### Article 8. Label Route
 
-### 第13条 证据优先级
+Historically, `Label Route` meant the final EEGUnity or MNE-compatible path where labels landed, not necessarily the raw storage form. Earlier values were:
 
-出现冲突时，证据优先级原则上按以下顺序排列：
+1. `Annotation`: time-based annotations with `onset`, `duration`, and `description`.
+2. `STIM`: trigger or stim channel route for code values or trigger pulses.
+3. `MISC`: misc channel route for numeric auxiliary labels, continuous quantities, or attached labels unsuitable as event names.
 
-1. 实际可验证的数据文件及其伴随标注文件。
-2. 数据集官方页面、官方 README、官方说明文档。
-3. 官方或明确使用该数据集的论文。
-4. 第三方介绍页面、博客、非官方说明。
+Deprecated: `Annotation`, `STIM`, and `MISC` as route values are not allowed in new documents. Current legal values are `event`, `misc`, and `info`; see Article 77.
 
-### 第14条 冲突处理总原则
+### Article 9. Task
 
-当不同来源信息冲突时，应当优先采用高优先级证据，并在 `Data Quality Notes` 中记录冲突及裁定立场。
+A `Task` is a definition that can directly guide EEG epoching, label construction, and supervised-learning configuration.
 
-### 第15条 数据优先原则
+### Article 10. Classical Task
 
-当在线资料、论文描述与实际数据文件不一致时，应当以实际数据文件为准；但不得忽略这种不一致，而应在文档中显式指出。
+A `Classical Task` is a core task that is supported by external evidence and can be implemented from the currently public data.
 
-### 第16条 保守原则
+### Article 11. Potential Task
 
-当现有证据不足以确认某个字段、某项任务或某个标签时：
+A `Potential Task` is supported by the data itself but lacks enough external evidence to confirm it as a core benchmark task, or is only a recommended, extended, or derived task.
 
-1. 应当优先降级为 `Potential Task`。
-2. 可以使用 `Needs verification`、`Variable`、`N/A`、`null` 等占位词。
-3. 不得凭空补足缺失信息。
+### Article 12. Evidence
 
-### 第17条 可实现性原则
+`Evidence` means external material supporting a task, parameter choice, or document judgment. It includes:
 
-即使某篇论文使用了该数据集，只要公开数据中不存在足以实现该任务的标签、事件或可验证的派生路径，该任务也不得直接认定为有效 `Classical Task`。
+1. The official dataset page.
+2. Official documentation.
+3. Papers that clearly use the dataset.
+4. Other authoritative sources.
 
+## Chapter 3. Evidence Priority and Conflict Handling
 
-## 第四章 角色分工
+### Article 13. Evidence Priority
 
-### 第18条 管理员职责
+When sources conflict, use this priority order:
 
-管理员负责：
+1. Verifiable data files and accompanying annotation files.
+2. Official dataset page, official README, or official documentation.
+3. Official papers or papers that clearly use the dataset.
+4. Third-party pages, blogs, or unofficial descriptions.
 
-1. 决定数据集条目的命名。
-2. 决定是否接受人工修订或 PR 中的规则更新。
-3. 决定是否需要新增或重写 kernel。
+### Article 14. General Conflict Rule
 
-### 第19条 人类审核员职责
+When sources conflict, use the higher-priority evidence and record the conflict and decision in `Data Quality Notes`.
 
-人类审核员负责：
+### Article 15. Data Priority
 
-1. 审核 `Classical Task` 是否成立。
-2. 审核字段是否与真实数据和官方资料一致。
-3. 判断冲突信息的裁定方向。
-4. 在需要时标记 `Manual Review`。
+When online material or paper descriptions conflict with actual data files, the actual data files prevail. The inconsistency must still be stated explicitly.
 
-### 第20条 LLM 审核脚本职责
+### Article 16. Conservative Handling
 
-LLM 审核脚本负责：
+If existing evidence is insufficient to confirm a field, task, or label:
 
-1. 在既定规则下预生成或预修正文档。
-2. 根据规则识别潜在冲突、缺漏和无效任务。
-3. 输出保守、可追溯的建议，不得编造不存在的原始标签。
+1. Prefer downgrading it to `Potential Task`.
+2. Use placeholders such as `Needs verification`, `Variable`, `N/A`, or `null` when appropriate.
+3. Do not fabricate missing information.
 
+### Article 17. Implementability
 
-# 第二编 分则
+Even if a paper used the dataset, a task must not be treated as a valid `Classical Task` unless the public data contains labels, events, or a verifiable derivation path sufficient to implement it.
 
-## 第五章 Meta Area
+## Chapter 4. Roles
 
-### 第21条 字段总则
+### Article 18. Administrator Responsibilities
 
-`Meta Area` 用于记录数据集的标识性元信息。除本规则另有规定外，字段应当优先简洁、稳定、便于程序读取。
+Administrators are responsible for:
 
-### 第22条 `Dataset`
+1. Deciding dataset entry names.
+2. Deciding whether to accept human revisions or rule updates in pull requests.
+3. Deciding whether a kernel must be added or rewritten.
 
-1. `Dataset` 字段为数据集标识符。
-2. 该字段命名格式应为 `<source_name_id>`。
-3. 该字段由管理员决定命名。
-4. 审核员与 LLM 不得主动修改该字段。
+### Article 19. Human Reviewer Responsibilities
 
-### 第23条 `Year`
+Human reviewers are responsible for:
 
-1. `Year` 字段用于记录与数据采集、处理或发布相关的关键年份集合。
-2. 该字段不要求区分“采集年份”与“发布年份”。
-3. 如同时涉及多个关键年份，可使用 `/` 连接，如 `2004/2021`。
-4. 如涉及连续年份区间，可使用 `-` 连接，如 `2008-2015/2017`。
-5. 该字段无需保证完全覆盖全部历史年份，应根据已有可信资料尽力更新。
-6. 尽力避免因网页标题年份而忽略数据本身明确给出的关键年份。
+1. Reviewing whether a `Classical Task` is valid.
+2. Reviewing whether fields match actual data and official material.
+3. Deciding how to resolve conflicting information.
+4. Filling `Manual Review` when appropriate.
 
-### 第24条 `URL`
+### Article 20. LLM Review Script Responsibilities
 
-1. `URL` 应当优先指向可获取下载入口或数据说明的信息页面。
-2. 如存在文件直链与信息页两种选择，应优先保留信息页。
-3. 当链接失效且无法替换为有效信息页时，应删除或改写为可访问的权威页面。
-4. 该字段不要求永久有效，但应保证在审核时具备实际访问价值。
+LLM review scripts are responsible for:
 
-### 第25条 `Category`
+1. Pre-generating or pre-correcting documents under the rulebook.
+2. Detecting likely conflicts, omissions, and invalid tasks.
+3. Producing conservative, traceable suggestions without inventing raw labels.
 
-1. `Category` 必须且只能取以下六类之一：
+# Part II. Specific Rules
+
+## Chapter 5. Meta Area
+
+### Article 21. General Field Rule
+
+`Meta Area` records identifying dataset metadata. Unless otherwise specified, fields should be concise, stable, and easy for programs to read.
+
+### Article 22. `Dataset`
+
+1. `Dataset` is the dataset identifier.
+2. It should follow `<source_name_id>`.
+3. Administrators decide this name.
+4. Reviewers and LLMs must not proactively modify it.
+
+### Article 23. `Year`
+
+1. `Year` records key years related to collection, processing, or release.
+2. It does not need to distinguish collection year from release year.
+3. Multiple key years may be joined with `/`, for example `2004/2021`.
+4. Continuous ranges may use `-`, for example `2008-2015/2017`.
+5. The field need not cover every historical year, but should be updated as well as trusted sources allow.
+6. Do not ignore key years clearly present in the data because a web page title shows a different year.
+
+### Article 24. `URL`
+
+1. `URL` should preferably point to an information page that gives access to downloads or documentation.
+2. If both a direct file link and an information page exist, keep the information page.
+3. If a link is dead and cannot be replaced with an authoritative information page, delete it or replace it with an accessible authoritative page.
+4. The field does not need to be permanently valid, but must have practical review value at the time of review.
+
+### Article 25. `Category`
+
+1. `Category` must be exactly one of:
    - `Complex Applied`
    - `High-level Mental`
    - `Action/Output`
    - `Sensory/Response`
    - `Biological State`
    - `Others`
-2. 该字段原则上由程序或预处理 LLM 先行给出。
-3. 人工审核员仅在分类明显错误时进行修正。
-4. 不得创建上述六类之外的新分类值。
+2. The field is normally proposed by a program or preprocessing LLM.
+3. Human reviewers should correct it only when the classification is clearly wrong.
+4. Do not create category values outside the six listed values.
 
-### 第26条 `Subjects`
+### Article 26. `Subjects`
 
-1. `Subjects` 为数据集所涉及的有效被试数，取整数。
-2. 如官方人数与实际可用人数不一致，应优先采用实际可用人数。
-3. 该类冲突应在 `Data Quality Notes` 中说明。
+1. `Subjects` is the integer number of valid subjects in the dataset.
+2. If the official count differs from the actually usable count, prefer the actually usable count.
+3. Record this conflict in `Data Quality Notes`.
 
-### 第27条 `Files (Completed)`
+### Article 27. `Files (Completed)`
 
-1. `Files (Completed)` 指 EEGUnity 程序解析为 `Completed` 的文件数量。
-2. 该字段原则上不由 LLM 与人工审核员手工修改。
-3. 如程序解析结果明显异常，应提交“需重解析”或“需修正 kernel”的结论，而非直接手工篡改。
+1. `Files (Completed)` is the number of files parsed by EEGUnity as `Completed`.
+2. LLMs and human reviewers normally must not edit this field manually.
+3. If the parser result is clearly abnormal, report that the dataset needs a rescan or kernel correction instead of manually changing the count.
 
-### 第28条 `Channels`
+### Article 28. `Channels`
 
-1. `Channels` 指文件所使用的通道数量，包含非 EEG 通道。
-2. 若存在少量不同通道数量且可以清晰列举，可使用 `32/64`、`22-128` 等方式表示。
-3. 若情况复杂且不宜完整枚举，可使用 `Variable`。
-4. 允许采用 LLM 或审核员认为最清晰的表示方式，但应避免引起歧义。
+1. `Channels` is the number of channels used by files, including non-EEG channels.
+2. If only a few channel counts exist and can be listed clearly, use forms such as `32/64` or `22-128`.
+3. If the situation is complex and should not be fully enumerated, use `Variable`.
+4. LLMs or reviewers may use the clearest representation, but must avoid ambiguity.
 
-### 第29条 `Sampling Rate`
+### Article 29. `Sampling Rate`
 
-1. `Sampling Rate` 应记录数据的主要采样率信息。
-2. 当全数据集采样率一致时，应写明单一值。
-3. 当不同文件、模态或阶段存在明显差异时，可以使用多值或说明性写法。
-4. 当差异复杂且不宜完整枚举时，可以使用 `Variable`，并在 `Data Quality Notes` 中补充说明。
+1. `Sampling Rate` records the main sampling-rate information.
+2. If the whole dataset has one sampling rate, write a single value.
+3. If files, modalities, or phases differ, use multiple values or explanatory wording.
+4. If differences are complex, use `Variable` and explain in `Data Quality Notes`.
 
-### 第30条 `Manual Review`
+### Article 30. `Manual Review`
 
-1. `Manual Review` 仅能由人类审核员填写。
-2. 填写内容可以为姓名、笔名或审核员认可的标识符。
-3. 多位人类审核员应按先后顺序使用 `/` 分隔。
-4. LLM 不得伪造、补写或冒充 `Manual Review` 标记。
-5. `Manual Review` 必须内联写在第二行 Meta 区域末尾，位于 `Sampling Rate` 之后，格式为 `| **Manual Review**: ...`。
-6. 不再允许将 `Manual Review` 单独放在第三行。
+1. Only human reviewers may fill `Manual Review`.
+2. The value may be a real name, alias, or reviewer-approved identifier.
+3. Multiple reviewers should be separated by `/` in review order.
+4. LLMs must not forge, add, or impersonate a `Manual Review` mark.
+5. `Manual Review` must be inline at the end of the second meta line, after `Sampling Rate`, using `| **Manual Review**: ...`.
+6. A separate third-line `Manual Review` field is no longer allowed.
 
-### 第30条之一 固定结构
+### Article 30.1. Fixed Structure
 
-1. 当前版本原则上只保留以下一级栏目，并按既有模板顺序组织：
+1. The current template normally keeps only these top-level sections in this order:
    - `## Paradigm`
    - `## File Scan Result`
    - `## Tasks`
    - `## Data Quality Notes`
    - `## Kernel Responsibilities`
-2. `## File Scan Result` 节下设以下三级子节，顺序固定：
-   - `### Event Structure`（必须）
-   - `### MISC Label Summary`（可选）
-   - `### Info`（必须）
-3. 除本规则明确列出的可选栏目外，不得擅自重命名固定栏目标题。
-4. `STIM Label Summary` 已废止，不得在新文档中新增该栏目。原始数据中来自 trigger/stim channel 的离散事件，应统一在 `### Event Structure` 表格中登记。
+2. `## File Scan Result` contains these third-level subsections in fixed order:
+   - `### Event Structure` (required)
+   - `### MISC Label Summary` (optional)
+   - `### Info` (required)
+3. Do not rename fixed section headings except for explicitly optional sections listed in this rulebook.
+4. `STIM Label Summary` is deprecated and must not be added to new documents. Discrete events from trigger or stim channels must be registered in `### Event Structure`.
 
-### 第30条之二 禁止额外章节
+### Article 30.2. No Extra Sections
 
-1. 除维护者明确要求外，不得新增非模板一级栏目，例如 `## Meta`、独立 `## References`、自定义扩展说明区等。
-2. 如确需补充说明，应优先写入现有栏目下的 Task `Notes`、`Data Quality Notes`、`### Kernel Notes`（`## Kernel Responsibilities` 下）或审核记录，而不应新增一级章节。
-3. 对既有历史文档进行实质性修订时，应同步删除不符合现行结构的额外章节，除非维护者另有明确要求。
+1. Unless maintainers explicitly request it, do not add non-template top-level sections such as `## Meta`, standalone `## References`, or custom extension sections.
+2. If extra explanation is necessary, prefer task `Notes`, `Data Quality Notes`, `### Kernel Notes` under `## Kernel Responsibilities`, or review records.
+3. When substantially revising historical documents, remove extra sections that violate the current structure unless maintainers explicitly request otherwise.
 
-### 第30条之三 `Manual Review` 自动化行为
+### Article 30.3. Automated Behavior for `Manual Review`
 
-1. 生成流水线中的 LLM 环节**不得**填写 `Manual Review` 字段（包括 `Pending`、`TBD`、`N/A` 等占位值）。
-2. LLM 应在第二行 Meta 区域末尾原样输出 `| **Manual Review**:`（冒号后为空）。若 LLM 因模板复用意外填入任何非空值，流水线后处理必须强制清空该字段。
-3. 该字段内容只在人类审核员手工编辑 `analysis.md` 时才可出现非空值，填写规则见第30条。
+1. LLM stages in generation pipelines must not fill `Manual Review`, including placeholders such as `Pending`, `TBD`, or `N/A`.
+2. LLMs should output `| **Manual Review**:` at the end of the second meta line with nothing after the colon. If template reuse accidentally inserts a non-empty value, post-processing must clear it.
+3. This field may be non-empty only when a human reviewer manually edits `analysis.md`; use Article 30 for formatting.
 
+## Chapter 6. Paradigm Area
 
-## 第六章 Paradigm Area
+### Article 31. General Paradigm Rule
 
-### 第31条 范式描述总则
+`Paradigm Area` should describe the dataset's experimental paradigm, task form, subject behavior, and recording method, and should match the actual data.
 
-`Paradigm Area` 应描述数据集的实验范式、任务形式、被试行为与记录方式，并应与数据实际内容相一致。
+### Article 32. Consistency Requirements
 
-### 第32条 一致性要求
+Paradigm descriptions must align with:
 
-范式描述应当同时对齐以下信息：
+1. Data directories and file structure.
+2. Event files.
+3. Official pages and official documentation.
+4. Authoritative papers that clearly use the dataset.
 
-1. 数据目录与文件结构。
-2. 事件文件。
-3. 官方页面与官方说明。
-4. 明确使用该数据集的权威论文。
+### Article 33. Data Priority
 
-### 第33条 数据优先
+When online material conflicts with data material, the data prevails.
 
-当在线资料与数据资料不一致时，应当以数据为准。
+### Article 34. No Over-Inference
 
-### 第34条 禁止过度推断
+Paradigm descriptions must not turn a paper's experimental goal, theoretical hypothesis, or common analysis style into a label task supposedly supported by the public data unless the data provides implementable events or labels.
 
-范式描述不得将论文中的实验目的、理论假设或作者常用分析方式，直接改写为当前公开数据已明确支持的标签任务，除非数据中确有可落地的事件或标签依据。
+### Article 35. Description Boundary
 
-### 第35条 描述边界
+Paradigm descriptions may state the original experimental intent, but must distinguish:
 
-范式描述可以写明实验原本意图，但应区分以下两层内容：
+1. The goal of the experimental design.
+2. The labels and tasks actually available in the public data.
 
-1. 实验设计层面的目标。
-2. 当前公开数据层面实际可用的标签和任务。
+## Chapter 7. Kernel Responsibilities Area
 
+### Article 36. Purpose and Structure
 
-## 第七章 Kernel Responsibilities Area
+1. `Kernel Responsibilities Area` records the core semantic judgment for the dataset at the kernel level.
+2. The section uses blockquote metadata fields. The current version keeps only `Super Meta Required` and `Status`, in that order.
+3. Do not add other fields, custom blocks, or explanatory text in this section.
+4. Historical fields such as Type 1/2/3 template text, `Selected Mode`, `Why`, `Primary Label Routes`, and `Web Reference Used for Decision` are deprecated and should be removed during substantial revisions.
 
-### 第36条 节的作用与结构
+### Article 37. `Super Meta Required`
 
-1. `Kernel Responsibilities Area` 用于记录当前数据集在 kernel 语义层面的核心判断。
-2. 该节采用 blockquote 元字段形式，当前版本只保留两个字段：`Super Meta Required` 与 `Status`，按此顺序书写。
-3. 不得在本节新增其他字段、自定义块或说明性文本。
-4. 历史文档中遗留的 `Type 1/2/3` 模板文本、`Selected Mode`、`Why`、`Primary Label Routes`、`Web Reference Used for Decision` 等字段已废止，在实质性修订时应同步删除。
+1. `Super Meta Required` states whether the dataset has target labels that require extra derivation, pairing, folding, mapping, or cross-file joining.
+2. Legal values are exactly:
+   - `Yes`: at least one task in `Tasks Area` has `Meta Level = super`.
+   - `No`: all tasks have `Meta Level = raw`.
+3. Do not use synonyms or case variants.
 
-### 第37条 `Super Meta Required`
+### Article 38. Deciding `Super Meta Required`
 
-1. `Super Meta Required` 表示当前数据集是否存在需要额外派生、配对、折叠、映射或跨文件连接才能生成的目标标签。
-2. 合法取值仅为以下两种：
-   - `Yes` — `Tasks Area` 中至少一个任务的 `Meta Level = super`
-   - `No` — 所有任务的 `Meta Level = raw`
-3. 该字段不得使用其他同义词或大小写变体。
+1. If any task, including `Classical Task` or `Potential Task`, has `Meta Level = super`, `Super Meta Required` must be `Yes`.
+2. If all tasks have `Meta Level = raw`, `Super Meta Required` should be `No`.
+3. If this field conflicts with `Tasks Area`, `Tasks Area` prevails and this field must be corrected.
+4. LLM review scripts may infer and fill this field from `Tasks Area`.
 
-### 第38条 `Super Meta Required` 的判定规则
+### Article 42.1. `Status`
 
-1. 凡 `Tasks Area` 中任一任务（含 `Classical Task` 与 `Potential Task`）的 `Meta Level = super`，则 `Super Meta Required` 必须为 `Yes`。
-2. 所有任务的 `Meta Level = raw`，则 `Super Meta Required` 应为 `No`。
-3. 若 `Super Meta Required` 字段与 `Tasks Area` 实际情况不一致，以 `Tasks Area` 为准，并应同步修正本字段。
-4. LLM 审核脚本可根据 `Tasks Area` 自动推断并填写本字段。
+1. `Status` marks whether the current document text is sufficient to support later kernel refactoring, EEGUnity export, or event and label reconstruction.
+2. `Status` is a dataset-level field, not a per-task field.
+3. Although `Status` is metadata, it must currently be written in the `Kernel Responsibilities Area` blockquote, not in a new top-level section.
+4. LLM review scripts, human reviewers, or maintainers may update `Status` according to the latest judgment.
 
-### 第42条之一 `Status`
+### Article 42.2. Legal `Status` Values
 
-1. `Status` 用于标记“当前文档文本状态”是否已足以支撑后续 kernel 重构、EEGUnity 导出或事件/标签重建。
-2. `Status` 为数据集级字段，不按单个 `Task` 分别填写。
-3. 虽然 `Status` 在性质上属于元信息，但当前版本中应写在 `Kernel Responsibilities Area` 的 blockquote 元字段中，而非新增一级栏目。
-4. `Status` 可以由 LLM 审核脚本、人类审核员或维护者根据最新判断进行修改。
-
-### 第42条之二 `Status` 合法取值
-
-`Status` 仅允许以下四种机器可读写法：
+`Status` may use only these four machine-readable values:
 
 1. `wait_kernel_update`
 2. `wait_manual_review`
 3. `completed`
 4. `hallucination`
 
-不得使用上述写法之外的同义词、自然语言短句或大小写变体替代。
+Do not replace them with synonyms, natural-language phrases, or case variants.
 
-### 第42条之二之一 `completed` 与 `hallucination` 的权限边界
+### Article 42.2.1. Authority Boundary for `completed` and `hallucination`
 
-1. `completed` 与 `hallucination` 仅能由人类审核员给出，LLM 审核脚本不得主动判定为这两个值。
-2. LLM 审核脚本在当前阶段只应在 `wait_kernel_update` 与 `wait_manual_review` 之间作二选一判断。
-3. 若当前文本已经足以支撑既有任务、且未暴露明确的 kernel 结构性缺口，LLM 审核脚本也应保守地给出 `wait_manual_review`，等待人类审核员最终确认。
-4. 人类审核员完成审核后，最终状态必须为 `completed` 或 `hallucination`，不得将审核结果留在 `wait_manual_review` 或 `wait_kernel_update`。
+1. Only human reviewers may assign `completed` or `hallucination`. LLM review scripts must not proactively assign either value.
+2. At the current stage, LLM review scripts should choose only between `wait_kernel_update` and `wait_manual_review`.
+3. If the current text is already sufficient to support existing tasks and does not expose a clear structural kernel gap, LLM review scripts should conservatively output `wait_manual_review` and wait for final human confirmation.
+4. After human review is complete, the final status must be `completed` or `hallucination`; it must not remain `wait_manual_review` or `wait_kernel_update`.
 
-### 第42条之二之二 `hallucination` 的判定边界
+### Article 42.2.2. Boundary for `hallucination`
 
-1. `hallucination` 是文档级别的严重缺陷标记，适用于整个 `analysis.md` 文档均无法信任的情形。
-2. 触发条件包括但不限于：
-   - 数据集 URL 失效且无法核实任何关键字段
-   - 文档描述与实际数据集内容完全对不上（牛头不对马脚）
-   - 任务定义、Event Structure、Paradigm 均无可信依据，且无法通过合理补充修复
-   - 数据集本身信息严重缺失，专家也无法给出可靠判断
-3. `hallucination` **不适用于**局部问题（如某个任务引用有误、部分通道描述不准确）；局部问题应在 `Data Quality Notes` 中记录，状态保持 `completed`。
-4. 收到 `hallucination` 标记的数据集，管理员将考虑删除该文档或安排重新扫描，不再要求审核员继续修复。
+1. `hallucination` is a severe document-level defect flag for cases where the entire `analysis.md` cannot be trusted.
+2. Triggering conditions include, but are not limited to:
+   - The dataset URL is invalid and no key field can be verified.
+   - The document describes a dataset that does not match the actual dataset.
+   - Task definitions, `Event Structure`, and `Paradigm` have no credible basis and cannot be repaired by reasonable supplementation.
+   - Dataset information is so incomplete that even experts cannot make a reliable judgment.
+3. `hallucination` does not apply to local issues such as one incorrect task citation or partially inaccurate channel description. Local issues should be recorded in `Data Quality Notes`, and status should remain `completed` after human review.
+4. For datasets marked `hallucination`, administrators will consider deleting the document or arranging a rescan. Reviewers are not required to keep repairing it.
 
-### 第42条之三 `Status` 判定规则
+### Article 42.3. Deciding `Status`
 
-1. `wait_kernel_update` 表示：当前文档文本已经明确暴露出 kernel 语义层面的结构性缺口，即 `Event Structure`、`MISC Label Summary`、`Label Route`、companion files 接入、`super meta` 的整合路径等内容尚不足以支撑既有任务稳定成立。此为 LLM 脚本或自动扫描阶段的中间状态。
-2. `wait_manual_review` 表示：当前文档未明确暴露上述 kernel 结构性缺口，或虽然仍有疑点，但这些疑点主要属于人类审核确认、任务去留确认、最终放行确认，而不应被自动判定为”必须修改 kernel”。此为 LLM 脚本的默认输出状态。
-3. `completed` 表示：人类审核员确认已完成对该文档的审核工作。即使存在已知质量问题，只要已在 `Data Quality Notes` 中记录，且整体文档可信、可推进，即可标记为 `completed`。`completed` 反映的是”审核员已尽职审核”，而非”文档零瑕疵”。
-4. `hallucination` 表示：人类审核员判断整个文档存在无法修复的严重缺陷，无法继续审核或推进 kernel 实现，应由管理员处理。
-5. 下列事项原则上不得单独作为 `wait_kernel_update` 的判定理由：
-   - 常规预处理、滤波、重参考、下采样
-   - artifact rejection、坏段剔除、坏文件筛除
-   - 一般性数据质量控制
-   - 训练参数、epoch 长度、模型超参数等实现细节
-   - 仅凭文档外推测 kernel 现实中也许尚未写完或尚未验证
-6. 若文档语义上已经把相关事件、标签、companion files 或 metadata 接入路径说清楚，并以”当前方案已可成立”的口吻组织任务，则不应仅因实现层面的谨慎猜测而判为 `wait_kernel_update`。
-7. 当同一数据集同时存在多类问题时，判定优先级应为：`hallucination` 高于其他所有值；`wait_manual_review` 高于 `wait_kernel_update`；`wait_kernel_update` 高于 `completed`。
+1. `wait_kernel_update` means the document clearly exposes a structural semantic kernel gap: `Event Structure`, `MISC Label Summary`, `Label Route`, companion-file ingestion, or `super meta` integration is not yet sufficient to support existing tasks stably. This is an intermediate state for LLM scripts or automatic scanning.
+2. `wait_manual_review` means no clear structural kernel gap is exposed, or remaining doubts mainly require human confirmation of task validity, task retention, or final release. This is the default LLM output status.
+3. `completed` means a human reviewer confirms that document review is finished. Known quality issues may still exist if they are recorded in `Data Quality Notes` and the overall document is trustworthy and ready to proceed. `completed` means the reviewer has done due diligence, not that the document is flawless.
+4. `hallucination` means a human reviewer judges the whole document to have unrecoverable severe defects and that it should be handled by administrators.
+5. The following must not, by themselves, justify `wait_kernel_update`:
+   - Routine preprocessing, filtering, rereferencing, or downsampling.
+   - Artifact rejection, bad-segment removal, or bad-file exclusion.
+   - General data quality control.
+   - Implementation details such as training parameters, epoch length, or model hyperparameters.
+   - Guessing from outside the document that the kernel might be unfinished or unverified.
+6. If the document semantically explains relevant events, labels, companion files, or metadata access paths and presents tasks as currently valid, do not mark `wait_kernel_update` only because of implementation caution.
+7. When a dataset has multiple issue types, judgment priority is: `hallucination` above all other values; `wait_manual_review` above `wait_kernel_update`; `wait_kernel_update` above `completed`.
 
-### 第42条之四 blockquote 书写位置与顺序
+### Article 42.4. Blockquote Position and Order
 
-1. 当前版本中，`Kernel Responsibilities Area` 下的 blockquote 元字段应按以下顺序书写：
+1. In the current version, blockquote metadata under `Kernel Responsibilities Area` must appear in this order:
    - `Super Meta Required`
    - `Status`
-2. 不得为上述字段单独新增一级章节或自定义块。
-3. 若维护脚本批量改写 `Status`，应只修改该字段所在固定行，不得顺带重写其他正文内容。
+2. Do not create separate top-level sections or custom blocks for these fields.
+3. If a maintenance script batch-rewrites `Status`, it should modify only the fixed line for that field and should not rewrite unrelated body text.
 
+## Chapter 8. File Scan Result Area
 
-## 第八章 File Scan Result Area
+`## File Scan Result` summarizes the kernel scan over raw data files, including kernel fingerprint, event structure, MISC labels, and subject information. It contains fixed subsections `### Event Structure`, `### MISC Label Summary`, and `### Info`, and begins with a kernel fingerprint blockquote.
 
-`## File Scan Result` 节汇总 kernel 对原始数据文件的扫描结果，包括 kernel 指纹、事件结构、MISC 标签与受试者信息。该节下设三个固定子节（`### Event Structure`、`### MISC Label Summary`、`### Info`），并在节开头提供 kernel 指纹 blockquote。
+### Article 42.5. Kernel Fingerprint
 
-### 第42条之五 Kernel 指纹
-
-1. `## File Scan Result` 节开头应以 blockquote 形式记录生成本扫描结果所用的 kernel 指纹信息。
-2. 当前参考格式（字段可随版本增减，顺序由 neurodoc 决定）：
-   ```
+1. The start of `## File Scan Result` should record the kernel fingerprint used to generate the scan result as a blockquote.
+2. The reference format is:
+   ```markdown
    > **Kernel SHA256**: `<full_hash>`
    > **EEGUnity Version**: `X.Y.Z`
    > **Scan Type**: Full
    ```
-3. `Kernel SHA256` 为 kernel 文件内容的哈希，由维护脚本自动计算，不应手工填写；`EEGUnity Version` 为扫描时所用 EEGUnity 版本号。
-4. `Scan Type` 取值为 `Full`（全量扫描）或 `Sampled (N/M files)`（采样扫描）。
-5. 若当前数据集尚无 kernel，`Kernel SHA256` 字段写 `N/A`。
-6. 该 blockquote 由 neurodoc 自动维护，人类审核员与 LLM 不得手工修改哈希值。
-7. 前端展示层（neuroaudit/server.py + index.html）将 `## File Scan Result` 节开头所有连续的 `>` 行整体视为 Kernel Fingerprint，以渲染后的 blockquote 展示，不解析具体字段名。此设计使前端无需随字段变更而修改解析逻辑。
-8. 不得在 `### Event Structure` 或其他子节中插入 HTML 注释标记（如 `<!-- AUTO-KERNEL-... -->`）；所有 kernel 派生信息均直接写入标准 Markdown 格式。
+3. `Kernel SHA256` is the hash of the kernel file content and is calculated by maintenance scripts; it should not be filled manually. `EEGUnity Version` is the version used during scanning.
+4. `Scan Type` is `Full` or `Sampled (N/M files)`.
+5. If the dataset has no kernel yet, write `N/A` for `Kernel SHA256`.
+6. Neurodoc maintains this blockquote automatically. Human reviewers and LLMs must not manually edit the hash value.
+7. The frontend display layer treats all consecutive `>` lines at the beginning of `## File Scan Result` as Kernel Fingerprint and renders them as one blockquote without parsing field names. This keeps the frontend independent of field changes.
+8. Do not insert HTML comments such as `<!-- AUTO-KERNEL-... -->` inside `### Event Structure` or other subsections. All kernel-derived information must be written directly in standard Markdown.
 
-### 第一节 Event Structure（子节）
+## Section 1. Event Structure Subsection
 
-### 第43条 表格形式
+### Article 43. Table Form
 
-`### Event Structure` 应以表格形式呈现。表格可为空，但其为空本身应被视为具有规则后果的判断结果。
+`### Event Structure` must be presented as a table. The table may be empty, but emptiness has rule consequences.
 
-### 第44条 列要求
+### Article 44. Required Columns
 
-表格至少应包含以下列：
+The table must contain at least:
 
 1. `Event ID`
 2. `Count (total)`
@@ -454,185 +473,178 @@ LLM 审核脚本负责：
 4. `Meta Level`
 5. `Meaning`
 
-### 第45条 空表格的后果
+### Article 45. Consequences of an Empty Table
 
-当 `Event Structure` 实际为空，或明确表示“无任何有效事件标签”时：
+When `Event Structure` is empty or explicitly states that no valid event labels exist:
 
-1. 不得保留 `epoch_by_event_hdf5` 任务。
-2. 不得保留 `epoch_by_long_event_hdf5` 任务。
-3. 原则上仅可考虑 `epoch_by_segmentation_hdf5`。
+1. Do not keep `epoch_by_event_hdf5` tasks.
+2. Do not keep `epoch_by_long_event_hdf5` tasks.
+3. Normally only `epoch_by_segmentation_hdf5` may be considered.
 
-### 第46条 `Type` 的合法取值
+### Article 46. Legal `Type` Values
 
-`Type` 仅允许以下两个值：
+`Type` may use only:
 
-1. `event` — 可用于任务的离散事件或时间段，包括刺激、反应、状态转换、睡眠分期等全部业务性事件。
-2. `admin` — 系统性、边界性或应被排除的事件，如设备标记、文件边界、运动伪迹标记等。
+1. `event`: discrete events or time spans that can be used for tasks, including stimuli, responses, state transitions, sleep stages, and other domain events.
+2. `admin`: system, boundary, or excluded events, such as device markers, file boundaries, or motion-artifact markers.
 
-> **说明**：原有的 `short`、`long`、`rest` 细分类型已废止。事件时长特征（瞬时 vs 持续）由 `Epoch Method` 在 `Tasks Area` 中决定，不在 `Event Structure` 中重复标注。
+The historical `short`, `long`, and `rest` subdivisions are deprecated. Event duration behavior is determined by `Epoch Method` in `Tasks Area`, not repeated in `Event Structure`.
 
-### 第47条 `admin` 事件
+### Article 47. `admin` Events
 
-1. `admin` 事件应显式保留在 `Event Structure` 表格中，不得默认删除。
-2. `admin` 事件默认不得作为监督学习任务的 `target_events`。
-3. 如确有例外，应提供强证据并在 Task 的 `Notes` 中写明理由。
+1. `admin` events should remain explicitly listed in `Event Structure`; do not delete them by default.
+2. `admin` events must not normally be used as `target_events` for supervised-learning tasks.
+3. Any exception requires strong evidence and a reason in task `Notes`.
 
-### 第48条 `Meta Level` 的判定
+### Article 48. Deciding `Meta Level`
 
-1. 能直接从原始数据读取的事件，应标记为 `raw`。
-2. 需经配对、折叠、推导、映射、连接或重构而成的事件，应标记为 `super`。
+1. Events that can be read directly from raw data are `raw`.
+2. Events that require pairing, folding, derivation, mapping, joining, or reconstruction are `super`.
 
-### 第49条 首次制作原则
+### Article 49. First-Pass Documentation
 
-首次制作文档时，`Event Structure` 原则上仅记录 `raw meta`。若 `super meta` 尚未由稳定 kernel 支持，不应伪装为已存在的原始事件。
+On first document creation, `Event Structure` should normally record only `raw meta`. If `super meta` is not yet supported by a stable kernel, do not pretend it is a raw event.
 
-### 第50条 与资料不符的处理
+### Article 50. Handling Mismatches with Source Material
 
-当 `Event Structure` 与数据集资料描述严重不符时，应作如下处理：
+When `Event Structure` seriously disagrees with dataset documentation:
 
-1. 若不影响 `Tasks Area` 的有效性，可在 `Data Quality Notes` 中注明警告。
-2. 若影响任务有效性，应优先修正事件解释、降级任务、删除任务，或提交“需重解析”结论。
-3. 不得在未说明冲突的情况下强行维持错误任务。
+1. If task validity is not affected, warn in `Data Quality Notes`.
+2. If task validity is affected, correct event interpretation, downgrade tasks, delete tasks, or report that a rescan is needed.
+3. Do not keep incorrect tasks without explaining the conflict.
 
-### 第51条 解析差异
+### Article 51. Parser Differences
 
-当 `Event Structure` 与资料不符的原因疑似来自 kernel 解析差异时：
+When mismatch is likely caused by kernel parser differences:
 
-1. 若不影响任务成立，可暂不修正。
-2. 若影响任务成立，应明确标记为“需重解析”或“需修正 kernel”。
+1. If task validity is not affected, correction may be postponed.
+2. If task validity is affected, clearly mark that a rescan or kernel correction is needed.
 
-### 第51条之一 与 `Status` 的联动
+### Article 51.1. Linkage with `Status`
 
-1. 若当前 `Event Structure`、`MISC Label Summary`（如有）与 `Tasks Area` 之间，已经在文档语义上形成足够一致的证据链，则不应仅因预处理、artifact rejection、质量控制或实现细节而判为 `wait_kernel_update`。
-2. 若当前文档已经足以组成既有 `Classical Task` 或 `Potential Task` 的文本依据，但是否最终放行为 `completed` 仍需管理员或人类审核员确认，则 LLM 审核脚本应暂时判为 `wait_manual_review`。
-3. 若当前 `Event Structure` 不足以支撑现有任务，且问题主要来自任务定义本身是否成立、事件语义是否正确、证据是否冲突、标签映射是否应被删除或降级等人工裁定问题，则 `Status` 原则上应为 `wait_manual_review`。
-4. 仅当当前 `Event Structure` 与相关任务、路由说明、`MISC Label Summary`（如有）之间已形成足够一致且可追溯的实现依据，并经管理员或人类审核员确认后，`Status` 方可为 `completed`。
+1. If `Event Structure`, `MISC Label Summary` when present, and `Tasks Area` already form a sufficiently consistent evidence chain, do not mark `wait_kernel_update` only because of preprocessing, artifact rejection, quality control, or implementation details.
+2. If the document is already sufficient as textual support for existing `Classical Task` or `Potential Task` entries, but final release still requires administrator or human-reviewer confirmation, LLM review scripts should temporarily mark `wait_manual_review`.
+3. If `Event Structure` cannot support existing tasks and the issue mainly concerns human judgment about task validity, event semantics, evidence conflict, label mapping, deletion, or downgrading, `Status` should normally be `wait_manual_review`.
+4. `Status` may be `completed` only when `Event Structure`, relevant tasks, route explanations, and `MISC Label Summary` when present form a sufficiently consistent and traceable implementation basis, and a human reviewer or administrator has confirmed it.
 
-### 第52条 上下文依赖事件
+### Article 52. Context-Dependent Events
 
-若同一事件码在不同文件、不同 task、或不同实验阶段中具有不同语义，应视为“上下文依赖事件”。
+If the same event code has different meanings across files, tasks, or experimental phases, it is a context-dependent event. For such events:
 
-对此类事件：
+1. Do not interpret their meaning without file-level context.
+2. Warn explicitly in `Event Structure` or `Data Quality Notes`.
+3. Without stable context rules, do not use them directly in high-confidence `Classical Task` entries.
 
-1. 不得脱离文件级上下文独立解释其语义。
-2. 应在 `Event Structure` 或 `Data Quality Notes` 中明确警告。
-3. 如无稳定上下文判定规则，不得将其直接用于高置信度 `Classical Task`。
+### Article 53. Later Updates for `super meta`
 
-### 第53条 `super meta` 的后续更新
+When a `Classical Task` depends on `super meta`, human reviewers are normally not required to manually rewrite `Event Structure` first. Such updates should be handled by later kernel and LLM automation.
 
-当 `Classical Task` 依赖 `super meta` 时，原则上不要求人工先手工改写 `Event Structure`。该类更新宜由后续 kernel 与 LLM 自动化流程完成。
+### Article 53.1. Optional Notes under `Event Structure`
 
-### 第53条之一 `Event Structure` 下的说明性 Note
+1. An optional explanatory `Note` may appear after the `Event Structure` table, but is not required.
+2. The note must not repeat the meanings of the `Type` enum values; `event` and `admin` are defined by this rulebook.
+3. Use the note only when:
+   - Raw data has parsing ambiguity, such as the same event code meaning different things in different files.
+   - Events come from multiple sources, such as companion files and trigger channels, and their merge logic matters.
+   - Other explanations materially affect kernel implementation.
+4. Do not use the note to introduce new events that are absent from the table.
+5. If a later kernel update changes event representation, first update this note and related task routes, then decide whether to rewrite the main `Event Structure` table.
+6. When neurodoc writes new scan results, any change to the `Event Structure` table, including count changes or event additions or removals, clears this note automatically. If the table is unchanged, the note remains unchanged.
 
-1. `Event Structure` 表格之后可以设置可选的说明性 `Note`，但不作强制要求。
-2. 不得在该 `Note` 中重复解释 `Type` 枚举值的含义；`event` 与 `admin` 的语义由规则书统一定义，文档中无需重复声明。
-3. 该 `Note` 仅用于以下情形：
-   - 原始数据存在解析歧义（如同一事件码在不同文件中语义不同），需说明当前文档立场；
-   - 事件来自多种来源（如 companion file、trigger channel）且合并方式需交代；
-   - 其他对 kernel 实现有实质影响的说明。
-4. 该 `Note` 不应用于凭空引入表格中不存在的新事件。
-5. 若后续 kernel 更新导致事件表达方式发生变化，应优先修改该 `Note` 与相关任务路由，再决定是否需要改写 `Event Structure` 主表。
-6. neurodoc 在写入新扫描结果时，若 `Event Structure` 表格发生任何变化（包括计数变化、事件增删），将自动清空该 `Note`，需由人类审核员重新填写。若表格完全未变，`Note` 保持原文不变。
+### Article 53.2. Companion Files and External Tables
 
-### 第53条之二 companion files 与外部表的使用
+1. Labels, event intervals, or auxiliary fields directly present in official companion files, `participants.tsv`, behavioral tables, sleep-stage files, or other formal sidecars may normally be used as valid information sources.
+2. If such information is a discrete event or time span and will be used for `target_events` or event-route tasks, it must first be registered in `Event Structure`.
+3. If such information is an epoch-level class, scalar, count, score, or continuous quantity, do not force it into `Event Structure`; route it through `MISC Label Summary` or task `Notes` as appropriate.
+4. These fields are `raw` only when directly readable without extra derivation. If they require pairing, mapping, normalization, cross-file joining, or rule-based reconstruction, they are `super`.
 
-1. 若标签、事件区间或辅助字段直接存在于数据集随附的官方 companion files、`participants.tsv`、行为表、sleep stage 文件或其他正式 sidecar 中，原则上可以作为合法信息源使用。
-2. 若上述信息本质上是离散事件或时间段，并将被用于 `target_events` 或事件型任务，必须先在 `Event Structure` 中登记后方可被任务引用。
-3. 若上述信息本质上是每 epoch 一个类别、标量、计数、评分或连续量，不应强行写入 `Event Structure`；应根据其最终路由写入 `MISC Label Summary` 或 Task 的 `Notes`。
-4. 仅当这些字段可直接读取且无需额外推导时，方可视为 `raw`；若需要配对、映射、标准化、跨文件连接或规则重建，则应视为 `super`。
+## Section 2. MISC Label Summary Subsection
 
+### Article 54. General Rule
 
-### 第二节 MISC Label Summary（子节）
+`### MISC Label Summary` describes the source, meaning, and implementation of numeric or continuous auxiliary labels.
 
-### 第54条 一般规则
+`STIM Label Summary` is deprecated. Discrete events originally stored in trigger or stim channels must be registered in `### Event Structure` instead.
 
-`### MISC Label Summary` 用于描述数值型或连续型辅助标签的来源、含义与实现方式。
+### Article 55. When It Appears
 
-> **说明**：`STIM Label Summary` 已废止。原始数据中来自 trigger/stim channel 的离散事件，应统一在 `### Event Structure` 表格中登记，不再单独设置 `STIM Label Summary` 节。
+1. If any task uses `misc` as `Label Route`, `### MISC Label Summary` must exist.
+2. If no task uses the `misc` route, this subsection may be omitted.
+3. Native misc channels found during scanning may be registered here for future tasks even when no current task uses them.
 
-### 第55条 出现条件
+### Article 56. Content Requirements
 
-1. 如某个任务使用 `misc` 作为 `Label Route`，则 `### MISC Label Summary` 必须存在。
-2. 若 `misc` 路由未实际用于任何任务，该子节可以省略。
-3. 原生 misc channel（扫描阶段发现）即使当前未被任务使用，也可以在本节登记供后续任务参考。
+`### MISC Label Summary` is a table with fixed columns `Channel | Source | Meta | Notes`:
 
-### 第56条 内容要求
+1. `Channel`: misc channel name, referenced by `Label Route = misc` tasks in the first column of `Target Definition`.
+2. `Source`: field source, such as `native (raw misc in EEG file)`, `native (events.tsv column: response_time)`, or `derived from participants.tsv: p_factor`.
+3. `Meta`: `raw` or `super`. Derived misc must be `super`; see Article 77.8.
+4. `Notes`: units, alignment, derivation logic, fill rules, and other implementation notes.
 
-`### MISC Label Summary` 以表格形式呈现，列结构固定为 `Channel | Source | Meta | Notes`：
+### Article 57. Automation Principle
 
-1. `Channel`：misc channel 名称，供 `Label Route = misc` 的任务在 `Target Definition` 首列引用。
-2. `Source`：字段来源（如 `native (raw misc in EEG file)`、`native (events.tsv column: response_time)`、`derived from participants.tsv: p_factor`）。
-3. `Meta`：`raw` 或 `super`（派生 misc 必填 `super`，见第77条之八）。
-4. `Notes`：单位、对齐方式、派生逻辑、填充规则等实现说明。
+This section is normally generated by the kernel and LLM. Human reviewers should edit it only when it is clearly wrong, incomplete, or in conflict with task dependencies.
 
-### 第57条 自动化原则
+## Section 3. Info Subsection
 
-该部分原则上由 kernel 与 LLM 自动生成，人类审核员仅在明显错误、遗漏或任务依赖冲突时进行修正。
+### Article 57.1. General Rule
 
+1. `### Info` records availability of file-level subject and device metadata for `Label Route = info` tasks.
+2. This subsection is required and must not be omitted. If information is entirely missing, still list the relevant fields and mark them `missing`.
 
-### 第三节 Info（子节）
+### Article 57.2. Fields and Completeness
 
-### 第57条之一 一般规则
-
-1. `### Info` 记录数据集文件级受试者与设备元信息的可用性，供 `Label Route = info` 类任务使用。
-2. 该子节为必须节，不可省略；若信息完全缺失，仍需填写相应字段并标注 `missing`。
-
-### 第57条之二 字段与完整性
-
-1. `### Info` 以表格形式呈现，固定列为 `Field`、`Completeness`、`Notes`。
-2. 以下字段为必展示规范字段，必须出现；若缺失填 `missing`：
+1. `### Info` is a table with fixed columns `Field`, `Completeness`, and `Notes`.
+2. These canonical fields are mandatory and must appear; if absent, mark them `missing`:
    - `subject_age`
    - `subject_sex`
    - `device`
-3. 扫描阶段应额外枚举 `participants.tsv` 中发现的所有列（如 `handedness`、`p_factor`、`internalizing`、`diagnosis` 等），按发现顺序追加到表格中。
-4. 以下字段为规范性可选字段，仅在数据集存在受试者分组概念时显式登记（可与第3款发现列重复，但同一字段只出现一次）：
-   - `subject_group`
-5. 任何 `Label Route = info` 的任务所引用的 `Info Field`，必须是本表中登记的字段名之一。
+3. The scan stage should additionally enumerate every column found in `participants.tsv`, such as `handedness`, `p_factor`, `internalizing`, or `diagnosis`, appended in discovery order.
+4. `subject_group` is a canonical optional field and should be registered explicitly only when the dataset has a subject-group concept. It may overlap with discovered columns, but each field should appear only once.
+5. Any `Info Field` referenced by a `Label Route = info` task must be one of the fields registered in this table.
 
-### 第57条之三 `Completeness` 合法取值
+### Article 57.3. Legal `Completeness` Values
 
-`Completeness` 仅允许以下四值：
+`Completeness` may use only:
 
-1. `complete` — 数据集中每条 EEG 记录均存在该字段。
-2. `partial` — 多数记录存在，但不保证全覆盖；具体比例可在 `Notes` 中说明。
-3. `incomplete` — 明确存在较多缺失，缺失程度显著。
-4. `missing` — 完全缺失。
+1. `complete`: every EEG record in the dataset has this field.
+2. `partial`: most records have it, but full coverage is not guaranteed; the ratio may be described in `Notes`.
+3. `incomplete`: many missing values are known.
+4. `missing`: the field is entirely absent.
 
-### 第57条之四 `Notes` 列
+### Article 57.4. `Notes` Column
 
-1. `Notes` 列为可选补充说明，可填写数值范围、枚举值、缺失原因等。
-2. 若无需补充，填写 `N/A`。
+1. `Notes` is optional supplementary explanation, such as numeric range, enum values, or missingness reasons.
+2. If no supplement is needed, write `N/A`.
 
-### 第57条之五 自动化原则
+### Article 57.5. Automation Principle
 
-1. `subject_age` 与 `subject_sex` 的 `Completeness` 原则上由 kernel 扫描结果（`locator_meta`）自动推断。
-2. `device` 与 `subject_group` 可由 LLM 从官方页面或 README 辅助填写。
-3. 人类审核员仅在自动填写明显错误或缺失时进行修正。
+1. `subject_age` and `subject_sex` completeness should normally be inferred automatically from kernel scan results such as `locator_meta`.
+2. `device` and `subject_group` may be assisted by the LLM using the official page or README.
+3. Human reviewers should edit them only when automatic filling is clearly wrong or missing.
 
+## Chapter 9. Retired
 
-## 第九章（原第九章已并入第八章）
+The former Chapter 9, `MISC Label Summary`, has been merged into Chapter 8, Section 2. This chapter number is retained as a placeholder and has no active content.
 
-> **说明**：原第九章 `MISC Label Summary` 已并入第八章 `File Scan Result Area` 的第二节，本章编号保留为空，不再另设内容。
+## Chapter 10. Tasks Area
 
+## Section 1. General Rules
 
-## 第十章 Tasks Area
+### Article 58. Role of the Tasks Area
 
-### 第一节 一般规则
+`Tasks Area` is the most important executable area in the document. It should directly guide EEG epoching, label generation, and later implementation.
 
-### 第58条 任务区地位
+### Article 59. Task Headings
 
-`Tasks Area` 是文档中最关键的执行区，应能直接指导 EEG 数据切窗、标签生成与后续实现。
-
-### 第59条 任务标题
-
-任务标题应采用以下形式之一：
+Task headings must use one of:
 
 1. `### Classical Task N: ...`
 2. `### Potential Task N: ...`
 
-### 第60条 任务字段顺序
+### Article 60. Task Field Order
 
-每个任务原则上应包含以下字段，并保持稳定顺序：
+Each task should normally contain these fields in stable order:
 
 1. `Task Type`
 2. `Epoch Method`
@@ -640,32 +652,31 @@ LLM 审核脚本负责：
 4. `Label Route`
 5. `Meta Level`
 6. `Target Definition`
-7. `Super Meta Notes`（如适用）
-8. `Evidence`（`Classical Task` 必填）
-9. `Notes`（自由补充说明，无强制格式；可用于 super meta 派生步骤、参数推断依据、审核备注等；旧文档字段名 `Kernel Notes` 自 v3 起统一改为 `Notes`。）
+7. `Super Meta Notes`, if applicable
+8. `Evidence`, required for `Classical Task`
+9. `Notes`, as free supplementary text with no forced format. It may be used for super-meta derivation steps, parameter inference, review notes, and similar content. The old field name `Kernel Notes` is unified as `Notes` from v3 onward.
 
-### 第61条 历史遗留写法
+### Article 61. Historical Legacy Syntax
 
-当前仓库中可能存在将 `segmentation` 写入 `Task Type` 的历史写法。自本规则草案起，建议统一如下：
+Some historical documents may write `segmentation` as `Task Type`. From this rulebook onward:
 
-1. `Task Type` 只使用 `classification` 或 `regression`。
-2. `epoch_by_segmentation_hdf5` 仅作为 `Epoch Method` 使用。
-3. 历史遗留文档可暂不立即批量清理，但新文档与新修订应尽量遵循本条。
+1. `Task Type` should use only `classification` or `regression`.
+2. `epoch_by_segmentation_hdf5` is only an `Epoch Method`.
+3. Historical documents need not be batch-cleaned immediately, but new documents and new revisions should follow this rule.
 
+## Section 2. Classical Task and Potential Task
 
-### 第二节 Classical Task 与 Potential Task
+### Article 62. Conditions for `Classical Task`
 
-### 第62条 `Classical Task` 成立条件
+A `Classical Task` is valid only when both conditions hold:
 
-`Classical Task` 同时满足下列两个条件时方可成立：
+1. Evidence shows that external literature or an authoritative source clearly used this dataset or an identifiable subset of it.
+2. The evidence clearly supports the current task objective, label definition, or supervision target.
 
-1. 存在证据表明外部文献或权威来源明确使用了本数据集或其可识别子集。
-2. 该证据明确支持当前任务目标、标签定义或监督目标。
+### Article 62.1. Explicitness Required for `Classical Task`
 
-### 第62条之一 `Classical Task` 明确性要求
-
-1. `Classical Task` 的关键字段不得使用模糊占位符。
-2. 本条所称关键字段，至少包括：
+1. Key fields in a `Classical Task` must not use vague placeholders.
+2. Key fields include at least:
    - `Task Type`
    - `Epoch Method`
    - `Epoch Parameters`
@@ -673,7 +684,7 @@ LLM 审核脚本负责：
    - `Meta Level`
    - `Target Definition`
    - `Evidence`
-3. 下列内容均属于本条所称模糊占位符或模糊写法：
+3. Vague placeholders or vague styles include:
    - `Needs verification`
    - `TBD`
    - `task-dependent`
@@ -681,348 +692,341 @@ LLM 审核脚本负责：
    - `Variable`
    - `N/A`
    - `unknown`
-   - 带 `*` 或其他未定义不确定标记的参数写法
-   - 其他不能直接指导实现的空泛描述
-4. 若缺乏足够依据填写明确值，则该任务不得保留为 `Classical Task`，应降级为 `Potential Task`、标记为需重审，或直接删除。
-5. LLM 与人类审核员均可以运用认知判断，为 `Classical Task` 选择最合适的明确值。
-6. 前款所称“最合适的明确值”，原则上按以下顺序优先选择：
-   - 官方页面或官方说明中的推荐值
-   - 明确使用该数据集的参考文献中的实际取值
-   - 审核员或 LLM 基于专业知识给出的合理取值
-7. 如所选取值并非直接由官方页面或文献逐字给出，应在 Task 的 `Notes` 中简要说明判断依据。
+   - parameters marked with `*` or another undefined uncertainty marker
+   - any broad description that cannot directly guide implementation
+4. If there is not enough basis for explicit values, the task must not remain a `Classical Task`; downgrade it to `Potential Task`, mark it for review, or delete it.
+5. LLMs and human reviewers may use judgment to choose the best explicit values for `Classical Task`.
+6. The best explicit value should be chosen in this priority order:
+   - official page or official documentation recommendation
+   - actual values used in papers that clearly use the dataset
+   - reasonable values chosen by a reviewer or LLM based on domain knowledge
+7. If the chosen value is not quoted directly from the official page or paper, briefly explain the judgment in task `Notes`.
 
-### 第63条 `Potential Task` 适用情形
+### Article 63. When to Use `Potential Task`
 
-下列情形应写为 `Potential Task`：
+Use `Potential Task` when:
 
-1. 数据本身支持该任务，但外部证据不足。
-2. 文献证明用了该数据集，但未能明确证明就是该任务。
-3. 任务属于合理派生任务、推荐任务、工程任务，而非该数据集公认主任务。
+1. The data itself supports the task, but external evidence is insufficient.
+2. Literature proves the dataset was used, but does not prove this exact task.
+3. The task is a reasonable derived, recommended, or engineering task rather than the dataset's recognized main task.
 
-### 第63条之一 `Potential Task` 的最低明确性要求
+### Article 63.1. Minimum Explicitness for `Potential Task`
 
-1. `Potential Task` 可以比 `Classical Task` 更保守，但仍应保持基本可读、可审、可落地。
-2. 至少以下字段应给出明确合法值：`Task Type`、`Epoch Method`、`Label Route`、`Meta Level`。
-3. 若某一 `Epoch Method` 的必需参数仍无法明确，不得使用 `or`、`task-dependent`、`see Target Definition` 等写法将多个方案揉成一个任务；应拆分为多个候选任务、降为审核备注，或直接删除。
-4. 若任务仅代表“可能的研究方向”而尚不具备稳定标签来源或切窗定义，不应保留在 `Tasks Area`，应移至审核记录或 `Data Quality Notes`。
+1. A `Potential Task` may be more conservative than a `Classical Task`, but must remain readable, reviewable, and implementable.
+2. At minimum, `Task Type`, `Epoch Method`, `Label Route`, and `Meta Level` must have explicit legal values.
+3. If required parameters for an `Epoch Method` are unclear, do not merge alternatives into one task using `or`, `task-dependent`, or `see Target Definition`. Split into multiple candidates, move the uncertainty to review notes, or delete the task.
+4. If a task is only a possible research direction without a stable label source or epoch definition, do not keep it in `Tasks Area`; move it to review records or `Data Quality Notes`.
 
-### 第64条 降级规则
+### Article 64. Downgrading
 
-当既有 `Classical Task` 不再满足第62条时，应当降级为 `Potential Task`，而非继续保留为 `Classical Task`。
+When an existing `Classical Task` no longer satisfies Article 62, downgrade it to `Potential Task` rather than keeping it as `Classical Task`.
 
-### 第65条 删除规则
+### Article 65. Deletion
 
-当任务所依赖的标签、事件或派生路径在数据中不存在，且无法通过可信规则稳定重建时，该任务应删除，不得保留。
+When a task depends on labels, events, or derivation paths that do not exist in the data and cannot be reconstructed by trusted stable rules, delete it.
 
-### 第66条 并存规则
+### Article 66. Coexistence
 
-同一数据集可以同时存在多个 `Classical Task` 与多个 `Potential Task`，但每个任务都应有独立且自洽的成立依据。
+One dataset may contain multiple `Classical Task` and multiple `Potential Task` entries, but each task must have independent and self-consistent support.
 
+## Section 3. Task Type, Epoch Method, and Parameters
 
-### 第三节 Task Type、Epoch Method 与参数
+### Article 67. `Task Type`
 
-### 第67条 `Task Type`
-
-`Task Type` 仅允许取以下值：
+`Task Type` may use only:
 
 1. `classification`
 2. `regression`
 
-### 第68条 `Epoch Method`
+### Article 68. `Epoch Method`
 
-`Epoch Method` 仅允许取以下值：
+`Epoch Method` may use only:
 
 1. `epoch_by_event_hdf5`
 2. `epoch_by_long_event_hdf5`
 3. `epoch_by_segmentation_hdf5`
 
-### 第69条 `Epoch Parameters` 一般规则
+### Article 69. General Rule for `Epoch Parameters`
 
-`Epoch Parameters` 至少应提供当前 `Epoch Method` 所必需的参数（见第70–72条）。必需参数的最小集合由语义规则 `epoch_parameters_complete` 在 `detect.py` 中强制检查，严重度为 `error`，无论 `Classical Task` 还是 `Potential Task` 均不得缺省。
-在必需参数之外，`Epoch Parameters` 允许以 `key = value` 形式补充任何 `MNE.Epoch` 接受的可选参数（如 `baseline`, `reject`, `picks` 等），这些补充参数不受 `epoch_parameters_complete` 约束。
+`Epoch Parameters` must include at least the parameters required by the selected `Epoch Method`; see Articles 70-72. The semantic rule `epoch_parameters_complete` in `detect.py` enforces this minimum set with severity `error` for both `Classical Task` and `Potential Task`.
 
-### 第70条 `epoch_by_event_hdf5` 参数要求
+Additional optional parameters accepted by `MNE.Epoch`, such as `baseline`, `reject`, or `picks`, may be added as `key = value` pairs and are not constrained by `epoch_parameters_complete`.
 
-使用 `epoch_by_event_hdf5` 时，应至少提供：
+### Article 70. Required Parameters for `epoch_by_event_hdf5`
+
+When using `epoch_by_event_hdf5`, provide at least:
 
 1. `tmin`
 2. `tmax`
 3. `target_events`
 
-### 第71条 `epoch_by_long_event_hdf5` 参数要求
+### Article 71. Required Parameters for `epoch_by_long_event_hdf5`
 
-使用 `epoch_by_long_event_hdf5` 时，应至少提供：
+When using `epoch_by_long_event_hdf5`, provide at least:
 
 1. `tmin`
 2. `tmax`
 3. `overlap`
 4. `target_events`
 
-### 第72条 `epoch_by_segmentation_hdf5` 参数要求
+### Article 72. Required Parameters for `epoch_by_segmentation_hdf5`
 
-使用 `epoch_by_segmentation_hdf5` 时，应至少提供：
+When using `epoch_by_segmentation_hdf5`, provide at least:
 
 1. `segment_length`
 2. `overlap`
 
-### 第73条 参数来源
+### Article 73. Parameter Sources
 
-`Epoch Parameters` 应优先由 `Evidence` 支持；如证据未给出完整参数，人类审核员与 LLM 可以在保守原则下选择最合适的明确值。其优先顺序原则上为：
+`Epoch Parameters` should be supported by `Evidence` when possible. If evidence does not provide all parameters, human reviewers and LLMs may choose the best explicit values conservatively, using this priority:
 
-1. 官方页面或官方说明中的推荐值。
-2. 明确使用该数据集的参考文献中的实际取值。
-3. 审核员或 LLM 基于专业知识给出的合理取值。
+1. Recommended values from official pages or official documentation.
+2. Actual values used in references that clearly use the dataset.
+3. Reasonable values chosen by a reviewer or LLM based on domain knowledge.
 
-所填写参数应为可直接实现的明确值，不得以模糊占位符替代。
+Filled parameters must be explicit and directly implementable; do not replace them with vague placeholders.
 
+## Section 4. Target Events, Label Route, and Meta Level
 
-### 第四节 Target Events、Label Route 与 Meta Level
+### Article 74. Valid Sources for `target_events`
 
-### 第74条 `target_events` 合法来源
+`target_events` in `Epoch Parameters` may only come from entries in `Event Structure` that explicitly exist and have `Type = event`.
 
-`Epoch Parameters` 中的 `target_events` 只能来自 `Event Structure` 中明确存在且 `Type = event` 的条目。
+### Article 75. No Invented `target_events`
 
-### 第75条 禁止虚构 `target_events`
+If a task's `target_events` do not exist in `Event Structure`, or the corresponding entries have `Type = admin`, the task must not be treated as valid.
 
-若某个任务的 `target_events` 在 `Event Structure` 中不存在，或对应条目的 `Type = admin`，则该任务不得视为有效任务。
+### Article 76. Human Review Handling
 
-### 第76条 人工审核处置
+When `target_events` and `Event Structure` are inconsistent, human reviewers should do one of:
 
-人工审核时，如 `target_events` 与 `Event Structure` 不一致，应作以下处置之一：
+1. Adjust them to real existing labels.
+2. Mark in the submission notes that a rescan is needed.
+3. Delete the task.
 
-1. 微调为真实存在的标签。
-2. 在提交说明中标记”需重解析”。
-3. 删除该任务。
+### Article 77. `Label Route`
 
-### 第77条 `Label Route`
+1. `Label Route` describes the source and storage form of the task's supervision signal. Legal values are:
+   - `event`: supervision comes from the event stream, namely discrete events in `### Event Structure`, regardless of whether raw storage was annotation or stim channel.
+   - `misc`: supervision is numeric or continuous and stored in a misc channel registered in `### MISC Label Summary`.
+   - `info`: supervision comes from file-level subject or device properties registered in `### Info`, such as sex, age, or group.
+2. `Label Route`, `target_events`, and `Target Definition` must be consistent:
+   - `Label Route = event`: `Target Definition` uses an `Event -> y` mapping table.
+   - `Label Route = misc`: `Target Definition` uses two columns, `MISC Channel Name` and `Y Mapping Notes`.
+   - `Label Route = info`: `Target Definition` uses two columns, `Info Field` and `Y Mapping Notes`; see Article 77.2.
+3. For `misc` and `info` routes, the label source is uniquely specified by the first column of `Target Definition`; do not additionally declare `Label Field`.
+4. If a task is an exception, explain the reason in task `Notes`.
 
-1. `Label Route` 描述该任务监督信号（supervision signal）的来源与存储形式，仅允许以下三个值：
-   - `event` — 监督信号来自事件流（`### Event Structure` 中的离散事件，无论原始存储为 annotation 还是 stim channel）。
-   - `misc` — 监督信号是数值型或连续型量，存储于 misc channel（对应 `### MISC Label Summary`）。
-   - `info` — 监督信号来自文件级受试者或设备属性（对应 `### Info`，如性别、年龄、分组等）。
-2. `Label Route` 与 `target_events`、`Target Definition` 应保持一致：
-   - `Label Route = event` 时，`Target Definition` 使用 `Event → y` 映射表。
-   - `Label Route = misc` 时，`Target Definition` 使用 `MISC Channel Name / Y Mapping Notes` 两列表达 channel 到标签的映射关系。
-   - `Label Route = info` 时，`Target Definition` 使用 `Info Field / Y Mapping Notes` 两列表达字段到标签的映射关系（见第77条之二）。
-3. `misc/info` 路由下，标签来源由 `Target Definition` 首列唯一指定；不再额外声明 `Label Field`。
-4. 若任务属于例外情形，应在 Task 的 `Notes` 中说明理由。
+### Article 77.1. `misc` Route Usage: Epoch-Level Scalars and Continuous Values
 
-### 第77条之一 `misc` 路由用途：epoch-level 标量与连续量
+1. The `misc` route stores epoch-level numeric labels, continuous quantities, or categorical labels mapped from channel values, such as `response_time`, ratings, density, duration, physiological indicators, or derived factor scores such as `p_factor`.
+2. Epoch anchor events, which define epoch boundaries, are independent from the supervision-signal route. `Label Route = misc` does not prevent `Epoch Method` from using event anchoring or segmentation.
+3. `misc` sources are of two kinds:
+   - Native misc: a misc channel already present in raw files, or a numeric `events.tsv` column such as `response_time` that can be directly read and filled per segmentation. `Meta Level = raw`.
+   - Derived misc: a misc channel newly created by the kernel from external tables, such as `participants.tsv` or companion files, or from derivation logic. Values are filled per segmentation, with subject-level values constant across all segmentations for that subject. `Meta Level = super`; Article 77.8 applies.
+4. One dataset may contain multiple misc channels, such as `misc:p_factor`, `misc:externalizing`, or `misc:response_time`. Each task may reference only one; that channel name must appear in the first column of `Target Definition`.
+5. Tasks using this route require `### MISC Label Summary` to register source, unit, alignment, and necessary derivation logic.
 
-1. `misc` 路由用于存储 epoch-level 数值标签、连续量或可由 channel 值进一步映射得到的分类标签，如 `response_time`、评分、密度、持续时长、生理指标、派生因子分（`p_factor`）等。
-2. 切窗锚点事件（用于 epoch 边界定位的事件）与监督信号路由相互独立；`Label Route = misc` 不妨碍 `Epoch Method` 使用事件锚定方式或 segmentation 方式。
-3. `misc` 来源分两类：
-   - **原生 misc**（native）：原始文件中已经存在的 misc channel，或可由 `events.tsv` 数值列（如 `response_time`）直接读取后逐 segmentation 填充。`Meta Level = raw`。
-   - **派生 misc**（derived）：kernel 根据外部表格（`participants.tsv`、companion file 等）或派生逻辑新创建的 misc channel，其值按 segmentation 填充（受试者级值在该受试者全部 segmentation 上为常数）。`Meta Level = super`，并适用第77条之八。
-4. 同一数据集允许存在多个 misc channel（如 `misc:p_factor`、`misc:externalizing`、`misc:response_time`）。每个 Task 只能引用其中一个；该 channel 名应出现在 `Target Definition` 的首列。
-5. 采用本路由的任务，`### MISC Label Summary` 必须登记字段来源、单位、对齐方式与必要的派生逻辑。
+### Article 77.2. `Target Definition` Format for `Label Route = info`
 
-### 第77条之二 `Label Route = info` 时的 `Target Definition` 格式
-
-1. 当 `Label Route = info` 时，`Target Definition` 表格应采用以下格式：
+1. When `Label Route = info`, `Target Definition` uses this format:
 
    | Info Field | Y Mapping Notes |
    |---|---|
    | `subject_sex` | Male -> 0; Female -> 1 |
 
-2. `Info Field` 列的取值必须与 `### Info` 表中已登记的字段名称一致。
-3. 若该字段在 `### Info` 中的 `Completeness` 为 `missing` 或 `incomplete`，该任务不得成立为 `Classical Task`，至多为 `Potential Task`，并应在 Task 的 `Notes` 中说明数据缺失情况。
-4. `info` 路由只适用于 `participants.tsv` 中**原样可用**的列（性别、年龄、原生分组）。若需 median split、标准化、配对或派生，应改用派生 misc（第77条之一、第77条之八）。
-5. `Y Mapping Notes` 允许使用自由文本描述从原值到 `y` 的映射规则；若 `y` 直接跟随该字段原值，可填写 `no mapping`。
-6. `info` 路由每个 Task 只允许一个来源字段，因此 `Target Definition` 仅允许一行。
+2. Values in `Info Field` must match field names registered in `### Info`.
+3. If that field has `Completeness = missing` or `Completeness = incomplete`, the task cannot be a `Classical Task`; it may be at most a `Potential Task`, and task `Notes` should describe missingness.
+4. The `info` route applies only to raw columns in `participants.tsv`, such as sex, age, or native group. If median split, normalization, pairing, or derivation is needed, use derived misc instead; see Articles 77.1 and 77.8.
+5. `Y Mapping Notes` may freely describe how original values map to `y`. If `y` directly follows the field value, write `no mapping`.
+6. Each `info` route task may use only one source field; therefore `Target Definition` may contain only one row.
 
-### 第77条之三 `Label Field` 与单源规则
+### Article 77.3. `Label Field` and the Single-Source Rule
 
-1. `Label Route = event` 的任务不使用 `Label Field`。
-2. `Label Route ∈ {misc, info}` 的任务也不再单独声明 `Label Field`；标签来源统一由 `Target Definition` 首列指定。
-3. `Target Definition` 首列取值必须可在文档内部定位：
-   - `Label Route = misc` ⇒ 出现在 `### MISC Label Summary` 的 `Channel` 列；
-   - `Label Route = info` ⇒ 出现在 `### Info` 的 `Field` 列。
-4. `misc/info` 的 `Target Definition` 首列只允许一个唯一值，且表格只允许一行。
+1. `Label Route = event` tasks do not use `Label Field`.
+2. `Label Route` in `{misc, info}` tasks also no longer declare `Label Field`; the label source is specified by the first column of `Target Definition`.
+3. The first column of `Target Definition` must be locatable inside the document:
+   - `Label Route = misc`: it appears in the `Channel` column of `### MISC Label Summary`.
+   - `Label Route = info`: it appears in the `Field` column of `### Info`.
+4. For `misc` and `info`, the first column of `Target Definition` may contain only one unique value, and the table may contain only one row.
 
-### 第77条之四 `Target Definition` 格式矩阵
+### Article 77.4. `Target Definition` Format Matrix
 
-`Target Definition` 表格列结构由 `Label Route × Task Type` 联合决定：
+`Target Definition` table columns are determined by `Label Route x Task Type`:
 
-| Label Route | Task Type | 表头列 |
+| Label Route | Task Type | Header columns |
 |---|---|---|
 | `event` | `classification` | `\| Event ID \| y \| Meaning \|` |
-| `event` | `regression` | `\| Event ID \| Value \| Meaning \|`（罕见） |
+| `event` | `regression` | `\| Event ID \| Value \| Meaning \|` (rare) |
 | `misc` | `classification` | `\| MISC Channel Name \| Y Mapping Notes \|` |
 | `misc` | `regression` | `\| MISC Channel Name \| Y Mapping Notes \|` |
 | `info` | `classification` | `\| Info Field \| Y Mapping Notes \|` |
 | `info` | `regression` | `\| Info Field \| Y Mapping Notes \|` |
 
-1. 表头与列顺序必须与上表完全一致；LLM 与人工审核员不得擅自增删列。
-2. `event` 路由下，所有 `Event ID` 列单元必须来自 `### Event Structure`（沿用第74条）。
-3. `misc/info` 路由下，`Y Mapping Notes` 可填写 `no mapping` 表示 `y` 直接等于原始字段或 channel 的值；也可填写任意文本描述自定义转换规则。
+1. Headers and column order must exactly match this matrix. LLMs and human reviewers must not add or remove columns.
+2. For event routes, every `Event ID` cell must come from `### Event Structure`; see Article 74.
+3. For `misc` and `info` routes, `Y Mapping Notes` may be `no mapping` when `y` equals the raw field or channel value, or may freely describe a custom conversion.
 
-### 第77条之五 单目标任务规则
+### Article 77.5. Single-Target Task Rule
 
-1. 每个 Task 只编码一个学习目标（one Task = one label source）。
-2. 多维度标签（如心理测评四因子 `internalizing/externalizing/attention/p_factor`）必须拆分为多个 Task，每个 Task 只取一个 `Event ID`、一个 `Info Field` 或一个 `MISC Channel Name`。
-3. 若一份外部证据同时覆盖多个维度，应在每个拆分后的 Task 的 `Evidence` 中复用同一条目，而不是合并 Task。
-4. `Target Definition` 表格首列（Event ID / MISC Channel / Info Field）在该 Task 内只允许一个唯一值。
-5. 更复杂的复合任务（例如多个 source 混合构成一个联合标签）在概念上允许通过多个简单任务组合表达；为保持简洁与一致性，本文档当前**不定义**复杂任务的专用 schema。
+1. Each task encodes one learning target: one task equals one label source.
+2. Multidimensional labels, such as psychological four-factor scores `internalizing/externalizing/attention/p_factor`, must be split into separate tasks. Each task may use only one `Event ID`, one `Info Field`, or one `MISC Channel Name`.
+3. If one external evidence item covers multiple dimensions, reuse the same evidence in each split task instead of merging tasks.
+4. The first column of `Target Definition`, namely Event ID, MISC Channel, or Info Field, may contain only one unique value within the task.
+5. More complex composite tasks, such as a joint label built from multiple sources, may conceptually be expressed through combinations of simpler tasks. For consistency and brevity, this document currently defines no dedicated schema for complex tasks.
 
-### 第77条之六 `misc` 路由的映射说明要求
+### Article 77.6. Mapping Requirements for the `misc` Route
 
-1. `Label Route = misc` 的任务允许 `classification` 与 `regression`。
-2. 当 `Task Type = classification` 且标签来自 misc channel 时，`Y Mapping Notes` 必须清楚说明如何从 channel 的值映射到类别标签。
-3. 对 `misc` 执行阈值划分、binning、median split、取首位、聚合或其他转换时，均应在 `Y Mapping Notes` 或 `Notes` 中写明。
-4. 若该 misc channel 本身由 kernel 派生得到，则仍适用第77条之八。
+1. `Label Route = misc` tasks may be `classification` or `regression`.
+2. When `Task Type = classification` and the label comes from a misc channel, `Y Mapping Notes` must clearly explain how channel values map to class labels.
+3. Thresholding, binning, median split, taking the first value, aggregation, or any other conversion on `misc` must be described in `Y Mapping Notes` or `Notes`.
+4. If the misc channel itself is kernel-derived, Article 77.8 still applies.
 
-### 第77条之七 `classification` 任务的多类要求
+### Article 77.7. Multiple-Class Requirement for `classification`
 
-1. `Task Type = classification` 的任务，`Target Definition` 表中 `y` 列必须至少出现 2 个不同值。
-2. 若证据或数据只能支持单一类别（例如仅有 cue onset marker 而无对照类），该任务应改为 `regression`（若适用）或降级删除，不得保留单类 classification。
+1. For `Task Type = classification`, the `y` column in `Target Definition` must contain at least two distinct values.
+2. If evidence or data supports only a single class, for example only a cue-onset marker with no contrast class, change the task to `regression` when applicable or downgrade/delete it. Do not keep a one-class classification task.
 
-### 第77条之八 派生 misc ⇒ super meta
+### Article 77.8. Derived Misc Implies Super Meta
 
-1. 任何 kernel 新创建的 misc channel 属于派生数据，其所承载任务的 `Meta Level` 必须为 `super`，并使 `Super Meta Required = Yes`（见第37条）。
-2. 派生 misc 必须在 `### MISC Label Summary` 中明确声明为派生来源；**建议**在 Task 的 `Notes` 中写明派生步骤（从哪一列、如何填充到每个 segmentation、单位、异常值处理等）。该建议不受 `detect.py` 强制检查，仅作为审核与实现指引。
-3. 若派生来源字段本身在数据集中不存在（既不在 `events.tsv`、`participants.tsv`，也不在原生 misc channel），该任务不得成立，应删除。
+1. Any misc channel newly created by a kernel is derived data. Any task carried by it must have `Meta Level = super`, and `Super Meta Required = Yes`; see Article 37.
+2. Derived misc must be explicitly declared as derived in `### MISC Label Summary`. It is recommended to describe derivation steps in task `Notes`, including source column, fill method per segmentation, units, and outlier handling. This recommendation is not enforced by `detect.py`; it is review and implementation guidance.
+3. If the source field for derivation does not exist in the dataset, including `events.tsv`, `participants.tsv`, or native misc channels, the task is invalid and must be deleted.
 
-### 第78条 `Meta Level`
+### Article 78. `Meta Level`
 
-1. `Meta Level = raw` 表示该任务依赖原始标签即可实现。
-2. `Meta Level = super` 表示该任务依赖额外派生、连接或转换后的标签。
-3. 若标签需进行事件配对、类别折叠、主体信息映射、标准体系映射或连续变量计算，应标为 `super`。
+1. `Meta Level = raw` means the task can be implemented from raw labels.
+2. `Meta Level = super` means the task depends on additional derived, joined, or transformed labels.
+3. If the label requires event pairing, class folding, subject-info mapping, standard-system mapping, or continuous-variable calculation, mark it `super`.
 
+## Section 5. Evidence and Notes
 
-### 第五节 Evidence 与 Notes
+### Article 79. `Evidence`
 
-### 第79条 `Evidence`
+1. `Evidence` presents external support for task validity or parameter choice.
+2. `Classical Task` must provide `Evidence`.
+3. `Potential Task` may provide `Evidence`, but it is not mandatory.
+4. `Evidence` for `Classical Task` must be a specific locatable and identifiable source, not a vague placeholder.
+5. If a DOI is unknown but an official page, competition page, or formal literature page is locatable, write that specific source instead of a vague phrase such as `DOI unknown`.
 
-1. `Evidence` 展示支持任务成立或参数选择的外部依据。
-2. `Classical Task` 必须提供 `Evidence`。
-3. `Potential Task` 可以提供 `Evidence`，但非强制。
-4. `Classical Task` 的 `Evidence` 应为可定位、可识别的具体来源，不得仅写空泛占位符。
-5. 如 DOI 未识别但官方页面、比赛页面或正式文献页面可定位，应直接写该具体来源，而不应写“DOI 未知”等模糊表述。
+### Article 80. Evidence Review Focus
 
-### 第80条 证据审查重点
+Human reviewers and LLMs should focus on:
 
-人类审核员与 LLM 应重点判断以下问题：
+1. Whether the evidence clearly used this dataset.
+2. Whether the evidence clearly supports this task rather than only a similar task.
+3. Whether label definitions in the evidence match the public data.
 
-1. 证据是否明确使用了该数据集。
-2. 证据是否明确支持当前任务，而非仅支持相近任务。
-3. 证据中的标签定义是否与公开数据一致。
+### Article 81. Hallucination Prevention
 
-### 第81条 幻觉防范
+Because LLMs may hallucinate paper interpretations, any case that cannot be confirmed as both using this dataset and supporting the task should be downgraded or deleted rather than forced to remain a `Classical Task`.
 
-由于 LLM 可能在论文理解中产生幻觉，凡无法确认“确实使用了该数据集且确实支持该任务”的，应降级或删除，而非强行保留 `Classical Task`。
+### Article 82. Task `Notes`
 
-### 第82条 Task `Notes`
+From v3 onward, `- **Notes**:` inside a task block, formerly `Kernel Notes`, is free supplementary explanation with no forced structure and no `detect.py` enforcement. Common uses include:
 
-自 v3 起，Task 块内的 `- **Notes**:` 字段（旧字段名 `Kernel Notes`）是**自由补充说明**，没有强制结构，亦不受 `detect.py` 强制检查。常见用途包括但不限于：
+1. Label mapping details, file-level context dependencies, or external table parsing requirements.
+2. Event pairing, window-generation rules, or admin and pseudo-events to exclude.
+3. Super-meta derivation steps; see Article 77.8.
+4. Rationale for inferred `Epoch Parameters`; see Article 73.
+5. Human judgment when `Classical Task` parameters differ from official or reference values.
 
-1. 标签映射细节、文件级上下文依赖、外部表格解析要求。
-2. 事件配对、窗口生成规则、需排除的管理员事件或伪事件。
-3. super meta 派生步骤（见第77条之八，建议性要求）。
-4. `Epoch Parameters` 的推断依据（见第73条第2、3款）。
-5. `Classical Task` 参数与官方或参考文献不一致时的人工判断。
+Task `Notes` and `### Kernel Notes` under `## Kernel Responsibilities` are different: the former is free annotation for a single task; the latter is implementation-level, cross-task kernel memo. They may both exist, but should not be conflated.
 
-**Task `Notes` 与 `## Kernel Responsibilities` 下的 `### Kernel Notes` 子节的区别**：前者是单个 Task 的自由批注；后者是 kernel 实现层面、跨 Task 的实现备忘。二者可以同时存在，不要混用。
+## Chapter 11. Data Quality Notes Area
 
+### Article 83. General Requirement
 
-## 第十一章 Data Quality Notes Area
+`Data Quality Notes Area` should use bullet points to record data quality issues, source conflicts, parsing risks, and use limitations.
 
-### 第83条 一般要求
+### Article 84. Cases to Record
 
-`Data Quality Notes Area` 应采用分点形式，记录数据质量问题、资料冲突、解析风险与使用限制。
+Record these cases when possible:
 
-### 第84条 必写情形
+1. Official material conflicts with actual data.
+2. Data are missing, excluded, empty, or lack events or fields.
+3. Subject count, file count, channel count, or sampling rate differs from official description.
+4. Event semantics depend on file-level context.
+5. Some tasks are valid only for a subset of files.
 
-下列情形应尽量在本区说明：
+### Article 85. Stance Requirement
 
-1. 官方资料与实际数据不一致。
-2. 数据缺漏、排除、空文件、缺失事件、缺失字段。
-3. 被试数、文件数、通道数、采样率与官方表述不一致。
-4. 事件语义依赖文件级上下文。
-5. 某些任务仅在子集文件中成立。
+When official material conflicts with real data, explicitly state that this document follows the real data.
 
-### 第85条 立场要求
+### Article 86. No Exhaustiveness Requirement
 
-若存在官方资料与真实数据不一致，应明确说明本文档的立场为“以真实数据为准”。
+This area does not need to list every issue, but human reviewers and LLMs should try to record quality issues that materially affect task validity.
 
-### 第86条 穷尽义务
+## Chapter 12. References Area, Deprecated
 
-本区不要求穷尽全部问题，但人类审核员与 LLM 应尽力记录对任务有效性有实质影响的质量问题。
+### Article 87. Deprecation
 
+1. `References Area` is a legacy section from early document versions.
+2. Current `analysis.md` documents should normally not keep a standalone `References Area`.
+3. Sources directly related to a task should be written under `Evidence` in the corresponding `Classical Task` or `Potential Task`.
+4. Sources related to data conflicts, quality issues, or review decisions should be written in the relevant note or review record, not separately summarized as `References Area`.
 
-## 第十二章 References Area（废止）
+### Article 88. Transition Rule
 
-### 第87条 废止说明
+1. Historical documents may temporarily keep `References Area`.
+2. Once a document is substantially revised, remove that section unless maintainers explicitly request otherwise.
+3. LLMs should not add `References Area` when generating new versions.
 
-1. `References Area` 属于早期文档版本的遗留栏目。
-2. 现行版本的 `analysis.md` 原则上不应保留独立的 `References Area`。
-3. 与具体任务直接相关的来源，应写入对应 `Classical Task` 或 `Potential Task` 下的 `Evidence`。
-4. 与数据冲突、质量问题或审核裁定相关的来源，应写入对应说明段落或审核记录，而不再单独汇总为 `References Area`。
+## Chapter 12.1. STIM Label Summary Transition Rule
 
-### 第88条 过渡规则
+### Article 88.1. Deprecation
 
-1. 既有历史文档可暂时保留 `References Area`。
-2. 一旦对文档进行实质性修订，应同步删除该栏目，除非维护者另有明确要求。
-3. LLM 在生成新版本文档时，不应主动新增 `References Area`。
+1. `STIM Label Summary` is a v0.1 legacy section and is deprecated from v0.2 onward.
+2. All discrete events from trigger or stim channels should be registered in `Event Structure`, with `Type` set to `event` or `admin`.
+3. Deprecated `Event Structure.Type` values `short`, `long`, and `rest` are also no longer used from v0.2 onward. Their information is now represented by `Epoch Method` in `Tasks Area`.
 
+### Article 88.2. Existing-Document Transition
 
-## 第十二章之一 STIM Label Summary 废止过渡规则
+1. Existing historical `STIM Label Summary` sections do not have to be migrated immediately.
+2. Once a document is substantially revised, migrate discrete events from `STIM Label Summary` into `Event Structure` and delete `STIM Label Summary`.
+3. Existing `Event Structure` rows with `Type` equal to `short`, `long`, or `rest` should be rewritten to `event` during substantial revision; `admin` remains unchanged.
+4. LLM review scripts must not add `STIM Label Summary` or use deprecated `Event Structure.Type` enum values when generating or revising documents.
 
-### 第88条之一 废止说明
+# Part III. Supplementary Rules
 
-1. `STIM Label Summary` 属于 v0.1 版本的遗留栏目，自 v0.2 起废止。
-2. 所有来自 trigger/stim channel 的离散事件，应统一在 `Event Structure` 表格中登记，`Type` 字段按 `event` 或 `admin` 判定。
-3. `Event Structure.Type` 中废止的 `short`、`long`、`rest` 三类也自 v0.2 起停止使用，对应信息由 `Tasks Area` 的 `Epoch Method` 字段承载。
+## Chapter 13. Placeholders, Format, and Style
 
-### 第88条之二 存量文档过渡
+### Article 90. Allowed Placeholders
 
-1. 既有历史文档中已存在的 `STIM Label Summary` 暂不强制立即迁移。
-2. 一旦对文档进行实质性修订，应将 `STIM Label Summary` 中的离散事件条目迁移至 `Event Structure`，并删除 `STIM Label Summary` 节。
-3. `Event Structure` 中原有 `Type` 为 `short`、`long`、`rest` 的条目，在实质性修订时应统一改写为 `event`；`admin` 类型保持不变。
-4. LLM 审核脚本在生成或修订新版本文档时，不应主动新增 `STIM Label Summary` 节，也不应在 `Event Structure.Type` 中使用废止的枚举值。
-
-
-# 第三编 附则
-
-## 第十三章 占位词、格式与文风
-
-### 第90条 允许占位词
-
-在无法确定具体信息时，可以使用以下占位词：
+When specific information cannot be determined, use:
 
 1. `Needs verification`
 2. `Variable`
 3. `N/A`
 4. `null`
 
-前款占位词原则上不得用于 `Classical Task` 的关键字段。
+These placeholders should normally not be used in key fields of `Classical Task`.
 
-### 第91条 原样保留原则
+### Article 91. Preserve Raw Names
 
-原始事件名、原始码值、原始标签若可直接使用，应优先原样保留，不应为了语言美观而任意重命名。
+When raw event names, raw code values, or raw labels can be used directly, preserve them as-is. Do not rename them merely for language polish.
 
-### 第92条 文风要求
+### Article 92. Style
 
-文档应尽量保持技术化、事实化、可执行化。避免使用宣传性、夸张性或无法验证的结论性表述。
+Documents should be technical, factual, and executable. Avoid promotional, exaggerated, or unverifiable conclusions.
 
+## Chapter 14. Review Action Types
 
-## 第十四章 审核动作分类
+### Article 93. Review Actions
 
-### 第93条 审核动作类型
+Later human and LLM reviews may use these action categories:
 
-后续人工审核与 LLM 审核可采用以下动作类别：
+1. `keep`
+2. `correct`
+3. `downgrade`
+4. `delete`
+5. `mark Needs verification`
+6. `mark rescan required`
+7. `mark kernel correction required`
 
-1. `保留`
-2. `修正`
-3. `降级`
-4. `删除`
-5. `标注 Needs verification`
-6. `标注需重解析`
-7. `标注需修正 kernel`
+### Article 94. Action Use
 
-### 第94条 动作适用原则
-
-1. 能通过字段微调解决者，优先 `修正`。
-2. 任务证据不足但数据支持者，优先 `降级`。
-3. 标签来源不存在或无法稳定重建者，应 `删除`。
-4. 解析链路存在明显程序性问题者，应标注 `需重解析` 或 `需修正 kernel`。
+1. If a field adjustment can solve the problem, prefer `correct`.
+2. If task evidence is insufficient but the data support the task, prefer `downgrade`.
+3. If the label source does not exist or cannot be reconstructed stably, use `delete`.
+4. If the parsing chain has an obvious programmatic issue, mark `rescan required` or `kernel correction required`.
