@@ -86,9 +86,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 .step-sep { color: var(--border); font-size: 18px; }
 #step-content { flex: 1; overflow-y: auto; padding: 20px; }
 #no-dataset { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--muted); font-size: 14px; }
-#doc-toolbar { display: flex; align-items: center; gap: 10px; padding: 12px 20px 0; }
-#bulk-fix-status { font-size: 12px; color: var(--muted); }
-
 /* Bottom action bar */
 #action-bar { padding: 12px 20px; background: var(--panel); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 #ds-title { font-size: 13px; font-weight: 600; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -357,12 +354,6 @@ table.event-table td textarea.meaning-cell:focus { outline: 1px solid var(--acce
 #err-modal ul { padding-left: 18px; margin-bottom: 14px; }
 #err-modal li { font-size: 13px; margin-bottom: 4px; }
 #err-modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
-/* Fix-confirm modal */
-#fix-confirm-modal { background: #fff; border-radius: 10px; padding: 24px; width: 700px; max-width: 94vw; max-height: 90vh; display: flex; flex-direction: column; }
-#fix-confirm-modal h2 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
-#fix-confirm-textarea { flex: 1; min-height: 300px; font-family: monospace; font-size: 12px; border: 1px solid var(--border); border-radius: 6px; padding: 10px; resize: vertical; overflow-y: auto; }
-#fix-confirm-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 12px; flex-shrink: 0; }
-
 /* Preview modal */
 #preview-modal { background: #fff; border-radius: 10px; padding: 0; width: 860px; max-width: 96vw; max-height: 92vh; display: flex; flex-direction: column; }
 #preview-modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
@@ -412,10 +403,6 @@ table.event-table td textarea.meaning-cell:focus { outline: 1px solid var(--acce
       <button class="step-btn" id="step-btn-1" onclick="goStep(1)"><span class="step-num">2</span> File Scan &amp; Tasks</button>
       <span class="step-sep">›</span>
       <button class="step-btn" id="step-btn-2" onclick="goStep(2)"><span class="step-num">3</span> DQN &amp; Kernel</button>
-    </div>
-    <div id="doc-toolbar">
-      <button class="btn btn-primary" id="btn-fix-all-llm" onclick="fixAllErrorsWithLLM()">Fix All Errors with LLM</button>
-      <span id="bulk-fix-status"></span>
     </div>
     <div id="step-content">
       <div id="no-dataset">&#8592; Select a dataset to start reviewing</div>
@@ -504,21 +491,6 @@ table.event-table td textarea.meaning-cell:focus { outline: 1px solid var(--acce
     <div id="err-modal-actions">
       <button class="btn btn-secondary" onclick="closeErrModal()">Close</button>
       <button class="btn btn-secondary" onclick="viewRawContent()">View Raw</button>
-      <button id="btn-fix-llm" class="btn btn-primary" onclick="fixWithLLM()">Fix with LLM</button>
-    </div>
-  </div>
-</div>
-
-<!-- Fix-confirm modal -->
-<div id="fix-confirm-overlay" class="modal-overlay">
-  <div id="fix-confirm-modal">
-    <h2 id="fix-confirm-title">LLM Fix Result</h2>
-    <div id="fix-confirm-warnings" style="margin-bottom:8px;font-size:12px"></div>
-    <p style="font-size:11px;color:var(--muted);margin-bottom:6px">Review the fixed content below. You may edit it directly before accepting.</p>
-    <textarea id="fix-confirm-textarea"></textarea>
-    <div id="fix-confirm-actions">
-      <button class="btn btn-secondary" onclick="closeFix()">Cancel</button>
-      <button class="btn btn-primary" onclick="acceptFix()">Accept &amp; Load</button>
     </div>
   </div>
 </div>
@@ -553,9 +525,9 @@ table.event-table td textarea.meaning-cell:focus { outline: 1px solid var(--acce
 const STEP_LABELS = ['Meta-Paradigm', 'File Scan & Tasks', 'DQN & Kernel'];
 
 const STEP_RULEBOOK_HINTS = [
-  '第22条 Dataset, 第25条 Category, 第30条 Manual Review, 第31条 Paradigm',
-  '第七章 File Scan, Event Structure, MISC, Info, 第九章 Tasks, Label Route, Target',
-  '第十一章 Data Quality, 第37条 Super Meta Required, 第42条 Status',
+  'Article 22 Dataset, Article 25 Category, Article 30 Manual Review, Article 31 Paradigm',
+  'Chapter 8 File Scan, Event Structure, MISC, Info; Chapter 10 Tasks, Label Route, Target',
+  'Chapter 11 Data Quality, Article 37 Super Meta Required, Article 42 Status',
 ];
 
 const VALID_CATEGORIES = ['Complex Applied','High-level Mental','Action/Output','Sensory/Response','Biological State','Others'];
@@ -680,13 +652,17 @@ let currentTasks = [];
 let taskEditorMode = 'form';
 let currentMiscSummaryBody = '';
 let pendingErrDataset = null;
+let isDatasetLoading = false;
+let datasetLoadSeq = 0;
+let renderedStep = null;
 let guideChecks = {};   // key → boolean
 let previewSeen = false;
-let _batchFixRunning = false;
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 async function init() {
+  updateStepBar();
   await Promise.all([loadDatasets(), loadRulebook(), loadConfig()]);
+  updateStepBar();
 }
 
 async function loadDatasets() {
@@ -699,11 +675,8 @@ async function loadDatasets() {
     }));
     populateCategoryFilter();
     renderDatasetList();
-    updateBulkFixButton();
   } catch(e) {}
 }
-
-async function validateAllDatasets() {}
 
 async function loadRulebook() {
   try {
@@ -724,36 +697,6 @@ async function loadConfig() {
     document.getElementById('cfg-model').value = cfg.model || '';
     document.getElementById('cfg-proxy').value = cfg.proxy || '';
   } catch(e) {}
-}
-
-// ─── Document Validation ──────────────────────────────────────────────────────
-async function checkTemplateContent(content) {
-  const r = await fetch('/api/template/check', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ content })
-  });
-  return await readJsonResponse(r);
-}
-
-async function readJsonResponse(resp) {
-  const raw = await resp.text();
-  let data = null;
-  try {
-    data = raw ? JSON.parse(raw) : {};
-  } catch (err) {
-    const snippet = raw.replace(/\s+/g, ' ').trim().slice(0, 240) || `HTTP ${resp.status}`;
-    throw new Error(`Server returned a non-JSON response: ${snippet}`);
-  }
-  if (!resp.ok) {
-    throw new Error(
-      data?.error ||
-      (data?.template_check?.errors || []).join(' | ') ||
-      (data?.template_errors ? JSON.stringify(data.template_errors) : '') ||
-      `HTTP ${resp.status}`
-    );
-  }
-  return data;
 }
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
@@ -783,144 +726,6 @@ function renderDatasetList() {
       <span class="badge ${hasErr ? 'badge-rev' : statusBadgeClass(d.status)}">${hasErr ? 'error' : esc(d.status)}</span></div>`;
     list.appendChild(div);
   });
-  updateBulkFixButton();
-}
-
-function getLoadedInvalidDatasets() {
-  return allDatasets.filter(ds => Array.isArray(ds._errors) && ds._errors.length > 0);
-}
-
-function updateBulkFixButton(message = '') {
-  const btn = document.getElementById('btn-fix-all-llm');
-  const status = document.getElementById('bulk-fix-status');
-  if (!btn || !status) return;
-
-  const invalid = getLoadedInvalidDatasets();
-  btn.disabled = _batchFixRunning || invalid.length === 0;
-  btn.textContent = _batchFixRunning
-    ? 'Fixing…'
-    : invalid.length > 0
-      ? `Fix All Errors with LLM (${invalid.length})`
-      : 'Fix All Errors with LLM';
-
-  if (message) {
-    status.textContent = message;
-    status.style.color = 'var(--muted)';
-    return;
-  }
-
-  if (_batchFixRunning) {
-    status.style.color = 'var(--muted)';
-    return;
-  }
-
-  if (invalid.length === 0) {
-    status.textContent = 'All loaded datasets match the required template.';
-    status.style.color = 'var(--green)';
-  } else {
-    status.textContent = `${invalid.length} loaded dataset(s) currently have structural template errors.`;
-    status.style.color = 'var(--muted)';
-  }
-}
-
-async function requestTemplateFix(dsName) {
-  const resp = await fetch(`/api/template/fix_with_llm/${encodeURIComponent(dsName)}`, {
-    method: 'POST'
-  });
-  return await readJsonResponse(resp);
-}
-
-async function writeDatasetContent(dsName, content) {
-  const r = await fetch(`/api/dataset/${encodeURIComponent(dsName)}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ content })
-  });
-  return await readJsonResponse(r);
-}
-
-function formatBatchNameList(items, limit = 8) {
-  const names = items.map(item => typeof item === 'string' ? item : item.name);
-  if (names.length <= limit) return names.join(', ');
-  return `${names.slice(0, limit).join(', ')} (+${names.length - limit} more)`;
-}
-
-async function fixAllErrorsWithLLM() {
-  const targets = getLoadedInvalidDatasets();
-  if (targets.length === 0) {
-    alert('All loaded datasets already match the required template.');
-    return;
-  }
-
-  const confirmed = confirm(
-    `Run LLM auto-fix for all structural template errors in ${targets.length} loaded dataset(s)?\n\n` +
-    `Only documents that fully pass the shared template checker will be saved automatically.`
-  );
-  if (!confirmed) return;
-
-  _batchFixRunning = true;
-  closeErrModal();
-  closeFix();
-  updateBulkFixButton(`Preparing batch auto-fix for ${targets.length} dataset(s)...`);
-
-  const written = [];
-  const unresolved = [];
-  const failed = [];
-
-  try {
-    for (let i = 0; i < targets.length; i++) {
-      const ds = targets[i];
-      updateBulkFixButton(`Fixing ${i + 1}/${targets.length}: ${ds.name}`);
-
-      try {
-        const rd = await requestTemplateFix(ds.name);
-        const fixedContent = rd.fixed_content || '';
-        if (!fixedContent.trim()) throw new Error('LLM returned empty content.');
-
-        const remainingErrors = rd.template_check?.errors || [];
-        if (remainingErrors.length) {
-          unresolved.push({name: ds.name, error: remainingErrors.join(' | ')});
-          continue;
-        }
-
-        await writeDatasetContent(ds.name, fixedContent);
-        written.push(ds.name);
-      } catch (err) {
-        failed.push({name: ds.name, error: err.message || String(err)});
-      }
-    }
-  } finally {
-    _batchFixRunning = false;
-  }
-
-  await loadDatasets();
-
-  if (!currentDataset) {
-    document.getElementById('action-bar').style.display = 'none';
-    document.getElementById('step-content').innerHTML =
-      '<div id="no-dataset">&#8592; Select a dataset to start reviewing</div>';
-  }
-
-  const summary = [];
-  if (written.length) {
-    summary.push(`Saved ${written.length} dataset(s): ${formatBatchNameList(written)}`);
-  }
-  if (unresolved.length) {
-    summary.push(`LLM returned unresolved template errors for ${unresolved.length} dataset(s): ${formatBatchNameList(unresolved)}`);
-  }
-  if (failed.length) {
-    summary.push(`Failed ${failed.length} dataset(s): ${failed.map(item => `${item.name}: ${item.error}`).join(' | ')}`);
-  }
-  if (!summary.length) {
-    summary.push('No datasets were updated.');
-  }
-
-  updateBulkFixButton(
-    written.length
-      ? `Batch auto-fix finished. Saved ${written.length} dataset(s).`
-      : 'Batch auto-fix finished with no saved datasets.'
-  );
-  alert(summary.join('\n\n'));
 }
 
 function statusBadgeClass(s) {
@@ -940,149 +745,136 @@ function showErrModal(ds) {
   document.getElementById('err-modal-overlay').classList.add('open');
 }
 function closeErrModal() { document.getElementById('err-modal-overlay').classList.remove('open'); pendingErrDataset = null; }
-
-let _fixingDataset = null;
-
-async function fixWithLLM() {
-  if (!pendingErrDataset) return;
-  const dsName = pendingErrDataset;
-  _fixingDataset = dsName;   // preserve before closeErrModal nullifies pendingErrDataset
-  const btn = document.getElementById('btn-fix-llm');
-  btn.disabled = true; btn.textContent = 'Fixing…';
-
-  try {
-    const rd = await requestTemplateFix(dsName);
-    const fixedContent = rd.fixed_content || '';
-
-    if (!fixedContent.trim()) throw new Error('LLM returned empty content.');
-
-    // Validate the fixed content and show confirmation modal
-    const remainingErrors = rd.template_check?.errors || [];
-    const warnings = document.getElementById('fix-confirm-warnings');
-    if (remainingErrors.length) {
-      warnings.innerHTML =
-        `<div style="background:#fef3c7;border:1px solid #f59e0b;border-radius:6px;padding:8px 10px;color:#92400e">` +
-        `<strong>⚠ ${remainingErrors.length} error(s) remain after fix</strong> — review and edit manually before accepting:<ul style="margin:4px 0 0;padding-left:16px">` +
-        remainingErrors.map(e => `<li>${esc(e)}</li>`).join('') + `</ul></div>`;
-    } else {
-      warnings.innerHTML =
-        `<div style="background:#dcfce7;border:1px solid #86efac;border-radius:6px;padding:8px 10px;color:#166534">` +
-        `✓ All structural errors resolved — ready to load.</div>`;
-    }
-
-    document.getElementById('fix-confirm-title').textContent = `LLM Fix Result — ${dsName}`;
-    document.getElementById('fix-confirm-textarea').value = fixedContent;
-    closeErrModal();
-    document.getElementById('fix-confirm-overlay').classList.add('open');
-
-  } catch(e) {
-    alert('Fix with LLM failed:\n' + e.message);
-  } finally {
-    btn.disabled = false; btn.textContent = 'Fix with LLM';
-  }
-}
-
-function closeFix() {
-  document.getElementById('fix-confirm-overlay').classList.remove('open');
-}
-
-async function acceptFix() {
-  const dsName = _fixingDataset || pendingErrDataset || currentDataset;
-  const content = document.getElementById('fix-confirm-textarea').value;
-  if (!dsName || !content) return;
-
-  // Final validation before accepting
-  const check = await checkTemplateContent(content);
-  const remaining = check.errors || [];
-  if (remaining.length) {
-    alert(
-      `${remaining.length} structural error(s) still remain.\n\n` +
-      remaining.join('\n')
-    );
-    return;
-  }
-
-  // Write fixed content to disk
-  try {
-    const d = await writeDatasetContent(dsName, content);
-    if (!d.ok) {
-      throw new Error(
-        d.error ||
-        (d.template_check?.errors || []).join('\n') ||
-        'Save failed'
-      );
-    }
-  } catch(e) {
-    alert('Failed to save fixed content:\n' + e.message);
-    return;
-  }
-
-  closeFix();
-  _fixingDataset = null;
-  // Reload dataset into the normal audit flow
-  await selectDataset(dsName);
-}
-
-document.getElementById('fix-confirm-overlay').onclick = function(e) {
-  if (e.target === this) closeFix();
-};
 async function viewRawContent() {
   if (!pendingErrDataset) return;
   const dsName = pendingErrDataset;
   closeErrModal();
+  const viewId = ++datasetLoadSeq;
+  isDatasetLoading = false;
   try {
     const r = await fetch(`/api/dataset/${encodeURIComponent(dsName)}`);
     const d = await r.json();
+    if (viewId !== datasetLoadSeq) return;
+    currentDataset = null;
+    rawContent = '';
+    renderedStep = null;
     document.getElementById('action-bar').style.display = 'none';
+    document.getElementById('step-content').removeAttribute('data-step');
     const ds = allDatasets.find(x => x.name === dsName);
     document.getElementById('step-content').innerHTML = `
       <div class="doc-error-banner"><h3>&#9888; Document has structural errors — read-only</h3>
         <ul>${ds?._errors?.map(e=>`<li>${esc(e)}</li>`).join('')||''}</ul></div>
       <textarea class="full-textarea" style="min-height:500px" readonly>${esc(d.content)}</textarea>`;
+    renderDatasetList();
+    updateStepBar();
   } catch(e) {}
 }
 document.getElementById('err-modal-overlay').onclick = function(e) { if (e.target===this) closeErrModal(); };
 
 async function selectDataset(name) {
+  if (isDatasetLoading && currentDataset === name) return;
   if (dirty && !confirm('Unsaved changes — discard and switch?')) return;
+  const loadId = ++datasetLoadSeq;
+  isDatasetLoading = true;
   currentDataset = name; dirty = false; currentStep = 0; previewSeen = false;
+  rawContent = '';
+  renderedStep = null;
+  currentTasks = [];
   taskEditorMode = 'form';
   currentMiscSummaryBody = '';
+  llmHistory = [];
+  document.getElementById('action-bar').style.display = 'none';
+  document.getElementById('ds-title').textContent = name;
+  const content = document.getElementById('step-content');
+  content.removeAttribute('data-step');
+  content.innerHTML = `<div id="no-dataset">Loading ${esc(name)}...</div>`;
+  renderDatasetList();
+  updateStepBar();
   let errors = [];
   let ds = allDatasets.find(d => d.name === name);
   try {
     const r = await fetch(`/api/dataset/${encodeURIComponent(name)}`);
     const d = await r.json();
+    if (loadId !== datasetLoadSeq) return;
     rawContent = d.content;
     errors = d.template_check?.errors || [];
     ds = allDatasets.find(item => item.name === name);
     if (ds) ds._errors = errors;
-  } catch(e) { alert('Failed to load dataset'); return; }
+  } catch(e) {
+    if (loadId !== datasetLoadSeq) return;
+    currentDataset = null;
+    rawContent = '';
+    renderedStep = null;
+    document.getElementById('action-bar').style.display = 'none';
+    document.getElementById('step-content').removeAttribute('data-step');
+    document.getElementById('step-content').innerHTML = '<div id="no-dataset">Failed to load dataset.</div>';
+    isDatasetLoading = false;
+    renderDatasetList();
+    updateStepBar();
+    alert('Failed to load dataset');
+    return;
+  } finally {
+    if (loadId === datasetLoadSeq) isDatasetLoading = false;
+  }
+  if (loadId !== datasetLoadSeq) return;
   renderDatasetList();
-  if (errors.length) { showErrModal(ds || { name, _errors: errors }); return; }
-  llmHistory = [];
+  if (errors.length) {
+    currentDataset = null;
+    rawContent = '';
+    renderedStep = null;
+    document.getElementById('action-bar').style.display = 'none';
+    document.getElementById('step-content').removeAttribute('data-step');
+    document.getElementById('step-content').innerHTML = `<div id="no-dataset">Document has structural errors. Open the error dialog to view it read-only.</div>`;
+    showErrModal(ds || { name, _errors: errors });
+    renderDatasetList();
+    updateStepBar();
+    return;
+  }
   document.getElementById('action-bar').style.display = 'flex';
   document.getElementById('ds-title').textContent = name;
+  currentStep = 0;
   renderStep(0);
   updateStepBar();
 }
 
 // ─── Step Navigation ──────────────────────────────────────────────────────────
-function goStep(idx) { collectStep(currentStep); currentStep = idx; renderStep(idx); updateStepBar(); }
-function prevStep() { if (currentStep===0) return; collectStep(currentStep); currentStep--; renderStep(currentStep); updateStepBar(); }
-function nextStep() { if (currentStep===2) return; collectStep(currentStep); currentStep++; renderStep(currentStep); updateStepBar(); }
+function goStep(idx) {
+  if (isDatasetLoading || !currentDataset || idx === currentStep) return;
+  if (!collectStep(currentStep)) return;
+  currentStep = idx;
+  renderStep(idx);
+  updateStepBar();
+}
+function prevStep() {
+  if (isDatasetLoading || !currentDataset || currentStep===0) return;
+  if (!collectStep(currentStep)) return;
+  currentStep--;
+  renderStep(currentStep);
+  updateStepBar();
+}
+function nextStep() {
+  if (isDatasetLoading || !currentDataset || currentStep===2) return;
+  if (!collectStep(currentStep)) return;
+  currentStep++;
+  renderStep(currentStep);
+  updateStepBar();
+}
 
 function updateStepBar() {
+  const controlsDisabled = isDatasetLoading || !currentDataset || !rawContent;
   for (let i=0;i<3;i++) {
     const btn = document.getElementById(`step-btn-${i}`);
     btn.classList.toggle('active', i===currentStep);
+    btn.disabled = controlsDisabled;
   }
-  document.getElementById('btn-prev').disabled = currentStep===0;
-  document.getElementById('btn-next').disabled = currentStep===2;
-  document.getElementById('btn-preview').style.display = currentStep===2 ? '' : 'none';
+  document.getElementById('btn-prev').disabled = controlsDisabled || currentStep===0;
+  document.getElementById('btn-next').disabled = controlsDisabled || currentStep===2;
+  document.getElementById('btn-preview').style.display = (!controlsDisabled && currentStep===2) ? '' : 'none';
   renderRulebook(); renderStepGuide();
   document.getElementById('chat-context-label').textContent =
-    `Context: ${currentDataset} — step ${currentStep+1}: ${STEP_LABELS[currentStep]} | full doc + rulebook injected`;
+    currentDataset
+      ? `Context: ${currentDataset} — step ${currentStep+1}: ${STEP_LABELS[currentStep]} | full doc + rulebook injected`
+      : 'Context: no dataset selected';
   updateChatTokenHint();
 }
 
@@ -1581,12 +1373,25 @@ function collectEpochParams(card, idx, method) {
 
 // ─── Step Dispatch ────────────────────────────────────────────────────────────
 function renderStep(idx) {
-  if (!currentDataset) return;
+  if (isDatasetLoading || !currentDataset || !rawContent) return false;
   const c = document.getElementById('step-content');
   c.innerHTML = '';
+  c.dataset.step = String(idx);
   if (idx===0) renderMetaParadigm(c);
   else if (idx===1) renderFileScanTasks(c);
   else if (idx===2) renderDQNKernel(c);
+  else return false;
+  renderedStep = idx;
+  return hasStepDom(idx);
+}
+
+function hasStepDom(idx) {
+  const c = document.getElementById('step-content');
+  if (!c || c.dataset.step !== String(idx) || renderedStep !== idx) return false;
+  if (idx===0) return !!(document.getElementById('m-title') && document.getElementById('para-body'));
+  if (idx===1) return !!(document.getElementById('fst-tabs') && document.getElementById('event-table') && document.getElementById('info-table'));
+  if (idx===2) return !!document.getElementById('kr-status');
+  return false;
 }
 
 // ─── Step 0: Meta-Paradigm ────────────────────────────────────────────────────
@@ -1779,9 +1584,8 @@ function renderFileScanTasks(content) {
 }
 
 function switchFSTTab(tab) {
-  // v3: sync pending Task edits into currentTasks BEFORE hiding the pane so
-  // content (esp. Kernel Notes) isn't lost if the Tasks pane is later re-rendered.
-  try { collectTaskCards(); } catch (_) {}
+  // Sync pending Task edits before re-rendering the Tasks pane.
+  try { collectTaskDraft(); } catch (_) {}
   document.getElementById('fst-tab-scan').classList.toggle('active', tab==='scan');
   document.getElementById('fst-tab-tasks').classList.toggle('active', tab==='tasks');
   document.getElementById('fst-pane-scan').style.display = tab==='scan' ? '' : 'none';
@@ -1876,7 +1680,7 @@ function getMiscWarning(channelName) {
 }
 
 // ─── v3 Target Definition schema helpers ─────────────────────────────────────
-// Modes driven by Label Route × Task Type (see rulebook 第77条之四).
+// Modes driven by Label Route x Task Type (see rulebook Article 77.4).
 function tdMode(task) {
   const lr = task.labelRoute || 'event';
   const tt = task.taskType || 'classification';
@@ -2574,7 +2378,31 @@ function collectTaskCards() {
   });
 }
 
+function collectTaskDraft() {
+  const rawEditor = document.getElementById('task-raw-editor');
+  if (rawEditor) {
+    const newBody = rawEditor.value || '';
+    rawContent = replaceSection(rawContent, 'Tasks', newBody);
+    currentTasks = parseTasks(newBody);
+    taskEditorMode = checkTaskViolations(currentTasks).length ? 'raw' : 'form';
+    dirty = true;
+    return true;
+  }
+  const cards = document.querySelectorAll('.task-card[data-task-idx]');
+  if (cards.length) {
+    collectTaskCards();
+    rawContent = replaceSection(rawContent, 'Tasks', serializeTasks(currentTasks));
+    dirty = true;
+    return true;
+  }
+  return false;
+}
+
 function collectFileScanTasks() {
+  if (!document.getElementById('event-table') || !document.getElementById('info-table')) {
+    console.warn('Skipped File Scan collection because the File Scan DOM is not mounted.');
+    return false;
+  }
   const fsrBody = getSection(rawContent, 'File Scan Result');
   const fpMatch2 = fsrBody.match(/^((?:>.*\n?)*)/);
   const fingerprintBlock2 = fpMatch2 ? fpMatch2[1].trim() : '';
@@ -2587,11 +2415,15 @@ function collectFileScanTasks() {
   currentMiscSummaryBody = miscVal || '';
   const miscSection = miscVal ? `\n\n### MISC Label Summary\n\n${miscVal}` : '';
   const infoTable = serializeInfoTable();
+  if (!esTable || !infoTable) {
+    console.warn('Skipped File Scan collection because a table could not be serialized.');
+    return false;
+  }
   rawContent = replaceSection(rawContent, 'File Scan Result',
     `${fingerprintSection}### Event Structure\n\n${esTable}${esNoteBlock}${miscSection}\n\n### Info\n\n${infoTable}`);
-  collectTaskCards();
-  rawContent = replaceSection(rawContent, 'Tasks', serializeTasks(currentTasks));
+  collectTaskDraft();
   dirty = true;
+  return true;
 }
 
 // ─── Get AI Meanings ──────────────────────────────────────────────────────────
@@ -2698,9 +2530,14 @@ async function regenTasksFromRefs() {
     'This will overwrite ALL existing tasks by:\n' +
     '  Phase 0: Extract DOI/URL per reference\n' +
     '  Phase 1: Analyse each reference for task evidence\n' +
-    '  Phase 2: Run strict v2 task synthesis + repair + rule gate\n\n' +
+    '  Phase 2: Run rulebook v1.0.0 task synthesis + repair + rule gate\n\n' +
     'This may take several minutes. Proceed?'
   )) return;
+  if (!collectStep(currentStep)) {
+    alert('The current form is not ready yet. Please wait for the dataset to finish loading.');
+    return;
+  }
+  const analysisDraft = rawContent;
 
   const btn  = document.getElementById('btn-regen-tasks');
   const prog = document.getElementById('regen-progress');
@@ -2759,7 +2596,7 @@ async function regenTasksFromRefs() {
       const settled = await Promise.allSettled(chunk.map(f =>
         fetch(`/api/refs/phase1/${encodeURIComponent(currentDataset)}`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ file: f, p0: p0Results[f] || {} })
+          body: JSON.stringify({ file: f, p0: p0Results[f] || {}, analysis_md: analysisDraft })
         }).then(r => r.json())
       ));
       for (const res of settled) {
@@ -2790,7 +2627,7 @@ async function regenTasksFromRefs() {
     // ── Phase 2 (2-1 + 2-2 in server): synthesis ─────────────────────────────
     const p2Resp = await fetch(`/api/tasks/phase2/${encodeURIComponent(currentDataset)}`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ extractions: allUseful })
+      body: JSON.stringify({ extractions: allUseful, analysis_md: analysisDraft })
     });
     const p2Data = await p2Resp.json();
     if (!p2Resp.ok || p2Data.error) throw new Error(p2Data.error || `HTTP ${p2Resp.status}`);
@@ -2878,14 +2715,14 @@ async function applyModifyTask() {
   const taskMd = serializeTasks([taskCopy]);
 
   const systemPrompt =
-`You are an EEG dataset documentation expert. Modify a single Task block in analysis.md.
+`You are an EEG dataset documentation expert. Modify a single Task block in the current online analysis draft.
 
-You receive: the full analysis.md for context, the Task block to modify, and a user instruction.
+You receive: the full current draft for context, the Task block to modify, and a user instruction.
 
 Rules:
 - Modify ONLY what the instruction specifies; keep all other fields unchanged
 - Task heading: "### Classical Task N: Name" or "### Potential Task N: Name" (preserve original type/number)
-- Event IDs in target_events MUST come from the Event Structure table in analysis.md
+- Event IDs in target_events MUST come from the Event Structure table in the current draft
 - Valid epoch methods: epoch_by_event_hdf5, epoch_by_long_event_hdf5, epoch_by_segmentation_hdf5
 - Do NOT fabricate DOIs — only use DOIs explicitly in the task or instruction
 - Return ONLY valid JSON, no surrounding text:
@@ -2894,7 +2731,7 @@ Rules:
   const userMsg =
 `Dataset: ${currentDataset}
 
-=== Full analysis.md ===
+=== Full current online draft ===
 ${rawContent}
 
 === Task to modify ===
@@ -3041,16 +2878,29 @@ function collectDQNKernel() {
 
 // ─── Collect Step ─────────────────────────────────────────────────────────────
 function collectStep(idx) {
+  if (isDatasetLoading || !currentDataset) return false;
+  if (!hasStepDom(idx)) {
+    console.warn(`Skipped collectStep(${idx}) because the mounted form does not match the active step.`);
+    return false;
+  }
   try {
     if (idx===0) collectMetaParadigm();
-    else if (idx===1) collectFileScanTasks();
+    else if (idx===1) return collectFileScanTasks();
     else if (idx===2) collectDQNKernel();
-  } catch(e) { console.warn('collectStep error',e); }
+    else return false;
+    return true;
+  } catch(e) {
+    console.warn('collectStep error',e);
+    return false;
+  }
 }
 
 // ─── Confirm & Preview ────────────────────────────────────────────────────────
 function confirmAndPreview() {
-  collectStep(currentStep);
+  if (!collectStep(currentStep)) {
+    alert('The current form is not ready yet. Please wait for the dataset to finish loading.');
+    return;
+  }
   // Check guide items
   const allItems = [];
   STEP_GUIDE.forEach((step, si) => step.sections.forEach(sec => sec.items.forEach(item => allItems.push(item.key))));
@@ -3126,8 +2976,11 @@ function closeSaveComplete() { document.getElementById('save-complete-overlay').
 
 // ─── Save File ────────────────────────────────────────────────────────────────
 async function saveFile() {
-  collectStep(currentStep);
   if (!currentDataset) return;
+  if (!collectStep(currentStep)) {
+    alert('The current form is not ready yet. Please wait for the dataset to finish loading.');
+    return;
+  }
   if (!previewSeen) { alert('Please click "Confirm & Preview" first to review the document before saving.'); return; }
   const saveStatus = document.getElementById('save-status');
   saveStatus.textContent = 'Saving…';
@@ -3262,7 +3115,10 @@ async function sendChat() {
   const input=document.getElementById('chat-input');
   const msg=input.value.trim(); if(!msg) return;
   // Sync current DOM edits into rawContent before building system prompt
-  if (currentDataset) collectStep(currentStep);
+  if (currentDataset && !collectStep(currentStep)) {
+    alert('The current form is not ready yet. Please wait for the dataset to finish loading.');
+    return;
+  }
   input.value=''; appendChat('user',msg);
   llmHistory.push({role:'user',content:msg});
   const thinkingHtml='<div class="thinking-dots"><span>●</span><span>●</span><span>●</span></div>';

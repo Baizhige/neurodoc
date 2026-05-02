@@ -31,6 +31,7 @@ import pandas as pd
 
 
 DATASET_ID = "openneuro_ds005505"
+KERNEL_ID = DATASET_ID
 
 _CONTRAST_TASK = "contrastChangeDetection"
 _TARGET_TO_CORRECT_PRESS = {
@@ -525,6 +526,7 @@ def _add_response_time_channel(
 class OpenNeuroDS005505Kernel:
     """Stage-1 kernel for OpenNeuro ds005505 (HBN EEG Release 1)."""
 
+    KERNEL_ID = KERNEL_ID
     DATASET_NAME = DATASET_ID
     DATASET_PATH = "openneuro/ds005505"
 

@@ -16,108 +16,10 @@ from .strict_tasks import generate_tasks_phase2_strict
 from neurodoc.api import (
     anthropic_to_openai_response,
     call_llm_text,
-    check_analysis_text,
-    load_rules,
     post_llm_json,
     resolve_llm_config,
 )
 from neurodoc.paths import DATASET_DOCUMENT_DIR
-
-try:
-    _DETECT_RULES = load_rules()
-except Exception as _detect_err:
-    _DETECT_RULES = []
-    print(f"[server] WARNING: neurodoc semantic checks not loadable: {_detect_err}")
-
-
-def _run_semantic_checks(analysis_text: str, dataset_name: str = "") -> list[dict]:
-    """Invoke detect.py cross-checks on in-memory analysis.md text. Returns [] on failure."""
-    if not _DETECT_RULES:
-        return []
-    try:
-        return check_analysis_text(
-            analysis_text,
-            dataset_name=dataset_name,
-            rules=_DETECT_RULES,
-        )
-    except Exception as e:
-        print(f"[server] detect.check_analysis_text failed: {e}")
-        return []
-
-
-def _check_tasks_fragment(tasks_section: str, dataset_name: str = "", analysis_md: str = "") -> list[str]:
-    """Inject the synthesized Tasks section into a minimal analysis.md and run
-    Task-scoped cross-checks. Returns human-readable strings.
-
-    If `analysis_md` is supplied its real ## File Scan Result block is reused so
-    that target_events_in_event_structure can validate against actual event IDs.
-    Without it a stub with an empty Event Structure is used (legacy behaviour).
-    """
-    ts = (tasks_section or "").strip()
-    if not ts.startswith("##"):
-        ts = "## Tasks\n\n" + ts
-
-    fsr_block = ""
-    if analysis_md:
-        m = re.search(r"(## File Scan Result.*?)(?=\n## |\Z)", analysis_md, re.DOTALL)
-        if m:
-            fsr_block = m.group(1).strip()
-    if not fsr_block:
-        fsr_block = (
-            "## File Scan Result\n\n"
-            "### Event Structure\n\n| Event ID | Count | Type | Meta Level | Meaning |\n|---|---|---|---|---|\n\n"
-            "### MISC Label Summary\n\n| Channel | Source | Meta | Notes |\n|---|---|---|---|\n\n"
-            "### Info\n\n| Field | Value | Completeness | Notes |\n|---|---|---|---|\n"
-        )
-
-    shell = (
-        "# Analysis\n\n"
-        "## Paradigm\n\n(stub)\n\n"
-        f"{fsr_block}\n\n"
-        f"{ts}\n\n"
-        "## Data Quality Notes\n\n- (stub)\n\n"
-        "## Kernel Responsibilities\n\n> **Status**: wait_manual_review\n"
-        "> **Super Meta Required**: no\n"
-    )
-    violations = _run_semantic_checks(shell, dataset_name=dataset_name)
-    # Only surface rules that point at the Tasks section or derived checks.
-    task_relevant = {
-        "label_field_required_for_nonevent",
-        "label_field_absent_for_event",
-        "info_label_field_in_info_section",
-        "misc_label_field_in_misc_section",
-        "target_def_schema_matches_route",
-        "single_target_per_task",
-        "misc_classification_forbidden",
-        "classification_task_has_multiple_classes",
-        "derived_misc_requires_super_meta",
-        "segmentation_requires_nonevent_route",
-        "segmentation_requires_empty_target_events",
-        "target_events_in_event_structure",
-        "classical_task_evidence",
-        "task_order_classical_first",
-        "task_numbering_from_one",
-        "no_mi_on_phase_markers",
-    }
-    filtered = [v for v in violations if v.get("rule_id") in task_relevant]
-    return _format_semantic_errors(filtered)
-
-
-def _format_semantic_errors(violations: list[dict]) -> list[str]:
-    """Shape detect.py violations into short strings for the LLM repair prompt."""
-    lines = []
-    for v in violations:
-        rid = v.get("rule_id", "?")
-        sev = v.get("severity", "?")
-        desc = v.get("desc", "") or ""
-        detail = v.get("detail", "") or ""
-        if desc and detail:
-            lines.append(f"[{sev}] {rid}: {desc} — {detail}")
-        elif desc:
-            lines.append(f"[{sev}] {rid}: {desc}")
-        else:
-            lines.append(f"[{sev}] {rid}: {detail}")
-    return lines
 
 try:
     import requests as _requests
@@ -237,149 +139,6 @@ Output ONLY valid JSON, no surrounding text or markdown fences:
   "ref": ""
 }"""
 
-# ── Phase-2-1 system prompt (epoch alignment analysis, dataset-level) ──────────
-_P21_SYSTEM = """\
-You are an EEG preprocessing expert. Analyse a dataset's paradigm and event structure
-to determine the correct epoch alignment and recommended parameters.
-
-You receive: the dataset's analysis.md, Category SKILL guide, and Phase-1 extractions.
-
-Your job:
-1. Determine whether event markers represent cue ONSET or cue OFFSET.
-2. Determine cue duration (seconds) if inferable.
-3. Recommend tmin and tmax (or segment_length/overlap for segmentation paradigms).
-4. Identify if multiple paradigm types exist in the same dataset (each needs separate recommendation).
-5. Flag any run-dependent or subject-dependent complications.
-
-Output ONLY valid JSON, no markdown fences:
-{
-  "alignment": "onset|offset|mixed|unclear",
-  "cue_duration_s": <float or null>,
-  "recommendations": [
-    {
-      "paradigm_label": "<short name, e.g. 'Motor Imagery'>",
-      "epoch_method": "epoch_by_event_hdf5|epoch_by_long_event_hdf5|epoch_by_segmentation_hdf5",
-      "tmin": <float>,
-      "tmax": <float or null>,
-      "overlap": <float or null>,
-      "segment_length": <float or null>,
-      "reasoning": "<2-3 sentences explaining the choice>"
-    }
-  ],
-  "complications": "<any run-dependent, protocol-dependent, or subject-dependent issues>",
-  "kernel_notes": "<implementation notes for the kernel team>"
-}"""
-
-# ── Phase-2-2 system prompt (task synthesis + self-check, v3 taxonomy) ────────
-_P22_SYSTEM = """\
-You are an EEG machine learning task documentation expert. Write the complete "## Tasks" section
-of an EEG dataset's analysis.md following the v3 epoch/label taxonomy, then self-check.
-
-You receive: the full analysis.md, raw event IDs, Phase-1 extractions, Phase-2-1 epoch alignment,
-and a Category SKILL guide.
-
-=== EEGUnity Epoch Methods (ONLY these three) ===
-1. epoch_by_event_hdf5        short discrete events: params tmin, tmax, target_events
-2. epoch_by_long_event_hdf5   long sustained annotations: params tmin, tmax, overlap, target_events
-3. epoch_by_segmentation_hdf5 sliding window, no annotations: params segment_length, overlap;
-                              target_events MUST be []
-
-=== Task Template (v3) ===
-### Classical Task N: <concise name>
-- **Task Type**: classification | regression
-- **Epoch Method**: `<method>`
-- **Epoch Parameters**: <minimum required keys for the method — see Epoch Parameters rules below>
-- **Label Route**: `event` | `misc` | `info`
-- **Label Field**: `<channel_or_column_name>`     # ONLY when Route ∈ {misc, info}
-- **Meta Level**: raw | super
-- **Target Definition**:
-  <route-specific table — see schema matrix below>
-- **Evidence**:
-  - <ref> — <evidence_desc>
-- **Notes**: free-form task annotation (recommended: super-meta derivation steps, parameter inference rationale).
-
-=== Epoch Parameters rules (MANDATORY — detect.py rule epoch_parameters_complete, severity=error) ===
-Every Task MUST list AT LEAST these keys in Epoch Parameters for its declared Epoch Method:
-  * epoch_by_event_hdf5       — tmin, tmax, target_events
-  * epoch_by_long_event_hdf5  — tmin, tmax, overlap, target_events
-  * epoch_by_segmentation_hdf5 — segment_length, overlap (target_events MUST be [])
-Extra MNE.Epoch parameters (baseline, reject, picks, ...) are allowed as additional `key = value` pairs.
-If you cannot ground the required keys, DROP the task — do not leave them blank.
-
-=== Three Task Archetypes ===
-A — Event is the label  (Route=event, no Label Field)
-B1 — Native misc: label = numeric column of events.tsv (Route=misc, Meta=raw, regression only)
-B2 — Derived misc: label derived by kernel from participants.tsv (Route=misc, Meta=super, regression only)
-B3 — Native info: label = participants.tsv column used directly (Route=info)
-C  — No event; epoch_by_segmentation_hdf5 with subject-level label (Route=misc derived or info)
-
-=== Target Definition schema matrix (Route × Task Type) ===
-  event  classification  | Event ID | y | Meaning |
-                         y = integer class index (e.g. 0, 1, 2) OR comma-separated
-                         integers for multi-label events (e.g. "0,1" when one event
-                         belongs to multiple classes simultaneously).
-                         The union of all y tokens across all rows must be {0,1,…,N-1}.
-  event  regression      | Event ID | Value | Meaning |
-  misc   regression      | MISC Channel | Value (unit) | Notes |
-  misc   classification  FORBIDDEN — use event or info instead
-  info   classification  | Info Field | Value | y | Meaning |
-  info   regression      | Info Field | Range (unit) | Notes |
-
-=== HARD RULES ===
-H1 ONE LABEL FIELD PER TASK. Multi-dimension labels split into N tasks.
-H2 CLASSIFICATION ≥ 2 DISTINCT y VALUES.
-H3 misc ROUTE IS REGRESSION-ONLY.
-H4 LABEL FIELD REQUIRED iff Route ∈ {misc, info}; FORBIDDEN when Route=event.
-H5 DERIVED MISC ⇒ Meta Level = super. Notes SHOULD describe the derivation
-   (recommended, not enforced — Notes is freeform).
-H6 GROUND TRUTH only — do not invent fields. If the Label Field is not present in
-   events.tsv, participants.tsv, or the native misc list, DROP the task.
-H7 segmentation ⇒ target_events = [].
-H8 segmentation ⇒ Label Route MUST be misc or info. Label Route = event is FORBIDDEN
-   for epoch_by_segmentation_hdf5 because segmentation has no event anchors.
-
-=== Other Rules ===
-R1 Event grounding: target_events MUST come from Available Raw Event IDs.
-R2 Task classification:
-   "Classical Task": ≥1 paper with classification=relevant AND has ref. ref required.
-   "Potential Task": plausible analysis; partial/indirect evidence allowed.
-   Multiple papers → ONE task with all refs.
-R3 Refs: only from Phase-1 extractions. Never fabricate.
-R4 Mark unconfirmed params with * (e.g. tmin = -0.5 s *).
-R5 Use Phase-2-1 alignment recommendations as primary source.
-R6 Evidence desc must cover: task type, n-classes, epoch window, any deviation.
-
-=== SELF-CHECK (perform AFTER writing tasks, fix before output) ===
-A: HARD FAIL — every entry in target_events MUST appear verbatim in the Available Raw
-   Event IDs list above. Drop any entry not in that list. If dropping leaves
-   target_events = [] for an event/long-event task, drop the entire task or downgrade
-   it to Potential Task with a note. No invented, approximate, or synonymous IDs.
-   (Skip this check only for epoch_by_segmentation_hdf5, which always uses target_events = [].)
-B: Every Classical Task has at least one ref in Evidence.
-C: Epoch params match Phase-2-1 (or deviation noted).
-D: No duplicate tasks (same epoch+label combination).
-E: H1–H8 all satisfied — Label Field present iff non-event; classification has ≥2 y;
-   misc is regression-only; segmentation has target_events=[] AND Label Route ≠ event
-   (segmentation NEVER uses Label Route=event — use misc or info instead);
-   derived misc is super meta.
-F: Epoch Parameters contain all MINIMUM required keys for the declared Epoch Method
-   (see rules table above). Missing a required key (e.g. `overlap` for long-event) is a
-   hard error and will be rejected by detect.py. If you lack a value, DROP the task.
-G: Every classification Task's Target Definition must have ≥2 rows with DISTINCT y values
-   (e.g. 0 and 1 for binary). If only one class is present or the table is empty, either
-   add the missing class row or drop the task entirely.
-
-=== Output Format ===
-Return ONLY valid JSON (no markdown fences):
-{
-  "tasks_section": "## Tasks\\n\\n### Classical Task 1: ...\\n\\n### Potential Task 1: ...",
-  "num_classical_tasks": <integer>,
-  "num_potential_tasks": <integer>,
-  "self_check_notes": "<brief summary of checks performed and any fixes made>",
-  "summary": "<one sentence overall summary>"
-}
-CRITICAL: tasks_section is a single JSON string — use \\n for newlines."""
-
 # ── Reference pipeline helpers ─────────────────────────────────────────────────
 _P1_REF_MAX   = 100_000
 _P0_PAGE_MAX  = 6_000    # first ~2 pages for Phase-0
@@ -465,107 +224,6 @@ def _ref_from_text_regex(text):
     if m:
         return m.group(1).rstrip('.'), "url"
     return "", "none"
-
-
-def _event_ids_from_md(analysis_md):
-    m = re.search(r"## File Scan Result(.*?)(?=\n## |\Z)", analysis_md, re.DOTALL)
-    if not m:
-        return []
-    ids = re.findall(r"\|\s*`([^`\n]+)`", m.group(1))
-    seen, result = set(), []
-    for eid in ids:
-        if eid not in seen:
-            seen.add(eid)
-            result.append(eid)
-    return result
-
-
-def _build_p21_user_msg(dataset, analysis_md, skill_text, extractions):
-    """User message for Phase-2-1 epoch alignment analysis."""
-    ext_block = ""
-    for i, ext in enumerate(extractions, 1):
-        extr = ext.get("extraction", ext)
-        ref  = ext.get("ref") or ext.get("doi", "")
-        ext_block += (
-            f"\n--- Extraction {i}: {ext.get('reference_file', '')} "
-            f"[{ext.get('classification','?')}] ---\n"
-            + (f"ref: {ref}\n" if ref else "")
-            + f"paradigm:          {extr.get('paradigm', '')}\n"
-            + f"epoch_method_hint: {extr.get('epoch_method_hint', 'unclear')}\n"
-            + f"epoch_params:      {extr.get('epoch_params', 'unclear')}\n"
-        )
-    skill_block = f"\n=== Category SKILL Guide ===\n{skill_text}\n" if skill_text else ""
-    return (
-        f"Dataset: {dataset}\n"
-        f"{skill_block}"
-        f"\n=== analysis.md (Paradigm + Event Structure) ===\n{analysis_md}\n"
-        f"\n=== Phase-1 Extractions ({len(extractions)}) ===\n{ext_block}"
-        f"\nAnalyse epoch alignment and provide recommendations."
-    )
-
-
-def _build_p22_user_msg(dataset, analysis_md, extractions, p21_result, skill_text):
-    """User message for Phase-2-2 task synthesis + self-check."""
-    event_ids = _event_ids_from_md(analysis_md)
-    if event_ids:
-        eid_block = (
-            f"\n=== Available Raw Event IDs in '{dataset}' ===\n"
-            + "  " + ",  ".join(f"`{e}`" for e in event_ids) + "\n"
-            + "(EXACT strings. Raw meta target_events MUST use IDs from this list.)\n"
-        )
-    else:
-        eid_block = "\n(No Event Structure found — use best judgment.)\n"
-
-    ext_block = ""
-    for i, ext in enumerate(extractions, 1):
-        ref   = ext.get("ref") or ext.get("doi", "")
-        extr  = ext.get("extraction", ext)
-        cls   = ext.get("classification", "?")
-        ext_block += (
-            f"\n--- Extraction {i}: {ext.get('reference_file','')} [{cls}] ---\n"
-            + (f"ref: {ref}\n" if ref else "ref: (not identified)\n")
-            + f"supports_task:     {extr.get('supports_task', False)}\n"
-            + f"task_type:         {extr.get('task_type','none')}\n"
-            + f"n_classes:         {extr.get('n_classes', 0)}\n"
-            + f"paradigm:          {extr.get('paradigm','')}\n"
-            + f"epoch_method_hint: {extr.get('epoch_method_hint','unclear')}\n"
-            + f"epoch_params:      {extr.get('epoch_params','unclear')}\n"
-            + f"target_events:     {extr.get('target_events',[])}\n"
-            + f"label_mapping:     {extr.get('label_mapping','')}\n"
-            + f"meta_level:        {extr.get('meta_level','unclear')}\n"
-            + f"super_meta_note:   {extr.get('super_meta_note','')}\n"
-            + f"evidence_desc:     {extr.get('evidence_desc', extr.get('evidence_sentence',''))}\n"
-        )
-
-    p21_block = ""
-    if p21_result:
-        p21_block = (
-            f"\n=== Phase-2-1 Epoch Alignment Analysis ===\n"
-            f"alignment:      {p21_result.get('alignment','unclear')}\n"
-            f"cue_duration_s: {p21_result.get('cue_duration_s','unknown')}\n"
-            f"complications:  {p21_result.get('complications','')}\n"
-            f"kernel_notes:   {p21_result.get('kernel_notes','')}\n"
-        )
-        for rec in p21_result.get("recommendations", []):
-            p21_block += (
-                f"  recommendation [{rec.get('paradigm_label','')}]: "
-                f"{rec.get('epoch_method','')} "
-                f"tmin={rec.get('tmin','?')} tmax={rec.get('tmax','?')} "
-                f"overlap={rec.get('overlap','?')} segment_length={rec.get('segment_length','?')}\n"
-                f"    reasoning: {rec.get('reasoning','')}\n"
-            )
-
-    skill_block = f"\n=== Category SKILL Guide ===\n{skill_text}\n" if skill_text else ""
-
-    return (
-        f"Dataset: {dataset}\n"
-        f"{eid_block}"
-        f"{p21_block}"
-        f"{skill_block}"
-        f"\n=== Current analysis.md ===\n{analysis_md}\n"
-        f"\n=== Phase-1 Extractions ({len(extractions)} papers) ===\n{ext_block}"
-        f"\nSynthesize tasks for '{dataset}'. Apply all RULES and perform SELF-CHECK."
-    )
 
 
 def _call_llm(messages, timeout=180):
@@ -683,20 +341,6 @@ def api_put_dataset(name):
     return jsonify({"ok": True, "template_check": check})
 
 
-@app.route("/api/template/check", methods=["POST"])
-def api_template_check():
-    data = request.get_json(silent=True) or {}
-    content = data.get("content", "")
-    dataset_name = data.get("dataset", "")
-    result = template_checker.check_analysis_template(content)
-    semantic = _run_semantic_checks(content, dataset_name=dataset_name)
-    result["semantic_errors"] = _format_semantic_errors(semantic)
-    result["semantic_errors_raw"] = semantic
-    if semantic and result.get("ok"):
-        result["ok"] = False
-    return jsonify(result)
-
-
 @app.route("/api/rulebook")
 def api_rulebook():
     if not RULEBOOK_FILE.exists():
@@ -767,67 +411,6 @@ def api_llm():
         if status is not None:
             return jsonify({"error": f"HTTP {status}: {getattr(response, 'text', '')}"}), 502
         return jsonify({"error": str(e)}), 500
-
-
-@app.route("/api/template/fix_with_llm/<name>", methods=["POST"])
-def api_template_fix_with_llm(name):
-    if name in EXCLUDE_DIRS or ".." in name:
-        abort(400)
-
-    analysis_path = DATASET_DIR / name / "analysis.md"
-    if not analysis_path.exists():
-        abort(404)
-
-    content = analysis_path.read_text(encoding="utf-8", errors="replace")
-    check = template_checker.check_analysis_template(content)
-    semantic_violations = _run_semantic_checks(content, dataset_name=name)
-    semantic_errors = _format_semantic_errors(semantic_violations)
-
-    if check["ok"] and not semantic_errors:
-        return jsonify({
-            "fixed_content": content,
-            "template_check": check,
-            "semantic_errors": [],
-            "message": "Document already matches the required template and v3 semantic rules.",
-        })
-
-    combined_errors = list(check["errors"]) + semantic_errors
-    prompts = template_checker.build_template_repair_messages(
-        dataset_name=name,
-        content=content,
-        errors=combined_errors,
-    )
-    try:
-        raw = _call_llm([
-            {"role": "system", "content": prompts["system"]},
-            {"role": "user", "content": prompts["user"]},
-        ])
-    except Exception as e:
-        return jsonify({"error": str(e)}), 502
-
-    try:
-        raw = str(raw or "").strip()
-        parsed, err = _parse_llm_json(raw)
-        if parsed and isinstance(parsed, dict):
-            fixed_content = parsed.get("fixed_content", "")
-        elif raw.startswith("#"):
-            fixed_content = raw
-        else:
-            raise ValueError(err or f"LLM returned invalid JSON: {raw[:300]}")
-
-        if not fixed_content.strip():
-            raise ValueError("LLM returned empty content.")
-
-        fixed_check = template_checker.check_analysis_template(fixed_content)
-        fixed_semantic = _run_semantic_checks(fixed_content, dataset_name=name)
-        return jsonify({
-            "fixed_content": fixed_content,
-            "template_check": fixed_check,
-            "semantic_errors": _format_semantic_errors(fixed_semantic),
-            "semantic_errors_raw": fixed_semantic,
-        })
-    except Exception as e:
-        return jsonify({"error": str(e)}), 502
 
 
 @app.route("/api/refs/<name>")
@@ -907,10 +490,13 @@ def api_refs_phase1(name):
     ref_text, _ = _extract_ref_text(ref_path)
     ref_text = ref_text[:_P1_REF_MAX]
 
-    analysis_brief = ""
+    analysis_draft = data.get("analysis_md")
+    analysis_brief = analysis_draft if isinstance(analysis_draft, str) and analysis_draft.strip() else ""
     analysis_path = DATASET_DIR / name / "analysis.md"
-    if analysis_path.exists():
+    if not analysis_brief and analysis_path.exists():
         analysis_brief = analysis_path.read_text(encoding="utf-8", errors="replace")[:_P1_ANALYSIS_MAX]
+    else:
+        analysis_brief = analysis_brief[:_P1_ANALYSIS_MAX]
 
     # Ref hint: Phase-0 result takes priority over filename
     ref_hint = p0_result.get("ref") or _doi_from_filename(ref_file)
@@ -918,7 +504,7 @@ def api_refs_phase1(name):
 
     user_msg = (
         f"Dataset: {name}\n\n"
-        f"=== Dataset context (from analysis.md) ===\n{analysis_brief}\n\n"
+        f"=== Dataset context (current online draft; fallback is analysis.md) ===\n{analysis_brief}\n\n"
         f"=== Reference file: {ref_file} ===\n"
         f"{ref_hint_line}"
         f"{ref_text}\n\n"
@@ -964,7 +550,12 @@ def api_tasks_phase2(name):
     analysis_path = DATASET_DIR / name / "analysis.md"
     if not analysis_path.exists():
         abort(404)
-    analysis_md = analysis_path.read_text(encoding="utf-8", errors="replace")
+    analysis_draft = data.get("analysis_md")
+    analysis_md = (
+        analysis_draft
+        if isinstance(analysis_draft, str) and analysis_draft.strip()
+        else analysis_path.read_text(encoding="utf-8", errors="replace")
+    )
 
     category = _category_from_md(analysis_md)
     skill_text = _load_skill(category)
@@ -986,7 +577,7 @@ def api_tasks_phase2(name):
             "semantic_errors": [],
             "hard_fail_reason": str(e),
             "grounding_summary": {"logs": []},
-            "generation_mode": "doc_only_v2_strict",
+            "generation_mode": "doc_only_rulebook_v1_0_strict",
             "error": str(e),
         }), 500
 
