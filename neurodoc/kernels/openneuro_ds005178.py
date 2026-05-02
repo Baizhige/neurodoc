@@ -18,7 +18,7 @@ from __future__ import annotations
 import json
 import os
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
 import mne
@@ -29,14 +29,55 @@ import pandas as pd
 # BIDS scoring index to canonical event ID mapping.
 # Source: task-sleep_acq-scoring_events.json in dataset
 # scoring_idx values: 1=Wake, 2=REM, 3=N1, 4=N2, 5=N3, 6=Artefact
-# Annotator: LLM, 2026-04-08
+# Annotator: human, 2026-05-02
 _SCORING_MAP = {
     1: "Sleep stage W",
     2: "Sleep stage R",
     3: "Sleep stage N1",
     4: "Sleep stage N2",
     5: "Sleep stage N3",
-    6: "artefact",
+    6: "Artefact",
+}
+
+# Manual scoring labels from task-sleep_acq-scoring_events.tsv.
+# Annotator: human, 2026-05-02
+_SCORING_LABEL_MAP = {
+    "Wake": "Sleep stage W",
+    "W": "Sleep stage W",
+    "REM": "Sleep stage R",
+    "R": "Sleep stage R",
+    "N1": "Sleep stage N1",
+    "N2": "Sleep stage N2",
+    "N3": "Sleep stage N3",
+    "Artefact": "Artefact",
+    "Artifact": "Artefact",
+}
+
+# Event descriptions exposed for NeuroDoc/EEGUnity metadata consumers.
+# Annotator: human, 2026-05-02
+_RAW_META = {
+    "Sleep stage W": "Wake stage scored from BIDS scoring sidecar",
+    "Sleep stage R": "REM sleep scored from BIDS scoring sidecar",
+    "Sleep stage N1": "NREM stage N1 scored from BIDS scoring sidecar",
+    "Sleep stage N2": "NREM stage N2 scored from BIDS scoring sidecar",
+    "Sleep stage N3": "NREM stage N3 scored from BIDS scoring sidecar",
+    "Artefact": "Artefact epoch from manual scoring sidecar",
+    "trigger": "Manual trigger marker from ear-EEG/PSG trigger sidecar",
+    "error -10": "Buffer overflow error in ear-EEG ASICs",
+    "error -100": "Hard reset or power-cycle error in ear-EEG ASICs",
+    "oLED": "Connection loss to ASIC due to loose cable",
+    "event": "Generic event marker from native EEGLAB data",
+    "event_2": "Secondary generic event marker from native/source data",
+}
+
+# Super-meta labels for sleep-stage tasks.
+# Annotator: human, 2026-05-02
+_SUPER_META = {
+    "Sleep stage W": "sleep_stage_W",
+    "Sleep stage N1": "sleep_stage_N1",
+    "Sleep stage N2": "sleep_stage_N2",
+    "Sleep stage N3": "sleep_stage_N3",
+    "Sleep stage R": "sleep_stage_REM",
 }
 
 # Required info fields from participants.tsv to include in eegunity_description
@@ -241,6 +282,111 @@ def _read_events_tsv(events_path: str) -> Optional[pd.DataFrame]:
         return None
 
 
+def _detect_acquisition(file_path: str) -> str:
+    """Return the BIDS acquisition label from a file name, if present."""
+    match = re.search(r"_acq-([^_]+)", os.path.basename(file_path))
+    return match.group(1) if match else ""
+
+
+def _sidecar_matches_recording(file_name: str, sidecar_name: str) -> bool:
+    """Check subject/session identity between a recording and an events sidecar."""
+    for key in ("sub", "ses"):
+        rec_match = re.search(rf"{key}-(\w+)", file_name)
+        sidecar_match = re.search(rf"{key}-(\w+)", sidecar_name)
+        if rec_match and sidecar_match and rec_match.group(1) != sidecar_match.group(1):
+            return False
+    return True
+
+
+def _find_sidecar_events_tsvs(file_path: str, token: str) -> List[str]:
+    """Find same-subject/session events.tsv sidecars whose name contains token."""
+    dir_name = os.path.dirname(file_path)
+    file_name = os.path.basename(file_path)
+    if not os.path.isdir(dir_name):
+        return []
+
+    token_lower = token.lower()
+    matches = []
+    for sidecar_name in sorted(os.listdir(dir_name)):
+        sidecar_lower = sidecar_name.lower()
+        if not sidecar_lower.endswith("_events.tsv"):
+            continue
+        if token_lower not in sidecar_lower:
+            continue
+        if not _sidecar_matches_recording(file_name, sidecar_name):
+            continue
+        matches.append(os.path.join(dir_name, sidecar_name))
+    return matches
+
+
+def _find_trigger_events_tsvs(file_path: str) -> List[str]:
+    """Find trigger sidecars relevant to the current acquisition."""
+    candidates = _find_sidecar_events_tsvs(file_path, "trigger")
+    if not candidates:
+        return []
+
+    acq = _detect_acquisition(file_path).lower()
+    if acq == "eareeg":
+        preferred = [p for p in candidates if "eareegtrigger" in os.path.basename(p).lower()]
+        return preferred or candidates
+    if acq == "psg":
+        preferred = [
+            p for p in candidates
+            if "psgtrigger" in os.path.basename(p).lower()
+            and "eareegtrigger" not in os.path.basename(p).lower()
+        ]
+        return preferred or candidates
+    return candidates
+
+
+def _find_recording_failure_events_tsv(file_path: str) -> Optional[str]:
+    """Find the ear-EEG recording-failure sidecar for ear-EEG recordings."""
+    if _detect_acquisition(file_path).lower() != "eareeg":
+        return None
+    candidates = _find_sidecar_events_tsvs(file_path, "recordingfailures")
+    return candidates[0] if candidates else None
+
+
+def _dedupe_annotations(annotations: mne.Annotations) -> mne.Annotations:
+    """Remove exact duplicate annotations while preserving order."""
+    seen = set()
+    onsets = []
+    durations = []
+    descriptions = []
+    for onset, duration, description in zip(
+        annotations.onset,
+        annotations.duration,
+        annotations.description,
+    ):
+        key = (round(float(onset), 6), round(float(duration), 6), str(description))
+        if key in seen:
+            continue
+        seen.add(key)
+        onsets.append(float(onset))
+        durations.append(float(duration))
+        descriptions.append(str(description))
+
+    return mne.Annotations(
+        onset=onsets,
+        duration=durations,
+        description=descriptions,
+        orig_time=annotations.orig_time,
+    )
+
+
+def _merge_annotations(raw: mne.io.BaseRaw, annotations: mne.Annotations) -> mne.io.BaseRaw:
+    """Merge annotations into raw, avoiding exact duplicate sidecar/native events."""
+    if annotations is None or len(annotations) == 0:
+        return raw
+
+    existing = raw.annotations
+    if existing is None or len(existing) == 0:
+        raw.set_annotations(_dedupe_annotations(annotations))
+    else:
+        raw.set_annotations(_dedupe_annotations(existing + annotations))
+    return raw
+
+
 def _events_to_annotations(events_df: pd.DataFrame) -> mne.Annotations:
     """Convert BIDS events dataframe to MNE Annotations."""
     if events_df is None or events_df.empty:
@@ -270,6 +416,11 @@ def _events_to_annotations(events_df: pd.DataFrame) -> mne.Annotations:
         descriptions = np.array(descriptions)
     elif "stim_type" in events_df.columns:
         descriptions = events_df["stim_type"].astype(str).values
+    elif "scoring" in events_df.columns:
+        descriptions = np.array([
+            _SCORING_LABEL_MAP.get(str(v).strip(), str(v).strip())
+            for v in events_df["scoring"].values
+        ])
     else:
         # Use any available column as description
         desc_cols = [c for c in events_df.columns if c not in ("onset", "duration", "sample", "channel")]
@@ -304,7 +455,6 @@ def _add_scoring_annotations(raw: mne.io.BaseRaw, scoring_events_path: str) -> m
     if scoring_df is None or scoring_df.empty:
         return raw
     
-    # Check for scoring_idx or scoring column
     if "scoring_idx" in scoring_df.columns:
         onsets = scoring_df["onset"].values.astype(float)
         durations = scoring_df["duration"].values.astype(float) if "duration" in scoring_df.columns else np.zeros(len(onsets))
@@ -326,13 +476,9 @@ def _add_scoring_annotations(raw: mne.io.BaseRaw, scoring_events_path: str) -> m
             description=descriptions,
         )
         
-        # Combine with existing annotations
-        existing = raw.annotations
-        if existing is None or len(existing) == 0:
-            raw.set_annotations(scoring_annot)
-        else:
-            combined = existing + scoring_annot
-            raw.set_annotations(combined)
+        return _merge_annotations(raw, scoring_annot)
+    if "scoring" in scoring_df.columns:
+        return _merge_annotations(raw, _events_to_annotations(scoring_df))
     
     return raw
 
@@ -360,14 +506,15 @@ def _add_trigger_annotations(raw: mne.io.BaseRaw, trigger_events_path: str) -> m
         description=descriptions,
     )
     
-    existing = raw.annotations
-    if existing is None or len(existing) == 0:
-        raw.set_annotations(trigger_annot)
-    else:
-        combined = existing + trigger_annot
-        raw.set_annotations(combined)
-    
-    return raw
+    return _merge_annotations(raw, trigger_annot)
+
+
+def _add_generic_events_annotations(raw: mne.io.BaseRaw, events_path: str) -> mne.io.BaseRaw:
+    """Add annotations from a non-scoring/non-trigger BIDS events.tsv sidecar."""
+    events_df = _read_events_tsv(events_path)
+    if events_df is None or events_df.empty:
+        return raw
+    return _merge_annotations(raw, _events_to_annotations(events_df))
 
 
 def _ensure_misc_channels(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
@@ -396,6 +543,9 @@ class EESM23Kernel:
     """Stage1 kernel for the Ear-EEG Sleep Monitoring 2023 (EESM23) dataset."""
 
     KERNEL_ID: str = "eesm23-stage1"
+    required_info_fields: List[str] = field(default_factory=lambda: list(_REQUIRED_INFO_FIELDS))
+    raw_meta: Dict[str, str] = field(default_factory=lambda: dict(_RAW_META))
+    super_meta: Dict[str, str] = field(default_factory=lambda: dict(_SUPER_META))
 
     def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
         file_path = row["File Path"]
@@ -452,28 +602,37 @@ class EESM23Kernel:
         # - *_acq-PSGtrigger_events.tsv: trigger synchronization events
         # - *_acq-scoring_events.tsv: sleep stage scoring annotations
         
+        loaded_sidecars = set()
+
         # Find and add scoring annotations (primary for sleep staging tasks)
         scoring_events_path = _find_scoring_events_tsv(file_path)
         if scoring_events_path:
             raw = _add_scoring_annotations(raw, scoring_events_path)
-        
-        # Find and add trigger annotations
-        trigger_events_path = _find_events_tsv(file_path)
-        if trigger_events_path and trigger_events_path != scoring_events_path:
-            # Check if this is actually a trigger file
-            if "trigger" in trigger_events_path.lower() or "PSGtrigger" in trigger_events_path:
+            loaded_sidecars.add(scoring_events_path)
+
+        # Find and add trigger annotations. Trigger sidecars can coexist with
+        # scoring and recording-failure sidecars for the same session.
+        for trigger_events_path in _find_trigger_events_tsvs(file_path):
+            if trigger_events_path not in loaded_sidecars:
                 raw = _add_trigger_annotations(raw, trigger_events_path)
+                loaded_sidecars.add(trigger_events_path)
+
+        # Find and add ear-EEG recording-failure annotations.
+        failure_events_path = _find_recording_failure_events_tsv(file_path)
+        if failure_events_path and failure_events_path not in loaded_sidecars:
+            raw = _add_generic_events_annotations(raw, failure_events_path)
+            loaded_sidecars.add(failure_events_path)
         
         # If no annotations were loaded from sidecars, try to derive from any available events.tsv
         if raw.annotations is None or len(raw.annotations) == 0:
             # Try generic events.tsv finding
             generic_events = _find_events_tsv(file_path)
-            if generic_events:
+            if generic_events and generic_events not in loaded_sidecars:
                 events_df = _read_events_tsv(generic_events)
                 if events_df is not None and not events_df.empty:
                     annot = _events_to_annotations(events_df)
                     if len(annot) > 0:
-                        raw.set_annotations(annot)
+                        raw = _merge_annotations(raw, annot)
         
         # Final check: ensure we have annotations if sidecars exist
         # For EDF files without embedded events, the sidecars are essential
@@ -490,12 +649,7 @@ class EESM23Kernel:
                         if events_df is not None and not events_df.empty:
                             annot = _events_to_annotations(events_df)
                             if len(annot) > 0:
-                                existing = raw.annotations
-                                if existing is None or len(existing) == 0:
-                                    raw.set_annotations(annot)
-                                else:
-                                    combined = existing + annot
-                                    raw.set_annotations(combined)
+                                raw = _merge_annotations(raw, annot)
                                 break
         
         return raw

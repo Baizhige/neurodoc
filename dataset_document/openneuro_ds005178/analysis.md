@@ -9,28 +9,35 @@ Naturalistic nightly sleep monitoring using ear-EEG (in-ear electrodes) and poly
 
 ## File Scan Result
 
-> **Kernel SHA256**: `05c952b5adbb7c51c1e20d55e1cac5b7e2995315d83205c70482ea76be573017`
+> **Kernel SHA256**: `bc63a68f9ba26c0981ba24bc421dde0b1f1f07f31c18c348a3eacd3f53b7c533`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
-|----------|---------------|------|------------|---------|
-| `error -10` | 6020 | admin | raw | Buffer overflow error in ear-EEG ASICs |
-| `error -100` | 62 | admin | raw | Hard reset/power cycle error in ear-EEG ASICs |
-| `event` | 12424 | event | raw | General event marker |
-| `event_2` | 72 | event | raw | Secondary event marker |
-| `oLED` | 1 | admin | raw | Connection loss to ASIC due to loose cable |
-| `trigger` | 175 | event | raw | Manual trigger event sent by subject to mark sequence boundaries |
-
+|---|---|---|---|---|
+| `Artefact` | 1032 | event | raw |  |
+| `Sleep stage N1` | 2662 | event | raw |  |
+| `Sleep stage N2` | 15122 | event | raw |  |
+| `Sleep stage N3` | 5161 | event | raw |  |
+| `Sleep stage R` | 6259 | event | raw |  |
+| `Sleep stage W` | 2879 | event | raw |  |
+| `error -10` | 12535 | event | raw |  |
+| `error -100` | 118 | event | raw |  |
+| `event_2` | 72 | event | raw |  |
+| `oLED` | 6 | event | raw |  |
+| `trigger` | 243 | event | raw |  |
 
 ### Info
+
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
-| `device` | missing | N/A |
+| `age` | missing |  |
+| `amplifier` | missing |  |
+| `cap` | missing |  |
+| `handedness` | missing |  |
+| `sex` | missing |  |
 
 ## Tasks
 
