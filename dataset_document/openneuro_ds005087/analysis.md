@@ -1,7 +1,7 @@
 # Visual Hemifield RSVP Object Recognition Dataset
 
 **Dataset**: openneuro_ds005087 | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005087
-**Category**: EEG | **Subjects**: 80 | **Files (Completed)**: 80 | **Channels**: 63 | **Sampling Rate**: 1000 Hz | **Manual Review**:
+**Category**: Sensory/Response| **Subjects**: 80 | **Files (Completed)**: 80 | **Channels**: 63 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 

@@ -1,7 +1,7 @@
 # Trance Channeling EEG Dataset
 
 **Dataset**: openneuro_ds004040 | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds004040
-**Category**: Neuroscience | **Subjects**: 13 | **Files (Completed)**: 26 | **Channels**: 64 | **Sampling Rate**: 512 Hz | **Manual Review**:
+**Category**: Biological State| **Subjects**: 13 | **Files (Completed)**: 26 | **Channels**: 64 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 

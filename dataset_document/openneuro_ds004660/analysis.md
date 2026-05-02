@@ -1,7 +1,7 @@
 # TNO (Military Cognitive Workload)
 
 **Dataset**: `openneuro_ds004660` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004660
-**Category**: Military/Defense | **Subjects**: 9 | **Files (Completed)**: 18 | **Channels**: 64 | **Sampling Rate**: 256 Hz | **Manual Review**:
+**Category**: Complex Applied| **Subjects**: 9 | **Files (Completed)**: 18 | **Channels**: 64 | **Sampling Rate**: 256 Hz | **Manual Review**:
 
 ## Paradigm
 
