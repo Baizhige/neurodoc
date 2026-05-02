@@ -130,8 +130,8 @@ This dataset records home-based ear-EEG sleep monitoring from 20 healthy partici
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | Mapped from `participants.tsv` column `age`; age in 2019, range 22-36 years. |
-| `subject_sex` | complete | Mapped from `participants.tsv` column `sex`; values `f` = 13, `m` = 7. |
+| `age` | complete | Mapped from `participants.tsv` column `age`; age in 2019, range 22-36 years. |
+| `sex` | complete | Mapped from `participants.tsv` column `sex`; values `f` = 13, `m` = 7. |
 | `device` | complete | README identifies the EEG recorder as TMSi Mobita; amplifier/cap details are also captured in scan-derived fields. |
 | `acq` | partial (356/516) | e.g. PSG, earEEG |
 | `amplifier` | complete | e.g. TMSi Mobita |
@@ -211,7 +211,7 @@ This dataset records home-based ear-EEG sleep monitoring from 20 healthy partici
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_age` | no mapping; numeric age in years, range 22-36 |
+  | `age` | no mapping; numeric age in years, range 22-36 |
 - **Evidence**:
   - OpenNeuro ds005185 `participants.tsv` and `participants.json` — age is available for all 20 participants and is defined as age in 2019.
 - **Notes**: Subject-level metadata task, not a core published sleep-staging benchmark. Segmenting EEG does not increase the number of independent subject-level age labels.
@@ -225,7 +225,7 @@ This dataset records home-based ear-EEG sleep monitoring from 20 healthy partici
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_sex` | f -> 0; m -> 1 |
+  | `sex` | f -> 0; m -> 1 |
 - **Evidence**:
   - OpenNeuro ds005185 `participants.tsv` and `participants.json` — sex is complete for all 20 participants; distribution is 13 f / 7 m.
 - **Notes**: Subject-level metadata task, not a core published sleep-staging benchmark.

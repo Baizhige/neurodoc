@@ -38,8 +38,8 @@ Participants performed time-pressured categorization of static images based on m
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -52,13 +52,14 @@ Participants performed time-pressured categorization of static images based on m
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `E 8` | 0 | Movement-capable objects (animate) |
 | `E 9` | 1 | Non-movement-capable objects (inanimate) |
-
 - **Evidence**: DOI: 10.1016/j.neuroimage.2022.119517 | DOI: 10.31234/osf.io/3x2qh
 - **Kernel Notes**: Primary binary classification comparing movement-capable (E8, ~115k trials) vs non-movement-capable (E9, ~115k trials) object representations. E8 and E9 are the dominant event types (~3x more frequent than E1-E5 categories), making this the most statistically robust comparison. Event-related EEG epochs aligned to stimulus onset capture neural dynamics of movement capacity processing in RSVP paradigm.
+
+---
 
 ### Classical Task 2: Full Object Category Multiclass Classification (E1-E5, E8-E9)
 - **Task Type**: classification
@@ -68,7 +69,7 @@ Participants performed time-pressured categorization of static images based on m
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `E 1` | 0 | Object category 1 |
 | `E 2` | 1 | Object category 2 |
@@ -76,9 +77,10 @@ Participants performed time-pressured categorization of static images based on m
 | `E 5` | 3 | Object category 5 |
 | `E 8` | 4 | Object category 8 (movement-capable / animate) |
 | `E 9` | 5 | Object category 9 (no movement / inanimate) |
-
 - **Evidence**: DOI: 10.1016/j.neuroimage.2022.119517 | DOI: 10.31234/osf.io/3x2qh
 - **Kernel Notes**: Six-category classification including all object categories. Note: E1-E5 events (~38k each) have approximately 1/3 the trials of E8-E9 events (~115k each), creating class imbalance. E4 events (block boundaries, ~960 total) are excluded as admin markers. Papers confirm MVPA classification across condition labels capturing object category and movement capacity representations.
+
+---
 
 ### Potential Task 1: Animacy vs Inanimacy Classification
 - **Task Type**: classification
@@ -88,21 +90,29 @@ Participants performed time-pressured categorization of static images based on m
 - **Meta Level**: super
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `E 8` | 0 | Animate objects |
 | `E 9` | 1 | Inanimate objects |
-
 - **Evidence**: DOI: 10.1016/j.neuroimage.2022.119517 (animacy subcategories mentioned)
 - **Kernel Notes**: Animacy classification derived from movement capacity labels as super-level meta. Movement capacity and animacy are closely related organizational principles; E8 represents animate/movement-capable objects, E9 represents inanimate/non-moving objects. Type 2 meta integration required to route animacy labels separately from raw movement capacity labels.
 
-### Normal Task 1: Temporal Dynamics of Movement Capacity Representation
+---
+
+### Potential Task 1: Temporal Dynamics of Movement Capacity Representation
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [E 8, E 9], baseline = [-0.2, 0.0]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Same as Classical Task 1
+- **Target Definition**:
+
+| Event ID | y | Meaning |
+|---|---|---|
+| `E 8` | 0 | Movement-capable objects (animate) |
+| `E 9` | 1 | Non-movement-capable objects (inanimate) |
+
 - **Evidence**: DOI: 10.1016/j.neuroimage.2022.119517 | DOI: 10.31234/osf.io/3x2qh
 - **Kernel Notes**: Time-resolved MVPA analysis examining when neural classifiers can distinguish movement-capable vs non-movement-capable objects. Standard stimulus-locked epoch window (-0.2s to 1.0s) captures early visual ERP components and later categorization-related activity. Baseline correction applied to remove pre-stimulus drift.
 

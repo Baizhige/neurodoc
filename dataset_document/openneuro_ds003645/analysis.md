@@ -9,7 +9,7 @@ Participants performed a simple perceptual task judging the spatial symmetry of 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `1bcb7fd82e5ba3373573a9b83d8aac6ed8740dc6d4f796cb4d70b7ea4f8d6061`
+> **Kernel SHA256**: `df9214d3b16f5c4812eb1bf3a25b8d15472c21fd23a7597e94fde43f91b1ecb1`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -31,8 +31,8 @@ Participants performed a simple perceptual task judging the spatial symmetry of 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -44,8 +44,8 @@ Participants performed a simple perceptual task judging the spatial symmetry of 
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | event_1 | 0 | Famous/familiar face stimulus (condition 1) |
   | event_2 | 0 | Famous/familiar face stimulus (condition 2) |
   | event_3 | 1 | Unfamiliar face stimulus (condition 1) |

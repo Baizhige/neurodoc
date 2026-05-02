@@ -9,7 +9,7 @@ An experimental study investigating the neural correlates of implicit learning u
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `3845a0c331dc5f16a329a15339e10b0bc56df899f063f2efaa8ccce6f8a59519`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Full
 
@@ -29,20 +29,22 @@ No additional scan result info available.
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Implicitlearn
+### Classical Task 1: Publisher-defined BIDS task: Implicitlearn
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, target_events = [Needs Verification]
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds006159 DOI: https://doi.org/10.18112/openneuro.ds006159.v1.0.0
 
 
-### Normal Task 1: Continuous Segmentation (segmentation)
+### Potential Task 1: Continuous Segmentation (segmentation)
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5 s
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: N/A (no event markers; segmentation only)
 - **Notes**: No trial-level events available; purely continuous EEG. Labels must be derived from external metadata (e.g., block condition labels from participants.tsv if available).
 

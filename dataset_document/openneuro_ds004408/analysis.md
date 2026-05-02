@@ -9,7 +9,7 @@ Participants listened to continuous segments of an audiobook version of 'The Old
 
 ## File Scan Result
 
-> **Kernel SHA256**: `69309912a03b98adbdb68c0bc2dbaeeee96453fe754099441fa3617e36d96247`
+> **Kernel SHA256**: `8e9a91232fa4a37c6a0304f730ff7b624b2eff6c88aa6f94502449158028c102`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Participants listened to continuous segments of an audiobook version of 'The Old
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -34,7 +34,7 @@ Participants listened to continuous segments of an audiobook version of 'The Old
 ## Data Quality Notes
 
 - Substantial missing metadata: subject_age, subject_sex, device, hand, weight, and height fields are all incomplete or missing.
-- The draft reference indicates `subject_sex` was previously marked complete, but the authoritative scan shows it as missing — this discrepancy should be flagged for manual review.
+- The draft reference indicates `sex` was previously marked complete, but the authoritative scan shows it as missing — this discrepancy should be flagged for manual review.
 - No trial-level event markers are present; only a single dataset-level admin event descriptor exists per recording, limiting automatic epoching options.
 - All candidate tasks were dropped during v3 schema fill, indicating insufficient structured event information for automated task extraction.
 - Continuous naturalistic paradigm requires external stimulus alignment (speech envelope, phoneme annotations, linguistic features) for any meaningful analysis.

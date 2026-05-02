@@ -9,7 +9,7 @@ Eleven subjects performed steady-state visual evoked potential (SSVEP) tasks acr
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `b0fb53a13b65ddd627a459885811c0110078172e3fe0af22802920a04880cb10`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Full
 
@@ -35,20 +35,22 @@ Eleven subjects performed steady-state visual evoked potential (SSVEP) tasks acr
 
 ## Tasks
 
-### Primary Task 1: SSVEP target/frequency decoding
+### Classical Task 1: SSVEP target/frequency decoding
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5` or `epoch_by_long_event_hdf5`
+- **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, target_events = [Needs Verification] | tmin = Needs Verification, tmax = Needs Verification, overlap = Needs Verification, target_events = [Needs Verification]
-- **Label Route**: `stim` or `Annotation`
+- **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Stimulus frequency or target index
 - **Evidence**: SSVEP paradigm is explicitly stated in dataset metadata/reference. Source: https://www.physionet.org/ DOI: https://doi.org/10.1109/tbme.2017.2694818
 
 
-### Normal Task 1: SSVEP Frequency Classification (epoch_by_long_event)
+### Potential Task 1: SSVEP Frequency Classification (epoch_by_long_event)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, overlap = 2.0 s, target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Frequency label derived from filename; e.g., map each stimulus frequency to a class index.
 - **Notes**: Stimulus frequencies and their mapping to class indices must be parsed from file paths or metadata. Process datasets 1/2 (BrainProducts, 256ch, 250Hz) and dataset 3 (Emotiv, 14ch, 128Hz) **separately** due to different channel counts and sampling rates.
 

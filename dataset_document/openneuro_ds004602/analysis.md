@@ -9,7 +9,7 @@ Participants completed Flanker, Stroop, and Go/no-go tasks to evaluate the psych
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `bd014acfe209ebec137e3ec448b1f8ab7c8d674590a92348bde661904a569553`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Full
 
@@ -36,21 +36,42 @@ Participants completed Flanker, Stroop, and Go/no-go tasks to evaluate the psych
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Mixed
+### Classical Task 1: Publisher-defined BIDS task: Mixed
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
+- **Target Definition**: 
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `cor` | Needs verification | Correct response |
+  | `go` | Needs verification | Go trial |
+  | `con` | Needs verification | Congruent trial |
+  | `inc` | Needs verification | Incongruent trial |
+  | `err` | Needs verification | Error response |
+  | `neu` | Needs verification | Neutral trial |
+  | `ng` | Needs verification | No-go trial |
+  | `boundary` | Needs verification | Administrative boundary marker (exclude) |
+
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004602 DOI: https://doi.org/10.18112/openneuro.ds004602.v1.0.1
 
+---
 
-### Normal Task 1: Error vs Correct Classification (binary)
+### Potential Task 1: Error vs Correct Classification (binary)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
+- **Target Definition**: 
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `cor` | 0 | Correct response (ERN/Pe absent) |
+  | `err` | 1 | Error response (ERN/Pe present) |
+
 - **Notes**: boundary (545) is admin - exclude. cor (169,236) >> err (24,198) - significant class imbalance; undersample cor or use weighted loss. con/inc/go/ng/neu usable for separate task-level analyses.
 
  | Event | y | Meaning |
@@ -58,13 +79,21 @@ Participants completed Flanker, Stroop, and Go/no-go tasks to evaluate the psych
  | `cor` | 0 | Correct response (ERN/Pe absent) |
  | `err` | 1 | Error response (ERN/Pe present) |
 
+---
 
-### Normal Task 2: Congruent vs Incongruent (binary, Flanker/Stroop)
+### Potential Task 2: Congruent vs Incongruent (binary, Flanker/Stroop)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
+- **Target Definition**: 
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `con` | 0 | Congruent trial |
+  | `inc` | 1 | Incongruent trial |
+
 - **Notes**: 54,498 vs 47,242 - reasonably balanced. Filter by Flanker/Stroop task files only.
 
  | Event | y | Meaning |

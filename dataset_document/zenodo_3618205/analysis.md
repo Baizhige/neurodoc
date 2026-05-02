@@ -9,7 +9,7 @@ Forty-four participants (22 normal-hearing, 22 hearing-impaired) underwent EEG r
 
 ## File Scan Result
 
-> **Kernel SHA256**: `25fd07109b6a06499cc25ac1d336133aca00fb8d8a4ab201224974d4adc3b637`
+> **Kernel SHA256**: `26205622aa4230b9f05e23fb32ff60c01bed634764a2122da675a000bcb1a4bc`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -32,8 +32,8 @@ Forty-four participants (22 normal-hearing, 22 hearing-impaired) underwent EEG r
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -43,6 +43,7 @@ Forty-four participants (22 normal-hearing, 22 hearing-impaired) underwent EEG r
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 60.0 s (or full trial duration), overlap = 30.0 s, target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Use only files from the selective attention task. MMN and resting state files have different event structures.
 
@@ -56,6 +57,7 @@ Forty-four participants (22 normal-hearing, 22 hearing-impaired) underwent EEG r
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: As in Task 1, target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Needs verification.
 - **Notes**: Group labels (normal-hearing / hearing-impaired) must be derived from subject ID and companion demographics file. Primary comparison is neural tracking of attended speech across the two groups.
 

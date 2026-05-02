@@ -9,7 +9,7 @@ Participants performed a long-duration simulated driving task involving lane mai
 
 ## File Scan Result
 
-> **Kernel SHA256**: `2861a03d26d5955207e3567d0a300efca701bd6f65239f5731918a912441a1be`
+> **Kernel SHA256**: `15a9f9dcc5b04551e1547b5193f96d83490be1323bc13f58e9d9c6bcaf152ccd`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Participants performed a long-duration simulated driving task involving lane mai
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -37,9 +37,9 @@ Participants performed a long-duration simulated driving task involving lane mai
 - **Label Field**: `year_of_birth`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|-------------|-------|
-  | year_of_birth | 1978–1994 (years) | Age computed as 2022 - year_of_birth; ~16 year span across 17 subjects |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | year_of_birth | Age computed as 2022 - year_of_birth; ~16 year span across 17 subjects (1978–1994). Native participants.tsv column used directly—model can regress on year_of_birth directly or user can derive age in preprocessing. |
 - **Evidence**:
 - **Notes**: Native participants.tsv column used directly for regression. The kernel does not need to compute age explicitly—the model can regress on year_of_birth directly (monotonically related to age) or the user can derive age as 2022 - year_of_birth in preprocessing. Segment-based epoching with 4s non-overlapping windows is standard for biomarker/regression analysis on continuous driving data, treating the sustained driving task as a quasi-resting state for age-related EEG feature extraction.
 

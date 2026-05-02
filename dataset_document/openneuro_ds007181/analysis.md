@@ -9,7 +9,7 @@ Resting-state EEG (part of a full PSG recording) was collected from patients dia
 
 ## File Scan Result
 
-> **Kernel SHA256**: `c7a2badbf13ef768ecc7a1d58172c4ff9ffe004cfd6e934638a1c26aa11ba6dc`
+> **Kernel SHA256**: `bab676af260861080443fe8aa6dea2d773924eaf4f796e1e650eee13b1e3a18c`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -27,8 +27,8 @@ Resting-state EEG (part of a full PSG recording) was collected from patients dia
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -38,7 +38,7 @@ Resting-state EEG (part of a full PSG recording) was collected from patients dia
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0
 - **Label Route**: `event`
-- **Meta Level**: `raw`
+- **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|--------|

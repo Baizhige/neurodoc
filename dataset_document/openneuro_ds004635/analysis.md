@@ -24,8 +24,8 @@ Infants watched a series of engaging and relaxing videos to facilitate recording
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -49,7 +49,7 @@ Infants watched a series of engaging and relaxing videos to facilitate recording
 ## Data Quality Notes
 
 - Single aggregated file prevents subject-level separation; all 48 infants' data are combined into one recording with boundary markers.
-- `subject_age` and `subject_sex` fields are missing from info, but `Age` and `Gender` are present and complete as native participants.tsv columns.
+- `age` and `sex` fields are missing from info, but `Age` and `Gender` are present and complete as native participants.tsv columns.
 - `device` field is missing; no equipment metadata available in scan.
 - Only 10 events each for `TRSP` and `bgin`, which are admin/technical markers explicitly designated to ignore; very limited event structure for task-based analysis.
 - Event counts differ from original draft (10 vs previously noted 10 for both types, but types reclassified as admin vs event); the authoritative scan shows admin type with "System marker: Ignore" meaning.

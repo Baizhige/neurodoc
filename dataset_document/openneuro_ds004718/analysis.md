@@ -9,7 +9,7 @@ Naturalistic listening task where older Cantonese-speaking adults (65+) listened
 
 ## File Scan Result
 
-> **Kernel SHA256**: `02715511ce4a456fc1033e6419491b0406aa1163bcbbc5a872f2cdb8bb6884df`
+> **Kernel SHA256**: `e073b80285e6a5fc526f6f7f6dac22e4f408fc359a78a5714b7a39d9832d90c2`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -4503,8 +4503,8 @@ Naturalistic listening task where older Cantonese-speaking adults (65+) listened
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -4516,13 +4516,15 @@ Naturalistic listening task where older Cantonese-speaking adults (65+) listened
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `word_onset` | 0 | Word onset from NLP-aligned text |
 - **Super Meta Notes**: Derived from NLP text-audio alignment pipeline. Kernel step: Load word-onset timestamps from annotation files (NOT raw STIM triggers). Paper indicates ~4473 word events per participant. Note: `word_onset` events not present in raw scan — must be loaded from NLP-derived annotation files.
 - **Evidence**:
   - DOI: 10.1038/s41597-024-03745-8 — EEG epoched at word onsets (0-600ms) for ERP and ISC analyses during Cantonese audiobook listening; NLP-aligned text annotations include word frequency, POS tags, and time-aligned speech segmentation.
 - **Kernel Notes**: Must read word-onset timestamps from NLP annotations file; these are NOT raw STIM triggers. Verify NLP alignment between audio and text. 62-channel EEG at 1000Hz. Gradient artifact removal required for fMRI-EEG compatibility. (replaces Classical Task 1 from original analysis.md)
+
+---
 
 ### Classical Task 2: Story Section/Condition Code Classification
 - **Task Type**: classification
@@ -4531,8 +4533,8 @@ Naturalistic listening task where older Cantonese-speaking adults (65+) listened
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `story_code_1` | 0 | Story section code 1 (n=171) |
   | `story_code_3` | 1 | Story section code 3 (n=268) |
   | `story_code_4` | 2 | Story section code 4 (n=263) |
@@ -4546,6 +4548,8 @@ Naturalistic listening task where older Cantonese-speaking adults (65+) listened
   - DOI: 10.1038/s41597-024-03745-8 — Story segment triggers (codes 1-112) mark story sections; used for ERP and GLM analyses of neural responses during Cantonese audiobook listening.
 - **Kernel Notes**: Use actual `story_code_X` event IDs (NOT numeric codes alone). Event IDs confirmed from scan results. Verify full code mapping in events.tsv. (replaces Classical Task 2 from original analysis.md)
 
+---
+
 ### Potential Task 1: Story Section Multiclass Classification (Extended Window)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
@@ -4553,8 +4557,8 @@ Naturalistic listening task where older Cantonese-speaking adults (65+) listened
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `story_code_1` | 0 | Story/condition code 1 |
   | `story_code_3` | 1 | Story/condition code 3 |
   | `story_code_4` | 2 | Story/condition code 4 |

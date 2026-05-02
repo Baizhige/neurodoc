@@ -9,7 +9,7 @@ Resting-state EEG was collected from 149 participants (100 with Parkinson's dise
 
 ## File Scan Result
 
-> **Kernel SHA256**: `893b33a9e023d1f9d733bfdcee8853ce439ca4ca0056a9afb09c50a7a0106c61`
+> **Kernel SHA256**: `b1b282208a1b00ee5dccf3fe3431a98b08f50659c99222ad514151d4f03b6485`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Resting-state EEG was collected from 149 participants (100 with Parkinson's dise
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -33,7 +33,7 @@ Resting-state EEG was collected from 149 participants (100 with Parkinson's dise
 
 ## Data Quality Notes
 
-- Standard BIDS fields `subject_age` and `subject_sex` are missing; age and gender information is instead available as `AGE` and `GENDER` in the info fields with complete coverage.
+- Standard BIDS fields `age` and `sex` are missing; age and gender information is instead available as `AGE` and `GENDER` in the info fields with complete coverage.
 - Device information is missing from standard BIDS fields; no equipment metadata is available in the scan.
 - UPDRS scores have partial availability (100/149 subjects) due to structural missingness in healthy controls who do not have Parkinson's disease symptoms.
 - Event structure contains only `boundary` markers (admin type) with no task-related events, consistent with resting-state paradigm.

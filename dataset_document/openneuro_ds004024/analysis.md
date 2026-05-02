@@ -26,8 +26,8 @@ A multi-modal neuroimaging study using Paired Associative Stimulation (PAS) comb
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | missing | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -39,11 +39,11 @@ A multi-modal neuroimaging study using Paired Associative Stimulation (PAS) comb
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
-  | Stimulus/S  2 (14ms condition) | 0 | 14ms asynchrony - LTP condition (increased connectivity) |
-  | Stimulus/S  2 (9ms condition) | 1 | 9ms asynchrony - control condition (no change) |
-  | Stimulus/S  2 (4ms condition) | 2 | 4ms asynchrony - LTD condition (decreased connectivity) |
+  | Event ID | y | Meaning |
+  |----------|---|---|
+  | `Stimulus/S  2` (14ms condition) | 0 | 14ms asynchrony - LTP condition (increased connectivity); Needs verification: condition derived from experimental metadata |
+  | `Stimulus/S  2` (9ms condition) | 1 | 9ms asynchrony - control condition (no change); Needs verification: condition derived from experimental metadata |
+  | `Stimulus/S  2` (4ms condition) | 2 | 4ms asynchrony - LTD condition (decreased connectivity); Needs verification: condition derived from experimental metadata |
 - **Super Meta Notes**: Labels derived from experimental asynchrony condition metadata (4ms, 9ms, 14ms values) in the ccPAS protocol design files. Kernel step: Extract trial-wise asynchrony condition labels from the experimental design file (events.tsv or sidecar JSON) and merge with epoch labels. For papers analyzing Before vs After[1] (~10min) vs After[2] (~60min) sessions, also derive time-point labels from session markers.
 - **Evidence**:
   - DOI: 10.1016/j.neurom.2022.10.045 — Three-class ccPAS asynchrony detection (14ms LTP vs 9ms no-change vs 4ms LTD) using TMS-evoked EEG connectivity changes with statistical analysis in 5-20ms post-stimulus window
@@ -54,15 +54,17 @@ A multi-modal neuroimaging study using Paired Associative Stimulation (PAS) comb
   - Analysis window: 5-20ms post-stimulus for AUC/connectivity calculation
   - Super Meta required to decode asynchrony condition from experimental design metadata
 
-### Normal Task 1: Sub-threshold Baseline vs Active TMS Classification
+---
+
+### Potential Task 1: Sub-threshold Baseline vs Active TMS Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`Stimulus/S  2`, `Stimulus/S  4`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `Stimulus/S  2` | 0 | Active TMS/PAS stimulus pulse (33,153 trials) |
   | `Stimulus/S  4` | 1 | Sub-threshold baseline TMS pulse (5,406 trials) |
 - **Evidence**:

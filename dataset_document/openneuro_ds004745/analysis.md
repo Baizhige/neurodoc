@@ -9,7 +9,7 @@ Participants performed Steady-State Visual Evoked Potential (SSVEP) tasks at sti
 
 ## File Scan Result
 
-> **Kernel SHA256**: `8ec4540117314d5c94bcdba63475778b4971a7f0fdaef0fb2bd508b0cac49327`
+> **Kernel SHA256**: `cf96305e45aa86f5b5ceb197a9db0862c0aafd0c30e86ab8c89f52a5cdea8ab1`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -31,8 +31,8 @@ Participants performed Steady-State Visual Evoked Potential (SSVEP) tasks at sti
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -44,8 +44,8 @@ Participants performed Steady-State Visual Evoked Potential (SSVEP) tasks at sti
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|--|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `2` | 0 | 2 Hz SSVEP condition |
   | `4` | 1 | 4 Hz SSVEP condition |
   | `8` | 2 | 8 Hz SSVEP condition |
@@ -54,6 +54,8 @@ Participants performed Steady-State Visual Evoked Potential (SSVEP) tasks at sti
   - DOI: 10.1109/EMBC46164.2021.9629771 — "Efficient Artifact Removal from Low-Density Wearable EEG using Artifacts Subspace Reconstruction" — Six young adults performed SSVEP tasks at 2/4/8 Hz stimulation frequencies under both artifact-free and artifact conditions using BioWolf 8 dry electrodes at 1000 Hz sampling. Paper evaluates ASR-cleaned SSVEP responses with Frequency-Tagged Response (FTR) as the classification measure. This is the originating publication for this dataset.
 - **Kernel Notes**: Kernel extracts sliding 10 s windows with 50% overlap from raw continuous data, assigns labels based on which SSVEP condition (2/4/8 Hz or artifact/rest) was active during that window. Requires events.tsv to determine condition timing for label assignment. SSVEP harmonics at multiples of stimulation frequency are key features. Bandpass filter 0.15–40 Hz recommended as preprocessing.
 
+---
+
 ### Potential Task 1: SSVEP Event-Locked Condition Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -61,8 +63,8 @@ Participants performed Steady-State Visual Evoked Potential (SSVEP) tasks at sti
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|--|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `2` | 0 | 2 Hz SSVEP condition onset |
   | `4` | 1 | 4 Hz SSVEP condition onset |
   | `8` | 2 | 8 Hz SSVEP condition onset |

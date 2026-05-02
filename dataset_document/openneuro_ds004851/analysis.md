@@ -9,7 +9,7 @@ High-density EEG (72 channels) was recorded in an operational context involving 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `cfaa22cb59fd5feef36bd7eb0386d427a2ef3fa4d2c8b7d597b4c6f0f3d7f0bd`
+> **Kernel SHA256**: `c3d8a05fe8f8b35a035438fe31b4c3a02e721c83f4975e8a9d01af1b7f956598`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -61,8 +61,8 @@ High-density EEG (72 channels) was recorded in an operational context involving 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -273,7 +273,7 @@ High-density EEG (72 channels) was recorded in an operational context involving 
 
 ## Data Quality Notes
 
-- Missing demographic metadata: `subject_age`, `subject_sex`, and `device` fields are all missing from the dataset scan, limiting potential covariate analyses.
+- Missing demographic metadata: `age`, `sex`, and `device` fields are all missing from the dataset scan, limiting potential covariate analyses.
 - Class imbalance in 6-class stimulus task: Stimulus E has only 15 trials versus ~2000+ for A/B/D, which will severely impact model training if not addressed.
 - Moderate class imbalance in stimulus F: 469 trials versus ~1900-2200 for A/B/D.
 - Structural event-level mismatch: secondary_80_onset (65 trials, block-level) vs secondary_81_onset (973 trials, trial-level) creates fundamentally different sampling structures that may confound the 80 vs 81 discrimination task.

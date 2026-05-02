@@ -9,7 +9,7 @@ Participants performed speeded perceptual judgments and subsequently reported th
 
 ## File Scan Result
 
-> **Kernel SHA256**: `a6df321b40731aa8c9ea1eefe7979e21b9467d923ec7a8aa26f2972a40bbaf32`
+> **Kernel SHA256**: `4d30b57d695216b4e8f4a5fdbbadedb027c4765cdc89f1213930b45da09404a5`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -49,8 +49,8 @@ Participants performed speeded perceptual judgments and subsequently reported th
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | Mean age = 24.6 ± 1.43 y |
-| `subject_sex` | complete | Twenty-five healthy volunteers (12 females) |
+| `age` | complete | Mean age = 24.6 ± 1.43 y |
+| `sex` | complete | Twenty-five healthy volunteers (12 females) |
 | `device` | missing | EEG Recording: Data acquired via BrainVision system; MR-gradient artifacts removed via sliding window template subtraction. BCG artifacts removed using TP10 electrode (right mastoid) with semi-automatic procedure. Preprocessing included 1-10 Hz Butterworth filter (4th order zero-phase), [-0.2, 0.6] s epoching around response onset, common average reference, and ICA for artifact removal (EEGLAB/MATLAB). fMRI Recording: Structural (T1) and functional MRI data included; preprocessed using fMRIPrep with GLM analysis for BOLD signal estimation. |
 
 
@@ -88,10 +88,10 @@ Participants performed speeded perceptual judgments and subsequently reported th
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_sex` | F -> 0; M -> 1 |
+  | `sex` | F -> 0; M -> 1 |
 - **Evidence**:
   - openneuro_ds002158 - Resting-state sessions lack all event markers (no events.tsv, no .vmrk), enforcing segmentation-based approaches only for those files
-- **Notes**: This task serves as a fallback for resting-state sessions that lack event markers entirely. The `subject_sex` field is complete across all participants. Classification is binary with two distinct classes. The `subject_age` field could alternatively be used for regression (Potential Task), but the age range in a sample of 20 participants may be limited. This task is explicitly segmentation-based with empty target_events as required.
+- **Notes**: This task serves as a fallback for resting-state sessions that lack event markers entirely. The `sex` field is complete across all participants. Classification is binary with two distinct classes. The `age` field could alternatively be used for regression (Potential Task), but the age range in a sample of 20 participants may be limited. This task is explicitly segmentation-based with empty target_events as required.
 
 ### Potential Task 1: Confidence Rating Regression
 - **Task Type**: regression

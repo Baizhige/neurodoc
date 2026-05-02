@@ -63,8 +63,8 @@ A modified Sternberg working memory task requiring either simple retention or me
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -76,8 +76,8 @@ A modified Sternberg working memory task requiring either simple retention or me
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `11_y0`, `13_y0`, `15_y0`, `17_y0`, `19_y0`, `21_y0`, `23_y0`, `25_y0`, `27_y0`, `29_y0`, `31_y0`, `33_y0`, `35_y0`, `37_y0`, `39_y0` | 0 | Retention (simple maintenance) condition |
   | `11_y1`, `13_y1`, `15_y1`, `17_y1`, `19_y1`, `21_y1`, `23_y1`, `25_y1`, `27_y1`, `29_y1`, `31_y1`, `33_y1`, `35_y1`, `37_y1`, `39_y1`, `41_y1` | 1 | Manipulation (alphabetization) condition |
 - **Super Meta Notes**: Event ID suffix `_y0` = Retention (R), `_y1` = Manipulation (M). Prefix number may encode load level (5/6/7) or event subtype. Cross-reference with events.tsv trial_type column for full condition metadata.
@@ -86,6 +86,8 @@ A modified Sternberg working memory task requiring either simple retention or me
   - DOI: 10.1038/s41598-020-72940-5 — Electrophysiological underpinnings of variation in verbal working memory capacity; executive vs storage components of WM
 - **Kernel Notes**: Extends across full trial structure (−14.2 to 2.2 s relative to probe alignment). Baseline: −11.5 to −10.5 s. Numeric event IDs replace conceptual names from analysis.md. Load level extractable from event prefix for ordinal covariates.
 
+---
+
 ### Classical Task 2: Delay Period Working Memory State Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
@@ -93,8 +95,8 @@ A modified Sternberg working memory task requiring either simple retention or me
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `10_y0`, `12_y0`, `14_y0`, `16_y0`, `18_y0`, `20_y0`, `22_y0`, `24_y0`, `26_y0`, `28_y0`, `30_y0`, `32_y0`, `34_y0`, `36_y0`, `38_y0`, `40_y0` | 0 | Retention condition during delay phase |
   | `10_y1`, `12_y1`, `14_y1`, `16_y1`, `18_y1`, `20_y1`, `22_y1`, `24_y1`, `26_y1`, `28_y1`, `30_y1`, `32_y1`, `34_y1`, `36_y1`, `38_y1`, `40_y1` | 1 | Manipulation condition during delay phase |
 - **Super Meta Notes**: Long-duration delay events (>6 s) with sliding window segmentation (0.5 s overlap). Suffix `_y0` = Retention, `_y1` = Manipulation. Prefix encodes load level or delay subtype.
@@ -103,21 +105,25 @@ A modified Sternberg working memory task requiring either simple retention or me
   - DOI: 10.1038/s41598-020-72940-5 — WM capacity analysis using encoding and delay phase oscillations
 - **Kernel Notes**: Sliding windows capture sustained theta/alpha/beta dynamics across early and late delay subphases. Use 0.5 s overlap for temporal trajectory modeling.
 
-### Normal Task 1: Verbal Working Memory Load Level Effects
+---
+
+### Potential Task 1: Verbal Working Memory Load Level Effects
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -14.2 s, tmax = 2.2 s, target_events = [`11_y0`, `11_y1`, `13_y0`, `13_y1`, `15_y0`, `15_y1`, `17_y0`, `17_y1`, `19_y0`, `19_y1`, `21_y0`, `21_y1`, `23_y0`, `23_y1`, `25_y0`, `25_y1`, `27_y0`, `27_y1`, `29_y0`, `29_y1`, `31_y0`, `31_y1`, `33_y0`, `33_y1`, `35_y0`, `35_y1`, `37_y0`, `37_y1`, `39_y0`, `39_y1`, `41_y0`, `41_y1`]
 - **Label Route**: `misc`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
-  | All probe events | Load level (5, 6, or 7) | Number of letters in the presented sequence |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | Needs verification | Load level (5, 6, or 7) derived from event prefix number; no MISC channels present in dataset. Consider info route using events.tsv trial_type field, or derive from event ID prefix mapping to load level |
 - **Super Meta Notes**: Load level (5/6/7 letters) derived from event prefix number. Ordinal regression target. Extract from events.tsv trial_type column if prefix mapping is ambiguous.
 - **Evidence**:
   - DOI: 10.1038/s41598-020-72940-5 — Analyzes WM capacity variation across three load levels (5/6/7 letters)
   - DOI: 10.1111/ejn.15457 — Uses load levels as within-subject factor in oscillatory analysis
 - **Kernel Notes**: Load level available as ordinal covariate for regression or covariate for classification tasks. Cross-reference event prefixes with events.tsv to confirm load-to-prefix mapping.
+
+---
 
 ### Potential Task 1: Stimulus Detection ERP Analysis
 - **Task Type**: classification
@@ -126,9 +132,9 @@ A modified Sternberg working memory task requiring either simple retention or me
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
-  | All probe events | 1 | Stimulus onset (binary presence) |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | All probe events (`11_y0` through `41_y1`) | 1 | Stimulus onset (binary presence) |
 - **Evidence**: No direct DOI reference. Plausible from paradigm: probe events represent letter stimulus presentations suitable for P300/N200 ERP analysis. Response events available for trial-level accuracy labels (match vs non-match).
 - **Kernel Notes**: Tight window captures stimulus-locked ERP components. Baseline: −200 to 0 ms. Combine with Response events for accuracy-based trial rejection.
 

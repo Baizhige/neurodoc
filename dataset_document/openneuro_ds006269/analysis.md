@@ -9,7 +9,7 @@ Continuous 6-hour tethered EEG recordings were collected from wildtype and Synga
 
 ## File Scan Result
 
-> **Kernel SHA256**: `b5f97ab18d9052c98c6ae7ae6f3fcdde7f3d0ac27d3737f10ac48bec1c3a6b5f`
+> **Kernel SHA256**: `00b9a5eb95019babe2cac049de33be5808df9c77115641d904ce789015e4dc73`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -28,8 +28,8 @@ Continuous 6-hour tethered EEG recordings were collected from wildtype and Synga
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | missing | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

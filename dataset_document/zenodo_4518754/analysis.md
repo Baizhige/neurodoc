@@ -9,7 +9,7 @@ Thirteen subjects listened to two simultaneously presented Dutch stories (left v
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `b0fb53a13b65ddd627a459885811c0110078172e3fe0af22802920a04880cb10`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Sampled
 
@@ -28,8 +28,8 @@ Thirteen subjects listened to two simultaneously presented Dutch stories (left v
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

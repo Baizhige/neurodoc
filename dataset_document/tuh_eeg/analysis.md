@@ -9,7 +9,7 @@ The Temple University Hospital EEG Corpus (v2.0.1) is the largest publicly avail
 
 ## File Scan Result
 
-> **Kernel SHA256**: `None
+> **Kernel SHA256**: `b0fb53a13b65ddd627a459885811c0110078172e3fe0af22802920a04880cb10`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -24,8 +24,8 @@ The Temple University Hospital EEG Corpus (v2.0.1) is the largest publicly avail
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | using NicoletOne(Natus) |
 
 

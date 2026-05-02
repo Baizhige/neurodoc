@@ -11,7 +11,7 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
 
 ## File Scan Result
 
-> **Kernel SHA256**: `ef8114aa4ce30e7dc890cb3f6b4943c6e8b9bab7d638a7e409dd4a091a7fdaa2`
+> **Kernel SHA256**: `6f928254816808c17c06fa175429ac15bdad6a342bca28a3239d6c14550f1833`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -34,8 +34,8 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | [To Agent: Available per subject in `SubjectDetails.csv` as `Age`; overall 50 ± 10 years, range 28-68.] |
-| `subject_sex` | missing | [To Agent: Available per subject in `SubjectDetails.csv` as `Gender`; overall distribution 21M / 4F.] |
+| `age` | missing | [To Agent: Available per subject in `SubjectDetails.csv` as `Age`; overall 50 ± 10 years, range 28-68.] |
+| `sex` | missing | [To Agent: Available per subject in `SubjectDetails.csv` as `Gender`; overall distribution 21M / 4F.] |
 | `device` | missing | [To Agent: PSG `.rec` files used Jaeger-Toennies system; `_lifecard.edf` files used Reynolds Lifecard CF Holter ECG.] |
 
 
@@ -81,15 +81,15 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 30.0 s, overlap = 0.0, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `subject_age`
+- **Label Field**: `age`
 - **Meta Level**: super
 - **Target Definition**:
   | Info Field | Range | Notes |
   |---|---|---|
-  | `subject_age` | continuous (years) | Available for all 25 subjects in `SubjectDetails.csv` / `SubjectDetails.xls` as `Age |
+  | `age` | continuous (years) | Available for all 25 subjects in `SubjectDetails.csv` / `SubjectDetails.xls` as `Age |
 - **Evidence**:
 
-- **Notes**: `subject_age` is not present in the standard scanned info fields but can be injected from the companion SubjectDetails metadata. This is a Potential task because the dataset is small for age regression and no dataset-specific age-regression benchmark was identified. Use subject-level train/test splits to prevent leakage across 30 s segments from the same subject.
+- **Notes**: `age` is not present in the standard scanned info fields but can be injected from the companion SubjectDetails metadata. This is a Potential task because the dataset is small for age regression and no dataset-specific age-regression benchmark was identified. Use subject-level train/test splits to prevent leakage across 30 s segments from the same subject.
 
 ## Data Quality Notes
 

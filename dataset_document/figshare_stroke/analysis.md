@@ -9,7 +9,7 @@ Fifty stroke patients (sub-01 to sub-50) performed a cued left/right hand motor 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `fb851de3e4dbb6b9db1391ae068830a750d9dcec09ea21d253d9bcad876d6f4d`
+> **Kernel SHA256**: `11759583348321d136db5d087841f6b3abe68cf483378b87d118cc3a59ca49b8`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -29,8 +29,8 @@ Fifty stroke patients (sub-01 to sub-50) performed a cued left/right hand motor 
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | [to_agent: Showed in task-motor-imagery_eeg.json] |
 
 

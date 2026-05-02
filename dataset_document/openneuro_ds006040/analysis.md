@@ -31,8 +31,8 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -111,7 +111,7 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
   - DOI: 10.1038/s41597-026-06616-6 — GradCPT measures sustained attention via RT variability; RT extraction from S254 events is documented.
 - **Kernel Notes**: Only for target trials (S245) where S254 occurred within window. Extract RT = time(S254) - time(S245). Exclude omission errors (S245 without S254). Downsample from 5000 Hz before processing.
 
-### Normal Task 1: gradCPT Commission Error Detection
+### Potential Task 1: gradCPT Commission Error Detection
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, target_events = [`S155`]
@@ -126,7 +126,7 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
   - DOI: 10.1038/s41597-026-06616-6 — Commission error framework described: responding to standard stimuli (S155) as if they were targets.
 - **Kernel Notes**: Focus specifically on S155 (standard) trials to detect commission errors. Check for S254 presence within 2s window. Downsample from 5000 Hz before processing.
 
-### Normal Task 2: gradCPT Omission Error Detection
+### Potential Task 2: gradCPT Omission Error Detection
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, target_events = [`S245`]

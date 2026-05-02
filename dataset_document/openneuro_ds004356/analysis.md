@@ -27,8 +27,8 @@ The study measures subcortical Auditory Brainstem Responses (ABR) and cortical a
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

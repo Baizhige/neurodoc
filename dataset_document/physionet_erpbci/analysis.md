@@ -27,8 +27,8 @@ Participants spelled characters using a standard 6x6 matrix speller while EEG wa
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | No subject age demographic information is publicly available in this dataset. |
-| `subject_sex` | missing | No subject sex demographic information is publicly available in this dataset. |
+| `age` | missing | No subject age demographic information is publicly available in this dataset. |
+| `sex` | missing | No subject sex demographic information is publicly available in this dataset. |
 | `device` | missing | Recordings collected via BioSemi ActiveTwo EEG system (2048 Hz sampling rate), with 64 EEG channels, 2 earlobe references, and 4 EOG channels; software re-referencing required for full CMRR. |
 
 

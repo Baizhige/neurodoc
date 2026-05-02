@@ -31,8 +31,8 @@ The sleep-edf database contains 197 whole-night PolySomnoGraphic sleep recording
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 

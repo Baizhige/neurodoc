@@ -9,7 +9,7 @@ The CAP Sleep Database comprises 108 overnight polysomnographic (PSG) recordings
 
 ## File Scan Result
 
-> **Kernel SHA256**: `54f7bb12ca8e1497115f3bfc72b778ac0c2156309ded3fcdfb420ac50661c4e2`
+> **Kernel SHA256**: `75b8e91f0ee85940a6f1b23fc7c5369f4c8f497d330ce43caa933221925b80ab`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -34,8 +34,8 @@ The CAP Sleep Database comprises 108 overnight polysomnographic (PSG) recordings
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 

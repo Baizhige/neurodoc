@@ -9,7 +9,7 @@ A ship-steering simulation where participants control a rotating arrow to mainta
 
 ## File Scan Result
 
-> **Kernel SHA256**: `539d3d2a27a6922e3847639adf4071884ff8f962a1b683cceea5719b3353e5e8`
+> **Kernel SHA256**: `60b193d5e41df5b37a718b7b4655040a8bfdd6bc48f988341f28e86f7aba90ff`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -55,8 +55,8 @@ A ship-steering simulation where participants control a rotating arrow to mainta
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -69,7 +69,7 @@ A ship-steering simulation where participants control a rotating arrow to mainta
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `Stimulus/S  1` | 1 | Block 1, Condition 1 |
 | `Stimulus/S  2` | 2 | Block 1, Condition 2 |
@@ -95,9 +95,10 @@ A ship-steering simulation where participants control a rotating arrow to mainta
 | `Stimulus/S 82` | 22 | Block 8, Condition 2 |
 | `Stimulus/S 83` | 23 | Block 8, Condition 3 |
 | `Stimulus/S 84` | 24 | Block 8, Condition 4 |
-
 - **Evidence**: OpenNeuro metadata; dataset description indicates ship-steering BCI with varying noise levels. Source: https://openneuro.org/datasets/ds004264 DOI: https://doi.org/10.18112/openneuro.ds004264.v1.1.0
 - **Kernel Notes**: 34 distinct Stimulus event IDs with 2-digit suffix pattern (S  1-84). Condition labels derived from events.tsv metadata columns (noise_level, trial_type). High-count events (S 21-34: 4757-5450 trials) represent continuous task markers requiring label filtering. Verify condition mapping against BIDS task events.json if available. Keep events.tsv metadata schema versioned.
+
+---
 
 ### Classical Task 2: Catch/Baseline Trial Analysis
 - **Task Type**: classification
@@ -107,7 +108,7 @@ A ship-steering simulation where participants control a rotating arrow to mainta
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `Stimulus/S 61` | 1 | Catch Block 6, Condition 1 |
 | `Stimulus/S 62` | 2 | Catch Block 6, Condition 2 |
@@ -117,9 +118,10 @@ A ship-steering simulation where participants control a rotating arrow to mainta
 | `Stimulus/S 72` | 6 | Catch Block 7, Condition 2 |
 | `Stimulus/S 73` | 7 | Catch Block 7, Condition 3 |
 | `Stimulus/S 74` | 8 | Catch Block 7, Condition 4 |
-
 - **Evidence**: OpenNeuro metadata; low trial counts (30-113) indicate separate catch/baseline trial blocks distinct from main task. Source: https://openneuro.org/datasets/ds004264 DOI: https://doi.org/10.18112/openneuro.ds004264.v1.1.0
 - **Kernel Notes**: Catch trials use shorter tmax=0.5s for sparse trial analysis. 8 event types with 30-113 trials each vs 4000-5500 for main task blocks. May serve as baseline/calibration conditions. Label parsing from events.tsv metadata required.
+
+---
 
 ### Classical Task 3: Cognitive Load Regression
 - **Task Type**: regression
@@ -129,11 +131,10 @@ A ship-steering simulation where participants control a rotating arrow to mainta
 - **Meta Level**: super
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | Value | Meaning |
 |---|---|---|
 | `Stimulus/*` | noise_level (continuous) | Environmental noise level from events.tsv (super meta) |
 | `Stimulus/*` | performance_metric (continuous) | Steering performance (error/accuracy) from events.tsv (super meta) |
-
 - **Evidence**: OpenNeuro metadata; paradigm description states study of cognitive load under dynamic uncertainty with varying noise levels. Source: https://openneuro.org/datasets/ds004264 DOI: https://doi.org/10.18112/openneuro.ds004264.v1.1.0
 - **Kernel Notes**: Super meta labels (noise_level, performance_metric) not directly in raw event stream—must be loaded from events.tsv columns. Variable trial counts (1473-2373 per subject) across 21 subjects. Regression targets enable cognitive load estimation during closed-loop BCI control.
 

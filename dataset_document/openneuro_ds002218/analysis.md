@@ -9,7 +9,7 @@ Participants passively perceived rhythmic auditory tone sequences and visual fla
 
 ## File Scan Result
 
-> **Kernel SHA256**: `c321e8c16ce2439b0d7cb2735e681c043b1173f0cbf10ec93ceac6c3b3b78eb9`
+> **Kernel SHA256**: `24fc2a48b63b7a876604b8724eed20f5850f8059502f92861867571d41450caa`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -30,8 +30,8 @@ Participants passively perceived rhythmic auditory tone sequences and visual fla
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

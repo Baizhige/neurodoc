@@ -10,7 +10,7 @@ A reinforcement learning task (Probabilistic Selection Task) performed by partic
 
 ## File Scan Result
 
-> **Kernel SHA256**: `no_kernel`
+> **Kernel SHA256**: `1399b40651baaac3e10a58494210215b5e9793c8dd9cbd881ae8c97b387861c2`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -85,8 +85,8 @@ A reinforcement learning task (Probabilistic Selection Task) performed by partic
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -98,13 +98,15 @@ A reinforcement learning task (Probabilistic Selection Task) performed by partic
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `FB` (trial_type=correct) | 0 | Reward feedback (positive outcome) |
-  | `FB` (trial_type=incorrect) | 1 | Punishment feedback (negative outcome) |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | S116/S125/S134/S143/S152/S161 (trial_type=correct) | 0 | Reward feedback (positive outcome) |
+  | S116/S125/S134/S143/S152/S161 (trial_type=incorrect) | 1 | Punishment feedback (negative outcome) |
 - **Evidence**:
   - DOI: 10.1111/psyp.14276 — Uses OpenNeuro dataset ds004317 (Experiment 2, N=50) to examine how mood induction affects Reward Positivity (RewP) and reward learning during a probabilistic selection task, epoching EEG data from -2000 to 6000 ms around feedback onset and classifying correct vs incorrect feedback trials.
 - **Kernel Notes**: Raw trigger codes S116/S125/S134/S143/S152/S161 (2000 each) map to FB events across stimulus pairs. The trial_type column in events.tsv provides Correct/Incorrect sub-label distinction for binary classification. Baseline correction from -200 to 0 ms before feedback onset. Build version-controlled trigger decoding table before epoching. STATUS events (S85, S191) are administrative markers—exclude from analysis.
+
+---
 
 ### Potential Task 1: Stimulus-Response Locking Analysis
 - **Task Type**: classification
@@ -113,12 +115,14 @@ A reinforcement learning task (Probabilistic Selection Task) performed by partic
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `STIM` | 0 | Stimulus onset (stimulus pair presented) |
-  | `RESP` | 1 | Participant button-press response |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | S101-S105 | 0 | Stimulus onset (stimulus pair presented) |
+  | S201-S214 | 1 | Participant button-press response |
 - **Evidence**: No direct DOI reference; task supported by paradigm plausibility. Epoch alignment recommendations suggest mood-dependent differences in perceptual processing and motor preparation are examinable via stimulus and response locking.
 - **Kernel Notes**: S101-S105 (stimulus markers) and S201-S214 (response markers, 25 each) map to STIM and RESP events respectively. Optional secondary analysis to complement the primary RewP/feedback-locked analysis. Could support mood classification (sad vs happy) as exploratory extension.
+
+---
 
 ### Potential Task 2: Mood State Classification from EEG
 - **Task Type**: classification
@@ -127,25 +131,27 @@ A reinforcement learning task (Probabilistic Selection Task) performed by partic
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `STIM` | 0 | Sad mood condition trials |
-  | `FB` | 1 | Happy mood condition trials |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | Needs verification | 0 | Sad mood condition trials |
+  | Needs verification | 1 | Happy mood condition trials |
 - **Evidence**: No direct DOI reference; supported by partial evidence from DOI 10.1111/psyp.14276 which contrasts happy vs sad mood conditions during the reinforcement learning task.
 - **Kernel Notes**: Paradigm explicitly compares sad vs happy mood states following mood induction. Mood state may modulate neural responses across multiple temporal windows (stimulus processing, response preparation, feedback evaluation). Requires events.tsv metadata for condition labeling.
 
-### Normal Task 1: Feedback Timing Analysis
-- **Task Type**: regression/classification
+---
+
+### Potential Task 1: Feedback Timing Analysis
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [`FB`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `FB` (S116) | 0 | Feedback from stimulus pair A |
-  | `FB` (S125) | 1 | Feedback from stimulus pair B |
-  | `FB` (S134) | 2 | Feedback from stimulus pair C |
+  | Event ID | Value | Meaning |
+  |----------|-------|---------|
+  | S116 | 0 | Feedback from stimulus pair A |
+  | S125 | 1 | Feedback from stimulus pair B |
+  | S134 | 2 | Feedback from stimulus pair C |
 - **Evidence**: Indirect evidence only; supported by paradigm structure where participants learn stimulus-outcome associations across multiple pairs.
 - **Kernel Notes**: S116-S161 events likely encode different stimulus pairs with varying reinforcement probabilities. Examining neural responses by pair could reveal differential learning rates. TESTING events (S  8, 7126 total) may contain additional sub-label information in events.tsv trial_type column.
 

@@ -9,7 +9,7 @@ Participants without prior BCI experience performed a motor imagery vs rest prot
 
 ## File Scan Result
 
-> **Kernel SHA256**: `1c1ce2b498db2c62a25bae192b266f958d71e5bfc606f104f1c535ac01bbd383`
+> **Kernel SHA256**: `28da8b02b8c556ef27d3c8fd26e82bcaa29756b38d38475b254a7c9394307bb0`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -38,8 +38,8 @@ Participants without prior BCI experience performed a motor imagery vs rest prot
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | Derived from the `age` column of `participants.tsv`; range 20-30 years |
-| `subject_sex` | complete | Derived from the `gender` column of `participants.tsv`; `M` = 6, `F` = 4 |
+| `age` | complete | Derived from the `age` column of `participants.tsv`; range 20-30 years |
+| `sex` | complete | Derived from the `gender` column of `participants.tsv`; `M` = 6, `F` = 4 |
 | `device` | complete | Data in Brief reports EEG acquisition with Electro-Cap System II connected to OpenBCI Cyton + Daisy; this device information is not repeated in each per-run `eeg.json` |
 | `participant_id` | complete | Native `participants.tsv` column; 10 participants: `sub-02` to `sub-12`, excluding `sub-01` and `sub-11` |
 | `gender` | complete | Native `participants.tsv` column; values are `M` and `F` |
@@ -127,7 +127,7 @@ Participants without prior BCI experience performed a motor imagery vs rest prot
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_age` | no mapping |
+  | `age` | no mapping |
 - **Evidence**:
   - `participants.tsv` - `age` is a native column with values for all 10 participants.
   - `participants.json` - Defines `age` as participant age with units in years.
@@ -142,7 +142,7 @@ Participants without prior BCI experience performed a motor imagery vs rest prot
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_sex` | Male -> 0; Female -> 1 |
+  | `sex` | Male -> 0; Female -> 1 |
 - **Evidence**:
   - `participants.tsv` - `gender` is a native column with values for all 10 participants.
   - `participants.json` - Defines `gender` as participant sex and maps `M` to male and `F` to female.

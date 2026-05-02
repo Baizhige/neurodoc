@@ -26,8 +26,8 @@ Twenty-six subjects (ages 20-37) performed a P300-based BCI feedback task using 
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | partial (130/133) | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | partial (130/133) | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 

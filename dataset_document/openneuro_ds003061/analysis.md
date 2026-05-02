@@ -37,8 +37,8 @@ An auditory three-stimulus oddball task in which participants pressed a key in r
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -50,13 +50,15 @@ An auditory three-stimulus oddball task in which participants pressed a key in r
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `standard` | 0 | Standard non-target tone (500Hz, ~70% frequency) |
   | `oddball` | 1 | Oddball target tone (1000Hz, ~15% frequency) |
 - **Evidence**:
   - DOI: 10.1038/s41598-023-27528-0 — Auditory oddball binary classification with target (1000Hz) vs standard (500Hz) tones; epochs -0.5 to 1.5s capture full P300 window (300-700ms); dataset ds003061 explicitly used.
 - **Kernel Notes**: Use pre-classified `oddball` (586 trials) and `standard` (19855 trials) events directly; no metadata join required. Filter out `standard_with_response` (80 trials) as erroneous responses to non-targets. Response correctness can be validated by checking for corresponding `response` event after oddball trials.
+
+---
 
 ### Classical Task 2: Correct Response Filtering (Oddball Only)
 - **Task Type**: classification
@@ -65,12 +67,14 @@ An auditory three-stimulus oddball task in which participants pressed a key in r
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `oddball_with_response` | 1 | Correct oddball response (target tone with keypress) |
 - **Evidence**:
   - DOI: 10.1038/s41598-023-27528-0 — Validates target trials require button press; reaction time computed from stimulus to response.
 - **Kernel Notes**: `oddball_with_response` (3667 trials) represents trials with both oddball stimulus and subsequent response event. Shorter window (-0.2 to 1.0s) focuses on early perception and P300 rather than motor execution. Reaction time = time(response) - time(stimulus) for each trial. Compare with `oddball` events to identify missed responses.
+
+---
 
 ### Potential Task 1: Three-Way Stimulus Classification (Standard/Oddball/Noise)
 - **Task Type**: classification
@@ -79,12 +83,14 @@ An auditory three-stimulus oddball task in which participants pressed a key in r
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `standard` | 0 | Standard non-target tone (500Hz, ~70%) |
   | `oddball` | 1 | Oddball target tone (1000Hz, ~15%) |
   | `noise` | 2 | Distractor noise tone (~15%) |
 - **Kernel Notes**: Three-stimulus oddball paradigm includes standard, oddball target, and noise distractor stimuli. Available event counts: standard (19855), oddball (586), noise (4243). All three event types present in raw event stream. Exclude `standard_with_response` (80) and `noise_with_response` (21) as erroneous responses.
+
+---
 
 ### Potential Task 2: Reaction Time Regression
 - **Task Type**: regression
@@ -93,9 +99,9 @@ An auditory three-stimulus oddball task in which participants pressed a key in r
 - **Label Route**: `misc`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
-  | `oddball_with_response` | response_time | Reaction time: time from stimulus onset to keypress (in seconds) |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | Needs verification | Reaction time computed as time(response) - time(stimulus) for each `oddball_with_response` trial (in seconds). No MISC channels present in dataset; RT must be derived from event timestamps. |
 - **Regression Target**: `response_time` (from `misc` channel or computed as time(response) - time(stimulus))
 - **Kernel Notes**: Compute RT = timestamp(response) - timestamp(stimulus) for each oddball_with_response trial. RT provides continuous target for regression, capturing variability in decision speed. Motor-related components (MRN, LRP) appear ~100-200ms around response; shorter window (-0.2 to 1.0s) captures perception-to-action pipeline.
 

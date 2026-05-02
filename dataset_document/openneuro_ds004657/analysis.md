@@ -9,7 +9,7 @@ Participants performed a semi-automated driving task involving lane maintenance 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `b679e822b19f01636c5c85db16529502472020a1b36962ac3697fdae63407672`
+> **Kernel SHA256**: `b6fbb551a15aae1ec1df6a3267fe9e62beb72c496dbdac3a67f1aff04b16ea5c`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -155,21 +155,21 @@ Participants performed a semi-automated driving task involving lane maintenance 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
-### Normal Task 1: Mental Workload Classification (Easy vs Hard Road Complexity)
+### Potential Task 1: Mental Workload Classification (Easy vs Hard Road Complexity)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.875
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------||---|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Driving 231 V1` | 0 | Easy road complexity (main road, normal traffic) |
   | `Driving 231 V2` | 0 | Easy road complexity (main road, normal traffic) |
   | `Driving 411 V1` | 0 | Easy road complexity (highway segment) |
@@ -190,6 +190,8 @@ Participants performed a semi-automated driving task involving lane maintenance 
   - Compute 8s moving average for WL score as referenced in paper
   - Dominant classes (231/411 with ~10k each) vs minority classes (~1k-1.8k) — stratification recommended
 
+---
+
 ### Potential Task 1: Driving Condition Classification (Multiclass)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
@@ -197,8 +199,8 @@ Participants performed a semi-automated driving task involving lane maintenance 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------||---|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Driving 231 V1` | 0 | Driving condition 231, variant 1 (dominant, ~10k) |
   | `Driving 231 V2` | 1 | Driving condition 231, variant 2 (dominant, ~10k) |
   | `Driving 411 V1` | 2 | Driving condition 411, variant 1 (dominant, ~10k) |

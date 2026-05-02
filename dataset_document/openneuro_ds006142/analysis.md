@@ -9,7 +9,7 @@ Memory recognition task where participants watched 10-second movie clips and ide
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Full
 
@@ -32,8 +32,8 @@ Memory recognition task where participants watched 10-second movie clips and ide
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -59,6 +59,7 @@ Memory recognition task where participants watched 10-second movie clips and ide
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Key contrast is remembered vs not-recognized clips at first watch onset. High sampling rate (2048 Hz); consider downsampling.
 

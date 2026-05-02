@@ -9,7 +9,7 @@ Participants performed speech perception and silent speech production tasks invo
 
 ## File Scan Result
 
-> **Kernel SHA256**: `d659db75b998c95432f7d5ce269d3ecd21ea826dbc6fd3871b395d5a8727414a`
+> **Kernel SHA256**: `30ee038471fd331c768659b723dcbec1ee0a0c775a4e5dc45d506cdafb116da7`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -62,8 +62,8 @@ Participants performed speech perception and silent speech production tasks invo
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

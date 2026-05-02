@@ -9,7 +9,7 @@ Participants viewed rapid sequences of overlaid oriented grating pairs (presente
 
 ## File Scan Result
 
-> **Kernel SHA256**: `ae100be3bcccd0a91c5423c0ebafe55756e7b33fbfec510964ce8a3e2c04fc03`
+> **Kernel SHA256**: `cf2c5c509c449ae0372c32ce812ec51bb50af363fbd45dab2b23ba5b98ee3f99`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -29,8 +29,8 @@ Participants viewed rapid sequences of overlaid oriented grating pairs (presente
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -57,7 +57,7 @@ Participants viewed rapid sequences of overlaid oriented grating pairs (presente
 - `E  2` is labeled as "stimulus offset" in the scan but used as "uncued/ignored" in the task definition; this semantic mismatch needs resolution before analysis.
 - `E  3` has substantially lower count (1280 vs ~174K) and is labeled as "block start" rather than target/distractor trials, conflicting with prior draft interpretation.
 - Duplicated event markers exist with `Event/E  1`, `Event/E  2`, `Event/E  3` prefixes (EEGLAB-style variants) that are exact duplicates of base events and should be deduplicated during preprocessing.
-- Subject demographic fields (`subject_age`, `subject_sex`) are missing from dataset metadata.
+- Subject demographic fields (`age`, `sex`) are missing from dataset metadata.
 - Recording device information is missing from dataset metadata.
 - `boundary` markers are classified as `admin` type rather than `event` type, which is correct for segment boundaries but should be verified they represent subject-level boundaries (20 count matches 20 subjects).
 - Very high event counts per file (~174K per condition) will produce large epoch sets requiring memory-efficient processing pipelines.

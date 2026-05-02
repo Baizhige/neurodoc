@@ -9,7 +9,7 @@ Participants listened to music clips from film scores while their EEG was record
 
 ## File Scan Result
 
-> **Kernel SHA256**: `6bf8e6a13c940930c57917267c033a33bf77684c9aeef5788912caf77ee28cd1`
+> **Kernel SHA256**: `b0a1546992584b95b2764a9696ff83dc8213eb09620256dac96f550121420677`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Participants listened to music clips from film scores while their EEG was record
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

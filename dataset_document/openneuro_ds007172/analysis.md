@@ -9,7 +9,7 @@ Multi-task EEG battery investigating hemispheric asymmetries across resting stat
 
 ## File Scan Result
 
-> **Kernel SHA256**: `e5fb94a11a73b79da1de5255127daf5e9ced0fbf77136528adbaac579d787729`
+> **Kernel SHA256**: `5a32b4b16f401011e1c84964aa876e9dcfee503cb7499f1047c16fcafee216f6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -64,13 +64,13 @@ Multi-task EEG battery investigating hemispheric asymmetries across resting stat
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | missing | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
-### Normal Task 1: Multi-Condition EEG Asymmetry Classification
+### Potential Task 1: Multi-Condition EEG Asymmetry Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5 s, target_events = see Target Definition
@@ -105,7 +105,7 @@ Multi-task EEG battery investigating hemispheric asymmetries across resting stat
 - **Evidence**: DOI 10.1080/1357650X.2025.2591660
 - **Kernel Notes**: Use New Segment/ markers to identify subject/run boundaries. 501 segments across 100 subjects suggests ~5 segments per subject. S111-S224 encode emotion/language task conditions with first digit indicating condition type and second digit indicating block. S11/S21/S22 encode house visual discrimination. High condition count (23 classes) may require condition grouping or careful class balancing.
 
-### Normal Task 2: Face Perception Task - Identity Discrimination
+### Potential Task 2: Face Perception Task - Identity Discrimination
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, overlap = 0.1 s, target_events = see Target Definition
@@ -125,7 +125,7 @@ Multi-task EEG battery investigating hemispheric asymmetries across resting stat
 - **Evidence**: DOI 10.1080/1357650X.2025.2591660
 - **Kernel Notes**: Tighter window (tmin=-0.2, tmax=0.8) captures early N170/VPP components critical for face identity lateralization. S117/S118 and S217/S218 differ from S127/S128 and S227/S228 by condition type (first digit). ~6,400 trials per identity condition supports robust ERP averaging. Consider grouping by hemisphere (left vs right identity) for binary asymmetry analysis.
 
-### Normal Task 3: Visual Discrimination - House Category Classification
+### Potential Task 3: Visual Discrimination - House Category Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, overlap = 0.2 s, target_events = see Target Definition

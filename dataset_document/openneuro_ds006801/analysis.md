@@ -9,7 +9,7 @@ Resting-state EEG was recorded before and after an educational intervention in w
 
 ## File Scan Result
 
-> **Kernel SHA256**: `6951d06471e5bde013f2b4b80f0ce484335d39c96370bfa2fb275e5f6099b072`
+> **Kernel SHA256**: `1eb4d257b983d8fe10463b986b23ff4e8ade8bcc0682b11b349e53131f5ae6f6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Resting-state EEG was recorded before and after an educational intervention in w
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

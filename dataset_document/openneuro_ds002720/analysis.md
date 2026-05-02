@@ -9,7 +9,7 @@ Participants used EEG self-regulation to control the tempo of music in a tempo-b
 
 ## File Scan Result
 
-> **Kernel SHA256**: `f8ccabb74f55b6325ba81c0083fcd40a7776d77052a73c4c34fbbad4f06e3208`
+> **Kernel SHA256**: `59196c175ac3d8d41fdc5ed8d3a687afd6a5cc92ebd61dca68083721485beae3`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -25,8 +25,8 @@ Participants used EEG self-regulation to control the tempo of music in a tempo-b
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 
@@ -58,7 +58,7 @@ Participants used EEG self-regulation to control the tempo of music in a tempo-b
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_sex` | F -> 0; M -> 1 |
+  | `sex` | F -> 0; M -> 1 |
 - **Evidence**:
   - participants.tsv — sex field complete for all 18 subjects with class imbalance (M=14, F=4)
 - **Notes**: Continuous EEG segmentation (4s windows, 50% overlap) applied across all BCMI runs per subject. Binary classification of subject sex from resting/task-continuous EEG. Class imbalance present (M=14, F=4 out of 18 subjects). The segment_length and overlap values are standard defaults for continuous EEG segmentation with no task-specific reference guidance. This is a weak subject-trait task compared with the explicit alpha-state labels available in the event tables.
@@ -72,7 +72,7 @@ Participants used EEG self-regulation to control the tempo of music in a tempo-b
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_age` | no mapping |
+  | `age` | no mapping |
 - **Evidence**:
   - participants.tsv — age column complete for N=18, range 18–28, sample values [23, 24, 28, 20, 19, 26, 20]
 - **Notes**: The kernel must derive binary binned labels from the native age field using a median split at approximately 22–23 years (median of 18–28 range ≈ 23). This is a derived classification variant of the continuous age regression task; the kernel discretizes the continuous age into two balanced classes for segment-level classification. Segmentation produces fixed-length windows with 50% overlap; no event alignment is used. This remains an auxiliary demographic task, not the core BCMI task.

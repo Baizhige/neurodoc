@@ -9,7 +9,7 @@ Participants read and evaluated 210 short English-language texts including Haiku
 
 ## File Scan Result
 
-> **Kernel SHA256**: `92a183363f80913671afda1d11528e9a57dc8849ef3ca4010e076ddfd5414ae7`
+> **Kernel SHA256**: `e7354a297c789d42ee955002f45fa14dd3a935b5bc5c5fdb52fe0ffbccbee404`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
@@ -41,8 +41,8 @@ Participants read and evaluated 210 short English-language texts including Haiku
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -228,7 +228,7 @@ Participants read and evaluated 210 short English-language texts including Haiku
 
 ## Data Quality Notes
 
-- `subject_age` and `subject_sex` fields are missing from dataset metadata.
+- `age` and `sex` fields are missing from dataset metadata.
 - `device` field is missing from dataset metadata; equipment inferred from README and data descriptor as BioSemi ActiveTwo.
 - Events 65285-65288 and 65280 are rare events with severe class imbalance relative to main task events; consider exclusion or special handling in classification.
 - Events 65287 and 65288 (resting state 2 onset/end) are defined in event metadata but not observed in actual recordings.

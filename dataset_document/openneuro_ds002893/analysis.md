@@ -9,7 +9,7 @@ An interleaved dual-oddball task in which subjects selectively attended to eithe
 
 ## File Scan Result
 
-> **Kernel SHA256**: `06279b5cae711747c4c1192ce8883b36815035e082cf18804a5f0320512f6b35`
+> **Kernel SHA256**: `62b3f85ef2c0cb23ae21218e39336513a3379d9f784bfb26e492951f28f90602`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -25,8 +25,8 @@ No MISC labels identified in current scan.
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | partial (48/52) | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | partial (48/52) | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -48,6 +48,8 @@ No MISC labels identified in current scan.
 - **Evidence**: DOI: https://doi.org/10.18112/openneuro.ds002893.v2.0.0 | Dual-oddball paradigm core study objective; standard P300/Oddball target detection supported by paradigm description alone.
 - **Kernel Notes**: No events detected in kernel scan. Paradigm logic supports P300 target classification. Verify event IDs in accompanying *_events.tsv files. Standard oddball/P300 epoch window captures classic ERP response. Alignment to target stimulus onset.
 
+---
+
 ### Potential Task 2: Attention Modality Classification (binary)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
@@ -63,6 +65,8 @@ No MISC labels identified in current scan.
 
 - **Evidence**: DOI: https://doi.org/10.18112/openneuro.ds002893.v2.0.0 | Interleaved dual-oddball with selective attention to auditory or visual modalities supported by paradigm description.
 - **Kernel Notes**: Sustained `attend_*` states require overlapping sliding windows to capture extended neural states. The 0.5 overlap enables continuous modality classification. `shift_attention` is admin/transition-only; exclude from classification target. Derivation of high-level attention labels may require Type 2 super meta integration.
+
+---
 
 ### Potential Task 3: Attention Shift Detection
 - **Task Type**: classification

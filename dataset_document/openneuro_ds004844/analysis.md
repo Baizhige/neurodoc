@@ -9,7 +9,7 @@ Simulated semi-automated driving in a leader-follower paradigm focused on predic
 
 ## File Scan Result
 
-> **Kernel SHA256**: `73a9ee3558379d3ca8d7e3f011233c4e66ad62b0bd2b2038d80e74c34fcd323c`
+> **Kernel SHA256**: `553fbd88fa0f4458c30d1b1765297988511eecbcea53fdac3101010060668e6c`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -136,8 +136,8 @@ Simulated semi-automated driving in a leader-follower paradigm focused on predic
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

@@ -9,7 +9,7 @@ Simultaneous EEG-fMRI recordings were acquired during resting-state wakefulness 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `4c62d576cc9d09d80f102d36b7c8a924ed9e16f4eb3686c4d3b2652de816cbed`
+> **Kernel SHA256**: `4925f67ca568767f51cef7b3314322f7379d1d7d445f02537871a2a80c7ede73`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -29,8 +29,8 @@ Simultaneous EEG-fMRI recordings were acquired during resting-state wakefulness 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -40,10 +40,10 @@ Simultaneous EEG-fMRI recordings were acquired during resting-state wakefulness 
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 30.0 s, overlap = 0.0, target_events = [`Stimulus/S  1`, `Stimulus/S  2`, `Stimulus/S  3`]
 - **Label Route**: `event`
-- **Meta Level**: `super`
+- **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S  1` | 0 | Wake (W) |
   | `Stimulus/S  1` | 1 | NREM1 (N1) |
   | `Stimulus/S  2` | 2 | NREM2 (N2) |
@@ -54,15 +54,17 @@ Simultaneous EEG-fMRI recordings were acquired during resting-state wakefulness 
   - DOI: 10.1016/j.neuroimage.2022.119720 — Uses same OpenNeuro ds003768 dataset (version 1.0.9) analyzing 27 subjects with simultaneous EEG, fMRI, and autonomic recordings during resting-state and sleep transitions
 - **Kernel Notes**: Use 30-sec long-event epoching aligned with AASM standard sleep scoring. Downsample from 5000 Hz to 250 Hz to reduce computation. Apply gradient artifact removal for EEG-fMRI data (e.g., gradient interpolation). Verify event-to-sleep-stage mapping from sourcedata/events.tsv. Class imbalance expected (N3 rare). Consider subject-level cross-validation. Note: REM epochs not available in this dataset (no REM triggers in event structure).
 
+---
+
 ### Classical Task 2: Arousal state binary classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 20.0 s, overlap = 0.5, target_events = [`Stimulus/S  1`, `Stimulus/S  2`, `Stimulus/S  3`]
 - **Label Route**: `event`
-- **Meta Level**: `super`
+- **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S  1` | 0 | Awake (W) |
   | `Stimulus/S  1` | 1 | Sleep (N1) |
   | `Stimulus/S  2` | 1 | Sleep (N2) |
@@ -73,15 +75,17 @@ Simultaneous EEG-fMRI recordings were acquired during resting-state wakefulness 
   - DOI: 10.1016/j.neuroimage.2022.119720 — Uses same dataset for arousal state analysis during resting-state and sleep transitions; analyzes transient arousal dynamics with EEG-fMRI
 - **Kernel Notes**: Use 20-sec epochs with 50% overlap (10-sec sliding window) for denser sampling. Downsample to 250 Hz. Apply MRI gradient artifact removal before epoching. Verify sleep/wake labeling from sourcedata. Class imbalance likely (sleep more frequent than wake in sleep session data).
 
+---
+
 ### Potential Task 1: Sleep microarchitecture analysis (short-epoch ERP-like)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = -1.0 s, tmax = 2.0 s, overlap = 0.5, target_events = [`Stimulus/S  1`, `Stimulus/S  2`, `Stimulus/S  3`]
 - **Label Route**: `event`
-- **Meta Level**: `super`
+- **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S  1` | 0 | Sleep stage transition marker (W/N1 onset) |
   | `Stimulus/S  2` | 1 | Sleep stage transition marker (N2 onset) |
   | `Stimulus/S  3` | 2 | Sleep stage transition marker (N3 onset) |

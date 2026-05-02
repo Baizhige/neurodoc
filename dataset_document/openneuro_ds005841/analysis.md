@@ -9,7 +9,7 @@ An investigation of event-related potentials (ERPs) during visual tasks performe
 
 ## File Scan Result
 
-> **Kernel SHA256**: `dff9f33d6713a8cc2dce7301d67b7be99593cdbd614f1d3bc57a4b391976c202`
+> **Kernel SHA256**: `d5a8bb1d076ea2c1e66c9c923d1291e20a0ee1dd1ab53ee86608955c037f4707`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -46,8 +46,8 @@ An investigation of event-related potentials (ERPs) during visual tasks performe
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

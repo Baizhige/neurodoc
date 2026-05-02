@@ -9,7 +9,7 @@ Rapid Serial Visual Presentation (RSVP) of 200 object images at two presentation
 
 ## File Scan Result
 
-> **Kernel SHA256**: `bc3ce5ec9f3b496c0d56da90177a7013c47f26490de533945a7641c986a4e033`
+> **Kernel SHA256**: `a8db2663ac572e90e5379c1a425ae5e272fe68e7689a03f29a0f7c72ebca8588`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Rapid Serial Visual Presentation (RSVP) of 200 object images at two presentation
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -37,8 +37,8 @@ Rapid Serial Visual Presentation (RSVP) of 200 object images at two presentation
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|-------|---------|  
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `stars` | 0 | Star/celestial category RSVP image onset |
   | `boats` | 1 | Boat/vehicle category RSVP image onset |
 - **Evidence**:

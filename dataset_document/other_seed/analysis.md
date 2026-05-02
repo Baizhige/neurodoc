@@ -9,7 +9,7 @@ The SEED (SJTU Emotion EEG Dataset) was collected from 15 subjects who watched 1
 
 ## File Scan Result
 
-> **Kernel SHA256**: `b007ef59fd365c24a093fcb83b5f9c9f5884c598254eb434790690005d69d31b`
+> **Kernel SHA256**: `4077512da7329b9fac63d2a2e6f7d61ec825919cdf2cd9a8aeb3b5c4f756a39a`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -36,8 +36,8 @@ The SEED (SJTU Emotion EEG Dataset) was collected from 15 subjects who watched 1
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -97,7 +97,7 @@ The SEED (SJTU Emotion EEG Dataset) was collected from 15 subjects who watched 1
 - Event structure in raw files contains only sparse keypad response markers (`KeyPad Response 1/4/7/13/15`) and system trigger codes (`0`, `255`); no trial onset or emotion condition markers are present in the EEG event stream.
 - Keypad response events are highly imbalanced (Response 15: 8 occurrences; others: 2-4 each), limiting statistical power for response classification tasks.
 - No semantic mapping of keypad numbers to actual response meanings was found in dataset documentation.
-- `subject_age`, `subject_sex`, and `device` fields are missing from file metadata; demographic and equipment information must be inferred from the original SEED publication.
+- `age`, `sex`, and `device` fields are missing from file metadata; demographic and equipment information must be inferred from the original SEED publication.
 - MISC channels `M1` and `M2` are present in raw files but their roles (reference, EOG, or other) and units require verification.
 
 ## Kernel Responsibilities

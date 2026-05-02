@@ -9,7 +9,7 @@ The dataset records somatosensory evoked potentials (SEPs) in response to mixed 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `bc5d70f1557b015ca40a105acb9e174af146e0015d2631038779ba873cc1ba31`
+> **Kernel SHA256**: `f58bbb2edf4229e8c1fa16409bacb920c3d8fa34047f95240d5d1b6f692688f3`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -24,8 +24,8 @@ The dataset records somatosensory evoked potentials (SEPs) in response to mixed 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -37,12 +37,14 @@ The dataset records somatosensory evoked potentials (SEPs) in response to mixed 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Median - Stimulation` | 0 | Median nerve stimulation (upper limb SEP) |
   | `Tibial - Stimulation` | 1 | Tibial nerve stimulation (lower limb SEP) |
 - **Kernel Notes**: Bimodal event distribution (112,498 median + 111,997 tibial events) enables binary classification comparing upper vs lower limb somatosensory processing. The 2.0s window captures spinal (N13-P13) and cortical (N20-P37) SEP components. Channel mix includes scalp EEG, spinal ESG, and peripheral ENG/EMG—consider channel-specific filtering. Dataset includes both stimulation and resting state conditions across 399 files/40 subjects.
 - **Evidence**: Supported by dataset paradigm: mixed median and tibial nerve stimulation with simultaneous EEG and epidural spinal cord recordings (ESG) for characterizing spinal and cortical processing of somatosensory signals.
+
+---
 
 ### Potential Task 2: Evoked Potential Averaging by Stimulation Site
 - **Task Type**: regression
@@ -51,11 +53,13 @@ The dataset records somatosensory evoked potentials (SEPs) in response to mixed 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | Value | Meaning |
+  |----------|-------|---------|
   | `Median - Stimulation` | 0 | Median nerve stimulation onset |
 - **Kernel Notes**: Single-site SEP averaging for upper limb responses. The 10kHz sampling rate preserves fast somatosensory peak latencies; recommend downsampling to 1000Hz post-epoching for standard EEG analysis while retaining SEP fidelity. File naming conventions may encode stimulation parameters for regression targets.
 - **Evidence**: Paradigm-plausible task: stimulus-locked SEP acquisition with known upper limb SEP generators (median nerve → cervicomedullary junction → primary somatosensory cortex).
+
+---
 
 ### Potential Task 3: Evoked Potential Averaging by Stimulation Site (Tibial)
 - **Task Type**: regression
@@ -64,8 +68,8 @@ The dataset records somatosensory evoked potentials (SEPs) in response to mixed 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | Value | Meaning |
+  |----------|-------|---------|
   | `Tibial - Stimulation` | 0 | Tibial nerve stimulation onset |
 - **Kernel Notes**: Single-site SEP averaging for lower limb responses. Lower limb SEPs show larger spinalcord involvement (lumbar enlargement) with distinct cortical generators compared to median nerve. Same epoching rationale as median stimulation task.
 - **Evidence**: Paradigm-plausible task: stimulus-locked SEP acquisition with known lower limb SEP generators (tibial nerve → lumbar spinal cord → sensorimotor cortex).

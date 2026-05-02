@@ -9,7 +9,7 @@ A simulated driving task assessing driver fatigue and performance through a spee
 
 ## File Scan Result
 
-> **Kernel SHA256**: `346e3a371a26942ac2dcdada07e4c7eacaac1795abc6836ff6e497cd309f904c`
+> **Kernel SHA256**: `20cd740d4873de5698afe401f3accfb166eb0affeaae6eef0e028828cd0ee4c6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -32,8 +32,8 @@ A simulated driving task assessing driver fatigue and performance through a spee
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

@@ -9,7 +9,7 @@ Participants performed a covert spatial attention task where they were trained t
 
 ## File Scan Result
 
-> **Kernel SHA256**: `417360376b6b22993a001da72832486322893c67acabe84693cbc8677c6d17d4`
+> **Kernel SHA256**: `b48bb1fc0000cb9509b26b669a0c0923fa66c4d94b7f3455655c5a4c35e9cf54`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -36,8 +36,8 @@ Participants performed a covert spatial attention task where they were trained t
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | Range from 21-27 y, Mean age = 23 y |
-| `subject_sex` | complete | 7 female, 7 male (sex distribution fully reported in the manuscript) |
+| `age` | complete | Range from 21-27 y, Mean age = 23 y |
+| `sex` | complete | 7 female, 7 male (sex distribution fully reported in the manuscript) |
 | `device` | missing | EEG recording: g.tec HIamp 64-channel active EEG amplifier (512 Hz sampling rate, linked ears reference, 10-10 international electrode system, ground at FCz); Eye tracking: SR Research EyeLink 1000 optical eye tracker (500 Hz sampling rate); Stimulus display: 24" LCD monitor (50 cm fixed viewing distance) |
 
 
@@ -85,7 +85,7 @@ Participants performed a covert spatial attention task where they were trained t
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_age` | no mapping |
+  | `age` | no mapping |
 - **Evidence**:
 
 - **Notes**: Small-sample subject-level regression (N=14). Segmentation-based epoching with 4s non-overlapping windows extracts features from continuous sustained-attention EEG to predict age as a continuous biomarker. The narrow age range (21-27 years) limits predictive utility but demonstrates feasibility of age regression from EEG features.
@@ -99,7 +99,7 @@ Participants performed a covert spatial attention task where they were trained t
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_sex` | F -> 0; M -> 1 |
+  | `sex` | F -> 0; M -> 1 |
 - **Evidence**:
   - participants.tsv — N=14 subjects with complete sex data: 7 female (F), 7 male (M)
   - README — "Fourteen healthy subjects (seven female, seven male), age 23±1.52 years"

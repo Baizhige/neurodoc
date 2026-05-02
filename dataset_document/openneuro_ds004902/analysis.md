@@ -9,7 +9,7 @@ Resting-state EEG recordings with eyes open and eyes closed were conducted under
 
 ## File Scan Result
 
-> **Kernel SHA256**: `853b689d3ac3a4b842f90ee5a6bfcb311ac1e5d90547a4b1422d93c08fcf1930`
+> **Kernel SHA256**: `8e00cbfa7c484a84d412dab0a482b57c8c63684b44797f4ec8f5e08d6c91d67d`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -31,8 +31,8 @@ Resting-state EEG recordings with eyes open and eyes closed were conducted under
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

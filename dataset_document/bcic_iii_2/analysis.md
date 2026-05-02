@@ -9,7 +9,7 @@ Two subjects (A and B) attended to individual letters in a 6x6 character matrix 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `b0fb53a13b65ddd627a459885811c0110078172e3fe0af22802920a04880cb10`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Sampled
 
@@ -29,8 +29,8 @@ Two subjects (A and B) attended to individual letters in a 6x6 character matrix 
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -42,8 +42,8 @@ Two subjects (A and B) attended to individual letters in a 6x6 character matrix 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `target_flash` | 1 | Flash of row/column containing attended character (P300 present) |
   | `nontarget_flash` | 0 | Flash of row/column not containing attended character |
 - **Evidence**:

@@ -9,7 +9,7 @@ Eighteen subjects (S12, S13, S15, S21, S27, S28, S31, S33, S36, S37, S38, S39, S
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `53db4371cb557c00426050514e14ffaed83a1852a819fcc43b289d56ef7d4e55`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Full
 
@@ -27,8 +27,8 @@ Eighteen subjects (S12, S13, S15, S21, S27, S28, S31, S33, S36, S37, S38, S39, S
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -53,6 +53,7 @@ Eighteen subjects (S12, S13, S15, S21, S27, S28, S31, S33, S36, S37, S38, S39, S
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s (per stimulus onset event), target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Requires mapping trigger codes to stimulus/attention labels from the dataset documentation. Stimulus-onset codes (~3856-3966) mark individual sound presentations.
 - **Notes**: Trigger code semantics must be verified against the dataset README or companion paper. Variable sampling rates across subjects require per-subject resampling to a common rate.
 

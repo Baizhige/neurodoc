@@ -23,8 +23,8 @@ Subjects performed a long-duration simulated driving task involving lane mainten
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -37,12 +37,14 @@ Subjects performed a long-duration simulated driving task involving lane mainten
 - **Label Field**: `year_of_birth`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|-------------|-------|
-  | year_of_birth | 1976–1993 (year) | Approximate age at study ~21–38 years (circa 2014); single value per subject applied to all segments |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | year_of_birth | Continuous regression target: birth year 1976–1993. Approximate age at study ~21–38 years (circa 2014); single value per subject applied to all segments. |
 - **Evidence**:
   - participants.tsv — year_of_birth column complete for all 21 subjects with range 1976–1993
 - **Notes**: Segmentation-based approach for subject-level biomarker regression. No event structure required; 4-second segments with 50% overlap are standard for resting/baseline EEG feature extraction in subject-level prediction tasks. The year_of_birth field is native to participants.tsv (B3 archetype, raw meta level). Age is a fundamental demographic variable predictive of EEG spectral properties including alpha frequency slowing and theta power increases.
+
+---
 
 ### Classical Task 2: Subject Age Group Classification
 - **Task Type**: classification
@@ -52,12 +54,13 @@ Subjects performed a long-duration simulated driving task involving lane mainten
 - **Label Field**: `year_of_birth`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | year_of_birth | ≤1980 | 0 | Older (born 1980 or earlier) |
-  | year_of_birth | >1980 | 1 | Younger (born after 1980) |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | year_of_birth | Binary classification: ≤1980 → class 0 (Older), >1980 → class 1 (Younger). Median split derived from participants.tsv year_of_birth column. |
 - **Evidence**:
 - **Notes**: Median split at 1980 derived from participants.tsv year_of_birth column (sample values: 1984, 1979, 1978, 1976, 1993, 1980, 1985). With N=21 subjects, this task is underpowered but technically valid. The group column is constant ('Normal') and provides no discriminability. Segmentation-based epoching is used to extract 4-second non-overlapping/overlapping windows for subject-level spectral feature extraction, standard for biomarker classification from continuous driving EEG. The binary split creates balanced classes if the birth year distribution permits.
+
+---
 
 ### Classical Task 3: Driving with continuous segmentation (subject-level age)
 - **Task Type**: regression
@@ -67,12 +70,14 @@ Subjects performed a long-duration simulated driving task involving lane mainten
 - **Label Field**: `year_of_birth`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | year_of_birth | 1976–1993 (year) | Subject birth year from participants.tsv; age can be derived as (study_year - year_of_birth) if needed. Used as continuous subject-level target for regression across segmented driving epochs. |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | year_of_birth | Continuous regression target: birth year 1976–1993. Subject birth year from participants.tsv; age can be derived as (study_year - year_of_birth) if needed. Used as continuous subject-level target for regression across segmented driving epochs. |
 - **Evidence**:
   - 10.1016/j.neuroimage.2019.116054 — Mega-analysis paper using continuous EEG with temporal overlap regression for cognitive aspects; supports segmentation-based regression on sustained naturalistic paradigms.
 - **Notes**: Archetype C with native info column (year_of_birth). The kernel does not need to derive any channels; segmentation produces fixed-length windows from the continuous driving recording, and each window inherits the subject's year_of_birth as the regression target. 10s non-overlapping segments chosen to capture slower dynamics relevant to fatigue/mind wandering while providing independent samples.
+
+---
 
 ### Classical Task 4: Driving with continuous segmentation (subject-level labID)
 - **Task Type**: classification
@@ -82,29 +87,9 @@ Subjects performed a long-duration simulated driving task involving lane mainten
 - **Label Field**: `legacy_labID`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | legacy_labID | 2043 | 0 | Subject 2043 |
-  | legacy_labID | 2044 | 1 | Subject 2044 |
-  | legacy_labID | 2048 | 2 | Subject 2048 |
-  | legacy_labID | 2051 | 3 | Subject 2051 |
-  | legacy_labID | 2055 | 4 | Subject 2055 |
-  | legacy_labID | 2056 | 5 | Subject 2056 |
-  | legacy_labID | 2061 | 6 | Subject 2061 |
-  | legacy_labID | 2063 | 7 | Subject 2063 |
-  | legacy_labID | 2064 | 8 | Subject 2064 |
-  | legacy_labID | 2065 | 9 | Subject 2065 |
-  | legacy_labID | 2066 | 10 | Subject 2066 |
-  | legacy_labID | 2067 | 11 | Subject 2067 |
-  | legacy_labID | 2068 | 12 | Subject 2068 |
-  | legacy_labID | 2069 | 13 | Subject 2069 |
-  | legacy_labID | 2070 | 14 | Subject 2070 |
-  | legacy_labID | 2071 | 15 | Subject 2071 |
-  | legacy_labID | 2072 | 16 | Subject 2072 |
-  | legacy_labID | 2073 | 17 | Subject 2073 |
-  | legacy_labID | 2074 | 18 | Subject 2074 |
-  | legacy_labID | 2075 | 19 | Subject 2075 |
-  | legacy_labID | 2076 | 20 | Subject 2076 |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | legacy_labID | 21-class classification: 21 unique legacy_labID values (2043, 2044, 2048, 2051, 2055, 2056, 2061, 2063, 2064, 2065, 2066, 2067, 2068, 2069, 2070, 2071, 2072, 2073, 2074, 2075, 2076) mapped to sequential labels 0–20. Subject-level identification from continuous driving EEG segments. |
 - **Evidence**:
   - 10.1016/j.neuroimage.2019.116054 — EEG biometric identification using subject-level labels from continuous driving task data; 21-class subject identification paradigm
 - **Notes**: 21-class subject identification from 4-second non-overlapping segments of continuous driving EEG. The legacy_labID field from participants.tsv provides subject-level labels. While not a classical cognitive task, subject identification from continuous naturalistic EEG is an established benchmark for evaluating individual discriminability of neural signatures. All 21 unique legacy_labID values (2043, 2044, 2048, 2051, 2055, 2056, 2061, 2063, 2064, 2065, 2066, 2067, 2068, 2069, 2070, 2071, 2072, 2073, 2074, 2075, 2076) are mapped to sequential 0-20 labels. Segment length and overlap are inferred from standard EEG biometric literature practices for multi-class identification with limited subjects.

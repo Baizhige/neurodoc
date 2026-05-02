@@ -19,7 +19,7 @@ The Case B kernel dispatches loading to the appropriate paradigm-specific method
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `b0fb53a13b65ddd627a459885811c0110078172e3fe0af22802920a04880cb10`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Full
 
@@ -44,11 +44,12 @@ Dataset origin and publication unknown. Multi-paradigm EEG corpus (CockPart Data
 
 ## Tasks
 
-### Normal Task 1: N400 Language ERP - High-Cloze vs. Low-Cloze (epoch_by_event)
+### Potential Task 1: N400 Language ERP - High-Cloze vs. Low-Cloze (epoch_by_event)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 0.8 s (= 103/128 Hz; matches pre-epoched trial length), target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Filter to N400 paradigm files (`N400/EEG/Subject{N}.mat`). Case B kernel concatenates hiCloze (150) then loCloze (150) epochs; epoch window (0.8 s) matches the original pre-epoched length. sfreq = 128 Hz.
 
@@ -58,11 +59,12 @@ Dataset origin and publication unknown. Multi-paradigm EEG corpus (CockPart Data
 | `N400_loCloze` | 1 | Low-cloze (unpredictable) word - N400 enhanced |
 
 
-### Normal Task 2: Natural Speech Auditory Processing - Speech vs. Reversed Speech (epoch_by_long_event)
+### Potential Task 2: Natural Speech Auditory Processing - Speech vs. Reversed Speech (epoch_by_long_event)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, overlap = 0.0 s, use full recording duration from annotation, target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Filter to Natural Speech and Natural Speech - Reverse paradigm files. sfreq = 128 Hz. Multiple runs per subject; run files are independent.
 
@@ -72,11 +74,12 @@ Dataset origin and publication unknown. Multi-paradigm EEG corpus (CockPart Data
 | `NaturalSpeechReverse` | 1 | Listening to reversed (backward) speech |
 
 
-### Normal Task 3: Speech-in-Noise Modality - Audio vs. Video (epoch_by_long_event)
+### Potential Task 3: Speech-in-Noise Modality - Audio vs. Video (epoch_by_long_event)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, overlap = 0.0 s, use full recording duration from annotation, target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Filter to Speech in Noise paradigm files. sfreq = 512 Hz. Condition (audio/video) inferred from filename suffix (`_a_` or `_v_`).
 
@@ -86,11 +89,12 @@ Dataset origin and publication unknown. Multi-paradigm EEG corpus (CockPart Data
 | `SiN_video` | 1 | Speech-in-Noise video-only condition |
 
 
-### Normal Task 4: N400 cloze-condition decoding (high vs low cloze)
+### Potential Task 4: N400 cloze-condition decoding (high vs low cloze)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: `N400_hiCloze` vs `N400_loCloze` trial labels from the N400 subset.
 - **Evidence**: Primary task inferred from internal dataset documentation only; external publication/reference is not yet available.
 - **Notes**: Demoted from Primary Task because no external DOI/URL source is available.

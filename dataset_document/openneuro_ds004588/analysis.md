@@ -9,7 +9,7 @@ A multimodal neuromarketing study where 42 participants browsed supermarket prod
 
 ## File Scan Result
 
-> **Kernel SHA256**: `ed1d082a45a87a71d0c3b10c1e2c9c35ec765c84e5f403e02f68b2c91509ac7a`
+> **Kernel SHA256**: `a586e1141038066f28f43101b079252d754acda7be9ac02d25275576f833c8df`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -40,8 +40,8 @@ A multimodal neuromarketing study where 42 participants browsed supermarket prod
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -53,8 +53,8 @@ A multimodal neuromarketing study where 42 participants browsed supermarket prod
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Buy` | 0 | Product selected via left mouse click (purchase intent) |
   | `NoBuy` | 1 | Product viewed but not selected |
 - **Super Meta Notes**: Labels derived from raw events. Kernel must: (1) segment epochs around all 6 product leaflet image onsets (FYLLADIO_1-6.tif, aggregated as Leaflet_Images_1 category); (2) check for occurrence of `MouseButtonLeft pressed` within the 4-second epoch window; (3) assign Buy label if click present, NoBuy otherwise. On average ~18 products clicked and ~126 not clicked per subject across 144 total products. Exclude `MouseWheelDown120 pressed` and `MouseWheelUp120 pressed` as admin events.
@@ -64,6 +64,8 @@ A multimodal neuromarketing study where 42 participants browsed supermarket prod
   - DOI: 10.21203/rs.3.rs-8736773.v1 — Wide & Deep multimodal framework for consumer preference using EEG (19 channels) and eye-tracking (6 channels). Achieves 77.51% accuracy (±0.49%) and 74.60% weighted F1-score (±0.21%). Confirms epoch-based segmentation around product image onsets with click-derived labels.
 - **Kernel Notes**: Only 6 EEG channels available (dataset documentation indicates 19 channels originally). Limited spatial resolution restricts topographical analysis; focus on temporal features. Product category events embed full image filenames—aggregate all FYLLADIO_1-6.tif events as Leaflet_Images_1 category. Preprocessing per reference papers: 0.5–45 Hz bandpass filter, ASR and FORCe artifact removal. Exclude epochs <0.5s duration.
 
+---
+
 ### Potential Task 1: Mouse Click Neural Correlates
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -71,8 +73,8 @@ A multimodal neuromarketing study where 42 participants browsed supermarket prod
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `MouseButtonLeft pressed` | 0 | Left mouse button press (product selection action) |
 - **Evidence**: None — task inferred from paradigm. Left mouse button presses (1734 total) indicate product selection moments during free browsing. The -0.2 to 1.0s window captures motor preparation and execution phases of the click action. While no published paper explicitly analyzes EEG around click events separately from product viewing, this represents a plausible motor-related potential analysis.
 - **Kernel Notes**: Scroll wheel events (`MouseWheelDown120 pressed`, `MouseWheelUp120 pressed`) are admin data—exclude from analysis. Very limited spatial resolution with 6 EEG channels. Mouse clicks occur asynchronously relative to image onsets; variable timing within product viewing windows may introduce latency confounds. Consider aligning epochs by click onset rather than image onset for this task.

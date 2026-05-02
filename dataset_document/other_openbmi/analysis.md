@@ -9,7 +9,7 @@ Fifty-four healthy subjects (24–35 years old; 25 females) participated in the 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `66f8dfdbe76e3ef8af50220928aa968f28bfe243dc447a9f51c7bc9df487ecf9`
+> **Kernel SHA256**: `42c2c71dbd5b0012e7422b9f830de227d3074d8ef424a3100e8bc4fb58103d75`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -25,8 +25,8 @@ Fifty-four healthy subjects (24–35 years old; 25 females) participated in the 
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | partial (108/436) | N/A |
-| `subject_sex` | partial (108/436) | N/A |
+| `age` | partial (108/436) | N/A |
+| `sex` | partial (108/436) | N/A |
 | `device` | missing | N/A |
 
 

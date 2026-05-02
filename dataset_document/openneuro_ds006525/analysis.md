@@ -9,7 +9,7 @@ Spontaneous brain activity was recorded during resting-state EEG from 34 partici
 
 ## File Scan Result
 
-> **Kernel SHA256**: `870a86dccfc573560147295368fcf35953208f040f1c7cf11ce1990258384370`
+> **Kernel SHA256**: `6f1dabb43d92702a7fcea0eeded397c95e5f3f452481e1eb98bd99591eddb9e6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -30,8 +30,8 @@ Spontaneous brain activity was recorded during resting-state EEG from 34 partici
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | missing | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

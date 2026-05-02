@@ -10,7 +10,7 @@ A two-competing speaker paradigm where participants selectively attended to one 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `3845a0c331dc5f16a329a15339e10b0bc56df899f063f2efaa8ccce6f8a59519`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Full
 
@@ -28,26 +28,29 @@ _No event markers detected (`no_events`). This dataset contains continuous EEG r
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
 ### Classical Task 1: Publisher-defined BIDS task: Attended Speaker Paradigm
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004369 DOI: 10.18112/openneuro.ds004369.v1.0.1
 
+---
 
 ### Potential Task 1: Continuous Segmentation (resting/segmentation)
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: N/A (unsupervised segmentation)
 - **Notes**: No trial markers in EEG files; use sliding window segmentation. Only 7 channels (very low-density). Subject-level labels (attended speaker, blink/pause occurrence) may be available from behavioral logs.
 

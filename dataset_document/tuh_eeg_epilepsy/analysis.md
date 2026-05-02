@@ -9,7 +9,7 @@ The TUH EEG Epilepsy Corpus (v2.0.1) is a clinically labeled subset of the TUH E
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `4ce7a463441446bd796849f2ea33167eb1e5d273a5a2cfced82e42f800d856ec`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Full
 
@@ -33,20 +33,22 @@ The TUH EEG Epilepsy Corpus (v2.0.1) is a clinically labeled subset of the TUH E
 
 ## Tasks
 
-### Primary Task 1: Epilepsy vs non-epilepsy classification
+### Classical Task 1: Epilepsy vs non-epilepsy classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Patient/record-level epilepsy label from TUH Epilepsy corpus metadata.
 - **Evidence**: TUH Epilepsy Corpus is specifically assembled for epilepsy diagnosis classification research. Source: https://isip.piconepress.com/projects/tuh_eeg/ DOI: https://doi.org/10.3389/fnins.2016.00196
 
 
-### Normal Task 1: Epilepsy Patient Classification (epoch_by_long_event)
+### Potential Task 1: Epilepsy Patient Classification (epoch_by_long_event)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 5.0 s, overlap = 2.5 s, target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Parse label prefix before the colon. Class imbalance: 1785 epilepsy vs. 513 no-epilepsy (~3.5:1); apply class-balancing. Label is a **patient-level diagnosis**, not an EEG event; the EEG recording may or may not contain ictal activity.
 

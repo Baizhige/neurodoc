@@ -10,7 +10,7 @@ A visual working memory task with intermittent mind-wandering probes was adminis
 
 ## File Scan Result
 
-> **Kernel SHA256**: `bb6350a0f2fc7e55a19db4c38913125953a3084340240000c3b2fc4f6326cbc6`
+> **Kernel SHA256**: `b66177aaa892f125082a49a625f590b686f8a1f18bff06511c47fb48374ad921`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -34,8 +34,8 @@ A visual working memory task with intermittent mind-wandering probes was adminis
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -47,13 +47,15 @@ A visual working memory task with intermittent mind-wandering probes was adminis
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `Mind Wandering: Yes` | 0 | Mind-wandering state (off-task, probe response indicating self-reported wandering) |
   | `Mind Wandering: No` | 1 | On-task state (probe response indicating sustained attention) |
 - **Evidence**:
   - DOI: 10.1111/ejn.14863 — SVM classifiers on EEG alpha oscillations distinguish mind-wandering from on-task states based on participant self-reports during visual search and SART tasks
 - **Kernel Notes**: Extract epochs time-locked to 'Mind Wandering Probe' stimulus events (6434). Use 'Mind Wandering: Yes' (2002, y=0) and 'Mind Wandering: No' (4300, y=1) response events to derive binary labels. Event ID mapping differs from generic descriptions in original analysis.md—verify label mapping carefully in events.tsv. The -1s to 2s window captures pre-probe baseline, probe processing (P3b), and response preparation phases.
+
+---
 
 ### Potential Task 1: Mind-Wandering Intensity Regression
 - **Task Type**: regression
@@ -62,12 +64,14 @@ A visual working memory task with intermittent mind-wandering probes was adminis
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
-  | `Mind Wandering Probe` | 1-7 | Continuous mind-wandering intensity score from probe responses |
+  | Event ID | Value | Meaning |
+  |----------|-------|---------|
+  | `Mind Wandering Probe` | Needs verification | Continuous mind-wandering intensity score from probe responses (1-7 scale expected; verify exact value encoding in events.tsv) |
 - **Evidence**:
   - DOI: 10.3389/fnhum.2017.00365 — SVR regression predicts mind-wandering intensity (1-7 scale) from EEG power and coherence features during Sustained Attention to Response Task
 - **Kernel Notes**: Extract epochs time-locked to 'Mind Wandering Probe' stimulus onsets. Map response values to 1-7 Likert scale for regression target. Requires extracting rating information from events.tsv stimulus/response columns or annotations. The short -0.2s to 0.8s window focuses on P3b component relevant to probe evaluation. Verify response value extraction from events.tsv parsing.
+
+---
 
 ### Potential Task 2: Memory Stimulus vs. Retrieval Probe Classification
 - **Task Type**: classification
@@ -76,8 +80,8 @@ A visual working memory task with intermittent mind-wandering probes was adminis
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `Stim Onset: 3 Red` | 0 | Memory encoding stimulus (3 red items) |
   | `Stim Onset: 3 Red + 2 yellow` | 0 | Memory encoding stimulus (3 red + 2 yellow items) |
   | `Stim Onset: 5 Red` | 0 | Memory encoding stimulus (5 red items) |

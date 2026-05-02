@@ -9,7 +9,7 @@ A high-density EEG dataset focused on sensorimotor rhythm-based brain-computer i
 
 ## File Scan Result
 
-> **Kernel SHA256**: `846f88e87a5726a11f362cc12f7e71288781559b9b1ba11d04a676cb789854ff`
+> **Kernel SHA256**: `124058c11fd16c9a03f654797e82ced4432468abd8d1fd2747765303b3233891`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -27,8 +27,8 @@ A high-density EEG dataset focused on sensorimotor rhythm-based brain-computer i
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

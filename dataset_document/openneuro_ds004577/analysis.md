@@ -9,7 +9,7 @@ Resting-state EEG recordings from 103 healthy infants (aged 1-12 months) during 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `e1637d1741cd7dcfae96b0fc025448949e83855805a558e4b57002f089be2e33`
+> **Kernel SHA256**: `ab11afc32d9d7f0524ce7b5e691130b27bbd5e71d25945b9e262b71a276ecfa6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Resting-state EEG recordings from 103 healthy infants (aged 1-12 months) during 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | missing | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -46,7 +46,7 @@ Resting-state EEG recordings from 103 healthy infants (aged 1-12 months) during 
 
 ## Data Quality Notes
 
-- `subject_age` field is missing from metadata, preventing age-based analyses despite the dataset's developmental focus on 1-12 month infants.
+- `age` field is missing from metadata, preventing age-based analyses despite the dataset's developmental focus on 1-12 month infants.
 - `device` field is missing, obscuring which EEG amplifier and electrode system was used for the 128-channel recordings.
 - Event structure table is empty in the file scan, though Tasks section identifies event markers 65 and 66 for eyes-closed and eyes-open states; this discrepancy suggests event extraction may require kernel update.
 - Wide age range (1-12 months) with missing age metadata limits ability to control for developmental effects in analyses.

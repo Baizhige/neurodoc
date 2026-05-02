@@ -9,7 +9,7 @@ Electrophysiological recordings (EEG, ECG, EMG) of adult burn patients in a clin
 
 ## File Scan Result
 
-> **Kernel SHA256**: `d781d8bb83998be99a967f1595e5f0364ba2fe656956f059154b9ae9192e29a8`
+> **Kernel SHA256**: `b30f48d58d800d60f8b49b371df67291d672140f4bd41f8c9f8e480518995b7b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -25,8 +25,8 @@ Electrophysiological recordings (EEG, ECG, EMG) of adult burn patients in a clin
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

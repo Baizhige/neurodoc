@@ -9,7 +9,7 @@ Participants performed an oddball task with cross-modal stimuli (visual and audi
 
 ## File Scan Result
 
-> **Kernel SHA256**: `e11dcab388e5f0e492c8d25e0210666920a3c27f52f946dd140d17c0b68bcc88`
+> **Kernel SHA256**: `f3871f950ec0b4c90b0b8ea60397e67aebeb4d3fe4fa12366e7b7096bf19c9d3`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -27,8 +27,8 @@ Participants performed an oddball task with cross-modal stimuli (visual and audi
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -40,14 +40,16 @@ Participants performed an oddball task with cross-modal stimuli (visual and audi
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `S 1` | 0 | Standard stimulus |
   | `S 2` | 1 | Deviant stimulus |
   | `S 3` | 2 | Rare/target stimulus |
 - **Evidence**:
   - DOI: 10.1101/2022.07.26.22278079 — Preprint describing cross-modal oddball task for MMN and P300 analysis
 - **Kernel Notes**: Exclude `boundary` (148 occurrences) and `S255` (2 occurrences) admin markers from epoching. Event counts are balanced (~34k each for S 1, S 2, S 3), consistent with standard oddball probability structure. Mixed modality (visual/auditory) presentation may introduce latency confounds across conditions.
+
+---
 
 ### Potential Task 2: Admin Marker Detection
 - **Task Type**: classification
@@ -56,8 +58,8 @@ Participants performed an oddball task with cross-modal stimuli (visual and audi
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|--|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `boundary` | 0 | Recording boundary marker |
   | `S255` | 1 | BrainVision overflow/system marker |
 - **Evidence**: No reference required for potential task; task is plausible from paradigm structure

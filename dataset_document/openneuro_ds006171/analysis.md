@@ -52,8 +52,8 @@ Participants performed near-threshold visual detection tasks across three cueing
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -63,7 +63,7 @@ Participants performed near-threshold visual detection tasks across three cueing
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [1, 2, 11, 12, 21, 22, 101, 102, 103, 104, 111, 112, 113, 114, 121, 122, 124, 125]
 - **Label Route**: `event`
-- **Meta Level**: `raw`
+- **Meta Level**: raw
 - **Target Definition**:
 
 | Event | y | Meaning |
@@ -95,7 +95,7 @@ Participants performed near-threshold visual detection tasks across three cueing
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 2.5 s, overlap = null, segment_length = 3.0 s, target_events = [11, 12, 21, 22]
 - **Label Route**: `event`
-- **Meta Level**: `super`
+- **Meta Level**: super
 - **Target Definition**:
 
 | Event | y | Meaning |
@@ -107,12 +107,12 @@ Participants performed near-threshold visual detection tasks across three cueing
 - **Evidence**: DOI: https://doi.org/10.1111/psyp.14525 (paradigm explicitly examines spatial attention modulation via cue validity; epoch window -0.5s to 1.0s captures pre-stimulus alpha and post-stimulus perception)
 - **Kernel Notes**: Extract cue_validity metadata per segment for classification. Target comparison: hit vs miss rate as function of cue validity (0%, 50%, 100%). Segment length 3.0s accommodates baseline, stimulus, and response periods. Exclude event 128 (BioSemi boundary).
 
-### Normal Task 1: Perceptual Outcome vs. Sensory Uncertainty
+### Potential Task 1: Perceptual Outcome vs. Sensory Uncertainty
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, overlap = null, target_events = [11, 12, 21, 22, 101, 111, 121, 122]
 - **Label Route**: `event`
-- **Meta Level**: `super`
+- **Meta Level**: super
 - **Target Definition**:
 
 | Event | y | Meaning |
@@ -130,7 +130,7 @@ Participants performed near-threshold visual detection tasks across three cueing
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, overlap = null, target_events = [1, 2, 11, 12, 21, 22]
 - **Label Route**: `misc`
-- **Meta Level**: `raw`
+- **Meta Level**: raw
 - **Target Definition**:
 
 | Event | y | Meaning |

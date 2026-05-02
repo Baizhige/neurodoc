@@ -9,7 +9,7 @@ An EEG dataset recorded during a social-cognitive paradigm involving multiple hi
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `3845a0c331dc5f16a329a15339e10b0bc56df899f063f2efaa8ccce6f8a59519`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Full
 
@@ -36,8 +36,8 @@ An EEG dataset recorded during a social-cognitive paradigm involving multiple hi
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -47,6 +47,7 @@ An EEG dataset recorded during a social-cognitive paradigm involving multiple hi
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`2200`, `72011`, `52011`, `75011`, `55011`, `73011`, `74011`, `53011`, `54011`, `71011`, `2201`, `51011`]
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|

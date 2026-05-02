@@ -9,7 +9,7 @@ Five minutes of resting-state EEG recording used to compare spontaneous brain ac
 
 ## File Scan Result
 
-> **Kernel SHA256**: `fbd4ac8748e05bfe6864be140ae0828d105c2e1924b258f15c9edb261e26981c`
+> **Kernel SHA256**: `57db74e7a040b1ae93e73b50cbdb3f9635f8da68c7753d41c2ad39cc16c79e9a`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Five minutes of resting-state EEG recording used to compare spontaneous brain ac
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

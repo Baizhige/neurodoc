@@ -9,7 +9,7 @@ Forty-eight subjects participated in two EEG-based speech BCI paradigms recorded
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `b0fb53a13b65ddd627a459885811c0110078172e3fe0af22802920a04880cb10`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Sampled
 
@@ -42,21 +42,40 @@ Forty-eight subjects participated in two EEG-based speech BCI paradigms recorded
 
 ## Tasks
 
-### Primary Task 1: Speech BCI challenge classification (inner/overt tracks)
+### Classical Task 1: Speech BCI challenge classification (inner/overt tracks)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Competition-provided trial labels for imagined/inner speech and real speech tracks.
+- **Target Definition**:
+
+| Event ID | y | Meaning |
+|----------|---|---------|
+| `101` | 0 | Stimulus class 1 (inner/imagined speech) |
+| `102` | 1 | Stimulus class 2 (inner/imagined speech) |
+| `3` | Needs verification | Needs verification (overt/real speech) |
+| `4` | Needs verification | Needs verification (overt/real speech) |
+
 - **Evidence**: IEEE ICASSP 2024 EEG BCI Grand Challenge defines supervised speech-BCI classification as the core task. Source: https://2024.ieeeicassp.org/ DOI: https://doi.org/10.1109/icasspw62465.2024.10626244
 
+---
 
-### Normal Task 1: Imagined/Inner Speech Classification - Class 1 vs. Class 2 (epoch_by_event)
+### Potential Task 1: Imagined/Inner Speech Classification - Class 1 vs. Class 2 (epoch_by_event)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s (per stimulus onset), target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
+- **Target Definition**:
+
+| Event ID | y | Meaning |
+|----------|---|---------|
+| `101` | 0 | Stimulus class 1 |
+| `102` | 1 | Stimulus class 2 |
+
 - **Notes**: Filter to II_II task files (filename contains `II_II`) for imagined/inner speech paradigm, or RBII files for real speech BCI. Exclude events 65536 and 65790 (BioSemi system codes). The kernel stores all Status stim channel values as string annotations.
 
 | Event | y | Meaning |
@@ -64,13 +83,22 @@ Forty-eight subjects participated in two EEG-based speech BCI paradigms recorded
 | `101` | 0 | Stimulus class 1 |
 | `102` | 1 | Stimulus class 2 |
 
+---
 
-### Normal Task 2: Real Speech BCI Classification - Class 1 vs. Class 2 (epoch_by_event)
+### Potential Task 2: Real Speech BCI Classification - Class 1 vs. Class 2 (epoch_by_event)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s (per stimulus onset), target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
+- **Target Definition**:
+
+| Event ID | y | Meaning |
+|----------|---|---------|
+| `101` | 0 | Stimulus class 1 |
+| `102` | 1 | Stimulus class 2 |
+
 - **Notes**: Filter to RBII task files (filename contains `RBII`). Same event codes as Task 1; task type is identified from filename pattern.
 
 | Event | y | Meaning |

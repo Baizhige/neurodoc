@@ -9,7 +9,7 @@ A single participant viewed visual stimuli of objects at various rotations to in
 
 ## File Scan Result
 
-> **Kernel SHA256**: `75fddba52bcd3d5732d811a3397a785865bb4d52f2d496ebdb113da635022fb8`
+> **Kernel SHA256**: `c0200cb48ca31e874959b55a50d30557995155cbe2781ec4aadc544a9d340928`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -25,8 +25,8 @@ A single participant viewed visual stimuli of objects at various rotations to in
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -38,13 +38,15 @@ A single participant viewed visual stimuli of objects at various rotations to in
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `Event/E 1` | 0–59 | Object/rotation condition 1 subset (12 categories × 5 exemplars × 8 rotations) |
-  | `Event/E 2` | 0–59 | Object/rotation condition 2 subset |
-  | `Event/E 3` | 0–59 | Object/rotation condition 3 subset |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `Event/E  1` | 0–59 | Object/rotation condition 1 subset (12 categories × 5 exemplars × 8 rotations) |
+  | `Event/E  2` | 0–59 | Object/rotation condition 2 subset |
+  | `Event/E  3` | 0–59 | Object/rotation condition 3 subset |
 - **Evidence**: DOI: 10.31234/osf.io/wp73u — "This study used EEG data from OpenNeuro ds004252 to decode 60-way object classification using multivariate pattern analysis, comparing fixed-rotation decoding with rotation-tolerant decoding, with epochs from -100ms to 800ms relative to stimulus onset."
 - **Kernel Notes**: Raw events E1-E3 group stimuli into 3 coarse conditions; however, the paper supports 60-way classification (12 categories × 5 exemplars across 8 rotations). Verify if finer-grained 60-way labels can be reconstructed from stimulus metadata files. If not, fall back to 3-class coarse mapping. Severe class imbalance present (E1/E2: 14400 trials each vs. E3: 120 trials) may require subsampling or class weighting. Single-subject design limits cross-subject generalization.
+
+---
 
 ### Potential Task 1: 3-way coarse object category classification
 - **Task Type**: classification
@@ -53,11 +55,11 @@ A single participant viewed visual stimuli of objects at various rotations to in
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `Event/E 1` | 0 | Object/rotation condition 1 (coarse category group) |
-  | `Event/E 2` | 1 | Object/rotation condition 2 (coarse category group) |
-  | `Event/E 3` | 2 | Object/rotation condition 3 (coarse category group) |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `Event/E  1` | 0 | Object/rotation condition 1 (coarse category group) |
+  | `Event/E  2` | 1 | Object/rotation condition 2 (coarse category group) |
+  | `Event/E  3` | 2 | Object/rotation condition 3 (coarse category group) |
 - **Evidence**: No direct classification-relevant reference; plausible from paradigm alone (RSVP object recognition with 3 stimulus conditions). Extended epoch window (-200ms to 1000ms) captures N100 and N400 components.
 - **Kernel Notes**: Fallback task if 60-way finer labels cannot be reconstructed from metadata. Warning: severe class imbalance (14400:14400:120 ratio) requires subsampling or class weighting. Single-subject design; extended window may improve signal-to-noise for coarse classification.
 

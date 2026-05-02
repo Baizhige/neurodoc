@@ -9,7 +9,7 @@ Participants learned to produce and judge short, medium, and long temporal inter
 
 ## File Scan Result
 
-> **Kernel SHA256**: `ada696a32bc7d9b051ca9f489674553d553e60ea1d229421516cac83235bf9c6`
+> **Kernel SHA256**: `8b3eeff69a09fcc8471b94f3ac50d5ee7e41218aeb9495a14ad09dab96644dc5`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -76,8 +76,8 @@ Participants learned to produce and judge short, medium, and long temporal inter
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -87,10 +87,11 @@ Participants learned to produce and judge short, medium, and long temporal inter
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [Cond1_Phase1, Cond1_Phase2, Cond1_Phase3, Cond2_Phase1, Cond2_Phase2, Cond2_Phase3, Cond3_Phase1, Cond3_Phase2, Cond3_Phase3]
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**:
 
- | Event | y | Meaning |
- |-------|---|---------|
+ | Event ID | y | Meaning |
+ |----------|---|---------|
  | Cond1_Phase1 | 0 | Cond 1 phase 1 (short interval production) |
  | Cond1_Phase2 | 1 | Cond 1 phase 2 (medium interval production) |
  | Cond1_Phase3 | 2 | Cond 1 phase 3 (long interval production) |
@@ -100,58 +101,63 @@ Participants learned to produce and judge short, medium, and long temporal inter
  | Cond3_Phase1 | 6 | Cond 3 phase 1 (short interval judgment) |
  | Cond3_Phase2 | 7 | Cond 3 phase 2 (medium interval judgment) |
  | Cond3_Phase3 | 8 | Cond 3 phase 3 (long interval judgment) |
-
 - **Evidence**: 10.1073/pnas.2214638119 | DOI: https://doi.org/10.1073/pnas.2214638119
 - **Kernel Notes**: Use pre-processed Cond*_Phase annotation events as primary label source. Exclude `admin:marker-2` (3542 counts = block boundaries) and raw numeric codes (11, 12, 13, 21, 22, 23, 31, 32, 33, etc.) due to count inconsistencies with per-subject design. Nine-class paradigm directly maps to temporal scaling phenomenon (short/medium/long intervals × production/perception/judgment tasks). Alignment: onset with baseline correction.
 
-### Normal Task 1: Production vs Perception Task Differentiation (Binary)
+---
+
+### Potential Task 1: Production vs Perception Task Differentiation (Binary)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [Cond1_Phase1, Cond1_Phase2, Cond1_Phase3, Cond2_Phase1, Cond2_Phase2, Cond2_Phase3]
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**:
 
- | Event | y | Meaning |
- |-------|---|---------|
+ | Event ID | y | Meaning |
+ |----------|---|---------|
  | Cond1_Phase1 | 0 | Production task |
  | Cond1_Phase2 | 0 | Production task |
  | Cond1_Phase3 | 0 | Production task |
  | Cond2_Phase1 | 1 | Perception task |
  | Cond2_Phase2 | 1 | Perception task |
  | Cond2_Phase3 | 1 | Perception task |
-
 - **Evidence**: 10.1073/pnas.2214638119 (paradigm support); OpenNeuro dataset readme
 - **Kernel Notes**: Collapses across interval lengths to test task-type differentiation. Paradigm explicitly describes interleaved production and perception tasks. The tens digit encoding (1x=production, 2x=perception) supports this binary distinction.
+
+---
 
 ### Potential Task 1: Feedback-Related Potential Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, overlap = null, target_events = [Cond1_Feedback, Cond2_Feedback, Cond3_Feedback]
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**:
 
- | Event | y | Meaning |
- |-------|---|---------|
+ | Event ID | y | Meaning |
+ |----------|---|---------|
  | Cond1_Feedback | 0 | Feedback following production |
  | Cond2_Feedback | 1 | Feedback following perception |
  | Cond3_Feedback | 2 | Feedback following judgment |
-
 - **Evidence**: Paradigm description (visual feedback component); partial support from 10.1073/pnas.2214638119
 - **Kernel Notes**: Shorter epoch window (0.8s) appropriate for feedback processing neural correlates. Feedback events exist in pre-processed annotations but may require validation against paradigm description. May capture feedback-locked ERPs differentiated by underlying task type.
+
+---
 
 ### Potential Task 2: Temporal Interval Length Classification (Short/Medium/Long)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [Cond1_Phase1, Cond1_Phase2, Cond1_Phase3]
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**:
 
- | Event | y | Meaning |
- |-------|---|---------|
+ | Event ID | y | Meaning |
+ |----------|---|---------|
  | Cond1_Phase1 | 0 | Short interval (production) |
  | Cond1_Phase2 | 1 | Medium interval (production) |
  | Cond1_Phase3 | 2 | Long interval (production) |
-
 - **Evidence**: 10.1073/pnas.2214638119 (paradigm support)
 - **Kernel Notes**: Core temporal scaling task within production paradigm. Three-class classification of interval duration scaling. Can be extended to Cond2 and Cond3 phases separately. Paradigm explicitly states participants learned to produce/judge short, medium, and long intervals.
 

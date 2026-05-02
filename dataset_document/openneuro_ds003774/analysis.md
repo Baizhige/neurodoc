@@ -10,7 +10,7 @@ Twenty participants listened to 12 music tracks spanning various genres (classic
 
 ## File Scan Result
 
-> **Kernel SHA256**: `f30691bc53a2a28c00a2169a91162de693b2913d17a5ccd93b0b5b66ce3871e4`
+> **Kernel SHA256**: `f35fe237c95fb60fd54eedf1b42c9383cf5c533a54e914b4af966ed2709d5774`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -57,21 +57,21 @@ Twenty participants listened to 12 music tracks spanning various genres (classic
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
 ### Potential Task 1: Fine-Grained Continuous EEG Segmentation
-- **Task Type**: feature_extraction
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 1.0 s
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | Value | Meaning |
+  |----------|-------|---------|
   | `stim` | continuous | Music stimulus onset anchor |
   | `stm+` | continuous | Music stimulus offset confirmation |
 - **Evidence**:

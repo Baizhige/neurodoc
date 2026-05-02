@@ -9,7 +9,7 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 
 ## File Scan Result
 
-> **Kernel SHA256**: `6c59f4ea085164cb445b3775d8178b74879582b124f5d7e5939e0878184bc350`
+> **Kernel SHA256**: `8b42381113152290faf76763c1eaa743ccbfd986f4b73c621fbc098d77ebd1c3`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -37,7 +37,7 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `1` | 0 | Music condition 1 (affective state A1) |
 | `2` | 1 | Music condition 2 (affective state A2) |
@@ -48,9 +48,10 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 | `7` | 6 | Music condition 7 (affective state A7) |
 | `8` | 7 | Music condition 8 (affective state A8) |
 | `9` | 8 | Music condition 9 (affective state A9) |
-
 - **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
 - **Kernel Notes**: Short epochs (-0.2 to 1.0s) capture initial neural response to affective state induction. Verify event channel naming in raw data (may differ from standard). 9-class balanced design across ~95-96 files per condition. Decode valence/arousal mapping from Daly et al. 2018.
+
+---
 
 ### Classical Task 2: Affective Music Condition Classification (Sustained-segment)
 - **Task Type**: classification
@@ -60,7 +61,7 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `1` | 0 | Music condition 1 (sustained affective state) |
 | `2` | 1 | Music condition 2 (sustained affective state) |
@@ -71,17 +72,24 @@ Participants listened to 40-second synthetic music clips designed to induce spec
 | `7` | 6 | Music condition 7 (sustained affective state) |
 | `8` | 7 | Music condition 8 (sustained affective state) |
 | `9` | 8 | Music condition 9 (sustained affective state) |
-
 - **Evidence**: Daly et al. (2020). Neural and physiological data from participants listening to affective music. Scientific Data. DOI: https://doi.org/10.1038/s41597-020-0507-6
 - **Kernel Notes**: 40-second continuous music clips induce sustained affective states. Long event epoching captures entire stimulus period for decoding valence/arousal patterns. Cue duration (40s) is critical parameter. Physiological channels (ECG, GSR) present alongside EEG.
 
+---
+
 ### Potential Task 1: Publisher-defined BIDS Task (Run)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5` or `epoch_by_long_event_hdf5`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = Needs verification, overlap = Needs verification, target_events = [Needs verification]
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
+- **Target Definition**:
+
+| Event ID | y | Meaning |
+|---|---|---|
+| Needs verification | Needs verification | Needs verification |
+
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds002724
 - **Kernel Notes**: Verify raw event extraction pipeline—triggers may use non-standard channel naming. Event detection reported 'no events detected' despite metadata confirming well-balanced distribution. Verify event channel name in raw data.
 

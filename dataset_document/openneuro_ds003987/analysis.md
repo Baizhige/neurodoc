@@ -9,7 +9,7 @@ A double-blind, crossover pharmacological study investigating the effects of d-a
 
 ## File Scan Result
 
-> **Kernel SHA256**: `bc63a5f872f1f40b4689a56d0f0ba55ae04ca1a92ffd323d0c337362d7eea0ed`
+> **Kernel SHA256**: `8688900cc33559d58e37be1e6e7711980833e883ddd87a743f0e6a5e3d26213f`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -70,8 +70,8 @@ A double-blind, crossover pharmacological study investigating the effects of d-a
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

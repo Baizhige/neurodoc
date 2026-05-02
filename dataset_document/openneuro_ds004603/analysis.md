@@ -9,7 +9,7 @@ Participants observed sequences of visual stimuli that either followed or violat
 
 ## File Scan Result
 
-> **Kernel SHA256**: `cf52e094e4933369a312724f19fb6ad6a22ad5d12efdc177ede6aac1a9b54184`
+> **Kernel SHA256**: `4860f906f09be5425b2d5c3349412c1e15a89f3558fb12efd51ecd254971da68`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -38,8 +38,8 @@ Participants observed sequences of visual stimuli that either followed or violat
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -51,8 +51,8 @@ Participants observed sequences of visual stimuli that either followed or violat
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S   40` | 0 | No-trajectory control condition |
   | `Stimulus/S   20` | 1 | Size trajectory violation |
   | `Stimulus/S   30` | 2 | Orientation trajectory violation |
@@ -61,15 +61,17 @@ Participants observed sequences of visual stimuli that either followed or violat
   - DOI: `10.1016/j.cortex.2023.08.004` — Linear SVM classifiers decoded expectation violation signals by comparing each violation type (brightness/size/orientation) to physically identical control trials using epoched EEG data segmented -200 to 700 ms post-stimulus with baseline correction -100 to 0 ms. The paper demonstrates that while violations share a common temporal signature, attribute-specific information influences latency.
 - **Kernel Notes**: Violations occur at the final sequence position (after step_4). Baseline correction applied -100 to 0 ms pre-stimulus. Exclude `Stimulus/S  255` (system initialization trigger) and `Stimulus/S   50` (catch trials with motor response component). Event codes use MNE-style naming: `Stimulus/S   10`=col_vio, `Stimulus/S   20`=siz_vio, `Stimulus/S   30`=ori_vio, `Stimulus/S   40`=control. The unknown event `Stimulus/S65536` (39 occurrences) should be excluded until identified.
 
-### Normal Task 1: Trajectory Prediction Build-up Analysis
+---
+
+### Potential Task 1: Trajectory Prediction Build-up Analysis
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, baseline = [-0.1, 0.0] s, target_events = [`Stimulus/S    1`, `Stimulus/S    2`, `Stimulus/S    3`, `Stimulus/S    4`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | Value | Meaning |
+  |----------|-------|---------|
   | `Stimulus/S    1` | 1 | First step in trajectory (lowest prediction) |
   | `Stimulus/S    2` | 2 | Second step (building prediction) |
   | `Stimulus/S    3` | 3 | Third step (strengthening prediction) |
@@ -78,6 +80,8 @@ Participants observed sequences of visual stimuli that either followed or violat
   - DOI: `10.1016/j.cortex.2023.08.004` — The paradigm is designed to test predictive coding mechanisms; the paper analyzes how expectation signals develop across the trajectory sequence. While the primary publication focuses on violation decoding, the step-by-step sequence structure enables investigation of prediction build-up via ERPs or multivariate patterns across step positions.
 - **Kernel Notes**: Analyze each step position separately to examine how prediction strength builds across the sequence. Step_4 represents maximum expectation before the terminal stimulus. Baseline correction applied -100 to 0 ms pre-stimulus. Slight count imbalance (step_1=31368 vs others=31367) suggests some trials terminated early.
 
+---
+
 ### Potential Task 1: Catch Trial Response Detection
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -85,8 +89,8 @@ Participants observed sequences of visual stimuli that either followed or violat
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S   50` | 1 | Catch trial requiring button-press response |
 - **Evidence**:
   - Plausible from paradigm: Catch trials test whether participants detect violations and require motor responses, enabling reaction time and hit rate analysis alongside EEG correlates of response preparation and execution.

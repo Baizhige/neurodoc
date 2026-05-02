@@ -10,7 +10,7 @@ A virtual reality haptic interaction study where participants reached out to tou
 
 ## File Scan Result
 
-> **Kernel SHA256**: `7f74f7e3fbcbc9c441066de0be6e0c963c61370c4444f4fd9b49517aa7134126`
+> **Kernel SHA256**: `b665ce19fe174c9cc252320c20c401b6216878ac1108fa6fa627ad2e8356e7bc`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -24,8 +24,8 @@ A virtual reality haptic interaction study where participants reached out to tou
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | complete | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

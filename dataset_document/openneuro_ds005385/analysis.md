@@ -2999,8 +2999,8 @@ Resting-state EEG was recorded with eyes open and eyes closed before and after a
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -3009,7 +3009,7 @@ Resting-state EEG was recorded with eyes open and eyes closed before and after a
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
-- **Label Route**: `event` | `misc`
+- **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
@@ -3029,7 +3029,7 @@ Resting-state EEG was recorded with eyes open and eyes closed before and after a
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 5.0 s, overlap = 0.0
-- **Label Route**: `event` | `misc`
+- **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |

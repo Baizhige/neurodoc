@@ -9,7 +9,7 @@ High-density EEG recordings were collected during a visual stimulation task usin
 
 ## File Scan Result
 
-> **Kernel SHA256**: `6306944dafaf4b43bc154d6444152e02a0b35fe052e41ac4a2ed5c7355a69c14`
+> **Kernel SHA256**: `5f07d91df056b31b718f6b5c67d8f12ea772dd78c5ac295ce7bf538cb864b664`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -67,8 +67,8 @@ High-density EEG recordings were collected during a visual stimulation task usin
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | missing | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

@@ -9,7 +9,7 @@ The Healthy Brain Network (HBN) EEG Release 1 is a large-scale developmental EEG
 
 ## File Scan Result
 
-> **Kernel SHA256**: `f6ba47d7656d84e5080b68cbd7441e4d0d62823f934c16c417d30ecfafd68901`
+> **Kernel SHA256**: `d2a20370c75e70aa962603af5a1b27b44532d88150c49839b32b4d27ebabb160`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 

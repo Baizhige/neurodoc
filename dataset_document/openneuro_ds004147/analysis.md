@@ -9,7 +9,7 @@ A reinforcement learning task requiring participants to learn cue-response mappi
 
 ## File Scan Result
 
-> **Kernel SHA256**: `2d517e6aef5ec2951e8b06c29efcb48dbe165d27c87ebc315a392515d203e068`
+> **Kernel SHA256**: `af71c98d146f86a7de90b4bb81aceb5f169099565bd86c47bb69c5713680d88b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -52,8 +52,8 @@ A reinforcement learning task requiring participants to learn cue-response mappi
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

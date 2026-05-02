@@ -9,7 +9,7 @@ This study employs three cross-species behavioral paradigms (5-Choice Continuous
 
 ## File Scan Result
 
-> **Kernel SHA256**: `c2a2ef344f6f244253df13aa1d78c12743cd86515c5af5512f519c499626be7d`
+> **Kernel SHA256**: `43416574bd8ccdbb2a12f05b331f08a9bfeafaa233639f239a4fda1589e9272b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -83,8 +83,8 @@ This study employs three cross-species behavioral paradigms (5-Choice Continuous
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -97,12 +97,14 @@ This study employs three cross-species behavioral paradigms (5-Choice Continuous
 - **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|-------------|-------|
-  | age | 18.0–35.0 (years) | Continuous age from participants.tsv; all 57 subjects have complete age data |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | age | Continuous age from participants.tsv; range 18.0–35.0 (years); all 57 subjects have complete age data |
 - **Evidence**:
   - participants.tsv — age column contains continuous values 18.0–35.0 for all 57 subjects
 - **Notes**: Standard resting-state segmentation approach for subject-level biomarker regression. Since this is a continuous recording with no discriminating rest-specific events, the full continuous EEG is segmented into 2-second non-overlapping windows (50% overlap) and each window inherits the subject's age label from participants.tsv. Archetype B3 (native info field) requires no kernel derivation.
+
+---
 
 ### Potential Task 2: Sex classification from continuous EEG
 - **Task Type**: classification
@@ -112,12 +114,13 @@ This study employs three cross-species behavioral paradigms (5-Choice Continuous
 - **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | F | 0 | Female |
-  | sex | M | 1 | Male |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | sex | Binary classification: F mapped to class 0 (Female), M mapped to class 1 (Male); encoding derived from participants.tsv sex column |
 - **Evidence**:
 - **Notes**: Subject-level binary classification using resting-state segmentation. 2-second non-overlapping windows (50% overlap) are extracted from continuous EEG and labeled by the participant's sex from participants.tsv. This is a demographic prediction task rather than a task-evoked paradigm; all task events are ignored and the continuous recording is treated as a source of stable subject-level EEG features.
+
+---
 
 ### Potential Task 3: Subject ID prediction from EEG
 - **Task Type**: classification
@@ -127,13 +130,9 @@ This study employs three cross-species behavioral paradigms (5-Choice Continuous
 - **Label Field**: `UH2_ID`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | UH2_ID | 1 | 0 | Subject 001 |
-  | UH2_ID | 2 | 1 | Subject 002 |
-  | UH2_ID | 3 | 2 | Subject 003 |
-  | UH2_ID | ... | ... | ... |
-  | UH2_ID | 57 | 56 | Subject 057 |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | UH2_ID | 57-class subject identification; UH2_ID values 1–57 from participants.tsv mapped to sequential class labels 0–56 (y = UH2_ID − 1); Needs verification — UH2_ID field presence in participants.tsv not confirmed in Info fields list |
 - **Evidence**:
 - **Notes**: 57-class subject identification from continuous resting-state EEG segments. UH2_ID is a native participants.tsv column (1-57). Each subject's continuous EEG is segmented into 2-second windows with 50% overlap, creating multiple samples per subject. This is a common biometric/deep learning benchmark for EEG-based subject identification. The 57 classes are balanced at the subject level (one subject per class), though segment counts may vary slightly by recording duration. Classification targets are 0-based sequential integers mapping directly to UH2_ID values (y = UH2_ID - 1).
 

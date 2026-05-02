@@ -9,7 +9,7 @@ Resting-state EEG recordings with eyes closed were collected from 88 participant
 
 ## File Scan Result
 
-> **Kernel SHA256**: `a5a077e03a8e97e9503e578a34a4e0100bd823268763bd9b43b023e84609fded`
+> **Kernel SHA256**: `bf522927b635f7a26208a29133fbf0cc072d017e9bf1d12d0071f47864b7a2da`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Resting-state EEG recordings with eyes closed were collected from 88 participant
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -34,7 +34,7 @@ Resting-state EEG recordings with eyes closed were collected from 88 participant
 ## Data Quality Notes
 
 - No discrete event markers exist in raw recordings; all epoching must use continuous segmentation.
-- Standard BIDS fields `subject_age` and `subject_sex` are missing, but equivalent demographic data (`Age`, `Gender`) are available as custom info fields with complete coverage.
+- Standard BIDS fields `age` and `sex` are missing, but equivalent demographic data (`Age`, `Gender`) are available as custom info fields with complete coverage.
 - `device` field is missing; equipment details must be inferred from dataset documentation or sidecar files.
 - Group encoding uses single-letter codes (A/C/F) rather than full diagnostic labels; mapping must be handled during label extraction.
 - Class imbalance exists in diagnostic groups (36 AD, 23 FTD, 29 CN), which should be considered in model training and validation strategies.

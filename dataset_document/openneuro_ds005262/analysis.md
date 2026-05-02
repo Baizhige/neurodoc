@@ -9,7 +9,7 @@ EEG recordings of 12 subjects performing imagined (inner) speech tasks based on 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `bbbb68a2f8bc904707e779b7f404fda50f268d5c255fddcaa4d755d6859ddda8`
+> **Kernel SHA256**: `d74f3782405632b48dcb61c8265e059a14a4bcbbaadaccc85aa913e78691597b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -30,8 +30,8 @@ EEG recordings of 12 subjects performing imagined (inner) speech tasks based on 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

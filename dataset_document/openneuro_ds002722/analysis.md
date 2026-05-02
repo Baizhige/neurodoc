@@ -130,8 +130,8 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | complete | N/A |
 | `cap` | complete | e.g. 32-channel EEG cap |
 | `dataset` | complete | e.g. openneuro_ds002722 |
@@ -260,7 +260,7 @@ Nineteen healthy adults (age 19–30, 11 female) participated in a calibration s
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_sex` | female |
+  | `sex` | female |
 - **Evidence**:
   - analysis.md Paradigm - 19 healthy adults (11 female, 8 male) participated
   - analysis.md Info table - subject_sex field marked complete

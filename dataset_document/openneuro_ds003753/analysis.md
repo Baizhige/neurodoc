@@ -9,7 +9,7 @@ A reinforcement learning task involving probabilistic affective feedback to inve
 
 ## File Scan Result
 
-> **Kernel SHA256**: `907cc31ea39c0a3db7ec13e2d99ccbb532df9b433f3107583144327a7e49d696`
+> **Kernel SHA256**: `7212ceeb76366e00fea3485da13b2dc75d601159d03ae39a2eb1e9e03088431e`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -36,8 +36,8 @@ A reinforcement learning task involving probabilistic affective feedback to inve
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

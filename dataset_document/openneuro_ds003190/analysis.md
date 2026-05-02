@@ -10,7 +10,7 @@ A P300 ERP experiment evaluating the effects of stimulus count and visual presen
 
 ## File Scan Result
 
-> **Kernel SHA256**: `b39efab60211591cb32356eb1c56e892a569f70e6752c09d171e14fa6d5b2df1`
+> **Kernel SHA256**: `bde31296cbbfe9bbe11af2b9dedb2203ba3778e479b17f391b7a60aca93fd1ee`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -45,8 +45,8 @@ A P300 ERP experiment evaluating the effects of stimulus count and visual presen
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -58,26 +58,26 @@ A P300 ERP experiment evaluating the effects of stimulus count and visual presen
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `101` | 0 | Target flash condition 101 (cartoon face) |
-  | `102` | 0 | Target flash condition 102 (cartoon face) |
-  | `103` | 0 | Target flash condition 103 (cartoon face) |
-  | `104` | 0 | Target flash condition 104 (cartoon face) |
-  | `105` | 0 | Target flash condition 105 (cartoon face) |
-  | `106` | 0 | Target flash condition 106 (cartoon face) |
-  | `107` | 0 | Target flash condition 107 (cartoon face) |
-  | `108` | 0 | Target flash condition 108 (cartoon face) |
-  | `109` | 0 | Target flash condition 109 (cartoon face) |
-  | `1` | 1 | Non-target stimulus condition 1 (standard flash) |
-  | `2` | 1 | Non-target stimulus condition 2 (standard flash) |
-  | `3` | 1 | Non-target stimulus condition 3 (standard flash) |
-  | `4` | 1 | Non-target stimulus condition 4 (standard flash) |
-  | `5` | 1 | Non-target stimulus condition 5 (standard flash) |
-  | `6` | 1 | Non-target stimulus condition 6 (standard flash) |
-  | `7` | 1 | Non-target stimulus condition 7 (standard flash) |
-  | `8` | 1 | Non-target stimulus condition 8 (standard flash) |
-  | `9` | 1 | Non-target stimulus condition 9 (standard flash) |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `trigger/101` | 0 | Target flash condition 101 (cartoon face) |
+  | `trigger/102` | 0 | Target flash condition 102 (cartoon face) |
+  | `trigger/103` | 0 | Target flash condition 103 (cartoon face) |
+  | `trigger/104` | 0 | Target flash condition 104 (cartoon face) |
+  | `trigger/105` | 0 | Target flash condition 105 (cartoon face) |
+  | `trigger/106` | 0 | Target flash condition 106 (cartoon face) |
+  | `trigger/107` | 0 | Target flash condition 107 (cartoon face) |
+  | `trigger/108` | 0 | Target flash condition 108 (cartoon face) |
+  | `trigger/109` | 0 | Target flash condition 109 (cartoon face) |
+  | `trigger/1` | 1 | Non-target stimulus condition 1 (standard flash) |
+  | `trigger/2` | 1 | Non-target stimulus condition 2 (standard flash) |
+  | `trigger/3` | 1 | Non-target stimulus condition 3 (standard flash) |
+  | `trigger/4` | 1 | Non-target stimulus condition 4 (standard flash) |
+  | `trigger/5` | 1 | Non-target stimulus condition 5 (standard flash) |
+  | `trigger/6` | 1 | Non-target stimulus condition 6 (standard flash) |
+  | `trigger/7` | 1 | Non-target stimulus condition 7 (standard flash) |
+  | `trigger/8` | 1 | Non-target stimulus condition 8 (standard flash) |
+  | `trigger/9` | 1 | Non-target stimulus condition 9 (standard flash) |
 - **Evidence**:
   - DOI: 10.3390/s20247198 — "Single-Option P300-BCI Performance Is Affected by Visual Stimulation Conditions"; explicit dataset match (19 subjects, 3 sessions, ds003190); binary classification between target codes (101-109) and non-target codes (1-9) using CCA spatial filtering with LDA classifier; reports ~82% accuracy with cartoon face stimuli; paradigm confirms P300 oddball with standard flash vs cartoon face conditions.
 - **Kernel Notes**: Group all target flash codes (101-109) as class 0 (target) and all non-target stimulus codes (1-9) as class 1 (non-target). The extreme class imbalance (~2,524 target vs ~584,169 non-target events across dataset) requires stratified sampling or class weighting. Configuration codes 200-203 (~3,515 each) are session/block markers and should NOT be included in epoching. Use -0.2 to 0 s for baseline correction to capture pre-stimulus activity.

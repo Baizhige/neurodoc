@@ -9,7 +9,7 @@ An experimental task investigating neural mechanisms of anticipation by comparin
 
 ## File Scan Result
 
-> **Kernel SHA256**: `e55fcc32f1c0c663a6e615920982c072c481c866ed5b9ccccf663fa49fbe82aa`
+> **Kernel SHA256**: `3d13045e6115e46fccdec6982c79b3da49e1afe37e7c6394d61385556d353f97`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -83,8 +83,8 @@ An experimental task investigating neural mechanisms of anticipation by comparin
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | partial (37/38) | N/A |
+| `age` | complete | N/A |
+| `sex` | partial (37/38) | N/A |
 | `device` | missing | Device manufacturer/model not specified in metadata |
 
 ## Tasks
@@ -97,8 +97,8 @@ An experimental task investigating neural mechanisms of anticipation by comparin
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
-|-------|----|--------|
+| Event ID | y | Meaning |
+|----------|---|---------|
 | `S 17` | 0 | Attention condition |
 | `S 18` | 0 | Attention condition |
 | `S 19` | 0 | Attention condition |
@@ -130,11 +130,12 @@ An experimental task investigating neural mechanisms of anticipation by comparin
 | `S 55` | 1 | Expectation condition |
 | `S 56` | 1 | Expectation condition |
 | `S 57` | 1 | Expectation condition |
-
 - **Evidence**: DOI: https://doi.org/10.18112/openneuro.ds004502.v1.0.1 | OpenNeuro dataset metadata defining BIDS task 'attexp'
 - **Kernel Notes**: Trigger codes S 17-S 24 (~22.8k total) map to attention condition trials; trigger codes S 33-S 57 (~22k+ total) map to expectation condition trials. Count asymmetry within expectation codes (e.g., S 33 at 4104 vs S 34 at 456) indicates unequal trial probability per cue validity level. Maintain versioned trigger decoding table.
 
-### Normal Task 1: Cue Validity Sub-condition Classification (Expectation Trials)
+---
+
+### Potential Task 1: Cue Validity Sub-condition Classification (Expectation Trials)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [S 33, S 34, S 35, S 36, S 37, S 38, S 39, S 40]
@@ -142,8 +143,8 @@ An experimental task investigating neural mechanisms of anticipation by comparin
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
-|-------|----|---------|
+| Event ID | y | Meaning |
+|----------|---|---------|
 | `S 33` | 0 | High-frequency expectation (valid cue) |
 | `S 35` | 0 | High-frequency expectation (valid cue) |
 | `S 37` | 0 | High-frequency expectation (valid cue) |
@@ -152,9 +153,10 @@ An experimental task investigating neural mechanisms of anticipation by comparin
 | `S 36` | 1 | Low-frequency expectation (invalid cue) |
 | `S 38` | 1 | Low-frequency expectation (invalid cue) |
 | `S 40` | 1 | Low-frequency expectation (invalid cue) |
-
 - **Evidence**: Event count patterns (S 33/S 35/S 37/S 39 at ~4104 each vs S 34/S 36/S 38/S 40 at ~456 each, ~9:1 ratio) strongly suggest validity-based trial grouping consistent with attention/expectation paradigm literature.
 - **Kernel Notes**: The ~9:1 count ratio between high and low frequency events within expectation codes suggests explicit validity manipulation (valid vs invalid cues). This task requires detailed semantic mapping from events.tsv to confirm validity labels. Stimulus/S100-S105 events (38 each) appear to be stimulus delivery markers separate from cue validity markers.
+
+---
 
 ### Potential Task 1: Stimulus Modality Classification
 - **Task Type**: classification
@@ -164,15 +166,14 @@ An experimental task investigating neural mechanisms of anticipation by comparin
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
-|-------|----|---------|
+| Event ID | y | Meaning |
+|----------|---|---------|
 | `Stimulus/S100` | 0 | Auditory stimulus delivery |
 | `Stimulus/S101` | 1 | Visual stimulus delivery |
 | `Stimulus/S102` | 0 | Auditory stimulus delivery |
 | `Stimulus/S103` | 1 | Visual stimulus delivery |
 | `Stimulus/S104` | 0 | Auditory stimulus delivery |
 | `Stimulus/S105` | 1 | Visual stimulus delivery |
-
 - **Evidence**: Plausible from paradigm description ("attended to auditory or visual stimuli") and consistent event counts (38 each) suggest stimulus delivery markers. Exact modality mapping requires events.tsv confirmation.
 - **Kernel Notes**: Stimulus/S100-S105 events are separate from cue validity markers and appear at consistent 38 counts per subject, suggesting stimulus delivery events aligned to trial structure.
 

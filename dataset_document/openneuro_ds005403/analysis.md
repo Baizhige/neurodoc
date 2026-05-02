@@ -9,7 +9,7 @@ Participants performed a speech production task while receiving delayed auditory
 
 ## File Scan Result
 
-> **Kernel SHA256**: `4afa48fb7528750b8cf2c52fac832c22120aa5dd1a863f48d4c1bb18d10f1d3b`
+> **Kernel SHA256**: `a5b2bc49192a588678087f00c119d9332c1d97ac95a96e55e279c7156d518c0d`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -37,8 +37,8 @@ Participants performed a speech production task while receiving delayed auditory
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | missing | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -189,7 +189,7 @@ Participants performed a speech production task while receiving delayed auditory
 
 ## Data Quality Notes
 
-- `subject_age` is missing for all subjects, limiting demographic analysis and age-related covariate control.
+- `age` is missing for all subjects, limiting demographic analysis and age-related covariate control.
 - `device` field is missing, so EEG amplifier/equipment details are not documented in structured metadata.
 - `hand` field is present but encoded as numeric values (e.g., 56, 50, 100) rather than standard categorical handedness labels; these correspond to Edinburgh Handedness Inventory scores but may require interpretation.
 - Event ID `adaption` appears to be a spelling variant of "adaptation" used consistently throughout the dataset; this is preserved as-is in native event labels and should not be treated as a data error.

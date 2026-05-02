@@ -10,7 +10,7 @@ A mobile brain-body imaging experiment investigating brain activity during gait 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `81149a5a21d952f77607a7f09330e537c77a1e5528638920096ee82850d6dd03`
+> **Kernel SHA256**: `73b427ccd5ad7cec62287b5f21e9faa6c1a2faf4eeb2401d2535385f509d5030`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -54,8 +54,8 @@ A mobile brain-body imaging experiment investigating brain activity during gait 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -67,8 +67,8 @@ A mobile brain-body imaging experiment investigating brain activity during gait 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|----------|
+  | Event ID | y | Meaning |
+  |----------|---|----------|
   | `LHS` | 0 | Left heel strike |
   | `LTO` | 1 | Left toe-off |
   | `RHS` | 2 | Right heel strike |
@@ -77,6 +77,8 @@ A mobile brain-body imaging experiment investigating brain activity during gait 
   - DOI: `10.1113/jp284505` — This paper analyzes high-density EEG recorded during split-belt treadmill walking from 30 participants (dataset openneuro_ds004475) to examine spectral power changes in alpha, beta, and theta bands across gait adaptation stages, using gait events (heel strikes and toe-offs) detected from force plates as epoching points.
 - **Kernel Notes**: Gait events (LHS/RHS/RTO/LTO) are the fundamental unit of analysis in this locomotor paradigm. High event counts (~77k per type) reflect continuous walking across multiple conditions and are appropriate for event-related epoching. The epoch window (tmin=-0.2s to tmax=1.0s) captures the pre-event baseline and full post-event gait cycle dynamics. Channel filtering to EEG-only subset is required (260 total channels includes non-EEG motion capture markers).
 
+---
+
 ### Potential Task 1: Walking Condition Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
@@ -84,8 +86,8 @@ A mobile brain-body imaging experiment investigating brain activity during gait 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|----------|
+  | Event ID | y | Meaning |
+  |----------|---|----------|
   | `SB1` | 0 | Split-belt block 1 (tied speed, baseline adaptation) |
   | `SB2` | 1 | Split-belt block 2 (differential speed, active adaptation) |
 - **Evidence**: Plausible from paradigm — SB1 and SB2 markers explicitly denote distinct walking conditions (tied vs. split belt speeds) within the experimental protocol. Gait patterns differ substantially between conditions, allowing classifier training.

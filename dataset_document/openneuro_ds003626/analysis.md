@@ -10,7 +10,7 @@ Participants performed inner speech (imagined speech), pronounced speech, and vi
 
 ## File Scan Result
 
-> **Kernel SHA256**: `4abba4f94a1884a74a575ba2135a3e0353f431ab58466e86e6e1b514b2eb9c9a`
+> **Kernel SHA256**: `3a2955c96318a834ed012f5239431d57bff0a54cd66aa9463befcf43a547e484`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -47,8 +47,8 @@ Participants performed inner speech (imagined speech), pronounced speech, and vi
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

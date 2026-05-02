@@ -9,7 +9,7 @@ A pilot EEG study investigating the neural underpinnings of loneliness by contra
 
 ## File Scan Result
 
-> **Kernel SHA256**: `969ccec64d6022cd0426dc183d1f2e496ca601c022defefb2d85286e29971e8b`
+> **Kernel SHA256**: `3c51596f982a3c61b93e319e72febf83917eb79a189f6f7b99711986748a6a20`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -78,8 +78,8 @@ A pilot EEG study investigating the neural underpinnings of loneliness by contra
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | missing | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -278,7 +278,7 @@ A pilot EEG study investigating the neural underpinnings of loneliness by contra
 ## Data Quality Notes
 
 - Subject metadata is highly incomplete: only 38 of 79 subjects have usable participants.tsv entries (birth_month, birth_year, diagnosis, loneliness), while the remaining 41 subjects lack demographic and trait data entirely.
-- `subject_age` is completely missing across all subjects; age must be approximated from `birth_year` where available (37/38 subjects), but recording year is not explicitly documented.
+- `age` is completely missing across all subjects; age must be approximated from `birth_year` where available (37/38 subjects), but recording year is not explicitly documented.
 - `device` field is completely missing — EEG amplifier and electrode system (likely Biosemi given 73 channels) is undocumented in dataset metadata.
 - Event code meanings for condition variants 11-17, 30-36, and 51-57 are unknown and not described in accompanying task documentation; these may represent practice trials, catch trials, or auxiliary conditions.
 - The extremely high count of event_20 (49,566 occurrences, ~84% of all events) indicates dense fixation cross presentation that may complicate baseline correction and require careful epoch rejection around overlapping events.

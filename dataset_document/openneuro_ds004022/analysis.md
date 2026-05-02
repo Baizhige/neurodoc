@@ -8,7 +8,7 @@ Seven participants with orthopedic impairment performed four right-upper-limb mo
 
 ## File Scan Result
 
-> **Kernel SHA256**: `86f8ec17196fd19c621c4b469487c054ecd896ae4c5c24a4d8bf1b3332b98045`
+> **Kernel SHA256**: `f159e25f8de105c2cebaeb73c9854d33dff9482b7372c2ad586ca9542c5eedde`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -34,8 +34,8 @@ Seven participants with orthopedic impairment performed four right-upper-limb mo
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | BrainVision ActiCHamp |
 
 

@@ -9,7 +9,7 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `41238c913650e8aee93c6d08a502fd173adb57ece461b45c54422e369b91fdbd`
+> **Kernel SHA256**: `0e14f99423902d09a031bcc3906407cbcf60fe0fb028fc9386e73c494ecb8873`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -37,17 +37,17 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
 ### Classical Task 1: Poetry Condition Classification
 - **Task Type**: classification
-- **Epoch Method**: epoch_by_event_hdf5
+- **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [65281, 65282, 65283, 65284]
-- **Label Route**: event
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -63,9 +63,9 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 
 ### Potential Task 1: Aesthetic Judgment Regression
 - **Task Type**: regression
-- **Epoch Method**: epoch_by_event_hdf5
+- **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [65281, 65282, 65283, 65284]
-- **Label Route**: event
+- **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
 
@@ -80,10 +80,10 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 - **Kernel Notes**: Requires super-level meta integration from behavioral ratings file (events.tsv). Labels are continuous rather than categorical; use regression loss instead of classification loss. Five dimensions reported: Aesthetic Appeal, Vivid Imagery, Being Moved, Originality, Creativity. Verify exact dimension-to-event mapping in events.tsv.
 
 ### Potential Task 2: Sustained Reading Analysis
-- **Task Type**: segmentation
-- **Epoch Method**: epoch_by_segmentation_hdf5
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = null, overlap = null, segment_length = variable, target_events = [65281, 65282, 65283, 65284]
-- **Label Route**: event
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -97,11 +97,11 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 - **Evidence**: Paradigm plausibility (no reference required)
 - **Kernel Notes**: Variable-length segments capture full reading period per trial. Align segments to stimulus onset markers. Use detected text offset or word count for segmentation boundaries rather than fixed duration. Exclude boundary markers (n=5 admin events).
 
-### Normal Task 1: Neural Correlates of Aesthetic and Creative Cognition
+### Potential Task 1: Neural Correlates of Aesthetic and Creative Cognition
 - **Task Type**: classification
-- **Epoch Method**: epoch_by_event_hdf5
+- **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = [65281, 65282, 65283, 65284]
-- **Label Route**: event
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 

@@ -9,7 +9,7 @@ Participants monitored a semi-autonomous vehicle system and performed local situ
 
 ## File Scan Result
 
-> **Kernel SHA256**: `5015c68b45b1447cbd4bfd82f425de14e526a81633ad7792577ebe8369d4d1c7`
+> **Kernel SHA256**: `7a0893bdb60c6a3c03a26145c239958990a62ff978092cbdf8a0789563423ba5`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -167,13 +167,13 @@ Participants monitored a semi-autonomous vehicle system and performed local situ
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
-### Normal Task 1: Operational State Classification
+### Potential Task 1: Operational State Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, overlap = N/A, target_events = see Target Definition
@@ -195,7 +195,7 @@ Participants monitored a semi-autonomous vehicle system and performed local situ
 - **Evidence**: Dataset README and OpenNeuro metadata (n=11, task='Drive On Mission') — https://openneuro.org/datasets/ds004841 DOI: https://doi.org/10.18112/openneuro.ds004841.v1.0.1
 - **Kernel Notes**: 7-digit hierarchical codes require decode table for semantic mapping. States encode automation level (first digit) and operational mode (remaining digits). Large count range (918–12823) indicates heavily unbalanced classes. Small subject pool (n=11) — recommend leave-one-subject-out cross-validation. Type 1 kernel extracts raw state labels from state_ prefixed events.
 
-### Normal Task 2: Substate Segmentation
+### Potential Task 2: Substate Segmentation
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4.0 s, overlap = 0.0, target_events = see Target Definition

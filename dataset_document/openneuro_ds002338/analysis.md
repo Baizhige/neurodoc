@@ -9,7 +9,7 @@ Participants performed right-hand motor imagery and received neurofeedback (1D o
 
 ## File Scan Result
 
-> **Kernel SHA256**: `cd54d7617a2e8b3df74b6743f9932df8d71d1fe12f1b9bf4fc72c7e6b72987a8`
+> **Kernel SHA256**: `d6becf36657b579609c65ff4c6e310875000072f2ad7a89605820fa0498bd926`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -40,8 +40,8 @@ Participants performed right-hand motor imagery and received neurofeedback (1D o
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -87,7 +87,7 @@ Participants performed right-hand motor imagery and received neurofeedback (1D o
   |------------|----------------|
   | subject_sex | F -> 0; M -> 1 |
 - **Evidence**:
-- **Notes**: This B3 archetype task uses the native `subject_sex` column from participants.tsv, which is pre-existing metadata requiring no kernel derivation. The epoch windows are anchored to neurofeedback block onset markers (S 99 for initial baseline/recording start, S  2 for task block transitions) with 20-second windows matching the Rest/Task-NF block durations observed in events.tsv. All 23 subjects have complete sex labels (F=11, M=12) enabling balanced binary classification. The `*` on epoch parameters indicates these were inferred from the task block structure in events.tsv samples rather than from an explicit task definition.
+- **Notes**: This B3 archetype task uses the native `sex` column from participants.tsv, which is pre-existing metadata requiring no kernel derivation. The epoch windows are anchored to neurofeedback block onset markers (S 99 for initial baseline/recording start, S  2 for task block transitions) with 20-second windows matching the Rest/Task-NF block durations observed in events.tsv. All 23 subjects have complete sex labels (F=11, M=12) enabling balanced binary classification. The `*` on epoch parameters indicates these were inferred from the task block structure in events.tsv samples rather than from an explicit task definition.
 
 ### Potential Task 3: ECG Regression from Neurofeedback Blocks
 - **Task Type**: regression
@@ -117,7 +117,7 @@ Participants performed right-hand motor imagery and received neurofeedback (1D o
   |------------|----------------|
   | subject_age | 18.0–66.0 (years); no mapping |
 - **Evidence**:
-- **Notes**: Archetype C with native info column. Sliding window segmentation (4s windows, 50% overlap) applied to continuous EEG without relying on trial/block boundaries. Subject age is a native participants.tsv column, so Meta Level = raw. The kernel does not need to derive any channels; it only needs to read the pre-existing `subject_age` field from participants.tsv and assign it to all segments belonging to each subject.
+- **Notes**: Archetype C with native info column. Sliding window segmentation (4s windows, 50% overlap) applied to continuous EEG without relying on trial/block boundaries. Subject age is a native participants.tsv column, so Meta Level = raw. The kernel does not need to derive any channels; it only needs to read the pre-existing `age` field from participants.tsv and assign it to all segments belonging to each subject.
 
 ### Potential Task 5: Segmentation-based Sex Classification
 - **Task Type**: classification

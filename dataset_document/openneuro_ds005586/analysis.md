@@ -9,7 +9,7 @@ Participants passively viewed game boards depicting varying numbers of game piec
 
 ## File Scan Result
 
-> **Kernel SHA256**: `baf5356b61564a0375f5d160ea4039aaffd7603362c4837beaab1a47ccb903f2`
+> **Kernel SHA256**: `dde6e5ebb38ae36ebf0fb80df2e5d26204be0fef1ee2db0e0b2dba46dce81070`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -72,13 +72,13 @@ Participants passively viewed game boards depicting varying numbers of game piec
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
-### Normal Task 1: ERP Components for Numerosity Perception (Occluded vs Uncovered)
+### Potential Task 1: ERP Components for Numerosity Perception (Occluded vs Uncovered)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`Stimulus/S 95`, `Stimulus/S111`, `Stimulus/S112`, `Stimulus/S113`, `Stimulus/S114`, `Stimulus/S115`, `Stimulus/S116`, `Stimulus/S117`, `Stimulus/S118`, `Stimulus/S121`, `Stimulus/S122`, `Stimulus/S123`, `Stimulus/S124`, `Stimulus/S125`, `Stimulus/S126`, `Stimulus/S127`, `Stimulus/S128`, `Stimulus/S211`, `Stimulus/S212`, `Stimulus/S213`, `Stimulus/S214`, `Stimulus/S215`, `Stimulus/S216`, `Stimulus/S217`, `Stimulus/S218`, `Stimulus/S221`, `Stimulus/S222`, `Stimulus/S223`, `Stimulus/S224`, `Stimulus/S225`, `Stimulus/S226`, `Stimulus/S227`, `Stimulus/S228`]

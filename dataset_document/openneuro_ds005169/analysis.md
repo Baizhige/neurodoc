@@ -9,7 +9,7 @@ Intracranial EEG was recorded from drug-resistant epilepsy patients undergoing p
 
 ## File Scan Result
 
-> **Kernel SHA256**: `e9eaaa6de3c32f35b7684f29f3b93c838e3a5cc24cd30598a81c1019c73ba803`
+> **Kernel SHA256**: `50f10d187cd4387a37894d924f807c97227c3e834ae9a02cbcec0c6fc0ebb16a`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -34,17 +34,17 @@ Intracranial EEG was recorded from drug-resistant epilepsy patients undergoing p
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
 ### Classical Task 1: Clinical Effect Classification (6-class)
 - **Task Type**: classification
-- **Epoch Method**: epoch_by_long_event_hdf5
+- **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = -2.0 s, tmax = 0.0 s, overlap = 0.0, target_events = ["stimulation: baseline"] | tmin = 0.0 s, tmax = 2.0 s, overlap = 0.0, target_events = ["stimulation: response"]
-- **Label Route**: event
+- **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
@@ -63,9 +63,9 @@ Intracranial EEG was recorded from drug-resistant epilepsy patients undergoing p
 
 ### Classical Task 2: Visual Hallucination Subtype Classification (14-class)
 - **Task Type**: classification
-- **Epoch Method**: epoch_by_event_hdf5
+- **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -2.0 s, tmax = 3.0 s, overlap = null, target_events = ["stimulation: response"]
-- **Label Route**: event
+- **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |

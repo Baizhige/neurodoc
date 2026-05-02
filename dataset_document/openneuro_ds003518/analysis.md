@@ -9,7 +9,7 @@ This study examines whether conflict acts as an implicit cost in reinforcement l
 
 ## File Scan Result
 
-> **Kernel SHA256**: `acb6b744009087a86d617f1b6e416921b67ad6d6365b12f26c4430057c8d8fe9`
+> **Kernel SHA256**: `3ad5eb3f5ae8042e4a24911b7c81131446f34314e73dd679b1166b5cc4cce07e`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ This study examines whether conflict acts as an implicit cost in reinforcement l
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -62,7 +62,7 @@ This study examines whether conflict acts as an implicit cost in reinforcement l
 - `device` field is completely missing from info metadata, limiting knowledge about EEG amplifier/equipment used across studies.
 - Drug condition fields (`sess1_Drug`, `sess2_Drug`) are highly incomplete (27/110 subjects), restricting pharmacological analyses to Study 2 subset only.
 - Study 1 and Study 2 have substantially different sample sizes (83 vs 27) and experimental designs, creating potential confounds for cross-study analyses.
-- No known data quality issues for core demographic fields (`subject_age`, `subject_sex`, `Original_ID`, `Study`) which are all complete.
+- No known data quality issues for core demographic fields (`age`, `sex`, `Original_ID`, `Study`) which are all complete.
 
 ## Kernel Responsibilities
 

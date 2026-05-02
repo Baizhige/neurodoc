@@ -23,8 +23,8 @@ A multimodal neuroimaging study (EEG + MEG/MRI) investigating the spatiotemporal
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -36,8 +36,8 @@ A multimodal neuroimaging study (EEG + MEG/MRI) investigating the spatiotemporal
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `stimulus_onset` (animals) | 0 | Animal category presentation |
   | `stimulus_onset` (chairs) | 1 | Chair category presentation |
   | `stimulus_onset` (faces) | 2 | Face category presentation |
@@ -47,12 +47,20 @@ A multimodal neuroimaging study (EEG + MEG/MRI) investigating the spatiotemporal
   - DOI: `10.1101/2022.05.12.491595` — Performs EEG category classification decoding among 5 visual object categories (animals, chairs, faces, fruits, vehicles) using SVM classifiers on epochs extracted from -100ms to +600ms relative to stimulus onset
 - **Kernel Notes**: Verify event ID mapping from events.tsv. Paper indicates stimulus_onset events exist for epoching. Labels may be stored in a separate condition or trial_type column rather than as separate event IDs. Map trial_type values (animal/chair/face/fruit/vehicle) to numeric class labels 0-4.
 
+---
+
 ### Potential Task 1: Resting / Continuous Segmentation
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: N/A (null - no trial-level labels available)
+- **Target Definition**:
+  | Event ID | Value | Meaning |
+  |----------|-------|---------|
+  | N/A | null | No trial-level labels available for continuous resting-state segmentation |
+
 - **Notes**: High sampling rate (1200 Hz); downsampling recommended. Part of a multimodal dataset - check MEG/MRI files for corresponding event timing.
 
 ## Data Quality Notes

@@ -10,7 +10,7 @@ Nineteen subjects (s01-s20, one subject absent) aged 21-31 participated in a bio
 ## File Scan Result
 
 > **Kernel**: N/A
-> **SHA256**: N/A
+> **Kernel SHA256**: `b0fb53a13b65ddd627a459885811c0110078172e3fe0af22802920a04880cb10`
 
 ### Event Structure
 
@@ -40,8 +40,8 @@ Nineteen subjects (s01-s20, one subject absent) aged 21-31 participated in a bio
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | Age range: 21-31 years; mean age: 26.0 years |
-| `subject_sex` | missing | Male: 15; Female: 5 |
+| `age` | missing | Age range: 21-31 years; mean age: 26.0 years |
+| `sex` | missing | Male: 15; Female: 5 |
 | `device` | missing | The core recording device is an OpenBCI Ganglion Board, a 4-channel EEG acquisition system that samples data at 200 Hz. It uses Gold Cup electrodes placed at standard scalp positions (T7, F8, Cz, P4) with Ten20 conductive paste, and is operated via the OpenBCI GUI software. |
 
 

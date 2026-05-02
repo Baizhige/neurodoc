@@ -9,7 +9,7 @@ Participants performed perceptual judgements on visual targets embedded within t
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `3845a0c331dc5f16a329a15339e10b0bc56df899f063f2efaa8ccce6f8a59519`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Full
 
@@ -34,20 +34,23 @@ No stimulus/response trial events captured in events.tsv. All markers are admini
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: IG
+### Classical Task 1: Publisher-defined BIDS task: IG
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004587 DOI: https://doi.org/10.18112/openneuro.ds004587.v1.0.0
 
+---
 
-### Normal Task 1: Continuous Task EEG (segmentation)
+### Potential Task 1: Continuous Task EEG (segmentation)
 - **Task Type**: regression
-- **Epoch Method**: `segmentation`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: None
 - **Notes**: All events in events.tsv are administrative markers or artifact annotations. No stimulus/response trial events were captured. Trial structure may be recoverable from separate behavioral logs. Use sliding-window segmentation.
 

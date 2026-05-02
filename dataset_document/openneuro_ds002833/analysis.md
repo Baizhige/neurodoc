@@ -9,7 +9,7 @@ High-density 257-channel EEG recorded during a visual object naming or picture v
 
 ## File Scan Result
 
-> **Kernel SHA256**: `2195a8f01eccf34bca4e9140cfb399bfea7ab97e819d918a690c17a6da4b5b1c`
+> **Kernel SHA256**: `2bf17ff453a9bdf9ddc8e19f3d46156e6b8c78a009e9b3ac1c2a7a04d7eb37ca`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,13 +23,13 @@ High-density 257-channel EEG recorded during a visual object naming or picture v
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
-### Normal Task 1: Stimulus-Locked Visual ERP Analysis
+### Potential Task 1: Stimulus-Locked Visual ERP Analysis
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [DIN1]
@@ -37,13 +37,14 @@ High-density 257-channel EEG recorded during a visual object naming or picture v
 - **Meta Level**: super
 - **Target Definition**:
 
-| Event | y | Meaning |
-|-------|---|--------|
-| DIN1 | response_time | Visual stimulus onset with associated response latency |
-
+| MISC Channel Name | Y Mapping Notes |
+|-------------------|-----------------|
+| Needs verification | Response time regression target; no MISC channels present in file scan. Kernel Notes indicate Type 2 derivation required. Verify if response time data exists in derived channels or events structure. |
 - **Evidence**: Paradigm description indicates visual object naming with EGI stimulus triggers; partial reference (10.1038/s41597-021-00821-1) confirms HD-EEG visual naming methodology; alignment recommendations support onset-locked analysis window.
   - DOI: 10.1038/s41597-021-00821-1
 - **Kernel Notes**: DIN1 serves as epoch anchor for stimulus-locked ERP analysis. The -0.2s to 1.0s window captures N1/P1 visual components and early N400 semantic processing. Exclude `unknown` admin events (undecodable trigger codes in 20/80 files). Response time regression target stored in misc channel requires Type 2 derivation. Verify channel consistency across 257-channel EGI HydroCell array before pooling.
+
+---
 
 ### Potential Task 1: Visual Object Category Classification
 - **Task Type**: classification
@@ -53,10 +54,9 @@ High-density 257-channel EEG recorded during a visual object naming or picture v
 - **Meta Level**: super
 - **Target Definition**:
 
-| Event | y | Meaning |
-|-------|---|--------|
-| DIN1 | trial_type (from events.tsv) | Object category label (30 categories per paradigm) |
-
+| Event ID | y | Meaning |
+|----------|---|---------|
+| DIN1 | Needs verification | Object category label (30 categories per paradigm); Kernel Notes indicate trial_type/value must be derived from events.tsv since DIN1 only marks onset without condition encoding. No event IDs present in file scan result. |
 - **Evidence**: Paradigm description specifies visual object naming with 30 object categories; OpenNeuro dataset metadata confirms Pictures Naming BIDS task; alignment recommendations specify post-stimulus classification window. No direct classification-relevant reference.
   - DOI: https://doi.org/10.18112/openneuro.ds002833.v1.0.0
 - **Kernel Notes**: Stimulus identity (object category) must be derived from events.tsv trial_type/value columns since DIN1 only marks onset without condition encoding. Use post-stimulus window (tmin=0.0) to capture discriminative visual object-related activity. Exclude `unknown` events from target set. High-density 257-channel layout may require spatial downsampling for computational efficiency. Type 2 label integration required for BIDS task annotation route.

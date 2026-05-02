@@ -10,7 +10,7 @@ Spontaneous resting-state EEG was recorded in a cohort of females aged 60-80 yea
 
 ## File Scan Result
 
-> **Kernel SHA256**: `d3b7b79c84680f3d40ce6c47df5ccebe2db47adda3250d9511022b86589da3bb`
+> **Kernel SHA256**: `a1eca7fb36e57f045f47e25392f88bf796e7e2fea8d1a589482b95dcaa337c32`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -24,8 +24,8 @@ Spontaneous resting-state EEG was recorded in a cohort of females aged 60-80 yea
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -45,7 +45,7 @@ Spontaneous resting-state EEG was recorded in a cohort of females aged 60-80 yea
 - **Evidence**:
   - DOI: 10.1109/UBMK67458.2025.11207051 — Validated on OpenNeuro ds005420 for cross-dataset validation using VGG-19 and custom 6-layer CNN. Converted EEG to composite CWT images for binary classification. Segmented raw files into 10-s epochs with 1.0-s overlap to generate sufficient samples. Dataset-specific parameters confirmed: 20-channel EEG, 500 Hz sampling rate, 72 subjects (females, age 60–80).
 
-### Normal Task 1: Resting-State Segmentation for Frequency-Domain Analysis
+### Potential Task 1: Resting-State Segmentation for Frequency-Domain Analysis
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s, overlap = 0.5 s

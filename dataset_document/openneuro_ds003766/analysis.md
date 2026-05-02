@@ -10,7 +10,7 @@ Participants performed dynamic decision-making tasks including food preference c
 
 ## File Scan Result
 
-> **Kernel SHA256**: `4705529e337e327cb265f22d53b751f9762299fc6b6a1161f0e506333a0a2fcc`
+> **Kernel SHA256**: `4dd1142cd0a3ff28d98ea7794fa475561390992a491b6c218e18d31c3179292a`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -362,8 +362,8 @@ Participants performed dynamic decision-making tasks including food preference c
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -375,13 +375,15 @@ Participants performed dynamic decision-making tasks including food preference c
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `0500` | 0 | Left choice response (food preference task) |
   | `0501` | 1 | Right choice response (food preference task) |
 - **Evidence**:
   - DOI: 10.1038/s41597-022-01538-5 — SVM classifier decodes left vs right choices from food preference task EEG epochs, achieving 67–77% accuracy across three binary choice tasks. Paper explicitly describes dataset availability on OpenNeuro (ds003766).
 - **Kernel Notes**: Response-aligned epochs decode choice direction. Since mean RT >1200ms, extend tmax to 1.8s for full evidence accumulation period. Count ratio 0500:0501 ≈ 2:1 suggests left bias in food preference task. Verify label mapping from events.tsv (paper states 0500=left, 0501=right for food choice). Exclude `boundary` admin markers (2,146 occurrences) from epoching. 129-channel EEG at 1000Hz requires batch processing.
+
+---
 
 ### Classical Task 2: Stimulus-Locked ERP Analysis (Food Choice Onset)
 - **Task Type**: classification
@@ -390,8 +392,8 @@ Participants performed dynamic decision-making tasks including food preference c
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `0400` | 0 | Food stimulus option A onset |
   | `0401` | 1 | Stimulus variant 1 (food/image/word) |
   | `0402` | 2 | Stimulus variant 2 (food/image/word) |
@@ -400,6 +402,8 @@ Participants performed dynamic decision-making tasks including food preference c
   - DOI: 10.1038/s41597-022-01538-5 — Paper describes stimulus-locked epoch extraction from -200ms to 800ms aligned to stimulus onset for ERP analysis across three choice paradigms (food preference, word choice, image choice).
 - **Kernel Notes**: 0400 series events (0400: 28,542; 0401-0403: ~9,200 each) encode stimulus presentation across tasks. For stimulus-locked ERP analysis of food choice, use 0400 as primary anchor. Verify condition mapping from events.tsv since 0401-0403 may encode different task types (food vs semantic vs image). Use tmin=-0.2s for baseline correction, tmax=0.8s for standard ERP window.
 
+---
+
 ### Potential Task 1: Trial-Phase Segmentation Analysis
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
@@ -407,13 +411,15 @@ Participants performed dynamic decision-making tasks including food preference c
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|-------|---------|
+  | Event ID | y | Meaning |
+  |----------|-------|---------|
   | `0200` | 0 | Trial phase start |
   | `0221` | 21 | Trial phase end |
 - **Evidence**:
   - DOI: 10.1038/s41597-022-01538-5 — Paper describes trial-phase timing codes; 0200-series events (93 each) encode sequential trial phases from 0200 to 0299.
 - **Kernel Notes**: 0200-0299 series each have exactly 93 occurrences, suggesting systematic trial-phase markers. Decode phase meaning from events.tsv for temporal segmentation of evidence accumulation period. Segment_length must be determined from inter-event intervals. Long-event epoching captures continuous decision dynamics.
+
+---
 
 ### Potential Task 2: Response Outcome Classification
 - **Task Type**: classification
@@ -422,8 +428,8 @@ Participants performed dynamic decision-making tasks including food preference c
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `0503` | 0 | Response outcome type A |
   | `0505` | 1 | Response outcome type B |
   | `0506` | 2 | Response outcome type C |
@@ -431,15 +437,17 @@ Participants performed dynamic decision-making tasks including food preference c
   - DOI: 10.1038/s41597-022-01538-5 — Dataset paper describes response/outcome trigger codes; 0503/0505/0506 (~9,000 each) likely encode trial outcomes across choice tasks.
 - **Kernel Notes**: 0503-0506 events (8,960-9,375 each) may encode outcome evaluation or feedback. Without explicit mapping from events.tsv, treat as outcome type labels. Exclude rare 0502 (72), 0504 (257), 0507 (266) unless needed. Response-outcome decoding could capture feedback processing or confidence signals.
 
-### Normal Task 1: Cross-Task Stimulus Classification
+---
+
+### Potential Task 1: Cross-Task Stimulus Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [`0400`, `0401`, `0402`, `0403`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|-------|---------|
+  | Event ID | y | Meaning |
+  |----------|-------|---------|
   | `0400` | 0 | Food preference stimulus |
   | `0401` | 1 | Word choice stimulus |
   | `0402` | 2 | Image choice stimulus |

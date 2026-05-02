@@ -9,7 +9,7 @@ Participants viewed rapid streams of videos depicting touch to a hand or an obje
 
 ## File Scan Result
 
-> **Kernel SHA256**: `ae6939484ae682db3726c4e319b9322ca64e4283bd38ac5c8be8b4302f28db0e`
+> **Kernel SHA256**: `e26cf90ff5677b8ea40d04e80b693e6d35a070c2ffe522e314de33779772d0f3`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -38,8 +38,8 @@ Participants viewed rapid streams of videos depicting touch to a hand or an obje
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

@@ -9,7 +9,7 @@ Resting-state EEG microstates were recorded to correlate spontaneous brain dynam
 
 ## File Scan Result
 
-> **Kernel SHA256**: `ac519f813a35bc395e58e2f5909d0f841569d134cd5d0100de771e5a4952c500`
+> **Kernel SHA256**: `d1dd7541178bf0a18c2b351b152df0d8da05a5ea789dadc7fd4a1d499becd980`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -24,8 +24,8 @@ Resting-state EEG microstates were recorded to correlate spontaneous brain dynam
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -35,7 +35,7 @@ Resting-state EEG microstates were recorded to correlate spontaneous brain dynam
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5, target_events = see Target Definition
 - **Label Route**: `event`
-- **Meta Level**: `super`
+- **Meta Level**: super
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Microstate metrics (duration, coverage, occurrence) extracted from resting-state EEG blocks serve as predictors for executive function composite scores derived from a nine-task battery. Super meta labels stored in participants.tsv.
 
@@ -48,12 +48,12 @@ Resting-state EEG microstates were recorded to correlate spontaneous brain dynam
 - **Evidence**: DOI: `10.1016/j.cortex.2024.05.019` (Investigating the relationship between resting-state EEG microstates and executive functions: A null finding)
 - **Kernel Notes**: Resting-state blocks (30–60 s each) segmented into 2-second sliding windows (50% overlap) to extract microstate features per window. Executive function composite score is a super meta target from participants.tsv—not derived from EEG events. Epoch extraction uses RS_EC/RS_EO onsets; boundary and key press events excluded as admin markers. Consider memory-efficient batching given ~74,500–89,100 total potential epochs across 165 subjects. Class imbalance is not applicable for regression; stratification relevant only for train/test splits.
 
-### Normal Task 2: Eyes Open vs Eyes Closed (binary classification)
+### Potential Task 2: Eyes Open vs Eyes Closed (binary classification)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5, target_events = see Target Definition
 - **Label Route**: `event`
-- **Meta Level**: `raw`
+- **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Binary classification of resting-state condition from EEG microstate dynamics. Slight class imbalance: RS_EC (825) vs RS_EO (660) (~55/45%). Paradigm plausibility supports this task; not explicitly performed in primary reference but consistent with experimental design.
 

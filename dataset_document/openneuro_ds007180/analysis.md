@@ -9,7 +9,7 @@ EEG was recorded during interaction with an exoskeleton in a gait or robotic-ass
 
 ## File Scan Result
 
-> **Kernel SHA256**: `285edc6ad3d6ac3ecf0ff53ece92dfbba1db2e6d56f9b640bb7d11eaadbc07fb`
+> **Kernel SHA256**: `a9e5d443140090794ad3bcd21b02d67bbf116dd3dfde5214ee5189a474fca4c6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -71,13 +71,13 @@ EEG was recorded during interaction with an exoskeleton in a gait or robotic-ass
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
-### Normal Task 1: Upper Limb Movement Type Classification
+### Potential Task 1: Upper Limb Movement Type Classification
 
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`

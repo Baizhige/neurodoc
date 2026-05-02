@@ -9,7 +9,7 @@ Simultaneous EEG-fMRI acquisition during a kinesthetic motor imagery neurofeedba
 
 ## File Scan Result
 
-> **Kernel SHA256**: `b8765f797051b568f914682c5c07b2c71452b6c67b90de5d6877e88536ae30d8`
+> **Kernel SHA256**: `5028cf73593d96499e4d0c2255c72e04a4d745fc41abedfb569de390a06675e9`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -39,8 +39,8 @@ Simultaneous EEG-fMRI acquisition during a kinesthetic motor imagery neurofeedba
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -105,7 +105,7 @@ Simultaneous EEG-fMRI acquisition during a kinesthetic motor imagery neurofeedba
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |------------|-----------------|
-  | `subject_age` | no mapping |
+  | `age` | no mapping |
 - **Evidence**:
   - participants.tsv — age column complete for all N=10 subjects, range 19.0–39.0 years
   - analysis.md Potential Task 1 — 4-second windows with 50% overlap during sustained Rest blocks (20s), yielding ~7 segments per block
@@ -120,7 +120,7 @@ Simultaneous EEG-fMRI acquisition during a kinesthetic motor imagery neurofeedba
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |------------|-----------------|
-  | `subject_sex` | M -> 0; F -> 1 |
+  | `sex` | M -> 0; F -> 1 |
 - **Evidence**:
 - **Notes**: Segmentation-based classification using 4-second non-overlapping windows (50% overlap) of continuous resting-state/task EEG. Each segment inherits the subject's sex label from participants.tsv. Highly imbalanced dataset with 8 male and 2 female subjects. The small sample size (N=10) makes this a high-risk potential task with limited generalizability. No event markers are used for epoching since this is a pure segmentation approach on continuous data.
 

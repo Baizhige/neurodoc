@@ -10,7 +10,7 @@ Participants performed a continuous tracking task (CTT) requiring them to mainta
 
 ## File Scan Result
 
-> **Kernel SHA256**: `580fa6085db72bd619171bfab71f09723c8be13475bfd248c4e2ade2b1c8b0ab`
+> **Kernel SHA256**: `814fba4e6f0690882d77c2890c93a7df7e472fb6ee32ae4719db0556a62ead94`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -27,8 +27,8 @@ Participants performed a continuous tracking task (CTT) requiring them to mainta
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -40,14 +40,16 @@ Participants performed a continuous tracking task (CTT) requiring them to mainta
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|-------|--------|
-  | `Stimulation Start` | 1 | Transcranial electrical stimulation ON period |
-  | `Block Start` | 0 | Baseline/control task block (stimulation OFF) |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `16` | 1 | Transcranial electrical stimulation ON period (Stimulation Start) |
+  | `32` | 0 | Baseline/control task block (stimulation OFF) (Block Start) |
 - **Evidence**:
   - DOI: 10.1038/s41597-021-01046-y — Data descriptor defining dataset structure with 30-sec stimulation epochs during CTT; confirms 5-sec ramp-up/down transitions and binary ON/OFF classification as primary analysis target.
   - DOI: 10.1016/j.brs.2024.05.009 — Uses same dataset implementing 30-sec epoch segmentation comparing stimulation effects on EEG/behavioral vigilant attention; validates epoching approach.
 - **Kernel Notes**: Use `epoch_by_long_event_hdf5` to extract 30-sec windows aligned to `Stimulation Start` (y=1, stimulation ON) and `Block Start` (y=0, baseline OFF). Event codes in raw data: code 16→`Stimulation Start`, code 32→`Block Start`. Verify tmax matches actual stimulation duration per trial. Consider baseline correction window from -0.5 to 0 s to address ramp artifact.
+
+---
 
 ### Classical Task 2: Frontal vs Motor 30Hz HD-tACS Comparison
 - **Task Type**: classification
@@ -56,14 +58,16 @@ Participants performed a continuous tracking task (CTT) requiring them to mainta
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|-------|--------|
-  | `F30` | 0 | Frontal 30Hz HD-tACS (active stimulation) |
-  | `M30` | 1 | Motor 30Hz HD-tACS (active stimulation) |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `F30` | 0 | Frontal 30Hz HD-tACS (active stimulation) — derived from dose condition metadata |
+  | `M30` | 1 | Motor 30Hz HD-tACS (active stimulation) — derived from dose condition metadata |
 - **Super Meta Notes**: Derived from raw event `Stimulation Start` combined with dose condition metadata (F0/F5/F30, M0/M5/M30) in participants.tsv or events.tsv. Kernel step: filter `Stimulation Start` events to only those where dose code contains 'F30' (label 0) or 'M30' (label 1), excluding sham and other frequency conditions.
 - **Evidence**:
   - DOI: 10.1016/j.brs.2024.05.009 — Explicitly compares frontal 30Hz HD-tACS vs motor 30Hz HD-tACS effects on EEG/behavioral vigilant attention; uses 30-sec epoch partitioning by stimulation location; labels F30=frontal, M30=motor.
 - **Kernel Notes**: Requires joining `Stimulation Start` event timestamps with dose condition metadata to distinguish F30 vs M30 conditions. Use 30-sec windows following `Stimulation Start` for each active 30Hz condition. Verify dose condition codes exist in events.tsv before implementation.
+
+---
 
 ### Potential Task 1: Stimulation Ramp Dynamics Analysis
 - **Task Type**: classification
@@ -72,10 +76,10 @@ Participants performed a continuous tracking task (CTT) requiring them to mainta
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|-------|--------|
-  | `Stimulation Start` | 1 | tES ramp-ON transient period |
-  | `Stimulation Stop` | 0 | tES ramp-OFF transient period |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `16` | 1 | tES ramp-ON transient period (Stimulation Start) |
+  | `2` | 0 | tES ramp-OFF transient period (Stimulation Stop) |
 - **Evidence**:
   - DOI: 10.1038/s41597-021-01046-y — Documents 5-sec ramp-up/down transitions during tES delivery; ramp periods provide distinct transient dynamics for analysis.
 - **Kernel Notes**: Shorter 2-sec windows with 50% overlap enable detailed characterization of tES artifact and neural response during transition periods. Event codes: code 16→`Stimulation Start`, code 2→`Stimulation Stop`. Consider baseline correction using pre-onset window. High sampling rate (2000 Hz) may require downsampling to 500 Hz for memory efficiency.

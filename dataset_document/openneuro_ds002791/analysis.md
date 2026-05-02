@@ -9,7 +9,7 @@ Participants viewed and named visual objects (pictures presented as bitmap image
 
 ## File Scan Result
 
-> **Kernel SHA256**: `14da52f3b53f696e39f72f6b27d5bf353f8d008c31d8053c53f4ce41b09c46ee`
+> **Kernel SHA256**: `cfeba9b65173d02d2ad6dd8716c813557a509578dff45d09bc8a4d04c906fdd6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -24,25 +24,23 @@ Participants viewed and named visual objects (pictures presented as bitmap image
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
 ### Potential Task 1: Visual Object Naming — Stimulus Category Classification / Response Time Regression
 
-- **Task Type**: classification / regression
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s
-- **Label Route**: `stim` (derived from stimulus presentation timing) / `misc` (response_time)
+- **Label Route**: `misc`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|----------|
-  | Stimulus onset (derived) | category_id (0–29) | Visual object category (30 classes) |
-  | Stimulus onset (derived) | response_time | Naming latency (ms) from misc channel |
-
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | Needs verification | response_time for naming latency (ms); category_id (0–29) for visual object category if available via derived MISC channel — no native MISC channels present in file scan |
 - **Evidence (DOI)**: None (paradigm is plausible; however, neither partial reference explicitly cites this dataset or defines an ML-ready task with labeled epochs)
 - **Kernel Notes**: 
   - **Critical**: The raw event structure contains only generic trigger markers (`trigger/D249`: ~9.86M, `trigger/D250`: ~9.84M). The 30 visual object categories (e.g., GLOVE.bmp, FEATHER.bmp, GORILLA.bmp) are NOT present as native event IDs.

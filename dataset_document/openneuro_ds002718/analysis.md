@@ -9,7 +9,7 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 
 ## File Scan Result
 
-> **Kernel SHA256**: `ba29c0f01eb87c59052deabc969c88bed8cdd501d18e42ee08c87973dfbbe9aa`
+> **Kernel SHA256**: `d59146ae08cacb638e8c260abb81f84cd24c60b8571ab63d8e1787ba6c5614e6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -37,8 +37,8 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | partial (13/18) | N/A |
+| `age` | complete | N/A |
+| `sex` | partial (13/18) | N/A |
 | `device` | missing | N/A |
 
 
@@ -217,7 +217,7 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_age` | no mapping |
+  | `age` | no mapping |
 - **Evidence**:
   - participants.tsv — age column with values 23–31 years, partial completeness (13/18 subjects)
 - **Notes**: Segmentation-based subject-level trait prediction. Non-overlapping 2-second windows from continuous EEG are used to predict subject age. No event alignment needed; the full continuous recording is segmented. Age is a native participants.tsv column (B3 archetype, raw meta level). Subjects with missing age data will be excluded by the kernel.
@@ -231,14 +231,14 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_sex` | F -> 0; M -> 1 |
+  | `sex` | F -> 0; M -> 1 |
 - **Evidence**:
 
 - **Notes**: Subject-level binary classification using 2-second non-overlapping windows of continuous EEG. Gender is a native participants.tsv column with partial coverage (13/18 subjects: 7 M, 6 F). The kernel does not need to derive any new channels; labels are read directly from the BIDS participants sidecar.
 
 ## Data Quality Notes
 
-- `subject_sex` is only partially complete (13/18 subjects), with 5 subjects missing gender/sex information.
+- `sex` is only partially complete (13/18 subjects), with 5 subjects missing gender/sex information.
 - `device` field is completely missing from dataset metadata, limiting hardware reproducibility.
 - Event counts for `famous_second_early` (1313) and `famous_second_late` (1291) do not sum exactly to `famous_new` (2700), indicating minor data loss or exclusion during preprocessing (similar pattern for other categories).
 - The `boundary` events (90 total, 5 per subject) indicate merged runs from the original acquisition; users should verify no edge artifacts at boundaries.

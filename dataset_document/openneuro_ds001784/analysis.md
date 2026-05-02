@@ -9,7 +9,7 @@ Participants with treatment-resistant depression performed a modified Multi-Sour
 
 ## File Scan Result
 
-> **Kernel SHA256**: `488b4b0485c2f75a4a5565ec7262d1b1e3f90e28befead3622af1ad005dc9bc2`
+> **Kernel SHA256**: `97e1ccfdf964187e12fb09d66ab06a119e6b48de47d328b7186ab0e92bdaac5e`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -25,8 +25,8 @@ Participants with treatment-resistant depression performed a modified Multi-Sour
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

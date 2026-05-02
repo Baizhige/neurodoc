@@ -120,8 +120,8 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -200,7 +200,7 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`CueAOnset`, `CueBOnset`, `Probe_aX_onset`, `Probe_aY_onset`, `Probe_bY_onset`]
 - **Label Route**: `event`
-- **Meta Level**: `super`
+- **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|--------|

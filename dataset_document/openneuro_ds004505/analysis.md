@@ -33,8 +33,8 @@ Participants played real table tennis matches in cooperative (rallying) and comp
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -149,7 +149,7 @@ Participants played real table tennis matches in cooperative (rallying) and comp
 - Very small sample sizes for serve events (`Serve_res_competitive`: 20, `Serve_sub_competitive`: 16) make serve-related tasks marginal for reliable ML.
 - Hardware sync markers (`M  1`, `Master/M  1`) and system sync markers (`System/In sync`, `System/Out of sync`) are present in large numbers and should be excluded from epoching.
 - `boundary` events (403 total) indicate data segmentation and should be filtered before epoching.
-- Discrepancy between metadata fields: `subject_age` and `subject_sex` are missing in BIDS sidecar, but `Age` and `Gender` are complete in participants.tsv with 25 subjects; only 19 files completed suggests partial file availability vs. full participant enrollment.
+- Discrepancy between metadata fields: `age` and `sex` are missing in BIDS sidecar, but `Age` and `Gender` are complete in participants.tsv with 25 subjects; only 19 files completed suggests partial file availability vs. full participant enrollment.
 - Questionnaire constructs (Q1–Q9) are undocumented in available metadata; psychological meaning of response categories is unknown.
 - No super meta required; all tasks use raw event or info-native labels.
 

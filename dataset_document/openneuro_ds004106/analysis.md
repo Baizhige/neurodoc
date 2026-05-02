@@ -37,14 +37,16 @@ Subjects performed a sustained vigilance task simulating advanced security guard
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | Value | Meaning |
+  |----------|-------|---------|
   | `segment` | continuous | Reaction time (seconds) - smoothed with 90s centered mean filter |
   | `segment` | continuous | Accuracy (proportion correct) - smoothed with 90s centered mean filter |
 - **Super Meta Notes**: Derived from verification response events (1321, 1322) and stimulus events (1311, 1312) recorded during the ID card verification task. Kernel step: Compute RT from stimulus-response pairs, derive accuracy per segment, apply 90s centered mean filter to both EEG spectral features and behavioral measures, then use linear regression to predict performance metrics from EEG power spectra.
 - **Evidence**:
   - DOI: 10.1016/j.biopsycho.2015.12.009 — Linear regression with ICA-based EEG spectral features estimates continuous behavioral performance (reaction time, accuracy) in simulated guard duty task, achieving correlation coefficients of 0.548±0.117 for driving and 0.701±0.154 for guard duty tasks.
 - **Kernel Notes**: Extract EEG spectral features via ICA, compute power spectra in sliding windows (3s segment, ~2s step), apply 90s centered mean smoothing to both EEG and behavioral metrics, train linear regression model to predict behavioral metrics. 262-channel BioSemi data requires memory-efficient processing; consider channel reduction or chunked ICA computation.
+
+---
 
 ### Potential Task 1: High vs Low Workload Classification
 - **Task Type**: classification
@@ -53,8 +55,8 @@ Subjects performed a sustained vigilance task simulating advanced security guard
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `2110` | 0 | High workload condition marker |
   | `2120` | 1 | Low workload condition marker |
 - **Evidence**:

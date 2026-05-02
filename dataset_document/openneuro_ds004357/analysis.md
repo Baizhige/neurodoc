@@ -9,7 +9,7 @@ Participants viewed rapid serial visual presentation (RSVP) streams of Gabor-lik
 
 ## File Scan Result
 
-> **Kernel SHA256**: `14f7646bb8ae9bb8b23fdb5dd31c76aa78f8ade2c82e5b066c8c4627fdadbfd5`
+> **Kernel SHA256**: `d16a3123d632cb8d93ddef172f15c80cfe88a1d2c511c3c85da55eaab4d335fc`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -25,8 +25,8 @@ Participants viewed rapid serial visual presentation (RSVP) streams of Gabor-lik
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

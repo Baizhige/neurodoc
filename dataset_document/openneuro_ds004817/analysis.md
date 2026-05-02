@@ -10,7 +10,7 @@ A Rapid Serial Visual Presentation (RSVP) task (Experiment 2) investigating the 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `3a82a14f640b20e68beb91e412e3f7f183abfdb657e0d2a4b15b4857043dc177`
+> **Kernel SHA256**: `31f1c038ca3bb6019481db9ae8e03c1a86233c5ce00f280d531a0c2a5a2ba9d6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -27,8 +27,8 @@ A Rapid Serial Visual Presentation (RSVP) task (Experiment 2) investigating the 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

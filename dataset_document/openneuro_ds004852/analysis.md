@@ -9,7 +9,7 @@ An EEG dataset recorded during a dual-paradigm session combining N-back working 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `073b0786cca4e4167989dc5cd44ecf56e75b8fe41de5f120d497cbdef5972cff`
+> **Kernel SHA256**: `4e5663a6300152ff5b579a913608dee09893dc1bb51618fd230ab79510a7662b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -97,8 +97,8 @@ An EEG dataset recorded during a dual-paradigm session combining N-back working 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

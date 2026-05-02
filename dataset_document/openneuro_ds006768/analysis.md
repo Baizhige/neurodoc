@@ -25,8 +25,8 @@ No MISC labels identified in this dataset.
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | complete | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -64,8 +64,8 @@ No MISC labels identified in this dataset.
 - **Evidence**: DOI: https://doi.org/10.1101/2025.07.10.663816
 - **Kernel Notes**: This is the primary task described in the reference paper—predicting attentional lapses using neural decodability of target vs. distractor as a predictor. Requires deriving behavioral outcome labels (correct vs. lapse) from trial response data. Super-meta level integration of behavioral outcomes with raw event markers needed. Authors are from Macquarie University matching dataset contributors; abstract explicitly mentions MOM task and EEG decoding to predict attentional lapses.
 
-### Normal Task 1: Trial-Level Segmentation for Sustained Tracking Analysis
-- **Task Type**: segmentation
+### Potential Task 1: Trial-Level Segmentation for Sustained Tracking Analysis
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, segment_length = 4.0 s
 - **Label Route**: `event`

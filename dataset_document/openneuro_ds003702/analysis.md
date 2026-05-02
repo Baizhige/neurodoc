@@ -9,7 +9,7 @@ A visual working memory task performed in a virtual reality environment where pa
 
 ## File Scan Result
 
-> **Kernel SHA256**: `30af305b674c30fb3f41993aea08b9a9fffbb55d51e94e5b94a9f5638c611c63`
+> **Kernel SHA256**: `ec9f6ffddc484c9798eb2ceb6292eb232369b34a65850f8afb5295d0cf3df454`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -52,8 +52,8 @@ A visual working memory task performed in a virtual reality environment where pa
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

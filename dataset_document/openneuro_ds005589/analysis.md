@@ -9,7 +9,7 @@ Participants underwent Rapid Serial Visual Presentation (RSVP) at 5 Hz and a low
 
 ## File Scan Result
 
-> **Kernel SHA256**: `3b862d82c5ab1d387cde8c3a7ca69199072c3173f11f49286045281157f4c51c`
+> **Kernel SHA256**: `85c053cd296af0a6976dd9e806f9f05697391b8b912fda51612ca84d54bd97ec`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Participants underwent Rapid Serial Visual Presentation (RSVP) at 5 Hz and a low
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

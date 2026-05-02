@@ -9,7 +9,7 @@ Thirty-two recordings (23 EEG + 9 fNIRS) were collected from subjects performing
 
 ## File Scan Result
 
-> **Kernel SHA256**: `f5f23b6eaff653b5422dd754f5674fe93940d1734cb3bd7df0b240c6b5021314`
+> **Kernel SHA256**: `6012dc877f9a7bdebac72fccadd9c94e6465829f7c0d4dc038d8793528143a33`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -24,8 +24,8 @@ Thirty-two recordings (23 EEG + 9 fNIRS) were collected from subjects performing
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -50,6 +50,7 @@ Thirty-two recordings (23 EEG + 9 fNIRS) were collected from subjects performing
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: length = 5.0 s, overlap = 2.5 s
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: N/A - activity labels must be assigned post-hoc from filename metadata (see notes)
 - **Notes**: No event annotations are present; the kernel only records the recording ID in the description field. To assign activity labels for supervised learning, map recording IDs to physical activities using the dataset README. For artifact detection tasks, all recordings can be treated as motion-contaminated (except rest recordings).
 

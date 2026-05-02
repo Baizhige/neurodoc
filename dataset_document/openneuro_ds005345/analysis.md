@@ -9,7 +9,7 @@ Participants engaged in naturalistic listening to excerpts of "Le Petit Prince" 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `f3e0d978cfe4a7ea00dde0136943c950c3ce25aa1e4e0842777d18365c3d9c21`
+> **Kernel SHA256**: `0747d3c95be74b03e779d1cf58a742205ac4e6908c09466574275636968af160`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -28,8 +28,8 @@ Participants engaged in naturalistic listening to excerpts of "Le Petit Prince" 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -100,7 +100,7 @@ Participants engaged in naturalistic listening to excerpts of "Le Petit Prince" 
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |------------|----------------|
-  | `subject_age` | Continuous values from participants.tsv; range 20.0–28.0 years, mean 24.04 ± 2.28, N=25-26 subjects with complete age data. |
+  | `age` | Continuous values from participants.tsv; range 20.0–28.0 years, mean 24.04 ± 2.28, N=25-26 subjects with complete age data. |
 - **Evidence**:
   - participants.tsv — Complete age data for all subjects (range 20-28 years, mean 24.04, SD 2.28)
   - README — "25 native Mandarin Chinese speakers (14 females, mean age = 24.04 ± 2.28 years)"
@@ -116,7 +116,7 @@ Participants engaged in naturalistic listening to excerpts of "Le Petit Prince" 
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |------------|----------------|
-  | `subject_sex` | F -> 0 (Female); M -> 1 (Male) |
+  | `sex` | F -> 0 (Female); M -> 1 (Male) |
 - **Evidence**:
   - participants.tsv — N=26 subjects with sex labels (F=15, M=11), complete coverage
   - dataset_description.json — "Le Petit Prince (LPP) Multi-talker: Naturalistic 7T fMRI and EEG Dataset"
@@ -132,7 +132,7 @@ Participants engaged in naturalistic listening to excerpts of "Le Petit Prince" 
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |------------|----------------|
-  | `subject_age` | Per-subject continuous target; all segments from a subject share the same age value (20.0–28.0 years). Native participants.tsv column. |
+  | `age` | Per-subject continuous target; all segments from a subject share the same age value (20.0–28.0 years). Native participants.tsv column. |
 - **Evidence**:
 - **Notes**: Archetype C with info-native label. Segmentation-based task with no event dependency — all continuous EEG data is sliced into non-overlapping 6-second segments. Age is drawn directly from participants.tsv (native info field, Meta Level = raw). The 6-second segment length is inferred from SKILL defaults for naturalistic continuous listening data; overlap is set to 0.0 for non-overlapping segments. This task is identical in label structure to a B3 age regression but explicitly framed as segmentation with empty event dependency.
 

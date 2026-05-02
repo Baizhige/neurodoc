@@ -9,7 +9,7 @@ Eighteen subjects (S1-S18) participated in an auditory attention decoding (AAD) 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `aecdd9606e00b1a3e82f8d67ee3e8474de72f5575f371a38b710bd2379abb92c`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Full
 
@@ -28,8 +28,8 @@ Eighteen subjects (S1-S18) participated in an auditory attention decoding (AAD) 
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -55,6 +55,7 @@ Eighteen subjects (S1-S18) participated in an auditory attention decoding (AAD) 
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, use trial duration from annotation, overlap = 0.0 s, target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Annotations are per-trial; trial boundaries from `data.stimu` onset times. If the dataset's `.mat` file is missing `stimu` or `attended` fields, the kernel will produce `unknown` annotations.
 

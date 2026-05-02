@@ -9,7 +9,7 @@ Participants performed an attentional task within a virtual reality environment 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `f8e26ffa93b8443a102db4652c8b3bb0d0593318064cc5c344e4e6cb58e2a6aa`
+> **Kernel SHA256**: `2b4512088472b272b5cf5c40a32061c0d4819fe0b3393a161286fc5a052b5db8`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -27,8 +27,8 @@ Participants performed an attentional task within a virtual reality environment 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | missing | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

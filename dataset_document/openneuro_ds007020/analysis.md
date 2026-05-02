@@ -9,7 +9,7 @@ Resting-state EEG recordings (eyes open) were collected from Parkinson's disease
 
 ## File Scan Result
 
-> **Kernel SHA256**: `af4e64ea8045052b6b5293763aaf05cd8fe102f81b932cd214e59c31769b35f5`
+> **Kernel SHA256**: `2eb51dbfd0bf00ffaeaf96a7ca8df964f7f681752085713eb13bcbac25fdc653`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Resting-state EEG recordings (eyes open) were collected from Parkinson's disease
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

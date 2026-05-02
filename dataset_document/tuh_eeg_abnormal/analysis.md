@@ -25,8 +25,8 @@ The TUH EEG Abnormal Corpus (v3.0.1) is a clinically annotated subset of the TUH
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 

@@ -9,7 +9,7 @@ Longitudinal resting-state EEG recordings collected over four sessions spanning 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `30c2951678cc4852690f010c87ac639e9b54d873561630f622b2853ba049384a`
+> **Kernel SHA256**: `eb67d493b7e4b41c77502f53ddf0a526aded127e8c1bee49194408e030932233`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,19 +23,19 @@ Longitudinal resting-state EEG recordings collected over four sessions spanning 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
 ### Classical Task 1: Resting-State EEG Reliability Analysis
 
-- **Task Type**: reliability_analysis
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4.0 s, overlap = 0.5 s, target_events = null
 - **Label Route**: `misc`
-- **Meta Level**: `super`
+- **Meta Level**: super
 - **Target Definition**:
 
 | Event | y | Meaning |

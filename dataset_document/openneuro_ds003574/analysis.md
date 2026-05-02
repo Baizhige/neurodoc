@@ -285,8 +285,8 @@ Participants played two video games (FACE and MAZE) during a waking session—on
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -298,8 +298,8 @@ Participants played two video games (FACE and MAZE) during a waking session—on
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `face_game` | 0 | Face game block (60s) — rewarded condition |
   | `maze_game` | 1 | Maze game block (60s) — non-rewarded condition |
   | `rest` | 2 | Rest period block (90s) |
@@ -310,22 +310,33 @@ Participants played two video games (FACE and MAZE) during a waking session—on
   - DOI: 10.1038/s41467-021-24357-5 — "Reward biases spontaneous neural reactivation during sleep." Conditional Random Fields classifier decoded brain states during sleep from EEG-fMRI; showed privileged reactivation of reward-associated (face game) patterns during N3 sleep. 5-class classification with labels derived from game paradigm events.
 - **Kernel Notes**: Verify event ID mapping from events.tsv. Raw trigger mapping: `S  1`–`S 13` → face_game (rewarded win), `S 14`–`S 27` → maze_game (non-rewarded lose), `R` → rest period. Apply 4s EEG epochs with 2s overlap for spectral feature extraction. Pre-trained CRF classifier weights (paper: 10.1038/s41467-021-24357-5) required for inference on sleep EEG. Remove MRI gradient artifacts and ballistocardiogram noise before feature extraction. 'eyes' events (7 per file) may indicate eye calibration markers.
 
+---
+
 ### Potential Task 1: Sleep EEG Segmentation for Unsupervised Analysis
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4.0 s, overlap = 2.0 s
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: N/A (null — unsupervised analysis)
+- **Target Definition**:
+  | Event ID | Value | Meaning |
+  |----------|-------|---------|
+  | N/A | N/A | Unsupervised analysis — no target labels. Segmentation produces continuous EEG windows for clustering or pattern discovery without event-aligned labels. |
+
 - **Notes**: Sparse per-file trigger counts (most S-codes appear once per file) make event-triggered epoching impractical for training. Sliding window segmentation (4s windows, 50% overlap) on continuous sleep EEG provides robust feature extraction for clustering or pattern analysis. Suitable for identifying spontaneous replay events without requiring labeled training data.
+
+---
 
 ### Potential Task 2: Sleep Stage Classification (20s Windows)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 20.0 s, overlap = 10.0 s
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `N1` | 0 | Sleep stage N1 |
   | `N2` | 1 | Sleep stage N2 |
   | `N3` | 2 | Sleep stage N3 (slow-wave sleep) |

@@ -9,7 +9,7 @@ A multisensory detection task (MAVIS) in which participants identified auditory 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `4beb8110131aae5992a0343909970197c066b8c37de124c54b632c9c9b5ed898`
+> **Kernel SHA256**: `2db640f44783825dfd2d9147e676f5bab91c8eaefd6050c267719ef7f2d2e3d4`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -55,8 +55,8 @@ A multisensory detection task (MAVIS) in which participants identified auditory 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -135,7 +135,7 @@ A multisensory detection task (MAVIS) in which participants identified auditory 
 - Block-end markers (`11`, `21`, `31`, etc.) show inconsistent counts (25 for most blocks, but 37 for block 11 and 244 for block 6), suggesting possible recording anomalies or protocol variations for certain blocks
 - Response markers (`33` vs `34`) indicate substantial missing-response trials (~28% no-response rate), which may reflect task difficulty or participant engagement issues
 - Device metadata is missing from info fields, limiting hardware-specific reproducibility
-- `subject_age` and `subject_sex` fields are marked complete but duplicate `Age` and `Gender` fields; verify consistency across these redundant columns
+- `age` and `sex` fields are marked complete but duplicate `Age` and `Gender` fields; verify consistency across these redundant columns
 - Block duration for attention blocks (event IDs 66 and 77) is not explicitly documented; the 30s epoch length for the primary task is inferred and requires manual verification against actual stimulus logs
 
 ## Kernel Responsibilities

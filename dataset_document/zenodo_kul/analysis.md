@@ -9,7 +9,7 @@ Fifteen subjects performed a dichotic listening auditory attention decoding (AAD
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `40774e96159040fa49928dac066797e3a6c5a6d3c24d4bf8b52c08f2f83f3f6a`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Full
 
@@ -28,8 +28,8 @@ Fifteen subjects performed a dichotic listening auditory attention decoding (AAD
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -54,6 +54,7 @@ Fifteen subjects performed a dichotic listening auditory attention decoding (AAD
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, use trial duration from annotation, overlap = 0.0 s, target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Case B kernel uses `scipy.io.loadmat(simplify_cells=True)` and a custom `load()` method. Annotation durations match individual trial lengths. Balanced design: 10 trials per class per subject.
 

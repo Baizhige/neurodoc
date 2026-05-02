@@ -49,8 +49,8 @@ Twenty-four meditators (12 expert with ≥10 years daily practice, 12 novices) e
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | partial (38/40) | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | partial (38/40) | N/A |
+| `sex` | complete | N/A |
 | `device` | complete | N/A |
 | `amplifier` | complete | e.g. BIOSEMI ActiveTwo |
 | `cap` | complete | e.g. BioSemi 64-channel cap |

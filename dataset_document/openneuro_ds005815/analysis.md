@@ -9,7 +9,7 @@ Participants engaged in resting-state (eyes open/closed) and task phases involvi
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `41a3e353a99393b29ea4bc2f0b429b3ad50c888fc2b50a54ba0fa8e734ac709e`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Full
 
@@ -38,8 +38,8 @@ Participants engaged in resting-state (eyes open/closed) and task phases involvi
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -69,18 +69,20 @@ Participants engaged in resting-state (eyes open/closed) and task phases involvi
 
 ### Classical Task 2: Publisher-defined BIDS task: Rest1
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = see Target Definition | segment_length = Needs verification, overlap = Needs verification
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds005815 DOI: 10.18112/openneuro.ds005815.v2.0.1
 
 
 ### Classical Task 3: Publisher-defined BIDS task: Rest2
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = see Target Definition | segment_length = Needs verification, overlap = Needs verification
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds005815 DOI: 10.18112/openneuro.ds005815.v2.0.1
 
@@ -90,6 +92,7 @@ Participants engaged in resting-state (eyes open/closed) and task phases involvi
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.5 s, target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Numerical codes require decoding from events.tsv. Eyes-open/closed markers (`EyeOpen`, `Eyeclosed`) can be used for resting-state analysis.
 

@@ -9,7 +9,7 @@ High-density resting-state EEG recordings were collected from three groups: ampu
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `c1e75d21f608c2cf977c6b52cbcc5e97ce31176023bcdd92921792ce08f5ebc8`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Full
 
@@ -27,8 +27,8 @@ _No event markers detected (`no_events`). This dataset contains continuous resti
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -71,6 +71,7 @@ _No event markers detected (`no_events`). This dataset contains continuous resti
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5 s
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: N/A (no event markers; group labels from participants.tsv)
 - **Notes**: No trial-level events. Group labels (PLP amputee / non-PLP amputee / healthy control) must be derived from participants.tsv metadata. Very high sampling rate (2400 Hz); downsample before analysis.
 

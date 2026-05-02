@@ -10,7 +10,7 @@ Participants viewed naturalistic multimedia video clips (film excerpts, document
 
 ## File Scan Result
 
-> **Kernel SHA256**: `c667176ee37367028edf39272aa7b49de7d660958c021021a8a618188ae5ce22`
+> **Kernel SHA256**: `eec36a65d1a86eca2112d6f36895644c79ef6b81adca20372a74b8db50502240`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -45,8 +45,8 @@ Participants viewed naturalistic multimedia video clips (film excerpts, document
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -58,9 +58,9 @@ Participants viewed naturalistic multimedia video clips (film excerpts, document
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
-  | stimulus | video_id | Video clip onset (432 events) |
+  | Event ID | y | Meaning |
+  |----------|---|---|
+  | stimulus | Needs verification | Video clip onset (432 events); original target was video_id but event structure does not contain video_id labels - labels may need to be derived from subsequent continuous ratings or external mapping |
 - **Evidence**: N/A (plausible from paradigm alone)
 - **Kernel Notes**: Alternative epoching approach using stimulus onset (`stimulus`, 432 events) instead of subjective click markers. Labels derived from subsequent continuous ratings. Captures initial stimulus-driven emotional response vs. self-initiated moment marking.
 

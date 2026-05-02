@@ -9,7 +9,7 @@ Participants performed the Probabilistic Selection Task (PST) across two session
 
 ## File Scan Result
 
-> **Kernel SHA256**: `14f3c5fd1ced57e9a77ddf96c36a0cfedce46e05ae91e4a9a23528ed44f8ff6c`
+> **Kernel SHA256**: `e132b06501d19b17d88bec7d70f1055d02287348aa94e800953cf44ce7014813`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -78,8 +78,8 @@ Participants performed the Probabilistic Selection Task (PST) across two session
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -91,8 +91,8 @@ Participants performed the Probabilistic Selection Task (PST) across two session
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `correct` | 0 | Correct response (reward) |
   | `incorrect` | 1 | Incorrect response (punishment) |
 - **Super Meta Notes**: (NONE - meta_level is raw)
@@ -101,6 +101,8 @@ Participants performed the Probabilistic Selection Task (PST) across two session
   - DOI: 10.1038/ncomms6394 (duplicate from multiple source files)
 - **Kernel Notes**: Epoch around `FB` (feedback onset) to capture the neural response to outcome, including feedback-related negativity (FRN) and P300. Labels are derived from `correct` and `incorrect` events that immediately follow each FB event. Baseline correction: -300 to -200 ms prior to feedback onset per the referenced paper. **WARNING**: Severe class imbalance detected—correct (2098) vs incorrect (131) events in ~16:1 ratio. Consider class weighting, oversampling, or balanced subset selection during training. STATUS and admin markers should be excluded from analysis.
 
+---
+
 ### Potential Task 1: Binary Outcome Classification (short window variant)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -108,8 +110,8 @@ Participants performed the Probabilistic Selection Task (PST) across two session
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `correct` | 0 | Correct response (reward) |
   | `incorrect` | 1 | Incorrect response (punishment) |
 - **Notes**: Shortened feedback-locked window focusing on early outcome processing phase (FRN/P300 components) while reducing potential contamination from adjacent events. Labels derived from `correct`/`incorrect` events following FB. This variation offers a more computationally efficient approach with potentially cleaner ERP components at the cost of missing later outcome processing phases.

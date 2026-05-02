@@ -9,7 +9,7 @@ A neuroforecasting task that utilizes EEG activity during decision-making or val
 
 ## File Scan Result
 
-> **Kernel SHA256**: `789185d5ce1e8a49f721cdf2816d15beef27120732fcfb0c53ce9166173645c6`
+> **Kernel SHA256**: `9b711dd0dd5491ff5675717f64b2f7a06415e7b3a7298f1b2be3a21f67028b01`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ A neuroforecasting task that utilizes EEG activity during decision-making or val
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

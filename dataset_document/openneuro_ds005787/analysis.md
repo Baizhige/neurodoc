@@ -9,7 +9,7 @@ The NOD-EEG dataset contains 64-channel EEG recordings from a stimulus-response 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `62fd264d1aa86ab37d154435cbc658ea3ee3b878224b0a992c6fb84e9fca31a4`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Full
 
@@ -27,8 +27,8 @@ The NOD-EEG dataset contains 64-channel EEG recordings from a stimulus-response 
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -38,6 +38,7 @@ The NOD-EEG dataset contains 64-channel EEG recordings from a stimulus-response 
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`stim_on`, `resp`, `begin`, `end`]
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---------|

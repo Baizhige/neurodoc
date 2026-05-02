@@ -9,7 +9,7 @@ The PEARL-Neuro database comprises EEG recordings from 192 middle-aged participa
 
 ## File Scan Result
 
-> **Kernel SHA256**: `ba07d441d2fd6b98482c167468aa53b755b27a14dca38795653deb08fd2ab380`
+> **Kernel SHA256**: `cb3ea08c0ec3f44324c639f7dc78714e5fca88453dc60d76c468b6ab7c62b0dc`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -32,8 +32,8 @@ The PEARL-Neuro database comprises EEG recordings from 192 middle-aged participa
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

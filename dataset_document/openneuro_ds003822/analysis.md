@@ -10,7 +10,7 @@ A reinforcement learning task using probabilistic affective feedback to investig
 
 ## File Scan Result
 
-> **Kernel SHA256**: `da8530e877f8eb992d6189633b68c0e310a545bf76e90a90d3d641d0b9713d53`
+> **Kernel SHA256**: `e9fdf31cb54851029027553635c141a7cf3f9b3d65d0fd8714f50dd9726c9da0`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -46,8 +46,8 @@ A reinforcement learning task using probabilistic affective feedback to investig
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -59,13 +59,15 @@ A reinforcement learning task using probabilistic affective feedback to investig
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|—---|
-  | `FB type: liked win::*`, `FB type: point positive::*` | 1 | Rewarding/positive feedback (win conditions) |
-  | `FB type: disliked loss::*`, `FB type: point negative::*` | 0 | Punishing/negative feedback (loss conditions) |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `FB type: liked win::reward_valence=1::feedback_modality=1`, `FB type: point positive::reward_valence=1::feedback_modality=0` | 1 | Rewarding/positive feedback (win conditions) |
+  | `FB type: disliked loss::reward_valence=0::feedback_modality=1`, `FB type: point negative::reward_valence=0::feedback_modality=0` | 0 | Punishing/negative feedback (loss conditions) |
 - **Evidence**:
   - DOI: 10.3758/s13415-021-00950-5 — Epochs data from -1000 to 3000 ms around outcome cue onset to examine Reward Positivity (RewP) amplitudes for liked vs disliked feedback images; classifies feedback valence (reward vs punishment) based on RewP ERP at Cz (200-350 ms)
 - **Kernel Notes**: Detailed event IDs encode `reward_valence` parameter (0=loss, 1=win). Apply baseline correction -200 to 0 ms. Quantify RewP at 200-350 ms window at Cz for feature extraction. Boundary markers (n=25) indicate discontinuous recordings requiring concatenation verification.
+
+---
 
 ### Classical Task 2: Feedback Modality Classification
 - **Task Type**: classification
@@ -74,13 +76,15 @@ A reinforcement learning task using probabilistic affective feedback to investig
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|—---|
-  | `FB type: *::feedback_modality=1` | 1 | Picture feedback (puppy, chair, emotional images) |
-  | `FB type: *::feedback_modality=0` | 0 | Point feedback (green +1, yellow bar, red -1) |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `FB type: liked win::reward_valence=1::feedback_modality=1`, `FB type: disliked loss::reward_valence=0::feedback_modality=1` | 1 | Picture feedback (puppy, chair, emotional images) |
+  | `FB type: point positive::reward_valence=1::feedback_modality=0`, `FB type: point negative::reward_valence=0::feedback_modality=0` | 0 | Point feedback (green +1, yellow bar, red -1) |
 - **Evidence**:
   - DOI: 10.3758/s13415-021-00950-5 — Examines whether hedonic appraisal of picture vs point rewards modulates reward-related brain responses
 - **Kernel Notes**: Detailed event IDs encode `feedback_modality` parameter (1=picture, 0=point). Apply baseline correction -200 to 0 ms. Verify event counts per subject: picture conditions show ~5000 total events (2500 liked + 2500 disliked); point conditions show ~1815 total events (1230 positive + 585 negative).
+
+---
 
 ### Potential Task 1: Stimulus/Cue Classification (S1-S4)
 - **Task Type**: classification
@@ -89,13 +93,15 @@ A reinforcement learning task using probabilistic affective feedback to investig
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|—---|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `S  1` | 1 | Cue stimulus type 1 |
   | `S  2` | 2 | Cue stimulus type 2 |
   | `S  3` | 3 | Cue stimulus type 3 |
   | `S  4` | 4 | Cue stimulus type 4 |
 - **Kernel Notes**: S1-S4 markers each appear exactly 1250 times (balanced design). Plausible from paradigm: binary choice task requires 4 distinct cue stimuli (2 categories × 2 valence conditions). Verify cue meanings via experimental design documentation. Apply baseline correction -200 to 0 ms.
+
+---
 
 ### Potential Task 2: Feedback Onset Detection
 - **Task Type**: classification
@@ -104,13 +110,15 @@ A reinforcement learning task using probabilistic affective feedback to investig
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|—---|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `S 51` | 1 | Feedback onset marker 1 |
   | `S 52` | 2 | Feedback onset marker 2 |
   | `S 53` | 3 | Feedback onset marker 3 |
   | `S 54` | 4 | Feedback onset marker 4 |
 - **Kernel Notes**: S51-S54 show varying counts (1350, 1150, 1366, 1134) with combined total ~5000, matching expected picture feedback trial count. Likely encode feedback stimulus onset with 4 distinct feedback types. Verify mapping to picture feedback categories (liked win, disliked loss). Apply baseline correction -200 to 0 ms.
+
+---
 
 ### Potential Task 3: Response-Locked Processing
 - **Task Type**: classification
@@ -119,8 +127,8 @@ A reinforcement learning task using probabilistic affective feedback to investig
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|—---|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `S200` | 0 | Response marker type 1 |
   | `S201` | 1 | Response marker type 2 |
 - **Kernel Notes**: S200 (n=1500) and S201 (n=3500) show unequal counts. S200 likely marks response events (left/right button, accurate/inaccurate); S201 may mark trial completion or inter-trial interval. Verify via paradigm description (25 left + 25 right + 25 accurate + 25 inaccurate = 100 response events per subject, 2500 total across 25 subjects). Plausible from paradigm: response-locked ERPs examining feedback processing aligned to participant decisions.

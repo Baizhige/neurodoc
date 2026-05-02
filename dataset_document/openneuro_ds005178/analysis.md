@@ -1,7 +1,7 @@
 # Ear-EEG Sleep Monitoring 2023 (EESM23)
 
-**Dataset**: `openneuro_ds005178` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005178
-**Category**: Biological State | **Subjects**: 10 | **Files (Completed)**: 159 | **Channels**: 5 | **Sampling Rate**: 250 Hz | **Manual Review**:
+**Dataset**: `openneuro_ds005178` | **Year**: 2020-2022/2023/2024 | **URL**: https://openneuro.org/datasets/ds005178
+**Category**: Biological State | **Subjects**: 10 | **Files (Completed)**: 159 | **Channels**: 4/13 | **Sampling Rate**: 250 Hz | **Manual Review**: Yikai Dong
 
 ## Paradigm
 
@@ -17,89 +17,62 @@ Naturalistic nightly sleep monitoring using ear-EEG (in-ear electrodes) and poly
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |---|---|---|---|---|
-| `Artefact` | 1032 | event | raw |  |
-| `Sleep stage N1` | 2662 | event | raw |  |
-| `Sleep stage N2` | 15122 | event | raw |  |
-| `Sleep stage N3` | 5161 | event | raw |  |
-| `Sleep stage R` | 6259 | event | raw |  |
-| `Sleep stage W` | 2879 | event | raw |  |
-| `error -10` | 12535 | event | raw |  |
-| `error -100` | 118 | event | raw |  |
-| `event_2` | 72 | event | raw |  |
-| `oLED` | 6 | event | raw |  |
-| `trigger` | 243 | event | raw |  |
+| `Artefact` | 1032 | admin | raw | Manual scoring artefact / unusable signal epoch |
+| `Sleep stage N1` | 2662 | event | raw | N1 sleep epoch |
+| `Sleep stage N2` | 15122 | event | raw | N2 sleep epoch |
+| `Sleep stage N3` | 5161 | event | raw | N3 sleep epoch |
+| `Sleep stage R` | 6259 | event | raw | REM sleep epoch |
+| `Sleep stage W` | 2879 | event | raw | Wake epoch |
+| `error -10` | 12535 | admin | raw |  |
+| `error -100` | 118 | admin | raw |  |
+| `event_2` | 72 | admin | raw |  |
+| `oLED` | 6 | admin | raw |  |
+| `trigger` | 243 | admin | raw |  |
+
 
 ### Info
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `age` | missing |  |
-| `amplifier` | missing |  |
-| `cap` | missing |  |
-| `handedness` | missing |  |
-| `sex` | missing |  |
+| `age` | missing | N/A |
+| `amplifier` | missing | N/A |
+| `cap` | missing | N/A |
+| `handedness` | missing | N/A |
+| `sex` | missing | N/A |
+
 
 ## Tasks
 
-### Potential Task 1: Trigger Boundary Detection
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: `segment_length = 30 s *, overlap = 0.5 *, target_events = []`
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event ID | y | Meaning |
-  |----------|---|---------|
-  | `trigger` | 1 | Segment contains trigger boundary marker (video-to-sleep sequence transition) |
-  | (no trigger) | 0 | Non-boundary segment (no trigger within window) |
-- **Evidence**:
-  - README — "After the video sequence, the subject sent triggers to distinguish between the two sequences."
-  - sub-001_ses-001_task-sleep_acq-PSGtrigger_events.tsv — Four trigger events with zero duration confirming instantaneous boundary markers at onset times 9664s, 69123s, 172979s, 6079358s
-  - Event ID inventory — 175 `trigger` events confirmed across dataset
-- **Notes**: Segmentation-based approach with 30s windows and 50% overlap. A segment is labeled y=1 if any `trigger` event falls within its [start, end) interval; otherwise y=0. This creates a 2-class boundary detection task from continuous sleep recordings where triggers mark transitions between video and sleep sequences. The `trigger` event is confirmed as a manual subject-initiated boundary marker, not a hardware error (distinct from `error -10`, `error -100`, `oLED`).
-
-### Potential Task 2: ear-EEG error anomaly detection
+### Classical Task 1: Five-class sleep stage classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s *, tmax = 10 s *, overlap = 0.0, target_events = [`error -10`, `error -100`, `oLED`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`Sleep stage N1`, `Sleep stage N2`, `Sleep stage N3`, `Sleep stage R`, `Sleep stage W`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
-  |----------|---|---------|
-  | `error -10` | 0 | Buffer overflow error in ear-EEG ASICs |
-  | `error -100` | 0 | Hard reset/power cycle error in ear-EEG ASICs |
-  | `oLED` | 0 | Connection loss to ASIC due to loose cable |
-  | (non-error baseline) | 1 | Normal epoch without hardware error |
+  |---|---|---|
+  | `Sleep stage W` | 0 | wake epoch |
+  | `Sleep stage N1` | 1 | N1 sleep epoch |
+  | `Sleep stage N2` | 2 | N2 sleep epoch |
+  | `Sleep stage N3` | 3 | N3 sleep epoch |
+  | `Sleep stage R` | 4 | REM sleep epoch |
 - **Evidence**:
-  - [task-sleep_acq-earEEGRecordingFailures_events.json] — Explicitly defines Error -10 (buffer overflow), Error -100 (hard reset), and oLED (connection loss) as hardware failure conditions in ear-EEG ASICs with detailed descriptions of data gaps and invalidation rules
-- **Notes**: All three error events (`error -10`, `error -100`, `oLED`) are merged into y=0 (anomaly/error class) as they all represent hardware failures requiring data quality flagging. The complementary y=1 class represents normal epochs without any error event. Epoch parameters are inferred from variable-duration error events with 10s as a practical default for anomaly detection windows. This is a Potential Task as no published reference explicitly proposes this anomaly detection formulation, though the dataset's own sidecar documentation thoroughly characterizes these error conditions.
-
-### Potential Task 3: Buffer Overflow vs Hard Reset Error Classification
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s *, tmax = 5 s *, overlap = 0.0 *, target_events = [`error -10`, `error -100`]
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event ID | y | Meaning |
-  |----------|---|---------|
-  | `error -10` | 0 | Buffer overflow error in ear-EEG ASICs (SD card write interrupt, data gap with 50 inserted samples) |
-  | `error -100` | 1 | Hard reset/power cycle error in ear-EEG ASICs (power off/on, data loss with timestamp-based gap estimation) |
-- **Evidence**:
-  - [task-sleep_acq-earEEGRecordingFailures_events.json] — Maps `Error -10` to buffer overflow from SD card write interrupts/synchronization issues between ASICs, and `Error -100` to hard reset/power cycle with data loss estimation via nearest timestamps
-- **Notes**: This is a device diagnostics task distinguishing two distinct hardware failure modes in ear-EEG recordings. The severe class imbalance (6020 vs 62 events) reflects realistic error frequencies but should be noted for modeling. The 5-second window captures immediate error context while minimizing contamination from normal sleep data. Both error types produce data gaps but with different mechanisms and recovery procedures per the events.json sidecar.
+  - OpenNeuro ds005178 `task-sleep_acq-scoring_events.json` defines manual sleep scoring levels Wake, REM, N1, N2, N3, and Artefact.
+  - OpenNeuro ds005178 README describes at-home sleep recordings from 10 healthy participants with PSG plus ear-EEG for the first two recordings.
+  - 10.1038/s41597-025-04579-8 describes EESM23 as an OpenNeuro ear-EEG sleep monitoring dataset with manual scoring stored as event files.
+- **Notes**: Use only manually scored sleep-stage annotations. Exclude `Artefact`, trigger markers, and ear-EEG recording-failure markers from the target classes. Manual scoring files are available for the PSG sleep recordings, not for every ear-EEG-only session.
 
 ## Data Quality Notes
 
-- Substantial hardware error events present: 6,020 buffer overflow errors (`error -10`), 62 hard reset errors (`error -100`), and 1 connection loss event (`oLED`), totaling 6,083 error events across the dataset.
-- Severe class imbalance in error types (6020 vs 62 vs 1) may affect modeling for error classification tasks.
-- General `event` markers (12,424 occurrences) lack detailed semantic documentation in available metadata; meaning is unspecified beyond "general event marker."
-- Missing demographic metadata: subject age, sex, and recording device information are not available in scanned files.
-- The `event_2` secondary event marker (72 occurrences) lacks explicit documentation distinguishing it from the primary `event` marker.
-- Ear-EEG recordings in home environments are susceptible to motion artifacts, cable looseness, and ASIC buffer issues inherent to the miniaturized hardware design.
+- Manual sleep scoring is available through `acq-scoring_events.tsv` files for the PSG sleep recordings; later ear-EEG-only sessions do not all have manual sleep-stage labels.
+- `Artefact` is a manual scoring label for unusable signal epochs and should be excluded from the five-class sleep-stage target.
+- `trigger` and `event_2` are boundary/marker events, not sleep-stage labels; `event_2` lacks sufficient public semantic documentation for task use.
+- `error -10`, `error -100`, and `oLED` are ear-EEG recording-failure markers documented in `task-sleep_acq-earEEGRecordingFailures_events.json`.
+- The public BIDS files do not include `participants.tsv`; subject age, sex, and handedness are unavailable.
+- Channel configuration varies by acquisition: ear-EEG files have 4 EEG channels plus trigger, while PSG files have 13 physiological channels plus trigger.
 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: completed

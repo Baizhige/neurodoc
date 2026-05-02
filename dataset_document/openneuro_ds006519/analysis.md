@@ -9,7 +9,7 @@ Patients undergoing presurgical evaluation for drug-resistant epilepsy received 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `ef4db72c250192ddcac3bf81f87a71ba23d22ca47154bbdf66d42939b8d55087`
+> **Kernel SHA256**: `25abf2f19ab92d6567fd125fba64c76325919fc68f9e688a8b671a38073e6c86`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -24,13 +24,13 @@ Patients undergoing presurgical evaluation for drug-resistant epilepsy received 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
-### Normal Task 1: Pre- vs Post-Stimulation Classification
+### Potential Task 1: Pre- vs Post-Stimulation Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, overlap = null, target_events = ["prestim", "poststim"]
@@ -64,7 +64,7 @@ Patients undergoing presurgical evaluation for drug-resistant epilepsy received 
 
 ### Potential Task 2: Publisher-Defined BIDS Task (Dcs)
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, overlap = Needs verification, target_events = [Needs verification] | segment_length = Needs verification, overlap = Needs verification
 - **Label Route**: `event`
 - **Meta Level**: raw

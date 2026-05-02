@@ -9,7 +9,7 @@ A 5-minute eyes-open resting-state EEG recording comparing spontaneous brain act
 
 ## File Scan Result
 
-> **Kernel SHA256**: `5eecba9d39f0f731fe85fa7b3831e1dd4d05902987b87e3c939b5c0368eceaa6`
+> **Kernel SHA256**: `61f0ff589661309088077698ce83edde4b9aa16862223d39b8e0e2a9e69141cc`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ A 5-minute eyes-open resting-state EEG recording comparing spontaneous brain act
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

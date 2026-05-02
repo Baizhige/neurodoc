@@ -9,7 +9,7 @@ Participants performed a semantic classification task (alive vs. not alive) and 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `32437208c5e894b08b9283ef42d5bc2a191cdcf0e9cbd74da34a078e22c4962d`
+> **Kernel SHA256**: `82b036c8af2f9d276a658f50204a71bf906692c529fc7de012ca9a6c19355acc`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -37,8 +37,8 @@ Participants performed a semantic classification task (alive vs. not alive) and 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -50,8 +50,8 @@ Participants performed a semantic classification task (alive vs. not alive) and 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `E 1` | 0 | Animals (living) |
   | `E 2` | 1 | Plants (living) |
   | `E 3` | 2 | Still natural objects |
@@ -65,15 +65,17 @@ Participants performed a semantic classification task (alive vs. not alive) and 
   - DOI: 10.31234/osf.io/3x2qh — Preprint of the NeuroImage 2022 study with explicit OpenNeuro ds003885 reference; MVPA with LDA classifiers for 6-category object recognition.
 - **Kernel Notes**: Map raw event IDs E 1, E 2, E 3, E 5, E 8, E 9 to six semantic categories based on the experimental design. The dataset contains RSVP image presentations at ~3 Hz; epochs are extracted around each stimulus onset. Note: E 8 and E 9 have 3× the event count of other conditions (115,200 vs 38,400 total), suggesting different RSVP stream lengths or presentation rates across conditions. Class imbalance should be addressed during classifier training. E 4 (~960 events) appears to be block boundaries and should be excluded from analysis. Label y=0-5 corresponds to the six object categories.
 
-### Normal Task 1: Living vs. Non-living Object Discrimination
+---
+
+### Potential Task 1: Living vs. Non-living Object Discrimination
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.3 s, tmax = 1.0 s, target_events = [`E 1`, `E 2`, `E 3`, `E 5`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `E 1` | 0 | Living (animals) |
   | `E 2` | 0 | Living (plants) |
   | `E 3` | 1 | Non-living (still natural) |
@@ -82,6 +84,8 @@ Participants performed a semantic classification task (alive vs. not alive) and 
   - DOI: 10.1016/j.neuroimage.2022.119517 — The primary study investigates aliveness as an organizational principle in object representations; binary living vs. non-living discrimination is a reduced version of the main 6-class analysis.
 - **Kernel Notes**: Combine E 1 and E 2 as living category (y=0) and E 3 and E 5 as non-living category (y=1). Excludes moving objects (E 8, E 9) to isolate the aliveness dimension independent of movement capacity. Useful for assessing neural sensitivity to animacy cues in static stimuli.
 
+---
+
 ### Potential Task 1: Movement Capacity Discrimination
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -89,8 +93,8 @@ Participants performed a semantic classification task (alive vs. not alive) and 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `E 3` | 0 | Still (natural objects) |
   | `E 5` | 0 | Still (artificial objects) |
   | `E 8` | 1 | Moving (natural objects) |
@@ -98,15 +102,17 @@ Participants performed a semantic classification task (alive vs. not alive) and 
 - **Evidence**: None (plausible from paradigm alone)
 - **Kernel Notes**: Combine E 3 and E 5 as still objects (y=0) and E 8 and E 9 as moving objects (y=1). Excludes living categories (E 1, E 2) to isolate the movement dimension independent of animacy. This binary classification directly tests whether neural responses encode movement capacity as a fundamental object property.
 
+---
+
 ### Potential Task 2: Representational Similarity Analysis
-- **Task Type**: rsa
+- **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.3 s, tmax = 1.0 s, target_events = [`E 1`, `E 2`, `E 3`, `E 5`, `E 8`, `E 9`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
+  | Event ID | Value | Meaning |
+  |----------|-------|---------|
   | `E 1` | 0 | Animals (living) |
   | `E 2` | 1 | Plants (living) |
   | `E 3` | 2 | Still natural objects |

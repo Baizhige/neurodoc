@@ -9,7 +9,7 @@ A phoneme discrimination task where participants listened to speech sounds—inc
 
 ## File Scan Result
 
-> **Kernel SHA256**: `592a716bd95ad4d3b848e85417b611d884096b21cb66039ef4eed4286bea4c02`
+> **Kernel SHA256**: `47c3f681b0582d6ebfffde103e500959e4e49dc6560e4e9dd72900c51ad9ef39`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -31,8 +31,8 @@ A phoneme discrimination task where participants listened to speech sounds—inc
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

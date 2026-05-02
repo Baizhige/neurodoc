@@ -9,7 +9,7 @@ Participants viewed a large-scale set of 22,248 images spanning 1,854 object con
 
 ## File Scan Result
 
-> **Kernel SHA256**: `0b193703292dadd80c05026f52914244f4031b303db0da8eba87cda632245a6e`
+> **Kernel SHA256**: `ffc735cd62cf3fc66e8cbda4eab9b77a2176738abab43fbddb9df54026b982b3`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -32,8 +32,8 @@ Participants viewed a large-scale set of 22,248 images spanning 1,854 object con
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -45,14 +45,16 @@ Participants viewed a large-scale set of 22,248 images spanning 1,854 object con
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `E 1` | 0–1853 | One of 1,854 object concepts from THINGS stimulus set |
 - **Super Meta Notes**: Labels for 1,854 object concepts must be derived from THINGS stimulus design files (external to raw events). Raw E 1 markers provide only timing; concept identity requires super meta lookup by trial index.
 - **Evidence**:
   - DOI: 10.1038/s41597-021-01102-7 — "linear discriminant classifiers to decode between 1,854 object concepts and 200 validation images presented in RSVP streams at 10 Hz"; epochs from -100 to 1000 ms relative to stimulus onset (E1 triggers)
   - DOI: 10.1038/s41597-021-01102-7 — "22,248 images spanning 1,854 object concepts" across 50 subjects
 - **Kernel Notes**: Use only E 1 for epoch extraction (E 2 is redundant with identical count ~22,248 per subject). The 1,854 concept labels require super meta derivation from THINGS stimulus design files linked by trial order. Consider stratified subsampling across concepts due to high epoch count (~1.2M E 1 events per subject). Sub-06 has partial data (~12,360 events).
+
+---
 
 ### Potential Task 1: RSVP Block Boundary Detection
 - **Task Type**: classification
@@ -61,14 +63,16 @@ Participants viewed a large-scale set of 22,248 images spanning 1,854 object con
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `E 3` | 1 | Block/sequence boundary marker |
 - **Super Meta Notes**: N/A
 - **Evidence**:
   - DOI: 10.1038/s41597-021-01102-7 — describes RSVP streams with block structure; E 3 count (~84 per subject) suggests block-level organization
   - Partial Evidence: Epoch alignment recommendations specify E 3 marks block/sequence boundaries with longer epoch window (-500ms to 2000ms)
 - **Kernel Notes**: E 3 occurs ~84 times per subject—sparse but useful for modeling sustained attention or block-level effects. Longer epoch window (tmin=-0.5, tmax=2.0) captures pre/post block transition dynamics. For binary classification (block vs. non-block), use E 3 as positive class and subsampled E 1 as negative class.
+
+---
 
 ### Potential Task 2: Event Marker Reliability Check
 - **Task Type**: classification
@@ -77,8 +81,8 @@ Participants viewed a large-scale set of 22,248 images spanning 1,854 object con
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `E 1` | 0 | Primary stimulus onset (RSVP image) |
   | `E 2` | 1 | Secondary condition marker |
 - **Super Meta Notes**: N/A
@@ -86,15 +90,17 @@ Participants viewed a large-scale set of 22,248 images spanning 1,854 object con
   - Plausible from paradigm: E 1 and E 2 have identical counts (~22,248 each per subject), suggesting E 2 may be redundant or encode condition flags not documented in raw events
 - **Kernel Notes**: E 1 and E 2 are redundant markers for the same stimulus stream (10 Hz RSVP). This task serves as a data quality check—near-perfect classification would confirm redundancy, while poor classification may reveal timing offsets. Useful for validating preprocessing pipeline.
 
-### Normal Task 1: Stimulus Onset Detection
+---
+
+### Potential Task 1: Stimulus Onset Detection
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, target_events = [`E 1`, `boundary`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `E 1` | 1 | Valid RSVP stimulus onset |
   | `boundary` | 0 | Data boundary artifact |
 - **Super Meta Notes**: N/A

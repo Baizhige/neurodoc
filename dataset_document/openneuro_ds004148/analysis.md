@@ -9,7 +9,7 @@ A test-retest reliability study recording EEG during five cognitive/resting cond
 
 ## File Scan Result
 
-> **Kernel SHA256**: `dcafdcd15ba238c47ca2ab5180bba52f331198a9be7d52d1c07b24a878f15523`
+> **Kernel SHA256**: `0a06761427686a02b9e9530ac55b9847d7dcb33497b6ab65b0c1a0ff2749389a`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -36,8 +36,8 @@ A test-retest reliability study recording EEG during five cognitive/resting cond
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -49,8 +49,8 @@ A test-retest reliability study recording EEG during five cognitive/resting cond
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `S 33` | 0 | Eyes-open resting state |
   | `S 44` | 1 | Eyes-closed resting state |
   | `S 55` | 2 | Music listening |
@@ -60,6 +60,8 @@ A test-retest reliability study recording EEG during five cognitive/resting cond
   - DOI: 10.1038/s41597-022-01607-9 — Paper presents the openneuro_ds004148 dataset and describes decoding five EEG mental states (eyes-open, eyes-closed, memory, music, subtraction) using 5-min state blocks segmented into 4-s epochs with Welch method.
 - **Kernel Notes**: Segment continuous 5-min recordings into 4-s non-overlapping windows; extract spectral features (power spectrum, functional connectivity, microstates); train classifier to predict one of five mental states.
 
+---
+
 ### Classical Task 2: Mental Arithmetic vs. Other States Binary Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
@@ -67,8 +69,8 @@ A test-retest reliability study recording EEG during five cognitive/resting cond
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `S 33` | 0 | Eyes-open resting state |
   | `S 44` | 0 | Eyes-closed resting state |
   | `S 55` | 0 | Music listening |
@@ -78,6 +80,8 @@ A test-retest reliability study recording EEG during five cognitive/resting cond
   - DOI: 10.1038/s41597-022-01607-9 — Same dataset paper explicitly identifies mental arithmetic (subtraction) as a distinct cognitive state for decoding analysis.
 - **Kernel Notes**: Focus binary classification on isolating mental arithmetic (S 77) from all other four states (resting, music, memory). Segment recordings into 4-s epochs; extract spectral features; discriminate arithmetic vs. non-arithmetic mental states.
 
+---
+
 ### Potential Task 1: Fine-Grained Temporal Cognitive State Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
@@ -85,8 +89,8 @@ A test-retest reliability study recording EEG during five cognitive/resting cond
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `S 33` | 0 | Eyes-open resting state |
   | `S 44` | 1 | Eyes-closed resting state |
   | `S 55` | 2 | Music listening |
@@ -95,15 +99,17 @@ A test-retest reliability study recording EEG during five cognitive/resting cond
 - **Evidence**: Plausible from paradigm design. Alternative overlapping window approach for temporal analysis within continuous 5-min blocks. Excludes Sync Off events (~150/file admin markers).
 - **Kernel Notes**: Use 2-s sliding windows with 50% overlap to capture transient dynamics within block; aggregate per condition; train classifier.
 
-### Normal Task 1: Resting-State Classification (Eyes-Open vs. Eyes-Closed)
+---
+
+### Potential Task 1: Resting-State Classification (Eyes-Open vs. Eyes-Closed)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s, overlap = 0.0
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `S 33` | 0 | Eyes-open resting state |
   | `S 44` | 1 | Eyes-closed resting state |
 - **Evidence**: Paradigm provides EC/EO as standard rest conditions; supported by the dataset paper (DOI: 10.1038/s41597-022-01607-9) but not specifically highlighted for binary rest classification.

@@ -9,7 +9,7 @@ This dataset contains EEG recordings from 9 military personnel performing a P300
 
 ## File Scan Result
 
-> **Kernel SHA256**: `5db0f107b2be46903d445341f63b9882e524d03e7b43aa51db4839b18e728183`
+> **Kernel SHA256**: `f830d7888a9c3665a434e7b7260082b346a6ea9fae55de4413c9ee50d0b465b9`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -62,8 +62,8 @@ This dataset contains EEG recordings from 9 military personnel performing a P300
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -128,7 +128,7 @@ This dataset contains EEG recordings from 9 military personnel performing a P300
 
 ## Data Quality Notes
 
-- Missing subject metadata: `subject_age`, `subject_sex`, and `device` fields are absent from all recordings, limiting demographic and equipment-based analyses.
+- Missing subject metadata: `age`, `sex`, and `device` fields are absent from all recordings, limiting demographic and equipment-based analyses.
 - Small sample size: only 9 subjects with 18 completed files may limit generalizability of findings.
 - Severe class imbalance in Task 1 (Stimulus Pair Type Classification): item pair 21 comprises approximately 75% of all stimulus events (42922/55083), which may bias classification models.
 - Rare system markers (31202, 31301, 31302) have extremely low counts (2-3 occurrences), making them unsuitable for robust analysis.

@@ -9,7 +9,7 @@ A continuous visual oddball / selective-attention task recorded with 256-channel
 
 ## File Scan Result
 
-> **Kernel SHA256**: `89aaab696910b7caca856bbec641e222da1e8595c2a1c6209cb4a7ceef402a07`
+> **Kernel SHA256**: `3c221cbb992edef968d255c442ebb1899989076165e8a307a10b84832e041755`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -38,8 +38,8 @@ A continuous visual oddball / selective-attention task recorded with 256-channel
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 
@@ -137,7 +137,7 @@ A continuous visual oddball / selective-attention task recorded with 256-channel
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_sex` | F -> 0; M -> 1 |
+  | `sex` | F -> 0; M -> 1 |
 - **Evidence**:
   - participants.tsv — N=2 subjects with gender field: 1 female (sub-001), 1 male (sub-002)
 - **Notes**: Segment-based approach required since no discriminating event structure exists for this subject-level label. 10-second non-overlapping segments at 256 Hz yield 2560 samples per segment. Only 2 subjects are available, with 1 subject per class; this is an extremely weak proof-of-concept subject-trait decoding task and will likely be filtered out downstream.
@@ -151,7 +151,7 @@ A continuous visual oddball / selective-attention task recorded with 256-channel
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_age` | no mapping |
+  | `age` | no mapping |
 - **Evidence**:
   - participants.tsv — age column present for both subjects with value 30
 - **Notes**: Archetype B3: age is a native participants.tsv field (no kernel derivation needed). Segmentation-based epoching creates 10-second non-overlapping windows from continuous EEG; each segment inherits the subject's age as the regression target. However, both subjects are age 30, so this task has zero label variance and is effectively non-viable.

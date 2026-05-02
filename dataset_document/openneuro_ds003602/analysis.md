@@ -10,7 +10,7 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 
 ## File Scan Result
 
-> **Kernel SHA256**: `32d5f8ebc4297f564303deafb89204c552060317e7efeb4f2e122f3cf168acb3`
+> **Kernel SHA256**: `a06c6ae79229c75f698b135685f75b9c93ca5345598fe256fbcd3f4c0cca08b7`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -186,8 +186,8 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | Age data available in phenotype files |
-| `subject_sex` | complete | Sex data not present in EEG file headers |
+| `age` | complete | Age data available in phenotype files |
+| `sex` | complete | Sex data not present in EEG file headers |
 | `device` | missing | Recording device info not in EEG headers |
 
 ## Tasks
@@ -206,8 +206,18 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 | `NeuStim` | 1 | Neutral valence stimulus onset |
 | `PosStim` | 2 | Positive valence stimulus onset |
 
+- **Target Definition**:
+
+| Event ID | y | Meaning |
+|----------|---|---------|
+| 1 | 0 | Negative valence stimulus onset (Needs verification) |
+| 2 | 1 | Neutral valence stimulus onset (Needs verification) |
+| 3 | 2 | Positive valence stimulus onset (Needs verification) |
+
 - **Evidence**: Paradigm described in dataset publication; emotional picture viewing with standardized valence categories is a well-established EEG paradigm (International Affective Picture System). DOI: https://doi.org/10.18112/openneuro.ds003602.v1.0.1
 - **Kernel Notes**: Use general valence events (NegStim/NeuStim/PosStim) for primary classification. Exclude alcohol-specific variants (NegAlc*, PosAlc*, etc.) for clean valence-only labels. 230 trials per condition ensures balanced classes.
+
+---
 
 ### Classical Task 2: Alcohol Cue Reactivity Classification
 - **Task Type**: classification
@@ -226,8 +236,17 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 | `NeuNonAlcStimWithoutStartle` | 1 | Neutral non-alcohol stimulus (no probe) |
 | `PosNonAlcStimWithoutStartle` | 1 | Positive non-alcohol stimulus (no probe) |
 
+- **Target Definition**:
+
+| Event ID | y | Meaning |
+|----------|---|---------|
+| 1 | 0 | Alcohol-related stimulus (Needs verification) |
+| 2 | 1 | Non-alcohol stimulus (Needs verification) |
+
 - **Evidence**: Alcohol cue reactivity paradigm is a standard addiction neuroscience protocol; dataset specifically examines CSA-problem drinking links. DOI: https://doi.org/10.18112/openneuro.ds003602.v1.0.1
 - **Kernel Notes**: Use "WithoutStartle" variants for clean alcohol/non-alcohol comparison (690 trials each class). Extended tmax=1.5s captures late positive complex (LPC) associated with appetitive processing. Can stratify by valence for 2x3 design.
+
+---
 
 ### Classical Task 3: Resting-State Classification
 - **Task Type**: classification
@@ -244,10 +263,19 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 | `EyesClose1` | 1 | Eyes-closed resting-state block 1 |
 | `EyesClose2` | 1 | Eyes-closed resting-state block 2 |
 
+- **Target Definition**:
+
+| Event ID | y | Meaning |
+|----------|---|---------|
+| 200 | 0 | Eyes-open resting-state block (Needs verification) |
+| 201 | 1 | Eyes-closed resting-state block (Needs verification) |
+
 - **Evidence**: Resting-state EEG with eyes open/closed is canonical for alpha rhythm assessment and functional connectivity. DOI: https://doi.org/10.18112/openneuro.ds003602.v1.0.1
 - **Kernel Notes**: 234 subjects × 4 blocks = 936 total rest epochs. Exclude `EndOfRest`, `ignore`, and `boundary` admin events. Segment by block or combine for subject-level features.
 
-### Normal Task 1: Startle Probe Response Analysis
+---
+
+### Potential Task 1: Startle Probe Response Analysis
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s (relative to picture onset) OR align to probe onset separately
@@ -276,8 +304,18 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 | `NeuNonAlcP3000` | 2 | Neutral non-alcohol + startle probe at 3 s |
 | `PosNonAlcP3000` | 2 | Positive non-alcohol + startle probe at 3 s |
 
+- **Target Definition**:
+
+| Event ID | y | Meaning |
+|----------|---|---------|
+| 1 | 0 | Startle probe at 1 s (Needs verification) |
+| 2 | 1 | Startle probe at 2 s (Needs verification) |
+| 3 | 2 | Startle probe at 3 s (Needs verification) |
+
 - **Evidence**: Startle probe timing variants present in dataset (230 trials per condition); startle reflex paradigm is established in affective neuroscience.
 - **Kernel Notes**: P1000/P2000/P3000 indicate startle probes delivered at 1 s, 2 s, or 3 s after picture onset. Can analyze probe timing × valence interactions or align epochs to probe onset for startle response ERPs.
+
+---
 
 ### Potential Task 1: Trauma × Emotion Interaction Analysis
 - **Task Type**: classification
@@ -294,8 +332,19 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 | `PosStim` | 2 | Positive stimulus (high CSA group) |
 | `PosStim` | 3 | Positive stimulus (low/no CSA group) |
 
+- **Target Definition**:
+
+| Event ID | y | Meaning |
+|----------|---|---------|
+| 1 | 0 | Negative stimulus, high CSA group (Needs verification) |
+| 1 | 1 | Negative stimulus, low/no CSA group (Needs verification) |
+| 3 | 2 | Positive stimulus, high CSA group (Needs verification) |
+| 3 | 3 | Positive stimulus, low/no CSA group (Needs verification) |
+
 - **Evidence**: Dataset explicitly studies CSA-problem drinking links; subject-level clinical data (CSA history, problem drinking measures) available in phenotype data.
 - **Kernel Notes**: Requires merging EEG epochs with behavioral/clinical annotations (super-level meta). Hypothesis: CSA history modulates emotional reactivity to negative stimuli. 234 subjects provides adequate sample for subgroup analysis.
+
+---
 
 ### Potential Task 2: Problem Drinking Severity Regression
 - **Task Type**: regression
@@ -308,6 +357,12 @@ This study investigates neurobehavioral mechanisms linking childhood sexual abus
 | Event | y | Meaning |
 |-------|---|--------|
 | All picture events | AUDIT/ADS score | Problem drinking severity (continuous) |
+
+- **Target Definition**:
+
+| Event ID | Value | Meaning |
+|----------|-------|---------|
+| All picture events | AUDIT/ADS score | Problem drinking severity (continuous) (Needs verification) |
 
 - **Evidence**: Dataset includes validated problem drinking measures; alcohol cue reactivity is mechanistically linked to drinking severity.
 - **Kernel Notes**: Target variable derived from clinical assessments (not events). Merge behavioral data with EEG epochs for regression. Alcohol-specific stimuli (Alc*) likely show stronger correlation with drinking severity than non-alcohol stimuli.

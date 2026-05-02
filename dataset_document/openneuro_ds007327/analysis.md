@@ -55,8 +55,8 @@ EEG was recorded during two sports-related tasks (ball passing and dribbling) to
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -65,13 +65,13 @@ EEG was recorded during two sports-related tasks (ball passing and dribbling) to
 
 ---
 
-### Normal Task 1: 4-Class 2×2 Motor Intention × Observation Classification
+### Potential Task 1: 4-Class 2×2 Motor Intention × Observation Classification
 
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: `tmin = -0.2 s`, `tmax = 4.0 s`, `baseline = (-0.2, 0)`, `target_events = [B12, B14, B16, B18, C12, C14, C16, C18]`
 - **Label Route**: `event`
-- **Meta Level**: `raw`
+- **Meta Level**: raw
 
 #### Target Definition
 
@@ -102,13 +102,13 @@ EEG was recorded during two sports-related tasks (ball passing and dribbling) to
 
 ---
 
-### Normal Task 2: 3-Class Single-Factor Motor Condition Classification (A-Series)
+### Potential Task 2: 3-Class Single-Factor Motor Condition Classification (A-Series)
 
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: `tmin = -0.2 s`, `tmax = 4.0 s`, `baseline = (-0.2, 0)`, `target_events = [A11, A22, A88]`
 - **Label Route**: `event`
-- **Meta Level**: `raw`
+- **Meta Level**: raw
 
 #### Target Definition
 
@@ -138,7 +138,7 @@ EEG was recorded during two sports-related tasks (ball passing and dribbling) to
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: `tmin = -0.2 s`, `tmax = 4.0 s`, `baseline = (-0.2, 0)`, `target_events = [B18, B12, C18, C12, B14, B16, C14, C16]`
 - **Label Route**: `event`
-- **Meta Level**: `super`
+- **Meta Level**: super
 
 #### Target Definition
 

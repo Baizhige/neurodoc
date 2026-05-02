@@ -9,7 +9,7 @@ This dataset contains EEG recordings from a language/context processing experime
 
 ## File Scan Result
 
-> **Kernel SHA256**: `84d8ddf6ad848a2c1fa97d4402605a95886645dd847a9385862a4a7764e30360`
+> **Kernel SHA256**: `74d2eb9582677460eb0f9708cead592127dae7065381dbfe1d16736296228962`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -31,8 +31,8 @@ This dataset contains EEG recordings from a language/context processing experime
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

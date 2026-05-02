@@ -9,7 +9,7 @@ Thirteen subjects listened to two simultaneously presented stories (one in each 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `d1455cd83ada4da5c0a9594e295aada7a5aa6c40b580b561bf4557b380d3f336`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Sampled
 
@@ -28,8 +28,8 @@ Thirteen subjects listened to two simultaneously presented stories (one in each 
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -54,6 +54,7 @@ Thirteen subjects listened to two simultaneously presented stories (one in each 
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 10.0 s, overlap = 5.0 s, target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: Only `.dap` header files are processed; `.dat` and `.rs3` auxiliary files are skipped. Numeric stimulus event codes (1000001, 100255, 800000, 800001) may also appear from the stimulus delivery system; use the whole-trial `attend_*` label for the primary target.
 

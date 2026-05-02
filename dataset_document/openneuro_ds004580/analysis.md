@@ -9,7 +9,7 @@ Participants performed a Simon conflict task in which stimulus location (left/ri
 
 ## File Scan Result
 
-> **Kernel SHA256**: `93010a60eba62473fd2ce055cffe5b0d615f2dbb6fc7cc29e883eabce9e67bce`
+> **Kernel SHA256**: `4bcfb5ffaf6e327f721c71f8fc585f2afa0042b02ffeb2f5e10193d27587cb5c`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -27,8 +27,8 @@ Participants performed a Simon conflict task in which stimulus location (left/ri
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -40,7 +40,7 @@ Participants performed a Simon conflict task in which stimulus location (left/ri
 - Event meanings in File Scan Result differ from original draft: S 1 is "Visual cue onset" (not "Congruent trial") and S 2 is "Response onset" (not "Incongruent trial"), indicating the event structure represents trial phase timing rather than condition labeling.
 - S 3 has only 1 occurrence across all subjects, making it unsuitable for any task; previously described as "Rare/catch trial" but scan shows "Unknown system marker".
 - Subject count discrepancy: original draft listed 30 subjects, but File Scan Result and Tasks indicate 147 subjects with complete data in participants.tsv.
-- `subject_age` and `subject_sex` fields are missing from EEG metadata, but AGE and GENDER are complete in participants.tsv (147 subjects), requiring info-based label routing.
+- `age` and `sex` fields are missing from EEG metadata, but AGE and GENDER are complete in participants.tsv (147 subjects), requiring info-based label routing.
 - UPDRS data is partial (99/147 subjects), requiring imputation or exclusion for regression tasks.
 - `device` field is missing; equipment details unknown from scan metadata.
 - 156 boundary markers present; segmentation-based approaches naturally handle these, but event-based analyses would need boundary-aware epoch rejection.

@@ -35,8 +35,8 @@ Longitudinal spontaneous EEG recordings from infants at 4, 8, and 12 months of a
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | missing | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -48,8 +48,8 @@ Longitudinal spontaneous EEG recordings from infants at 4, 8, and 12 months of a
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `face` | 1 | Face stimulus (social) |
   | `speech` | 1 | Speech stimulus (social) |
   | `object` | 0 | Object stimulus (non-social) |
@@ -58,6 +58,8 @@ Longitudinal spontaneous EEG recordings from infants at 4, 8, and 12 months of a
   - DOI: 10.1016/j.dcn.2022.101163 — Uses APPLESEED pipeline on infant EEG from OpenNeuro ds003710 to analyze scale-wise entropy differences between face viewing (social) and object viewing (non-social) conditions across developmental stages. Confirms dataset, epoch parameters (tmin=-0.2s, tmax=1.0s), and binary social/non-social label mapping.
 - **Kernel Notes**: Extract epochs time-locked to stimulus onset events (face, speech, object, water). Apply binary label: social (face, speech) = 1, non-social (object, water) = 0. Downsample from 5000 Hz to 250-500 Hz before epoching. Handle infant EEG artifact rejection. Attention-getter events (admin: Stimulus/S  5) precede stimuli but are not target classification events; exclude admin/unknown events from epoching.
 
+---
+
 ### Potential Task 1: 4-class stimulus category classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -65,8 +67,8 @@ Longitudinal spontaneous EEG recordings from infants at 4, 8, and 12 months of a
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `face` | 0 | Face stimulus |
   | `speech` | 1 | Speech stimulus |
   | `object` | 2 | Object stimulus |
@@ -75,6 +77,8 @@ Longitudinal spontaneous EEG recordings from infants at 4, 8, and 12 months of a
   - DOI: 10.1016/j.dcn.2022.101163 — Paradigm includes all four stimulus categories presented during infant viewing; APPLESEED paper demonstrates feasibility of event-based epoching on these events. No reference explicitly validates multi-class classification, but all events are present with sufficient trial counts.
 - **Kernel Notes**: Extract epochs for all four stimulus types. Apply 4-class labels (0=face, 1=speech, 2=object, 3=water). Expect class imbalance: face and speech have higher counts (~3300) than object and water (~2000). Longitudinal design (4, 8, 12 months) may enable age-stratified analysis. Same preprocessing as Classical Task 1 (downsampling, artifact rejection).
 
+---
+
 ### Potential Task 2: Attention-getter triggered response analysis
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -82,8 +86,8 @@ Longitudinal spontaneous EEG recordings from infants at 4, 8, and 12 months of a
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `admin: Stimulus/S  5` | 0 | Attention-getter onset |
 - **Evidence**:
   - Plausible from paradigm: The APPLESEED paradigm description indicates attention-getter events orient infant attention before stimulus trials. Event ID `admin: Stimulus/S  5` (1406 occurrences) likely corresponds to attention-getter markers based on count ratios and paradigm structure.

@@ -9,7 +9,7 @@ The `VisualSituationalAwareness` task investigates neural correlates of situatio
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `3845a0c331dc5f16a329a15339e10b0bc56df899f063f2efaa8ccce6f8a59519`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Full
 
@@ -41,20 +41,22 @@ Placeholder for additional file scan metadata.
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Visual Situational Awareness
+### Classical Task 1: Publisher-defined BIDS task: Visual Situational Awareness
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004843 DOI: https://doi.org/10.18112/openneuro.ds004843.v1.0.0
 
 
-### Normal Task 1: Visual Situational Awareness (multiclass)
+### Potential Task 1: Visual Situational Awareness (multiclass)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = see Target Definition
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
 - **Notes**: `32000` (1,099) is a scene/trial boundary - exclude. Very small dataset (7 files); balance classes by undersampling. 5-digit codes require README or paper decode.
 

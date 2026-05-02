@@ -9,7 +9,7 @@ Participants performed a battery of executive function tasks including visual N-
 
 ## File Scan Result
 
-> **Kernel SHA256**: `3935db34da01b67e06fa4226a7dbc869e536deb16d8eb03e49126612d474d646`
+> **Kernel SHA256**: `501d793b25ca88ef80c9b8a931334af12c80b53bc63adbc68e9732530e5e2b25`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -96,8 +96,8 @@ Participants performed a battery of executive function tasks including visual N-
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -122,6 +122,8 @@ Participants performed a battery of executive function tasks including visual N-
   - events.tsv (sub-001_ses-post_task-NB1_events.tsv) — Confirmed event values `A`, `B`, `C`, `D` with stimulus column documenting letter identity
 - **Notes**: All four event IDs (`NB1: A`, `NB1: B`, `NB1: C`, `NB1: D`) are confirmed stimulus onset markers for the 1-back condition. Epoch window (-0.2 to 1.5s) covers pre-stimulus baseline and full stimulus duration plus response window per README (stimulus 1s, fixation 500ms, 1500ms response deadline). Classes are well-balanced with ~3300 occurrences each.
 
+---
+
 ### Classical Task 2: N-back stimulus classification (2-back)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -139,6 +141,8 @@ Participants performed a battery of executive function tasks including visual N-
   - 10.3389/fnhum.2020.00246 — Original study describing N-back working memory paradigm with letters A-D and 1/2/3-back conditions
   - 10.1016/j.neuroimage.2026.121820 — EEG classification analysis of N-back stimuli; 2-back condition with balanced classes A/B/C/D
 - **Notes**: 4-class classification of stimulus identity in the 2-back working memory condition. All four letter classes are well-balanced (~3300 trials each). The epoch window captures pre-stimulus baseline (-200 ms) and extended post-stimulus period (1500 ms) to account for longer processing demands of 2-back maintenance. Target detection in 2-back requires comparing current stimulus to the item presented two trials back, increasing working memory load relative to 1-back.
+
+---
 
 ### Classical Task 3: N-back stimulus classification (3-back)
 - **Task Type**: classification
@@ -158,6 +162,8 @@ Participants performed a battery of executive function tasks including visual N-
   - `10.1016/j.neuroimage.2026.121820` — 4-class classification of N-back stimuli; 3-back condition maximizes working memory demand and frontal-midline theta engagement
 - **Notes**: Balanced classes with ~3300 trials each. All four event IDs confirmed in events.tsv with stimulus onset meanings. 3-back condition represents highest working memory load in the N-back paradigm.
 
+---
+
 ### Classical Task 4: N-back load level classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -175,6 +181,8 @@ Participants performed a battery of executive function tasks including visual N-
   - 10.1016/j.neuroimage.2026.121820 — Reference explicitly mentions 'n-back load level (1/2/3)' as condition label for classification
 - **Notes**: All four letter stimuli (A/B/C/D) within each n-back load level are merged into a single class y=0,1,2. This many-to-one mapping is justified because the task is to classify working memory load level, not individual stimulus identity. The stimulus-locked epoch window (-0.2 to 1.5 s) captures the sustained theta dynamics critical for load discrimination.
 
+---
+
 ### Classical Task 5: Local-Global congruence classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -191,6 +199,8 @@ Participants performed a battery of executive function tasks including visual N-
 - **Evidence**:
   - 10.3389/fnhum.2020.00246 — Reference explicitly mentions 'congruent/incongruent for Local-Global' as condition label; 2-class classification of congruent vs incongruent trials with balanced classes (~18,257 vs ~18,250)
 - **Notes**: Congruent trials (y=0) merge largeHSmallH (9123) and largeTSmallT (9134). Incongruent trials (y=1) merge largeHSmallT (9120) and largeTSmallH (9130). Response events are excluded from epoching; only stimulus onset events are used. Epoch window [-0.2, 1.0] s captures pre-stimulus baseline and early ERP components associated with global-local integration and congruence effects.
+
+---
 
 ### Classical Task 6: Local-Global 4-class stimulus identity
 - **Task Type**: classification
@@ -211,6 +221,8 @@ Participants performed a battery of executive function tasks including visual N-
   - code/tasks/localGlobalAttention.m — Documents bit-to-meaning mapping: bit1=largeHSmallH, bit2=largeHSmallT, bit3=largeTSmallH, bit4=largeTSmallT
 - **Notes**: 4-class classification of all stimulus identity combinations in the Local-Global paradigm. Tests hierarchical stimulus processing by requiring the classifier to distinguish both global letter identity (H vs T) and local letter identity (H vs T) simultaneously. Classes are well-balanced (~9,120-9,134 trials each). The event route uses native stimulus onset markers directly from the BIDS events.tsv files.
 
+---
+
 ### Classical Task 7: SART target detection
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -226,6 +238,8 @@ Participants performed a battery of executive function tasks including visual N-
   - 10.3389/fnhum.2020.00246 — SART paradigm with target (digit 3, NoGo) vs nontarget (all other digits, Go) conditions; 1499 target and 11833 nontarget trials across 24 participants
 - **Notes**: Standard sustained attention classification. The epoch window (-0.2 to 1.5 s) captures the pre-stimulus baseline and the decision/inhibition process following digit onset. Stimulus duration is ~1s with 500ms fixation, making 1.5s sufficient to capture Go/NoGo ERP components (N2, P3) associated with response inhibition.
 
+---
+
 ### Classical Task 8: Neurofeedback group classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
@@ -234,14 +248,15 @@ Participants performed a battery of executive function tasks including visual N-
 - **Label Field**: `group`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | group | FB | 0 | Feedback group (received real-time neurofeedback) |
-  | group | S | 1 | Sham/control group (received sham feedback) |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | group | FB -> 0 (Feedback group, real-time neurofeedback); S -> 1 (Sham/control group, sham feedback). Derived from participants.tsv `group` column. Needs verification: exact values in Info fields. |
 - **Evidence**:
   - 10.3389/fnhum.2020.00246 — Pre/post neurofeedback design comparing feedback vs sham neurofeedback groups on executive function tasks (N-Back, SART, Local-Global)
   - 10.1016/j.neuroimage.2026.121820 — Neurofeedback training study with feedback and sham/control group comparison
 - **Notes**: Segmentation-based approach required because no event in the recording discriminates neurofeedback group assignment; group membership is a between-subjects variable stored in participants.tsv. The 2-second segments with 50% overlap allow sufficient samples for subject-level group classification while capturing task-related EEG dynamics across the continuous recordings. Both sessions (pre and post neurofeedback) are available per participant, enabling potential within-subject or cross-session analyses.
+
+---
 
 ### Classical Task 9: Cross-task executive function segmentation with group label
 - **Task Type**: classification
@@ -251,13 +266,14 @@ Participants performed a battery of executive function tasks including visual N-
 - **Label Field**: `group`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | group | FB | 0 | Neurofeedback group (real feedback) |
-  | group | S | 1 | Sham group (control) |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | group | FB -> 0 (Neurofeedback group, real feedback); S -> 1 (Sham group, control). Derived from participants.tsv `group` column. Needs verification: exact values in Info fields. |
 - **Evidence**:
   - 10.3389/fnhum.2020.00246 — Neurofeedback study design with FB (feedback) vs S (sham) group randomization; participants.tsv confirms group assignment with complete coverage across N=24 participants
 - **Notes**: Segmentation-based approach enables cross-task generalization by treating 2-second EEG windows as samples from a common executive function state space, regardless of whether the underlying task is N-Back, SART, or Local-Global. The group label is a native participants.tsv column requiring no kernel derivation.
+
+---
 
 ### Potential Task 1: SART Response Commission Error Detection
 - **Task Type**: classification
@@ -274,6 +290,8 @@ Participants performed a battery of executive function tasks including visual N-
   - `events.tsv` (task-SART) — Shows `SART: target` events (digit 3 requiring no response) and `SART: rt` response events; target events have 1,499 occurrences with expected ~5-10% commission error rate typical for SART paradigms
   - `README` — Describes SART task: "target digit 3, requires withholding response" vs non-target digits requiring spacebar response
 - **Notes**: The label is derived by checking whether a `SART: rt` event occurs within a reasonable response window (e.g., 0-1500 ms) following each `SART: target` event. The kernel must pair target events with subsequent response events to determine commission errors. This is a standard Go/NoGo inhibition failure measure with characteristic ERN/Pe ERP components. Epochs are time-locked to the target onset (`SART: target`) to capture both pre-stimulus baseline and post-error neural dynamics.
+
+---
 
 ### Potential Task 2: Local-Global response identity classification
 - **Task Type**: classification
@@ -294,6 +312,8 @@ Participants performed a battery of executive function tasks including visual N-
   - code/tasks/localGlobalAttention.m — Bit-to-meaning mapping confirming response event codes (bit5=responseSmallH, bit6=responseSmallT, bit7=responseLargeH, bit8=responseLargeT)
 - **Notes**: Response-locked epochs with extended pre-response window to capture readiness potential (BP) and lateralized readiness potential (LRP). All four response identities are well-balanced (~8,957-9,272 occurrences each). This is a 4-class motor response decoding task testing whether EEG can discriminate which of four possible responses was executed based on pre-response and post-response neural activity.
 
+---
+
 ### Potential Task 3: Local-Global global letter classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -312,6 +332,8 @@ Participants performed a battery of executive function tasks including visual N-
   - code/tasks/localGlobalAttention.m — Bit-to-meaning mapping: bit1=largeHSmallH, bit2=largeHSmallT, bit3=largeTSmallH, bit4=largeTSmallT
   - README — Describes LG (Local Global) task as part of executive functioning battery
 - **Notes**: Two-class classification of global letter identity (H vs T) by merging congruent and incongruent trials within each global letter category. This tests global precedence effect and attentional selection at the global level. Trial counts from evidence summary: Global H ≈18,243 trials, Global T ≈18,264 trials (nearly perfectly balanced).
+
+---
 
 ### Potential Task 4: Local-Global Local Letter Classification
 - **Task Type**: classification

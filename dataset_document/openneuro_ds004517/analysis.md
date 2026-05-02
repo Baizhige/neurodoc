@@ -9,7 +9,7 @@ Participants imagined animals and tools in response to auditory cues while EEG w
 
 ## File Scan Result
 
-> **Kernel SHA256**: `a3b68996291cfaa4e6cf8dc5aea0f899c26c048cf854475f67a62a5f713ea929`
+> **Kernel SHA256**: `2e62a99208c7692bf48a4420df4df3ed099d09ca2006f9e01f9ecc317594e31b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -24,8 +24,8 @@ Participants imagined animals and tools in response to auditory cues while EEG w
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

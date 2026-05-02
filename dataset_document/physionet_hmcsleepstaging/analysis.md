@@ -30,8 +30,8 @@ One hundred and fifty-one (151) overnight polysomnographic recordings from the H
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | [To Agent: Dataset-level aggregate age is 53.9 ± 15.4 years.] |
-| `subject_sex` | missing | [To Agent: Dataset-level aggregate sex distribution is 85 M / 66 F.] |
+| `age` | missing | [To Agent: Dataset-level aggregate age is 53.9 ± 15.4 years.] |
+| `sex` | missing | [To Agent: Dataset-level aggregate sex distribution is 85 M / 66 F.] |
 | `device` | missing | [To Agent: Dataset documentation states recordings used SOMNOscreen PSG, PSG+, and EEG 10-20 recorders from SOMNOmedics, Germany, with AgAgCl electrodes.] |
 
 

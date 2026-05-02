@@ -9,7 +9,7 @@ Participants performed two alternating visual go/no-go tasks: an animal categori
 
 ## File Scan Result
 
-> **Kernel SHA256**: `e60bd9d976550ddd04ba2224e19595e7163bb9c539cc62c489359498c159186c`
+> **Kernel SHA256**: `792b1eb3437f3496ecfba948aa6c7cfe2045b47acccc7be7719a993583a568e8`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -33,8 +33,8 @@ Participants performed two alternating visual go/no-go tasks: an animal categori
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | missing | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 
@@ -155,7 +155,7 @@ Participants performed two alternating visual go/no-go tasks: an animal categori
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_sex` | F -> 0; M -> 1 |
+  | `sex` | F -> 0; M -> 1 |
 - **Evidence**:
   - participants.tsv — Include the gender of the subjects
 - **Notes**: Segmentation-based biometric classification using 2-second overlapping EEG segments (50% overlap) from continuous recordings. Subject gender labels are drawn from participants.tsv, with balanced classes (7F, 7M across 14 subjects). No event structure required; segments are extracted uniformly across the continuous recording. Epoch parameters inferred from standard segmentation defaults for subject-level biometric tasks.

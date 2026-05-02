@@ -9,7 +9,7 @@ Participants performed a visual perception task identifying whether stimuli were
 
 ## File Scan Result
 
-> **Kernel SHA256**: `a60563dd79622904c3d1cc7955e44f868f37d925b51d097be2cb64bb2b805f9b`
+> **Kernel SHA256**: `69fb1e428f99e6fceb13ccd4ba02b8759012c1428d64706cd98531f7122bbdce`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -25,8 +25,8 @@ Participants performed a visual perception task identifying whether stimuli were
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -48,8 +48,8 @@ Participants performed a visual perception task identifying whether stimuli were
 
 ## Data Quality Notes
 
-- Multiple metadata fields are missing: `subject_age`, `subject_sex`, `device`, `species`, and `handedness`.
-- `subject_sex` was marked as complete in the prior draft but is now missing; this discrepancy should be noted for manual review.
+- Multiple metadata fields are missing: `age`, `sex`, `device`, `species`, and `handedness`.
+- `sex` was marked as complete in the prior draft but is now missing; this discrepancy should be noted for manual review.
 - The `event_65536` system marker is listed in the event structure but was not observed in sampled events.tsv files, suggesting possible file-level variability or rare occurrence.
 - EMG/EOG channels are included in the 73-channel montage and should be excluded from EEG-only analyses.
 

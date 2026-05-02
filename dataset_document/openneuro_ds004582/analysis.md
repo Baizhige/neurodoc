@@ -9,7 +9,7 @@ Participants viewed fake face images with different emotional expressions while 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `3845a0c331dc5f16a329a15339e10b0bc56df899f063f2efaa8ccce6f8a59519`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Sampled
 
@@ -37,20 +37,23 @@ No additional scan information available.
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: FF
+### Classical Task 1: Publisher-defined BIDS task: FF
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5` or `epoch_by_segmentation_hdf5`
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, overlap = Needs Verification, target_events = [Needs Verification] | segment_length = Needs Verification, overlap = Needs Verification
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004582 DOI: https://doi.org/10.18112/openneuro.ds004582.v1.0.0
 
+---
 
-### Normal Task 1: Continuous Segmentation (resting/segmentation)
+### Potential Task 1: Continuous Segmentation (resting/segmentation)
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: N/A (unsupervised segmentation)
 - **Notes**: New Segment/ is a BrainVision hardware recording marker, not a task event. Use sliding window segmentation for feature extraction.
 

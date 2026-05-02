@@ -9,7 +9,7 @@ Participants walked two different outdoor routes while performing a self-paced b
 
 ## File Scan Result
 
-> **Kernel SHA256**: `5c16bd9ef04bfe59190a1721435c3a658b30a981317461472a0299bfde78bc71`
+> **Kernel SHA256**: `abf3448b6f9183cf2eaba33dce56aa035e6d512d708f088998c190d52368c818`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -82,8 +82,8 @@ Participants walked two different outdoor routes while performing a self-paced b
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

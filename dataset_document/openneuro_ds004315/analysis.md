@@ -9,7 +9,7 @@ Fifty healthy adult participants completed a probabilistic selection task (PST) 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `20311fff644cb38d02ca2a4ee3141e0b26b865840ae3880ecc1a8a9509306953`
+> **Kernel SHA256**: `b1f58291451243d2b940f810afd9f458a109e1043e579c6f9d621ec4e35a83d8`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -72,8 +72,8 @@ Fifty healthy adult participants completed a probabilistic selection task (PST) 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -85,13 +85,15 @@ Fifty healthy adult participants completed a probabilistic selection task (PST) 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `FB` aligned to Correct outcome | 0 | Correct response (reward feedback) |
-  | `FB` aligned to Incorrect outcome | 1 | Incorrect response (punishment feedback) |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `S  1` (feedback correct outcome) | 0 | Correct response (reward feedback) — Needs verification |
+  | `S  2` (feedback incorrect outcome) | 1 | Incorrect response (punishment feedback) — Needs verification |
 - **Super Meta Notes**: Epochs extracted around feedback onset (`FB`). Labels derived from events.tsv trial outcome column mapping Correct → y=0 and Incorrect → y=1. ROI at electrode FCz for RewP analysis.
 - **Evidence**: DOI: 10.1111/psyp.14276 — EEG data from OpenNeuro ds004315 examined RewP ERP (200-350ms at FCz) epoched -2s to 6s relative to feedback onset, comparing correct vs incorrect feedback outcomes across mood induction groups.
 - **Kernel Notes**: Extract epochs for all `FB` events. Apply baseline correction -200ms to 0ms. Focus ROI at electrode FCz. Use events.tsv trial outcome column to assign y-labels post-extraction. Class imbalance: Correct (~200) >> Incorrect (~55-85); consider class balancing during classification training.
+
+---
 
 ### Potential Task 2: Short-Window Feedback Outcome Classification
 - **Task Type**: classification
@@ -100,13 +102,15 @@ Fifty healthy adult participants completed a probabilistic selection task (PST) 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `FB` aligned to Correct outcome | 0 | Correct response |
-  | `FB` aligned to Incorrect outcome | 1 | Incorrect response |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `S  1` (feedback correct outcome) | 0 | Correct response — Needs verification |
+  | `S  2` (feedback incorrect outcome) | 1 | Incorrect response — Needs verification |
 - **Super Meta Notes**: Short-window feedback-locked epochs targeting immediate feedback processing and early outcome evaluation. Labels derived from events.tsv Correct/Incorrect outcomes.
 - **Evidence**: Paradigm-based plausibility (reinforcement learning task with clear feedback outcomes); epoch alignment recommendation from kernel.
 - **Kernel Notes**: Status is admin/system marker—exclude from target events. Class imbalance noted (Correct >> Incorrect); apply class balancing or weighted loss. Shorter window captures early feedback processing components (FRN, P300) distinct from late RewP.
+
+---
 
 ### Potential Task 3: Testing Phase Stimulus-Response Classification
 - **Task Type**: classification
@@ -115,10 +119,10 @@ Fifty healthy adult participants completed a probabilistic selection task (PST) 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `TESTING` with correct outcome sub-label | 0 | Correct response during testing |
-  | `TESTING` with incorrect outcome sub-label | 1 | Incorrect response during testing |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `S 21` (testing correct outcome) | 0 | Correct response during testing — Needs verification |
+  | `S 23` (testing incorrect outcome) | 1 | Incorrect response during testing — Needs verification |
 - **Super Meta Notes**: TESTING phase contains rich sub-labels in events.tsv (e.g., 'TESTING: Right Press, Correct'); extract trial_type column for detailed outcome and response classification.
 - **Evidence**: Paradigm-based plausibility (reinforcement learning testing phase with novel stimulus pairs).
 - **Kernel Notes**: Extract epochs for TESTING events. Parse events.tsv trial_type column for sub-label mapping (response direction + outcome). Window captures stimulus presentation, response, and feedback during testing trials.

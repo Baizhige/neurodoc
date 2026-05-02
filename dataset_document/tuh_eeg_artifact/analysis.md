@@ -9,7 +9,7 @@ The TUH EEG Artifact Corpus (TUAR) is a comprehensive dataset designed for the i
 
 ## File Scan Result
 
-> **Kernel SHA256**: `ea71b385fd265312a7bce9d712214ded6de63091c53c5d85dbdb592f50061155`
+> **Kernel SHA256**: `a76e25dadae339282ebf9cccfcc2d5d2081b8e73ccf097ad905d7e92cc8fb67e`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -46,8 +46,8 @@ The TUH EEG Artifact Corpus (TUAR) is a comprehensive dataset designed for the i
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 

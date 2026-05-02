@@ -9,7 +9,7 @@ A three-stimulus auditory oddball task (standard tones, target tones requiring b
 
 ## File Scan Result
 
-> **Kernel SHA256**: `7eed99c23187737b1771b37bd447699725593af250d425a9cb95c01999b5a4d4`
+> **Kernel SHA256**: `bda652431c7f803a1026e0c4565b8cad81262745e01313fcdc56b017594e0b98`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -32,8 +32,8 @@ A three-stimulus auditory oddball task (standard tones, target tones requiring b
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

@@ -9,7 +9,7 @@ This dataset validates a spectral sleep staging approach using a three-electrode
 
 ## File Scan Result
 
-> **Kernel SHA256**: `79475293afd909f4cc5ddcf8972754aa504848804472eddb7d0906ec875e0206`
+> **Kernel SHA256**: `9a2da720e99c9f1ca063ffc3eaedabee78a93533469f993dd4535e30a06d90e4`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ This dataset validates a spectral sleep staging approach using a three-electrode
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -34,7 +34,7 @@ This dataset validates a spectral sleep staging approach using a three-electrode
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`Wake`, `N1`, `N2`, `N3`, `REM`]
 - **Label Route**: `event`
-- **Meta Level**: `super`
+- **Meta Level**: super
 - **Target Definition**:
   | Event | y | Meaning |
   |-------|---|---|
@@ -61,6 +61,7 @@ This dataset validates a spectral sleep staging approach using a three-electrode
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5 s
 - **Label Route**: `event`
+- **Meta Level**: super
 - **Target Definition**: N/A (labels derived from external scoring files for spindle/K-complex detection)
 - **Super Meta Notes**: No EEG event markers available. Alternative segmentation approach for detecting transient sleep microevents (spindles, K-complexes, arousals) within continuous overnight recordings. Sliding 2-second windows with 50% overlap enable fine-grained detection of microarchitectural features.
 - **Evidence**:

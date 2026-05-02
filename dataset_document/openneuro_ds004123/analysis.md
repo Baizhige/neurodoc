@@ -9,7 +9,7 @@ Subjects performed a simulated driving task with varying levels of visual traffi
 
 ## File Scan Result
 
-> **Kernel SHA256**: `7c20f0f885e99333e4abe19bf41e82f12c5fb6fcf705c4088f6789c3b3412006`
+> **Kernel SHA256**: `e9d43e2cfd7099d0ece7b1c2b608fb02c651e900ad61253c6a8ac04953c4b703`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Subjects performed a simulated driving task with varying levels of visual traffi
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

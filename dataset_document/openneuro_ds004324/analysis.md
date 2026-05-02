@@ -9,7 +9,7 @@ Participants viewed rapid serial visual presentation (RSVP) streams of three typ
 
 ## File Scan Result
 
-> **Kernel SHA256**: `b27f860326399603255ab4e132a51767467fbcd872d7fea6715716fab9f46af7`
+> **Kernel SHA256**: `3b1c8cf0cc0d6be8f2128fb23b630820affee10498543f5f847fd8ad58c84678`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -46,8 +46,8 @@ Participants viewed rapid serial visual presentation (RSVP) streams of three typ
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | missing | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -59,8 +59,8 @@ Participants viewed rapid serial visual presentation (RSVP) streams of three typ
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `img/0`, `img/1`, `img/2`, `img/3`, `img/4` | 0 | Real photograph face (IMG) |
   | `toon/0`, `toon/1`, `toon/2`, `toon/3`, `toon/4` | 1 | Stylized toon face (TOON) |
   | `sf/0`, `sf/1`, `sf/2`, `sf/3`, `sf/4` | 2 | Schematic stick-figure face (SF) |
@@ -69,6 +69,8 @@ Participants viewed rapid serial visual presentation (RSVP) streams of three typ
   - DOI: 10.21203/rs.3.rs-1886096/v1 — Uses RSVP paradigm with this dataset to present IMG/TOON/SF categories and demonstrates enhanced ERP features for emotion detection across face types.
 - **Kernel Notes**: Apply baseline correction from -200ms to 0ms. Intensity sub-levels (0-4) are grouped by face type for three-class classification. Exclude admin events (block1/2/3, BlockEnd, Instructions*, Intro, PracticeInstructions) from epoching. Handle significant class imbalance (intensity 1: 5070 trials vs intensities 2/3: 390 trials per face type) via stratified sampling or weighted loss.
 
+---
+
 ### Potential Task 1: Binary Emotion Detection (Emotional vs Neutral)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -76,8 +78,8 @@ Participants viewed rapid serial visual presentation (RSVP) streams of three typ
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `img/0`, `toon/0`, `sf/0` | 0 | Neutral face (intensity 0) |
   | `img/1`, `img/2`, `img/3`, `img/4`, `toon/1`, `toon/2`, `toon/3`, `toon/4`, `sf/1`, `sf/2`, `sf/3`, `sf/4` | 1 | Emotional face (intensity 1-4) |
 - **Evidence**:

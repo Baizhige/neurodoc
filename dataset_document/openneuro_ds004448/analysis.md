@@ -26,8 +26,8 @@ This is the fourth BMI-HDEEG sensorimotor rhythm-based BCI dataset. Scientific D
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | EEG sidecar reports `Manufacturer = Magstim EGI`, `ManufacturersModelName = GES400`, `SamplingFrequency = 1000`, and `EEGChannelCount = 129`. |
 
 
@@ -42,7 +42,7 @@ This is the fourth BMI-HDEEG sensorimotor rhythm-based BCI dataset. Scientific D
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_age` | no mapping; numeric age in years, range 19-58 |
+  | `age` | no mapping; numeric age in years, range 19-58 |
 - **Evidence**:
   - OpenNeuro ds004448 `participants.tsv` — `age` is complete for all 56 public participants.
 - **Notes**: Subject-level metadata task using fixed EEG segmentation. This is technically implementable but is not the core BCI benchmark described by the data descriptor.
@@ -56,7 +56,7 @@ This is the fourth BMI-HDEEG sensorimotor rhythm-based BCI dataset. Scientific D
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_sex` | female -> 0; male -> 1 |
+  | `sex` | female -> 0; male -> 1 |
 - **Evidence**:
   - OpenNeuro ds004448 `participants.tsv` — `gender` is complete; distribution is 7 female / 49 male.
 - **Notes**: Technically valid binary metadata task, but highly imbalanced and not central to the BCI paradigm.

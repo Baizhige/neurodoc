@@ -9,7 +9,7 @@ A Rapid Serial Visual Presentation (RSVP) task investigating the neural dynamics
 
 ## File Scan Result
 
-> **Kernel SHA256**: `40e5aa1eea3c81ef7bdccba037c83ae12d3578127d0cfd9688ef7787d396cc00`
+> **Kernel SHA256**: `0c04a21d906e0f4ac2f738ed629c51242c6563df372d0192bb7d39eafb86ec0b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -29,8 +29,8 @@ A Rapid Serial Visual Presentation (RSVP) task investigating the neural dynamics
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

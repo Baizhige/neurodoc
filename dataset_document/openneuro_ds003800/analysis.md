@@ -10,7 +10,7 @@ Elderly participants with dementia received 40 Hz amplitude-modulated (AM) audit
 
 ## File Scan Result
 
-> **Kernel SHA256**: `acb182177b3fe8a79612be884d45c0ccf55fa8409970c03de87bf032381bb0fb`
+> **Kernel SHA256**: `e6959baf7172128448178128b96e9921e3939b7476219ea3e516462b0f400235`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -25,8 +25,8 @@ Elderly participants with dementia received 40 Hz amplitude-modulated (AM) audit
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -51,7 +51,7 @@ Elderly participants with dementia received 40 Hz amplitude-modulated (AM) audit
 ## Data Quality Notes
 
 - Metadata conflict: File Scan Result indicates 13 subjects with complete Age/Gender data, but dataset header shows only 8 subjects with 24 completed files. The Tasks section references 13 participants in participants.tsv, suggesting some subjects may lack EEG recordings or have incomplete data.
-- Missing standard BIDS fields: `subject_age` and `subject_sex` are missing at the EEG metadata level, though `Age` and `Gender` are available via participants.tsv (archetype B3).
+- Missing standard BIDS fields: `age` and `sex` are missing at the EEG metadata level, though `Age` and `Gender` are available via participants.tsv (archetype B3).
 - `Group` field is entirely missing, preventing group-level analyses (e.g., dementia severity stratification).
 - `MMSE` coverage is partial (12/13), with one missing value; however, README and participants.tsv disagree on which subject is missing MMSE data.
 - Rest recordings are missing for sub-06 and sub-13, affecting Potential Task 4 and reducing effective sample size for rest-based analyses.

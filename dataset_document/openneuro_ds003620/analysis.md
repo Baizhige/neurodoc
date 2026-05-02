@@ -9,7 +9,7 @@ Participants performed an auditory oddball task under three levels of environmen
 
 ## File Scan Result
 
-> **Kernel SHA256**: `167606e080f52acfeae27436261f36147486b8c9edca79bf8d374baa59a5a369`
+> **Kernel SHA256**: `08529bad615403b5fdbf6115eb33b936ffbbcb1a62666710dad7b60569c62ea0`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -46,8 +46,8 @@ Participants performed an auditory oddball task under three levels of environmen
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -59,14 +59,16 @@ Participants performed an auditory oddball task under three levels of environmen
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `t_count_lab`, `t_count_oval`, `t_count_campus`, `t_Count_lab`, `t_Count_oval`, `t_Count_campus`, `t_Dontcount_lab`, `t_Dontcount_oval`, `t_Dontcount_campus` | 1 | Target/deviant tone |
   | `ntcount_lab`, `ntcount_oval`, `ntcount_campus`, `ntCount_lab`, `ntCount_oval`, `ntCount_campus`, `ntDontcount_lab`, `ntDontcount_oval`, `ntDontcount_campus` | 0 | Non-target/standard tone |
 - **Evidence**:
   - DOI: 10.1038/s41598-021-01772-8 — Published Runabout study analyzing P3 and MMN components from auditory oddball paradigm across lab, oval, and campus environments with 44 participants. Epoched -200ms to 800ms relative to event markers. Direct classification: target (deviant) vs non-target (standard) tones.
   - DOI: 10.1101/2021.05.27.445993 — Preprint of the same study with identical methodology, confirming event-based epoching and oddball classification approach.
 - **Kernel Notes**: Event naming encodes environment (_lab/_oval/_campus) and instruction (count/Count/Dontcount). Use `Stimulus/S  1` for primary epoch alignment when needed; detailed labels are in specific event IDs. Mobile EEG introduces motion artifacts during oval/campus walking conditions—apply robust ICA or ASR for artifact removal. Expect reduced P300 amplitude and increased variance in walking vs lab conditions.
+
+---
 
 ### Classical Task 2: Cross-Environment Oddball Classification (Lab vs Oval vs Campus)
 - **Task Type**: classification
@@ -75,8 +77,8 @@ Participants performed an auditory oddball task under three levels of environmen
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `t_count_lab`, `t_Count_lab`, `t_Dontcount_lab`, `ntcount_lab`, `ntCount_lab`, `ntDontcount_lab` | 0 | Laboratory (sitting) |
   | `t_count_oval`, `t_Count_oval`, `t_Dontcount_oval`, `ntcount_oval`, `ntCount_oval`, `ntDontcount_oval` | 1 | Oval (walking on sports field) |
   | `t_count_campus`, `t_Count_campus`, `t_Dontcount_campus`, `ntcount_campus`, `ntCount_campus`, `ntDontcount_campus` | 2 | Campus (walking on university campus) |
@@ -85,21 +87,25 @@ Participants performed an auditory oddball task under three levels of environmen
   - DOI: 10.1101/2021.05.27.445993 — Confirms environment as the primary experimental manipulation for studying mobile EEG artifacts and attentional processing during walking.
 - **Kernel Notes**: Environment encoded in event suffix (_lab/_oval/_campus). Pool target and non-target within each environment for 3-class environment classification. Expected: lower classification accuracy for oval/campus due to motion artifacts and cognitive-motor dual-task interference. Consider environment-specific artifact rejection thresholds.
 
-### Normal Task 1: Counting Instruction Effect on Oddball Processing
+---
+
+### Potential Task 1: Counting Instruction Effect on Oddball Processing
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [`t_count_lab`, `t_count_oval`, `t_count_campus`, `t_Count_lab`, `t_Count_oval`, `t_Count_campus`, `t_Dontcount_lab`, `t_Dontcount_oval`, `t_Dontcount_campus`, `ntcount_lab`, `ntcount_oval`, `ntcount_campus`, `ntCount_lab`, `ntCount_oval`, `ntCount_campus`, `ntDontcount_lab`, `ntDontcount_oval`, `ntDontcount_campus`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `t_count_lab`, `t_count_oval`, `t_count_campus`, `t_Count_lab`, `t_Count_oval`, `t_Count_campus` | 1 | Count instruction (active engagement) |
   | `t_Dontcount_lab`, `t_Dontcount_oval`, `t_Dontcount_campus` | 0 | Don't-count instruction (passive listening) |
 - **Evidence**:
   - DOI: 10.1038/s41598-021-01772-8 — Uses count accuracy as a behavioral performance metric, indicating active engagement modulates P300 amplitude during oddball processing.
   - DOI: 10.1101/2021.05.27.445993 — Mentions count/ignore instructions as a key experimental manipulation affecting attentional processing during walking.
 - **Kernel Notes**: The case sensitivity (t_count vs t_Count) may indicate counterbalancing across participants; pool both as 'count' condition. Compare target P300 amplitude between count vs don't-count conditions within-subject. May show enhanced P300 for count conditions due to increased attentional engagement.
+
+---
 
 ### Potential Task 1: Motion Artifact Classification / Quality Assessment
 - **Task Type**: classification
@@ -108,8 +114,8 @@ Participants performed an auditory oddball task under three levels of environmen
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `t_count_lab`, `t_Count_lab`, `t_Dontcount_lab`, `ntcount_lab`, `ntCount_lab`, `ntDontcount_lab` | 0 | Lab (low motion artifact) |
   | `t_count_oval`, `t_Count_oval`, `t_Dontcount_oval`, `ntcount_oval`, `ntCount_oval`, `ntDontcount_oval`, `t_count_campus`, `t_Count_campus`, `t_Dontcount_campus`, `ntcount_campus`, `ntCount_campus`, `ntDontcount_campus` | 1 | Walking conditions (high motion artifact) |
 - **Evidence**:

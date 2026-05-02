@@ -9,7 +9,7 @@ An EEG dataset (ODE) recorded during a social-cognitive paradigm with hierarchic
 
 ## File Scan Result
 
-> **Kernel SHA256**: `8354cb1eb6cd79a9fadeaff627f7d9f84035c974e98d3efa97394d8be83f14ea`
+> **Kernel SHA256**: `31636b65a6427342d9c506e28c468dea21e109d2a46056099133515cdfd5f388`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ An EEG dataset (ODE) recorded during a social-cognitive paradigm with hierarchic
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

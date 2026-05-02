@@ -9,7 +9,7 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `e882c899bcb6d30b0e0311b5eca21d951830de6467723b91a72c1eb23f2d4564`
+> **Kernel SHA256**: `a622f3c18fda073fcab4904a246197ba85ac15a30fabf10670a0af99d88be864`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -30,8 +30,8 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | complete | EEG sidecar reports Manufacturer = Magstim EGI, ManufacturersModelName = GES400, SamplingFrequency = 1000, and EEGChannelCount = 129. |
 | `amplifier` | complete | e.g. GES400 |
 | `cap` | complete | e.g. Magstim EGI Hydrocel Geodesic Sensor Net |
@@ -115,7 +115,7 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_age` | no mapping; numeric age in years, range 19-27 for the 22 publicly available EEG subjects |
+  | `age` | no mapping; numeric age in years, range 19-27 for the 22 publicly available EEG subjects |
 - **Evidence**:
   - OpenNeuro ds004447 `participants.tsv` — Age metadata is available; only `sub-001` to `sub-022` have public EEG data directories.
 - **Notes**: Subject-level metadata task. It is technically implementable but not the core BCI benchmark.
@@ -129,7 +129,7 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_sex` | female -> 0; male -> 1 |
+  | `sex` | female -> 0; male -> 1 |
 - **Evidence**:
   - OpenNeuro ds004447 `participants.tsv` — Sex metadata is available; among the 22 publicly available EEG subjects the distribution is 3 female / 19 male.
 - **Notes**: Technically valid binary metadata task, but strongly imbalanced and not central to the BCI paradigm.

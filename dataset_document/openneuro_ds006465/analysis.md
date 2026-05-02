@@ -9,7 +9,7 @@ Participants performed three modes of speech production - overt (spoken aloud), 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `8d982b8f1dc1dee89fd6d8b12eabee17634bc734ad5fdf3d830146a792f0b5df`
+> **Kernel SHA256**: `462c37fb52082f3aa16dd3fd66d176e3a0ab7bc63401cbf1dc4a55f8471436ac`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -79,8 +79,8 @@ Participants performed three modes of speech production - overt (spoken aloud), 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -117,7 +117,7 @@ Participants performed three modes of speech production - overt (spoken aloud), 
   - DOI: 10.1038/s41597-025-06346-1 — validates EEGNet-based binary classification achieving 60-73% accuracy for speech mode discrimination (overt vs silent vs imagined); experimental design specifies distinct temporal windows per mode
 - **Kernel Notes**: Events 131061-131071 (~50-52 counts each) likely encode trial-level markers or condition blocks. Verify raw BIDS events.tsv to confirm mapping to overt/silent/imagined speech modes. Derive mode labels from block assignment or temporal position within experimental structure. Bandpass filter 0.5-40 Hz.
 
-### Normal Task 1: Multi-Block Speech Mode Classification (3-class)
+### Potential Task 1: Multi-Block Speech Mode Classification (3-class)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0 s, tmax = 10.0 s, target_events = [`event_131061`, `event_131062`, `event_131063`, `event_131070`, `event_131071`]

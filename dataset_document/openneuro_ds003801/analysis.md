@@ -10,7 +10,7 @@ A mobile EEG study investigating neural speech tracking during a dichotic listen
 
 ## File Scan Result
 
-> **Kernel SHA256**: `e00f11cfabb8509b0d3ebd0b641413bb1668bba8f70c27db5b5fa73051d48085`
+> **Kernel SHA256**: `3dd4226e5a3ce5665bbb12234c5e341c196926878e70b6c9d4195d3b6cdb6662`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -53,8 +53,8 @@ A mobile EEG study investigating neural speech tracking during a dichotic listen
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

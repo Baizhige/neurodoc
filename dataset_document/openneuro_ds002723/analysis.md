@@ -9,7 +9,7 @@ Participants interacted with a real-time affective brain-computer music interfac
 
 ## File Scan Result
 
-> **Kernel SHA256**: `567d94e30faa6107dc4c0b55e4c1c3e13d47c23ef7830f2bd9f83748c7437e1c`
+> **Kernel SHA256**: `f1613b37e30aec62e426c566bdb6860440f62514cc719f1c5433e402f9f59c5a`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Participants interacted with a real-time affective brain-computer music interfac
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -36,8 +36,8 @@ Participants interacted with a real-time affective brain-computer music interfac
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `1` | 0 | Music condition 1 |
   | `2` | 1 | Music condition 2 |
   | `3` | 2 | Music condition 3 |

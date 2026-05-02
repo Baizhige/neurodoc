@@ -9,7 +9,7 @@ Technical validation study using an electrically conductive head phantom to simu
 
 ## File Scan Result
 
-> **Kernel SHA256**: `378b290db8f4cdd7ef26187d6b45c976123447f38a189a6cae217bdfccca83dd`
+> **Kernel SHA256**: `b495636bd9098f86b3750798374c2060451ca9f77f4b2f9f1d60b5267f0b5c87`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -24,8 +24,8 @@ Technical validation study using an electrically conductive head phantom to simu
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -34,7 +34,7 @@ Technical validation study using an electrically conductive head phantom to simu
 
 ## Data Quality Notes
 
-- No human subjects; data collected from conductive head phantom, so `subject_age` and `subject_sex` fields are not applicable.
+- No human subjects; data collected from conductive head phantom, so `age` and `sex` fields are not applicable.
 - Event ID `65343` labeled as admin trigger with note that metadata describes 'other numbered events' as nonsensical and to be ignored; this conflicts with prior draft interpretation of these as artifact condition markers.
 - Event ID `65471` described as trial phase onset with 5-minute intervals between markers, suggesting long continuous segments rather than discrete trial structure.
 - `device` field is missing across all files, limiting hardware provenance information.

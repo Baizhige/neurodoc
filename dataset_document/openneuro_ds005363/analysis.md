@@ -9,7 +9,7 @@ Younger adults and older adults completed a visual object-recognition EEG task d
 
 ## File Scan Result
 
-> **Kernel SHA256**: `3583aa1b5e26ec08b61adb74d32b02e0aed8f95e571755adc8e85e26a46feaf0`
+> **Kernel SHA256**: `50df0c66ae5c6524e9d1d897009b063c32eb0eba7eca8d06c72379d7effaf7cc`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -103,8 +103,8 @@ Younger adults and older adults completed a visual object-recognition EEG task d
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

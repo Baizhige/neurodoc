@@ -9,7 +9,7 @@ Participants predicted the final height of an animated rising bar based on cues 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `9701d09920a9a5e5312b7d7b3075acbfec9ac35a59e2b68bca56bb14a611a9e6`
+> **Kernel SHA256**: `49a7a7d85a87ed7536ff53c2c2efc0e808b6bad1504ab0cb212dcc91ba5c1e8f`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -59,8 +59,8 @@ Participants predicted the final height of an animated rising bar based on cues 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

@@ -10,7 +10,7 @@ Participants played a continuous 8-bit style video game while EEG was recorded t
 
 ## File Scan Result
 
-> **Kernel SHA256**: `44ba692bce80533a303f7b5de9ce7e38b19bce72989fb3af22da701f0aa3c3f8`
+> **Kernel SHA256**: `61f1ba9fb5fb093515699389d7452e5aa40118a47b7ad6c331067fbda5430ea1`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -52,27 +52,29 @@ Participants played a continuous 8-bit style video game while EEG was recorded t
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
-### Normal Task 1: Oddball target detection (P300 classification)
+### Potential Task 1: Oddball target detection (P300 classification)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.25 s, tmax = 0.75 s, target_events = [`S 20`, `S 29`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `S 20` | 0 | Standard/frequent tone (probable) |
   | `S 29` | 1 | Rare/target tone (probable) |
 - **Evidence**:
   - DOI: 10.1016/j.neuroimage.2016.02.075 — Origin dataset publication; LASSO classifier trained on oddball target vs standard events for P300 detection using tmin=-0.25s, tmax=0.75s, baseline=-500 to -300ms
   - DOI: 10.1016/j.neuroimage.2025.121521 — Decodes naturalistic game behaviors from EEG oscillatory patterns
 - **Kernel Notes**: CRITICAL — Analysis.md references ODDBALL STANDARD and ODDBALL RARE labels, but only generic codes S 20 and S 29 appear in scan. Count of 17 matches expected oddball count. Kernel must load raw file Stim channel or annotation stream to decode label mapping before processing. Baseline correction: -500 to -300 ms if mapping confirmed.
+
+---
 
 ### Potential Task 2: Gambling outcome classification (win vs loss)
 - **Task Type**: classification
@@ -81,13 +83,15 @@ Participants played a continuous 8-bit style video game while EEG was recorded t
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `S 50` | 0 | Loss outcome (probable, 15 occurrences) |
   | `S 53` | 1 | Win outcome (probable, 16 occurrences) |
 - **Evidence**:
   - DOI: 10.1016/j.neuroimage.2016.02.075 — Same paper reports LASSO classifier on gambling wins vs losses with same epoch parameters; only 14 files contain gambling events (small sample warning)
 - **Kernel Notes**: CRITICAL — GAMBLING WIN/LOSS labels from analysis.md not in scanned data. S 50 (15) and S 53 (16) counts approximate the 14-file gambling subset. Kernel must verify Stim channel mapping. Only 14 files contribute gambling events; expect imbalanced epochs. Baseline correction: -500 to -300 ms.
+
+---
 
 ### Potential Task 3: Six-class naturalistic game behavior classification
 - **Task Type**: classification
@@ -96,8 +100,8 @@ Participants played a continuous 8-bit style video game while EEG was recorded t
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `S 90` | 1 | Missile launch button press (probable, 13562 occurrences) |
   | `S 91` | 2 | Star collection — reward (probable, 4443 occurrences) |
   | `S 92` | 3 | Ammunition box collection (probable, 1810 occurrences) |

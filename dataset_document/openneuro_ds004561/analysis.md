@@ -9,7 +9,7 @@ Participants experienced electrical muscle stimulation that actuated their hand 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `60a5e98f949d2b8ff5248518d585d8eb27ef0b462d3274617dd5587a5695b562`
+> **Kernel SHA256**: `f00995041342336d1f6ee3e5019cf487f455faa9166f90e934af860fd6e844a3`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Participants experienced electrical muscle stimulation that actuated their hand 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -46,7 +46,9 @@ Participants experienced electrical muscle stimulation that actuated their hand 
 - **Evidence**: DOI: https://doi.org/10.1523/JNEUROSCI.1116-23.2023
 - **Kernel Notes**: Class 1 pools both voluntary movement conditions (pretest + posttest) as self-generated agency contrasts against externally-actuated stimulation. Verify that stimulation artifact does not bias classifier toward stimulation condition. Consider separate condition-wise analysis to check for pretest/posttest differences before pooling.
 
-### Normal Task 1: Condition Classification (3-class)
+---
+
+### Potential Task 1: Condition Classification (3-class)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to event onset)
@@ -62,6 +64,8 @@ Participants experienced electrical muscle stimulation that actuated their hand 
 
 - **Evidence**: Dataset readme and paradigm description. Primary paper (DOI: https://doi.org/10.1523/JNEUROSCI.1116-23.2023) supports condition-specific neural dynamics, though classification=relevant ref focuses on 2-class agency contrast.
 - **Kernel Notes**: 3-class task captures condition-specific neural signatures. Use caution when interpreting stimulation condition due to EMS artifact. Pre-test and post-test voluntary movements serve as within-subject controls but may exhibit adaptation effects.
+
+---
 
 ### Potential Task 1: Agency RT / Attribution Time-Course Analysis
 - **Task Type**: classification

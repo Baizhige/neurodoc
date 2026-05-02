@@ -42,8 +42,8 @@ Resting-state EEG recording featuring alternating one-minute intervals of eyes-o
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -55,14 +55,15 @@ Resting-state EEG recording featuring alternating one-minute intervals of eyes-o
 - **Label Route**: `misc`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | Control | 0 | BDI≤7 (no/minimal depression symptoms) |
-  | Depressive | 1 | BDI≥13 (clinical depression) |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | Needs verification | BDI≤7 → y=0 (Control, no/minimal depression); BDI≥13 → y=1 (Depressive). Derived from participants.tsv BDI scores. |
 - **Super Meta Notes**: Labels derived from BDI scores in participants.tsv by threshold mapping. Kernel step: (1) Read BDI scores for each subject from participant metadata. (2) Apply threshold: BDI≤7 → Control (y=0), BDI≥13 → Depressive (y=1). (3) Extract 4-second segments from `Eyes Open` and `Eyes Closed` blocks, excluding first/last 10s per block. (4) Merge segment labels with subject-level BDI-derived depression labels.
 - **Evidence**:
   - DOI: 10.3389/fpsyt.2023.1132996 — Multi-class classification of depression status (cMDD vs pMDD vs None vs Control) using spatial correlations of EEG amplitude fluctuations during eyes-open and eyes-closed rest with BDI-derived group labels.
 - **Kernel Notes**: Raw event IDs map to annotated labels: `1` → `Eyes Open`, `2` → `Eyes Closed` (verify via metadata). Remove first/last 10s of each eyes-open/eyes-closed block as artifact rejection. Each ~60s block yields ~10 usable 4-second segments after exclusion. Apply subject-level BDI thresholding consistently across all segments from same subject.
+
+---
 
 ### Classical Task 2: Depression Subtype Multi-Class Classification (cMDD/pMDD/None/Control)
 - **Task Type**: classification
@@ -71,30 +72,31 @@ Resting-state EEG recording featuring alternating one-minute intervals of eyes-o
 - **Label Route**: `misc`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | Control | 0 | BDI≤7, no MDD history |
-  | None | 1 | BDI≥13, depressive symptoms but no MDD history |
-  | pMDD | 2 | BDI≥13, past MDD diagnosis |
-  | cMDD | 3 | BDI≥13, current MDD diagnosis |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | Needs verification | BDI≤7 + no MDD history → y=0 (Control); BDI≥13 + no MDD history → y=1 (None); BDI≥13 + past MDD → y=2 (pMDD); BDI≥13 + current MDD → y=3 (cMDD). Derived from participants.tsv BDI scores and clinical interview data. |
 - **Super Meta Notes**: Labels derived from BDI scores and clinical interview data in participants.tsv. Kernel step: (1) Read BDI scores and clinical MDD status from participant metadata. (2) Apply mapping: BDI≤7 → Control (y=0); BDI≥13 + clinical interview → None (y=1, symptoms without MDD history), pMDD (y=2, past MDD), cMDD (y=3, current MDD). (3) Extract 4-second segments from `Eyes Open` and `Eyes Closed` blocks. (4) Merge segment labels with subject-level multi-class depression subtype labels.
 - **Evidence**:
   - DOI: 10.3389/fpsyt.2023.1132996 — Multi-class classification of depression status (cMDD vs pMDD vs None vs Control) using spatial correlations of EEG amplitude fluctuations during eyes-open and eyes-closed rest with BDI-derived group labels.
 - **Kernel Notes**: Raw event IDs map to annotated labels: `1` → `Eyes Open`, `2` → `Eyes Closed`. Remove first/last 10s of each eyes-open/eyes-closed block as artifact rejection. Each ~60s block yields ~10 usable 4-second segments. Class imbalance expected: Control and cMDD may be overrepresented compared to None/pMDD subtypes. Apply subject-level multi-class mapping consistently across all segments.
 
-### Normal Task 1: Eyes-Open vs Eyes-Closed State Classification
+---
+
+### Potential Task 1: Eyes-Open vs Eyes-Closed State Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4 s, overlap = 0.0, target_events = [`Eyes Open`, `Eyes Closed`], remove_first_last_s = 10
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | Eyes Open | 0 | Eyes-open resting state block |
-  | Eyes Closed | 1 | Eyes-closed resting state block |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | 1 | 0 | Eyes-open resting state block |
+  | 2 | 1 | Eyes-closed resting state block |
 - **Evidence**: Plausible from paradigm; resting-state eyes-open/eyes-closed contrast is well-established in EEG literature. No specific DOI for this dataset yet.
 - **Kernel Notes**: Raw event IDs map to annotated labels: `1` → `Eyes Open`, `2` → `Eyes Closed`. Standard binary contrast task for verifying preprocessing pipeline.
+
+---
 
 ### Potential Task 1: Depression Severity Continuous Prediction (BDI Score Regression)
 - **Task Type**: regression
@@ -103,9 +105,9 @@ Resting-state EEG recording featuring alternating one-minute intervals of eyes-o
 - **Label Route**: `misc`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | BDI continuous | 0–63 | Beck Depression Inventory score per subject |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | Needs verification | Continuous BDI score (0–63) as regression target per subject. Derived from participants.tsv. |
 - **Super Meta Notes**: Kernel step: (1) Read BDI scores from participant metadata. (2) Assign continuous BDI score (0–63 scale) as regression target for all segments from same subject. (3) Train regression model to predict BDI from EEG features.
 - **Evidence**: Supported by DOI 10.3389/fpsyt.2023.1132996 (BDI used for group assignment), extended to continuous prediction rather than categorical thresholding.
 - **Kernel Notes**: BDI ranges 0–63; consider log-transform or normalization for regression target. Report Pearson correlation between predicted and actual BDI as primary metric.

@@ -9,7 +9,7 @@ Participants walked over uneven terrain at different speeds while high-density E
 
 ## File Scan Result
 
-> **Kernel SHA256**: `eec29ae51dff17785ba0eb410e00b3b9ac95a5f5192003e7cbe81d79322222a6`
+> **Kernel SHA256**: `eb03be6070bc8c13950b231396c06c065c2431316e93aebb45bc75f64dea3272`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -38,8 +38,8 @@ Participants walked over uneven terrain at different speeds while high-density E
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

@@ -15,7 +15,7 @@ The TUSZ corpus plays a vital role in the development and testing of advanced se
 
 ## File Scan Result
 
-> **Kernel SHA256**: `79affa516f7074d9405abede4f1d0ce3fe72507bfd35d9c597125e101aab87e0`
+> **Kernel SHA256**: `0c90e3ec94547026731787ac95cb32b924b667dc778975c503f0d947daff981f`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -41,8 +41,8 @@ The TUSZ corpus plays a vital role in the development and testing of advanced se
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 

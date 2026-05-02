@@ -9,7 +9,7 @@ Participants used voice-guided imagery to induce and sustain 15 distinct emotion
 
 ## File Scan Result
 
-> **Kernel SHA256**: `9c087043f37ac6921fc1b534eb9f79b4f58c41884cf33a3bbd5820b1f68a4d5c`
+> **Kernel SHA256**: `b26c7592cfd95f8963be17e60817fb304b389205cb1f3d5f9c8d2cca0031473e`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -52,8 +52,8 @@ Participants used voice-guided imagery to induce and sustain 15 distinct emotion
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -213,7 +213,7 @@ Participants used voice-guided imagery to induce and sustain 15 distinct emotion
 - Event durations are zero in BIDS files (impulse markers), requiring epoch parameters to be inferred from paper descriptions rather than derived from event boundaries.
 - Subject count discrepancy: metadata states 31 subjects but 34 files completed; the File Scan Result shows 34 subjects with complete Age/Gender/YOB data and 32/34 with Handedness data.
 - The dataset contains 16 emotion events (`anger`, `awe`, `compassion`, `content`, `disgust`, `excite`, `fear`, `frustration`, `grief`, `happy`, `jealousy`, `joy`, `love`, `relief`, `relax`, `sad`) but papers describe 15 emotion narratives, creating ambiguity around whether `excite` and/or `relax` should be treated as emotions or control conditions.
-- `subject_age` and `subject_sex` fields are missing from BIDS files; age and gender information is only available through the non-BIDS `Age` and `Gender` info fields in participants.tsv.
+- `age` and `sex` fields are missing from BIDS files; age and gender information is only available through the non-BIDS `Age` and `Gender` info fields in participants.tsv.
 - `device` metadata is missing from BIDS files despite the use of a high-density 256-channel EEG system (only 219 channels present in processed data).
 - `prebase_instruct` event count (33) does not match `prebase` event count (34), suggesting one subject may be missing the pre-baseline instruction event.
 - `InitialInstructions` event count (31) is lower than the number of completed files (34), suggesting 3 subjects may lack this event or it was not recorded.

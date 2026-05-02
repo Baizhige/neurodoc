@@ -9,7 +9,7 @@ Participants viewed resting and movement scenes in a Mixed Reality (MR) stereo v
 
 ## File Scan Result
 
-> **Kernel SHA256**: `a70e3482770baa1ec8f19a91dfce8d718d12edcbb4b06607b7e4451767e3a200`
+> **Kernel SHA256**: `4413fa79df8b82d3f35ee2b20b9e7e6c8a8ab59438e05322163058428bf672e3`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Participants viewed resting and movement scenes in a Mixed Reality (MR) stereo v
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -44,7 +44,7 @@ Participants viewed resting and movement scenes in a Mixed Reality (MR) stereo v
 
 - **Notes**: Continuous EEG segmented into sliding windows. Labels derived from per-subject, per-scene subjective ratings (5-point ordinal scales for fatigue level and comfort level). Binary classification: comfort state vs fatigue state. Analysis focuses on brain network connectivity features (PLV, betweenness centrality, clustering coefficient, node efficiency, characteristic path length) in delta (0.5–4 Hz), theta (4–8 Hz), alpha (8–13 Hz) bands.
 
-### Normal Task 1: MR Fatigue Condition Blocks (Sustained States)
+### Potential Task 1: MR Fatigue Condition Blocks (Sustained States)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
 - **Epoch Parameters**: tmin = 0.0, tmax = 300.0, overlap = null

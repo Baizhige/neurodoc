@@ -9,7 +9,7 @@ Thirteen experienced trance channelers performed alternating 5-minute blocks of 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `2dae4eccd153c0f54620bb55ee284ed6ebe47dc306b8abaa5ee6c09a6c3c539e`
+> **Kernel SHA256**: `5031f81be9c933b0df8c283b80d338a523e54709511d6b945057f6f12330a2f5`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -34,8 +34,8 @@ Thirteen experienced trance channelers performed alternating 5-minute blocks of 
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

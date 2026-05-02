@@ -27,8 +27,8 @@ Participants performed a one-dimensional cursor BCI task using mental imagery in
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | complete | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | Exp1 and Exp2 used a Neuroscan SynAmps RT amplifier, while Exp3 used a Biosemi Active Two system. |
 
 ## Tasks

@@ -9,7 +9,7 @@ Nightly sleep monitoring and pre-sleep resting recordings using ear-EEG and part
 
 ## File Scan Result
 
-> **Kernel SHA256**: `f3dc6f84457dde259198b2c8ce281375ff4cefab30da313223fbbeef7bd99c92`
+> **Kernel SHA256**: `d3ad857648439ab648bc0832ed69b2979b6d01565177499cc4c735023afb04c2`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Nightly sleep monitoring and pre-sleep resting recordings using ear-EEG and part
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | missing | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -41,7 +41,7 @@ Nightly sleep monitoring and pre-sleep resting recordings using ear-EEG and part
   | subject_sex | m -> 0; f -> 1 |
 - **Evidence**:
   - participants.tsv — N=9 subjects with complete gender information (6 male, 3 female)
-- **Notes**: Binary classification of participant sex from continuous sleep EEG segments. Uses 30-second non-overlapping segmentation matching standard sleep epoch duration. Class imbalance noted (6:3 male:female ratio). The Info Field name `subject_sex` reflects the BIDS-compliant field name from the current File Scan Result, superseding the legacy `gender` reference.
+- **Notes**: Binary classification of participant sex from continuous sleep EEG segments. Uses 30-second non-overlapping segmentation matching standard sleep epoch duration. Class imbalance noted (6:3 male:female ratio). The Info Field name `sex` reflects the BIDS-compliant field name from the current File Scan Result, superseding the legacy `gender` reference.
 
 ### Classical Task 2: Wake Resting-State Segmentation with Gender Label
 - **Task Type**: classification
@@ -54,7 +54,7 @@ Nightly sleep monitoring and pre-sleep resting recordings using ear-EEG and part
   |------------|-----------------|
   | subject_sex | m -> 0; f -> 1 |
 - **Evidence**:
-- **Notes**: Archetype C with native info column (gender from participants.tsv). Since gender is a pre-existing BIDS participants.tsv column, no kernel derivation is needed — Meta Level remains raw. The 10-s segmentation with no overlap is applied to continuous wake resting-state recordings (task-wake, ~3.5h duration) where no discriminating events exist; the 512 marker is an EDF-to-SET conversion artifact, not an experimental event. The Info Field name `subject_sex` reflects the BIDS-compliant field name from the current File Scan Result.
+- **Notes**: Archetype C with native info column (gender from participants.tsv). Since gender is a pre-existing BIDS participants.tsv column, no kernel derivation is needed — Meta Level remains raw. The 10-s segmentation with no overlap is applied to continuous wake resting-state recordings (task-wake, ~3.5h duration) where no discriminating events exist; the 512 marker is an EDF-to-SET conversion artifact, not an experimental event. The Info Field name `sex` reflects the BIDS-compliant field name from the current File Scan Result.
 
 ### Classical Task 3: Sleep Segmentation with Gender Label
 - **Task Type**: classification
@@ -67,7 +67,7 @@ Nightly sleep monitoring and pre-sleep resting recordings using ear-EEG and part
   |------------|-----------------|
   | subject_sex | m -> 0; f -> 1 |
 - **Evidence**:
-- **Notes**: Continuous sleep EEG is segmented into 30-second epochs (standard sleep epoch length per SKILL default, marked with * since inferred). Gender labels are drawn from participants.tsv as a native info field. This task serves as an alternative to event-based sleep staging when annotation quality is uncertain, predicting participant gender from raw EEG spectral and temporal features without requiring manual sleep stage scoring. The Info Field name `subject_sex` reflects the BIDS-compliant field name from the current File Scan Result.
+- **Notes**: Continuous sleep EEG is segmented into 30-second epochs (standard sleep epoch length per SKILL default, marked with * since inferred). Gender labels are drawn from participants.tsv as a native info field. This task serves as an alternative to event-based sleep staging when annotation quality is uncertain, predicting participant gender from raw EEG spectral and temporal features without requiring manual sleep stage scoring. The Info Field name `sex` reflects the BIDS-compliant field name from the current File Scan Result.
 
 ## Data Quality Notes
 

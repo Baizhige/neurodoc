@@ -9,7 +9,7 @@ A single subject performed directional motor imagery (BCI Competition III, 2005)
 
 ## File Scan Result
 
-> **Kernel SHA256**: `0c3d0c93040028190511ea41a99743313b965b932a8f604a46dc9b38b7dc3634`
+> **Kernel SHA256**: `27cf1cc33a846d0cf195d0dbe6e4c4aab7a6d8ce81440c98ede842867dcadfde`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 ### Event Structure
@@ -25,8 +25,8 @@ A single subject performed directional motor imagery (BCI Competition III, 2005)
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

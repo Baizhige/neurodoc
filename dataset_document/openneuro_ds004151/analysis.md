@@ -9,7 +9,7 @@ Preadolescents (obese and normal-weight, ages 9-10) performed a stop-signal task
 
 ## File Scan Result
 
-> **Kernel SHA256**: `192766816e023e07da05021619601b5aa6434d8f43ad7ecdcd7453d8dcbefb23`
+> **Kernel SHA256**: `befd2bc64e7033bbdac2aa3a33668be32de31140d460b476b0244dd25c682f08`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -32,8 +32,8 @@ Preadolescents (obese and normal-weight, ages 9-10) performed a stop-signal task
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | complete | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -45,10 +45,9 @@ Preadolescents (obese and normal-weight, ages 9-10) performed a stop-signal task
 - **Label Route**: `misc`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
-  | `Ton-` | continuous | Go trial — BMI score (regression target) |
-  | `Ton+` | continuous | Stop-signal trial — BMI score (regression target) |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | Needs verification | Participant BMI score loaded from dataset metadata; assigned as continuous regression target to all epochs from each participant. Source of BMI values in misc route requires confirmation. |
 - **Evidence**:
   - DOI: `10.1109/OJEMB.2024.3425855` — Demonstrates BMI score prediction using EEG-derived functional network features from Go and Stop-signal trials in the openneuro_ds004151 dataset
 - **Kernel Notes**:
@@ -60,6 +59,8 @@ Preadolescents (obese and normal-weight, ages 9-10) performed a stop-signal task
     6. Assign BMI value as regression target to all epochs from each participant
     7. Train stepwise multiple linear regression model to predict BMI from network features
 
+---
+
 ### Classical Task 2: BMI Group Classification from Stop-Signal Task EEG
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -67,10 +68,9 @@ Preadolescents (obese and normal-weight, ages 9-10) performed a stop-signal task
 - **Label Route**: `misc`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
-  | `Ton-` | categorical | Go trial — BMI group (obese=1 / normal-weight=0) |
-  | `Ton+` | categorical | Stop-signal trial — BMI group (obese=1 / normal-weight=0) |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | Needs verification | Participant BMI group derived from dataset metadata using standard pediatric BMI percentile thresholds (obese=1 / normal-weight=0); assigned as categorical target to all epochs from each participant. Source of BMI values in misc route requires confirmation. |
 - **Evidence**:
   - DOI: `10.1016/j.ijpsycho.2021.04.003` — Study design compares 27 obese preadolescents (mean BMI=25.9) vs 29 normal-weight peers (mean BMI=17.5) during stop-signal task; Go trials (Ton-) and Stop-signal trials (Ton+) analyzed for N200, P300a, P300b ERP components with group as independent variable
 - **Kernel Notes**:
@@ -81,6 +81,8 @@ Preadolescents (obese and normal-weight, ages 9-10) performed a stop-signal task
     5. Class imbalance: ~70% go vs ~30% stop trials; consider stratified sampling during model training
     6. Verify participant group labels exist in dataset metadata or derive from BMI values stored in misc route
 
+---
+
 ### Potential Task 1: Go vs Stop Trial Type Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -88,10 +90,10 @@ Preadolescents (obese and normal-weight, ages 9-10) performed a stop-signal task
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
-  | `Ton-` | categorical | Go trial — response required |
-  | `Ton+` | categorical | Stop-signal trial — inhibition required |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `Ton-` | 0 | Go trial — response required |
+  | `Ton+` | 1 | Stop-signal trial — inhibition required |
 - **Evidence**: Plausible from paradigm structure alone; stop-signal paradigm inherently defines two distinct trial types with different cognitive demands (response execution vs response inhibition)
 - **Kernel Notes**:
     1. Extract epochs from both event IDs `Ton-` (14364 events) and `Ton+` (6156 events)

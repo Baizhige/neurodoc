@@ -9,7 +9,7 @@ Participants navigated a virtual architectural environment using keyboard contro
 
 ## File Scan Result
 
-> **Kernel SHA256**: `a4ee721c67fc7e3f214518ed2177ab65a92391289b064776f62f01ad052f2cdc`
+> **Kernel SHA256**: `9c41d220edf20ac47ba885bd73b9985cff5185a0779bc715684afd69c7a1d9e2`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,21 +23,22 @@ Participants navigated a virtual architectural environment using keyboard contro
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
-### Primary Task 1: Publisher-defined BIDS task: Default Task
+### Classical Task 1: Publisher-defined BIDS task: Default Task
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = Needs verification, tmax = Needs verification, target_events = [Needs verification]
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004980 DOI: https://doi.org/10.18112/openneuro.ds004980.v1.0.0
 
-### Normal Task 1: Navigation Action Classification (multiclass)
+### Potential Task 1: Navigation Action Classification (multiclass)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = ["Key pressed: UpArrow (forward)", "Key pressed: RightArrow (turn right)", "Key pressed: LeftArrow (turn left)", "Door opened", "ColliderRoom1 has been entered", "ColliderRoom2 has been entered"]
@@ -57,7 +58,7 @@ Participants navigated a virtual architectural environment using keyboard contro
 - **Evidence**: DOI: 10.1111/ejn.16461 — "Human brain dynamics dissociate early perceptual and late motor-related stages of affordance processing" (Berlin TU research group; virtual 3D environment affordance task with door navigation and SAM ratings; partial support for paradigm relevance)
 - **Kernel Notes**: Epochs align to event onset. Key released events captured but not used as primary alignment points. SAM events (SAM:start, SAM:completed) must be excluded from navigation epochs — treat separately in Normal Task 2. Admin events (Reset insideActivator flag, player position reseted) excluded. Re-verify event IDs against actual BIDS files during kernel execution.
 
-### Normal Task 2: SAM Rating Assessment
+### Potential Task 2: SAM Rating Assessment
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.5 s, target_events = ["SAM:start", "SAM:completed"]

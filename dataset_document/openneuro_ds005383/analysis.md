@@ -10,7 +10,7 @@ Participants engaged in self-paced natural reading of Chinese sentences and news
 
 ## File Scan Result
 
-> **Kernel SHA256**: `aa57f78b39f44f306ef0cc03667bfd2bbe6eeff381a0079cf70a1b432f230c91`
+> **Kernel SHA256**: `e079baf097588764c21ac96898e0c1c3743b12276a4bbc8711d755195ac46bf9`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -217,8 +217,8 @@ Participants engaged in self-paced natural reading of Chinese sentences and news
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -238,7 +238,7 @@ Participants engaged in self-paced natural reading of Chinese sentences and news
   - DOI: 10.1038/s41597-025-05036-2 — TMNRED dataset paper confirming 30 participants read Chinese sentences with vs without target semantic words during 2-second stimulus presentation windows; binary classification of target presence.
 - **Kernel Notes**: Event IDs 31 and 32 confirmed in available events with consistent ~17,280 total count (240/file × 72 files). The 2-second tmax aligns with stimulus presentation duration from paper. This is the primary classification task supported by direct evidence from the dataset paper.
 
-### Normal Task 1: Multiclass Condition Code Classification
+### Potential Task 1: Multiclass Condition Code Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = 0 s, tmax = 2.0 s, target_events = ["16", "21", "22", "26", "31", "32", "36", "41", "42", "46", "51", "52", "55", "56", "61"]

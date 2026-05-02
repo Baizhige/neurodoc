@@ -9,7 +9,7 @@ Intraoperative recording of Somatosensory Evoked Potentials (SEP) elicited by me
 
 ## File Scan Result
 
-> **Kernel SHA256**: `c6927a6f05fd704c492903a3a626c79c005833345653ec08e757ad043712fd51`
+> **Kernel SHA256**: `4dd836a838b3227126431a4f91e0762ad4f20e70885e4637bf3c42326302aea4`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,21 +23,21 @@ Intraoperative recording of Somatosensory Evoked Potentials (SEP) elicited by me
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
 ### Classical Task 1: SEP SNR Regression by Stimulation Rate
 - **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5` (no raw events detected; stimulation timing derived from metadata encoding)
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 0.05 s (medianus N20), segment_length = 0.1 s (tibial P40), overlap = 0.0
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | Value | Meaning |
+  |----------|-------|---------|
   | `stimulation_rate_2.7Hz` | continuous | SNR value at 2.7 Hz stimulation |
   | `stimulation_rate_4.7Hz` | continuous | SNR value at 4.7 Hz stimulation |
   | `stimulation_rate_8.7Hz` | continuous | SNR value at 8.7 Hz stimulation |
@@ -50,6 +50,8 @@ Intraoperative recording of Somatosensory Evoked Potentials (SEP) elicited by me
   - DOI: 10.1016/j.clinph.2023.03.008 — Uses this dataset to optimize SEP stimulation rate by analyzing SNR as a function of stimulation rate (2.7–28.7 Hz), finding optimal rates of 12.7 Hz for medianus and 4.7 Hz for tibial SEP recordings
 - **Kernel Notes**: No discrete events exist in raw data (`no_events` only). Super meta parsing required to extract stimulation rate from filenames/metadata. Segmentation aligned to stimulus artifact detection; compute SNR = signal_amplitude / (0.5 * noise_rms) per sweep for regression target. Downsampling from 20 kHz to ~1000 Hz recommended.
 
+---
+
 ### Potential Task 1: Continuous Segmentation for Artifact Rejection
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
@@ -57,6 +59,11 @@ Intraoperative recording of Somatosensory Evoked Potentials (SEP) elicited by me
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**: N/A (unsupervised segmentation for artifact detection/quality control before SEP averaging)
+- **Target Definition**:
+  | Event ID | Value | Meaning |
+  |----------|-------|---------|
+  | Needs verification | continuous | Unsupervised segmentation for artifact detection/quality control before SEP averaging; no discrete events in raw data |
+
 - **Notes**: No BIDS trial event markers; stimulation rate (8 levels) encoded in filename/metadata only. Continuous segmentation enables artifact rejection before per-stimulus SEP averaging.
 
 ## Data Quality Notes

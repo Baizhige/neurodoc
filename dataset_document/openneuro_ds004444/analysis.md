@@ -9,7 +9,7 @@ Brain-computer interfacing task based on sensorimotor rhythms (SMR) using high-d
 
 ## File Scan Result
 
-> **Kernel SHA256**: `7099a55557381396528266b6d303f832d46976f4878c0906ade12f39be7104ff`
+> **Kernel SHA256**: `704e1b61480a170c44c7b9e995057aa5512532ced9602aa70d56171f011d823b`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -23,8 +23,8 @@ Brain-computer interfacing task based on sensorimotor rhythms (SMR) using high-d
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

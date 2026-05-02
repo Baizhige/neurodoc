@@ -10,7 +10,7 @@ This dataset investigates the directional characteristics of brain alpha waves d
 
 ## File Scan Result
 
-> **Kernel SHA256**: `48e0c09d8efe7799c84862c95346506dcc817f9524266beb676ba7a20aac2ab4`
+> **Kernel SHA256**: `614f4280256d040cf684c9cb04894dc6ad0c8b1027c4b3128273d6c9d3e2dc27`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -52,8 +52,8 @@ This dataset investigates the directional characteristics of brain alpha waves d
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -83,7 +83,7 @@ This dataset investigates the directional characteristics of brain alpha waves d
 
 ---
 
-### Normal Task 1: Encoding Mode Classification (Simultaneous vs. Sequential)
+### Potential Task 1: Encoding Mode Classification (Simultaneous vs. Sequential)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.5 s, tmax = 6.0 s, target_events = [`Stimulus/S   28`, `Stimulus/S   40`, `Stimulus/S   60`, `Stimulus/S  100`]

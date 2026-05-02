@@ -9,7 +9,7 @@ A frequency-tagging EEG study measuring steady-state visual evoked potentials (S
 
 ## File Scan Result
 
-> **Kernel SHA256**: `31c1edbda1ea156c9a954d9e15b07057e742dd664f402adcf412b02e91845bca`
+> **Kernel SHA256**: `6ce48fad481e55fe53481be1473b61633aa00d8fa25e651f47765baabd5adbf4`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -35,8 +35,8 @@ A frequency-tagging EEG study measuring steady-state visual evoked potentials (S
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | missing | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

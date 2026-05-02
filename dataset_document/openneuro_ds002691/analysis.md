@@ -9,7 +9,7 @@ A sustained internal attention task where participants were asked to either ment
 
 ## File Scan Result
 
-> **Kernel SHA256**: `5d036d2cbdcc15eaed25e3fde5582a6d7f2786f274dff77aa3a066b5f6616fcb`
+> **Kernel SHA256**: `fb454029d18aa154c492a342c895e6471b4061e610fd610d0a0521f8a0c7f724`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -138,8 +138,8 @@ A sustained internal attention task where participants were asked to either ment
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

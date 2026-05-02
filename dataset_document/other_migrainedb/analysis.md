@@ -13,7 +13,7 @@ The dataset enables comparison of sensory processing and resting-state EEG activ
 
 ## File Scan Result
 
-> **Kernel SHA256**: `544fe6fad1eb26fcf2b990ee48fcaf4bfecaad1ae0564a4eb2d9cfa0fd06fb2b`
+> **Kernel SHA256**: `04696b9de008be8dc5f92ddbac8703374e60d9fbe7d14a0898fb627163677e2f`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -51,8 +51,8 @@ The dataset enables comparison of sensory processing and resting-state EEG activ
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | partial (108/117) | N/A |
-| `subject_sex` | partial (108/117) | N/A |
+| `age` | partial (108/117) | N/A |
+| `sex` | partial (108/117) | N/A |
 | `device` | missing | N/A |
 
 

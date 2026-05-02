@@ -33,8 +33,8 @@ Nine subjects (B01-B09) performed two-class cued motor imagery of the left and r
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | a device with Ag/AgCl electrode |
 
 ## Tasks

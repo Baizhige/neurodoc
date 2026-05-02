@@ -9,7 +9,7 @@ An inner-speech production task where participants mentally vocalized eight spec
 
 ## File Scan Result
 
-> **Kernel SHA256**: `988afec0b6493fd2034ec9543c69e9333904ca7281a8d505b99709b43248b148`
+> **Kernel SHA256**: `4f2de5406cb60178e592714636cc664f33eed495d6308c5d8de877b6cbd0deed`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -33,8 +33,8 @@ An inner-speech production task where participants mentally vocalized eight spec
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -46,8 +46,8 @@ An inner-speech production task where participants mentally vocalized eight spec
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `event_111` | 0 | Social word: child |
   | `event_112` | 0 | Social word: daughter |
   | `event_113` | 0 | Social word: father |
@@ -62,6 +62,8 @@ An inner-speech production task where participants mentally vocalized eight spec
   - DOI: 10.1101/2022.05.24.492109 — "Binary classification (social vs numeric) with Random Forest achieving 62.81% EEG-only accuracy (chance 50%) using 2s epoch windows around stimulus onset."
 - **Kernel Notes**: Verify event-to-word mapping against events.tsv columns. Events 111-114 correspond to child/daughter/father/wife; events 125-128 correspond to four/three/ten/six. Aggregate to binary labels by collapsing events 111-114 → y=0 (social) and events 125-128 → y=1 (numeric).
 
+---
+
 ### Classical Task 2: Inner Speech 8-Class Word Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
@@ -69,8 +71,8 @@ An inner-speech production task where participants mentally vocalized eight spec
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `event_111` | 0 | Social word: child |
   | `event_112` | 1 | Social word: daughter |
   | `event_113` | 2 | Social word: father |

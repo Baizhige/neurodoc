@@ -9,7 +9,7 @@ Participants viewed object and word stimuli presented at 5 Hz in rapid visual st
 
 ## File Scan Result
 
-> **Kernel SHA256**: `5e138eb3a207e9d0dcec61de127b7afcbbe8ecb2dd10353e4a650020f8d9d9c6`
+> **Kernel SHA256**: `f74bffc308de7d9f386abdd0e7165c65b35d2e3959b2f1710c98fff8f739aade`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -29,8 +29,8 @@ Participants viewed object and word stimuli presented at 5 Hz in rapid visual st
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

@@ -27,8 +27,8 @@ Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly fema
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | Age range: 16–26 years, mean age: approximately 18.33 years |
-| `subject_sex` | complete | Males (M): 8, females (F): 28, predominantly female |
+| `age` | complete | Age range: 16–26 years, mean age: approximately 18.33 years |
+| `sex` | complete | Males (M): 8, females (F): 28, predominantly female |
 | `device` | missing | EEG was recorded using a 23-channel Neurocom monopolar system (XAI-MEDICA, Ukraine) with silver/silver chloride electrodes placed per the international 10–20 system, linked ear reference, 500 Hz sampling rate, 0.5–45 Hz bandpass filtering, 50 Hz notch filtering, and electrode impedance kept below 5 kΩ. |
 
 
@@ -111,10 +111,10 @@ Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly fema
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_age` | no mapping |
+  | `age` | no mapping |
 - **Evidence**:
   - Paradigm section notes ages 16-26
-  - Info table confirms `subject_age` is complete
+  - Info table confirms `age` is complete
 - **Notes**: Predicts subject age from mental arithmetic EEG. Requires pairing event epochs with info metadata by subject ID. Age range is narrow (10 years), limiting regression difficulty.
 
 ### Potential Task 2: Subject Sex Classification from Mental Arithmetic
@@ -126,10 +126,10 @@ Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly fema
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
-  | `subject_sex` | no mapping |
+  | `sex` | no mapping |
 - **Evidence**:
   - Paradigm notes predominantly female subjects
-  - Info table confirms `subject_sex` is complete
+  - Info table confirms `sex` is complete
 - **Notes**: Binary sex classification from mental arithmetic EEG. Predominantly female sample may cause class imbalance. Requires super meta pairing with subject info.
 
 ### Potential Task 3: Continuous Quality Regression (Rest Condition)

@@ -9,7 +9,7 @@ Participants played a real MOBA (Multiplayer Online Battle Arena) game while 60-
 
 ## File Scan Result
 
-> **Kernel SHA256**: `N/A`
+> **Kernel SHA256**: `3845a0c331dc5f16a329a15339e10b0bc56df899f063f2efaa8ccce6f8a59519`
 > **EEGUnity Version**: `N/A`
 > **Scan Type**: Full
 
@@ -33,8 +33,8 @@ Participants played a real MOBA (Multiplayer Online Battle Arena) game while 60-
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -78,6 +78,7 @@ Participants played a real MOBA (Multiplayer Online Battle Arena) game while 60-
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4.0 s *, overlap = 0.5 *
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: N/A — unannotated resting-state segments extracted from eye-open resting recordings
 - **Evidence**: OpenNeuro metadata indicates resting-state recordings were collected
 - **Kernel Notes**: Verify from dataset README which runs correspond to eye-open resting. Apply preprocessing filter 1-40 Hz.
@@ -87,6 +88,7 @@ Participants played a real MOBA (Multiplayer Online Battle Arena) game while 60-
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 4.0 s *, overlap = 0.5 *
 - **Label Route**: `event`
+- **Meta Level**: raw
 - **Target Definition**: N/A — unannotated resting-state segments extracted from eye-closed resting recordings
 - **Evidence**: OpenNeuro metadata indicates resting-state recordings were collected
 - **Kernel Notes**: Verify from dataset README which runs correspond to eye-closed resting. Apply preprocessing filter 1-40 Hz.

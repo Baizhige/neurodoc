@@ -9,7 +9,7 @@ An audiovisual simple reaction-time task (AVSRT) in which participants press a b
 
 ## File Scan Result
 
-> **Kernel SHA256**: `f237482396a85eec6555c494a62d58c7b723ae9791bdfdc5e6816c78f50e4ec9`
+> **Kernel SHA256**: `6ef3d79d2cd164466ef2d325b9b71b720b3aa054f8c6c3ab69f941a8178ae637`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -32,17 +32,17 @@ An audiovisual simple reaction-time task (AVSRT) in which participants press a b
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
-### Normal Task 1: Stimulus Modality Classification (Auditory / Visual / Audiovisual)
+### Potential Task 1: Stimulus Modality Classification (Auditory / Visual / Audiovisual)
 - **Task Type**: classification
-- **Epoch Method**: epoch_by_event_hdf5
+- **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s
-- **Label Route**: event
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -55,11 +55,11 @@ An audiovisual simple reaction-time task (AVSRT) in which participants press a b
 - **Evidence** (DOI): https://doi.org/10.18112/openneuro.ds006777.v1.0.0
 - **Kernel Notes**: Three conditions are well-balanced (~16 000 trials each). Exclude system artifacts (event_201, event_50, event_65536–event_65737) from epoching. Apply 0.5–40 Hz bandpass and baseline correction (−0.2 to 0 s) before decoding. event_1 (Response_button) is a motor response marker; exclude from stimulus classification.
 
-### Normal Task 2: Reaction-Time Regression
+### Potential Task 2: Reaction-Time Regression
 - **Task Type**: regression
-- **Epoch Method**: epoch_by_event_hdf5
+- **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s
-- **Label Route**: misc
+- **Label Route**: `misc`
 - **Meta Level**: super
 - **Target Definition**:
 
@@ -70,11 +70,11 @@ An audiovisual simple reaction-time task (AVSRT) in which participants press a b
 - **Evidence** (DOI): https://doi.org/10.18112/openneuro.ds006777.v1.0.0
 - **Kernel Notes**: RT target is stored in misc/reaction_time channel (derived, not native raw event). Stimulus modality (event_3/4/5) can be included as a covariate. Guard against missed responses (no following Response_button) and catch trials with multiple responses per stimulus. Store derivation source, unit (seconds), and version metadata per Type 2 kernel mode.
 
-### Normal Task 3: Response-Locked Motor Epoch (Lateralized Readiness Potential / Motor ERP)
+### Potential Task 3: Response-Locked Motor Epoch (Lateralized Readiness Potential / Motor ERP)
 - **Task Type**: classification
-- **Epoch Method**: epoch_by_event_hdf5
+- **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.6 s, tmax = 0.4 s
-- **Label Route**: event
+- **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
 
@@ -87,9 +87,9 @@ An audiovisual simple reaction-time task (AVSRT) in which participants press a b
 
 ### Potential Task 1: Group Membership Prediction (ASD vs. Neurotypical)
 - **Task Type**: classification
-- **Epoch Method**: epoch_by_segmentation_hdf5
+- **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s
-- **Label Route**: misc
+- **Label Route**: `misc`
 - **Meta Level**: super
 - **Target Definition**:
 

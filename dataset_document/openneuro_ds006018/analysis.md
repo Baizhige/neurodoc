@@ -9,7 +9,7 @@ A suite of standardized ERP tasks from the ERP CORE compendium (Kappenman et al.
 
 ## File Scan Result
 
-> **Kernel SHA256**: `7998c7fdd31fcb765d3a858c2d64059ceff98c366149177134ff2e5696d06109`
+> **Kernel SHA256**: `8b5c0872b71fc83bab38255acea125e0bacd8ec9d316cb6850376d645710bf93`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -71,8 +71,8 @@ A suite of standardized ERP tasks from the ERP CORE compendium (Kappenman et al.
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | missing | N/A |
+| `age` | missing | N/A |
+| `sex` | missing | N/A |
 | `device` | missing | N/A |
 
 ## Tasks

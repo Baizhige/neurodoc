@@ -9,7 +9,7 @@ Participants learned and performed specific rhythmic drumming patterns at varyin
 
 ## File Scan Result
 
-> **Kernel SHA256**: `882d940e77cbeb5c4509f76c94b23d52ca0f7bc0269920c7fa5d639f1303a6c4`
+> **Kernel SHA256**: `7aed5c304aac4369d0004429b7396675e178ba824ec606318ab0cf186029ff47`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -116,8 +116,8 @@ Participants learned and performed specific rhythmic drumming patterns at varyin
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | complete | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
@@ -129,10 +129,9 @@ Participants learned and performed specific rhythmic drumming patterns at varyin
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|----|---------|
-  | `Stimulus/S XX` | continuous | Drum key press / beat onset (regression predictor) |
-  | `Stimulus/S XX` | continuous | Timing adjustment (regression target; derived from Stimulus timing relative to expected tempo) |
+  | Event ID | Value | Meaning |
+  |----------|-------|---------|
+  | `Stimulus/S 1`–`Stimulus/S 135` (selected codes) | continuous | Drum key press / beat onset (regression predictor); timing adjustment derived from inter-beat interval relative to expected tempo |
 - **Evidence**:
   - DOI: 10.1111/psyp.14589 — Regression-based ERP analysis examining whether trial-to-trial fluctuations in RewP (240-340ms at FCz) predict timing adjustment on subsequent trials during a continuous drumming task at three tempos.
 - **Kernel Notes**:
@@ -142,16 +141,18 @@ Participants learned and performed specific rhythmic drumming patterns at varyin
   4. CRITICAL: No `feedback_onset` event found in event scan. The reference paper (10.1111/psyp.14589) mentions feedback_onset events; verify if events.tsv contains these with different naming convention. If absent, derive feedback timing from Stimulus timing + experiment protocol delay.
   5. Filter low-count event codes (<100 occurrences: S36, S38, S42-S52, S76, S78) if noise becomes problematic.
 
-### Normal Task 1: Drum Beat Detection (Single-Class ERP Analysis)
+---
+
+### Potential Task 1: Drum Beat Detection (Single-Class ERP Analysis)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`Stimulus/S 1`, `Stimulus/S 2`, `Stimulus/S 3`, `Stimulus/S 4`, `Stimulus/S 5`, `Stimulus/S 6`, `Stimulus/S 7`, `Stimulus/S 8`, `Stimulus/S 9`, `Stimulus/S 10`, `Stimulus/S 11`, `Stimulus/S 12`, `Stimulus/S 14`, `Stimulus/S 15`, `Stimulus/S 21`, `Stimulus/S 22`, `Stimulus/S 23`, `Stimulus/S 24`, `Stimulus/S 25`, `Stimulus/S 26`, `Stimulus/S 27`, `Stimulus/S 28`, `Stimulus/S 29`, `Stimulus/S 30`, `Stimulus/S 31`, `Stimulus/S 32`, `Stimulus/S 36`, `Stimulus/S 38`, `Stimulus/S 42`, `Stimulus/S 43`, `Stimulus/S 44`, `Stimulus/S 45`, `Stimulus/S 46`, `Stimulus/S 47`, `Stimulus/S 48`, `Stimulus/S 49`, `Stimulus/S 51`, `Stimulus/S 52`, `Stimulus/S 61`, `Stimulus/S 62`, `Stimulus/S 63`, `Stimulus/S 64`, `Stimulus/S 65`, `Stimulus/S 66`, `Stimulus/S 67`, `Stimulus/S 68`, `Stimulus/S 69`, `Stimulus/S 70`, `Stimulus/S 71`, `Stimulus/S 72`, `Stimulus/S 76`, `Stimulus/S 78`, `Stimulus/S 81`, `Stimulus/S 82`, `Stimulus/S 83`, `Stimulus/S 84`, `Stimulus/S 85`, `Stimulus/S 86`, `Stimulus/S 87`, `Stimulus/S 88`, `Stimulus/S 89`, `Stimulus/S 90`, `Stimulus/S 91`, `Stimulus/S 92`, `Stimulus/S 94`, `Stimulus/S 95`, `Stimulus/S101`, `Stimulus/S102`, `Stimulus/S103`, `Stimulus/S104`, `Stimulus/S105`, `Stimulus/S106`, `Stimulus/S107`, `Stimulus/S108`, `Stimulus/S109`, `Stimulus/S110`, `Stimulus/S111`, `Stimulus/S112`, `Stimulus/S116`, `Stimulus/S121`, `Stimulus/S122`, `Stimulus/S123`, `Stimulus/S124`, `Stimulus/S125`, `Stimulus/S126`, `Stimulus/S127`, `Stimulus/S128`, `Stimulus/S129`, `Stimulus/S130`, `Stimulus/S131`, `Stimulus/S132`, `Stimulus/S134`, `Stimulus/S135`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|----|---------|
-  | `Stimulus/S XX` | 0 | Drum key press / beat onset |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `Stimulus/S 1`–`Stimulus/S 135` (selected codes) | 0 | Drum key press / beat onset (single-class ERP marker) |
 - **Evidence**:
   - DOI: 10.1111/psyp.14589 (indirect) — Continuous drumming paradigm supports stimulus-locked ERP analysis; single-class beat detection provides baseline ERP characterization.
 - **Kernel Notes**:

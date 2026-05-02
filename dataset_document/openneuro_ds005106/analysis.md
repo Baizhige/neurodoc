@@ -9,7 +9,7 @@ Human infant EEG dataset recorded while infants viewed 200 distinct object image
 
 ## File Scan Result
 
-> **Kernel SHA256**: `3c079cb5e9aafd2fd2562b71d3eb2aa2e06908c03425ba325d1b3c70042a0b3d`
+> **Kernel SHA256**: `7560520e894ee1bad24306facae2eb1bcf2947668f83f6c17190f176684f574a`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -223,18 +223,17 @@ Human infant EEG dataset recorded while infants viewed 200 distinct object image
 ### Info
 | Field | Completeness | Notes |
 |---|---|---|
-| `subject_age` | missing | N/A |
-| `subject_sex` | complete | N/A |
+| `age` | missing | N/A |
+| `sex` | complete | N/A |
 | `device` | missing | N/A |
 
 ## Tasks
 
 ### Classical Task 1: Superordinate Classification (Animate vs. Inanimate)
-
-**Task Type**: Binary classification
-**Epoch Method**: epoch_by_event_hdf5
+**Task Type**: classification
+**Epoch Method**: `epoch_by_event_hdf5`
 **Epoch Parameters**: tmin=-0.2, tmax=0.8, alignment=onset, filter_width=None
-**Label Route**: stim
+**Label Route**: `event`
 **Meta Level**: super
 
 | Event | y | Meaning |
@@ -254,11 +253,10 @@ Human infant EEG dataset recorded while infants viewed 200 distinct object image
 ---
 
 ### Classical Task 2: Category-Level Classification (10 Mid-Level Categories)
-
-**Task Type**: Multi-class classification (10 classes)
-**Epoch Method**: epoch_by_event_hdf5
+**Task Type**: classification
+**Epoch Method**: `epoch_by_event_hdf5`
 **Epoch Parameters**: tmin=-0.2, tmax=0.8, alignment=onset, filter_width=None
-**Label Route**: stim
+**Label Route**: `event`
 **Meta Level**: raw
 
 | Event | y | Meaning |
@@ -276,12 +274,11 @@ Human infant EEG dataset recorded while infants viewed 200 distinct object image
 
 ---
 
-### Normal Task 1: Object-Specific Identification (200 Classes)
-
-**Task Type**: Multi-class classification (200 classes)
-**Epoch Method**: epoch_by_event_hdf5
+### Potential Task 1: Object-Specific Identification (200 Classes)
+**Task Type**: classification
+**Epoch Method**: `epoch_by_event_hdf5`
 **Epoch Parameters**: tmin=-0.2, tmax=0.8, alignment=onset, filter_width=None
-**Label Route**: stim
+**Label Route**: `event`
 **Meta Level**: raw
 
 | Event | y | Meaning |
