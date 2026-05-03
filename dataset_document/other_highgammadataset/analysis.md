@@ -37,7 +37,7 @@ The High-Gamma Dataset contains EEG recordings from 14 healthy participants perf
 ### Classical Task 1: Four-Class Motor Imagery Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s, target_events = [`left_hand`, `right_hand`, `feet`, `tongue`]
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s, target_events = [`left_hand`, `right_hand`, `feet`, `rest`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:

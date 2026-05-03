@@ -739,25 +739,28 @@ def info_completeness_values(analysis_text: str, **_) -> tuple[bool, str]:
 def kernel_sha256_matches(
     analysis_text: str, dataset_name: str = "", **_
 ) -> tuple[bool, str]:
-    """Kernel SHA256 in document must match actual SHA256 of the kernel file."""
+    """Kernel SHA256 in document must match the effective scan kernel file."""
     if not dataset_name:
         return False, ""
 
-    sha_m = re.search(
-        r">\s*\*\*Kernel SHA256\*\*:\s*`?([a-f0-9]{64})`?", analysis_text
+    field_m = re.search(
+        r">\s*\*\*Kernel SHA256\*\*:\s*`?([^`\n]+)`?", analysis_text
     )
-    if not sha_m:
+    if not field_m:
         return False, ""  # missing fingerprint caught by kernel_fingerprint_exists
 
-    doc_sha = sha_m.group(1)
+    doc_value = field_m.group(1).strip()
 
-    kernel_path = KERNELS_DIR / f"{dataset_name}.py"
-    if not kernel_path.exists():
+    specific_kernel: Path | None = None
+    direct_kernel = KERNELS_DIR / f"{dataset_name}.py"
+    if direct_kernel.exists():
+        specific_kernel = direct_kernel
+    else:
         for sub in KERNELS_DIR.iterdir():
             if sub.is_dir():
                 candidate = sub / f"{dataset_name}.py"
                 if candidate.exists():
-                    kernel_path = candidate
+                    specific_kernel = candidate
                     break
 
     if not kernel_path.exists():
@@ -770,6 +773,74 @@ def kernel_sha256_matches(
             True,
             f"SHA256 mismatch: doc={doc_sha[:16]}… file={actual_sha[:16]}…"
             f"— rerun scan to update fingerprint",
+        )
+    return False, ""
+
+
+@_cc
+def kernel_sha256_matches(
+    analysis_text: str, dataset_name: str = "", **_
+) -> tuple[bool, str]:
+    """Kernel SHA256 in document must match the effective scan kernel file."""
+    if not dataset_name:
+        return False, ""
+
+    field_m = re.search(
+        r">\s*\*\*Kernel SHA256\*\*:\s*`?([^`\n]+)`?", analysis_text
+    )
+    if not field_m:
+        return False, ""
+
+    doc_value = field_m.group(1).strip()
+
+    specific_kernel: Path | None = None
+    direct_kernel = KERNELS_DIR / f"{dataset_name}.py"
+    if direct_kernel.exists():
+        specific_kernel = direct_kernel
+    else:
+        for sub in KERNELS_DIR.iterdir():
+            if sub.is_dir():
+                candidate = sub / f"{dataset_name}.py"
+                if candidate.exists():
+                    specific_kernel = candidate
+                    break
+
+    effective_kernel = specific_kernel
+    if effective_kernel is None:
+        try:
+            from scan_engine import detect_kernel_path as _detect_kernel_path
+        except Exception:
+            _detect_kernel_path = None
+        if _detect_kernel_path is not None:
+            kernel_path = _detect_kernel_path(dataset_name)
+            if kernel_path:
+                candidate = Path(kernel_path)
+                if not candidate.is_absolute():
+                    candidate = ROOT_DIR / kernel_path
+                if candidate.exists():
+                    effective_kernel = candidate
+
+    generic_ok = effective_kernel is None or effective_kernel.name == "bids.py"
+
+    if doc_value == "N/A":
+        if specific_kernel is not None:
+            return True, "Kernel SHA256 is `N/A` but a dataset-specific kernel file exists"
+        if generic_ok:
+            return False, ""
+        return True, "Kernel SHA256 is `N/A` but scan uses a concrete shared kernel file"
+
+    if not re.fullmatch(r"[a-f0-9]{64}", doc_value):
+        return True, f"invalid Kernel SHA256 value: {doc_value!r}"
+
+    if effective_kernel is None:
+        return True, f"kernel file not found; cannot verify SHA256 (doc: {doc_value[:16]}...)"
+
+    raw = effective_kernel.read_bytes().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
+    actual_sha = hashlib.sha256(raw).hexdigest()
+    if actual_sha != doc_value:
+        return (
+            True,
+            f"SHA256 mismatch: doc={doc_value[:16]}... file={actual_sha[:16]}... rerun scan to update fingerprint",
         )
     return False, ""
 
@@ -996,6 +1067,38 @@ def _check_rule(
     return violated, detail
 
 
+def _analysis_allows_no_dataset_kernel(analysis_text: str, dataset_name: str) -> bool:
+    """Return True when kernel-target rules may be skipped for this dataset."""
+    if not analysis_text or not dataset_name:
+        return False
+
+    field_m = re.search(
+        r">\s*\*\*Kernel SHA256\*\*:\s*`?([^`\n]+)`?", analysis_text
+    )
+    if not field_m or field_m.group(1).strip() != "N/A":
+        return False
+
+    direct_kernel = KERNELS_DIR / f"{dataset_name}.py"
+    if direct_kernel.exists():
+        return False
+    for sub in KERNELS_DIR.iterdir():
+        if sub.is_dir() and (sub / f"{dataset_name}.py").exists():
+            return False
+
+    try:
+        from scan_engine import detect_kernel_path as _detect_kernel_path
+    except Exception:
+        _detect_kernel_path = None
+
+    if _detect_kernel_path is None:
+        return True
+
+    kernel_path = _detect_kernel_path(dataset_name)
+    if not kernel_path:
+        return True
+    return Path(kernel_path).name == "bids.py"
+
+
 # ── In-memory checker (used by NeuroAudit server) ───────────────────────────
 
 def load_rules(rulebook_path: Path | str | None = None) -> list[dict]:
@@ -1034,6 +1137,8 @@ def check_analysis_text(
             texts_to_check.append(("analysis_md", analysis_text))
         if target in ("kernel", "both") and kernel_text:
             texts_to_check.append(("kernel", kernel_text))
+        elif target in ("kernel", "both") and _analysis_allows_no_dataset_kernel(analysis_text, dataset_name):
+            continue
 
         for file_type, text in texts_to_check:
             violated, detail = _check_rule(
@@ -1100,6 +1205,8 @@ def check_dataset(
         if target in ("kernel", "both"):
             if kernel_text:
                 texts_to_check.append(("kernel", kernel_text))
+            elif _analysis_allows_no_dataset_kernel(analysis_text, dataset_name):
+                continue
             elif target == "kernel":
                 violations.append({
                     "dataset": dataset_name,
