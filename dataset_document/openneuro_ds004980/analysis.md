@@ -36,7 +36,15 @@ Participants navigated a virtual architectural environment using keyboard contro
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
+- **Target Definition**:
+
+  | Event ID | y | Meaning |
+  |----------|---|---|
+  | Needs verification | Needs verification | Needs verification |
+
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004980 DOI: https://doi.org/10.18112/openneuro.ds004980.v1.0.0
+
+---
 
 ### Potential Task 1: Navigation Action Classification (multiclass)
 - **Task Type**: classification
@@ -46,17 +54,18 @@ Participants navigated a virtual architectural environment using keyboard contro
 - **Meta Level**: raw
 - **Target Definition**:
 
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `Key pressed: UpArrow (forward)` | 0 | Forward navigation |
   | `Key pressed: RightArrow (turn right)` | 1 | Right turn action |
   | `Key pressed: LeftArrow (turn left)` | 2 | Left turn action |
   | `Door opened` | 3 | Door affordance activated |
   | `ColliderRoom1 has been entered` | 4 | Room 1 spatial boundary |
   | `ColliderRoom2 has been entered` | 5 | Room 2 spatial boundary |
-
 - **Evidence**: DOI: 10.1111/ejn.16461 — "Human brain dynamics dissociate early perceptual and late motor-related stages of affordance processing" (Berlin TU research group; virtual 3D environment affordance task with door navigation and SAM ratings; partial support for paradigm relevance)
 - **Kernel Notes**: Epochs align to event onset. Key released events captured but not used as primary alignment points. SAM events (SAM:start, SAM:completed) must be excluded from navigation epochs — treat separately in Normal Task 2. Admin events (Reset insideActivator flag, player position reseted) excluded. Re-verify event IDs against actual BIDS files during kernel execution.
+
+---
 
 ### Potential Task 2: SAM Rating Assessment
 - **Task Type**: classification
@@ -66,13 +75,14 @@ Participants navigated a virtual architectural environment using keyboard contro
 - **Meta Level**: raw
 - **Target Definition**:
 
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `SAM:start` | 0 | SAM rating initiated |
   | `SAM:completed` | 1 | SAM rating completed |
-
 - **Evidence**: DOI: 10.1111/ejn.16461 — Mentions SAM ratings as experimental design element; paradigm explicitly records valence/arousal/dominance assessments during virtual navigation
 - **Kernel Notes**: Separate task from navigation classification. Use SAM:start as alignment point to capture pre-rating baseline and rating response. Player entered/exited SAM Activator events provide zone context but SAM:start/SAM:completed are primary epoch alignment markers.
+
+---
 
 ### Potential Task 1: Navigation Error Detection
 - **Task Type**: classification
@@ -82,12 +92,13 @@ Participants navigated a virtual architectural environment using keyboard contro
 - **Meta Level**: raw
 - **Target Definition**:
 
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `Wall touched: trial failed!` | 1 | Navigation error detected |
-
 - **Evidence**: Paradigm supports error-related processing analysis; wall collision events indicate failed affordance actions
 - **Kernel Notes**: Single-class detection task. Could be used as contrasting condition against successful navigation (Normal Task 1). Event count (2183 total across dataset) suggests adequate trials for detection analysis.
+
+---
 
 ### Potential Task 2: Spatial Boundary Processing
 - **Task Type**: classification
@@ -97,12 +108,11 @@ Participants navigated a virtual architectural environment using keyboard contro
 - **Meta Level**: raw
 - **Target Definition**:
 
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `Player left StartSquare` | 0 | Start zone exit |
   | `ColliderRoom1 has been entered` | 1 | Room 1 entered |
   | `ColliderRoom2 has been entered` | 2 | Room 2 entered |
-
 - **Evidence**: DOI: 10.1111/ejn.16461 — Architectural transitions investigated as affordance markers
 - **Kernel Notes**: Focus on spatial boundary crossings as discrete environmental events. Plausible from paradigm alone without direct classification=relevant reference. Could complement door affordance analysis in Normal Task 1.
 

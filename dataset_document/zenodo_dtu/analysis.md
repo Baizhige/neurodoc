@@ -41,14 +41,16 @@ Eighteen subjects (S1-S18) participated in an auditory attention decoding (AAD) 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `attend_speaker_1` | 0 | Attend to speaker 1 |
   | `attend_speaker_2` | 1 | Attend to speaker 2 |
 - **Super Meta Notes**: (not applicable - raw meta)
 - **Evidence**:
   - DOI: 10.1088/2057.1976.ae09b2 — Uses DTU dataset (18 subjects) for binary left/right auditory attention classification, achieving 88.2% accuracy with a 2-second window.
 - **Kernel Notes**: Raw annotations `attend_speaker_1` and `attend_speaker_2` already exist as per-trial labels in the dataset. The kernel extracts these as long events spanning the full trial duration. If `.mat` files are missing `stimu` or `attended` fields, kernel should produce `unknown` annotations. Users can apply additional windowing (e.g., 2s) inside the kernel if needed for specific model architectures.
+
+---
 
 ### Potential Task 1: Auditory Attention Decoding - Speaker 1 vs. Speaker 2 (epoch_by_long_event)
 - **Task Type**: classification
@@ -57,6 +59,12 @@ Eighteen subjects (S1-S18) participated in an auditory attention decoding (AAD) 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `attend_speaker_1` | 0 | Attend to speaker 1 |
+  | `attend_speaker_2` | 1 | Attend to speaker 2 |
+
 - **Notes**: Annotations are per-trial; trial boundaries from `data.stimu` onset times. If the dataset's `.mat` file is missing `stimu` or `attended` fields, the kernel will produce `unknown` annotations.
 
 | Event | y | Meaning |

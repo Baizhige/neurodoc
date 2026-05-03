@@ -86,8 +86,8 @@ EEG was recorded during interaction with an exoskeleton in a gait or robotic-ass
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
-|---|---|-------|
+| Event ID | y | Meaning |
+|---|---|---|
 | `S13` | 0 | Movement type 1 — condition-3 epoch |
 | `S23` | 1 | Movement type 2 — condition-3 epoch |
 | `S33` | 2 | Movement type 3 — condition-3 epoch |
@@ -96,10 +96,11 @@ EEG was recorded during interaction with an exoskeleton in a gait or robotic-ass
 | `S63` | 5 | Movement type 6 — condition-3 epoch |
 | `S73` | 6 | Movement type 7 — condition-3 epoch |
 | `S83` | 7 | Movement type 8 — condition-3 epoch |
-
 - **Evidence**:
   - DOI: 10.1371/journal.pone.0182578 — Cited in epoch alignment context as classifying upper limb movements (elbow flexion/extension, forearm supination/pronation, hand open/close, rest, and imagination) from low-frequency EEG during exoskeleton-assisted movement; indirect classification support (not present in formal reference extraction list).
 - **Kernel Notes**: All eight SXX3 events carry exactly 1750 occurrences each, indicating a perfectly balanced condition marker — strongly preferred as the primary classification target. Apply 0.3–3 Hz bandpass filter consistent with low-frequency MI literature. The symmetric [-0.4, 0.4] s window captures both movement preparation and early execution phases relative to stimulus onset. Verify movement-type semantic mapping (e.g., elbow vs hand vs forearm) against the dataset events.tsv before assigning human-readable class names. Subject-wise z-scoring recommended to mitigate cross-subject variability introduced by individual exoskeleton fitting configurations.
+
+---
 
 ---
 
@@ -112,8 +113,8 @@ EEG was recorded during interaction with an exoskeleton in a gait or robotic-ass
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
-|---|---|-------|
+| Event ID | y | Meaning |
+|---|---|---|
 | `S13` | 0 | Movement type 1 — condition-3 epoch |
 | `S23` | 1 | Movement type 2 — condition-3 epoch |
 | `S33` | 2 | Movement type 3 — condition-3 epoch |
@@ -126,9 +127,10 @@ EEG was recorded during interaction with an exoskeleton in a gait or robotic-ass
 | `S103` | 9 | Movement type 10 — condition-3 epoch |
 | `S113` | 10 | Movement type 11 — condition-3 epoch |
 | `S123` | 11 | Movement type 12 — condition-3 epoch |
-
 - **Evidence**: Structural inference from event code pattern — all SXX3 events share a consistent count (1250–1750 per type) and the suffix-3 digit is uniform across all 12 movement-type groups, plausibly extending the 8-class paradigm to a full 12-class set. No direct reference available.
 - **Kernel Notes**: S93–S123 yield ~1250 trials versus ~1750 for S13–S83, suggesting S9X–S12X may encode a distinct sub-paradigm block (e.g., different task phase, bilateral vs unilateral, or imagined vs executed extension). Kernel must verify sub-paradigm identity before merging all 12 classes. Apply class-balancing (downsample to 1250 trials per class) if merged. The S96/S106/S116/S126 low-count events (31–44 occurrences) are excluded from target_events and likely encode error or transition markers.
+
+---
 
 ---
 
@@ -141,8 +143,8 @@ EEG was recorded during interaction with an exoskeleton in a gait or robotic-ass
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
-|---|---|-------|
+| Event ID | y | Meaning |
+|---|---|---|
 | `S11` | 0 | Movement type 1 — assistance condition A |
 | `S12` | 1 | Movement type 1 — assistance condition B |
 | `S21` | 0 | Movement type 2 — assistance condition A |
@@ -159,7 +161,6 @@ EEG was recorded during interaction with an exoskeleton in a gait or robotic-ass
 | `S72` | 1 | Movement type 7 — assistance condition B |
 | `S81` | 0 | Movement type 8 — assistance condition A |
 | `S82` | 1 | Movement type 8 — assistance condition B |
-
 - **Evidence**: Structural inference from symmetric SXX1/SXX2 pairing across all 8 primary movement types with near-equal per-event counts (~1847–1885), consistent with a two-level within-movement manipulation (e.g., powered vs unpowered exoskeleton, or high vs low assistance torque). No direct reference available.
 - **Kernel Notes**: Label assignment pools across movement types: suffix digit 1 → y=0 (condition A), suffix digit 2 → y=1 (condition B). Movement type identity must be stored as a metadata covariate, and movement-type-stratified cross-validation is strongly recommended to prevent movement class leaking into assistance-condition decoding. The asymmetric [-0.2, 1.0] s window accommodates sustained exoskeleton torque response following stimulus onset. SXX6 low-count events (97–135 occurrences) are excluded; they likely encode anomalous or transition trials and should be marked as artifacts during preprocessing.
 

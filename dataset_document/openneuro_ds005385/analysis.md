@@ -3012,8 +3012,8 @@ Resting-state EEG was recorded with eyes open and eyes closed before and after a
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `age_20_29` | 0 | Age group 20-29 years |
   | `age_30_39` | 1 | Age group 30-39 years |
   | `age_40_49` | 2 | Age group 40-49 years |
@@ -3025,6 +3025,8 @@ Resting-state EEG was recorded with eyes open and eyes closed before and after a
   - DOI: `10.3390/brainsci12020218` — Age-Related Alterations in EEG Network Connectivity study, supporting age classification methodology and connectivity analysis.
 - **Kernel Notes**: Verify subject age metadata availability in dataset. Filter to 1-45 Hz. Compute eLORETA connectivity in 7 bands. Extract small-world features per hemisphere. Map ages to 5 bins (20-29, 30-39, 40-49, 50-59, 60-70). Exclude administrative events during segmentation.
 
+---
+
 ### Classical Task 2: EEG Biomarker Reliability Classification (Super Meta)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
@@ -3032,8 +3034,8 @@ Resting-state EEG was recorded with eyes open and eyes closed before and after a
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `biomarker_negative` | 0 | Below delta power threshold (non-biomarker) |
   | `biomarker_positive` | 1 | Above delta power threshold (biomarker-positive) |
 - **Super Meta Notes**: Derived from raw EEG by computing right fronto-temporal delta band (1-4 Hz) power from 5-min eyes-closed and eyes-open resting recordings. Threshold applied to classify biomarker-positive vs biomarker-negative. Kernel step: Bandpass filter 1-60 Hz, compute delta band PSD, apply threshold from training data to produce binary labels.
@@ -3042,6 +3044,8 @@ Resting-state EEG was recorded with eyes open and eyes closed before and after a
   - DOI: `10.1038/s41598-025-26778-4` — Electrophysiological resting-state signatures study using graph metrics (efficiency, clustering) from same cohort for biomarker validation.
 - **Kernel Notes**: Verify baseline vs 5-year follow-up session identification. Filter 1-60 Hz. Compute delta band (1-4 Hz) power from right frontal (F4, F8) and right temporal (T4, T6) electrodes. Apply classification threshold. Verify event ID mapping from events.tsv.
 
+---
+
 ### Potential Task 1: Resting Condition Segmentation (long event)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
@@ -3049,9 +3053,9 @@ Resting-state EEG was recorded with eyes open and eyes closed before and after a
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `event_1`–`event_256` | — | Primary condition markers (~160-260 each) |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `event_1`–`event_256` | — | Primary condition markers (~160-260 each); Needs verification |
   | `event_255` | 0 | Secondary condition marker (95 occurrences) |
   | `event_256` | 1 | Tertiary condition marker (2 occurrences) |
 - **Notes**: The dataset uses BrainVision S-codes (S1-S207+) to encode specific resting-state conditions (pre/post cognitive tasks × eyes open/closed). Event IDs with ~200 counts likely correspond to primary condition markers, while lower-count events represent session-specific or follow-up markers. Subject-specific events (counts 1-3) correspond to follow-up sessions.

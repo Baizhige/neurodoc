@@ -51,15 +51,16 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 - **Meta Level**: raw
 - **Target Definition**:
 
-  | Event | y | Meaning |
+  | Event ID | y | Meaning |
   |----|---|---|
   | 65281 | 1 | BioSemi condition code 65281 (Haiku) |
   | 65282 | 2 | BioSemi condition code 65282 (Senryu) |
   | 65283 | 3 | BioSemi condition code 65283 (non-poetic control) |
   | 65284 | 4 | BioSemi condition code 65284 (additional condition) |
-
 - **Evidence**: DOI: https://doi.org/10.1038/s41597-025-06189-w
 - **Kernel Notes**: Use high-count events (65281-65284, ~848 each) for primary classification. Low-count events (65280, 65285-65288, 4 each) are likely calibration pulses—exclude from analysis. Decode condition mapping from events.tsv for definitive label assignment. The reference paper confirms 3-class paradigm (Haiku, Senryu, non-poetic control); verify if 4 event codes map to 3 conditions or represent sub-conditions.
+
+---
 
 ### Potential Task 1: Aesthetic Judgment Regression
 - **Task Type**: regression
@@ -69,15 +70,16 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 - **Meta Level**: super
 - **Target Definition**:
 
-  | Event | y | Meaning |
+  | Event ID | Value | Meaning |
   |----|---|---|
   | 65281 | continuous | Aesthetic Appeal rating (1-7 scale) |
   | 65282 | continuous | Vivid Imagery rating (1-7 scale) |
   | 65283 | continuous | Being Moved rating (1-7 scale) |
   | 65284 | continuous | Originality/Creativity rating (1-7 scale) |
-
 - **Evidence**: DOI: https://doi.org/10.1038/s41597-025-06189-w (partial support for 5 continuous rating dimensions)
 - **Kernel Notes**: Requires super-level meta integration from behavioral ratings file (events.tsv). Labels are continuous rather than categorical; use regression loss instead of classification loss. Five dimensions reported: Aesthetic Appeal, Vivid Imagery, Being Moved, Originality, Creativity. Verify exact dimension-to-event mapping in events.tsv.
+
+---
 
 ### Potential Task 2: Sustained Reading Analysis
 - **Task Type**: regression
@@ -87,15 +89,16 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 - **Meta Level**: raw
 - **Target Definition**:
 
-  | Event | y | Meaning |
+  | Event ID | Value | Meaning |
   |----|---|---|
   | 65281 | 1 | Reading segment for Haiku stimulus |
   | 65282 | 2 | Reading segment for Senryu stimulus |
   | 65283 | 3 | Reading segment for non-poetic control |
   | 65284 | 4 | Reading segment for additional condition |
-
 - **Evidence**: Paradigm plausibility (no reference required)
 - **Kernel Notes**: Variable-length segments capture full reading period per trial. Align segments to stimulus onset markers. Use detected text offset or word count for segmentation boundaries rather than fixed duration. Exclude boundary markers (n=5 admin events).
+
+---
 
 ### Potential Task 1: Neural Correlates of Aesthetic and Creative Cognition
 - **Task Type**: classification
@@ -105,13 +108,12 @@ Participants read and evaluated 210 short poetic (Haiku, Senryu) and non-poetic 
 - **Meta Level**: raw
 - **Target Definition**:
 
-  | Event | y | Meaning |
+  | Event ID | y | Meaning |
   |----|---|---|
   | 65281 | 1 | Poetry condition (aesthetic processing) |
   | 65282 | 1 | Poetry condition (aesthetic processing) |
   | 65283 | 0 | Non-poetry control condition |
   | 65284 | 1 | Poetry condition (aesthetic processing) |
-
 - **Evidence**: DOI: https://doi.org/10.1038/s41597-025-06189-w (paradigm evidence, not direct classification-relevant)
 - **Kernel Notes**: Binary contrast between poetry (Haiku, Senryu, and additional conditions) and non-poetic control. Tests whether aesthetic processing during poetry reading produces distinct neural signatures. Collapse 3 poetry conditions into single class for binary analysis.
 

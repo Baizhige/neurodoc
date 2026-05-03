@@ -51,8 +51,8 @@ Participants engaged in resting-state (eyes open/closed) and task phases involvi
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `1` | 1 | Visual stimuli condition code * |
   | `6` | 1 | Visual stimuli condition code * |
   | `21` | 1 | Visual stimuli condition code * |
@@ -67,6 +67,8 @@ Participants engaged in resting-state (eyes open/closed) and task phases involvi
   - DOI: `10.1038/s41597-025-05881-1` — YOTO dataset validation paper showing visual/auditory/multimodal mental imagery classification with 3-class label mapping (visual=1, auditory=2, multimodal=3)
 - **Kernel Notes**: Extract 4s epochs from imagery phase (post-stimulus onset). Verify event ID to modality mapping from events.tsv — current mapping uses numeric codes as best inference from available raw events; paper describes `visual_square`, `auditory_vowel_a` style labels which may be derived BIDS names.
 
+---
+
 ### Classical Task 2: Publisher-defined BIDS task: Rest1
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
@@ -74,8 +76,17 @@ Participants engaged in resting-state (eyes open/closed) and task phases involvi
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `EyeOpen` | 1 | Eyes-open resting state |
+  | `Eyeclosed` | 2 | Eyes-closed resting state |
+  | `StartInstruction` | Needs verification | Instruction onset — verify if used as epoch marker |
+  | `EndInstruction` | Needs verification | Instruction offset — verify if used as epoch marker |
+
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds005815 DOI: 10.18112/openneuro.ds005815.v2.0.1
 
+---
 
 ### Classical Task 3: Publisher-defined BIDS task: Rest2
 - **Task Type**: classification
@@ -84,8 +95,17 @@ Participants engaged in resting-state (eyes open/closed) and task phases involvi
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `EyeOpen` | 1 | Eyes-open resting state |
+  | `Eyeclosed` | 2 | Eyes-closed resting state |
+  | `StartInstruction` | Needs verification | Instruction onset — verify if used as epoch marker |
+  | `EndInstruction` | Needs verification | Instruction offset — verify if used as epoch marker |
+
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds005815 DOI: 10.18112/openneuro.ds005815.v2.0.1
 
+---
 
 ### Potential Task 1: Multi-task Cognitive (long_event)
 - **Task Type**: classification
@@ -94,6 +114,26 @@ Participants engaged in resting-state (eyes open/closed) and task phases involvi
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `99` | 0 | Admin/session marker |
+  | `1` | 1 | Condition code 1 |
+  | `2` | 2 | Condition code 2 |
+  | `3` | 3 | Condition code 3 |
+  | `5` | 4 | Condition code 5 |
+  | `StartInstruction` | 5 | Instruction onset |
+  | `Eyeclosed` | 6 | Eyes-closed onset |
+  | `FixationBreak` | 7 | Fixation break |
+  | `EyeOpen` | 8 | Eyes-open onset |
+  | `EndInstruction` | 9 | Instruction offset |
+  | `88` | 10 | Response code 88 |
+  | `6`-`9` | 11 | Condition code range 6-9 (needs verification) |
+  | `21` | 12 | Code 21 |
+  | `22` | 13 | Code 22 |
+  | `23` | 14 | Code 23 |
+  | `30`-`35` | 15 | Imagery code range 30-35 (needs verification) |
+
 - **Notes**: Numerical codes require decoding from events.tsv. Eyes-open/closed markers (`EyeOpen`, `Eyeclosed`) can be used for resting-state analysis.
 
  | Event | y | Meaning |

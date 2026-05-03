@@ -37,13 +37,15 @@ Thirty-two recordings (23 EEG + 9 fNIRS) were collected from subjects performing
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `R` | 0 | Clean interval (rise) |
   | `F` | 1 | Motion-contaminated interval (fall) |
 - **Evidence**:
   - DOI: 10.13026/C2988P — PhysioNet dataset provides paired EEG/fNIRS with trigger annotations marking clean (R) and artifact-contaminated (F) intervals for benchmarking artifact removal algorithms.
 - **Kernel Notes**: Extract epochs anchored at R (clean) and F (artifact) trigger events. Each epoch represents a ~2 second interval. Labels: R→0 (clean), F→1 (contaminated). Verify exact trigger labels from events.tsv. (replaces Classical Task 1 from original analysis.md)
+
+---
 
 ### Potential Task 1: Physical Activity Classification - Resting-State Segmentation (epoch_by_segmentation)
 - **Task Type**: classification
@@ -52,6 +54,11 @@ Thirty-two recordings (23 EEG + 9 fNIRS) were collected from subjects performing
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: N/A - activity labels must be assigned post-hoc from filename metadata (see notes)
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---|
+  | Needs verification | Needs verification | Activity labels must be assigned post-hoc from filename metadata; no event annotations present in data |
+
 - **Notes**: No event annotations are present; the kernel only records the recording ID in the description field. To assign activity labels for supervised learning, map recording IDs to physical activities using the dataset README. For artifact detection tasks, all recordings can be treated as motion-contaminated (except rest recordings).
 
 ## Data Quality Notes

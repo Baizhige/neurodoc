@@ -44,14 +44,16 @@ A phoneme discrimination task where participants listened to speech sounds—inc
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `consonant` | 0 | Consonant phoneme stimulus |
-  | `vowel` | 1 | Vowel phoneme stimulus |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `stimulus` | 0 | Consonant phoneme stimulus (Needs verification: exact event ID for consonant trials) |
+  | `stimulus` | 1 | Vowel phoneme stimulus (Needs verification: exact event ID for vowel trials) |
 - **Super Meta Notes**: Labels derived from stimulus presentation logs mapping phoneme categories to stimulus onset events. Requires loading external phoneme category file to map each `stimulus` event to consonant/vowel label.
 - **Evidence**:
   - DOI: 10.1038/s41597-025-05187-2 — classifies consonant vs vowel phonemes from TMS-EEG during speech perception
 - **Kernel Notes**: Load phoneme category label file; match stimulus timestamps to phoneme identity; extract consonant/vowel category. Apply TMS artifact rejection before feature extraction.
+
+---
 
 ### Classical Task 2: Word Type Classification (Real vs Pseudoword)
 - **Task Type**: classification
@@ -60,14 +62,16 @@ A phoneme discrimination task where participants listened to speech sounds—inc
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `real_word` | 0 | Real word stimulus |
-  | `pseudoword` | 1 | Pseudoword stimulus |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `stimulus` | 0 | Real word stimulus (Needs verification: exact event ID for real word trials) |
+  | `stimulus` | 1 | Pseudoword stimulus (Needs verification: exact event ID for pseudoword trials) |
 - **Super Meta Notes**: Labels derived from stimulus presentation logs mapping word types to stimulus onset events. Requires loading external word-type label file to classify each `stimulus` event.
 - **Evidence**:
   - DOI: 10.1038/s41597-025-05187-2 — classifies real words vs pseudowords from TMS-EEG during speech perception
 - **Kernel Notes**: Load word-type label file; match stimulus timestamps to word/pseudoword identity. The 2000 Hz sampling rate provides sufficient temporal resolution for lexical processing effects.
+
+---
 
 ### Classical Task 3: Single Phoneme Identity Classification
 - **Task Type**: classification
@@ -76,23 +80,25 @@ A phoneme discrimination task where participants listened to speech sounds—inc
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `/b/` | 0 | bilabial stop |
-  | `/p/` | 1 | bilabial stop (voiceless) |
-  | `/d/` | 2 | alveolar stop |
-  | `/t/` | 3 | alveolar stop (voiceless) |
-  | `/s/` | 4 | alveolar fricative |
-  | `/z/` | 5 | alveolar fricative (voiced) |
-  | `/i/` | 6 | high front vowel |
-  | `/ɛ/` | 7 | mid front vowel |
-  | `/ɑ/` | 8 | low back vowel |
-  | `/u/` | 9 | high back vowel |
-  | `/oʊ/` | 10 | diphthong |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `stimulus` | 0 | /b/ bilabial stop (Needs verification: exact event ID mapping) |
+  | `stimulus` | 1 | /p/ bilabial stop voiceless (Needs verification: exact event ID mapping) |
+  | `stimulus` | 2 | /d/ alveolar stop (Needs verification: exact event ID mapping) |
+  | `stimulus` | 3 | /t/ alveolar stop voiceless (Needs verification: exact event ID mapping) |
+  | `stimulus` | 4 | /s/ alveolar fricative (Needs verification: exact event ID mapping) |
+  | `stimulus` | 5 | /z/ alveolar fricative voiced (Needs verification: exact event ID mapping) |
+  | `stimulus` | 6 | /i/ high front vowel (Needs verification: exact event ID mapping) |
+  | `stimulus` | 7 | /ɛ/ mid front vowel (Needs verification: exact event ID mapping) |
+  | `stimulus` | 8 | /ɑ/ low back vowel (Needs verification: exact event ID mapping) |
+  | `stimulus` | 9 | /u/ high back vowel (Needs verification: exact event ID mapping) |
+  | `stimulus` | 10 | /oʊ/ diphthong (Needs verification: exact event ID mapping) |
 - **Super Meta Notes**: Labels derived from stimulus presentation logs mapping phoneme identity to stimulus onset events. Requires loading phoneme identity mapping file with all 11 phoneme classes.
 - **Evidence**:
   - DOI: 10.1038/s41597-025-05187-2 — classifies single phoneme identity from TMS-EEG ERPs
 - **Kernel Notes**: Requires phoneme label file with stimulus-to-phoneme mapping. Epoch parameters capture N100/P200 components relevant for phoneme discrimination. TMS artifacts should be addressed before feature extraction.
+
+---
 
 ### Potential Task 1: TMS vs Stimulus Classification
 - **Task Type**: classification
@@ -101,8 +107,8 @@ A phoneme discrimination task where participants listened to speech sounds—inc
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `TMS` | 0 | TMS pulse |
   | `stimulus` | 1 | Speech stimulus onset |
 - **Evidence**: Equal event counts (14630 each) indicate systematic 1:1 pairing. Task is supported by paradigm logic; TMS pulses co-occur with stimuli to test speech motor cortex involvement.

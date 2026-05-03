@@ -36,8 +36,8 @@ Participants underwent Rapid Serial Visual Presentation (RSVP) at 5 Hz and a low
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `1` | 0 | Object category 1 |
   | `2` | 1 | Object category 2 |
   | `3` | 2 | Object category 3 |
@@ -63,6 +63,8 @@ Participants underwent Rapid Serial Visual Presentation (RSVP) at 5 Hz and a low
   - DOI: 10.1038/s41597-025-04843-x — This paper presents the MSS dataset with ~800,000 RSVP trials and ~40,000 low-speed trials for 20-category visual object recognition, validating EEG classification using epochs of 0–500ms post-stimulus with a fully connected neural network achieving above-chance decoding across all 20 categories.
 - **Kernel Notes**: Use 500ms epochs from stimulus onset (tmin=0.0s, tmax=0.5s) aligned to event onset. Map event IDs 1–20 to labels 0–19 for 20-category classification. Event ID 99 (catch trials) serves as a 21st class (label 20). Exclude feedback codes 252/254 from stimulus-response epochs to prevent contamination. Apply bandpass filter (1–40 Hz) and baseline correction using pre-stimulus window (e.g., -0.1 to 0 s) if tmin is adjusted. Per-session z-score normalization recommended given the multi-session structure (32 subjects × 1592 files).
 
+---
+
 ### Potential Task 1: RSVP 7-Category Visual Object Recognition Decoding
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -70,8 +72,8 @@ Participants underwent Rapid Serial Visual Presentation (RSVP) at 5 Hz and a low
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `21` | 0 | RSVP category 21 |
   | `22` | 1 | RSVP category 22 |
   | `23` | 2 | RSVP category 23 |

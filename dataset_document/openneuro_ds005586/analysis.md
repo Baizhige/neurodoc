@@ -85,8 +85,8 @@ Participants passively viewed game boards depicting varying numbers of game piec
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S 95` | 0 | Catch/fixation baseline |
   | `Stimulus/S111` | 1 | Occluded, 4 visible pieces (trial type 1) |
   | `Stimulus/S112` | 1 | Occluded, 4 visible pieces (trial type 2) |
@@ -125,6 +125,8 @@ Participants passively viewed game boards depicting varying numbers of game piec
   - DOI: 10.1162/jocn.a_02264 — Same publication (duplicate DOI format)
 - **Kernel Notes**: Baseline correction from -0.2 to 0s. Apply bandpass filter (1-40 Hz). Artifact rejection before epoching. Stimulus codes: 1xx prefix = occluded with 4 visible pieces, 2xx prefix = uncovered with 32 visible pieces. Class labels y=1 vs y=2 distinguish occlusion condition for classification. Use y=0 (S95) as baseline/fixation rejection criteria.
 
+---
+
 ### Potential Task 1: Binary Occlusion Condition Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -132,8 +134,8 @@ Participants passively viewed game boards depicting varying numbers of game piec
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S111` | 0 | Occluded (4 visible pieces) |
   | `Stimulus/S112` | 0 | Occluded (4 visible pieces) |
   | `Stimulus/S113` | 0 | Occluded (4 visible pieces) |
@@ -169,6 +171,8 @@ Participants passively viewed game boards depicting varying numbers of game piec
 - **Evidence**: DOI: 10.1162/jocn_a_02264 — Paradigm encodes occlusion condition via stimulus code prefix (1xx=occluded, 2xx=uncovered); plausible binary classification from visual evoked responses to occlusion manipulation.
 - **Kernel Notes**: Binary classification distinguishing occlusion state. Code prefix 1xx → y=0 (occluded), 2xx → y=1 (uncovered). Excludes 2-digit codes (S11, S15, S21) and catch trials (S95).
 
+---
+
 ### Potential Task 2: Numerosity Discrimination (4 vs 32 Visible Pieces)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -176,8 +180,8 @@ Participants passively viewed game boards depicting varying numbers of game piec
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S111` | 0 | 4 visible pieces |
   | `Stimulus/S112` | 0 | 4 visible pieces |
   | `Stimulus/S113` | 0 | 4 visible pieces |
@@ -213,6 +217,8 @@ Participants passively viewed game boards depicting varying numbers of game piec
 - **Evidence**: Plausible from paradigm — numerosity perception under occlusion is a core research question; DOI 10.1162/jocn_a_02264 shows differential ERP responses to different numerosity conditions.
 - **Kernel Notes**: Binary numerosity discrimination. Code prefix 1xx = 4 visible pieces → y=0, Code prefix 2xx = 32 visible pieces → y=1. Same epoching as occlusion task but targeting distinct numerosity dimension.
 
+---
+
 ### Potential Task 3: Multi-Condition Classification (3 Classes)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -220,8 +226,8 @@ Participants passively viewed game boards depicting varying numbers of game piec
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|--- |--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S 95` | 0 | Catch/fixation baseline |
   | `Stimulus/S111` | 1 | Occluded, 4 pieces (representative) |
   | `Stimulus/S127` | 1 | Occluded, 4 pieces (alternate code) |
@@ -230,6 +236,8 @@ Participants passively viewed game boards depicting varying numbers of game piec
 - **Evidence**: Plausible from paradigm — multi-class discrimination between baseline, occluded, and uncovered conditions.
 - **Kernel Notes**: Three-class classification: y=0 (baseline/fixation), y=1 (occluded with 4 visible pieces), y=2 (uncovered with 32 visible pieces). Selected representative event codes; full multi-class mapping available in Normal Task 1.
 
+---
+
 ### Potential Task 4: Catch Trial Detection
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -237,8 +245,8 @@ Participants passively viewed game boards depicting varying numbers of game piec
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|--- |--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S 95` | 1 | Catch/fixation trial |
   | all others | 0 | Experimental stimulus |
 - **Evidence**: Supported by event structure — S95 (14399 events) is the dominant event type representing catch/fixation baseline trials interspersed throughout the experiment.

@@ -41,8 +41,8 @@ Thirteen subjects listened to two simultaneously presented Dutch stories (left v
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `attend_left` | 0 | Attend to left-ear speaker |
   | `attend_right` | 1 | Attend to right-ear speaker |
 - **Evidence**:

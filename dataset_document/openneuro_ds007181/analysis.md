@@ -40,8 +40,8 @@ Resting-state EEG (part of a full PSG recording) was collected from patients dia
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Sleep stage W` | 0 | Wake |
   | `Sleep stage N1` | 1 | Stage 1 sleep |
   | `Sleep stage N2` | 2 | Stage 2 sleep |

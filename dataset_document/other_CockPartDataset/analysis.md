@@ -58,6 +58,7 @@ Dataset origin and publication unknown. Multi-paradigm EEG corpus (CockPart Data
 | `N400_hiCloze` | 0 | High-cloze (predictable) word - N400 attenuated |
 | `N400_loCloze` | 1 | Low-cloze (unpredictable) word - N400 enhanced |
 
+---
 
 ### Potential Task 2: Natural Speech Auditory Processing - Speech vs. Reversed Speech (epoch_by_long_event)
 - **Task Type**: classification
@@ -73,6 +74,7 @@ Dataset origin and publication unknown. Multi-paradigm EEG corpus (CockPart Data
 | `NaturalSpeech` | 0 | Listening to natural (forward) speech |
 | `NaturalSpeechReverse` | 1 | Listening to reversed (backward) speech |
 
+---
 
 ### Potential Task 3: Speech-in-Noise Modality - Audio vs. Video (epoch_by_long_event)
 - **Task Type**: classification
@@ -88,6 +90,7 @@ Dataset origin and publication unknown. Multi-paradigm EEG corpus (CockPart Data
 | `SiN_audio` | 0 | Speech-in-Noise audio-only condition |
 | `SiN_video` | 1 | Speech-in-Noise video-only condition |
 
+---
 
 ### Potential Task 4: N400 cloze-condition decoding (high vs low cloze)
 - **Task Type**: classification

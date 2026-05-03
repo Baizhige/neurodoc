@@ -37,6 +37,13 @@ Resting-state EEG microstates were recorded to correlate spontaneous brain dynam
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**: Event-to-label mapping table below.
+- **Target Definition**:
+  | Event ID | Value | Meaning |
+  |----------|-------|---------|
+  | `RS_EC` | predictor block | Eyes-closed resting block for microstate extraction (predictor, not target) |
+  | `RS_EO` | predictor block | Eyes-open resting block for microstate extraction (predictor, not target) |
+  | `RS_EC` / `RS_EO` | executive_function_score | Super meta target from participants.tsv; event IDs mark epochs used for microstate feature extraction (Needs verification) |
+
 - **Notes**: Microstate metrics (duration, coverage, occurrence) extracted from resting-state EEG blocks serve as predictors for executive function composite scores derived from a nine-task battery. Super meta labels stored in participants.tsv.
 
  | Event | y | Meaning |
@@ -48,6 +55,8 @@ Resting-state EEG microstates were recorded to correlate spontaneous brain dynam
 - **Evidence**: DOI: `10.1016/j.cortex.2024.05.019` (Investigating the relationship between resting-state EEG microstates and executive functions: A null finding)
 - **Kernel Notes**: Resting-state blocks (30–60 s each) segmented into 2-second sliding windows (50% overlap) to extract microstate features per window. Executive function composite score is a super meta target from participants.tsv—not derived from EEG events. Epoch extraction uses RS_EC/RS_EO onsets; boundary and key press events excluded as admin markers. Consider memory-efficient batching given ~74,500–89,100 total potential epochs across 165 subjects. Class imbalance is not applicable for regression; stratification relevant only for train/test splits.
 
+---
+
 ### Potential Task 2: Eyes Open vs Eyes Closed (binary classification)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
@@ -55,6 +64,12 @@ Resting-state EEG microstates were recorded to correlate spontaneous brain dynam
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `RS_EC` | 0 | Eyes-closed resting state |
+  | `RS_EO` | 1 | Eyes-open resting state |
+
 - **Notes**: Binary classification of resting-state condition from EEG microstate dynamics. Slight class imbalance: RS_EC (825) vs RS_EO (660) (~55/45%). Paradigm plausibility supports this task; not explicitly performed in primary reference but consistent with experimental design.
 
  | Event | y | Meaning |

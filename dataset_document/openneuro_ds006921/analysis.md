@@ -40,8 +40,8 @@ _No event markers detected (`no_events`). This dataset contains continuous resti
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `AmpPLP` | 0 | Amputee with phantom limb pain |
   | `AmpNoPLP` | 1 | Amputee without phantom limb pain |
   | `IC` | 2 | Intact healthy control |
@@ -50,6 +50,8 @@ _No event markers detected (`no_events`). This dataset contains continuous resti
   - DOI: 10.21203/rs.3.rs-8645281.v1 — Pre-registered study analyzing high-density resting-state EEG from openneuro_ds006921 to compare theta power and peak alpha frequency between amputees with phantom limb pain, amputees without pain, and healthy controls using mixed-effects models.
 - **Kernel Notes**: 1) Segment continuous EEG into 5-second windows with 50% overlap. 2) Load participants.tsv to obtain group labels per subject. 3) Map group labels to epochs (same label for all epochs from same subject). 4) High sampling rate (2400 Hz); consider downsampling to 500-1000 Hz before feature extraction.
 
+---
+
 ### Classical Task 2: Resting-state condition classification (eyes-open vs eyes-closed)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
@@ -57,14 +59,16 @@ _No event markers detected (`no_events`). This dataset contains continuous resti
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|-|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `eyes-open` | 0 | Eyes-open resting condition |
   | `eyes-closed` | 1 | Eyes-closed resting condition |
 - **Super Meta Notes**: Derived from BIDS task labels in filenames or metadata. Kernel step: Parse file/session identifiers to determine eyes-open vs eyes-closed condition for each recording, apply to all epochs from that recording.
 - **Evidence**:
   - DOI: 10.21203/rs.3.rs-8645281.v1 — Uses both eyes-open and eyes-closed conditions in analysis; reports separate analyses for each condition.
 - **Kernel Notes**: Requires metadata to distinguish eyes-open vs eyes-closed recordings. If unavailable, treat as single resting-state condition.
+
+---
 
 ### Potential Task 1: Resting-State Segmentation (segmentation)
 - **Task Type**: classification
@@ -73,6 +77,11 @@ _No event markers detected (`no_events`). This dataset contains continuous resti
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: N/A (no event markers; group labels from participants.tsv)
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | Needs verification | Needs verification | No event markers present in file scan; group labels derived from participants.tsv metadata (AmpPLP/AmpNoPLP/IC) |
+
 - **Notes**: No trial-level events. Group labels (PLP amputee / non-PLP amputee / healthy control) must be derived from participants.tsv metadata. Very high sampling rate (2400 Hz); downsample before analysis.
 
 ## Data Quality Notes

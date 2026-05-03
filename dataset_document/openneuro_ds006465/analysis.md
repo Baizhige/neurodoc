@@ -92,12 +92,14 @@ Participants performed three modes of speech production - overt (spoken aloud), 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `event_1` | 0 | Phoneme trigger (primary numeric code; decode specific Pinyin from raw events.tsv) |
 - **Evidence**:
   - DOI: 10.1038/s41597-025-06346-1 — validates 3M-CPSEED dataset with >55% accuracy for pairwise pinyin syllable classification; 10 phoneme classes (a, i, u, ü, m, f, j, l, k, ch) encoded as numeric event codes
 - **Kernel Notes**: Primary phoneme trigger `event_1` has 1843 occurrences across dataset. Verify raw events.tsv to decode actual phoneme identity and confirm all 10 pinyin categories are present. Bandpass filter 0.5-40 Hz recommended. Exclude response-related events.
+
+---
 
 ### Classical Task 2: Speech Production Mode Classification
 - **Task Type**: classification
@@ -106,8 +108,8 @@ Participants performed three modes of speech production - overt (spoken aloud), 
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `event_131061` | 0 | Trial marker: overt speech block |
   | `event_131062` | 0 | Trial marker: overt speech block |
   | `event_131063` | 0 | Trial marker: overt speech block |
@@ -117,6 +119,8 @@ Participants performed three modes of speech production - overt (spoken aloud), 
   - DOI: 10.1038/s41597-025-06346-1 — validates EEGNet-based binary classification achieving 60-73% accuracy for speech mode discrimination (overt vs silent vs imagined); experimental design specifies distinct temporal windows per mode
 - **Kernel Notes**: Events 131061-131071 (~50-52 counts each) likely encode trial-level markers or condition blocks. Verify raw BIDS events.tsv to confirm mapping to overt/silent/imagined speech modes. Derive mode labels from block assignment or temporal position within experimental structure. Bandpass filter 0.5-40 Hz.
 
+---
+
 ### Potential Task 1: Multi-Block Speech Mode Classification (3-class)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
@@ -124,14 +128,19 @@ Participants performed three modes of speech production - overt (spoken aloud), 
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | Overt speech block markers | 0 | Overt speech (spoken aloud) |
-  | Silent-intended block markers | 1 | Silent-intended (mouthed without sound) |
-  | Imagined speech block markers | 2 | Imagined (mental speech) |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `event_131061` | 0 | Overt speech (spoken aloud) — Needs verification |
+  | `event_131062` | 0 | Overt speech (spoken aloud) — Needs verification |
+  | `event_131063` | 0 | Overt speech (spoken aloud) — Needs verification |
+  | `event_131070` | 1 | Silent-intended (mouthed without sound) — Needs verification |
+  | `event_131071` | 1 | Silent-intended (mouthed without sound) — Needs verification |
+  | [unobserved imagined markers] | 2 | Imagined (mental speech) — Needs verification |
 - **Evidence**:
   - DOI: 10.1038/s41597-025-06346-1 — supports 3-class discrimination across overt, mouthed, and imagined speech; paper establishes experimental paradigm with 4 blocks per subject
 - **Kernel Notes**: Requires verification of raw events.tsv to identify imagined speech block markers (events 131064-131069 may correspond). Extract extended epochs covering full trial duration (10s) to capture mode-specific neural dynamics. Temporal windowing may be needed to isolate distinct production phases.
+
+---
 
 ### Potential Task 1: Pinyin Syllable × Speech Mode Cross-Classification
 - **Task Type**: classification
@@ -140,12 +149,14 @@ Participants performed three modes of speech production - overt (spoken aloud), 
 - **Label Route**: `misc`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `event_1` | (phoneme, mode) | Combined label: phoneme type × speech production mode |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | Needs verification | Combined label: phoneme type × speech production mode. Requires deriving compound (phoneme, mode) labels from `event_1` triggers and block-level mode markers. No MISC channels present in dataset — implementation requires alternative label construction strategy. |
 - **Evidence**:
   - DOI: 10.1038/s41597-025-06346-1 — paradigm supports joint analysis of phoneme identity and speech mode; 10 phonemes × 3 modes = 30-class classification potential
 - **Kernel Notes**: Combines pinyin syllable identity with speech mode into compound labels. Requires combining `event_1` triggers with block-level mode markers. High-dimensional classification problem; may benefit from hierarchical or multi-task approach.
+
+---
 
 ### Potential Task 2: Phoneme-Specific Neural Response Analysis
 - **Task Type**: classification
@@ -154,9 +165,9 @@ Participants performed three modes of speech production - overt (spoken aloud), 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
-  | `event_1` | see events.tsv | Per-epoch annotation of phoneme identity and timing |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `event_1` | Needs verification | Per-epoch annotation of phoneme identity and timing — decode specific phoneme from raw events.tsv |
 - **Evidence**:
   - DOI: 10.1038/s41597-025-06346-1 — experimental design specifies 10 distinct pinyin phonemes with known temporal profiles; event_1 aggregates all phoneme triggers for epoch extraction
 - **Kernel Notes**: Primary task is epoch extraction from phoneme trigger events. Subsequent analysis (decoding, ERP averaging, time-frequency) can be applied post-epoch. Verify events.tsv for phoneme-level annotations within individual trial records.

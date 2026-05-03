@@ -39,13 +39,14 @@ No MISC labels identified in this dataset.
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `target` | 1 | Target object to be tracked |
 | `distractor` | 2 | Distractor object |
-
 - **Evidence**: DOI: https://doi.org/10.1101/2025.07.10.663816 (Using EEG to Detect Lapses in Sustained Attention to Moving Stimuli)
 - **Kernel Notes**: Event duration classified as "short" (<2s) confirms onset-aligned epoching. Dataset provides perfectly balanced classes (11004 target / 11004 distractor), ideal for binary classification. The `event` marker (20384 occurrences) is a generic trial marker and should be excluded as it does not differentiate conditions. Apply bandpass filter (0.5–40 Hz) and artifact rejection prior to epoching.
+
+---
 
 ### Classical Task 2: Attentional Lapse Prediction from Decodability Drop
 - **Task Type**: classification
@@ -55,14 +56,15 @@ No MISC labels identified in this dataset.
 - **Meta Level**: super
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `target` | 1 | Target object to be tracked |
 | `distractor` | 2 | Distractor object |
 | `miss_response` | 0 | Missed target response (attentional lapse) |
-
 - **Evidence**: DOI: https://doi.org/10.1101/2025.07.10.663816
 - **Kernel Notes**: This is the primary task described in the reference paper—predicting attentional lapses using neural decodability of target vs. distractor as a predictor. Requires deriving behavioral outcome labels (correct vs. lapse) from trial response data. Super-meta level integration of behavioral outcomes with raw event markers needed. Authors are from Macquarie University matching dataset contributors; abstract explicitly mentions MOM task and EEG decoding to predict attentional lapses.
+
+---
 
 ### Potential Task 1: Trial-Level Segmentation for Sustained Tracking Analysis
 - **Task Type**: regression
@@ -72,10 +74,9 @@ No MISC labels identified in this dataset.
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | Value | Meaning |
 |---|---|---|
 | `event` | 0 | Generic trial onset marker |
-
 - **Evidence**: Partial support from DOI: https://doi.org/10.1371/journal.pone.0022660 (EEG Correlates of Attentional Load during Multiple Object Tracking); DOI: https://doi.org/10.1088/1741-2552/abb9bc (Continuous decoding of cognitive load from EEG)
 - **Kernel Notes**: For sustained tracking analysis, segment trials around the `event` marker indicating trial onset. The 4s window accommodates the full trial structure including target designation, tracking period, and response. Supports primary classification/segmentation task defined in dataset metadata. 210 files from 30 subjects with ~7 runs each requires consistent run-level handling.
 

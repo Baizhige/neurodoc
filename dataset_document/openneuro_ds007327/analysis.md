@@ -65,6 +65,8 @@ EEG was recorded during two sports-related tasks (ball passing and dribbling) to
 
 ---
 
+---
+
 ### Potential Task 1: 4-Class 2×2 Motor Intention × Observation Classification
 
 - **Task Type**: classification
@@ -73,9 +75,9 @@ EEG was recorded during two sports-related tasks (ball passing and dribbling) to
 - **Label Route**: `event`
 - **Meta Level**: raw
 
-#### Target Definition
+- **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `B18` | 0 | MIMI — Motor imagination of intention (dribble task) |
 | `B12` | 1 | MIMO — Motor imagination of observation (dribble task) |
@@ -91,7 +93,6 @@ EEG was recorded during two sports-related tasks (ball passing and dribbling) to
 - https://openneuro.org/datasets/ds007327 — Dataset landing page describes a 2×2 factorial design crossing motor intention (MI) with motor observation (MO) during sport tasks (dribble, passing). The four compound conditions MIMI/MIMO/MOMI/MOMO are the primary experimental contrasts (~8300–8400 trials per condition across all files). B-series and C-series prefixes inferred to correspond to dribble and passing task files respectively based on count alignment: B18+C18 ≈ 8335 (MIMI), B12+C12 ≈ 8394 (MIMO), B14+C14 ≈ 8396 (MOMI), B16+C16 ≈ 8394 (MOMO). No peer-reviewed paper with explicit relevance classification was available at extraction time.
 
 #### Kernel Notes
-
 - **CRITICAL — Raw event code mapping**: The EDF files contain raw alphanumeric codes (A11, B12, …) not the semantic labels (MIMI, MIMO, MOMI, MOMO) described in the paradigm. A super-metadata mapping layer must be established before epoching. The mapping inferred here is based on count-matching between semantic totals and per-series raw counts.
 - **Alignment assumption**: cue ONSET. tmin = -0.2 s captures pre-stimulus baseline; tmax = 4.0 s covers the full 3–4 s motor intention/observation window.
 - **Task-series assignment**: B-series events (B12/B14/B16/B18) appear in dribble task files; C-series events (C12/C14/C16/C18) appear in passing task files. Pool both series using identical y-labels for cross-sport generalisation. Separate sport-specific models are also viable.
@@ -99,6 +100,8 @@ EEG was recorded during two sports-related tasks (ball passing and dribbling) to
 - **Channel exclusion**: Remove all 24 BIP channels before epoching (EMG/kinematic signals, not EEG).
 - **Recommended preprocessing**: bandpass 0.5–40 Hz → BIP removal → artifact rejection → epoch.
 - **Label verification required**: Confirm B18↔MIMI, B12↔MIMO, B14↔MOMI, B16↔MOMO via dataset README, BIDS `events.tsv`, or author contact before releasing labels.
+
+---
 
 ---
 
@@ -110,9 +113,9 @@ EEG was recorded during two sports-related tasks (ball passing and dribbling) to
 - **Label Route**: `event`
 - **Meta Level**: raw
 
-#### Target Definition
+- **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `A22` | 0 | MI — Pure motor intention condition |
 | `A11` | 1 | MO — Pure motor observation condition |
@@ -123,12 +126,13 @@ EEG was recorded during two sports-related tasks (ball passing and dribbling) to
 - https://openneuro.org/datasets/ds007327 — A-series events (A11 ≈ 4 200, A22 ≈ 4 195, A88 ≈ 4 198) match the single-factor conditions MO, MI, MO_MI described in the paradigm (count-matched). A-series appears in a third sport task file (likely ball-passing baseline task). These single-factor conditions support a 3-class decoding benchmark contrasting pure motor intention, pure motor observation, and their combination.
 
 #### Kernel Notes
-
 - **Alignment assumption**: cue ONSET. Same epoch window as Normal Task 1 for direct comparability.
 - **A66** (4 313, static baseline) and **A44** (4 073, rest) are available for baseline-vs-active contrasts but are excluded from this 3-class active-conditions task.
 - **A98** (~2 100) and **A99** (~421) have atypical counts; treat as administrative/boundary markers and exclude unless confirmed as trial events.
 - If sport-task identity of A-series files can be confirmed (e.g., via BIDS `task-` field), stratify by sport task as a covariate.
 - Same BIP-removal and bandpass preprocessing as Normal Task 1 applies.
+
+---
 
 ---
 
@@ -140,9 +144,9 @@ EEG was recorded during two sports-related tasks (ball passing and dribbling) to
 - **Label Route**: `event`
 - **Meta Level**: super
 
-#### Target Definition
+- **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `B18` | 0 | Motor IMAGINATION trial (MIMI — dribble) |
 | `B12` | 0 | Motor IMAGINATION trial (MIMO — dribble) |
@@ -158,7 +162,6 @@ EEG was recorded during two sports-related tasks (ball passing and dribbling) to
 - No direct paper evidence. Task is plausible from the 2×2 factorial paradigm: collapsing across the intention/observation sub-factor yields a binary imagery (MIMI + MIMO) vs. observation (MOMI + MOMO) contrast — a classical BCI-relevant decoding problem. This is a standard derived binary contrast for motor imagery datasets of this type.
 
 #### Kernel Notes
-
 - **Meta Level = super**: y-labels are not directly encoded in raw events; they require collapsing across the intention sub-factor. A super-metadata derivation step is mandatory. Map {B18, B12, C18, C12} → y=0 (imagination) and {B14, B16, C14, C16} → y=1 (observation).
 - **Label verification**: This mapping is only valid if B18/C18 = MIMI and B12/C12 = MIMO (imagination conditions) and B14/C14 = MOMI and B16/C16 = MOMO (observation conditions). Confirm raw-to-semantic mapping before releasing super labels.
 - **Class balance**: Each binary class will contain ~16 700–16 800 trials pooled across both sport tasks, yielding near-perfect balance.

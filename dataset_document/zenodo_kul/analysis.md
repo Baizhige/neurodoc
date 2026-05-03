@@ -41,13 +41,15 @@ Fifteen subjects performed a dichotic listening auditory attention decoding (AAD
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `attended_left` | 0 | Attended ear: left |
   | `attended_right` | 1 | Attended ear: right |
 - **Evidence**:
   - DOI: 10.1109/TBME.2019.2911728 — Uses KU Leuven AAD dataset for auditory attention detection by reconstructing speech envelope from 64-channel EEG and classifying which ear was attended based on correlation analysis. Trials are ~60s duration.
 - **Kernel Notes**: Uses speech envelope reconstruction via least-squares estimation; compares decoder output correlation with left vs. right speaker envelopes to determine attended ear. (replaces Potential Task 1 from original analysis.md)
+
+---
 
 ### Potential Task 1: Auditory Attention Decoding - Left vs. Right Ear (epoch_by_long_event)
 - **Task Type**: classification
@@ -56,6 +58,12 @@ Fifteen subjects performed a dichotic listening auditory attention decoding (AAD
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `attended_left` | 0 | Attended ear: left |
+  | `attended_right` | 1 | Attended ear: right |
+
 - **Notes**: Case B kernel uses `scipy.io.loadmat(simplify_cells=True)` and a custom `load()` method. Annotation durations match individual trial lengths. Balanced design: 10 trials per class per subject.
 
 | Event | y | Meaning |

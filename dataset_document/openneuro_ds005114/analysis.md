@@ -133,8 +133,8 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `CueAOnset` | 0 | Cue A onset (context maintenance) |
   | `CueBOnset` | 1 | Cue B onset (context maintenance) |
   | `Probe_aX_onset` | 2 | Probe aX (AX trial - expected congruent) |
@@ -148,6 +148,8 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
   - DOI: 10.1007/s11682-019-00171-y — Joint analysis of frontal theta synchrony following mTBI using DPX task variant of AX-CPT in same patient cohort
 - **Kernel Notes**: Event mapping verified: S 37 (50,287) → `Response: CueCorr`, S 51 (35,272) → `Probe_aX_onset`, S 45 (3,626) → `Response: Probe_Incorr`, S 43 (33,178) → `CueBOnset`, S 44 (2,235) → `Probe_aY_onset`, S 42 (1,391) → `Probe_bY_onset`. Exclude S 41 (STATUS), S 99 (practice filler), and boundary markers from training.
 
+---
+
 ### Potential Task 1: Cue-Locked Context Maintenance (P3a)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -155,13 +157,15 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `CueAOnset` | 0 | Cue A (valid context - expect aX probe) |
   | `CueBOnset` | 1 | Cue B (invalid context - expect non-a probe) |
 - **Evidence**:
   - DOI: 10.1016/j.neuropsychologia.2019.107125 — P3a component analysis for proactive cognitive control
 - **Kernel Notes**: Cue-locked epochs capture P3a and context maintenance processes. Window [-0.2, 1.0]s covers baseline and ERP components. Task supports decomposition of proactive control via CueA vs CueB discrimination.
+
+---
 
 ### Potential Task 2: Probe-Locked Response Inhibition (P3b)
 - **Task Type**: classification
@@ -170,14 +174,16 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Probe_aX_onset` | 0 | AX trial (expected - go response) |
   | `Probe_aY_onset` | 1 | AY trial (unexpected - no-go) |
   | `Probe_bY_onset` | 2 | BY trial (no-go control) |
 - **Evidence**:
   - DOI: 10.1016/j.neuropsychologia.2019.107125 — P3b component analysis for reactive cognitive control
 - **Kernel Notes**: Probe-locked epochs capture P3b and response-related processes. Window [-0.2, 0.8]s covers expected (aX), unexpected (aY), and BY probe responses. Task supports decomposition of reactive control via probe discrimination.
+
+---
 
 ### Potential Task 3: Response-Locked Error Monitoring
 - **Task Type**: classification
@@ -186,14 +192,16 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Response: CueCorr` | 0 | Correct cue response (S 37) |
   | `Response: Probe_Corr` | 1 | Correct probe response |
   | `Response: Probe_Incorr` | 2 | Incorrect probe response (S 45) |
 - **Evidence**:
   - DOI: 10.1016/j.neuropsychologia.2019.107125 — Error-related negativity and feedback processing in mTBI
 - **Kernel Notes**: Response-locked epochs capture feedback processing and error monitoring. Window [-0.5, 0.5]s covers correct/incorrect response events. Useful for error-related negativity (ERN) analysis in cognitive control assessment.
+
+---
 
 ### Potential Task 4: mTBI Subgroup Classification
 - **Task Type**: classification
@@ -202,10 +210,10 @@ The Dot Pattern Expectancy (DPX) task, a version of the Continuous Performance T
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
-  | participant_group | 0 | mTBI patient |
-  | participant_group | 1 | healthy control |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `participant_group` | 0 | mTBI patient |
+  | `participant_group` | 1 | healthy control |
 - **Evidence**:
   - DOI: 10.1007/s11682-019-00171-y — Same patient cohort with mTBI vs healthy control comparison
 - **Kernel Notes**: Group labels from participants.tsv enable mTBI subgroup analysis. Super meta-level classification combines EEG features with clinical group membership. Verify group label availability in participants.tsv before training.

@@ -45,14 +45,16 @@ Memory recognition task where participants watched 10-second movie clips and ide
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `startOfNotRecognisedClip` | 0 | Clip not recognized during second viewing |
   | `startOfRecognisedClipFirstWatch` | 1 | Clip recognized during second viewing |
   | `startOfRememberedClipFirstWatch` | 2 | Clip remembered with detail during second viewing |
 - **Evidence**:
   - DOI: 10.1038/s41597-025-06203-1 — Three-class memory recognition: not-recognised vs recognised vs remembered movie clips using ERP analysis (tmin=-0.2s, tmax=1.0s) on EEG during first watch onset events.
 - **Kernel Notes**: ERP epoching around first-watch clip onsets. For ERP: tmin=-0.2s, tmax=1.0s. For PSD analysis: tmin=-1.0s, tmax=10.0s. Downsample to 512 Hz, apply bandpass 1-30 Hz. (replaces Classical Task 1 from original analysis.md)
+
+---
 
 ### Potential Task 1: Movie Memory Recognition (epoch_by_event)
 - **Task Type**: classification
@@ -61,6 +63,13 @@ Memory recognition task where participants watched 10-second movie clips and ide
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `startOfNotRecognisedClip` | 0 | Not-recognized clip onset |
+  | `startOfRecognisedClipFirstWatch` | 1 | First watch - recognized |
+  | `startOfRememberedClipFirstWatch` | 2 | First watch - remembered |
+
 - **Notes**: Key contrast is remembered vs not-recognized clips at first watch onset. High sampling rate (2048 Hz); consider downsampling.
 
  | Event | y | Meaning |

@@ -252,6 +252,8 @@ Human infant EEG dataset recorded while infants viewed 200 distinct object image
 
 ---
 
+---
+
 ### Classical Task 2: Category-Level Classification (10 Mid-Level Categories)
 **Task Type**: classification
 **Epoch Method**: `epoch_by_event_hdf5`
@@ -271,6 +273,8 @@ Human infant EEG dataset recorded while infants viewed 200 distinct object image
 - OSF: https://www.31234/osf.io/dzrkq
 
 **Kernel Notes**: The paper's Technical Validation section explicitly demonstrates successful category-level decoding using Representational Similarity Analysis (RSA) and MVPA. Categories can be decoded from infant EEG responses >6 months of age. Use the full 0.8s post-stimulus window to capture category-selective responses in the N300-N400 time range.
+
+---
 
 ---
 

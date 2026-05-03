@@ -77,8 +77,8 @@ Multi-task EEG battery investigating hemispheric asymmetries across resting stat
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S111` | 0 | Emotion/language condition (positive valence, block 1) |
   | `Stimulus/S112` | 1 | Emotion/language condition (positive valence, block 2) |
   | `Stimulus/S113` | 2 | Emotion/language condition (positive valence, block 3) |
@@ -105,6 +105,8 @@ Multi-task EEG battery investigating hemispheric asymmetries across resting stat
 - **Evidence**: DOI 10.1080/1357650X.2025.2591660
 - **Kernel Notes**: Use New Segment/ markers to identify subject/run boundaries. 501 segments across 100 subjects suggests ~5 segments per subject. S111-S224 encode emotion/language task conditions with first digit indicating condition type and second digit indicating block. S11/S21/S22 encode house visual discrimination. High condition count (23 classes) may require condition grouping or careful class balancing.
 
+---
+
 ### Potential Task 2: Face Perception Task - Identity Discrimination
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
@@ -112,8 +114,8 @@ Multi-task EEG battery investigating hemispheric asymmetries across resting stat
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S117` | 0 | Face identity left (block 1) |
   | `Stimulus/S118` | 1 | Face identity right (block 1) |
   | `Stimulus/S127` | 2 | Face identity left (block 2) |
@@ -125,6 +127,8 @@ Multi-task EEG battery investigating hemispheric asymmetries across resting stat
 - **Evidence**: DOI 10.1080/1357650X.2025.2591660
 - **Kernel Notes**: Tighter window (tmin=-0.2, tmax=0.8) captures early N170/VPP components critical for face identity lateralization. S117/S118 and S217/S218 differ from S127/S128 and S227/S228 by condition type (first digit). ~6,400 trials per identity condition supports robust ERP averaging. Consider grouping by hemisphere (left vs right identity) for binary asymmetry analysis.
 
+---
+
 ### Potential Task 3: Visual Discrimination - House Category Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
@@ -132,8 +136,8 @@ Multi-task EEG battery investigating hemispheric asymmetries across resting stat
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S11` | 0 | House visual category 1 |
   | `Stimulus/S21` | 1 | House visual category 2 |
   | `Stimulus/S22` | 2 | House visual category 3 |

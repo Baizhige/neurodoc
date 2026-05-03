@@ -43,8 +43,8 @@ Spontaneous brain activity was recorded during resting-state EEG from 34 partici
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | cCAP1 | 0 | Cluster 1 - co-activation pattern |
   | cCAP2 | 1 | Cluster 2 - co-activation pattern |
   | cCAP3 | 2 | Cluster 3 - co-activation pattern |
@@ -59,6 +59,8 @@ Spontaneous brain activity was recorded during resting-state EEG from 34 partici
   - DOI: 10.1016/j.neuroimage.2025.121408 — Identifies transient co-activation patterns (CAPs) via K-means clustering on alpha-band (8-12 Hz) instantaneous amplitude data from resting-state EEG
 - **Kernel Notes**: Segment continuous EEG into 1-s non-overlapping epochs; apply ICA (e.g., FastICA with n_components=20-30) to decompose signals; extract time-frequency features (power in delta/theta/alpha/beta/gamma bands) from ICs; run K-means (k=8) on standardized feature vectors; assign cluster labels (cCAP1-cCAP8) as epoch annotations. Expect class imbalance across clusters; consider silhouette scoring for cluster quality assessment. High channel count (128ch) at 250 Hz—use channel subset (e.g., 64ch) or dimensionality reduction for computational efficiency.
 
+---
+
 ### Potential Task 2: Resting-State Segmentation (Long Event Boundaries)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
@@ -66,8 +68,8 @@ Spontaneous brain activity was recorded during resting-state EEG from 34 partici
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `rsts` | 0 | Resting-state block start |
   | `rstf` | 1 | Resting-state block end |
   | `NRST` | 2 | Non-resting state period |

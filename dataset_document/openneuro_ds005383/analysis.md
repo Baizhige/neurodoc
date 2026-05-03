@@ -230,13 +230,15 @@ Participants engaged in self-paced natural reading of Chinese sentences and news
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `31` | 0 | Non-target sentence (no fuzzy semantic target word) |
   | `32` | 1 | Target sentence (contains fuzzy semantic target word: name, means of transportation, animal, or fruit) |
 - **Evidence**:
   - DOI: 10.1038/s41597-025-05036-2 — TMNRED dataset paper confirming 30 participants read Chinese sentences with vs without target semantic words during 2-second stimulus presentation windows; binary classification of target presence.
 - **Kernel Notes**: Event IDs 31 and 32 confirmed in available events with consistent ~17,280 total count (240/file × 72 files). The 2-second tmax aligns with stimulus presentation duration from paper. This is the primary classification task supported by direct evidence from the dataset paper.
+
+---
 
 ### Potential Task 1: Multiclass Condition Code Classification
 - **Task Type**: classification
@@ -245,8 +247,8 @@ Participants engaged in self-paced natural reading of Chinese sentences and news
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `16` | 0 | Condition code 16 |
   | `21` | 1 | Condition code 21 |
   | `22` | 2 | Condition code 22 |
@@ -266,6 +268,8 @@ Participants engaged in self-paced natural reading of Chinese sentences and news
   - DOI: 10.1038/s41597-025-05036-2 — Dataset paper confirms multiple experimental conditions encoded in BioSemi trigger codes; systematic +5 code pattern suggests structured semantic conditions requiring full decode from events.tsv for interpretation.
 - **Kernel Notes**: 15 distinct numerical condition codes confirmed in available events with ~240 count per file each. The systematic code pattern (16, 21, 26, 31, 32, 36...) suggests 5-condition groupings but semantic meaning requires decode from events.tsv. Codes 31–32 overlap with Classical Task 1 labels. Exclude 'boundary' events (240/file) which mark file segments.
 
+---
+
 ### Potential Task 1: Self-Paced Reading Temporal Dynamics
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_long_event_hdf5`
@@ -273,8 +277,8 @@ Participants engaged in self-paced natural reading of Chinese sentences and news
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|
+  | Event ID | Value | Meaning |
+  |----------|-------|---------|
   | `31` | continuous | Non-target sentence reading time |
   | `32` | continuous | Target sentence reading time |
 - **Evidence**: Paradigm description states "self-paced natural reading" but paper focuses on 2-second fixed presentation windows; plausible extended analysis examining reading time differences between target/non-target conditions.

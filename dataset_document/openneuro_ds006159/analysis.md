@@ -38,6 +38,7 @@ No additional scan result info available.
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds006159 DOI: https://doi.org/10.18112/openneuro.ds006159.v1.0.0
 
+---
 
 ### Potential Task 1: Continuous Segmentation (segmentation)
 - **Task Type**: regression

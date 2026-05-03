@@ -41,13 +41,15 @@ Thirteen subjects listened to two simultaneously presented stories (one in each 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `attend_left` | 0 | Attend to left-ear speaker (unattended) |
   | `attend_right` | 1 | Attend to right-ear speaker (attended) |
 - **Evidence**:
   - DOI: 10.1088/1741-2552.ac2629 — Uses 255-channel ultra-high-density EEG for auditory attention decoding where subjects attend to one of two simultaneously presented stories; linear decoder reconstructs speech envelopes from EEG to identify attended speaker via correlation comparison; epochs of 60,30,20,10,5,2,1 seconds used in cross-validation with 10s decision windows reported
 - **Kernel Notes**: The `attend_*` annotations span the entire recording (each file is one trial). Use long-event epochs with sliding windows across the full trial. The label mapping is inferred from the paper's correlation comparison between reconstructed and target speech envelopes (attended=1, unattended=0). (replaces Potential Task 1 from original analysis.md)
+
+---
 
 ### Potential Task 1: Auditory Attention Decoding - Left vs. Right (epoch_by_long_event)
 - **Task Type**: classification
@@ -56,6 +58,12 @@ Thirteen subjects listened to two simultaneously presented stories (one in each 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Event-to-label mapping table below.
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `attend_left` | 0 | Attend to left-ear speaker |
+  | `attend_right` | 1 | Attend to right-ear speaker |
+
 - **Notes**: Only `.dap` header files are processed; `.dat` and `.rs3` auxiliary files are skipped. Numeric stimulus event codes (1000001, 100255, 800000, 800001) may also appear from the stimulus delivery system; use the whole-trial `attend_*` label for the primary target.
 
 | Event | y | Meaning |

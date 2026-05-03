@@ -42,8 +42,17 @@ This dataset investigates the neural correlates and hand kinematics associated w
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
+- **Target Definition**:
+
+| Event ID | y | Meaning |
+|----------|---|---|
+| `incongruent_trial` | 1 | Incongruent/conflict trial |
+| (absence) | 0 | Congruent/non-conflict trial |
+
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds006840 DOI: https://doi.org/10.18112/openneuro.ds006840.v1.0.0
 - **Kernel Notes**: Raw markers sufficient for primary classification. incongruent_trial marker (6881 events) serves as conflict condition label. Full motor trial spans ~3-4s from premove through execution to hit, supporting long event epoching.
+
+---
 
 ### Potential Task 1: Motor Phase Classification
 - **Task Type**: classification
@@ -59,8 +68,18 @@ This dataset investigates the neural correlates and hand kinematics associated w
 | `execution` | 1 | Motor execution onset |
 | `hit` | 2 | Successful trial completion |
 
+- **Target Definition**:
+
+| Event ID | y | Meaning |
+|----------|---|---|
+| `premove` | 0 | Pre-movement intention/preparation phase |
+| `execution` | 1 | Motor execution onset |
+| `hit` | 2 | Successful trial completion |
+
 - **Evidence**: Epoch alignment recommendations. Well-balanced 3-class design (~7022-7031 events per type) making it ideal for classification. Short stimulus-onset markers (<2s) representing distinct moments in motor planning-execution cycle.
 - **Kernel Notes**: Type 1 + Type 3 mode selected. Raw markers (premove/execution/hit) sufficient for motor phase classification via Annotation channel. Apply bandpass filter (0.5-40 Hz) and artifact rejection prior to epoching.
+
+---
 
 ### Potential Task 1: Intention-Action Conflict Detection
 - **Task Type**: classification
@@ -72,6 +91,13 @@ This dataset investigates the neural correlates and hand kinematics associated w
 
 | Event | y | Meaning |
 |-------|---|---|
+| `incongruent_trial` | 1 | Conflict between intended and executed action |
+| (absence) | 0 | Congruent/non-conflict trial |
+
+- **Target Definition**:
+
+| Event ID | y | Meaning |
+|----------|---|---|
 | `incongruent_trial` | 1 | Conflict between intended and executed action |
 | (absence) | 0 | Congruent/non-conflict trial |
 

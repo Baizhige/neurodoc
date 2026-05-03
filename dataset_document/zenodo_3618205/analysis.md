@@ -52,6 +52,8 @@ Forty-four participants (22 normal-hearing, 22 hearing-impaired) underwent EEG r
 | `attend_left` | 0 | Attend to left-ear speaker |
 | `attend_right` | 1 | Attend to right-ear speaker |
 
+---
+
 ### Potential Task 2: Normal-Hearing vs. Hearing-Impaired Group Comparison (epoch_by_long_event)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`

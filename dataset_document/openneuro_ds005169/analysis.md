@@ -47,8 +47,8 @@ Intracranial EEG was recorded from drug-resistant epilepsy patients undergoing p
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | cognitive | 0 | Cognitive effect evoked by stimulation |
   | motor | 1 | Motor effect evoked by stimulation |
   | sensory | 2 | Sensory effect evoked by stimulation |
@@ -61,6 +61,8 @@ Intracranial EEG was recorded from drug-resistant epilepsy patients undergoing p
   - DOI: 10.1016/j.brs.2025.05.138 — Uses openneuro_ds005169 dataset to analyze functional and effective brain connectivity during high-frequency intracranial stimulation, classifying visual hallucinations elicited in 22 patients.
 - **Kernel Notes**: Use epoch_by_long_event_hdf5 for both baseline (stimulation: baseline) and response (stimulation: response) windows. Labels are derived from clinical effect categories reported by patients - not directly in raw events. Requires mapping clinical notes to 6-category ILAE classification. Available admin events (admin: stim_param, admin: uuid_annotation) should be excluded from epoching.
 
+---
+
 ### Classical Task 2: Visual Hallucination Subtype Classification (14-class)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -68,8 +70,8 @@ Intracranial EEG was recorded from drug-resistant epilepsy patients undergoing p
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | elementary | 0 | Elementary visual hallucination |
   | plus | 1 | Plus visual hallucination |
   | minus | 2 | Minus visual hallucination |

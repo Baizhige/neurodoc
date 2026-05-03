@@ -48,8 +48,8 @@ A frequency-tagging EEG study measuring steady-state visual evoked potentials (S
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S 11` | 0 | Same movement, 1 person (condition 1) |
   | `Stimulus/S 21` | 1 | Different movement, 1 person (condition 2) |
   | `Stimulus/S 31` | 2 | Same movement, 2 people (condition 3) |
@@ -60,6 +60,8 @@ A frequency-tagging EEG study measuring steady-state visual evoked potentials (S
   - DOI: 10.1101/2024.05.10.593473
 - **Kernel Notes**: Extract epochs anchored at sequence start events (S11/S21/S31/S41). Compute SSVEP power spectral density in target frequency bands (2.5 Hz, 3.16 Hz, 5.66 Hz) for classification. Using tmax=48.6s (cropped from original 53.6s window) to focus on steady-state response phase.
 
+---
+
 ### Potential Task 1: Action Integration Condition Classification (8-class)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -67,8 +69,8 @@ A frequency-tagging EEG study measuring steady-state visual evoked potentials (S
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S 11` | 0 | Action condition 1 start |
   | `Stimulus/S 12` | 1 | Action condition 1 end |
   | `Stimulus/S 21` | 2 | Action condition 2 start |

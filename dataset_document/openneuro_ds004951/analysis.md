@@ -62,6 +62,8 @@ Participants identified Braille letters presented via tactile stimulation to the
   - 10.7554/eLife.98148 — Right-hand analog of the classical left-hand task. Events S10-S16 correspond to the same 8 Braille letters (B, C, D, L, M, N, V, Z) presented to the right index finger. README confirms S9-S16 are right hand stimuli. Same trial counts (~3298-3301 each) as left hand. Enables cross-hand transfer learning analysis.
 - **Notes**: Right-hand counterpart to the classical left-hand Braille letter classification task. Per README, triggers S1-S8 are left hand stimuli and S9-S16 are right hand stimuli. The 8 events S10-S16 (note: S9 appears to be unused or grouped with S10-S16 in the actual data) represent 8 distinct Braille letters presented to the right index finger, forming an 8-class classification problem analogous to the left-hand task.
 
+---
+
 ### Potential Task 2: Age Regression from Continuous EEG
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
@@ -70,11 +72,13 @@ Participants identified Braille letters presented via tactile stimulation to the
 - **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Range (unit) | Notes |
-  |------------|--------------|-------|
-  | age | 29–61 (years) | Participant chronological age from participants.tsv; N=11, mean ~45. Each segment inherits the subject's age as regression target. |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | age | Participant chronological age from participants.tsv; N=11, mean ~45. Each segment inherits the subject's age as regression target. Range 29–61 years. |
 - **Evidence**:
 - **Notes**: Archetype B3: age is a native numeric column in participants.tsv, requiring no kernel derivation. Segmentation produces fixed-length windows from continuous EEG; each segment is labeled with the corresponding subject's age. The 2s segment length and 50% overlap are standard defaults for continuous-data regression tasks when no event structure is needed.
+
+---
 
 ### Potential Task 3: Sex Classification from Continuous EEG
 - **Task Type**: classification
@@ -84,12 +88,13 @@ Participants identified Braille letters presented via tactile stimulation to the
 - **Label Field**: `sex`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Info Field | Value | y | Meaning |
-  |------------|-------|---|---------|
-  | sex | F | 0 | Female |
-  | sex | M | 1 | Male |
+  | Info Field | Y Mapping Notes |
+  |------------|-----------------|
+  | sex | Binary classification: F mapped to 0 (Female), M mapped to 1 (Male). Highly imbalanced dataset (8F/3M). |
 - **Evidence**:
 - **Notes**: Binary classification of participant sex from segmented continuous EEG. Uses 2-second non-overlapping segments (50% overlap) with subject-level labels from participants.tsv. Highly imbalanced dataset (8F/3M) but valid 2-class problem. No event structure required due to segmentation approach.
+
+---
 
 ### Potential Task 4: HEOG Regression (Native Misc)
 - **Task Type**: regression
@@ -99,9 +104,9 @@ Participants identified Braille letters presented via tactile stimulation to the
 - **Label Field**: `HEOG`
 - **Meta Level**: super
 - **Target Definition**:
-  | MISC Channel | Value (unit) | Notes |
-  |--------------|--------------|-------|
-  | HEOG | continuous (µV) | Horizontal electrooculogram; native continuous misc channel recorded during Braille letter stimulus presentation |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | HEOG | Horizontal electrooculogram; native continuous misc channel recorded during Braille letter stimulus presentation. Value in µV. Epoch window [-0.2, 0.8] s covers pre-stimulus baseline and post-stimulus ocular response. |
 - **Evidence**:
 - **Notes**: Native HEOG channel is the only continuous non-EEG channel available in this dataset (EOGChannelCount=1, EMGChannelCount=0, MiscChannelCount=0). The task regresses HEOG amplitude from EEG channels time-locked to right-hand Braille letter stimulus onsets (S 10-S 16), capturing ocular activity/artifact during tactile letter processing. Epoch window [-0.2, 0.8] s covers pre-stimulus baseline and post-stimulus ocular response. All seven right-hand stimulus event IDs are pooled as epoch anchors since they share the same functional role (letter onset for right hand) per the README and events structure.
 

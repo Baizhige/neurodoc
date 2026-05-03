@@ -46,14 +46,16 @@ Participants played a real MOBA (Multiplayer Online Battle Arena) game while 60-
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `13` | 0 | In-game kill event (marker 13) |
   | `14` | 1 | In-game death event (marker 14) |
 - **Evidence**:
   - DOI: 10.1038/s41597-025-05435-5 — Confirms binary classification of kill (13) vs death (14) events with epochs spanning -1000ms to +2000ms
   - DOI: 10.18112/openneuro.ds005520.v1.0.1 — Confirms segmentation of EEG epochs time-locked to kills (13) and deaths (14) with baseline correction [-0.2s, 0s]
 - **Kernel Notes**: Apply baseline correction from -200ms to 0s as per paper. Exclude intervals <1000ms between consecutive events to avoid epoch overlap.
+
+---
 
 ### Classical Task 2: Multi-class Game Event Classification
 - **Task Type**: classification
@@ -62,8 +64,8 @@ Participants played a real MOBA (Multiplayer Online Battle Arena) game while 60-
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `13` | 0 | In-game kill event |
   | `14` | 1 | In-game death event |
   | `66` | 2 | Game start event |
@@ -73,6 +75,8 @@ Participants played a real MOBA (Multiplayer Online Battle Arena) game while 60-
   - DOI: 10.1038/s41597-025-05435-5 — Confirms multi-class classification including game start (66), victory (666), defeat (444) events derived from frame-by-frame video analysis
 - **Kernel Notes**: Validate event ID mapping from events.tsv. Apply bandpass filter (1-40 Hz) and artifact rejection. (replaces Potential Task 1 from original analysis.md)
 
+---
+
 ### Potential Task 1: Resting State Eye Open
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
@@ -80,8 +84,15 @@ Participants played a real MOBA (Multiplayer Online Battle Arena) game while 60-
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: N/A — unannotated resting-state segments extracted from eye-open resting recordings
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | Needs verification | 0 | Unannotated resting-state eye-open segment (no event markers; label assigned by segmentation) |
+
 - **Evidence**: OpenNeuro metadata indicates resting-state recordings were collected
 - **Kernel Notes**: Verify from dataset README which runs correspond to eye-open resting. Apply preprocessing filter 1-40 Hz.
+
+---
 
 ### Potential Task 2: Resting State Eye Closed
 - **Task Type**: classification
@@ -90,6 +101,11 @@ Participants played a real MOBA (Multiplayer Online Battle Arena) game while 60-
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: N/A — unannotated resting-state segments extracted from eye-closed resting recordings
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | Needs verification | 0 | Unannotated resting-state eye-closed segment (no event markers; label assigned by segmentation) |
+
 - **Evidence**: OpenNeuro metadata indicates resting-state recordings were collected
 - **Kernel Notes**: Verify from dataset README which runs correspond to eye-closed resting. Apply preprocessing filter 1-40 Hz.
 

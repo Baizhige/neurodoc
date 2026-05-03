@@ -39,6 +39,7 @@ Dataset is a Zenodo mirror of the Mendeley SiN dataset. Each `.mat` file contain
 - **Target Definition**: Condition or attended-stream labels (released split commonly uses condition 7 vs 13).
 - **Evidence**: Speech-in-noise AAD dataset is explicitly provided for supervised attention decoding tasks. Source: https://zenodo.org/
 
+---
 
 ### Potential Task 1: Speech-in-Noise Condition Classification - Condition 7 vs. 13 (epoch_by_event)
 - **Task Type**: classification

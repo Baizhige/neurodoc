@@ -81,7 +81,7 @@ High-density EEG recordings were collected during a visual stimulation task usin
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `Stimulus/S  1` | 0 | Visual condition S1 |
 | `Stimulus/S  2` | 1 | Visual condition S2 |
@@ -121,7 +121,6 @@ High-density EEG recordings were collected during a visual stimulation task usin
 | `Stimulus/S 54` | 35 | Visual condition S54 |
 | `Stimulus/S 55` | 36 | Visual condition S55 |
 | `Stimulus/S 56` | 37 | Visual condition S56 |
-
 - **Evidence**: N/A (no references available)
 - **Kernel Notes**: 
   - 38 distinct visual stimulus codes mapped to unique class labels.

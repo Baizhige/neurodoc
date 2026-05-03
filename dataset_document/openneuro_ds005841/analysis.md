@@ -59,8 +59,8 @@ An investigation of event-related potentials (ERPs) during visual tasks performe
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `event_53` | 0 | VR stimulus condition (low-count event; verify via events.tsv) |
   | `event_55` | 1 | VR stimulus condition (low-count event; verify via events.tsv) |
   | `event_56` | 2 | VR stimulus condition (low-count event; verify via events.tsv) |
@@ -70,6 +70,8 @@ An investigation of event-related potentials (ERPs) during visual tasks performe
 - **Evidence (DOI)**: N/A — no reference papers with classification=relevant available for this dataset
 - **Kernel Notes**: CRITICAL MISMATCH DETECTED between analysis.md paradigm description and actual event structure. Analysis.md describes 4 conditions (RAND_DARK, RAND_LIGHT, REF_DARK, REF_LIGHT with 288 trials each), but available event IDs show: (1) low-count events (event_53-59: 41-48 trials) likely corresponding to primary stimulus conditions, and (2) high-count events (event_1-8: 1300-2000+ trials) possibly indicating sub-stimuli, feedback, or concatenated sessions. Kernel MUST: (a) inspect BIDS events.tsv files to establish exact correspondence between analysis.md conditions and actual event codes, (b) verify session structure (48 subjects × 6 sessions = 288 files; are sessions concatenated or separate?), (c) confirm whether low-count events represent epoch-able stimulus onsets. Apply bandpass filter (1-40 Hz) and ICA for VR motion artifact removal. Do NOT assume analysis.md event names map directly to available event IDs.
 
+---
+
 ### Potential Task 2: VR Prediction Error Analysis (RAND vs REF)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -77,8 +79,8 @@ An investigation of event-related potentials (ERPs) during visual tasks performe
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `event_53` | 0 | Unpredictable (random) VR stimulus condition |
   | `event_55` | 1 | Unpredictable (random) VR stimulus condition |
   | `event_56` | 2 | Unpredictable (random) VR stimulus condition |
@@ -88,6 +90,8 @@ An investigation of event-related potentials (ERPs) during visual tasks performe
 - **Evidence (DOI)**: N/A — no reference papers with classification=relevant available for this dataset
 - **Kernel Notes**: Binary classification of prediction error ERP component (mismatch negativity / N200). This task collapses across lighting conditions (DARK/LIGHT) to isolate neural response to stimulus predictability. Kernel MUST verify which event codes correspond to RAND vs REF conditions by cross-referencing BIDS events.tsv with paradigm description. Primary contrasts: unpredictable (RAND) vs predictable (REF) stimulus presentation.
 
+---
+
 ### Potential Task 3: VR Luminance Effect Analysis (DARK vs LIGHT)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -95,8 +99,8 @@ An investigation of event-related potentials (ERPs) during visual tasks performe
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `event_53` | 0 | Dark luminance VR stimulus |
   | `event_55` | 1 | Dark luminance VR stimulus |
   | `event_56` | 2 | Light luminance VR stimulus |

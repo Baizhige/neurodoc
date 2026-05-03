@@ -40,13 +40,15 @@ Eighteen subjects (S12, S13, S15, S21, S27, S28, S31, S33, S36, S37, S38, S39, S
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | (trigger code for attended speaker) | 0 | Attend to left/right spatial location * |
   | (trigger code for unattended) | 1 | Attend to other location * |
 - **Evidence**:
   - DOI: 10.5281/zenodo.3357164 — Spatial Auditory Attention dataset for decoding attended spatial auditory stream/location
 - **Kernel Notes**: Trigger codes (~3856-3966) in Status channel mark stimulus onsets. Exact mapping to attention conditions requires dataset README verification. Variable sampling rates (1024-4096 Hz) require per-subject resampling.
+
+---
 
 ### Potential Task 1: Spatial Attention Decoding - Present Stimulus (epoch_by_event)
 - **Task Type**: classification
@@ -55,6 +57,11 @@ Eighteen subjects (S12, S13, S15, S21, S27, S28, S31, S33, S36, S37, S38, S39, S
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**: Requires mapping trigger codes to stimulus/attention labels from the dataset documentation. Stimulus-onset codes (~3856-3966) mark individual sound presentations.
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | ~3856-3966 | Needs verification | Stimulus onset codes (individual sound presentations); attention label mapping requires dataset documentation |
+
 - **Notes**: Trigger code semantics must be verified against the dataset README or companion paper. Variable sampling rates across subjects require per-subject resampling to a common rate.
 
 ## Data Quality Notes

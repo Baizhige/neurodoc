@@ -36,8 +36,8 @@ This dataset validates a spectral sleep staging approach using a three-electrode
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `Wake` | 0 | Awake state (eyes open/closed, >=50% alpha or movement) |
   | `N1` | 1 | NREM stage 1 (light sleep, theta, slow eye movements) |
   | `N2` | 2 | NREM stage 2 (sleep spindles, K-complexes) |
@@ -56,6 +56,8 @@ This dataset validates a spectral sleep staging approach using a three-electrode
   7. Validate signal quality across all 3 forehead channels before classification
   8. Confirm manual PSG scoring used AASM 2007 rules (not older Rechtschaffen-Kales standard)
 
+---
+
 ### Potential Task 1: Sleep Microarchitecture Analysis
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
@@ -64,6 +66,11 @@ This dataset validates a spectral sleep staging approach using a three-electrode
 - **Meta Level**: super
 - **Target Definition**: N/A (labels derived from external scoring files for spindle/K-complex detection)
 - **Super Meta Notes**: No EEG event markers available. Alternative segmentation approach for detecting transient sleep microevents (spindles, K-complexes, arousals) within continuous overnight recordings. Sliding 2-second windows with 50% overlap enable fine-grained detection of microarchitectural features.
+- **Target Definition**:
+  | Event ID | y | Meaning |
+  |----------|---|---|
+  | Needs verification | Needs verification | Labels derived from external scoring files for spindle/K-complex detection; no event markers in EEG. Ground-truth microevent annotations (spindle, K-complex, arousal, none) require manual verification from available PSG scoring files. |
+
 - **Evidence**:
   - DOI: `10.1109/ISOIRS65690.2025.11168096` — Related work on interpretable sleep staging using forehead EEG patch with SHAP-guided clustering; supports microarchitecture detection methodology
   - Paradigm support: Plausible from sleep staging paradigm — transient features (spindles, arousals) require shorter windows than standard 30-sec epochs

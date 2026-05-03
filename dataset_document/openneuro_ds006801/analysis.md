@@ -37,13 +37,14 @@ Resting-state EEG was recorded before and after an educational intervention in w
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
-|-------|---|---------|
-| participants.tsv | pre | Pre-intervention resting-state |
-| participants.tsv | post | Post-intervention resting-state |
-
+| Event ID | y | Meaning |
+|----------|---|---------|
+| Needs verification | pre | Pre-intervention resting-state (derived from participants.tsv) |
+| Needs verification | post | Post-intervention resting-state (derived from participants.tsv) |
 - **Evidence**: DOI — (no references provided; task is plausible from paradigm alone)
 - **Kernel Notes**: This is a resting-state dataset with no raw events. Classification labels (pre/post intervention) must be derived entirely from participants.tsv metadata. The 42 files = 21 subjects × 2 sessions (pre/post). Segment length of 4.0s with 50% overlap creates overlapping windows suitable for capturing sustained oscillatory patterns in resting-state data.
+
+---
 
 ### Potential Task 2: Study Condition Classification
 - **Task Type**: classification
@@ -53,14 +54,15 @@ Resting-state EEG was recorded before and after an educational intervention in w
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
-|-------|---|---------|
-| participants.tsv | active_retrieval | Active retrieval practice condition |
-| participants.tsv | passive_review | Passive review condition |
-| participants.tsv | control | Control condition |
-
+| Event ID | y | Meaning |
+|----------|---|---------|
+| Needs verification | active_retrieval | Active retrieval practice condition (derived from participants.tsv) |
+| Needs verification | passive_review | Passive review condition (derived from participants.tsv) |
+| Needs verification | control | Control condition (derived from participants.tsv) |
 - **Evidence**: DOI — (no references provided; task is plausible from paradigm alone)
 - **Kernel Notes**: The paradigm examines how different study strategies (active retrieval practice, passive review, control) affect resting-state neural oscillations. Verify that participants.tsv contains study condition labels before kernel execution. Segment-level classification predicts which study method participants experienced based on resting-state EEG patterns. This is a 3-class classification problem requiring careful participant-level metadata mapping.
+
+---
 
 ### Potential Task 3: Eyes-Open/Eyes-Closed Classification
 - **Task Type**: classification
@@ -70,11 +72,10 @@ Resting-state EEG was recorded before and after an educational intervention in w
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
-|-------|---|---------|
-| session metadata | eyes_open | Eyes-open resting-state |
-| session metadata | eyes_closed | Eyes-closed resting-state |
-
+| Event ID | y | Meaning |
+|----------|---|---------|
+| Needs verification | eyes_open | Eyes-open resting-state (derived from session metadata) |
+| Needs verification | eyes_closed | Eyes-closed resting-state (derived from session metadata) |
 - **Evidence**: DOI — (no references provided; task is plausible from paradigm alone)
 - **Kernel Notes**: Each participant completed both eyes-open and eyes-closed resting blocks. However, EEG events cannot distinguish these states—labels must be inferred from session metadata or file naming conventions. If eyes-open/eyes-closed cannot be determined from metadata, this dimension should be excluded from classification or duration-based heuristics should be implemented. Standard alpha rhythm differences typically distinguish these states.
 

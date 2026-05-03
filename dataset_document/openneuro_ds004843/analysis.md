@@ -50,6 +50,7 @@ Placeholder for additional file scan metadata.
 - **Target Definition**: Event/condition labels for this BIDS task (dataset-specific mapping)
 - **Evidence**: OpenNeuro metadata.tasksCompleted and dataset readme. Source: https://openneuro.org/datasets/ds004843 DOI: https://doi.org/10.18112/openneuro.ds004843.v1.0.0
 
+---
 
 ### Potential Task 1: Visual Situational Awareness (multiclass)
 - **Task Type**: classification

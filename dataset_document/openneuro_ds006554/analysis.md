@@ -91,7 +91,7 @@ EEG was recorded while participants engaged in social observation tasks, likely 
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | condition_11 | 0 | Social condition 11 |
 | condition_12 | 1 | Social condition 12 |
@@ -123,7 +123,6 @@ EEG was recorded while participants engaged in social observation tasks, likely 
 | condition_68 | 27 | Social condition 68 |
 | condition_87 | 28 | Social condition 87 |
 | condition_88 | 29 | Social condition 88 |
-
 - **Evidence**: None (no reference papers available)
 - **Kernel Notes**: Social observation paradigm with 30 distinct condition codes. The tens-digit grouping (10s, 20s, 30s, 60s, 80s) may represent factor levels (e.g., stimulus type × emotion × viewpoint). Consider reduced-class grouping for hierarchical classification. Perfectly balanced design across 47 subjects supports cross-subject decoding. Apply bandpass filter (0.5-40 Hz) and artifact rejection prior to epoching.
 

@@ -40,8 +40,8 @@ The NOD-EEG dataset contains 64-channel EEG recordings from a stimulus-response 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `stim_on` | 0 | Stimulus onset |
   | `resp` | 1 | Button-press response |
   | `begin` | 2 | Block begin |

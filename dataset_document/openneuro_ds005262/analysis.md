@@ -43,8 +43,8 @@ EEG recordings of 12 subjects performing imagined (inner) speech tasks based on 
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---|
+  | Event ID | y | Meaning |
+  |----------|---|---|
   | `Comment/Rest` | 0 | Rest condition (baseline) |
   | `Comment/Up` | 1 | Inner speech of "Up" command |
   | `Comment/Down` | 2 | Inner speech of "Down" command |

@@ -181,19 +181,20 @@ Participants monitored a semi-autonomous vehicle system and performed local situ
 - **Meta Level**: raw
 - **Target Definition**:
 
- | Event | y | Meaning |
- |-------|---|-----------|
- | `state_1110001` | 0 | Operational state (low automation) |
- | `state_1110002` | 1 | Operational state (low automation) |
- | `state_2110000` | 2 | Operational state (partial automation) |
- | `state_2210001` | 3 | Operational state (conditional automation) |
- | `state_2210002` | 4 | Operational state (conditional automation) |
- | `state_4100001` | 5 | System state (driver monitoring) |
- | `state_4310000` | 6 | System state (supervised autonomy) |
- | `state_4320000` | 7 | System state (active monitoring) |
-
+| Event ID | y | Meaning |
+|----------|---|---------|
+| `state_1110001` | 0 | Operational state (low automation) |
+| `state_1110002` | 1 | Operational state (low automation) |
+| `state_2110000` | 2 | Operational state (partial automation) |
+| `state_2210001` | 3 | Operational state (conditional automation) |
+| `state_2210002` | 4 | Operational state (conditional automation) |
+| `state_4100001` | 5 | System state (driver monitoring) |
+| `state_4310000` | 6 | System state (supervised autonomy) |
+| `state_4320000` | 7 | System state (active monitoring) |
 - **Evidence**: Dataset README and OpenNeuro metadata (n=11, task='Drive On Mission') — https://openneuro.org/datasets/ds004841 DOI: https://doi.org/10.18112/openneuro.ds004841.v1.0.1
 - **Kernel Notes**: 7-digit hierarchical codes require decode table for semantic mapping. States encode automation level (first digit) and operational mode (remaining digits). Large count range (918–12823) indicates heavily unbalanced classes. Small subject pool (n=11) — recommend leave-one-subject-out cross-validation. Type 1 kernel extracts raw state labels from state_ prefixed events.
+
+---
 
 ### Potential Task 2: Substate Segmentation
 - **Task Type**: classification
@@ -203,14 +204,15 @@ Participants monitored a semi-autonomous vehicle system and performed local situ
 - **Meta Level**: raw
 - **Target Definition**:
 
- | Event | y | Meaning |
- |-------|---|--------|
- | `substate_4300010` | 0 | Substate (fine-grained monitoring level 1) |
- | `substate_4300020` | 1 | Substate (fine-grained monitoring level 2) |
- | `substate_4300100` | 2 | Substate (fine-grained monitoring level 3) |
-
+| Event ID | y | Meaning |
+|----------|---|---------|
+| `substate_4300010` | 0 | Substate (fine-grained monitoring level 1) |
+| `substate_4300020` | 1 | Substate (fine-grained monitoring level 2) |
+| `substate_4300100` | 2 | Substate (fine-grained monitoring level 3) |
 - **Evidence**: Dataset README — substate events (counts 1056–1425) represent finer vehicle operational granularity within parent state 4300000.
 - **Kernel Notes**: Substates capture cognitive engagement variations within a single operational state. Fixed 4s segmentation ensures balanced epoch count across classes. Type 1 kernel extracts substate labels from substate_ prefixed events. Combined with Normal Task 1 for hierarchical classification.
+
+---
 
 ### Potential Task 1: State Transition Classification
 - **Task Type**: classification
@@ -220,17 +222,16 @@ Participants monitored a semi-autonomous vehicle system and performed local situ
 - **Meta Level**: raw
 - **Target Definition**:
 
- | Event | y | Meaning |
- |-------|---|--------|
- | `4300200` | 0 | State transition (low→medium demand) |
- | `4300300` | 1 | State transition (medium demand) |
- | `4300400` | 2 | State transition (medium→high demand) |
- | `4301000` | 3 | State transition (monitoring checkpoint) |
- | `4302000` | 4 | State transition (scenario change) |
- | `4303000` | 5 | State transition (complex scenario) |
- | `4304000` | 6 | State transition (high cognitive load) |
- | `4305000` | 7 | State transition (critical event) |
-
+| Event ID | y | Meaning |
+|----------|---|---------|
+| `4300200` | 0 | State transition (low→medium demand) |
+| `4300300` | 1 | State transition (medium demand) |
+| `4300400` | 2 | State transition (medium→high demand) |
+| `4301000` | 3 | State transition (monitoring checkpoint) |
+| `4302000` | 4 | State transition (scenario change) |
+| `4303000` | 5 | State transition (complex scenario) |
+| `4304000` | 6 | State transition (high cognitive load) |
+| `4305000` | 7 | State transition (critical event) |
 - **Evidence**: Plausible from paradigm — 7-digit codes with format 43XXXXX encode state transitions requiring cognitive re-engagement. High event counts (464–789) support statistical classification.
 - **Kernel Notes**: Captures event-related neural dynamics during vehicle state transitions. Short epoch window (-0.2 to 1.0 s) aligns with transient cognitive responses. Requires decode table for semantic state mapping. Type 1 kernel extracts raw transition labels from 43XXXXX events.
 

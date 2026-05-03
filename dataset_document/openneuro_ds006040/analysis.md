@@ -44,13 +44,15 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|-----|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `correct_trial` | 0 | Correct commission (S245+press) or correct omission (S155+no press) |
   | `incorrect_trial` | 1 | Commission error (S155+press) or omission error (S245+no press) |
 - **Evidence**:
   - DOI: 10.1038/s41597-026-06616-6 — Classifies correct vs incorrect trials (commission/omission errors) in sustained attention using gradCPT stimuli (S155=mountain/standard, S245=city/target) and button press responses (S254).
 - **Kernel Notes**: Epoch around each S155/S245 stimulus. Within each epoch, check for presence/absence of S254 to derive trial outcome. S254 count (813) is low relative to stimuli (400k+), indicating mostly correct withhold responses. Downsample from 5000 Hz before processing.
+
+---
 
 ### Classical Task 2: gradCPT Attention State Classification (In-Zone vs Out-of-Zone)
 - **Task Type**: classification
@@ -59,13 +61,15 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|-----|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `in_zone` | 0 | Low RT variability (sustained attention maintained) |
   | `out_zone` | 1 | High RT variability (attention lapses) |
 - **Evidence**:
   - DOI: 10.1038/s41597-026-06616-6 — Classifies in-the-zone vs out-of-the-zone attention states based on RT variability during correct trials in gradCPT.
 - **Kernel Notes**: Must compute reaction time from S254 events and derive rolling RT variability (e.g., coefficient of variation over 5-10 trial rolling window). Low variability → in_zone (y=0), high variability → out_zone (y=1). Downsample from 5000 Hz before processing.
+
+---
 
 ### Classical Task 3: gradCPT Stimulus Classification (Mountain vs City)
 - **Task Type**: classification
@@ -74,13 +78,15 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|-----|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `S155` | 0 | Standard stimulus (mountain scene, withhold response) |
   | `S245` | 1 | Target stimulus (city scene, press button) |
 - **Evidence**:
   - DOI: 10.1038/s41597-026-06616-6 — Uses gradCPT paradigm with mountain (S155) as frequent standard and city (S245) as rare target stimuli.
 - **Kernel Notes**: Basic stimulus-locked epoching for S155 vs S245 classification. S155 is more frequent (201922 vs 201110 events). Downsample from 5000 Hz before processing.
+
+---
 
 ### Potential Task 1: gradCPT Sustained Attention Timecourse Analysis
 - **Task Type**: classification
@@ -89,13 +95,14 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
 - **Label Route**: `misc`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|-----|---------|
-  | `in_zone` | 0 | Sustained attention maintained (low RT variability over segment) |
-  | `out_zone` | 1 | Attention lapses (high RT variability over segment) |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | Needs verification | Derived from rolling RT variability: low variability → y=0 (in_zone), high variability → y=1 (out_zone); no MISC channels present in file |
 - **Evidence**:
   - DOI: 10.1038/s41597-026-06616-6 — Supports sustained attention analysis using rolling variability metrics across consecutive correct trials.
 - **Kernel Notes**: Use longer segments (60s) to capture attentional fluctuations over time. Compute rolling RT variability across correct trials within segment window. Requires RT extraction from S254 timing relative to preceding stimulus. Downsample from 5000 Hz before processing.
+
+---
 
 ### Potential Task 2: gradCPT Reaction Time Prediction
 - **Task Type**: regression
@@ -104,12 +111,14 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|-----|---------|
-  | `S245` + S254 | RT in ms | Reaction time for correct target responses |
+  | Event ID | Value | Meaning |
+  |----------|-------|---------|
+  | `S245` + `S254` | RT in ms | Reaction time for correct target responses (time(S254) - time(S245)) |
 - **Evidence**:
   - DOI: 10.1038/s41597-026-06616-6 — GradCPT measures sustained attention via RT variability; RT extraction from S254 events is documented.
 - **Kernel Notes**: Only for target trials (S245) where S254 occurred within window. Extract RT = time(S254) - time(S245). Exclude omission errors (S245 without S254). Downsample from 5000 Hz before processing.
+
+---
 
 ### Potential Task 1: gradCPT Commission Error Detection
 - **Task Type**: classification
@@ -118,13 +127,15 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|-----|---------|
-  | `S155` + no S254 | 0 | Correct withhold (standard trial, no response) |
-  | `S155` + S254 | 1 | Commission error (responded to non-target) |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `S155` + no `S254` | 0 | Correct withhold (standard trial, no response) |
+  | `S155` + `S254` | 1 | Commission error (responded to non-target) |
 - **Evidence**:
   - DOI: 10.1038/s41597-026-06616-6 — Commission error framework described: responding to standard stimuli (S155) as if they were targets.
 - **Kernel Notes**: Focus specifically on S155 (standard) trials to detect commission errors. Check for S254 presence within 2s window. Downsample from 5000 Hz before processing.
+
+---
 
 ### Potential Task 2: gradCPT Omission Error Detection
 - **Task Type**: classification
@@ -133,10 +144,10 @@ The dataset uses the Gradual Continuous Performance Task (gradCPT) to measure su
 - **Label Route**: `event`
 - **Meta Level**: super
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|-----|---------|
-  | `S245` + S254 | 0 | Correct detection (target trial, responded) |
-  | `S245` + no S254 | 1 | Omission error (failed to detect target) |
+  | Event ID | y | Meaning |
+  |----------|---|---------|
+  | `S245` + `S254` | 0 | Correct detection (target trial, responded) |
+  | `S245` + no `S254` | 1 | Omission error (failed to detect target) |
 - **Evidence**:
   - DOI: 10.1038/s41597-026-06616-6 — Omission error framework described: failure to respond to target stimuli (S245).
 - **Kernel Notes**: Focus specifically on S245 (target) trials to detect omission errors. Check for S254 absence within 2s window. Downsample from 5000 Hz before processing.

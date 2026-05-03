@@ -60,6 +60,8 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
   - 10.1371/journal.pone.0256111 — 5-class sleep stage classification (W/N1/N2/N3/REM) using UCD Sleep Apnea Database; explicitly maps R&K stages 3 and 4 to single AASM N3 class; uses 30s epochs (tmin=0s, tmax=30s, no overlap); excludes undefined/artifact epochs.
 - **Notes**: Kernel must implement R&K-to-AASM mapping: `Sleep stage 3` and `Sleep stage 4` both map to y=3. `Sleep stage 8` (n=15 artifact epochs) must be excluded from classification. Standard 5-class sleep staging task with raw event-level labels from expert-scored PSG.
 
+---
+
 ### Classical Task 2: Sleep Apnea Detection
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
@@ -68,13 +70,14 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
 - **Label Field**: `apnea_label`
 - **Meta Level**: super
 - **Target Definition**:
-  | MISC Channel | Value | Notes |
-  |---|---|---|
-  | `apnea_label` | 0 | No apnea/hypopnea event overlaps the 10 s window |
-  | `apnea_label` | 1 | At least one apnea/hypopnea event overlaps the 10 s window |
+  | MISC Channel Name | Y Mapping Notes |
+  |---|---|
+  | `apnea_label` | Binary 0/1: 0 = no apnea/hypopnea event overlaps the 10 s window; 1 = at least one apnea/hypopnea event overlaps the 10 s window. Derived from `_respevt.txt` files (not a native signal channel). Needs verification: channel not present in MISC Label Summary. |
 - **Evidence**:
   - 10.1109/TENSYMP49402.2020.9230848 — Binary apnea/non-apnea classification using 10-second EEG frames with 50% overlap from the UCD sleep apnea database; positive class includes obstructive, central, and mixed apnea/hypopnea events.
 - **Notes**: SUPER META REQUIRED: `apnea_label` is a derived misc label, not a native signal channel. Kernel must parse companion `_respevt.txt` files, align HH:MM:SS event times to PSG recording onset using `PSG Start Time` from `SubjectDetails.csv` with midnight wrap-around handling, and assign binary labels to 10 s sliding windows. Set `apnea_label = 1` if any apnea/hypopnea event overlaps `[start, start + 10s]`, otherwise `0`. Positive event types should include `APNEA-O`, `APNEA-C`, `APNEA-M`, `HYP-O`, `HYP-C`, and `HYP-M`; do not map ambiguous `POSSIBLE` events to positive unless an explicit rule is defined. Segmentation-based epoching is used because respiratory events are variable-duration events and the benchmark target is a fixed-window apnea/non-apnea label.
+
+---
 
 ### Potential Task 1: Subject Age Regression
 - **Task Type**: regression
@@ -84,9 +87,9 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
 - **Label Field**: `age`
 - **Meta Level**: super
 - **Target Definition**:
-  | Info Field | Range | Notes |
-  |---|---|---|
-  | `age` | continuous (years) | Available for all 25 subjects in `SubjectDetails.csv` / `SubjectDetails.xls` as `Age |
+  | Info Field | Y Mapping Notes |
+  |---|---|
+  | `age` | Continuous value in years, per-subject. Available for all 25 subjects in `SubjectDetails.csv` / `SubjectDetails.xls`. Same value assigned to all epochs from a given subject. |
 - **Evidence**:
 
 - **Notes**: `age` is not present in the standard scanned info fields but can be injected from the companion SubjectDetails metadata. This is a Potential task because the dataset is small for age regression and no dataset-specific age-regression benchmark was identified. Use subject-level train/test splits to prevent leakage across 30 s segments from the same subject.

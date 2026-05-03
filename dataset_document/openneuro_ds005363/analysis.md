@@ -116,8 +116,8 @@ Younger adults and older adults completed a visual object-recognition EEG task d
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S 65` | 0 | Visual category 1 (faces) |
   | `Stimulus/S 66` | 1 | Visual category 2 (animals) |
   | `Stimulus/S 67` | 2 | Visual category 3 (places) |
@@ -127,6 +127,8 @@ Younger adults and older adults completed a visual object-recognition EEG task d
   - DOI: 10.1016/j.cub.2025.03.062 — Explicitly investigates 4-category visual object recognition (faces, animals, places, objects) using S65-S69 event codes with multivariate EEG classification across 86 subjects (43 older, 43 younger).
 - **Kernel Notes**: Include 200ms pre-stimulus baseline for proper baseline correction. Exclude S99 fixation marker (21460 events) to avoid event density issues. S4-S57 encode individual exemplar identities (~1315 trials each, 60+ items)—reserved for RSA task. S255 (2 events) likely experimental outlier; exclude.
 
+---
+
 ### Potential Task 1: Representational Similarity Analysis (RSA) - Exemplar Level
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -134,8 +136,8 @@ Younger adults and older adults completed a visual object-recognition EEG task d
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | Value | Meaning |
+  |----------|-------|---------|
   | `Stimulus/S 4` | 0 | Exemplar image 1 |
   | `Stimulus/S 5` | 1 | Exemplar image 2 |
   | `Stimulus/S 6` | 2 | Exemplar image 3 |

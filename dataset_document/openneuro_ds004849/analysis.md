@@ -49,8 +49,8 @@ An EEG dataset recorded during a social-cognitive paradigm involving multiple hi
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|---------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `2200` | 0 | Dominant trigger code (primary condition) |
   | `72011` | 1 | Trigger code (category 7, type 2) |
   | `52011` | 2 | Trigger code (category 5, type 2) |

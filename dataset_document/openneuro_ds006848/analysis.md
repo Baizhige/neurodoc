@@ -65,12 +65,9 @@ This dataset investigates the directional characteristics of brain alpha waves d
 - **Label Route**: `misc`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
-  | `Stimulus/S   40` | 0–7 | Retention_Fast: EEG retention period after fast sequential encoding (400 ms/digit); y = number of digits correctly recalled |
-  | `Stimulus/S   60` | 0–7 | Retention_FastDelay: EEG retention period after fast sequential encoding with additional delay gap; y = number of digits correctly recalled |
-  | `Stimulus/S  100` | 0–7 | Retention_Slow: EEG retention period after slow sequential encoding (1000 ms/digit); y = number of digits correctly recalled |
-  | `Stimulus/S   28` | 0–7 | Retention_Simultaneous: EEG retention period after simultaneous full-set encoding; y = number of digits correctly recalled |
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | `behavioral_response` or `log_file` | y = number of digits correctly recalled (integer 0–7) for each retention period; sourced from behavioral response/log files, not encoded in EEG event stream. Needs verification: exact MISC channel name containing digit recall count. |
 - **Evidence**:
   - DOI: 10.1101/2025.05.04.652111 — "Temporal structure of item presentation modulates brain oscillations in verbal working memory." Directly analyzes EEG from ds006848 using single-trial regression models linking encoding theta/alpha suppression and 6 s retention-period spectral power (theta 4–7 Hz, alpha 8–13 Hz, beta 18–24 Hz) to number of digits recalled across all four presentation modes (Fast, Slow, FastDelay, Simultaneous). Classification = relevant.
 - **Kernel Notes**:
@@ -83,6 +80,8 @@ This dataset investigates the directional characteristics of brain alpha waves d
 
 ---
 
+---
+
 ### Potential Task 1: Encoding Mode Classification (Simultaneous vs. Sequential)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -90,8 +89,8 @@ This dataset investigates the directional characteristics of brain alpha waves d
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S   28` | 0 | Retention period after simultaneous (full-set) encoding; 1495 trials |
   | `Stimulus/S   40` | 1 | Retention period after fast sequential encoding; 1499 trials |
   | `Stimulus/S   60` | 1 | Retention period after fast sequential encoding with extra delay; 1499 trials |
@@ -107,6 +106,8 @@ This dataset investigates the directional characteristics of brain alpha waves d
 
 ---
 
+---
+
 ### Potential Task 1: Resting State Eyes Open vs. Eyes Closed Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
@@ -114,8 +115,8 @@ This dataset investigates the directional characteristics of brain alpha waves d
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S   20` | 0 | Eyes-closed resting state block onset; 87 occurrences across 30 subjects |
   | `Stimulus/S   21` | 1 | Eyes-open resting state block onset; 88 occurrences across 30 subjects |
 - **Evidence**:
@@ -129,6 +130,8 @@ This dataset investigates the directional characteristics of brain alpha waves d
 
 ---
 
+---
+
 ### Potential Task 2: Sequential Encoding Digit Identity Classification (10-Class)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
@@ -136,8 +139,8 @@ This dataset investigates the directional characteristics of brain alpha waves d
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
-  | Event | y | Meaning |
-  |-------|---|--------|
+  | Event ID | y | Meaning |
+  |----------|---|---------|
   | `Stimulus/S   10` | 0 | Digit "0" sequential encoding onset (3163 trials) |
   | `Stimulus/S    1` | 1 | Digit "1" sequential encoding onset (3134 trials) |
   | `Stimulus/S    2` | 2 | Digit "2" sequential encoding onset (3077 trials) |

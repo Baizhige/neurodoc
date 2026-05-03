@@ -1,4 +1,4 @@
-# neurodoc - Semantic Rulebook v3.0
+# neurodoc - Semantic Rulebook
 # Used by detect.py for batch checking of analysis.md and kernel files.
 #
 # Check types:
@@ -27,9 +27,9 @@
 #       against the locator cache CSV. LLM may fill narrative gaps but must
 #       not override program-derived values.
 #
-# HC-4  Agent may only set Status to:
-#         wait_manual_review  -- pipeline completed, no structural error
-#         wait_kernel_update  -- kernel failed or scan incomplete
+# HC-4  LLM or automation may only set Status to:
+#         wait_manual_review  -- default output when no explicit structural kernel gap is exposed
+#         wait_kernel_update  -- explicit structural kernel gap or scan failure
 #       "completed" and "hallucination" are reserved for human reviewers only.
 #
 # HC-5  Kernel must NOT remap original event IDs. Prefix-based enrichment is
@@ -94,14 +94,14 @@ rules:
     severity: "error"
 
   - id: "has_info_subsection"
-    desc: "## File Scan Result must contain ### Info subsection (rulebook Article 37, clause 1)."
+    desc: "## File Scan Result must contain ### Info subsection (rulebook Article 57.1)."
     target: "analysis_md"
     check: "section_exists"
     section: "### Info"
     severity: "error"
 
   - id: "no_stim_label_summary"
-    desc: "STIM Label Summary is deprecated (rulebook v0.2+) and must not appear."
+    desc: "STIM Label Summary is a deprecated legacy section and must not appear."
     target: "analysis_md"
     check: "pattern"
     pattern: "^##\\s+STIM Label Summary"
@@ -115,7 +115,7 @@ rules:
     severity: "error"
 
   - id: "no_extra_top_level_sections"
-    desc: "Only the 5 required ## sections are allowed. No extra top-level headings (rulebook Article 10, clause 2)."
+    desc: "Only the 5 required ## sections are allowed. No extra top-level headings (rulebook Article 30.2)."
     target: "analysis_md"
     check: "cross_check"
     function: "no_extra_sections"
@@ -125,7 +125,7 @@ rules:
   # Aligns with neuroaudit/rulebook.md explicit enumeration rules.
 
   - id: "status_valid_value"
-    desc: "Status must be one of: wait_kernel_update, wait_manual_review, completed, hallucination (rulebook Article 12, clause 2)."
+    desc: "Status must be one of: wait_kernel_update, wait_manual_review, completed, hallucination (rulebook Article 42.2)."
     target: "analysis_md"
     check: "field_value"
     field_pattern: ">\\s*\\*\\*Status\\*\\*:\\s*(.+)"
@@ -147,7 +147,7 @@ rules:
     severity: "error"
 
   - id: "category_valid_value"
-    desc: "Category must be one of 6 valid values (rulebook Article 15): Complex Applied / High-level Mental / Action/Output / Sensory/Response / Biological State / Others."
+    desc: "Category must be one of 6 valid values (rulebook Article 25): Complex Applied / High-level Mental / Action/Output / Sensory/Response / Biological State / Others."
     target: "analysis_md"
     check: "field_value"
     field_pattern: "\\*\\*Category\\*\\*:\\s*([^|\\n]+)"
@@ -161,7 +161,7 @@ rules:
     severity: "error"
 
   - id: "label_route_no_deprecated"
-    desc: "Label Route must not use deprecated values Annotation/STIM/MISC (uppercase). Valid values: event, misc, info (rulebook Article 9, v0.4+)."
+    desc: "Label Route must use current values event, misc, or info. Historical values Annotation/STIM/MISC are not allowed (rulebook Article 77)."
     target: "analysis_md"
     check: "pattern"
     pattern: "\\*\\*Label Route\\*\\*[^\\n]*`(Annotation|STIM|MISC)`"
@@ -169,14 +169,14 @@ rules:
     severity: "error"
 
   - id: "event_type_no_deprecated"
-    desc: "Event Structure Type column must not use deprecated values short/long/rest. Use event or admin only (rulebook Article 16, v0.2+)."
+    desc: "Event Structure Type must use event or admin only. Historical short/long/rest values are not allowed (rulebook Article 46)."
     target: "analysis_md"
     check: "pattern"
     pattern: "\\|\\s*(short|long|rest)\\s*\\|"
     severity: "error"
 
   - id: "kernel_fingerprint_exists"
-    desc: "## File Scan Result must begin with a kernel fingerprint blockquote containing Kernel SHA256 (rulebook Article 12, clause 2)."
+    desc: "## File Scan Result must begin with a kernel fingerprint blockquote containing Kernel SHA256 (rulebook Article 42.5)."
     target: "analysis_md"
     check: "pattern"
     pattern: ">\\s*\\*\\*Kernel SHA256\\*\\*:"
@@ -207,14 +207,14 @@ rules:
     severity: "error"
 
   - id: "classical_task_has_evidence"
-    desc: "Every Classical Task must have a non-empty Evidence field (rulebook Article 32)."
+    desc: "Every Classical Task must have a non-empty Evidence field (rulebook Articles 62 and 79)."
     target: "analysis_md"
     check: "cross_check"
     function: "classical_task_evidence"
     severity: "error"
 
   - id: "info_completeness_valid"
-    desc: "### Info table Completeness column must use: complete, incomplete, missing, or partial (x/n) (rulebook Article 37, clause 3)."
+    desc: "### Info table Completeness column must use: complete, partial (x/n), incomplete, or missing (rulebook Article 57.3)."
     target: "analysis_md"
     check: "cross_check"
     function: "info_completeness_values"
@@ -249,35 +249,35 @@ rules:
     severity: "warning"
 
   - id: "kr_has_super_meta"
-    desc: "## Kernel Responsibilities must contain > **Super Meta Required**: blockquote field (rulebook Article 37, Article 12, clause 4)."
+    desc: "## Kernel Responsibilities must contain > **Super Meta Required**: blockquote field (rulebook Articles 36-38)."
     target: "analysis_md"
     check: "cross_check"
     function: "kr_has_super_meta"
     severity: "error"
 
   - id: "kr_has_status"
-    desc: "## Kernel Responsibilities must contain > **Status**: blockquote field (rulebook Article 12, clause 1)."
+    desc: "## Kernel Responsibilities must contain > **Status**: blockquote field (rulebook Articles 36 and 42.1)."
     target: "analysis_md"
     check: "cross_check"
     function: "kr_has_status"
     severity: "error"
 
   - id: "kr_only_blockquote_fields"
-    desc: "## Kernel Responsibilities must contain only the two blockquote fields (Super Meta Required, Status), no extra prose (rulebook Article 12, clause 4)."
+    desc: "## Kernel Responsibilities must contain only the two blockquote fields (Super Meta Required, Status), no extra prose (rulebook Articles 36 and 42.4)."
     target: "analysis_md"
     check: "cross_check"
     function: "kr_only_blockquote_fields"
     severity: "warning"
 
   - id: "dqn_bullet_format"
-    desc: "## Data Quality Notes content must use '- ' bullet format (rulebook Article 13)."
+    desc: "## Data Quality Notes content must use '- ' bullet format (rulebook Article 83)."
     target: "analysis_md"
     check: "cross_check"
     function: "dqn_bullet_format"
     severity: "warning"
 
   - id: "task_type_no_normal"
-    desc: "Task headings must be 'Classical Task' or 'Potential Task' only. 'Normal Task' is not a valid type."
+    desc: "Task headings must be 'Classical Task' or 'Potential Task' only. 'Normal Task' is a legacy label and is not allowed."
     target: "analysis_md"
     check: "pattern"
     pattern: "###\\s+Normal\\s+Task"
@@ -297,65 +297,65 @@ rules:
     function: "task_numbering_from_one"
     severity: "error"
 
-  # --- Group C+: v3 Task Taxonomy (Epoch/Label Separation) -------------------
+  # Task taxonomy and route/epoch consistency.
   - id: "task_dataset_dispatchable"
-    desc: "Every Task block must be statically dispatchable by dataset_api.build_dataset_from_task(dry_run=True) (rulebook v3.1)."
+    desc: "Every Task block must be accepted by dataset_api.build_dataset_from_task(dry_run=True)."
     target: "analysis_md"
     check: "cross_check"
     function: "task_dataset_dispatchable"
     severity: "error"
 
   - id: "target_def_schema_matches_route"
-    desc: "Target Definition table header must match the Route x Task Type matrix (rulebook Article 37, clause 4)."
+    desc: "Target Definition table header must match the Label Route x Task Type matrix (rulebook Article 77.4)."
     target: "analysis_md"
     check: "cross_check"
     function: "target_def_schema_matches_route"
     severity: "error"
 
   - id: "single_target_per_task"
-    desc: "Target Definition first column (source field/channel) must have exactly one unique value per misc/info task (rulebook Article 37, clause 2)."
+    desc: "For misc/info tasks, the first Target Definition column must contain exactly one unique source value. This rule does not restrict event tasks with multiple Event ID rows (rulebook Articles 77.3 and 77.5)."
     target: "analysis_md"
     check: "cross_check"
     function: "single_target_per_task"
     severity: "error"
 
   - id: "classification_task_has_multiple_classes"
-    desc: "Classification tasks must have >= 2 distinct y values in Target Definition (rulebook Article 37, clause 3)."
+    desc: "Classification tasks must have >= 2 distinct y values in Target Definition (rulebook Article 77.7)."
     target: "analysis_md"
     check: "cross_check"
     function: "classification_task_has_multiple_classes"
     severity: "error"
 
   - id: "classification_y_zero_indexed_sequential"
-    desc: "Classification tasks y values must be 0-based sequential ints: distinct y set == set(range(N)). Many-to-one mapping allowed (e.g. A->0, B->1, C->1 is valid; {0,1,3} or {1,2} are not). Applies to event route TD tables only; misc/info routes use Y Mapping Notes instead of a y column."
+    desc: "Event-route classification tasks must use 0-based sequential integer y values: the distinct y set must equal set(range(N)). Many-to-one mapping is allowed (e.g. A->0, B->1, C->1 is valid; {0,1,3} or {1,2} are not). Misc/info routes use Y Mapping Notes instead of a y column."
     target: "analysis_md"
     check: "cross_check"
     function: "classification_y_zero_indexed_sequential"
     severity: "error"
 
   - id: "derived_misc_requires_super_meta"
-    desc: "Tasks with Route=misc whose TD channel is not listed as native in MISC Label Summary must have Meta Level = super (rulebook Article 37, clause 6)."
+    desc: "Tasks with Label Route = misc whose Target Definition source is not listed as native in MISC Label Summary must have Meta Level = super (rulebook Article 77.8)."
     target: "analysis_md"
     check: "cross_check"
     function: "derived_misc_requires_super_meta"
     severity: "error"
 
   - id: "segmentation_requires_empty_target_events"
-    desc: "Epoch Method = epoch_by_segmentation_hdf5 => target_events must be empty (rulebook Article 32)."
+    desc: "Epoch Method = epoch_by_segmentation_hdf5 requires target_events = [] (rulebook Articles 45 and 72)."
     target: "analysis_md"
     check: "cross_check"
     function: "segmentation_requires_empty_target_events"
     severity: "error"
 
   - id: "epoch_parameters_complete"
-    desc: "Epoch Parameters must list the minimum required keys for the declared Epoch Method (rulebook Article 39--42)."
+    desc: "Epoch Parameters must list the minimum required keys for the declared Epoch Method (rulebook Articles 69-72)."
     target: "analysis_md"
     check: "cross_check"
     function: "epoch_parameters_complete"
     severity: "error"
 
   - id: "manual_review_blank"
-    desc: "Manual Review field must be blank in generated documents (rulebook Article 10, clause 3)."
+    desc: "Manual Review must be blank in generated or auto-repaired documents (rulebook Article 30.3)."
     target: "analysis_md"
     check: "pattern"
     pattern: "\\*\\*Manual Review\\*\\*:\\s*\\S"

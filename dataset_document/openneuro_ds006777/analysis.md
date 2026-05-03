@@ -46,14 +46,15 @@ An audiovisual simple reaction-time task (AVSRT) in which participants press a b
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `event_3` | 1 | Simultaneous audiovisual stimulus |
 | `event_4` | 2 | Auditory-only stimulus |
 | `event_5` | 3 | Visual-only stimulus |
-
 - **Evidence** (DOI): https://doi.org/10.18112/openneuro.ds006777.v1.0.0
 - **Kernel Notes**: Three conditions are well-balanced (~16 000 trials each). Exclude system artifacts (event_201, event_50, event_65536–event_65737) from epoching. Apply 0.5–40 Hz bandpass and baseline correction (−0.2 to 0 s) before decoding. event_1 (Response_button) is a motor response marker; exclude from stimulus classification.
+
+---
 
 ### Potential Task 2: Reaction-Time Regression
 - **Task Type**: regression
@@ -63,12 +64,13 @@ An audiovisual simple reaction-time task (AVSRT) in which participants press a b
 - **Meta Level**: super
 - **Target Definition**:
 
-| Event | y | Meaning |
-|---|---|---|
-| `event_1` | RT (seconds) | Reaction time = Response_button (event_1) onset − stimulus onset; derived via stim–response pairing |
-
+| MISC Channel Name | Y Mapping Notes |
+|---|---|
+| `reaction_time` | RT (seconds) = Response_button (event_1) onset − stimulus onset; derived via stim–response pairing. Needs verification: channel name not confirmed in MISC Label Summary (no MISC channels present in scan). |
 - **Evidence** (DOI): https://doi.org/10.18112/openneuro.ds006777.v1.0.0
 - **Kernel Notes**: RT target is stored in misc/reaction_time channel (derived, not native raw event). Stimulus modality (event_3/4/5) can be included as a covariate. Guard against missed responses (no following Response_button) and catch trials with multiple responses per stimulus. Store derivation source, unit (seconds), and version metadata per Type 2 kernel mode.
+
+---
 
 ### Potential Task 3: Response-Locked Motor Epoch (Lateralized Readiness Potential / Motor ERP)
 - **Task Type**: classification
@@ -78,12 +80,13 @@ An audiovisual simple reaction-time task (AVSRT) in which participants press a b
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `event_1` | 1 | Button-press response |
-
 - **Evidence** (DOI): https://doi.org/10.18112/openneuro.ds006777.v1.0.0
 - **Kernel Notes**: Epochs locked to event_1 (Response_button) isolate motor preparation (LRP) and execution components. A 600 ms pre-response window captures motor preparation; 400 ms post-response covers post-movement rebound. Baseline correction: −0.6 to −0.4 s relative to response. Analyze separately from stimulus-locked epochs to avoid conflation of sensory and motor activity.
+
+---
 
 ### Potential Task 1: Group Membership Prediction (ASD vs. Neurotypical)
 - **Task Type**: classification
@@ -93,10 +96,9 @@ An audiovisual simple reaction-time task (AVSRT) in which participants press a b
 - **Meta Level**: super
 - **Target Definition**:
 
-| Event | y | Meaning |
-|---|---|---|
-| Subject-level covariate | group_label | ASD vs. NT group membership from participant metadata |
-
+| MISC Channel Name | Y Mapping Notes |
+|---|---|
+| `group_label` | ASD vs. NT group membership from participant metadata. Needs verification: no MISC channels present in scan; consider `info` route using `sex` or `age` fields, or derive from external participant metadata. |
 - **Evidence** (DOI): https://doi.org/10.18112/openneuro.ds006777.v1.0.0
 - **Kernel Notes**: SFARI cohort includes ASD and neurotypical participants. Group membership is a subject-level covariate, not an event label; route via misc with source (participant metadata) and version metadata. May be combined with stimulus-locked epochs for group-difference decoding.
 

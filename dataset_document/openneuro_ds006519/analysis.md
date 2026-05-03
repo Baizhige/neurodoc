@@ -38,13 +38,14 @@ Patients undergoing presurgical evaluation for drug-resistant epilepsy received 
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `prestim` | 0 | Pre-stimulation baseline period |
 | `poststim` | 1 | Post-stimulation response period |
-
 - **Evidence**: OpenNeuro dataset metadata and paradigm description. Source: https://openneuro.org/datasets/ds006519 DOI: https://doi.org/10.18112/openneuro.ds006519.v1.0.0
 - **Kernel Notes**: Alignment is ONSET (both events are 'short' type, <2s). The tmin=-0.2s includes a brief pre-stimulus baseline window. Downsampling from 4096 Hz to ≤1000 Hz recommended before epoching due to high sampling rate. Event counts are balanced (35 each), confirming paired trial structure suitable for binary classification.
+
+---
 
 ### Potential Task 1: Long-Segment Stimulation Analysis
 - **Task Type**: classification
@@ -54,13 +55,14 @@ Patients undergoing presurgical evaluation for drug-resistant epilepsy received 
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `prestim` | 0 | Pre-stimulation baseline |
 | `poststim` | 1 | Sustained post-stimulation response |
-
 - **Evidence**: Paradigm description indicates stimulation-evoked negative motor responses with sustained cortical effects; epoch alignment recommendations suggest 4-second window for capturing full stimulation response.
 - **Kernel Notes**: Verify that long-event structure exists in actual data files, or adjust to epoch_by_event_hdf5 with extended window if stimulation periods are marked as consecutive short events. Requires confirmation of stimulation duration from dataset documentation to refine tmax.
+
+---
 
 ### Potential Task 2: Publisher-Defined BIDS Task (Dcs)
 - **Task Type**: classification
@@ -70,11 +72,10 @@ Patients undergoing presurgical evaluation for drug-resistant epilepsy received 
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | `prestim` | Needs verification | BIDS task condition TBD |
 | `poststim` | Needs verification | BIDS task condition TBD |
-
 - **Evidence**: OpenNeuro metadata.tasksCompleted references a BIDS task named 'Dcs'. Source: https://openneuro.org/datasets/ds006519 DOI: https://doi.org/10.18112/openneuro.ds006519.v1.0.0
 - **Kernel Notes**: No task-specific parameters provided in dataset metadata. Verify BIDS task JSON or README for event definitions and epoch parameters before implementation. Default to Normal Task 1 parameters if no additional documentation is found.
 

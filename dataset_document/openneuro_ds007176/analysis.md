@@ -38,10 +38,9 @@ Longitudinal resting-state EEG recordings collected over four sessions spanning 
 - **Meta Level**: super
 - **Target Definition**:
 
-| Event | y | Meaning |
-|-------|---|---------|
-| N/A | N/A | No discrete trial events; continuous resting-state EEG segmented into fixed-length windows |
-
+| MISC Channel Name | Y Mapping Notes |
+|-------------------|-----------------|
+| N/A | No MISC channels present in dataset; continuous resting-state EEG segmented into fixed-length windows. Reliability target (y) derived from session-level biomarker consistency, not from a MISC channel. Needs verification: actual y-source may be info-route (session/time-point from participants.tsv) or derived post-hoc from epoch features. |
 - **Notes**: Reliability analysis examines test-retest consistency of quantitative EEG biomarkers (e.g., spectral band power) across longitudinal sessions. Session/time-point labels from participants.tsv required as super meta for reliability modeling (ICC, W-corr, etc.).
 
 - **Evidence (DOI)**: https://doi.org/10.1016/j.bspc.2026.109484

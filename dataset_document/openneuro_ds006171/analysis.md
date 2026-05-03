@@ -66,7 +66,7 @@ Participants performed near-threshold visual detection tasks across three cueing
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | 1 | 1 | Trial start |
 | 2 | 2 | Response (detection report) |
@@ -86,9 +86,10 @@ Participants performed near-threshold visual detection tasks across three cueing
 | 122 | 12 | 50%-validity cue - miss (50pct_miss, run 2) |
 | 124 | 15 | 100%-validity cue - false alarm (100pct_FA) |
 | 125 | 16 | 100%-validity cue - correct rejection (100pct_CR) |
-
 - **Evidence**: DOI: https://doi.org/10.1111/psyp.14525 (Perception of near-threshold visual stimuli is influenced by prestimulus alpha-band amplitude but not by alpha phase; supports classification of detection outcomes across cueing conditions)
 - **Kernel Notes**: BioSemi code 128 is boundary marker (admin; exclude). Preserve continuous behavioral regressors (gabor_contrast, subjective_r, objective_r, response_time) from events.tsv for regression-based analyses. Event codes 111/121 both encode 50pct_hit—may reflect separate recording runs; preserve source metadata.
+
+---
 
 ### Classical Task 2: Cue Validity Effect on Detection Performance
 - **Task Type**: classification
@@ -98,14 +99,15 @@ Participants performed near-threshold visual detection tasks across three cueing
 - **Meta Level**: super
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | 11 | 1 | No-cue condition (0% validity) |
 | 21 | 2 | 50%-validity cue condition |
 | 22 | 2 | 50%-validity cue condition (alternate marker) |
-
 - **Evidence**: DOI: https://doi.org/10.1111/psyp.14525 (paradigm explicitly examines spatial attention modulation via cue validity; epoch window -0.5s to 1.0s captures pre-stimulus alpha and post-stimulus perception)
 - **Kernel Notes**: Extract cue_validity metadata per segment for classification. Target comparison: hit vs miss rate as function of cue validity (0%, 50%, 100%). Segment length 3.0s accommodates baseline, stimulus, and response periods. Exclude event 128 (BioSemi boundary).
+
+---
 
 ### Potential Task 1: Perceptual Outcome vs. Sensory Uncertainty
 - **Task Type**: classification
@@ -115,15 +117,16 @@ Participants performed near-threshold visual detection tasks across three cueing
 - **Meta Level**: super
 - **Target Definition**:
 
-| Event | y | Meaning |
+| Event ID | y | Meaning |
 |---|---|---|
 | 101 | 1 | Hit (detected) |
 | 122 | 0 | Miss (not detected) |
 | 111 | 1 | Hit under 50% cue |
 | 121 | 1 | Hit under 50% cue (run 2) |
-
 - **Evidence**: Partial support from DOI: https://doi.org/10.1111/psyp.14525 (examines perceptual outcome modulated by pre-stimulus alpha; partial evidence since reference emphasizes alpha analysis rather than sensory uncertainty stratification)
 - **Kernel Notes**: Stratify epochs by gabor_contrast from events.tsv into threshold/super-threshold bins. Continuous regressor (gabor_contrast) available for regression-based modeling. Binary label: hit (detected) vs miss (not detected). Preserve source metadata for contrast derivation.
+
+---
 
 ### Potential Task 1: Response Time Regression
 - **Task Type**: regression
@@ -133,10 +136,9 @@ Participants performed near-threshold visual detection tasks across three cueing
 - **Meta Level**: raw
 - **Target Definition**:
 
-| Event | y | Meaning |
-|---|---|---|
-| 2 | response_time (continuous) | Button press response time in seconds |
-
+| MISC Channel Name | Y Mapping Notes |
+|---|---|
+| Needs verification | Response time regression target derived from events.tsv `response_time` column (continuous, seconds); no MISC channels present in dataset. Consider using `info` route with events.tsv field or custom extraction pipeline. |
 - **Evidence**: Paradigm description indicates response_time stored in events.tsv; plausible from experimental design (reaction time is standard dependent variable in detection tasks)
 - **Kernel Notes**: Preserve response_time derivation source (events.tsv column), unit (seconds), and version metadata. Use response-aligned epoching (tmax=0.5s captures early motor response; exclude trials with response_time > 2.0s as outliers). Continuous predictors available: gabor_contrast, subjective_r, objective_r.
 

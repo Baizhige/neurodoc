@@ -44,6 +44,7 @@ Eleven subjects performed steady-state visual evoked potential (SSVEP) tasks acr
 - **Target Definition**: Stimulus frequency or target index
 - **Evidence**: SSVEP paradigm is explicitly stated in dataset metadata/reference. Source: https://www.physionet.org/ DOI: https://doi.org/10.1109/tbme.2017.2694818
 
+---
 
 ### Potential Task 1: SSVEP Frequency Classification (epoch_by_long_event)
 - **Task Type**: classification

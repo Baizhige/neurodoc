@@ -42,6 +42,7 @@ The TUH EEG Epilepsy Corpus (v2.0.1) is a clinically labeled subset of the TUH E
 - **Target Definition**: Patient/record-level epilepsy label from TUH Epilepsy corpus metadata.
 - **Evidence**: TUH Epilepsy Corpus is specifically assembled for epilepsy diagnosis classification research. Source: https://isip.piconepress.com/projects/tuh_eeg/ DOI: https://doi.org/10.3389/fnins.2016.00196
 
+---
 
 ### Potential Task 1: Epilepsy Patient Classification (epoch_by_long_event)
 - **Task Type**: classification
