@@ -1,7 +1,7 @@
 # UCD Sleep Apnea Database
 
 **Dataset**: `physionet_ucddb` | **Year**: 2007 | **URL**: https://physionet.org/content/ucddb/1.0.0/
-**Category**: Biological State | **Subjects**: 25 | **Files (Completed)**: 50 | **Channels**: 14/16 | **Sampling Rate**: 8/64/128 | **Manual Review**:
+**Category**: Biological State | **Subjects**: 25 | **Files (Completed)**: 50 | **Channels**: 14/16 | **Sampling Rate**: 8/64/128 | **Manual Review**: Jiping Cui
 
 ## Paradigm
 
@@ -27,6 +27,7 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
 | `Sleep stage REM` | 1990 | event | raw | Rapid eye movement sleep |
 | `Sleep stage W` | 4707 | event | raw | Wake |
 
+
 ### MISC Label Summary
 
 | Channel | Source | Meta | Notes |
@@ -42,6 +43,7 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
 | `cap` | missing | Electrode cap/hardware model is not explicitly documented in the dataset release. |
 | `handedness` | missing | Handedness is not reported in the public dataset metadata. |
 | `sex` | missing | Available per subject in `SubjectDetails.xls` as `Gender`, but not present in EDF headers. |
+
 
 ## Tasks
 
@@ -62,9 +64,7 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
   | `Sleep stage REM` | 4 | REM sleep |
 - **Evidence**:
   - 10.1371/journal.pone.0256111 — 5-class sleep stage classification (W/N1/N2/N3/REM) using UCD Sleep Apnea Database; explicitly maps R&K stages 3 and 4 to single AASM N3 class; uses 30s epochs (tmin=0s, tmax=30s, no overlap); excludes undefined/artifact epochs.
-- **Notes**: Kernel must implement R&K-to-AASM mapping: `Sleep stage 3` and `Sleep stage 4` both map to y=3. `Sleep stage 8` (n=15 artifact epochs) must be excluded from classification. Standard 5-class sleep staging task with raw event-level labels from expert-scored PSG.
-
----
+- **Notes**: --
 
 ### Classical Task 2: Sleep Apnea Detection
 - **Task Type**: regression
@@ -78,16 +78,13 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
   | `apnea_label` | Binary 0/1: 0 = no apnea/hypopnea event overlaps the 10 s window; 1 = at least one apnea/hypopnea event overlaps the 10 s window. Derived from `_respevt.txt` files (not a native signal channel). Needs verification: channel not present in MISC Label Summary. |
 - **Evidence**:
   - 10.1109/TENSYMP49402.2020.9230848 — Binary apnea/non-apnea classification using 10-second EEG frames with 50% overlap from the UCD sleep apnea database; positive class includes obstructive, central, and mixed apnea/hypopnea events.
-- **Notes**: SUPER META REQUIRED: `apnea_label` is a derived misc label, not a native signal channel. Kernel must parse companion `_respevt.txt` files, align HH:MM:SS event times to PSG recording onset using `PSG Start Time` from `SubjectDetails.csv` with midnight wrap-around handling, and assign binary labels to 10 s sliding windows. Set `apnea_label = 1` if any apnea/hypopnea event overlaps `[start, start + 10s]`, otherwise `0`. Positive event types should include `APNEA-O`, `APNEA-C`, `APNEA-M`, `HYP-O`, `HYP-C`, and `HYP-M`; do not map ambiguous `POSSIBLE` events to positive unless an explicit rule is defined. Segmentation-based epoching is used because respiratory events are variable-duration events and the benchmark target is a fixed-window apnea/non-apnea label.
-
----
+- **Notes**: --
 
 ### Potential Task 1: Subject Age Regression
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 30.0 s, overlap = 0.0, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
 - **Meta Level**: raw
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
