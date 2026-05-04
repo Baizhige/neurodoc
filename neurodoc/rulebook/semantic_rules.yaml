@@ -221,7 +221,7 @@ rules:
     severity: "error"
 
   - id: "kernel_sha256_matches_file"
-    desc: "Kernel SHA256 in document must match actual SHA256 of neurodoc/kernels/<dataset>.py. Mismatch means doc was not produced by the current kernel."
+    desc: "If Kernel SHA256 is a concrete hash, it must match the effective kernel file used for scanning. `N/A` is allowed when scanning does not require a dataset-specific kernel file (for example generic/default parser cases)."
     target: "analysis_md"
     check: "cross_check"
     function: "kernel_sha256_matches"

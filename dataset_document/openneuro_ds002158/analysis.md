@@ -90,22 +90,8 @@ Participants performed speeded perceptual judgments and subsequently reported th
   |---|---|
   | `sex` | F -> 0; M -> 1 |
 - **Evidence**:
-  - openneuro_ds002158 - Resting-state sessions lack all event markers (no events.tsv, no .vmrk), enforcing segmentation-based approaches only for those files
+  - openneuro_ds002158 — Resting-state sessions lack all event markers (no events.tsv, no .vmrk), enforcing segmentation-based approaches only for those files
 - **Notes**: This task serves as a fallback for resting-state sessions that lack event markers entirely. The `sex` field is complete across all participants. Classification is binary with two distinct classes. The `age` field could alternatively be used for regression (Potential Task), but the age range in a sample of 20 participants may be limited. This task is explicitly segmentation-based with empty target_events as required.
-
-### Potential Task 1: Confidence Rating Regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.6 s, target_events = [`Response/R128`]
-- **Label Route**: `misc`
-- **Meta Level**: super
-- **Target Definition**:
-  | MISC Channel Name | Y Mapping Notes |
-  |---|---|
-  | `Response/R128` | no mapping |
-- **Evidence**:
-  - 10.1073/pnas.1918335117 - Multivariate EEG decoding of trial-by-trial confidence ratings using linear regression with peak R² at 96 ms (active) and 356 ms (observation) post-response; epochs time-locked to first-order response with window [-0.2, 0.6 s]
-- **Notes**: This task requires super meta information (the actual confidence rating values) that is not present in the raw event structure. The continuous confidence values would need to be extracted from behavioral data files or events.tsv trial_type columns. The reference describes response-locked epoching around `Response/R128`, but the confidence values themselves are not embedded as event annotations. This task is marked as Potential due to the super meta requirement.
 
 ## Data Quality Notes
 
@@ -118,5 +104,5 @@ Participants performed speeded perceptual judgments and subsequently reported th
 
 ## Kernel Responsibilities
 
-> **Super Meta Required**: Yes
+> **Super Meta Required**: No
 > **Status**: completed

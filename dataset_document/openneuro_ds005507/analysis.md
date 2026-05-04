@@ -1,7 +1,7 @@
 # Healthy Brain Network (HBN) EEG - Release 3
 
 **Dataset**: `openneuro_ds005507` | **Year**: 2017/2025 | **URL**: https://openneuro.org/datasets/ds005507
-**Category**: Complex Applied | **Subjects**: 183 | **Files (Completed)**: 1812 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**:
+**Category**: Complex Applied | **Subjects**: 183 | **Files (Completed)**: 1812 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 

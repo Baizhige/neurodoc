@@ -45,7 +45,7 @@ One hundred and nine volunteers performed a series of motor movement and motor i
 ### Classical Task 1: 4-Class Motor Imagery Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 3 s, target_events = [`Imagine Opening Left Fist Movement`, `Imagine Opening Right Fist Movement`, `Imagine Opening Fists Movement`, `Imagine Opening Feet Movement`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 3 s, target_events = [`Imagine Opening Left Fist Movement`, `Imagine Opening Right Fist Movement`, `Imagine Opening Both Fists Movement`, `Imagine Opening Feet Movement`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:

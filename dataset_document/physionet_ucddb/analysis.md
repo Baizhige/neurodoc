@@ -11,7 +11,7 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
 
 ## File Scan Result
 
-> **Kernel SHA256**: `6f928254816808c17c06fa175429ac15bdad6a342bca28a3239d6c14550f1833`
+> **Kernel SHA256**: `0acc9804fa4f6b37ceb80fd5ea08893e28c4f6576826749a7a1942d4d0c77da6`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -19,24 +19,30 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |---|---|---|---|---|
-| `Sleep stage 1` | 3016 | event | raw | NREM Stage 1 (R&K) |
-| `Sleep stage 2` | 3403 | event | raw | NREM Stage 2 (R&K) |
-| `Sleep stage 3` | 6985 | event | raw | NREM Stage 3 - slow-wave sleep (R&K) |
-| `Sleep stage 4` | 673 | event | raw | NREM Stage 4 - deep SWS (R&K) |
-| `Sleep stage 8` | 15 | admin | raw | Undefined/artifact epoch (exclude from classification) |
-| `Sleep stage REM` | 1990 | event | raw | REM sleep |
-| `Sleep stage W` | 4707 | event | raw | Wake (30-second epoch) |
+| `Sleep stage 1` | 3016 | event | raw | NREM Stage 1 (R&K scoring) |
+| `Sleep stage 2` | 3403 | event | raw | NREM Stage 2 (R&K scoring) |
+| `Sleep stage 3` | 6985 | event | raw | NREM Stage 3 / slow-wave sleep (R&K scoring) |
+| `Sleep stage 4` | 673 | event | raw | NREM Stage 4 / deep slow-wave sleep (R&K scoring) |
+| `Sleep stage 8` | 15 | event | raw | Undefined or artifact epoch; exclude from standard sleep-stage classification |
+| `Sleep stage REM` | 1990 | event | raw | Rapid eye movement sleep |
+| `Sleep stage W` | 4707 | event | raw | Wake |
 
 
-> Counts are totals across all 25 PSG files. Event 8 indicates undefined or movement-time epochs. ECG _lifecard.edf files yield unknown annotations and should be excluded.
+### MISC Label Summary
+
+| Channel | Source | Meta | Notes |
+|---|---|---|---|
+| `apnea_label` | native (raw misc in EEG file) | raw | Binary 0/1 derived from companion `_respevt.txt`: 1 when an `APNEA-*` or `HYP-*` event overlaps the current sample/window, otherwise 0. |
 
 ### Info
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `age` | missing | [To Agent: Available per subject in `SubjectDetails.csv` as `Age`; overall 50 ± 10 years, range 28-68.] |
-| `sex` | missing | [To Agent: Available per subject in `SubjectDetails.csv` as `Gender`; overall distribution 21M / 4F.] |
-| `device` | missing | [To Agent: PSG `.rec` files used Jaeger-Toennies system; `_lifecard.edf` files used Reynolds Lifecard CF Holter ECG.] |
+| `age` | missing | Available per subject in `SubjectDetails.xls` as `Age`, but not present in EDF headers. |
+| `amplifier` | missing | PSG `.rec` files were acquired on a Jaeger-Toennies PSG system; companion `_lifecard.edf` files come from a Reynolds Lifecard CF Holter recorder. |
+| `cap` | missing | Electrode cap/hardware model is not explicitly documented in the dataset release. |
+| `handedness` | missing | Handedness is not reported in the public dataset metadata. |
+| `sex` | missing | Available per subject in `SubjectDetails.xls` as `Gender`, but not present in EDF headers. |
 
 
 ## Tasks
@@ -58,16 +64,13 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
   | `Sleep stage REM` | 4 | REM sleep |
 - **Evidence**:
   - 10.1371/journal.pone.0256111 — 5-class sleep stage classification (W/N1/N2/N3/REM) using UCD Sleep Apnea Database; explicitly maps R&K stages 3 and 4 to single AASM N3 class; uses 30s epochs (tmin=0s, tmax=30s, no overlap); excludes undefined/artifact epochs.
-- **Notes**: Kernel must implement R&K-to-AASM mapping: `Sleep stage 3` and `Sleep stage 4` both map to y=3. `Sleep stage 8` (n=15 artifact epochs) must be excluded from classification. Standard 5-class sleep staging task with raw event-level labels from expert-scored PSG.
-
----
+- **Notes**: --
 
 ### Classical Task 2: Sleep Apnea Detection
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 10.0 s, overlap = 5.0, target_events = []
 - **Label Route**: `misc`
-- **Label Field**: `apnea_label`
 - **Meta Level**: super
 - **Target Definition**:
   | MISC Channel Name | Y Mapping Notes |
@@ -75,17 +78,14 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
   | `apnea_label` | Binary 0/1: 0 = no apnea/hypopnea event overlaps the 10 s window; 1 = at least one apnea/hypopnea event overlaps the 10 s window. Derived from `_respevt.txt` files (not a native signal channel). Needs verification: channel not present in MISC Label Summary. |
 - **Evidence**:
   - 10.1109/TENSYMP49402.2020.9230848 — Binary apnea/non-apnea classification using 10-second EEG frames with 50% overlap from the UCD sleep apnea database; positive class includes obstructive, central, and mixed apnea/hypopnea events.
-- **Notes**: SUPER META REQUIRED: `apnea_label` is a derived misc label, not a native signal channel. Kernel must parse companion `_respevt.txt` files, align HH:MM:SS event times to PSG recording onset using `PSG Start Time` from `SubjectDetails.csv` with midnight wrap-around handling, and assign binary labels to 10 s sliding windows. Set `apnea_label = 1` if any apnea/hypopnea event overlaps `[start, start + 10s]`, otherwise `0`. Positive event types should include `APNEA-O`, `APNEA-C`, `APNEA-M`, `HYP-O`, `HYP-C`, and `HYP-M`; do not map ambiguous `POSSIBLE` events to positive unless an explicit rule is defined. Segmentation-based epoching is used because respiratory events are variable-duration events and the benchmark target is a fixed-window apnea/non-apnea label.
-
----
+- **Notes**: --
 
 ### Potential Task 1: Subject Age Regression
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
 - **Epoch Parameters**: segment_length = 30.0 s, overlap = 0.0, target_events = []
 - **Label Route**: `info`
-- **Label Field**: `age`
-- **Meta Level**: super
+- **Meta Level**: raw
 - **Target Definition**:
   | Info Field | Y Mapping Notes |
   |---|---|
@@ -104,5 +104,5 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
 
 ## Kernel Responsibilities
 
-> **Super Meta Required**: No
+> **Super Meta Required**: Yes
 > **Status**: completed

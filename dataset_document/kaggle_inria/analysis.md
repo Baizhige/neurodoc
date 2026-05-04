@@ -51,20 +51,6 @@ Twenty-six subjects (ages 20-37) performed a P300-based BCI feedback task using 
   - 10.1088/1741-2552/aace8c — Evaluates EEGNet on ERN paradigm with epochs [0, 1.25]s post feedback.
 - **Notes**: FeedBackEvent channel (column 57) encodes feedback onset times; match labels from TrainLabels.csv by feedback ID (e.g., S01_Sess01_FB001). Exclude sessions with `unknown feedback to P300` (test set). Bandpass filter 1-40Hz recommended per paper preprocessing. (replaces Potential Task 1 from original analysis.md)
 
-### Potential Task 1: Subject Identification via Feedback-Related Potentials
-- **Task Type**: classification
-- **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.3 s, target_events = [`good feedback to P300`, `wrong feedback to P300`]
-- **Label Route**: `event`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Event ID | y | Meaning |
-  |---|---|---|
-  | `good feedback to P300` | 0, 1 | Subject ID derived from positive feedback |
-  | `wrong feedback to P300` | 0, 1 | Subject ID derived from negative feedback |
-- **Evidence**:
-  - Task uses positive vs negative feedback-related ERP responses for biometric authentication. SVM with EMD-based features achieves up to 0.99 accuracy.
-- **Notes**: Labels are derived from subject IDs, not feedback correctness. (Note: y represents different subject classes, e.g., Subject 0 = 0, Subject 1 = 1, to satisfy the ≥2 distinct class requirement).
 
 ## Data Quality Notes
 
