@@ -450,6 +450,7 @@ _EXT_READERS = {{
     ".eeg": lambda f: mne.io.read_raw_brainvision(f, preload=False, verbose=False),
 }}
 
+tested_count = 0
 for fpath in sample_files:
     print(f"[TEST] Testing: {{fpath}}")
     try:
@@ -466,6 +467,7 @@ for fpath in sample_files:
             print(f"  [SKIP] Cannot load {{fpath}}: {{load_err}}")
             continue
 
+        tested_count += 1
         result = kernel.apply(None, raw, row)
         import json as _json
         desc = result.info.get("description", "")
@@ -495,6 +497,24 @@ for fpath in sample_files:
         print(f"[MISC] {{fpath}} channels={{_json.dumps(misc_names)}}")
     except Exception as e:
         errors.append(f"{{fpath}}: {{traceback.format_exc()}}")
+
+# If every sample file was skipped (e.g. all .mat — not in _EXT_READERS), we never
+# called kernel.apply() and the errors list would be empty regardless of the kernel's
+# validity.  Check that the kernel class defines its OWN apply() method (not just an
+# inherited or coincidentally-imported attribute from numpy/mne/pandas).
+if tested_count == 0 and sample_files:
+    has_own_apply = "apply" in type(kernel).__dict__
+    if not has_own_apply:
+        errors.append(
+            f"All {{len(sample_files)}} sample file(s) skipped (unsupported extensions "
+            f"{{set(f[f.rfind('.'):]for f in sample_files)}}) — kernel class "
+            f"{{type(kernel).__name__}} does not define apply(). "
+            "The kernel must implement "
+            "`def apply(self, udataset, raw, row) -> mne.io.BaseRaw:`."
+        )
+    else:
+        print(f"[NOTE] All {{len(sample_files)}} sample file(s) skipped. "
+              "kernel.apply() is defined but could not be tested on real data.")
 
 if errors:
     print("\\n[FAIL] Errors:")
@@ -576,6 +596,106 @@ def _format_kernel_requirements(kr: Optional[Dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+def _format_error_history(error_history: List[Dict[str, Any]]) -> str:
+    """Format prior failure history for injection into retry prompts.
+
+    Shows the full error text for the 2 most recent failures and a one-line
+    summary for older ones — same pattern used by Claude Code / Aider to keep
+    LLM context relevant without exploding prompt size.
+    """
+    if not error_history:
+        return ""
+    lines = ["=== Prior attempt failures (do NOT repeat these approaches) ==="]
+    recent_cutoff = max(0, len(error_history) - 2)
+    for i, entry in enumerate(error_history):
+        v, strategy = entry["version"], entry["strategy"]
+        text = entry["full"] if i >= recent_cutoff else f"{entry['summary']} [full error truncated]"
+        lines.append(f"\n[Attempt v{v}, strategy={strategy}]")
+        lines.append(text)
+    return "\n".join(lines)
+
+
+def _check_all_zero_annotations(stdout: str, sample_files: List[str]) -> bool:
+    """Return True when every tested file produced annotations=0.
+
+    Returns False if no [EVENTS] lines were emitted (all files skipped / test
+    crashed) — we need at least one confirmed test to trust the result.
+    """
+    got_map: Dict[str, int] = {}
+    for m in re.finditer(r"^\[EVENTS\]\s+(\S+)\s+annotations=(\d+)", stdout, re.MULTILINE):
+        got_map[m.group(1)] = int(m.group(2))
+    if not got_map:
+        return False
+    return all(v == 0 for v in got_map.values())
+
+
+def _format_zero_event_evidence(
+    ds_dir: Path,
+    sample_files: List[str],
+    stdout: str,
+    context: Dict[str, Any],
+) -> str:
+    """Build evidence block for the all-zero-annotation case (no events.tsv available).
+
+    Gives the LLM enough context to decide: are events genuinely absent
+    (resting state / continuous recording), or did the kernel miss them?
+    """
+    lines = [
+        "[zero-annotation evidence] All tested sample files produced 0 annotations.",
+        "No BIDS *_events.tsv sidecars were found, so expected-count verification",
+        "was skipped.  Determine whether events truly do not exist (resting-state,",
+        "marker-less recording) or whether the kernel failed to surface them.",
+        "",
+    ]
+
+    # File format evidence
+    ext_counts: Dict[str, int] = {}
+    for f in sample_files:
+        ext = Path(f).suffix.lower()
+        ext_counts[ext] = ext_counts.get(ext, 0) + 1
+    lines.append(f"Sample file extensions: {ext_counts}")
+    lines.append(f"Sample files ({len(sample_files)}): {[Path(f).name for f in sample_files[:5]]}")
+
+    # Search for any events-like files anywhere in the dataset
+    events_files: List[Path] = []
+    if ds_dir.exists():
+        for pat in ("*events*.tsv", "*events*.csv", "*events*.txt", "*markers*", "*trigger*"):
+            events_files.extend(list(ds_dir.rglob(pat))[:3])
+    if events_files:
+        lines.append("\nEvent-related files found in dataset (may contain event info):")
+        for ef in events_files[:6]:
+            rel = ef.relative_to(ds_dir) if ds_dir in ef.parents else ef
+            lines.append(f"  {rel}")
+            try:
+                head = ef.read_text(encoding="utf-8", errors="replace").splitlines()[:6]
+                for ln in head:
+                    lines.append(f"    {ln}")
+            except Exception:
+                pass
+    else:
+        lines.append("\nNo events/markers/trigger files found — dataset may be event-free.")
+
+    # MISC channels from the test run (to show what the kernel DID produce)
+    misc_hits = re.findall(r"^\[MISC\].*", stdout, re.MULTILINE)
+    if misc_hits:
+        lines.append("\nMISC channels produced by kernel:")
+        for ln in misc_hits[:5]:
+            lines.append(f"  {ln}")
+
+    # Dataset tree for structural context
+    tree = context.get("ds_tree", "")[:1500]
+    if tree:
+        lines.append(f"\nDataset directory tree (truncated):\n{tree}")
+
+    # Paradigm hint from analysis.md
+    analysis = context.get("analysis_md", "")
+    pm = re.search(r"## Paradigm\s*(.*?)(?=^##|\Z)", analysis, re.DOTALL | re.MULTILINE)
+    if pm:
+        lines.append(f"\nParadigm (from analysis.md):\n{pm.group(1).strip()[:400]}")
+
+    return "\n".join(lines)
+
+
 def build_kernel(
     dataset_name: str,
     context: Dict[str, Any],
@@ -628,60 +748,112 @@ def build_kernel(
         f"Now write the complete kernel for {dataset_name}."
     )
 
-    MAX_VERSIONS = 7  # bumped from 5 → 7 so event-diagnose retries can fire alongside generic fixes
-    MAX_EVENT_DIAGNOSE_RETRIES = 3
+    MAX_VERSIONS = 9               # total iteration budget
+    MAX_EVENT_DIAGNOSE_RETRIES = 10  # generous — outer MAX_VERSIONS is the real cap
+    _REGENERATE_FROM_V = 7         # v7-9 switch to full re-generation with failure history
 
     kernel_code = ""
     last_error = ""
     version = 0
     success = False
-    event_diagnose_mode = False          # toggled after a successful subprocess but mismatched events
+    event_diagnose_mode = False   # subprocess passed but events.tsv mismatch detected
+    is_zero_event = False         # subprocess passed but ALL sample files have 0 annotations
+    force_regenerate = False      # structural static error → skip generic fix, go straight to regen
     event_diagnose_retries = 0
+    error_history: List[Dict[str, Any]] = []   # rolling failure log for prompt injection
     expected_events_map = _compute_expected_events(sample_files, ds_dir) if sample_files else {}
     events_numeric_columns = (context.get("bids_sidecars") or {}).get("events_numeric_columns") or {}
 
+    # Compact context digest carried into fix / event-diagnose prompts so the LLM
+    # always knows what dataset and data format it is working with.
+    context_digest = (
+        f"=== Dataset context ===\n"
+        f"Dataset: {dataset_name}\n"
+        f"Directory tree:\n{context['ds_tree'][:1200]}\n"
+        + (f"\nKernel requirements:\n{reqs_block[:600]}\n" if reqs_block else "")
+        + f"\nTasks excerpt:\n{tasks_section[:500]}\n"
+    )
+
     while version < MAX_VERSIONS:
         version += 1
-        log(f"[KernelBuilder] Generating kernel v{version}/{MAX_VERSIONS}...")
 
+        # ── Determine strategy for this iteration ──────────────────────────
+        if version == 1:
+            mode = "initial"
+        elif force_regenerate or version >= _REGENERATE_FROM_V:
+            mode = "regenerate"
+            force_regenerate = False
+        elif event_diagnose_mode or is_zero_event:
+            mode = "event_diagnose"
+            event_diagnose_mode = False
+            is_zero_event = False
+        else:
+            mode = "fix"
+
+        log(f"[KernelBuilder] v{version}/{MAX_VERSIONS} mode={mode}...")
+        history_block = _format_error_history(error_history)
+
+        # ── Build prompt ───────────────────────────────────────────────────
         try:
-            if version == 1:
+            if mode == "initial":
                 budget.charge("kernel_loop")
                 raw_response = call_llm([
                     {"role": "system", "content": _KERNEL_SYSTEM},
                     {"role": "user", "content": base_user},
                 ])
-            elif event_diagnose_mode:
-                # Dedicated retry for empty/sparse annotations. Surface the evidence.
+
+            elif mode == "event_diagnose":
+                if event_diagnose_retries < MAX_EVENT_DIAGNOSE_RETRIES:
+                    event_diagnose_retries += 1
                 diag_user = (
                     f"Dataset: {dataset_name}\n\n"
                     f"=== Event-extraction failure evidence ===\n{last_error[:6000]}\n\n"
                     f"=== Current kernel ===\n```python\n{kernel_code[:10000]}\n```\n\n"
-                    f"Emit a corrected kernel so that `raw.annotations` is populated from the "
-                    f"relevant source (events.tsv or file-native triggers) — see system prompt."
+                    + (f"{history_block}\n\n" if history_block else "")
+                    + f"{context_digest}\n\n"
+                    "Emit a corrected kernel so that `raw.annotations` is populated.\n"
+                    "If events genuinely do not exist in this dataset (resting state /\n"
+                    "marker-less recording), return the kernel unchanged and add a comment\n"
+                    "`# no events expected` — do NOT fabricate events."
                 )
                 budget.charge("kernel_loop")
                 raw_response = call_llm([
                     {"role": "system", "content": _KERNEL_EVENT_DIAGNOSE_SYSTEM},
                     {"role": "user", "content": diag_user},
                 ])
-                event_diagnose_mode = False  # consume the flag; new kernel will be re-verified
-            else:
-                # Generic fix retry
+
+            elif mode == "regenerate":
+                regen_user = (
+                    f"{base_user}\n\n"
+                    f"{'='*60}\n"
+                    f"IMPORTANT — {len(error_history)} previous attempt(s) all failed.\n"
+                    f"{history_block}\n\n"
+                    "Write a completely new kernel. Do NOT repeat the approaches above."
+                )
+                budget.charge("kernel_loop")
+                raw_response = call_llm([
+                    {"role": "system", "content": _KERNEL_SYSTEM},
+                    {"role": "user", "content": regen_user},
+                ])
+
+            else:  # fix
                 fix_user = (
                     f"Fix this EEGUnity kernel for dataset '{dataset_name}'.\n\n"
                     f"=== Error ===\n{last_error[:3000]}\n\n"
-                    f"=== Current kernel (may be shortened) ===\n{kernel_code[:8000]}\n\n"
-                    f"Requirements:\n"
-                    f"- def apply(self, udataset, raw, row) -> mne.io.BaseRaw:  (exact, one line)\n"
-                    f"- eegunity_description dict with: age(str), sex, amplifier, cap, handedness\n"
-                    f"- KERNEL = <ClassName>()  at end of file\n"
+                    f"=== Current kernel ===\n{kernel_code[:8000]}\n\n"
+                    + (f"{history_block}\n\n" if history_block else "")
+                    + f"{context_digest}\n\n"
+                    "Requirements:\n"
+                    "- def apply(self, udataset, raw, row) -> mne.io.BaseRaw:  (exact, one line)\n"
+                    "- eegunity_description dict with: age(str), sex, amplifier, cap, handedness\n"
+                    "- KERNEL = <ClassName>()  at end of file\n"
                 )
                 budget.charge("kernel_loop")
                 raw_response = call_llm([
                     {"role": "system", "content": _KERNEL_FIX_SYSTEM},
                     {"role": "user", "content": fix_user},
                 ])
+
         except BudgetExhausted:
             log(f"[KernelBuilder] Budget exhausted at v{version}. Using last available kernel.")
             break
@@ -691,22 +863,26 @@ def build_kernel(
 
         new_code = _extract_code_block(raw_response)
         if not new_code:
-            log(f"[KernelBuilder] v{version}: LLM returned no Python code block, retrying...")
             last_error = "LLM returned no ```python code block."
+            error_history.append({"version": version, "strategy": mode,
+                                   "summary": last_error, "full": last_error})
+            log(f"[KernelBuilder] v{version}: LLM returned no Python code block, retrying...")
             continue
 
         kernel_code = new_code
 
-        # Security check — block kernels that write/delete files or run shell commands
+        # ── Security check ─────────────────────────────────────────────────
         sec_violations = _security_check(kernel_code)
         if sec_violations:
             last_error = "\n".join(sec_violations)
             fail_path = sandbox_dir / f"kernel_v{version}_SECURITY.py"
             fail_path.write_text(kernel_code, encoding="utf-8")
             log(f"[KernelBuilder] v{version}: SECURITY BLOCK ({fail_path.name}):\n{last_error}")
+            error_history.append({"version": version, "strategy": mode,
+                                   "summary": last_error[:120], "full": last_error})
             continue
 
-        # Static validation (RULEBOOK compliance)
+        # ── Static validation ──────────────────────────────────────────────
         static_errors = _static_validate(kernel_code, kernel_requirements)
         if static_errors:
             last_error = "\n".join(static_errors)
@@ -714,9 +890,18 @@ def build_kernel(
             fail_path.write_text(kernel_code, encoding="utf-8")
             log(f"[KernelBuilder] v{version}: Static validation failed ({fail_path.name}):\n{last_error}")
             log(f"[KernelBuilder] v{version}: Code preview: {kernel_code[:300]!r}")
+            error_history.append({"version": version, "strategy": mode,
+                                   "summary": last_error[:120], "full": last_error})
+            # Structural errors (missing apply() or KERNEL=) waste fix attempts —
+            # jump straight to re-generation on the next iteration.
+            _structural_kws = ("apply() method missing", "KERNEL = ... object missing",
+                               "cannot locate apply() body")
+            if any(kw in last_error for kw in _structural_kws):
+                force_regenerate = True
+                log(f"[KernelBuilder] v{version}: Structural error → forcing regeneration next.")
             continue
 
-        # Write to sandbox
+        # ── Write to sandbox ───────────────────────────────────────────────
         kernel_path = sandbox_dir / f"kernel_v{version}.py"
         kernel_path.write_text(kernel_code, encoding="utf-8")
         log(f"[KernelBuilder] v{version}: Written to {kernel_path}")
@@ -726,7 +911,7 @@ def build_kernel(
             success = True
             break
 
-        # Generate + run test script
+        # ── Run test script ────────────────────────────────────────────────
         test_script = _build_test_script(kernel_path, sample_files, eegunity_path, python_env)
         test_path = sandbox_dir / f"test_v{version}.py"
         test_path.write_text(test_script, encoding="utf-8")
@@ -747,8 +932,9 @@ def build_kernel(
             if combined:
                 for line in combined.splitlines()[-30:]:
                     log(f"  {line}")
+
             if result.returncode == 0:
-                # Subprocess passed — now verify annotation counts vs events.tsv.
+                # ── Verify annotation counts ───────────────────────────────
                 if expected_events_map and event_diagnose_retries < MAX_EVENT_DIAGNOSE_RETRIES:
                     ok_events, mismatch = _verify_kernel_events(stdout, expected_events_map)
                     if not ok_events:
@@ -757,9 +943,13 @@ def build_kernel(
                         last_error = _format_event_mismatch(
                             mismatch, ds_dir, sample_files, events_numeric_columns,
                         )
-                        # Preserve the kernel for offline inspection
                         fail_path = sandbox_dir / f"kernel_v{version}_EVENTS_EMPTY.py"
                         fail_path.write_text(kernel_code, encoding="utf-8")
+                        error_history.append({
+                            "version": version, "strategy": mode,
+                            "summary": f"events.tsv mismatch: {mismatch['summary']}",
+                            "full": last_error[:2000],
+                        })
                         log(
                             f"[KernelBuilder] v{version}: events mismatch "
                             f"({mismatch['summary']}); queuing event-diagnose retry "
@@ -767,18 +957,52 @@ def build_kernel(
                         )
                         continue
                     elif expected_events_map:
-                        log(f"[KernelBuilder] v{version}: event counts look consistent with events.tsv")
+                        log(f"[KernelBuilder] v{version}: event counts consistent with events.tsv")
+
+                elif (not expected_events_map
+                      and sample_files
+                      and event_diagnose_retries < MAX_EVENT_DIAGNOSE_RETRIES
+                      and _check_all_zero_annotations(stdout, sample_files)):
+                    # Non-BIDS zero-annotation safety net: all files show 0 annotations
+                    # even though no events.tsv exists to compare against.  Let the LLM
+                    # decide whether events are genuinely absent or were missed.
+                    event_diagnose_retries += 1
+                    is_zero_event = True
+                    last_error = _format_zero_event_evidence(
+                        ds_dir, sample_files, stdout, context,
+                    )
+                    fail_path = sandbox_dir / f"kernel_v{version}_ZERO_EVENTS.py"
+                    fail_path.write_text(kernel_code, encoding="utf-8")
+                    error_history.append({
+                        "version": version, "strategy": mode,
+                        "summary": "all sample files produced 0 annotations (no events.tsv)",
+                        "full": last_error[:2000],
+                    })
+                    log(
+                        f"[KernelBuilder] v{version}: All annotations=0, no events.tsv; "
+                        f"queuing zero-event diagnose "
+                        f"{event_diagnose_retries}/{MAX_EVENT_DIAGNOSE_RETRIES}"
+                    )
+                    continue
+
                 log(f"[KernelBuilder] v{version}: PASS")
                 success = True
                 break
             else:
                 last_error = f"STDOUT:\n{stdout[-2000:]}\nSTDERR:\n{stderr[-2000:]}"
+                first_line = (stderr or stdout).splitlines()[0][:120] if (stderr or stdout) else "subprocess failed"
+                error_history.append({"version": version, "strategy": mode,
+                                       "summary": first_line, "full": last_error})
                 log(f"[KernelBuilder] v{version}: FAIL — will retry")
         except subprocess.TimeoutExpired:
             last_error = "Test script timed out (120s)."
+            error_history.append({"version": version, "strategy": mode,
+                                   "summary": last_error, "full": last_error})
             log(f"[KernelBuilder] v{version}: TIMEOUT")
         except Exception as e:
             last_error = str(e)
+            error_history.append({"version": version, "strategy": mode,
+                                   "summary": str(e)[:120], "full": str(e)})
             log(f"[KernelBuilder] v{version}: subprocess error: {e}")
 
     # Write the final kernel to sandbox regardless

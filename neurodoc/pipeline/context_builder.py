@@ -452,8 +452,8 @@ def build_context(dataset_name: str, log, data_dir: str = "") -> Dict[str, Any]:
             "Action/Output": "action_output.md",
             "Biological State": "biological_state.md",
             "Complex Applied": "complex_applied.md",
-            "High Level Mental": "high_level_mental.md",
-            "Sensory Response": "sensory_response.md",
+            "High-level Mental": "high_level_mental.md",
+            "Sensory/Response": "sensory_response.md",
         }
         for k, v in skill_map.items():
             if k.lower() in category.lower():

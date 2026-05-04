@@ -1,4 +1,3 @@
-!/usr/bin/env python3
 """
 neurodoc - generate kernel + analysis.md from scratch.
 

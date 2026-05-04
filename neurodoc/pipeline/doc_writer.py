@@ -56,6 +56,13 @@ RULES:
 3. ## Data Quality Notes must use "- " bullet format for every line of content.
 4. Do NOT add any extra ## sections beyond these 5.
 5. Do NOT invent event IDs, counts, or meanings not present in the provided data.
+6. <category> MUST be exactly one of these 6 values (copy verbatim, no other strings allowed):
+   "Action/Output"    — motor imagery, BCI task, movement, key-press, finger/hand execution, reaction
+   "High-level Mental" — emotion recognition, cognitive load, mental workload, attention, meditation, memory
+   "Sensory/Response" — SSVEP, auditory ERP, visual ERP, N400, MMN, steady-state or evoked potentials
+   "Complex Applied"  — multi-paradigm or applied BCI combining more than one of the above
+   "Biological State" — sleep staging, seizure/epilepsy detection, clinical disorder monitoring
+   "Others"           — does not clearly fit any category above
 
 Output ONLY valid JSON:
 {
@@ -189,6 +196,12 @@ def _build_kr_block(super_meta_required: str, status: str) -> str:
     )
 
 
+_VALID_CATEGORIES = (
+    "Action/Output", "High-level Mental", "Sensory/Response",
+    "Complex Applied", "Biological State", "Others",
+)
+
+
 def _enforce_manual_review_blank(analysis_md: str) -> str:
     """Force the Manual Review field to be blank."""
     return re.sub(
@@ -196,6 +209,28 @@ def _enforce_manual_review_blank(analysis_md: str) -> str:
         "**Manual Review**:",
         analysis_md,
     )
+
+
+def _enforce_category_fallback(analysis_md: str) -> tuple[str, bool]:
+    """If Category is blank or not one of the 6 valid values, set it to 'Others'.
+
+    Returns (new_md, was_changed). This is a last-resort guard — the LLM prompt
+    already lists valid values, but scan failures or LLM refusals can leave the
+    field blank, which triggers the category_valid_value detect error.
+    """
+    m = re.search(r"\*\*Category\*\*:\s*([^|*\n]*)", analysis_md)
+    if not m:
+        return analysis_md, False
+    current = m.group(1).strip()
+    if current in _VALID_CATEGORIES:
+        return analysis_md, False
+    new_md = re.sub(
+        r"(\*\*Category\*\*:)\s*[^|*\n]*",
+        r"\1 Others ",  # trailing space preserves ' | ' separator
+        analysis_md,
+        count=1,
+    )
+    return new_md, True
 
 
 def _enforce_kr_block(analysis_md: str, kr_block: str) -> str:
@@ -292,6 +327,10 @@ def generate_analysis_md(
     if analysis_md != before_mr:
         log("[DocWriter] Manual Review field was non-blank; forced to blank.")
 
+    analysis_md, cat_fixed = _enforce_category_fallback(analysis_md)
+    if cat_fixed:
+        log("[DocWriter] Category was blank/invalid; defaulted to 'Others'.")
+
     log(f"[DocWriter] analysis.md: {len(analysis_md)} chars")
     return analysis_md
 
@@ -324,7 +363,7 @@ def write_failed_analysis(
         content = (
             f"# {dataset_name}\n\n"
             f"**Dataset**: `{dataset_name}` | **Year**:  | **URL**: \n"
-            f"**Category**:  | **Subjects**:  | **Files (Completed)**:  | **Channels**:  | **Sampling Rate**:  | **Manual Review**:\n\n"
+            f"**Category**: Others | **Subjects**:  | **Files (Completed)**:  | **Channels**:  | **Sampling Rate**:  | **Manual Review**:\n\n"
             f"## Paradigm\n\n(Pending)\n\n"
             f"## File Scan Result\n\n"
             f"> **Kernel SHA256**: `N/A`\n"
