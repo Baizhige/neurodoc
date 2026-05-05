@@ -1,11 +1,11 @@
-# Auditory EEG Dataset (Biometric Identification)
+# Auditory evoked potential EEG-Biometric dataset
 
 **Dataset**: `physionet_auditoryeeg` | **Year**: 2021 | **URL**: https://physionet.org/content/auditory-eeg/1.0.0/
-**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 205 | **Channels**: 4 | **Sampling Rate**: 200 Hz |**Manual Review**:
+**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 205 | **Channels**: 4 | **Sampling Rate**: 200 Hz | **Manual Review**: Shu Peng
 
 ## Paradigm
 
-Nineteen subjects (s01-s20, one subject absent) aged 21-31 participated in a biometric EEG identification study using resting-state and auditory stimulus paradigms (Trujillo et al., 2021). EEG was recorded using an OpenBCI Cyton board (13 channels, gold-cup electrodes at T7, F8, Cz, P4 and surrounding positions). Each subject completed multiple recording sessions across different experimental conditions: two resting-state conditions (eyes open, eyes closed), eyes-open with noise isolation, and six auditory stimulus conditions (native song, non-native song, neutral music - via in-ear headphones or bone-conduction headphones). Each recording is labeled by experiment code (ex01-ex12) encoded in the filename. Files from subject 5 (ex05) lack structured event codes and retain raw experiment codes as annotations.
+Twenty volunteers (s01-s20) aged 21-31 participated in a multipurpose EEG study involving resting-state and auditory stimulus paradigms, completing all tasks in a single day while seated comfortably. EEG data was recorded at a 200 Hz sampling rate using an OpenBCI Ganglion board with four gold-cup electrodes (T7, F8, Cz, P4) positioned according to the 10/10 international system, alongside ear-placed reference and ground electrodes. The recording conditions consisted of three-minute sessions for resting states (eyes open, eyes closed) and six auditory stimulus tasks. For the auditory stimuli, subjects listened to a native song, a non-native song (Arabic for Italian subjects, and Italian for non-Italian subjects), and neutral instrumental music, which were delivered via both in-ear and bone-conducting headphones.
 
 ## File Scan Result
 
@@ -26,6 +26,7 @@ Nineteen subjects (s01-s20, one subject absent) aged 21-31 participated in a bio
 | `resting_eyes_closed` | 360 | event | raw | Resting state with eyes closed (ex02) |
 | `resting_eyes_open` | 358 | event | raw | Resting state with eyes open (ex01) |
 
+
 ### Info
 
 | Field | Completeness | Notes |
@@ -34,15 +35,16 @@ Nineteen subjects (s01-s20, one subject absent) aged 21-31 participated in a bio
 | `amplifier` | partial (1438/2166) | e.g. OpenBCI Ganglion Board |
 | `cap` | partial (1438/2166) | e.g. gold-cup electrodes with Ten20 conductive paste |
 | `device` | partial (1438/2166) | e.g. OpenBCI Ganglion Board, a 4-channel EEG acquisition system sampling at 200 Hz, with gold-cup electrodes at T7, F8, Cz, and P4 using Ten20 conductive paste and OpenBCI GUI v5.0.3. |
-| `handedness` | missing |  |
+| `handedness` | missing | N/A |
 | `sex` | partial (1438/2166) | e.g. male, female |
+
 
 ## Tasks
 
-### Classical Task 1: Experimental Condition Classification
+### Potential Task 1: Experimental Condition Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`resting_eyes_open`, `resting_eyes_closed`, `auditory_native_song_in_ear`, `auditory_nonnative_song_in_ear`, `auditory_neutral_music_in_ear`, `auditory_native_song_bone`, `auditory_nonnative_song_bone`, `auditory_neutral_music_bone`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`auditory_native_song_bone`, `auditory_native_song_in_ear`, `auditory_neutral_music_bone`, `auditory_neutral_music_in_ear`, `auditory_nonnative_song_bone`, `auditory_nonnative_song_in_ear`, `resting_eyes_closed`, `resting_eyes_open`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -61,10 +63,10 @@ Nineteen subjects (s01-s20, one subject absent) aged 21-31 participated in a bio
   - Paradigm section describes resting-state conditions and six auditory stimulus conditions
 - **Notes**: Noise-isolation conditions are excluded because no corresponding scanable records are present in the local `RECORDS`/file inventory. Each annotation spans the full recording file; long-event epoching with 30s windows captures sustained state. Primary dataset purpose is biometric identification, but condition classification is derivable from event labels.
 
-### Classical Task 2: Eyes-Open Condition Classification
+### Potential Task 2: Eyes-Open Condition Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`resting_eyes_open`, `auditory_native_song_in_ear`, `auditory_nonnative_song_in_ear`, `auditory_neutral_music_in_ear`, `auditory_native_song_bone`, `auditory_nonnative_song_bone`, `auditory_neutral_music_bone`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`auditory_native_song_bone`, `auditory_native_song_in_ear`, `auditory_neutral_music_bone`, `auditory_neutral_music_in_ear`, `auditory_nonnative_song_bone`, `auditory_nonnative_song_in_ear`, `resting_eyes_open`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -82,11 +84,10 @@ Nineteen subjects (s01-s20, one subject absent) aged 21-31 participated in a bio
   - Paradigm notes eyes-open resting and all auditory conditions use comparable alertness state
 - **Notes**: Excludes `resting_eyes_closed` to control for eye-state confound and excludes unavailable noise-isolation records. Useful for comparing auditory delivery methods while holding eye state constant.
 
-
-### Classical Task 3: Binary Resting vs. Auditory Classification
+### Potential Task 3: Binary Resting vs. Auditory Classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`resting_eyes_open`, `resting_eyes_closed`, `auditory_native_song_in_ear`, `auditory_nonnative_song_in_ear`, `auditory_neutral_music_in_ear`, `auditory_native_song_bone`, `auditory_nonnative_song_bone`, `auditory_neutral_music_bone`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`auditory_native_song_bone`, `auditory_native_song_in_ear`, `auditory_neutral_music_bone`, `auditory_neutral_music_in_ear`, `auditory_nonnative_song_bone`, `auditory_nonnative_song_in_ear`, `resting_eyes_closed`, `resting_eyes_open`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -105,10 +106,10 @@ Nineteen subjects (s01-s20, one subject absent) aged 21-31 participated in a bio
   - Event Structure provides sufficient counts for both super-classes
 - **Notes**: Collapses 8 file-supported conditions into 2 superordinate categories. Useful for the simplest baseline task before finer-grained condition classification.
 
-### Potential Task 1: In-Ear vs. Bone-Conduction Headphone Comparison
+### Potential Task 4: In-Ear vs. Bone-Conduction Headphone Comparison
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`auditory_native_song_in_ear`, `auditory_nonnative_song_in_ear`, `auditory_neutral_music_in_ear`, `auditory_native_song_bone`, `auditory_nonnative_song_bone`, `auditory_neutral_music_bone`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`auditory_native_song_bone`, `auditory_native_song_in_ear`, `auditory_neutral_music_bone`, `auditory_neutral_music_in_ear`, `auditory_nonnative_song_bone`, `auditory_nonnative_song_in_ear`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -127,12 +128,10 @@ Nineteen subjects (s01-s20, one subject absent) aged 21-31 participated in a bio
 
 ## Data Quality Notes
 
-- Only 13 EEG channels (non-standard OpenBCI placement); spatial coverage is limited.
-- Noise-isolation conditions are described in the source metadata, but no corresponding `ex03`, `ex04`, `ex11`, or `ex12` records are present in the local `RECORDS`/file inventory.
+- Only 4 EEG channels (non-standard OpenBCI placement); spatial coverage is limited.
 - Primary use case is biometric identification (same person across sessions), not condition classification; adapt label source accordingly.
-- Some subjects may be missing recordings for certain experiment codes.
 
 ## Kernel Responsibilities
 
 > **Super Meta Required**: No
-> **Status**: wait_manual_review
+> **Status**: completed

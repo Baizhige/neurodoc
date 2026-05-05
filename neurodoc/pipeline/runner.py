@@ -27,18 +27,25 @@ try:
 except ImportError:
     from paths import EVIDENCE_CACHE_DIR, KERNELS_DIR, NEURODOC_DIR, PROGRESS_DIR, SANDBOX_DIR
 
-# Phase order for resume logic
+# Phase order for resume logic.
+# Grouped into three high-level phases (see README.md § Generation Pipeline):
+#   Phase 1 (Build Context): context, ref_analysis, pre_scan, event_annotation
+#   Phase 2 (Task Synthesis): feasibility, task_synthesis
+#   Phase 3 (Kernel Coding): kernel_loop, scan, reconcile, doc_write
 PHASES = [
-    "context",
-    "ref_analysis",
-    "feasibility",
-    "pre_scan",           # initial scan (before kernel) for event IDs
-    "event_annotation",   # P3a+P3b: isolated event meaning annotation
-    "task_synthesis",     # v2: aggregate → fill → detect gate → repair
-    "kernel_loop",
-    "scan",               # final scan with new kernel
-    "reconcile",          # prune hallucinated tasks; at most 1 kernel patch + rescan
-    "doc_write",
+    # ── Phase 1: Build Context ─────────────────────────────────────────────
+    "context",           # local evidence: dataset files, BIDS sidecars, EEG header
+    "ref_analysis",      # academic sources: extract info from papers/docs
+    "pre_scan",          # local evidence: initial scan for event ID preview
+    "event_annotation",  # local evidence: LLM annotates semantic meaning of event IDs
+    # ── Phase 2: Task Synthesis ────────────────────────────────────────────
+    "feasibility",       # entry check: LLM judges dataset feasibility
+    "task_synthesis",    # propose task candidates + list kernel requirements
+    # ── Phase 3: Kernel Coding ─────────────────────────────────────────────
+    "kernel_loop",       # coding loop: generate kernel.py + sandbox validation
+    "scan",              # final EEGUnity scan with new kernel
+    "reconcile",         # reconcile synthesized tasks against scan results
+    "doc_write",         # write final analysis.md
     "done",
 ]
 

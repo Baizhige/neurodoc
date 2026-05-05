@@ -23,14 +23,11 @@ _CHANNEL_NAMES = ["P4", "Cz", "F8", "T7"]
 _RECORD_RE = re.compile(r"(?P<subject>s\d{2})_ex(?P<experiment>\d{2})(?:_s(?P<session>\d{2}))?", re.I)
 
 # Source: dataset_document/physionet_auditoryeeg/analysis.md Event Structure,
-<<<<<<< HEAD
 #         local README.txt "Testing and data recording" experiment order, and
 #         RECORDS/file inventory. The local release has ex01/ex02 and ex05-ex10;
 #         it has no ex03/ex04/ex11/ex12 files, so noise-isolation records are
 #         not synthesized here.
-=======
-#         local README.txt "Testing and data recording" experiment order.
->>>>>>> origin/win_client
+
 # Annotator: Codex, 2026-05-03 - needs human review
 _EXPERIMENT_EVENT_MAP: Dict[str, str] = {
     "01": "resting_eyes_open",

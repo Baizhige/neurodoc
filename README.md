@@ -1,105 +1,171 @@
-# EEG Corpus, NeuroDoc, and NeuroAudit
+<div align="center">
 
-This repository is an EEG dataset corpus with two companion tools:
+<img src="_docs/NeuroDoc_logo.png" width="88" alt="NeuroDoc"/>
 
-- `dataset_document/` stores curated dataset documentation in `analysis.md` format.
-- `neurodoc/` generates, scans, upgrades, and validates dataset kernels and documentation.
-- `neuroaudit/` supports human review and lightweight editing of existing dataset documents.
+# EEG Benchmark Skill
 
-The repository is designed for two main audiences:
+**An open EEG dataset corpus with automated documentation and community review tooling**
 
-1. People who want to use the corpus as a resource for understanding EEG datasets.
-2. People who want to contribute documentation, review fixes, or new dataset kernels.
+[![Datasets](https://img.shields.io/badge/datasets-55%20completed-4CAF50?style=flat-square)](dataset_document/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](https://github.com/EEG-BenchmarkSkill/EEGBenchmarkSKILL/pulls)
+[![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?style=flat-square&logo=python&logoColor=white)](neurodoc/)
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey?style=flat-square)](LICENSE)
 
-## If You Want to Use the Corpus
+</div>
 
-Start from `dataset_document/`.
+---
 
-Each dataset folder typically contains:
+This repository is a curated corpus of EEG datasets, each paired with a structured `analysis.md` document and a dataset-specific normalization kernel. Two companion tools power the workflow:
 
-- `analysis.md`: a structured dataset description, including paradigm, scanned event structure, metadata fields, task definitions, and quality notes
-- reference files such as papers, README exports, or official webpages when available
+- **NeuroDoc** — automated three-phase LLM pipeline that generates kernels and documentation from scratch
+- **NeuroAudit** — browser-based review UI for human contributors to inspect, edit, and validate documents
 
-If a dataset has a dedicated kernel, it is stored in:
+---
 
-- `neurodoc/kernels/<dataset>.py`
+## 🚀 Quick Navigation
 
-These kernels are dataset-specific normalization and parsing resources used by the documentation workflow. If you want to export machine-learning tasks from these kernels, please refer to the EEGUnity repository for downstream task construction and data export workflows.
+<table>
+<tr>
+<td align="center" width="33%">
 
-Suggested reading path for corpus users:
+### 📚 Use the Corpus
 
-1. Open `dataset_document/<dataset>/analysis.md`
-2. Check the `Paradigm` and `File Scan Result` sections first
-3. Review the `Tasks` section if you want task-oriented summaries
-4. Open `neurodoc/kernels/<dataset>.py` if you need to inspect how the dataset is normalized or annotated
+Browse `analysis.md` files and kernels as a research reference. No setup required.
 
-## If You Want to Contribute
+[**Get started ↓**](#-use-the-corpus)
 
-There are two common contribution paths.
+</td>
+<td align="center" width="33%">
 
-### Light Document and Task Review
+### 🔍 Review & Contribute
 
-Use `neuroaudit/` if you want to:
+Review documents, improve task definitions, and submit fixes via NeuroAudit.
 
-- review existing dataset documents
-- lightly edit wording or task definitions
-- validate document structure and reviewer-facing rules
-- regenerate task sections during review
+[**Reviewer tutorial →**](_docs/tutorial_reviewer.md)
 
-Start here:
+</td>
+<td align="center" width="33%">
 
-- [neuroaudit/README.md](neuroaudit/README.md)
+### 🔧 Build & Add Datasets
 
-### New Datasets, Kernel Work, or Re-Scanning
+Add new datasets or fix kernels using the NeuroDoc generation pipeline.
 
-Use `neurodoc/` if you want to:
+[**Contributor tutorial →**](_docs/tutorial_contributor.md)
 
-- add support for a new dataset
-- write or fix a dataset kernel
-- regenerate or re-scan `analysis.md`
-- apply `[to_agent: ...]` upgrade instructions
-- run semantic validation across the corpus
+</td>
+</tr>
+</table>
 
-Start here:
+---
 
-- [neurodoc/README.md](neurodoc/README.md)
+## 📚 Use the Corpus
 
-## Repository Map
+Start from the browsable index of all 55 completed datasets:
 
-- `dataset_document/`
-  - the corpus itself; one folder per dataset
-- `neurodoc/`
-  - kernel generation, scanning, validation, and upgrade pipeline
-- `neuroaudit/`
-  - local review UI for existing dataset documents
-- `Script/`
-  - supporting and archived automation; not the main entry point for most users
+**[→ _docs/corpus_index.md](_docs/corpus_index.md)** — full table sorted by paradigm category, with links to each `analysis.md`
 
-## Recommended Reading Order
+Each dataset document contains five sections: `Paradigm`, `File Scan Result`, `Tasks`, `Data Quality Notes`, and `Kernel Responsibilities`. The `Tasks` section defines ready-to-use ML task configurations (label route, target events, class mappings) that feed directly into the HDF5 export and PyTorch DataLoader pipeline.
 
-For corpus users:
+**Full step-by-step guide** — browsing → dataset selection → EEGUnity HDF5 export → PyTorch DataLoader:
 
-1. `dataset_document/<dataset>/analysis.md`
-2. `neurodoc/kernels/<dataset>.py`
-3. `dataset_document/<dataset>/references/` when present
+**[→ _docs/tutorial_corpus_user.md](_docs/tutorial_corpus_user.md)**
 
-For light contributors:
+> [!NOTE]
+> For advanced EEGUnity usage, preprocessing pipelines, and HDF5 format specification, refer to [eegunity.readthedocs.io](https://eegunity.readthedocs.io/).
 
-1. [neuroaudit/README.md](neuroaudit/README.md)
-2. `neuroaudit/rulebook.md`
-3. the target `dataset_document/<dataset>/analysis.md`
+---
 
-For kernel contributors:
+## 🤝 Community Contributions
 
-1. [neurodoc/README.md](neurodoc/README.md)
-2. `neurodoc/kernels/KERNEL_RULEBOOK.md`
-3. the target `neurodoc/kernels/<dataset>.py`
-4. the target `dataset_document/<dataset>/analysis.md`
+We welcome contributions from the EEG and BCI community. The standard contribution flow is:
 
-## Related Documentation
+```
+Fork main branch  →  Make changes (NeuroAudit or NeuroDoc)  →  PR to dev branch
+```
 
-- [neurodoc/README.md](neurodoc/README.md)
-- [neuroaudit/README.md](neuroaudit/README.md)
-- [Script/README.md](Script/README.md)
-- [AGENTS.md](AGENTS.md)
+### Contribution Workflow
 
+```
+1.  Fork  EEG-BenchmarkSkill/EEGBenchmarkSKILL  on GitHub
+        ↓
+2.  Clone your fork  &  create a feature branch
+    git checkout -b review/<dataset>   # for document review
+    git checkout -b contrib/<dataset>  # for kernel / new dataset work
+        ↓
+3a. Document review  →  open NeuroAudit  →  edit  →  save
+    python -m neuroaudit              # http://127.0.0.1:5000
+        ↓
+3b. Kernel / new dataset  →  run NeuroDoc pipeline  →  validate
+    python -m neurodoc.generate --dataset <name>
+    python -m neurodoc.detect   --dataset <name>
+        ↓
+4.  Commit the changed files  (analysis.md  and/or  kernel.py)
+        ↓
+5.  Open PR  →  base: EEG-BenchmarkSkill/EEGBenchmarkSKILL @ dev
+```
+
+> [!TIP]
+> Not sure which path to take? If you are fixing wording, tasks, or quality notes on an existing dataset, use **NeuroAudit** (path 3a). If you are adding a new dataset or the kernel is broken, use **NeuroDoc** (path 3b).
+
+**Detailed step-by-step tutorials:**
+
+| Audience | Tutorial |
+|---|---|
+| Reviewers & document editors | [_docs/tutorial_reviewer.md](_docs/tutorial_reviewer.md) |
+| Kernel & dataset contributors | [_docs/tutorial_contributor.md](_docs/tutorial_contributor.md) |
+
+---
+
+## 📁 Repository Map
+
+```
+EEGBenchmarkSKILL/
+├── dataset_document/        # The corpus — one folder per dataset
+│   └── <dataset>/
+│       ├── analysis.md      # Structured documentation (paradigm, tasks, scan result)
+│       └── *.pdf / *.txt    # Reference materials
+│
+├── neurodoc/                # NeuroDoc: automated generation pipeline
+│   ├── generate.py          # CLI: full 3-phase pipeline
+│   ├── detect.py            # CLI: semantic rule validation
+│   ├── full_scan.py         # CLI: re-scan with existing kernel
+│   ├── kernels/             # Dataset-specific normalization kernels (400+)
+│   └── README.md            # NeuroDoc full documentation
+│
+├── neuroaudit/              # NeuroAudit: browser-based review UI
+│   ├── server.py            # Flask backend
+│   ├── index.html           # Single-page review interface
+│   └── README.md            # NeuroAudit documentation
+│
+├── Script/                  # Supporting automation and experiment scripts
+│   └── neurodoc_runtime/    # Runtime state: logs, progress, machine config (gitignored)
+│
+├── _docs/                   # Guides and assets
+│   ├── tutorial_reviewer.md
+│   └── tutorial_contributor.md
+│
+└── AGENTS.md                # Codex / OpenAI Agents skill definition
+```
+
+---
+
+## 📖 Related Documentation
+
+| Document | Description |
+|---|---|
+| [neurodoc/README.md](neurodoc/README.md) | NeuroDoc pipeline architecture, CLI reference, kernel specification |
+| [neuroaudit/README.md](neuroaudit/README.md) | NeuroAudit UI, review workflow, rulebook |
+| [neurodoc/kernels/KERNEL_RULEBOOK.md](neurodoc/kernels/KERNEL_RULEBOOK.md) | Kernel writing standards |
+| [AGENTS.md](AGENTS.md) | Codex / OpenAI Agents skill definition |
+| [_docs/corpus_index.md](_docs/corpus_index.md) | Browsable index of all 55 completed datasets |
+| [_docs/tutorial_corpus_user.md](_docs/tutorial_corpus_user.md) | Corpus user guide: browse → select → export HDF5 → PyTorch |
+| [_docs/tutorial_reviewer.md](_docs/tutorial_reviewer.md) | Reviewer & document contributor guide |
+| [_docs/tutorial_contributor.md](_docs/tutorial_contributor.md) | Kernel & dataset contributor guide |
+
+---
+
+## ⚖️ License
+
+This repository is released under **[CC BY-NC 4.0](LICENSE)**.
+Free to use and adapt for academic and research purposes.
+Commercial use is not permitted.

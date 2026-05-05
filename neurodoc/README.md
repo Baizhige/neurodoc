@@ -1,6 +1,6 @@
 # NeuroDoc
 
-`neurodoc/` is the automated generation engine for EEG dataset kernel files and `analysis.md` documents. It drives a multi-stage LLM pipeline: analyze reference materials -> synthesize task definitions -> generate/validate kernel code -> run EEGUnity scan -> write the final document.
+`neurodoc/` is the automated generation engine for EEG dataset kernel files and `analysis.md` documents. It drives a three-phase LLM pipeline: **(1) Build Context** from local dataset evidence and academic sources, **(2) Task Synthesis** to propose ML task candidates and derive kernel requirements, and **(3) Kernel Coding** to generate and iteratively validate the data-loading kernel in a sandbox, then reconcile synthesized tasks against real scan results.
 
 ---
 
@@ -22,17 +22,17 @@ neurodoc/
 |                               #   analysis.md merge logic, sampling plan
 |
 |-- pipeline/                   # Per-phase implementation of the generation pipeline
-|   |-- runner.py               # Pipeline class: main orchestrator managing 10 sequential phases
+|   |-- runner.py               # Pipeline orchestrator: 3-phase framework with 10 internal steps
 |   |-- budget.py               # LLM call budget tracking (Budget / BudgetExhausted)
-|   |-- context_builder.py      # Phase 1: load existing kernel, reference files, BIDS sidecars
-|   |-- ref_analyzer.py         # Phase 2: LLM extracts key information from papers/docs
-|   |-- task_synthesizer.py     # Phase 3: LLM feasibility judgment
-|   |-- scan_bridge.py          # Phase 3.5 / 6: invoke scan_engine to run EEGUnity scan
-|   |-- event_annotator.py      # Phase 3b: isolated P3a+P3b event semantic annotation
-|   |-- task_synthesizer_v2.py  # Phase 4: aggregate -> fill -> gate -> repair task synthesis
-|   |-- kernel_builder.py       # Phase 5: generate kernel.py + static/runtime validation (up to 3x)
-|   |-- reconcile.py            # Phase 6.5: prune hallucinated tasks; at most 1 kernel patch + rescan
-|   |-- doc_writer.py           # Phase 7: write final analysis.md
+|   |-- context_builder.py      # Phase 1 (local evidence): load kernel, BIDS sidecars, EEG header
+|   |-- ref_analyzer.py         # Phase 1 (academic sources): LLM extracts info from papers/docs
+|   |-- task_synthesizer.py     # Phase 2 (entry): LLM feasibility judgment
+|   |-- scan_bridge.py          # Phase 1 + Phase 3: invoke scan_engine to run EEGUnity scan
+|   |-- event_annotator.py      # Phase 1 (local evidence): isolated event semantic annotation
+|   |-- task_synthesizer_v2.py  # Phase 2: propose task candidates + list kernel requirements
+|   |-- kernel_builder.py       # Phase 3 (coding loop): generate kernel.py + sandbox validation
+|   |-- reconcile.py            # Phase 3 (reconcile): prune hallucinated tasks after scan
+|   |-- doc_writer.py           # Phase 3: write final analysis.md
 |   `-- file_scan_result_builder.py  # Build File Scan Result section from scan output
 |
 |-- kernels/                    # Version-controlled kernel implementations (400+ datasets)
@@ -163,25 +163,55 @@ python -m neurodoc.tools.migrate_to_v3 --dataset openneuro_ds001784
 
 ---
 
-## Pipeline Phases
+## Generation Pipeline
 
-`Pipeline.run()` (`pipeline/runner.py`) executes the following phases in order, with support for pause and resume from checkpoint:
+`generate.py` drives a three-phase pipeline implemented in `pipeline/runner.py`. All phases execute sequentially with pause-and-resume support via a progress checkpoint.
 
-| # | Phase | Module | Description |
-|---|-------|--------|-------------|
-| 1 | `context` | `context_builder.py` | Load existing kernel, reference files, BIDS sidecars, EEG header |
-| 2 | `ref_analysis` | `ref_analyzer.py` | LLM extracts experiment design, events, subject info from papers/docs |
-| 3 | `feasibility` | `task_synthesizer.py` | LLM judges dataset feasibility; writes failure doc and exits if infeasible |
-| 3.5 | `pre_scan` | `scan_bridge.py` | Pre-scan with existing kernel (or default parser) to get event ID preview |
-| 3b | `event_annotation` | `event_annotator.py` | LLM independently annotates semantic meaning of each event ID (P3a+P3b pattern) |
-| 4 | `task_synthesis` | `task_synthesizer_v2.py` | LLM synthesizes tasks: aggregate -> fill -> gate -> repair |
-| 5 | `kernel_loop` | `kernel_builder.py` | LLM generates kernel.py; static check + runtime validation; up to 3 retries |
-| 6 | `scan` | `scan_bridge.py` | Final EEGUnity scan with new kernel; triggers one patch if event counts are empty |
-| 6.5 | `reconcile` | `reconcile.py` | Prune hallucinated tasks; at most 1 kernel patch + rescan |
-| 7 | `doc_write` | `doc_writer.py` | Synthesize and write final analysis.md |
-| - | `done` | - | Complete |
+### Phase 1 — Build Context
 
-**Budget mechanism**: Each LLM call consumes 1 budget unit (default total: 500). When exhausted, `BudgetExhausted` is raised; partial output is written and progress is saved.
+Collects all available evidence about the dataset before any task or kernel decisions are made. Evidence comes from two sources:
+
+**From dataset local evidence** — scan the raw data files, collect event IDs and channel metadata:
+
+| Step | Phase key | Module | Description |
+|---|---|---|---|
+| 1.1 | `context` | `context_builder.py` | Load existing kernel, BIDS sidecars, EEG file headers, and directory tree |
+| 1.2 | `pre_scan` | `scan_bridge.py` | Pre-scan with existing or default kernel to collect event ID preview |
+| 1.3 | `event_annotation` | `event_annotator.py` | LLM independently annotates the semantic meaning of each observed event ID |
+
+**From academic sources** — extract structured information from papers and documentation:
+
+| Step | Phase key | Module | Description |
+|---|---|---|---|
+| 1.4 | `ref_analysis` | `ref_analyzer.py` | LLM extracts experiment design, event descriptions, and subject info from PDFs/docs |
+
+---
+
+### Phase 2 — Task Synthesis
+
+Using the accumulated context, the LLM proposes ML task candidates and derives the kernel requirements needed to support them:
+
+| Step | Phase key | Module | Description |
+|---|---|---|---|
+| 2.1 | `feasibility` | `task_synthesizer.py` | LLM judges dataset feasibility; writes failure doc and exits if infeasible |
+| 2.2 | `task_synthesis` | `task_synthesizer_v2.py` | LLM proposes task candidates and lists kernel requirements (aggregate → fill → gate → repair) |
+
+---
+
+### Phase 3 — Kernel Coding
+
+A kernel Python file is generated and validated in a sandbox environment, then synthesized tasks are reconciled against real scan results:
+
+| Step | Phase key | Module | Description |
+|---|---|---|---|
+| 3.1 | `kernel_loop` | `kernel_builder.py` | LLM generates `kernel.py`; iterative static + runtime validation in sandbox (up to 9 versions) |
+| 3.2 | `scan` | `scan_bridge.py` | Final EEGUnity scan with the new kernel |
+| 3.3 | `reconcile` | `reconcile.py` | Reconcile synthesized tasks against scan results; prune hallucinated tasks |
+| 3.4 | `doc_write` | `doc_writer.py` | Write final `analysis.md` |
+
+---
+
+**Budget mechanism**: Each LLM call consumes 1 budget unit (default total: 500). When exhausted, `BudgetExhausted` is raised; partial output is written and progress is saved for resume.
 
 ---
 
