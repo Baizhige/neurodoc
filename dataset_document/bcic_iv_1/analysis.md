@@ -35,7 +35,7 @@ Seven subject datasets are provided for two-class motor imagery without feedback
 
 ## Tasks
 
-### Classical Task 1: Two-Class Motor Imagery Classification (Standard Calibration)
+### Classical Task 1: Three-Class Motor Imagery Classification (Standard Calibration)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
 - **Epoch Parameters**: tmin = 0 s, tmax = 4 s, target_events = [`foot`, `left`, `right`]
