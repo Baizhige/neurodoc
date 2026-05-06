@@ -33,8 +33,6 @@ The TUH EEG Artifact Corpus (TUAR) is a comprehensive dataset designed for the i
 | `shiv_elec` | 1 | event | raw | Concurrent shivering and electrode artifact in EEG |
 
 
-> [to_agent: Please check if there exist more artifact label and add background annotation for normal period?]
-
 ### MISC Label Summary
 
 - **Route**: `misc`

@@ -31,7 +31,7 @@ Fifty stroke patients (sub-01 to sub-50) performed a cued left/right hand motor 
 |---|---|---|
 | `age` | complete | N/A |
 | `sex` | complete | N/A |
-| `device` | missing | [to_agent: Showed in task-motor-imagery_eeg.json] |
+| `device` | missing | also showed in task-motor-imagery_eeg.json |
 
 
 ## Tasks
