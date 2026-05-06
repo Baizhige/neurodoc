@@ -13,9 +13,14 @@ try:
     from ..paths import APP_DIR, DATASET_DOCUMENT_DIR, KERNELS_DIR
 except ImportError:
     from paths import APP_DIR, DATASET_DOCUMENT_DIR, KERNELS_DIR
+try:
+    from .kernel_casebook import collect_format_evidence, select_casebook
+except ImportError:
+    from pipeline.kernel_casebook import collect_format_evidence, select_casebook
 
 BIDS_ROOT = DATASET_DOCUMENT_DIR
 SKILLS_DIR = KERNELS_DIR / "skills"
+SOURCE_KERNELS_DIR = Path(__file__).resolve().parent.parent / "kernels"
 
 
 def _ls_tree(path: Path, max_depth: int = 3, _depth: int = 0) -> List[str]:
@@ -64,15 +69,6 @@ def _find_kernel(dataset_name: str) -> Optional[Path]:
     return None
 
 
-def _select_example_kernels(n: int = 3) -> List[Path]:
-    candidates = []
-    for p in sorted(KERNELS_DIR.glob("*.py")):
-        if p.name.startswith("__"):
-            continue
-        candidates.append(p)
-    return candidates[:n]
-
-
 # =============================================================================
 # NEW V2: BIDS sidecar reading (evidence level ①)
 # =============================================================================
@@ -81,12 +77,20 @@ def _detect_format(data_path: Path) -> str:
     """Detect dataset format type from directory structure."""
     if (data_path / "dataset_description.json").exists():
         return "bids"
-    if list(data_path.rglob("*.mat"))[:1]:
-        return "mat"
+    has_mat = bool(list(data_path.rglob("*.mat"))[:1])
+    has_gdf = bool(list(data_path.rglob("*.gdf"))[:1])
+    has_bdf = bool(list(data_path.rglob("*.bdf"))[:1])
+    has_edf = bool(list(data_path.rglob("*.edf"))[:1])
+    if has_mat and (has_gdf or has_bdf or has_edf):
+        return "mixed"
+    if has_gdf:
+        return "gdf"
     if list(data_path.rglob("*.bdf"))[:1]:
         return "bdf"
     if list(data_path.rglob("*.edf"))[:1]:
         return "edf"
+    if has_mat:
+        return "mat"
     return "other"
 
 
@@ -421,6 +425,8 @@ def build_context(dataset_name: str, log, data_dir: str = "") -> Dict[str, Any]:
 
     # 6. KERNEL_RULEBOOK
     rulebook_path = KERNELS_DIR / "KERNEL_RULEBOOK.md"
+    if not rulebook_path.exists():
+        rulebook_path = SOURCE_KERNELS_DIR / "KERNEL_RULEBOOK.md"
     rulebook = _read_file(rulebook_path) if rulebook_path.exists() else ""
     log(f"[Context] RULEBOOK: {len(rulebook)} chars")
 
@@ -431,17 +437,11 @@ def build_context(dataset_name: str, log, data_dir: str = "") -> Dict[str, Any]:
             skill_texts[sf.name] = _read_file(sf, max_chars=6000)
     log(f"[Context] SKILL files: {len(skill_texts)}")
 
-    # 8. Example kernels
-    example_kernels: Dict[str, str] = {}
-    for ep in _select_example_kernels(3):
-        example_kernels[ep.name] = _read_file(ep, max_chars=5000)
-    log(f"[Context] Example kernels: {list(example_kernels.keys())}")
-
-    # 9. neuroaudit/rulebook.md
+    # 8. neuroaudit/rulebook.md
     app_rulebook_path = APP_DIR / "rulebook.md"
     app_rulebook = _read_file(app_rulebook_path, max_chars=8000) if app_rulebook_path.exists() else ""
 
-    # 10. Category SKILL
+    # 9. Category SKILL
     category = ""
     m = re.search(r"\*\*Category\*\*:\s*([^|*\n]+)", analysis_md)
     if m:
@@ -463,10 +463,12 @@ def build_context(dataset_name: str, log, data_dir: str = "") -> Dict[str, Any]:
                 break
     log(f"[Context] Category: {category or '(unknown)'}")
 
-    # 11. V2: BIDS sidecar reading from raw data directory (evidence ①)
+    # 10. V2: BIDS sidecar reading from raw data directory (evidence ①)
     bids_sidecars: Dict[str, Any] = {}
     format_type = "unknown"
     eeg_header_summary = ""
+    kernel_casebook = ""
+    format_evidence = ""
 
     if data_dir:
         data_path = Path(data_dir)
@@ -475,10 +477,16 @@ def build_context(dataset_name: str, log, data_dir: str = "") -> Dict[str, Any]:
             log(f"[Context] Format type: {format_type}")
             bids_sidecars = _read_bids_sidecars(data_path, log)
             eeg_header_summary = _sample_eeg_headers(data_path, log)
+            kernel_casebook = select_casebook(format_type, data_path, bids_sidecars)
+            format_evidence = collect_format_evidence(data_path, format_type)
+            log(f"[Context] Kernel casebook: {len(kernel_casebook)} chars")
+            if format_evidence:
+                log(f"[Context] Format evidence: {len(format_evidence)} chars")
         else:
             log(f"[Context] data_dir not found: {data_dir}")
     else:
         log("[Context] No data_dir provided — skipping BIDS sidecar reading")
+        kernel_casebook = select_casebook(format_type, None, bids_sidecars)
 
     return {
         "dataset_name": dataset_name,
@@ -491,7 +499,8 @@ def build_context(dataset_name: str, log, data_dir: str = "") -> Dict[str, Any]:
         "existing_kernel_path": str(kernel_path) if kernel_path else "",
         "rulebook": rulebook,
         "skill_texts": skill_texts,
-        "example_kernels": example_kernels,
+        "kernel_casebook": kernel_casebook,
+        "format_evidence": format_evidence,
         "app_rulebook": app_rulebook,
         "category": category,
         "category_skill": category_skill,

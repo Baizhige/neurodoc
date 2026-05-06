@@ -59,6 +59,9 @@ RULES:
 - Prioritise root-level task-*_events.json and task-*_events.tsv first.
 - For non-BIDS formats (no events.tsv), request read_eeg_header to check
   annotations embedded in the EEG file itself.
+- If programmatic local format evidence already lists marker_values, sidecar
+  labels, or local documentation snippets, treat that as valid data-directory
+  evidence and only request files needed to resolve missing/ambiguous groups.
 - Only request next_reads for groups that are not yet covered.
 """
 
@@ -323,6 +326,7 @@ def _run_agent_loop(
     budget,
     log: Callable,
     cache_dir: Optional[str],
+    format_evidence: str = "",
 ) -> List[Dict]:
     """P3a: multi-turn evidence collection. Returns list of turn records."""
     dir_summary = _build_dir_summary(data_dir)
@@ -333,7 +337,12 @@ def _run_agent_loop(
         f"=== Raw event IDs and counts (from pre-scan) ===\n{event_ids}\n\n"
         f"{dir_summary}\n\n"
         f"{initial_str}\n\n"
-        "Now: identify all grouping dimensions (sessions × tasks) and plan "
+        + (
+            "=== Programmatic local format evidence ===\n"
+            f"{format_evidence[:5000]}\n\n"
+            if format_evidence else ""
+        )
+        + "Now: identify all grouping dimensions (sessions × tasks) and plan "
         "which files to read to cover all groups. Remember: coverage_sufficient "
         "must be false on turn 0."
     )
@@ -344,7 +353,11 @@ def _run_agent_loop(
     ]
 
     turns_data: List[Dict] = []
-    max_turns = 20
+    has_programmatic_events = (
+        "marker_values:" in (format_evidence or "")
+        or "external_annotation_labels:" in (format_evidence or "")
+    )
+    max_turns = 8 if has_programmatic_events else 20
 
     for turn_idx in range(max_turns):
         log(f"[EventAnnotator] P3a turn {turn_idx}...")
@@ -425,6 +438,7 @@ def _run_annotation(
     call_llm: Callable,
     budget,
     log: Callable,
+    format_evidence: str = "",
 ) -> Dict:
     """P3b: single isolated LLM call to annotate event Meanings."""
     # Assemble all evidence from agent loop turns
@@ -432,6 +446,11 @@ def _run_annotation(
         f"=== Raw event IDs and counts ===\n{event_ids}",
         "\n=== Evidence collected from data directory ===",
     ]
+    if format_evidence:
+        evidence_parts.append(
+            "\n[Programmatic local format evidence]\n"
+            + format_evidence[:5000]
+        )
     for t in turns_data:
         assessment = t["llm_output"].get("assessment", "")
         turn_summary = t["llm_output"].get("turn_summary", "")
@@ -480,6 +499,7 @@ def annotate_events(
     budget,
     log: Callable,
     evidence_cache_dir: Optional[str] = None,
+    format_evidence: str = "",
 ) -> Dict:
     """Run P3a + P3b. Returns {"annotations": [...], "notes": "..."}."""
     if not data_dir or not Path(data_dir).is_dir():
@@ -499,9 +519,17 @@ def annotate_events(
         budget,
         log,
         cache_dir,
+        format_evidence=format_evidence,
     )
 
-    annotation = _run_annotation(turns_data, event_ids_preview, call_llm, budget, log)
+    annotation = _run_annotation(
+        turns_data,
+        event_ids_preview,
+        call_llm,
+        budget,
+        log,
+        format_evidence=format_evidence,
+    )
 
     # Persist final annotation to evidence cache
     if cache_dir:

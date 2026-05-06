@@ -1,6 +1,7 @@
 """Main pipeline orchestrator for NeuroDoc."""
 from __future__ import annotations
 
+import ast
 import json
 import queue
 import threading
@@ -57,6 +58,86 @@ class PauseSignal(Exception):
 def _progress_path(dataset_name: str) -> Path:
     PROGRESS_DIR.mkdir(parents=True, exist_ok=True)
     return PROGRESS_DIR / f"{dataset_name}.json"
+
+
+def _pre_scan_from_format_evidence(format_evidence: str, log) -> Optional[Dict[str, Any]]:
+    """Build a lightweight event preview from local evidence when default scan is unhelpful.
+
+    This is used only before a generated kernel exists. It avoids full default-parser
+    scans on custom MAT/EDF-sidecar datasets where the default parser cannot expose the
+    real event IDs anyway.
+    """
+    ext_counts = _format_evidence_ext_counts(format_evidence)
+    standard_raw_exts = {
+        ".bdf", ".cnt", ".edf", ".fif", ".gdf", ".set", ".vhdr",
+    }
+    has_standard_raw = bool(set(ext_counts) & standard_raw_exts)
+    event_ids: set[str] = set()
+    skipped_marker_preview = False
+    for line in (format_evidence or "").splitlines():
+        if "external_annotation_labels:" in line:
+            raw = line.split("external_annotation_labels:", 1)[1].strip()
+        elif "marker_values:" in line and "sample_values=" in line:
+            if has_standard_raw:
+                skipped_marker_preview = True
+                continue
+            raw = line.split("sample_values=", 1)[1].strip()
+        else:
+            continue
+        try:
+            parsed = ast.literal_eval(raw)
+        except Exception:
+            continue
+        if not isinstance(parsed, (list, tuple, set)):
+            continue
+        for value in parsed:
+            text = str(value).strip()
+            if not text or text.lower() in {"0", "0.0", "nan", "none"}:
+                continue
+            event_ids.add(text)
+
+    if not event_ids:
+        if skipped_marker_preview:
+            log(
+                "[Pipeline] Format-evidence marker preview skipped because "
+                "standard raw EEG files are present; running default pre-scan."
+            )
+        return None
+    log(
+        "[Pipeline] Using format-evidence event preview instead of default "
+        f"pre-scan: {sorted(event_ids)}"
+    )
+    return {
+        "kernel_path": "",
+        "kernel_sha256": "",
+        "eegunity_version": "",
+        "scan_type": "format_evidence_preview",
+        "sampled": True,
+        "sampled_n": 0,
+        "total_n": 0,
+        "cache_source": "format_evidence",
+        "event_counts": {eid: 1 for eid in sorted(event_ids)},
+        "subject_info": {},
+        "misc_channel_names": [],
+    }
+
+
+def _format_evidence_ext_counts(format_evidence: str) -> Dict[str, int]:
+    for line in (format_evidence or "").splitlines():
+        if not line.startswith("File extension counts:"):
+            continue
+        counts: Dict[str, int] = {}
+        for item in line.split(":", 1)[1].split(","):
+            item = item.strip()
+            if "=" not in item:
+                continue
+            ext, raw_count = item.rsplit("=", 1)
+            try:
+                counts[ext.strip().lower()] = int(raw_count.strip())
+            except ValueError:
+                continue
+        return counts
+    return {}
 
 
 def load_progress(dataset_name: str) -> Dict[str, Any]:
@@ -249,22 +330,31 @@ class Pipeline:
                 self.log("[Pipeline] Running pre-scan to get event IDs...")
                 # Use existing kernel if available, else default parser
                 existing_kernel_path = context.get("existing_kernel_path", "")
-                try:
-                    pre_scan_result = run_scan(
-                        self.dataset_name,
-                        existing_kernel_path,
-                        self._dataset_roots,
-                        self._eegunity_path,
-                        self._num_workers,
+                pre_scan_result = None
+                if not existing_kernel_path:
+                    pre_scan_result = _pre_scan_from_format_evidence(
+                        context.get("format_evidence", ""),
                         self.log,
                     )
-                    # Don't store full df in progress (too large)
-                    pre_scan_for_progress = {k: v for k, v in pre_scan_result.items() if k != "df"}
-                    self._save("task_synthesis", pre_scan_result=pre_scan_for_progress)
-                except Exception as e:
-                    self.log(f"[Pipeline] Pre-scan failed: {e}. Will use analysis.md event list instead.")
-                    pre_scan_result = {"event_counts": {}, "misc_channel_names": []}
+                if pre_scan_result is not None:
                     self._save("task_synthesis", pre_scan_result=pre_scan_result)
+                else:
+                    try:
+                        pre_scan_result = run_scan(
+                            self.dataset_name,
+                            existing_kernel_path,
+                            self._dataset_roots,
+                            self._eegunity_path,
+                            self._num_workers,
+                            self.log,
+                        )
+                        # Don't store full df in progress (too large)
+                        pre_scan_for_progress = {k: v for k, v in pre_scan_result.items() if k != "df"}
+                        self._save("task_synthesis", pre_scan_result=pre_scan_for_progress)
+                    except Exception as e:
+                        self.log(f"[Pipeline] Pre-scan failed: {e}. Will use analysis.md event list instead.")
+                        pre_scan_result = {"event_counts": {}, "misc_channel_names": []}
+                        self._save("task_synthesis", pre_scan_result=pre_scan_result)
             else:
                 self.log("[Pipeline] Resuming: skipping pre_scan")
 
@@ -282,6 +372,7 @@ class Pipeline:
                     self.budget,
                     self.log,
                     evidence_cache_dir=str(EVIDENCE_CACHE_DIR),
+                    format_evidence=context.get("format_evidence", ""),
                 )
                 self._save("task_synthesis", event_annotations=event_annotations)
             else:
@@ -304,6 +395,7 @@ class Pipeline:
                     bids_sidecars=context.get("bids_sidecars"),
                     format_type=context.get("format_type", "unknown"),
                     eeg_header_summary=context.get("eeg_header_summary", ""),
+                    format_evidence=context.get("format_evidence", ""),
                     event_annotations=event_annotations,
                     misc_channel_names=(pre_scan_result or {}).get("misc_channel_names", []),
                 )

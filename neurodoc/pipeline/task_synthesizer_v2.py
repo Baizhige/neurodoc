@@ -17,6 +17,7 @@ Hallucination guards:
 """
 from __future__ import annotations
 
+import ast
 import json
 import re
 from typing import Any, Dict, List, Optional, Tuple
@@ -41,10 +42,10 @@ from .task_synthesizer import (
 # ──────────────────────────────────────────────────────────────────────────────
 
 _AGGREGATE_SYSTEM = """\
-You are an EEG ML task curator. Your job is to produce a RICH, grounded set of candidate
-tasks that this dataset can support. Err on the side of including candidates — it is
-better to let downstream repair/filter drop a marginal candidate than to silently censor
-a legitimate paradigm here.
+You are an EEG ML task curator. Your job is to produce a compact, grounded set of
+candidate tasks that this dataset can support. Cover every distinct paradigm/label set
+that is explicitly grounded, but do not manufacture extra tasks by enumerating arbitrary
+event subsets, pairwise class contrasts, or phase-marker variants.
 
 You receive:
   - Per-reference task extractions (output of Phase 1 per-ref analysis).
@@ -52,6 +53,9 @@ You receive:
     (participants.tsv columns, events.tsv numeric columns, native misc channels).
   - Locked event meanings (ground truth from dataset sidecar files).
   - BIDS sidecars (events.json column definitions).
+  - Optional raw format evidence (.mat keys, marker fields, sidecar headers).
+    When it contains `external_annotation_labels: [...]`, those are literal labels
+    observed in local EDF/CSV/TSE/summary interval sidecars and may ground Route=event.
 
 Emit candidates covering all of:
   1. Every Route=event paradigm suggested by any relevant/partial ref.
@@ -127,7 +131,14 @@ HARD RULES (non-negotiable):
   H3 misc route allows both regression AND classification. For classification, Y Mapping Notes must describe value→class mapping.
   H4 No Label Field bullet. TD first column is the sole source identifier for misc/info routes.
   H6 segmentation ⇒ target_events = [] (don't populate must_have_events).
-  G1 Every must_have_event MUST be in the Available event IDs list (or locked meanings).
+  G1 Every must_have_event MUST be a literal raw event/marker ID from Available event IDs,
+     locked meanings, BIDS sidecars, or raw format evidence. Do NOT write semantic class
+     names such as `left_hand`, `feet`, `seizure`, or `target` unless those exact strings
+     are literal values present in the raw file/sidecar.
+  G1b For EDF clinical interval sidecars (CSV `label`, TSE/LBL label token, or summary
+     `Seizure N Start/End Time` evidence), prefer Route=event with the literal labels in
+     `external_annotation_labels`. Do NOT turn interval event labels into derived misc
+     channels unless the task is explicitly a continuous/regression target.
   G2 Every must_have_native_misc MUST correspond to a CONTINUOUS misc channel on the raw
      object (already in the pre-scan `misc_channel_names` list or typed non-EEG in
      channels.tsv). Per-trial events.tsv columns do NOT satisfy G2 — route them through
@@ -138,7 +149,24 @@ HARD RULES (non-negotiable):
      builder knows to read from the sidecar. When sourced from participants.tsv, use the
      literal column name.
 
-SOFT GUIDELINES (favor inclusion over exclusion):
+TASK GRANULARITY RULES:
+  - ONE grounded paradigm/label set ⇒ ONE candidate. A 4-class MI task stays one
+    4-class task unless a reference or local file explicitly defines a binary subset.
+  - Do NOT create pairwise subsets (left-vs-right, feet-vs-tongue, hands-vs-feet, etc.)
+    merely because the multi-class event IDs exist.
+  - Do NOT create admin/phase-marker tasks unless they are the dataset's actual stated
+    task target or the local evidence clearly defines them as labels.
+  - If references repeat the same paradigm with different models or metrics, merge them
+    into one Classical candidate with combined evidence.
+  - Prefer fewer high-confidence tasks over many speculative Potential tasks.
+  - If the paradigm is supported but the literal raw event IDs are unknown, keep the
+    candidate only if raw format evidence exposes marker codes. Otherwise drop it later
+    during fill instead of inventing semantic event IDs.
+  - For seizure/clinical EDF datasets with local interval sidecars, a compact event
+    classification over the literal sidecar label set is enough. Do not emit one task per
+    seizure subtype unless distinct labels are actually present in the sidecar.
+
+SOFT GUIDELINES (preserve legitimate coverage):
   - DISTINCT EVENT SETS ⇒ DISTINCT CANDIDATES. seqLearning6target and seqLearning8target
     use different event IDs → TWO candidates, not one.
   - A naturalistic-viewing or resting paradigm with NO discriminable trigger structure is
@@ -149,8 +177,7 @@ SOFT GUIDELINES (favor inclusion over exclusion):
     epoch_hint.inferred=true with the SKILL-guide default; the downstream fill will mark
     unconfirmed params with *.
   - Only skip a candidate (move to "dropped") when you cannot find ANY grounded Label
-    Field or Event ID source for it. Aim for ≥5 candidates per dataset when the catalog
-    has multiple participants.tsv columns and multiple event types.
+    Field or Event ID source for it. Do not aim for a minimum task count.
 
 Deduplication:
   - Merge two refs proposing the SAME paradigm (same event IDs, same classes) into one.
@@ -201,6 +228,7 @@ def aggregate_candidates(
     log,
     format_type: str = "unknown",
     eeg_header_summary: str = "",
+    format_evidence: str = "",
     sidecar_block: str = "",
 ) -> Dict[str, Any]:
     """Run the dedupe/candidate step. Returns dict with 'candidates' list."""
@@ -211,6 +239,7 @@ def aggregate_candidates(
         f"Dataset: {dataset_name} (format: {format_type})\n\n"
         f"=== analysis.md excerpt ===\n{analysis_md[:3000]}\n\n"
         + (f"{sidecar_block}\n\n" if sidecar_block else "")
+        + (f"=== Raw Format Evidence ===\n{format_evidence[:4000]}\n\n" if format_evidence else "")
         + (f"=== EEG File Header Sample ===\n{eeg_header_summary}\n\n" if eeg_header_summary else "")
         + f"=== Available event IDs (from pre-scan — authoritative) ===\n{event_ids_preview}\n\n"
         + (f"{locked_meanings_block}\n\n" if locked_meanings_block else "")
@@ -267,7 +296,7 @@ Minimum required keys by method:
   * epoch_by_long_event_hdf5   — tmin, tmax, overlap, target_events
   * epoch_by_segmentation_hdf5 — segment_length, overlap (target_events MUST be [])
 Format examples:
-  `tmin = 0 s, tmax = 3 s, target_events = [\`left_hand\`, \`right_hand\`]`
+  `tmin = 0 s, tmax = 3 s, target_events = [\`769\`, \`770\`]`
   `segment_length = 4 s, overlap = 0.5, target_events = []`
 
 PARAMETER INFERENCE (do NOT drop for unclear params):
@@ -307,8 +336,15 @@ columns) → Meta Level = raw.
     → y=0). FORBIDDEN: {0, 1, 3} (gap), {1, 2} (not 0-based), "class_A"/"target" (string).
     Do NOT write y=target/y=distractor/y=more_symmetric — pick a 0..N-1 integer.
   - segmentation ⇒ target_events = [].
-  - Every Event ID used MUST appear in the candidate's kernel_needs.must_have_events
-    (for event route) OR be empty (for segmentation) OR be the event anchor (for B1/B2).
+  - Every Event ID used MUST be a literal raw ID from Available event IDs, locked
+    meanings, BIDS sidecars, or raw format evidence. It should appear in
+    kernel_needs.must_have_events when available, but if the candidate used semantic
+    placeholders, replace them with literal raw codes only when evidence grounds the
+    mapping. Otherwise set drop=true. Do NOT use semantic class names as Event IDs unless
+    they are the exact strings present in the file/sidecar.
+  - `external_annotation_labels: [...]` in Raw Format Evidence is an allowed event-ID
+    source for EDF clinical sidecars. Keep those labels literal in Target Definition and
+    kernel_requirements.event_ids_used.
 
 === Authorized TD first-column sources (misc/info routes) ===
 For misc/info routes the TD first-column value MUST equal one of:
@@ -349,6 +385,92 @@ def _format_candidate_for_fill(candidate: Dict[str, Any]) -> str:
     return json.dumps(candidate, indent=2, ensure_ascii=False)
 
 
+def _is_no_events_preview(event_ids_preview: str) -> bool:
+    text = (event_ids_preview or "").strip().lower()
+    return not text or "no events detected" in text or "0 event" in text
+
+
+def _literal_marker_values_from_format_evidence(format_evidence: str) -> set[str]:
+    values: set[str] = set()
+    for line in (format_evidence or "").splitlines():
+        if "external_annotation_labels:" in line:
+            raw_labels = line.split("external_annotation_labels:", 1)[1].strip()
+            try:
+                parsed_labels = ast.literal_eval(raw_labels)
+            except Exception:
+                parsed_labels = []
+            if isinstance(parsed_labels, (list, tuple, set)):
+                values.update(str(v) for v in parsed_labels)
+            continue
+        if "marker_values:" not in line or "sample_values=" not in line:
+            continue
+        raw = line.split("sample_values=", 1)[1].strip()
+        try:
+            parsed = ast.literal_eval(raw)
+        except Exception:
+            continue
+        if isinstance(parsed, (list, tuple, set)):
+            values.update(str(v) for v in parsed)
+    return values
+
+
+def _event_ids_from_task_markdown(task_markdown: str) -> set[str]:
+    ids: set[str] = set()
+    match = re.search(r"target_events\s*=\s*\[([^\]]*)\]", task_markdown or "")
+    if match:
+        ids.update(re.findall(r"`([^`]+)`", match.group(1)))
+        if not ids:
+            ids.update(x.strip().strip("\"'") for x in match.group(1).split(",") if x.strip())
+    # Event-route target definition rows use backticked Event IDs in the first column.
+    for line in (task_markdown or "").splitlines():
+        if not line.strip().startswith("| `"):
+            continue
+        m = re.match(r"\|\s*`([^`]+)`\s*\|", line.strip())
+        if m:
+            ids.add(m.group(1))
+    return ids
+
+
+def _drop_event_tasks_outside_marker_values(
+    filled: List[Dict[str, Any]],
+    *,
+    event_ids_preview: str,
+    format_evidence: str,
+    bids_sidecars: Optional[Dict],
+    log,
+) -> List[Dict[str, Any]]:
+    if not (
+        _is_no_events_preview(event_ids_preview)
+        and format_evidence
+        and not (bids_sidecars or {}).get("events_tsv_samples")
+    ):
+        return filled
+
+    allowed = _literal_marker_values_from_format_evidence(format_evidence)
+    if not allowed:
+        return filled
+
+    kept: List[Dict[str, Any]] = []
+    for result in filled:
+        md = result.get("task_markdown", "")
+        if "- **Label Route**: `event`" not in md:
+            kept.append(result)
+            continue
+        kr = result.get("kernel_requirements") or {}
+        event_ids = set(str(x) for x in (kr.get("event_ids_used") or []))
+        event_ids.update(_event_ids_from_task_markdown(md))
+        missing = sorted(e for e in event_ids if e not in allowed)
+        if missing:
+            title = md.splitlines()[0].lstrip("# ").strip() if md else "event task"
+            log(
+                f"[TaskSynthV2][Guard] Dropping '{title}' — event IDs {missing} "
+                f"are absent from observed raw marker values {sorted(allowed)}."
+            )
+            continue
+        kept.append(result)
+    return kept
+
+
 def fill_task_schema(
     dataset_name: str,
     candidate: Dict[str, Any],
@@ -361,6 +483,7 @@ def fill_task_schema(
     budget,
     log,
     eeg_header_summary: str = "",
+    format_evidence: str = "",
 ) -> Dict[str, Any]:
     """Fill one candidate into a v3 task markdown block."""
     name = candidate.get("name", f"task_{task_index}")
@@ -376,6 +499,7 @@ def fill_task_schema(
         + (f"{locked_meanings_block}\n\n" if locked_meanings_block else "")
         + f"{grounded_block}\n\n"
         + (f"{sidecar_block}\n\n" if sidecar_block else "")
+        + (f"=== Raw Format Evidence ===\n{format_evidence[:4000]}\n\n" if format_evidence else "")
         + (f"=== EEG File Header Sample ===\n{eeg_header_summary}\n" if eeg_header_summary else "")
     )
     budget.charge("task_synthesis")
@@ -732,6 +856,49 @@ def _aggregate_kernel_requirements(filled_tasks: List[Dict[str, Any]]) -> Dict[s
     }
 
 
+def _filled_tasks_present_in_section(
+    filled_tasks: List[Dict[str, Any]],
+    tasks_section: str,
+) -> List[Dict[str, Any]]:
+    """Keep only filled task records whose title survived markdown guards/repair.
+
+    The repair and legacy guard stages operate on markdown and can drop whole
+    tasks after the per-task JSON fill has already completed. Kernel
+    requirements must reflect the final markdown, not stale filled records;
+    otherwise kernel_builder may be asked to derive labels for tasks that no
+    longer exist.
+    """
+    if not filled_tasks:
+        return []
+
+    section_norm = re.sub(r"\s+", " ", tasks_section).lower()
+    kept: List[Dict[str, Any]] = []
+
+    for task in filled_tasks:
+        candidates: List[str] = []
+        cand_name = ((task.get("candidate") or {}).get("name") or "").strip()
+        if cand_name:
+            candidates.append(cand_name)
+
+        md = (task.get("task_markdown") or "").strip()
+        if md:
+            first = md.splitlines()[0]
+            m = re.match(
+                r"###\s+(?:Classical Task|Potential Task|Task)\s*\d*\s*:?\s*(.*)",
+                first,
+            )
+            heading = (m.group(1) if m else first.lstrip("# ")).strip()
+            if heading:
+                candidates.append(heading)
+
+        if any(re.sub(r"\s+", " ", name).lower() in section_norm for name in candidates):
+            kept.append(task)
+
+    # If all titles disappeared because a repair prompt rewrote headings, keep the
+    # original list rather than risk under-specifying a real task.
+    return kept if kept else filled_tasks
+
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Public entry point
 # ──────────────────────────────────────────────────────────────────────────────
@@ -748,6 +915,7 @@ def synthesize_tasks_v2(
     bids_sidecars: Optional[Dict] = None,
     format_type: str = "unknown",
     eeg_header_summary: str = "",
+    format_evidence: str = "",
     event_annotations: Optional[Dict] = None,
     misc_channel_names: Optional[List[str]] = None,
     max_repair_rounds: int = 2,
@@ -759,6 +927,17 @@ def synthesize_tasks_v2(
     """
     sidecar_block = _format_bids_sidecars(bids_sidecars or {})
     locked_meanings_block = _format_locked_meanings(event_annotations)
+    if (
+        locked_meanings_block
+        and _is_no_events_preview(event_ids_preview)
+        and format_evidence
+        and not (bids_sidecars or {}).get("events_tsv_samples")
+    ):
+        log(
+            "[TaskSynthV2] Ignoring P3 locked meanings for custom/non-BIDS data "
+            "with no pre-scan event IDs; using raw format evidence instead."
+        )
+        locked_meanings_block = ""
     grounded = _collect_grounded_label_fields(bids_sidecars, misc_channel_names)
     grounded_block = _format_grounded_label_fields(grounded)
 
@@ -768,6 +947,7 @@ def synthesize_tasks_v2(
         grounded_block, locked_meanings_block, category_skill,
         call_llm, budget, log,
         format_type=format_type, eeg_header_summary=eeg_header_summary,
+        format_evidence=format_evidence,
         sidecar_block=sidecar_block,
     )
     candidates: List[Dict[str, Any]] = agg.get("candidates") or []
@@ -790,6 +970,7 @@ def synthesize_tasks_v2(
                 grounded_block, locked_meanings_block, sidecar_block,
                 call_llm, budget, log,
                 eeg_header_summary=eeg_header_summary,
+                format_evidence=format_evidence,
             )
         except BudgetExhausted:
             log("[TaskSynthV2] Budget exhausted mid-fill; assembling what we have.")
@@ -799,6 +980,14 @@ def synthesize_tasks_v2(
             continue
         if not result.get("dropped"):
             filled.append(result)
+
+    filled = _drop_event_tasks_outside_marker_values(
+        filled,
+        event_ids_preview=event_ids_preview,
+        format_evidence=format_evidence,
+        bids_sidecars=bids_sidecars,
+        log=log,
+    )
 
     if not filled:
         log("[TaskSynthV2] All candidates dropped during fill. Returning empty.")
@@ -857,10 +1046,16 @@ def synthesize_tasks_v2(
     tasks_section = _strip_single_class_classifications(tasks_section, log)
     tasks_section = _strip_ungrounded_label_fields(tasks_section, grounded, log)
 
-    # Rebuild kernel_requirements from the (possibly post-repair / post-drop) filled list.
-    # Note: if repair dropped tasks, the kernel_requirements here is a superset — reconcile
-    # will prune actual usage against the final tasks_section.
-    kernel_requirements = _aggregate_kernel_requirements(filled)
+    # Rebuild kernel_requirements from tasks that survived markdown repair/guards.
+    # This keeps kernel_builder focused on the final Tasks section instead of
+    # stale candidate requirements from tasks that were later dropped.
+    final_filled = _filled_tasks_present_in_section(filled, tasks_section)
+    if len(final_filled) != len(filled):
+        log(
+            f"[TaskSynthV2][Guard] Kernel requirements pruned from "
+            f"{len(filled)} filled task(s) to {len(final_filled)} final task(s)."
+        )
+    kernel_requirements = _aggregate_kernel_requirements(final_filled)
     # Add dropped list for visibility
     kernel_requirements["_dropped_candidates"] = agg.get("dropped") or []
 
