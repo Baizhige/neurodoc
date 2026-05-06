@@ -28,6 +28,8 @@ Output your response as a Python code block ONLY — no explanation, no JSON:
 
 MANDATORY requirements — violating any will cause rejection:
 1. Last line of file: KERNEL = <ClassName>()
+   The instantiated class must expose `KERNEL_ID = "<dataset_name>"` as a string
+   class or instance attribute; the sandbox reads `kernel.KERNEL_ID`.
 2. Method signature MUST be EXACTLY: def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
    — DO NOT split across lines, DO NOT add type annotations to parameters, DO NOT rename udataset/raw/row
 3. raw.info["description"] = json.dumps({
@@ -39,11 +41,20 @@ MANDATORY requirements — violating any will cause rejection:
 5. sex is always lowercase: "male" / "female" / "unknown"
 6. Inferred values: add comment  # inferred by LLM, needs human review
 7. Channel rename BEFORE set_montage()
+   Whenever you call `raw.set_montage(...)`, pass `on_missing="ignore"` unless
+   the dataset sidecar proves every channel has a montage position. MAT/custom
+   files often contain extended/space-padded names that otherwise fail full_scan.
+   If you call `raw.rename_channels(...)`, ensure the resulting names are unique.
+   EDF headers sometimes already contain duplicate names; pass `allow_duplicates=True`
+   or append a stable suffix yourself when stripping prefixes/whitespace.
 8. When `required_info_fields` is non-empty in kernel_requirements, the kernel MUST read
    the listed columns from participants.tsv for the current subject and include them as
    STRING values inside eegunity_description (see above). The downstream epoch writer
    attaches every non-canonical key as a source-level HDF5 attr so InfoDataset can reach it.
    If a column is genuinely missing for a subject, use "unknown" (do NOT fabricate).
+   Do NOT put canonical fields (`age`, `sex`, `amplifier`, `cap`, `handedness`) into
+   `required_info_fields`; those five keys must always be explicitly present in
+   eegunity_description with defaults even when no participants.tsv exists.
 9. When `required_native_misc` or `derived_misc_channels` is non-empty, the kernel MUST
    ensure those channel names exist on the returned raw as misc-type channels.
    - Native misc: already a physical channel on the raw; just make sure its ch_type is
@@ -53,6 +64,9 @@ MANDATORY requirements — violating any will cause rejection:
      RawArray concatenated via raw.add_channels(), or any other MNE-compatible path. The
      ONLY invariants are (a) the exact `name` in raw.ch_names, (b) ch_types[name] == 'misc',
      (c) raw.get_data(picks=[name]) returns shape (1, len(raw.times)) with finite values.
+   - If you use raw.add_channels(...) on a raw object read from EDF/GDF/BDF/SET/FIF,
+     call raw.load_data() first. For interval labels from sidecars, prefer
+     raw.set_annotations(...) instead of misc channels.
    - For derived misc sourced from `events.tsv:<column>`, read the sibling events.tsv for
      the current file and populate the channel samples so that at each annotation onset
      the channel reflects that row's value. Between trials use 0 / NaN / carry-forward —
@@ -65,6 +79,34 @@ MANDATORY requirements — violating any will cause rejection:
    IDs (HC-5) — pass the literal `value` / `trial_type` column through. The exact
    reading approach (pandas + mne.Annotations, mne.annotations_from_events, etc.) is
    your call; only the outcome matters.
+10b. When local EDF/GDF sidecars expose interval annotations (CSV with
+    `start_time/stop_time/label`, TSE/LBL token rows, or summary files with
+    `Seizure N Start/End Time`), convert those intervals into raw.annotations using
+    literal sidecar labels. Deduplicate repeated channel-level rows by
+    `(start, stop, label)`. Do NOT create a misc channel for these interval event
+    labels unless kernel_requirements explicitly asks for a misc route.
+11. HC-5 applies to ALL formats, not only BIDS. For .mat/GDF/EDF/CSV sidecars, preserve
+    the literal marker code/annotation/sidecar label as the annotation description. Do
+    NOT replace `1`, `769`, `T1`, `gnsz`, etc. with semantic labels such as left/right,
+    motor imagery class names, seizure names, or prettier descriptions. Semantic meaning
+    belongs in analysis.md, not in kernel event IDs. Prefix enrichment is allowed only
+    when the original ID remains visible (e.g. `protocolA::1`).
+12. If MNE/EEGUnity cannot natively load the data file format (common for .mat/custom
+    arrays), implement a custom `load(...)` method that returns an MNE Raw object and
+    set `HANDLES_UNAVAILABLE = True`. Make `load(...)` accept either a file path string
+    or a row/Series containing `File Path`.
+    Row objects usually use the exact key `File Path` (capital F/P). Use a helper that
+    tries `row.get("File Path")` first and converts Path objects to str before calling
+    string methods such as `.replace()` or `.split()`.
+13. For custom loaders, put parsing/annotation construction in a shared helper and call
+    that helper from BOTH `load(...)` and `apply(...)`. Real EEGUnity scans may call
+    `apply(...)` on a partially loaded raw object without invoking `load(...)`; if the
+    incoming raw lacks annotations/misc channels that your helper can reconstruct from
+    `row["File Path"]`, `apply(...)` must rebuild or add them. A kernel whose sample
+    files are all skipped by the sandbox test is invalid.
+14. In mixed-format releases, prioritize the standard raw recordings selected for the
+    sandbox test. Do not synthesize annotations from MAT/CSV label sidecars unless the
+    final kernel_requirements explicitly asks for that sidecar-derived label field.
 """
 
 _KERNEL_FIX_SYSTEM = """\
@@ -76,6 +118,8 @@ Fix ONLY what is broken. Output your fix as a Python code block ONLY:
 
 MANDATORY — any violation will fail validation again:
 - def apply(self, udataset, raw, row) -> mne.io.BaseRaw:  — exact signature, one line, no type hints on params
+- The kernel class must define `KERNEL_ID = "<dataset_name>"` as a string class
+  or instance attribute; the test harness reads `kernel.KERNEL_ID`.
 - Inside apply(), one literal statement:
     raw.info["description"] = json.dumps({
         "original_description": <original>,
@@ -85,28 +129,55 @@ MANDATORY — any violation will fail validation again:
   MNE stores description as a STRING, not a dict.
 - When the error lists `required_info_fields`, read each one from participants.tsv
   for the current subject and put it (as str) into eegunity_description.
+- Always initialize eegunity_description with explicit default keys:
+  `age`, `sex`, `amplifier`, `cap`, `handedness`. Then add extra participants.tsv
+  columns if required. Never rely on looping over `required_info_fields` to create
+  those five canonical keys.
 - When the error lists `derived_misc_channels`, create each one as an MNE misc-type
   channel on the returned raw. Derivation mechanism is YOUR choice — constant broadcast
   is fine for participants.tsv sources; events.tsv-sourced columns often warrant a
   trial-locked step function. Only invariants: exact `name` in raw.ch_names, ch_type
-  'misc', and finite data of shape (1, len(raw.times)).
+  'misc', and finite data of shape (1, len(raw.times)). If you use raw.add_channels(...),
+  call raw.load_data() first unless you created the RawArray yourself.
 - If the failure was annotations/event-count related, fix the event-reading path:
   decide whether the raw file carries its own triggers, whether events.tsv must be
-  parsed, or whether a STIM channel is available. HC-5 forbids remapping event IDs —
-  pass the literal tsv labels through to raw.annotations."""
+  parsed, whether an EDF clinical CSV/TSE/LBL/summary sidecar must be parsed, or whether
+  a STIM channel is available. HC-5 forbids remapping event IDs — pass the literal
+  local labels through to raw.annotations.
+- If a custom `load(...)` produced annotations but full_scan still saw zero events,
+  move the same annotation-building logic into `apply(...)` as well. EEGUnity may pass
+  `apply(...)` a raw object that has channels but no annotations; use `row["File Path"]`
+  to rebuild/add the literal raw event IDs.
+- If using `set_montage(...)`, add `on_missing="ignore"` and strip/normalize channel
+  name whitespace before montage assignment.
+- If using `raw.rename_channels(...)`, avoid duplicate-name failures: either pass
+  `allow_duplicates=True` or make the target names unique before renaming.
+- If the traceback mentions `row['file_path']`, `Path.replace`, or `PosixPath.split`,
+  fix path handling: prefer `row.get("File Path")`, convert to `str`, then use string
+  operations.
+- HC-5 applies to every source: .mat marker codes, GDF annotation strings, EDF labels,
+  and CSV sidecar labels must stay literal. Put semantic interpretation in the document
+  Meaning field, not in raw.annotations.
+- In mixed-format releases, do not keep adding MAT/CSV label-sidecar loaders when the
+  sandbox sample files are standard raw recordings and kernel_requirements contains no
+  sidecar-derived misc/super label."""
 
 _KERNEL_EVENT_DIAGNOSE_SYSTEM = """\
 You are an EEG kernel engineer. The previous kernel loaded sample files without error
-and populated eegunity_description, BUT the resulting raw objects exposed FAR FEWER
-annotations/events than the sibling BIDS events.tsv files contain. Your task: diagnose
-WHY and emit a corrected kernel so `mne.events_from_annotations(raw)` yields at least
-as many events as the non-empty rows in the sibling events.tsv.
+and populated eegunity_description, BUT the resulting raw objects or full_scan exposed
+FAR FEWER annotations/events than the local raw markers or sibling events.tsv files
+indicate. Your task: diagnose WHY and emit a corrected kernel so
+`mne.events_from_annotations(raw)` yields the literal local event IDs.
 
 Common root causes — pick the one that fits the evidence:
   1. Raw file format carries no triggers (EEGLAB .set with empty `event` field, EDF
      without annotations, BrainVision .eeg without its marker file). Events MUST come
      from events.tsv — use `mne.Annotations` or `mne.annotations_from_events` keyed on
      the `onset`/`duration`/`trial_type` (or `value`) columns.
+  1b. EDF clinical corpora often store intervals in a sibling CSV/TSE/LBL file or a
+      per-subject summary text file instead of the EDF header. Parse those local
+      intervals, dedupe repeated channel-level rows by `(start, stop, label)`, and
+      create raw.annotations with the literal sidecar label.
   2. Kernel read events.tsv with the wrong column — e.g. took `trial_type` when the
      meaningful trigger is in `value`, or vice versa. Look at the events.tsv snippet
      you are given and pick the column that actually carries distinguishable labels.
@@ -118,17 +189,22 @@ Common root causes — pick the one that fits the evidence:
      samples to `mne.Annotations(onset=..., sfreq=...)` or forgot to scale.
   6. The kernel loaded events but assigned them to `raw.info` instead of
      `raw.set_annotations(...)` → they never reach `raw.annotations`.
+  7. Custom `load(...)` builds annotations, but `apply(...)` only writes metadata.
+     Real full_scan may call `apply(...)` on a bare raw object; share the parser helper
+     between `load(...)` and `apply(...)`, or have `apply(...)` rebuild from row/File Path.
 
 You are given:
   - the prior kernel's full source (truncated if large),
-  - per-file annotation counts it produced vs expected events.tsv row counts,
-  - the matching events.tsv snippet (header + first rows) for each sample file,
-  - the non-canonical numeric columns of events.tsv (from the grounded catalog),
-  - the events.json column definitions if present.
+  - per-file annotation counts it produced vs expected events.tsv row counts when present,
+  - the matching events.tsv snippet (header + first rows) for each sample file when present,
+  - the non-canonical numeric columns of events.tsv (from the grounded catalog) when present,
+  - the events.json column definitions if present,
+  - otherwise the current kernel and sample files for custom-format diagnosis.
 
 HARD RULES:
   - Do NOT fabricate event labels. Use the literal strings in the relevant tsv column.
-  - HC-5: do NOT remap or rename event IDs.
+  - HC-5: do NOT remap or rename event IDs from any source. Semantic labels belong in
+    analysis.md Meaning fields, never as replacement annotation descriptions.
   - Preserve the full kernel signature, eegunity_description (dynamic json.dumps), and
     the `KERNEL = <ClassName>()` module-level assignment.
   - All other requirements from the initial `_KERNEL_SYSTEM` still apply.
@@ -245,6 +321,7 @@ def _format_event_mismatch(
 
 _RULEBOOK_VALIDATION_CHECKS = [
     (r"KERNEL\s*=\s*\w+\(", "KERNEL = ... object missing at module level"),
+    (r"\bKERNEL_ID\s*=", "KERNEL_ID attribute missing from kernel class/instance"),
     (r"def apply\b", "apply() method missing entirely"),
     (r"udataset", "udataset parameter missing from apply()"),
     (r"eegunity_description", "eegunity_description key missing"),
@@ -305,6 +382,39 @@ def _static_validate(code: str,
         if not re.search(pattern, code):
             errors.append(f"STATIC CHECK FAILED: {msg}")
 
+    errors.extend(_event_remap_check(code))
+
+    if "set_montage" in code and "on_missing" not in code:
+        errors.append(
+            "STATIC CHECK FAILED: set_montage(...) is used without "
+            '`on_missing="ignore"`. Add on_missing="ignore" and normalize channel '
+            "name whitespace before montage assignment so full_scan does not reject "
+            "records with partial montage coverage."
+        )
+
+    if "rename_channels" in code and "allow_duplicates" not in code:
+        errors.append(
+            "STATIC CHECK FAILED: rename_channels(...) is used without "
+            "allow_duplicates=True or an explicit duplicate-safe strategy. EDF files "
+            "often contain duplicate channel names; make target names unique before "
+            "renaming or pass allow_duplicates=True."
+        )
+
+    if re.search(r"raw\.add_channels\s*\(", code) and not re.search(r"\.load_data\s*\(", code):
+        errors.append(
+            "STATIC CHECK FAILED: raw.add_channels(...) is used without raw.load_data(). "
+            "EDF/GDF/BDF/SET/FIF Raw objects are usually not preloaded; call "
+            "raw.load_data() first, or use raw.set_annotations(...) for interval labels "
+            "instead of creating a misc channel."
+        )
+
+    if re.search(r"row\s*\[\s*['\"]file_path['\"]\s*\]", code):
+        errors.append(
+            "STATIC CHECK FAILED: use row.get(\"File Path\") rather than row['file_path']. "
+            "EEGUnity row keys are title-cased in the sandbox/full_scan path; convert the "
+            "result to str before string operations."
+        )
+
     # Rule #3 (tightened): apply() body must assign raw.info["description"] via
     # json.dumps(...) so the per-subject eegunity_description is actually
     # written per file. A class-level dict alone never reaches raw.info.
@@ -322,6 +432,29 @@ def _static_validate(code: str,
                 "`raw.info[\"description\"] = {}` / `.update(...)` / dict assignment. "
                 "Build a dict with keys `original_description` and "
                 "`eegunity_description`, then json.dumps it in ONE statement."
+            )
+        canonical_fields = ["age", "sex", "amplifier", "cap", "handedness"]
+        canonical_source = apply_body
+        if re.search(r"['\"]eegunity_description['\"]\s*:\s*[A-Za-z_]\w+", apply_body):
+            # Common good pattern: a helper builds the canonical dict and apply()
+            # writes it dynamically. Validate those helper defaults too.
+            canonical_source += "\n" + code
+        missing_canonical = []
+        for field in canonical_fields:
+            literal_key = re.search(rf"['\"]{re.escape(field)}['\"]\s*:", canonical_source)
+            explicit_set = re.search(
+                rf"eegunity_description\s*\[\s*['\"]{re.escape(field)}['\"]\s*\]",
+                canonical_source,
+            )
+            if not literal_key and not explicit_set:
+                missing_canonical.append(field)
+        if missing_canonical:
+            errors.append(
+                "STATIC CHECK FAILED: apply() must explicitly populate canonical "
+                "eegunity_description fields with defaults when local metadata is "
+                f"missing: {missing_canonical}. Do not rely on looping over "
+                "required_info_fields, because absent participants.tsv files would "
+                "leave the required keys missing."
             )
     else:
         errors.append(
@@ -393,6 +526,30 @@ def _security_check(code: str) -> List[str]:
     return violations
 
 
+_EVENT_REMAP_PATTERNS: List[Tuple[str, str]] = [
+    (r"\bmne\.rename_events\s*\(", "mne.rename_events replaces event IDs"),
+    (r"\b(?:event_id_map|rename_events|replace_events)\s*=", "event remap variable"),
+    (r"\b(?:new_event_id|numeric_event_map)\s*=", "new/canonical event-id mapping"),
+    (r"\bdef\s+_?(?:remap|rename|update)_?events?\b", "event remap helper"),
+    (r"\bdef\s+_?remap_annotations\b", "annotation remap helper"),
+    (r"\b768\s*\+\s*int\s*\(", "class label offset into acquisition event ID"),
+    (r"\bclasslabel\b[\s\S]{0,600}\b768\s*\+", "classlabel converted to 769/770/771/772-style IDs"),
+]
+
+
+def _event_remap_check(code: str) -> List[str]:
+    """Detect obvious HC-5 event-remapping patterns in generated kernels."""
+    violations: List[str] = []
+    for pattern, desc in _EVENT_REMAP_PATTERNS:
+        if re.search(pattern, code):
+            violations.append(
+                "HC-5 CHECK FAILED: generated kernel appears to remap/rename event IDs "
+                f"({desc}). Preserve literal raw marker IDs in raw.annotations; put "
+                "semantic interpretation in analysis.md Meaning fields instead."
+            )
+    return violations
+
+
 def _extract_code_block(raw: str) -> str:
     """Extract Python source from a markdown ```python ... ``` code block."""
     # Strip <think> blocks (some models include chain-of-thought)
@@ -450,7 +607,28 @@ _EXT_READERS = {{
     ".eeg": lambda f: mne.io.read_raw_brainvision(f, preload=False, verbose=False),
 }}
 
+def _load_with_kernel(load_fn, fpath, row):
+    if load_fn is None:
+        return None
+    last_err = None
+    for arg in (fpath, row):
+        try:
+            raw_obj = load_fn(arg)
+            if raw_obj is not None:
+                return raw_obj
+        except TypeError as exc:
+            last_err = exc
+            continue
+        except Exception as exc:
+            last_err = exc
+            break
+    if last_err is not None:
+        raise last_err
+    return None
+
 tested_count = 0
+custom_load_count = 0
+runtime_apply_recovery_checked = False
 for fpath in sample_files:
     print(f"[TEST] Testing: {{fpath}}")
     try:
@@ -458,14 +636,36 @@ for fpath in sample_files:
         row = pd.Series({{"File Path": fpath}})
         ext = fpath[fpath.rfind("."):].lower()
         reader = _EXT_READERS.get(ext)
-        if reader is None:
-            print(f"  [SKIP] Unsupported extension: {{ext}}")
-            continue
-        try:
-            raw = reader(fpath)
-        except Exception as load_err:
-            print(f"  [SKIP] Cannot load {{fpath}}: {{load_err}}")
-            continue
+        raw = None
+        used_custom_load = False
+        if reader is not None:
+            try:
+                raw = reader(fpath)
+            except Exception as load_err:
+                print(f"  [WARN] Standard reader could not load {{fpath}}: {{load_err}}")
+
+        if raw is None:
+            load_fn = getattr(kernel, "load", None)
+            if load_fn is None:
+                if reader is None:
+                    errors.append(
+                        f"{{fpath}}: unsupported extension {{ext}} and kernel has no custom load() method. "
+                        "For .mat/custom formats, implement load(...) returning an MNE Raw object."
+                    )
+                else:
+                    print(f"  [SKIP] Cannot load {{fpath}} and no custom load() is available")
+                continue
+            try:
+                raw = _load_with_kernel(load_fn, fpath, row)
+                custom_load_count += 1
+                used_custom_load = True
+                print("  [OK] custom load() produced raw object")
+            except Exception as load_err:
+                errors.append(f"{{fpath}}: custom load() failed: {{load_err}}")
+                continue
+            if raw is None:
+                errors.append(f"{{fpath}}: custom load() returned None")
+                continue
 
         tested_count += 1
         result = kernel.apply(None, raw, row)
@@ -495,26 +695,42 @@ for fpath in sample_files:
             misc_names = []
         print(f"[EVENTS] {{fpath}} annotations={{n_ann}}")
         print(f"[MISC] {{fpath}} channels={{_json.dumps(misc_names)}}")
+
+        # EEGUnity full_scan may call apply() on a raw object loaded by its own parser
+        # without first calling custom load(). If load() found annotations, apply()
+        # must be able to restore them from row/File Path when the incoming raw is bare.
+        if used_custom_load and n_ann > 0 and not runtime_apply_recovery_checked:
+            runtime_apply_recovery_checked = True
+            try:
+                probe = result.copy()
+                probe.set_annotations(mne.Annotations([], [], []))
+                recovered = kernel.apply(None, probe, row)
+                recovered_n = len(recovered.annotations) if getattr(recovered, "annotations", None) is not None else 0
+                if recovered_n <= 0:
+                    errors.append(
+                        f"{{fpath}}: custom load() created annotations, but apply() did not "
+                        "recreate them when given a raw object with empty annotations. "
+                        "Move the same row/File Path annotation-building logic into apply(); "
+                        "otherwise full_scan may report Events Not Found."
+                    )
+                else:
+                    print(f"  [OK] apply() restored annotations without relying on load(): {{recovered_n}}")
+            except Exception as recovery_err:
+                errors.append(f"{{fpath}}: apply() annotation-recovery probe failed: {{recovery_err}}")
     except Exception as e:
         errors.append(f"{{fpath}}: {{traceback.format_exc()}}")
 
-# If every sample file was skipped (e.g. all .mat — not in _EXT_READERS), we never
-# called kernel.apply() and the errors list would be empty regardless of the kernel's
-# validity.  Check that the kernel class defines its OWN apply() method (not just an
-# inherited or coincidentally-imported attribute from numpy/mne/pandas).
+# If every sample file was skipped, we never called kernel.apply() and the errors
+# list may be empty regardless of validity. This is invalid: .mat/custom formats
+# must implement and exercise a custom load() path.
 if tested_count == 0 and sample_files:
-    has_own_apply = "apply" in type(kernel).__dict__
-    if not has_own_apply:
-        errors.append(
-            f"All {{len(sample_files)}} sample file(s) skipped (unsupported extensions "
-            f"{{set(f[f.rfind('.'):]for f in sample_files)}}) — kernel class "
-            f"{{type(kernel).__name__}} does not define apply(). "
-            "The kernel must implement "
-            "`def apply(self, udataset, raw, row) -> mne.io.BaseRaw:`."
-        )
-    else:
-        print(f"[NOTE] All {{len(sample_files)}} sample file(s) skipped. "
-              "kernel.apply() is defined but could not be tested on real data.")
+    errors.append(
+        f"All {{len(sample_files)}} sample file(s) were skipped; kernel.apply() was never "
+        "tested on real data. For unsupported formats such as .mat, implement custom "
+        "load(...) and ensure the sandbox can exercise it."
+    )
+elif custom_load_count:
+    print(f"[NOTE] custom load() exercised on {{custom_load_count}} file(s).")
 
 if errors:
     print("\\n[FAIL] Errors:")
@@ -527,13 +743,14 @@ else:
 """
 
 
-def _pick_sample_files(ds_dir: Path, n: int = 5) -> List[str]:
+def _pick_sample_files(ds_dir: Path, n: int = 5, format_evidence: str = "") -> List[str]:
     """Pick a diverse set of sample files from the dataset directory."""
     EEG_EXTS = {".edf", ".bdf", ".gdf", ".set", ".fif", ".mat", ".eeg"}
+    STANDARD_RAW_EXTS = {".edf", ".bdf", ".gdf", ".set", ".fif", ".eeg"}
     # Suffixes that indicate non-raw FIF files
     _FIF_SKIP_SUFFIXES = ("-proj.fif", "-fwd.fif", "-cov.fif", "-ave.fif",
                           "-inv.fif", "-trans.fif", "-src.fif", "-bem.fif")
-    all_files = []
+    all_files: List[Tuple[int, str]] = []
     for root, _, files in os.walk(str(ds_dir)):
         for f in files:
             fl = f.lower()
@@ -550,12 +767,87 @@ def _pick_sample_files(ds_dir: Path, n: int = 5) -> List[str]:
     if not all_files:
         return []
 
+    standard_raw = [
+        item for item in all_files
+        if Path(item[1]).suffix.lower() in STANDARD_RAW_EXTS
+    ]
+    if standard_raw:
+        # In mixed-format releases, MAT files are often labels, preprocessed
+        # mirrors, or helper arrays for the standard raw recordings. Sampling
+        # them here pressures the LLM to support an unrelated input format and
+        # can hide whether the actual GDF/EDF/BDF/SET reader path is correct.
+        #
+        # Pure-MAT/custom datasets still have no STANDARD_RAW_EXTS, so the
+        # custom loader path remains mandatory and cannot all-skip pass.
+        all_files = standard_raw
+
+    preferred = _sample_files_from_format_evidence(ds_dir, format_evidence, EEG_EXTS)
+    if preferred:
+        known = {f for _, f in all_files}
+        selected: List[str] = []
+        for p in preferred:
+            if p in selected:
+                continue
+            if p in known or Path(p).exists():
+                selected.append(p)
+            if len(selected) >= n:
+                return selected
+        if selected:
+            remaining = [item for item in all_files if item[1] not in set(selected)]
+            remaining.sort(key=lambda x: x[0])
+            if remaining:
+                step = max(1, len(remaining) // max(1, n - len(selected)))
+                for i in range(0, len(remaining), step):
+                    selected.append(remaining[i][1])
+                    if len(selected) >= n:
+                        break
+            return selected[:n]
+
     all_files.sort(key=lambda x: x[0])
     if len(all_files) <= n:
         return [f for _, f in all_files]
     # Pick stratified by size (small, mid, large)
     step = len(all_files) // n
     return [all_files[i * step][1] for i in range(n)]
+
+
+def _sample_files_from_format_evidence(
+    ds_dir: Path,
+    format_evidence: str,
+    eeg_exts: set[str],
+) -> List[str]:
+    """Prefer sample recordings named in interval evidence."""
+    out: List[str] = []
+    for line in (format_evidence or "").splitlines():
+        if "interval_example:" not in line:
+            continue
+        payload = line.split("interval_example:", 1)[1].strip()
+        candidates: List[Path] = []
+        if " -> " in payload:
+            left, right = payload.split(" -> ", 1)
+            summary_path = ds_dir / left.strip()
+            edf_name = right.split(":", 1)[0].strip()
+            if edf_name:
+                candidates.append(summary_path.parent / edf_name)
+        else:
+            rel = payload.split(":", 1)[0].strip()
+            sidecar = ds_dir / rel
+            if sidecar.suffix.lower() in {".csv", ".tse", ".lbl"}:
+                candidates.append(sidecar.with_suffix(".edf"))
+            elif sidecar.name.lower().endswith(".csv_bi"):
+                candidates.append(sidecar.with_name(sidecar.name[:-7] + ".edf"))
+            elif sidecar.name.lower().endswith(".tse_bi") or sidecar.name.lower().endswith(".lbl_bi"):
+                candidates.append(sidecar.with_name(sidecar.name[:-7] + ".edf"))
+            else:
+                candidates.append(sidecar)
+
+        for candidate in candidates:
+            if candidate.suffix.lower() not in eeg_exts:
+                continue
+            if candidate.exists():
+                out.append(str(candidate))
+                break
+    return out
 
 
 def _format_kernel_requirements(kr: Optional[Dict[str, Any]]) -> str:
@@ -575,11 +867,17 @@ def _format_kernel_requirements(kr: Optional[Dict[str, Any]]) -> str:
         "  * Do NOT fabricate a field that has no ground-truth source. If you cannot",
         "    derive a required field from the actual data files, omit it — reconcile will",
         "    drop the corresponding task rather than accept a hallucinated value.",
-        "  * source_field for derived misc MUST be an actual participants.tsv column.",
+        "  * source_field for derived misc MUST be an actual grounded source: either a",
+        "    participants.tsv column or an events.tsv:<column> listed in the catalog.",
         "",
     ]
     if events:
         lines.append(f"Required event IDs (must appear in scan): {events}")
+        lines.append(
+            "  HC-5 reminder: these must be literal raw marker IDs. If a required value "
+            "looks semantic and the local file only contains numeric/string codes, keep "
+            "the literal local code in annotations; semantic meaning belongs in analysis.md."
+        )
     if native_misc:
         lines.append(f"Required native misc channels (already in raw data): {native_misc}")
     if info_fields:
@@ -716,7 +1014,8 @@ def build_kernel(
         (kernel_code, kernel_path, success)
     """
     ds_dir = Path(dataset_path) if dataset_path else Path(context["ds_dir"])
-    sample_files = _pick_sample_files(ds_dir)
+    format_evidence = context.get("format_evidence", "")
+    sample_files = _pick_sample_files(ds_dir, format_evidence=format_evidence)
     log(f"[KernelBuilder] Sample files for testing: {len(sample_files)}")
     if not sample_files:
         log("[KernelBuilder] WARNING: No EEG files found for testing. Will generate kernel without testing.")
@@ -724,16 +1023,10 @@ def build_kernel(
     sandbox_dir.mkdir(parents=True, exist_ok=True)
 
     # Build the initial generation prompt
-    skill_summary = "\n\n".join(
-        f"=== {name} ===\n{content[:3000]}"
-        for name, content in context.get("skill_texts", {}).items()
-    )
-    example_summary = "\n\n".join(
-        f"=== Example: {name} ===\n{content}"
-        for name, content in context.get("example_kernels", {}).items()
-    )
+    casebook_summary = context.get("kernel_casebook", "")
 
     reqs_block = _format_kernel_requirements(kernel_requirements)
+    sample_block = "\n".join(f"- {Path(p).name} ({p})" for p in sample_files[:8])
 
     base_user = (
         f"Dataset: {dataset_name}\n\n"
@@ -741,10 +1034,11 @@ def build_kernel(
         f"=== Dataset directory tree ===\n{context['ds_tree'][:2000]}\n\n"
         f"=== Tasks to support ===\n{tasks_section[:3000]}\n\n"
         + (f"{reqs_block}\n\n" if reqs_block else "")
+        + (f"=== Sandbox sample files that MUST pass ===\n{sample_block}\n\n" if sample_block else "")
+        + (f"=== Raw format evidence ===\n{format_evidence[:5000]}\n\n" if format_evidence else "")
         + f"=== KERNEL_RULEBOOK ===\n{context['rulebook'][:6000]}\n\n"
-        f"=== SKILL patterns ===\n{skill_summary[:6000]}\n\n"
-        f"=== Example kernels ===\n{example_summary[:6000]}\n\n"
-        f"=== Existing kernel (if any, for reference) ===\n{context.get('existing_kernel', '')[:3000]}\n\n"
+        f"=== Generic anonymized kernel casebook ===\n{casebook_summary[:6000]}\n\n"
+        f"=== Existing kernel (if any; parsing reference only, do not copy event remapping) ===\n{context.get('existing_kernel', '')[:3000]}\n\n"
         f"Now write the complete kernel for {dataset_name}."
     )
 
@@ -770,6 +1064,9 @@ def build_kernel(
         f"=== Dataset context ===\n"
         f"Dataset: {dataset_name}\n"
         f"Directory tree:\n{context['ds_tree'][:1200]}\n"
+        + (f"\nSandbox sample files:\n{sample_block[:800]}\n" if sample_block else "")
+        + (f"\nRaw format evidence:\n{format_evidence[:1000]}\n" if format_evidence else "")
+        + (f"\nGeneric casebook:\n{casebook_summary[:1200]}\n" if casebook_summary else "")
         + (f"\nKernel requirements:\n{reqs_block[:600]}\n" if reqs_block else "")
         + f"\nTasks excerpt:\n{tasks_section[:500]}\n"
     )
@@ -1046,13 +1343,15 @@ def patch_kernel_for_events(
     required_hint = ""
     if required_event_ids:
         required_hint = (
-            f"\nThe downstream tasks require these event IDs to be preserved in raw.annotations:\n"
-            f"{required_event_ids}\n"
+            "\nThe downstream tasks currently reference these event IDs. Treat them as a hint,\n"
+            "not permission to rename raw markers: if they are semantic names, keep literal\n"
+            f"raw IDs in annotations and put semantic meaning in document fields:\n{required_event_ids}\n"
         )
     user_msg = (
         f"Dataset: {dataset_name}\n\n"
-        f"The full scan produced an empty event_counts dict, even though events.tsv sidecars\n"
-        f"contain events. Patch the kernel so raw.annotations is populated.{required_hint}\n"
+        f"The full scan produced an empty event_counts dict after installing the kernel.\n"
+        f"Patch the kernel so raw.annotations is populated from literal local markers or\n"
+        f"sidecars during apply(), not only during load().{required_hint}\n"
         f"=== Evidence ===\n{evidence_block}\n\n"
         f"=== Current kernel ===\n```python\n{current_kernel_code[:12000]}\n```"
     )
