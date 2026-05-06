@@ -51,7 +51,7 @@ Nine subjects (A01-A09) performed four-class cued motor imagery (BCI Competition
   | `Cue onset foot (class 3)` | 2 | Feet motor imagery |
   | `Cue onset tongue (class 4)` | 3 | Tongue motor imagery |
 - **Evidence**:
-  - DOI: (not identified) — Official BCI Competition IV Dataset 2a description defines four-class MI (left hand, right hand, feet, tongue) as benchmark task with 4s imagery window from cue onset.
+  - DOI: official website — Official BCI Competition IV Dataset 2a description defines four-class MI (left hand, right hand, feet, tongue) as benchmark task with 4s imagery window from cue onset.
   - DOI: 10.1109/tnnls.2018.2789927 — CNN trained on 0.5-2.5s MI period after cue onset.
   - DOI: 10.1109/tnsre.2022.3156076 — SincNet hybrid achieves 74.26% accuracy.
 - **Notes**: 

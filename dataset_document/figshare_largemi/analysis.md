@@ -130,7 +130,7 @@ For the synchronous paradigms, each recording session began with an initial rela
   | `FREEFORM: left hand MI` | 0 | Left-hand motor imagery (FREEFORM paradigm) |
   | `FREEFORM: right hand MI` | 1 | Right-hand motor imagery (FREEFORM paradigm) |
 - **Evidence**:
-  - 10.1109/tnsre.2022.3186442 — Binary classification of left vs right hand motor imagery from the figshare_largemi dataset (unknown paradigm, this task is for FREEFORM)
+  - 10.1109/tnsre.2022.3186442 — Binary classification of left vs right hand motor imagery from the figshare_largemi dataset (the paper not claim specific paradigm, this task is for FREEFORM)
 - **Notes**: 
 
 ## Data Quality Notes
