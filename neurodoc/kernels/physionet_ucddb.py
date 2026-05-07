@@ -22,7 +22,6 @@ from __future__ import annotations
 import json
 import os
 import re
-import tempfile
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 
@@ -145,18 +144,8 @@ def _build_apnea_label_channel(raw: mne.io.BaseRaw, resp_path: str) -> np.ndarra
 
 
 def _load_rec_preloaded(file_path: str) -> mne.io.BaseRaw:
-    """Reload a .rec file as EDF with data preloaded into memory."""
-    with open(file_path, "rb") as fh:
-        raw_bytes = fh.read()
-
-    with tempfile.NamedTemporaryFile(suffix=".edf", delete=False) as tmp:
-        tmp.write(raw_bytes)
-        tmp_path = tmp.name
-
-    try:
-        return mne.io.read_raw_edf(tmp_path, preload=True, verbose=False)
-    finally:
-        os.remove(tmp_path)
+    """Load a .rec file through MNE's EDF reader with preload enabled."""
+    return mne.io.read_raw_edf(file_path, preload=True, verbose=False)
 
 
 def _ensure_loaded(raw: mne.io.BaseRaw, file_path: str) -> mne.io.BaseRaw:

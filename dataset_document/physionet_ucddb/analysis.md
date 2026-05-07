@@ -11,7 +11,7 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
 
 ## File Scan Result
 
-> **Kernel SHA256**: `0acc9804fa4f6b37ceb80fd5ea08893e28c4f6576826749a7a1942d4d0c77da6`
+> **Kernel SHA256**: `be40fcba92ce9917ba252fe3ec53369fedab8990c4fb6c78793c3654d5f32efe`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 

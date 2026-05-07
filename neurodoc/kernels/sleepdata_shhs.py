@@ -24,6 +24,8 @@ from typing import Dict, List, Optional, Tuple
 
 import mne
 
+KERNEL_ID = "sleepdata-shhs-stage1"
+
 
 # ---------------------------------------------------------------------------
 # Channel rename: EEG → C4, EEG(sec) → C3
@@ -231,6 +233,8 @@ def _parse_nsrr_xml(xml_path: str) -> List[Tuple[float, float, str]]:
 
 class SleepdataShhsKernel:
     """SHHS stage-1 kernel (see module docstring for layout)."""
+
+    KERNEL_ID = KERNEL_ID
 
     def apply(self, udataset, raw, row):
         edf_path = ""

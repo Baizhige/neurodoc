@@ -17,6 +17,8 @@ import mne
 import numpy as np
 import pandas as pd
 
+KERNEL_ID = "openneuro-ds002680-stage1"
+
 
 # Standard 10-20 channel names for 31-channel cap used in this dataset
 # Source: BIDS sidecar eeg.json and standard 10-20 layout for 31 channels
@@ -265,6 +267,8 @@ def _create_response_time_misc(raw: mne.io.BaseRaw, events_df: pd.DataFrame) -> 
 
 class OpenneuroDs002680Kernel:
     """Dataset kernel for OpenNeuro ds002680 (Go-nogo categorization)."""
+
+    KERNEL_ID = KERNEL_ID
     
     def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
         file_path = row["file_path"] if "file_path" in row else str(row.get("path", ""))

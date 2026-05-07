@@ -77,10 +77,10 @@ The TUH EEG Artifact Corpus (TUAR) is a comprehensive dataset designed for the i
   - 10.1109/EMBC48229.2022.9871413 — Achieves 93.95% accuracy with MMC on 1-second windows from artifact onset; uses FFT and DWT features on 4 temporal channels at 250 Hz
 - **Notes**: the paper use 13 classes, but I think 6 classes more reasonable.
 
-### Potential Task 1: Artifact Type Classification (13-class, Event-based)
+### Potential Task 1: Pure Artifact Family Classification (6-class, Event-based)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, overlap = 0, target_events = [`chew`, `chew_elec`, `chew_musc`, `elec`, `elpp`, `eyem`, `eyem_chew`, `eyem_elec`, `eyem_musc`, `eyem_shiv`, `musc`, `musc_elec`, `shiv`, `shiv_elec`]
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 1.0 s, overlap = 0, target_events = [`chew`, `elec`, `elpp`, `eyem`, `musc`, `shiv`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -92,16 +92,9 @@ The TUH EEG Artifact Corpus (TUAR) is a comprehensive dataset designed for the i
   | `chew` | 3 | Chewing artifact |
   | `shiv` | 4 | Shivering artifact |
   | `elpp` | 5 | Electrode pop |
-  | `eyem_musc` | 0,1 | Combined eye movement + muscle |
-  | `eyem_elec` | 0,2 | Combined eye movement + electrode |
-  | `eyem_chew` | 0,3 | Combined eye movement + chewing |
-  | `musc_elec` | 1,2 | Combined muscle + electrode |
-  | `chew_elec` | 3,1 | Combined chewing + electrode |
-  | `chew_musc` | 3,1 | Combined chewing + muscle |
-  | `eyem_shiv` | 0,4 | Combined eye movement + shivering |
 - **Evidence**:
   - 10.1109/EMBC48229.2022.9871413 — Achieves 93.95% accuracy with MMC on 1-second windows from artifact onset; uses FFT and DWT features on 4 temporal channels at 250 Hz
-- **Notes**: Review supplement 6 classes task based on the evidence.
+- **Notes**: Restrict this potential task to the six pure artifact labels only. Multi-component labels such as `eyem_musc` and `musc_elec` are excluded because the current rulebook expects single integer class assignments rather than multi-label targets.
 
 ## Data Quality Notes
 

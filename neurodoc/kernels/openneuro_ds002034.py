@@ -434,7 +434,8 @@ class OpenNeuroDS002034Kernel:
             if "value" in events_df.columns or "event_value" in events_df.columns:
                 # Standardize column name
                 if "event_value" in events_df.columns and "value" not in events_df.columns:
-                    events_df = events_df.rename(columns={"event_value": "value"})
+                    events_df = events_df.copy()
+                    events_df["value"] = events_df["event_value"]
                 
                 try:
                     misc_raw = _create_event_value_misc_channel(raw, events_df)

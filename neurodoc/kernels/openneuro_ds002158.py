@@ -30,6 +30,8 @@ import mne
 import numpy as np
 import pandas as pd
 
+KERNEL_ID = "openneuro-ds002158-stage1"
+
 
 # =============================================================================
 # Dataset-specific constants
@@ -426,6 +428,7 @@ class OpenNeuroDS002158Kernel:
     def __init__(self):
         self.name = "openneuro_ds002158"
         self.version = "1.0.0"
+        self.KERNEL_ID = KERNEL_ID
     
     def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
         """Apply kernel processing to a single EEG file.

@@ -3,11 +3,17 @@ neurodoc - detect: batch check analysis.md and kernel files against semantic rul
 
 Usage:
     python detect.py --dataset openneuro_ds001784
-    python detect.py --all
-    python detect.py --all --severity error    # only show errors
+    python detect.py --completed-only
+    python detect.py --completed-only --severity error    # released / paper subset
+    python detect.py --all                                # maintainer-only full sweep
     python detect.py --rulebook rulebook/semantic_rules.yaml  # custom rulebook
 
 Output: per-dataset report with rule violations and a summary table.
+
+Notes:
+    --completed-only is the default review surface for the released corpus.
+    --all is intended for maintainers performing repository-wide audits and may
+    include draft / unreleased documents that are not part of the paper subset.
 """
 from __future__ import annotations
 
@@ -945,6 +951,21 @@ def dqn_bullet_format(analysis_text: str, **_) -> tuple[bool, str]:
 
 
 @_cc
+def completed_manual_review_required(analysis_text: str, **_) -> tuple[bool, str]:
+    """Completed documents must record at least one reviewer name."""
+    status_m = re.search(r">\s*\*\*Status\*\*:\s*([^\n]+)", analysis_text)
+    review_m = re.search(r"\*\*Manual Review\*\*:\s*([^\n]*)", analysis_text)
+    if not status_m or not review_m:
+        return False, ""
+
+    status = status_m.group(1).strip()
+    reviewer = review_m.group(1).strip()
+    if status == "completed" and not reviewer:
+        return True, "Status=completed but Manual Review is blank"
+    return False, ""
+
+
+@_cc
 def task_order_classical_first(analysis_text: str, **_) -> tuple[bool, str]:
     """All Classical Tasks must appear before all Potential Tasks."""
     headings = re.findall(
@@ -1276,11 +1297,23 @@ def _print_report(all_violations: list[dict], datasets: list[str]) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="neurodoc: semantic rule checker"
+        description=(
+            "neurodoc: semantic rule checker. Use --completed-only for the "
+            "released / paper subset; reserve --all for maintainer-wide audits."
+        )
     )
     grp = parser.add_mutually_exclusive_group(required=True)
     grp.add_argument("--dataset", "-d", nargs="+", help="Dataset name(s) to check")
-    grp.add_argument("--all", action="store_true", help="Check all datasets with analysis.md")
+    grp.add_argument(
+        "--completed-only",
+        action="store_true",
+        help="Check only documents whose Status is completed (recommended for released corpus review)",
+    )
+    grp.add_argument(
+        "--all",
+        action="store_true",
+        help="Maintainer mode: check every dataset document with analysis.md, including draft / unreleased entries",
+    )
     parser.add_argument(
         "--severity", choices=["error", "warning", "info"],
         help="Only show violations of this severity level",
@@ -1314,6 +1347,15 @@ def main() -> None:
             for p in DATASET_DOCUMENT_DIR.glob("*/analysis.md")
             if not p.parent.name.startswith(".")
         )
+    elif args.completed_only:
+        datasets = []
+        for p in DATASET_DOCUMENT_DIR.glob("*/analysis.md"):
+            if p.parent.name.startswith("."):
+                continue
+            text = p.read_text(encoding="utf-8")
+            if re.search(r">\s*\*\*Status\*\*:\s*completed\b", text):
+                datasets.append(p.parent.name)
+        datasets = sorted(datasets)
     else:
         datasets = []
         for item in args.dataset:

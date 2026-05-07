@@ -9,7 +9,7 @@ Participants performed two alternating visual go/no-go tasks: an animal categori
 
 ## File Scan Result
 
-> **Kernel SHA256**: `792b1eb3437f3496ecfba948aa6c7cfe2045b47acccc7be7719a993583a568e8`
+> **Kernel SHA256**: `ff0ca244b877ee53f921cd182aadc7b0a3c9a2d53a7bf101424de81b7a3af3ff`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 

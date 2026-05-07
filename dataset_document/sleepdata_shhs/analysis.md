@@ -9,7 +9,7 @@ The Sleep Heart Health Study (SHHS) is a multi-center NIH/NHLBI cohort investiga
 
 ## File Scan Result
 
-> **Kernel SHA256**: `c07e572c2097434833f230846d58e8f32f84e4ba8d6e0f09d9f4c921560f6771`
+> **Kernel SHA256**: `9b2c11591e4e2ca376b0ad5925385f0cbbe420994b5669e33c9116041ac1d96e`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 
@@ -64,8 +64,8 @@ The Sleep Heart Health Study (SHHS) is a multi-center NIH/NHLBI cohort investiga
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `age` | partial | Available for 8444/8571 scanned records |
-| `sex` | partial | Available for 8444/8571 scanned records |
+| `age` | partial (8444/8571) | Available for 8444/8571 scanned records |
+| `sex` | partial (8444/8571) | Available for 8444/8571 scanned records |
 | `device` | complete | Compumedics P-Series Sleep Monitoring System; SHHS2 used P-series v3/v4 variants |
 
 

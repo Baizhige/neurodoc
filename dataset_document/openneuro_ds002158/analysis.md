@@ -9,7 +9,7 @@ Participants performed speeded perceptual judgments and subsequently reported th
 
 ## File Scan Result
 
-> **Kernel SHA256**: `4d30b57d695216b4e8f4a5fdbbadedb027c4765cdc89f1213930b45da09404a5`
+> **Kernel SHA256**: `403e1d8a5bd902759e4807d4044828a390140b5e3a2c32f52438f071182964ef`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 

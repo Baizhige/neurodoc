@@ -67,7 +67,7 @@ Clinical EEGs in the dataset utilize two common reference configurations: averag
 - **Notes**: 
 
 ## Data Quality Notes
--
+- No subject-level demographics are available in the released metadata.
 
 ## Kernel Responsibilities
 

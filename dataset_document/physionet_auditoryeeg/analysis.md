@@ -9,7 +9,7 @@ Twenty volunteers (s01-s20) aged 21-31 participated in a multipurpose EEG study 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `cf4fdf7a4ad0c7130370ae449d1e81dabf69d73d21aebbeb8158370b3fdca381`
+> **Kernel SHA256**: `f2baba5ab9eae9018027474a4a0fd04e526a9b49f98707e5b415b7e04bf76e9a`
 > **EEGUnity Version**: `0.8.1`
 > **Scan Type**: Full
 

@@ -355,10 +355,10 @@ rules:
     severity: "error"
 
   - id: "manual_review_blank"
-    desc: "Manual Review must be blank in generated or auto-repaired documents (rulebook Article 30.3)."
+    desc: "Completed documents must record at least one reviewer name. `wait_manual_review` documents may be blank or may retain reviewer names from later manual rework."
     target: "analysis_md"
-    check: "pattern"
-    pattern: "\\*\\*Manual Review\\*\\*:\\s*\\S"
+    check: "cross_check"
+    function: "completed_manual_review_required"
     severity: "warning"
 
   # --- Group D: Kernel Code Constraints --------------------------------------
