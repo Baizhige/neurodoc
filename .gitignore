@@ -40,3 +40,4 @@ __pycache__/
 *.tmp
 *.temp
 *~
+venv/

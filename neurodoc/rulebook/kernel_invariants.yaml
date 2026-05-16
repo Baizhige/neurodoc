@@ -1,0 +1,45 @@
+# Kernel invariants K1–K6 — v3 do-no-harm gate.
+# Enforced statically by neurodoc/pipeline/kernel_gate.py BEFORE any subprocess test.
+# All rules are severity=error: failing one drops the kernel into the retry queue.
+
+K1:
+  name: preserve_channel_names
+  severity: error
+  description: >
+    Kernel may call rename_channels() / set_channel_types name maps only when every
+    key appears in LocatorReport.rename_evidence. Default is no rename.
+
+K2:
+  name: preserve_event_ids
+  severity: error
+  description: >
+    Kernel must NOT call mne.rename_events() or pass an event_id_map dict. Pass-through
+    is mandatory. Licensed exception: prefix-only enrichment from event_prefix_groups.
+
+K3:
+  name: native_misc_honesty
+  severity: error
+  description: >
+    required_native_misc must be a subset of ProbeReport.misc_channel_names. If empty,
+    the kernel may not synthesize MISC channels named identically to native ones.
+
+K4:
+  name: derived_misc_groundable
+  severity: error
+  description: >
+    Each derived_misc_channels[*].source_field must cite a column from
+    LocatorReport.sidecars (events.tsv: or participants.tsv:). No fallback substitution.
+
+K5:
+  name: annotation_source_from_locator
+  severity: error
+  description: >
+    Every kernel sidecar-read path (xml/tsv/json/csv siblings) must match a path or
+    pairing rule listed in kernel_requirements.annotation_paths.
+
+K6:
+  name: test_honesty
+  severity: error
+  description: >
+    Kernel test harness reports ERROR (not silent PASS) when ImportError or [SKIP]
+    affects > 0 of the sample files.
