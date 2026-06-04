@@ -1,0 +1,37 @@
+# Example config for: python -m neurodoc.utils.export_task_h5 --config <this file>
+#
+# One command + one file. Edit cache_dir / dataset_roots / jobs to your setup.
+
+# ===== Global settings =====
+cache_dir: /gpfs/work/.../hdf5_cache         # output + cache root (or pass --cache_dir)
+# eegunity_path: /gpfs/.../EEGBenchmarkSKILL/Script   # optional; default = local Script/
+log_dir: /gpfs/work/.../export_logs          # optional; writes export_<timestamp>.log
+dataset_roots:                               # where raw datasets live (used to locate data)
+  - /gpfs/work/.../raw_eeg
+num_workers: 8
+
+# ===== Scope 1 (broadest): default fallback for every job =====
+default:
+  pipeline: null                # null = no preprocessing (raw)
+  pipeline_param: {}
+  common_channels: null         # null = no channel alignment (trust the kernel)
+  min_matched_channels: 1
+  epoch_param: {}               # overrides the doc's tmin/tmax/segment_length/overlap
+
+# ===== Scope 2: per-dataset (overrides default for all of its tasks) =====
+datasets:
+  bcic_iv_2a:
+    # raw_path: /explicit/path/to/bcic_iv_2a   # optional; else resolved via dataset_roots
+    common_channels: [C3, Cz, C4]
+    epoch_param: {tmin: -0.5, tmax: 4.0}
+  openneuro_ds004504:
+    pipeline: neurodoc/utils/pipelines/default.py
+    pipeline_param: {resample: 200, lower_bound: 0.1, upper_bound: 75, notch: 50}
+
+# ===== Scope 3: per-task (in jobs; overrides dataset + default) =====
+# task is the 1-based index of the Task block in analysis.md (document order).
+jobs:
+  - {dataset: figshare_meng2019, task: 1}
+  - {dataset: bcic_iv_2a,        task: 1}                              # uses dataset scope
+  - {dataset: bcic_iv_2a,        task: 2, epoch_param: {tmin: 0, tmax: 2}}
+  - {dataset: openneuro_ds004504, task: 2, common_channels: [Fp1, Fp2, F3, F4]}
