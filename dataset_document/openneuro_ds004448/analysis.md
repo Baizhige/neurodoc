@@ -1,7 +1,7 @@
 # The BMI-HDEEG dataset 4
 
 **Dataset**: `openneuro_ds004448` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004448
-**Category**: Action/Output | **Subjects**: 56 | **Files (Completed)**: 280 | **Channels**: 130 | **Sampling Rate**: 1000 Hz | **Manual Review**: Yikai Dong
+**Category**: Action/Output | **Subjects**: 56 | **Files (Completed)**: 280 | **Channels**: 130 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -9,34 +9,38 @@ This is the fourth BMI-HDEEG sensorimotor rhythm-based BCI dataset. Scientific D
 
 ## File Scan Result
 
-> **Kernel SHA256**: `d72f26fbb472eccd2b3469776dfe7698494f2e80185fb7afd92c7a5e7ba46828`
-> **EEGUnity Version**: `0.8.1`
+> **Kernel SHA256**: `b5085020f658e1d30a43e1e7085b48dc158685b15d9d1a807d721830343fc3f6`
+> **EEGUnity Version**: `0.8.2`
 > **Scan Type**: Full
 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |---|---|---|---|---|
-| `event_1` | 277 | event | raw | Trial phase onset: Trial start |
-| `event_2` | 1723 | event | raw | Unknown event code not present in BIDS events.tsv annotations |
-| `event_3` | 1875 | event | raw | Unknown event code not present in BIDS events.tsv annotations |
+| `event_1` | 3608 | event | raw | Trial phase onset: Trial start |
 
+### MISC Label Summary
+
+| Channel | Source | Meta | Notes |
+|---|---|---|---|
+| `trial_index` | native (raw misc in EEG file) | raw |  |
 
 ### Info
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `age` | complete | N/A |
-| `sex` | complete | N/A |
-| `device` | missing | EEG sidecar reports `Manufacturer = Magstim EGI`, `ManufacturersModelName = GES400`, `SamplingFrequency = 1000`, and `EEGChannelCount = 129`. |
-
+| `age` | complete | e.g. 23, 22, 24 |
+| `amplifier` | missing |  |
+| `cap` | missing |  |
+| `handedness` | complete | e.g. right, left |
+| `sex` | complete | e.g. male, female |
 
 ## Tasks
 
 ### Potential Task 1: Age regression from EEG segments
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s, overlap = 1, target_events = []
+- **Epoch Parameters**: segment_length = 2 s, overlap = 0.5, target_events = []
 - **Label Route**: `info`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -50,7 +54,7 @@ This is the fourth BMI-HDEEG sensorimotor rhythm-based BCI dataset. Scientific D
 ### Potential Task 2: Gender classification from EEG segments
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s, overlap = 1, target_events = []
+- **Epoch Parameters**: segment_length = 2 s, overlap = 0.5, target_events = []
 - **Label Route**: `info`
 - **Meta Level**: raw
 - **Target Definition**:

@@ -71,6 +71,37 @@ _HYDROCEL_GSN_128_MAP: Dict[str, str] = {
 }
 
 
+# Source: dataset_document/openneuro_ds004447/analysis.md and BIDS events.tsv
+# sidecars with value/instruction columns.
+# Annotator: human, 2026-06-04
+_RAW_META: Dict[str, str] = {
+    "event_1-rest": "Rest/relaxation instruction onset",
+    "event_2-ready": "Ready/preparation instruction onset in 4-phase sessions",
+    "event_2-task": "Task/motor imagery instruction onset in 2-phase sessions",
+    "event_3-task": "Task/motor imagery instruction onset in 4-phase sessions",
+    "event_4-interval": "Interval/blank instruction onset in 4-phase sessions",
+}
+
+_EVENT_HINTS: Dict[str, Dict[str, str]] = {
+    event_id: {
+        "type": "event",
+        "meta_level": "raw",
+        "meaning": meaning,
+    }
+    for event_id, meaning in _RAW_META.items()
+}
+
+
+def _get_file_path(row: Any) -> str:
+    """Extract an EEG file path from common locator row shapes."""
+    if hasattr(row, "get"):
+        for key in ("File Path", "file_path", "path"):
+            value = row.get(key, "")
+            if value:
+                return str(value)
+    return str(row)
+
+
 def _detect_schema(file_path: str) -> str:
     """Detect paradigm schema from session number in file path.
     
@@ -214,8 +245,14 @@ def _read_events_tsv(events_path: str) -> List[Tuple[float, float, str]]:
         for _, row in df.iterrows():
             onset = float(row['onset']) if pd.notna(row.get('onset')) else 0.0
             duration = float(row['duration']) if pd.notna(row.get('duration')) else 0.0
-            description = str(row['trial_type']) if pd.notna(row.get('trial_type')) else str(row.get('value', 'unknown'))
-            events.append((onset, duration, description))
+            if onset > 1000.0:
+                onset = onset / 1000.0
+
+            value = str(row.get("value", "")).strip()
+            instruction = str(row.get("instruction", "")).strip().lower()
+            description = f"event_{value}-{instruction}" if value and instruction else ""
+            if description in _RAW_META:
+                events.append((onset, duration, description))
         
         return events
     except Exception:
@@ -233,12 +270,15 @@ class OpenNeuroDS004447Kernel:
     KERNEL_ID = "openneuro_ds004447"
     DATASET_NAME = "ds004447"
     REQUIRED_INFO_FIELDS = ["age", "sex", "amplifier", "cap", "handedness"]
+    required_info_fields = REQUIRED_INFO_FIELDS
+    raw_meta = dict(_RAW_META)
+    super_meta: Dict[str, str] = {}
     
     def __init__(self):
         pass
     
     def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
-        file_path = row.get('file_path', '') if hasattr(row, 'get') else str(row)
+        file_path = _get_file_path(row)
         
         # Extract subject ID from file path or row
         subject_id = ''
@@ -262,6 +302,9 @@ class OpenNeuroDS004447Kernel:
         raw.info["description"] = json.dumps({
             "original_description": original_desc,
             "eegunity_description": eegunity_description,
+            "eegunity_scan_hints": {
+                "events": _EVENT_HINTS,
+            },
         })
         
         # Handle events from events.tsv

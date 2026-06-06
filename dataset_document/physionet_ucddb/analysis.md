@@ -1,7 +1,7 @@
 # UCD Sleep Apnea Database
 
 **Dataset**: `physionet_ucddb` | **Year**: 2007 | **URL**: https://physionet.org/content/ucddb/1.0.0/
-**Category**: Biological State | **Subjects**: 25 | **Files (Completed)**: 50 | **Channels**: 14/16 | **Sampling Rate**: 8/64/128 | **Manual Review**: Jiping Cui
+**Category**: Biological State | **Subjects**: 25 | **Files (Completed)**: 50 | **Channels**: 14/16 | **Sampling Rate**: 8/64/128 | **Manual Review**:
 
 ## Paradigm
 
@@ -11,8 +11,8 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
 
 ## File Scan Result
 
-> **Kernel SHA256**: `be40fcba92ce9917ba252fe3ec53369fedab8990c4fb6c78793c3654d5f32efe`
-> **EEGUnity Version**: `0.8.1`
+> **Kernel SHA256**: `5a21cd5a5bcc0c99b7409bc5a0d9fd94e0dfe13724b983a03aaf2a5a769a952f`
+> **EEGUnity Version**: `0.8.2`
 > **Scan Type**: Full
 
 ### Event Structure
@@ -27,23 +27,15 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
 | `Sleep stage REM` | 1990 | event | raw | Rapid eye movement sleep |
 | `Sleep stage W` | 4707 | event | raw | Wake |
 
-
-### MISC Label Summary
-
-| Channel | Source | Meta | Notes |
-|---|---|---|---|
-| `apnea_label` | native (raw misc in EEG file) | raw | Binary 0/1 derived from companion `_respevt.txt`: 1 when an `APNEA-*` or `HYP-*` event overlaps the current sample/window, otherwise 0. |
-
 ### Info
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `age` | missing | Available per subject in `SubjectDetails.xls` as `Age`, but not present in EDF headers. |
-| `amplifier` | missing | PSG `.rec` files were acquired on a Jaeger-Toennies PSG system; companion `_lifecard.edf` files come from a Reynolds Lifecard CF Holter recorder. |
-| `cap` | missing | Electrode cap/hardware model is not explicitly documented in the dataset release. |
-| `handedness` | missing | Handedness is not reported in the public dataset metadata. |
-| `sex` | missing | Available per subject in `SubjectDetails.xls` as `Gender`, but not present in EDF headers. |
-
+| `age` | missing |  |
+| `amplifier` | missing |  |
+| `cap` | missing |  |
+| `handedness` | missing |  |
+| `sex` | missing |  |
 
 ## Tasks
 
@@ -69,7 +61,7 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
 ### Classical Task 2: Sleep Apnea Detection
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 10.0 s, overlap = 5.0, target_events = []
+- **Epoch Parameters**: segment_length = 10.0 s, overlap = 0.5, target_events = []
 - **Label Route**: `misc`
 - **Meta Level**: super
 - **Target Definition**:
@@ -79,20 +71,6 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
 - **Evidence**:
   - 10.1109/TENSYMP49402.2020.9230848 — Binary apnea/non-apnea classification using 10-second EEG frames with 50% overlap from the UCD sleep apnea database; positive class includes obstructive, central, and mixed apnea/hypopnea events.
 - **Notes**: --
-
-### Potential Task 1: Subject Age Regression
-- **Task Type**: regression
-- **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 30.0 s, overlap = 0.0, target_events = []
-- **Label Route**: `info`
-- **Meta Level**: raw
-- **Target Definition**:
-  | Info Field | Y Mapping Notes |
-  |---|---|
-  | `age` | Continuous value in years, per-subject. Available for all 25 subjects in `SubjectDetails.csv` / `SubjectDetails.xls`. Same value assigned to all epochs from a given subject. |
-- **Evidence**:
-
-- **Notes**: `age` is not present in the standard scanned info fields but can be injected from the companion SubjectDetails metadata. This is a Potential task because the dataset is small for age regression and no dataset-specific age-regression benchmark was identified. Use subject-level train/test splits to prevent leakage across 30 s segments from the same subject.
 
 ## Data Quality Notes
 

@@ -1,7 +1,7 @@
 # Visual Oddball Task (256 channels)
 
 **Dataset**: `openneuro_ds002578` | **Year**: 2004/2021 | **URL**: https://openneuro.org/datasets/ds002578
-**Category**: Sensory/Response | **Subjects**: 2 | **Files (Completed)**: 2 | **Channels**: 256 | **Sampling Rate**: 256 Hz | **Manual Review**: Jun Li
+**Category**: Sensory/Response | **Subjects**: 2 | **Files (Completed)**: 2 | **Channels**: 256 | **Sampling Rate**: 256 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -9,39 +9,33 @@ A continuous visual oddball / selective-attention task recorded with 256-channel
 
 ## File Scan Result
 
-> **Kernel SHA256**: `3c221cbb992edef968d255c442ebb1899989076165e8a307a10b84832e041755`
-> **EEGUnity Version**: `0.8.1`
+> **Kernel SHA256**: `26f29dd8494b31246c59005225ccaba0758efe57d5721f327d374f848f1d9ef2`
+> **EEGUnity Version**: `0.8.2`
 > **Scan Type**: Full
 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |---|---|---|---|---|
-| `203` | 1 | admin | raw | System marker: unknown function (spurious event removed during preprocessing) |
-| `217` | 2 | admin | raw | System marker: unknown function (spurious event removed during preprocessing) |
-| `237` | 1 | admin | raw | System marker: unknown function (spurious event removed during preprocessing) |
-| `31` | 240 | event | raw | Experimental stimulus onset: five rectangular boxes, box 3 highlighted/cued, disc in box 1 (distractor, expected) |
-| `33` | 240 | event | raw | Experimental stimulus onset: five rectangular boxes, box 3 highlighted/cued, disc in box 3 (target, unexpected oddball) |
-| `34` | 239 | event | raw | Experimental stimulus onset: five rectangular boxes, box 3 highlighted/cued, disc in box 4 (distractor, expected) |
-| `35` | 240 | event | raw | Experimental stimulus onset: five rectangular boxes, box 3 highlighted/cued, disc in box 5 (distractor, expected) |
-| `41` | 238 | event | raw | Experimental stimulus onset: five rectangular boxes, box 4 highlighted/cued, disc in box 1 (distractor, expected) |
-| `42` | 239 | event | raw | Experimental stimulus onset: five rectangular boxes, box 4 highlighted/cued, disc in box 2 (distractor, expected) |
-| `43` | 240 | event | raw | Experimental stimulus onset: five rectangular boxes, box 4 highlighted/cued, disc in box 3 (distractor, expected) |
-| `44` | 239 | event | raw | Experimental stimulus onset: five rectangular boxes, box 4 highlighted/cued, disc in box 4 (target, unexpected oddball) |
-| `45` | 239 | event | raw | Experimental stimulus onset: five rectangular boxes, box 4 highlighted/cued, disc in box 5 (distractor, expected) |
-| `Picture` | 5939 | event | raw | Experimental stimulus onset: drawing of five rectangular boxes with highlighted cue box and disc |
-| `Response` | 1202 | event | raw | Participant response: keyboard key press |
-| `boundary` | 58 | admin | raw | Trial phase onset: pause/discontinuous segment boundary |
-
+| `31` | 240 | event | raw | Attend box 3, disc in box 1 (non-target distractor) |
+| `33` | 240 | event | raw | Attend box 3, disc in box 3 (target oddball) |
+| `34` | 239 | event | raw | Attend box 3, disc in box 4 (non-target distractor) |
+| `35` | 240 | event | raw | Attend box 3, disc in box 5 (non-target distractor) |
+| `41` | 238 | event | raw | Attend box 4, disc in box 1 (non-target distractor) |
+| `42` | 239 | event | raw | Attend box 4, disc in box 2 (non-target distractor) |
+| `43` | 240 | event | raw | Attend box 4, disc in box 3 (non-target distractor) |
+| `44` | 239 | event | raw | Attend box 4, disc in box 4 (target oddball) |
+| `45` | 239 | event | raw | Attend box 4, disc in box 5 (non-target distractor) |
 
 ### Info
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `age` | complete | N/A |
-| `sex` | complete | N/A |
-| `device` | missing | N/A |
-
+| `age` | complete | e.g. 30 |
+| `amplifier` | complete | e.g. BioSemi ActiveTwo |
+| `cap` | complete | e.g. BioSemi 256-channel cap |
+| `handedness` | missing |  |
+| `sex` | complete | e.g. female, male |
 
 ## Tasks
 

@@ -96,6 +96,16 @@ def _detect_subject(file_path: str) -> str:
     return match.group(1) if match else "unknown"
 
 
+def _get_file_path(row) -> str:
+    """Extract a file path from an EEGUnity locator row."""
+    if hasattr(row, "get"):
+        for key in ("File Path", "file_path", "path"):
+            value = row.get(key)
+            if value:
+                return str(value)
+    return str(row)
+
+
 def _find_bids_root(file_path: str) -> str:
     """Find BIDS root directory from a file path."""
     parts = file_path.split(os.sep)
@@ -547,8 +557,18 @@ class EESM23Kernel:
     raw_meta: Dict[str, str] = field(default_factory=lambda: dict(_RAW_META))
     super_meta: Dict[str, str] = field(default_factory=lambda: dict(_SUPER_META))
 
+    def export_include_row(self, row) -> bool:
+        """Export task HDF5 from scored BIDS PSG EEGLAB recordings only."""
+        file_path = _get_file_path(row)
+        file_name = os.path.basename(file_path).lower()
+        return (
+            file_name.endswith(".set")
+            and "_acq-psg_" in file_name
+            and _find_scoring_events_tsv(file_path) is not None
+        )
+
     def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
-        file_path = row["File Path"]
+        file_path = _get_file_path(row)
         
         # Extract subject ID and BIDS root
         subject_id = _detect_subject(file_path)

@@ -118,8 +118,8 @@ The Healthy Brain Network (HBN) EEG Release 1 is a large-scale developmental EEG
 
 ### Classical Task 1: resting state eyes-open vs eyes-closed
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 2.0 s, tmax = 20.0 s, overlap = 0.0, target_events = [`instructed_toCloseEyes`, `instructed_toOpenEyes`]
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = 2.0 s, tmax = 20.0 s, target_events = [`instructed_toCloseEyes`, `instructed_toOpenEyes`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -129,7 +129,7 @@ The Healthy Brain Network (HBN) EEG Release 1 is a large-scale developmental EEG
   | `instructed_toCloseEyes` | 1 | Eyes-closed resting state |
 - **Evidence**:
   - 10.1101/2024.10.03.615261 — The HBN-EEG release paper describes alternating eyes-open and eyes-closed resting-state periods and documents the corresponding instruction events in the release.
-- **Notes**: This is a sustained-state classification task. The first 2 seconds after each auditory instruction are skipped to reduce cue-evoked activity, and the 20-second window avoids crossing from the shorter eyes-open periods into the following eyes-closed period.
+- **Notes**: This is a sustained-state classification task using point instruction events. The first 2 seconds after each auditory instruction are skipped to reduce cue-evoked activity, and the 20-second window avoids crossing from the shorter eyes-open periods into the following eyes-closed period.
 
 ### Classical Task 2: contrast change target direction
 - **Task Type**: classification

@@ -1,7 +1,7 @@
 # The BMI-HDEEG dataset 3
 
 **Dataset**: `openneuro_ds004447` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004447
-**Category**: Action/Output | **Subjects**: 22 | **Files (Completed)**: 418 | **Channels**: 130 | **Sampling Rate**: 1000 Hz | **Manual Review**: Yikai Dong
+**Category**: Action/Output | **Subjects**: 22 | **Files (Completed)**: 418 | **Channels**: 130 | **Sampling Rate**: 1000 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -9,49 +9,29 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
 
 ## File Scan Result
 
-> **Kernel SHA256**: `a622f3c18fda073fcab4904a246197ba85ac15a30fabf10670a0af99d88be864`
-> **EEGUnity Version**: `0.8.1`
+> **Kernel SHA256**: `f4df1d5a0520d30938f647e977f1251a47ee521b2d7578d92324f7531531a5a4`
+> **EEGUnity Version**: `0.8.2`
 > **Scan Type**: Full
 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |---|---|---|---|---|
-| `event_1-rest` | 4180 | event | raw | Rest/relaxation instruction onset; trigger value 1, instruction `rest`, present in both 2-phase and 4-phase blocks. |
-| `event_2-ready` | 910 | event | raw | Ready/preparation instruction onset in 4-phase blocks; trigger value 2, instruction `ready`, typically preceding the motor imagery task period. |
-| `event_2-task` | 3270 | event | raw | Task/motor imagery instruction onset in 2-phase blocks; trigger value 2, instruction `task`, corresponding to right-finger kinesthetic motor imagery/SMR-ERD control. |
-| `event_3-task` | 910 | event | raw | Task/motor imagery instruction onset in 4-phase blocks; trigger value 3, instruction `task`, corresponding to right-finger kinesthetic motor imagery/SMR-ERD control. |
-| `event_4-interval` | 910 | event | raw | Interval/blank instruction onset in 4-phase blocks; trigger value 4, instruction `interval`, used as the post-task blank/break phase. |
-
-
-> Event IDs are emitted as `event_<value>-<instruction>` because raw trigger value 2 is reused with different meanings (`ready` in 4-phase blocks and `task` in 2-phase blocks). Onsets are converted from the events.tsv millisecond unit to MNE seconds by the kernel.
+| `event_1-rest` | 4180 | event | raw | Rest/relaxation instruction onset |
+| `event_2-ready` | 910 | event | raw | Ready/preparation instruction onset in 4-phase sessions |
+| `event_2-task` | 3270 | event | raw | Task/motor imagery instruction onset in 2-phase sessions |
+| `event_3-task` | 910 | event | raw | Task/motor imagery instruction onset in 4-phase sessions |
+| `event_4-interval` | 910 | event | raw | Interval/blank instruction onset in 4-phase sessions |
 
 ### Info
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `age` | complete | N/A |
-| `sex` | complete | N/A |
-| `device` | complete | EEG sidecar reports Manufacturer = Magstim EGI, ManufacturersModelName = GES400, SamplingFrequency = 1000, and EEGChannelCount = 129. |
-| `amplifier` | complete | e.g. GES400 |
-| `cap` | complete | e.g. Magstim EGI Hydrocel Geodesic Sensor Net |
-| `dataset` | complete | e.g. openneuro_ds004447 |
-| `eeg_channel_count` | complete | e.g. 129, 128 |
-| `eeg_ground` | complete | e.g. CPz, placed on FCz |
-| `eeg_placement_scheme` | complete | e.g. 10-20 system, 10 percent system |
-| `eeg_reference` | complete | e.g. Cz |
-| `event_description_format` | complete | e.g. event_<value>-<instruction> |
-| `event_onset_units` | complete | e.g. ms converted to seconds |
+| `age` | complete | e.g. 22, 23, 24 |
+| `amplifier` | missing |  |
+| `cap` | missing |  |
 | `handedness` | complete | e.g. left, right |
-| `manufacturer` | complete | e.g. Magstim EGI |
-| `paradigm_schema` | complete | e.g. 4phase, 2phase |
-| `sampling_rate_hz` | complete | e.g. 1000 |
-| `session` | complete | e.g. ses-01, ses-02, ses-03 |
-| `source_file` | complete | e.g. sub-001_ses-01_task-smrbmi_eeg.edf, sub-001_ses-02_task-smrbmi_eeg.edf, sub-001_ses-03_task-smrbmi_eeg.edf |
-| `stim_channel` | complete | e.g. Status |
-| `subject_id` | complete | e.g. sub-001, sub-002, sub-003 |
-| `task` | complete | e.g. smrbmi |
-
+| `sex` | complete | e.g. female, male |
 
 ## Tasks
 
@@ -109,7 +89,7 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
 ### Potential Task 3: Age regression from EEG segments
 - **Task Type**: regression
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s, overlap = 1, target_events = []
+- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0, target_events = []
 - **Label Route**: `info`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -118,12 +98,12 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
   | `age` | no mapping; numeric age in years, range 19-27 for the 22 publicly available EEG subjects |
 - **Evidence**:
   - OpenNeuro ds004447 `participants.tsv` — Age metadata is available; only `sub-001` to `sub-022` have public EEG data directories.
-- **Notes**: Subject-level metadata task. It is technically implementable but not the core BCI benchmark.
+- **Notes**: Subject-level metadata task. It is technically implementable but not the core BCI benchmark. Uses non-overlapping fixed windows because EEGUnity expects overlap as a fraction less than 1.0.
 
 ### Potential Task 4: Sex classification from EEG segments
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s, overlap = 1, target_events = []
+- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0, target_events = []
 - **Label Route**: `info`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -132,12 +112,12 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
   | `sex` | female -> 0; male -> 1 |
 - **Evidence**:
   - OpenNeuro ds004447 `participants.tsv` — Sex metadata is available; among the 22 publicly available EEG subjects the distribution is 3 female / 19 male.
-- **Notes**: Technically valid binary metadata task, but strongly imbalanced and not central to the BCI paradigm.
+- **Notes**: Technically valid binary metadata task, but strongly imbalanced and not central to the BCI paradigm. Uses non-overlapping fixed windows because EEGUnity expects overlap as a fraction less than 1.0.
 
 ### Potential Task 5: Handedness classification from EEG segments
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_segmentation_hdf5`
-- **Epoch Parameters**: segment_length = 2 s, overlap = 1, target_events = []
+- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0, target_events = []
 - **Label Route**: `info`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -146,7 +126,7 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
   | `handedness` | left -> 0; right -> 1 |
 - **Evidence**:
   - OpenNeuro ds004447 `participants.tsv` — Handedness metadata is available; among the 22 publicly available EEG subjects the distribution is 1 left / 21 right.
-- **Notes**: Satisfies the two-class requirement but is extremely imbalanced; treat as an edge-case metadata task.
+- **Notes**: Satisfies the two-class requirement but is extremely imbalanced; treat as an edge-case metadata task. Uses non-overlapping fixed windows because EEGUnity expects overlap as a fraction less than 1.0.
 
 ## Data Quality Notes
 

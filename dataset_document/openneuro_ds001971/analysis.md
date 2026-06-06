@@ -1,7 +1,7 @@
 # Audiocue walking study
 
 **Dataset**: `openneuro_ds001971` | **Year**: 2019 | **URL**: https://openneuro.org/datasets/ds001971
-**Category**: Complex Applied | **Subjects**: 18 | **Files (Completed)**: 273 | **Channels**: 115 | **Sampling Rate**: 512 Hz | **Manual Review**: Mingze Tang
+**Category**: Complex Applied | **Subjects**: 18 | **Files (Completed)**: 273 | **Channels**: 115 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -9,53 +9,56 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 
 ## File Scan Result
 
-> **Kernel SHA256**: `bf6afb20ba0f289e8b0f43351389a5321c89541b2830d440cf66e7336e918cd8`
-> **EEGUnity Version**: `0.8.1`
+> **Kernel SHA256**: `9f36519d0e873338d005554e2af9273813fa168c863a02b3e4f1e567e79d3e1c`
+> **EEGUnity Version**: `0.8.3`
 > **Scan Type**: Full
 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |---|---|---|---|---|
-| `AdvanceTempo` | 1154 | event | raw | Trial phase onset: AdvanceTempo (step advance pacing tempo condition) |
-| `AdvanceTempo_stream2` | 1154 | event | raw | Trial phase onset: AdvanceTempo stream 2 (step advance pacing tempo condition, auxiliary event stream) |
-| `DelayTempo` | 2368 | event | raw | Trial phase onset: DelayTempo (step delay pacing tempo condition) |
-| `DelayTempo_stream2` | 2368 | event | raw | Trial phase onset: DelayTempo stream 2 (step delay pacing tempo condition, auxiliary event stream) |
-| `PreferredCadence` | 32100 | event | raw | Trial phase onset: PreferredCadence (preferred cadence walking condition) |
-| `PreferredCadence_stream2` | 26354 | event | raw | Trial phase onset: PreferredCadence stream 2 (preferred cadence walking condition, auxiliary event stream) |
-| `PreferredCadence_stream3` | 20237 | event | raw | Trial phase onset: PreferredCadence stream 3 (preferred cadence walking condition, auxiliary event stream) |
-| `PreferredCadence_stream4` | 20692 | event | raw | Trial phase onset: PreferredCadence stream 4 (preferred cadence walking condition, auxiliary event stream) |
-| `PreferredCadence_stream5` | 34011 | event | raw | Trial phase onset: PreferredCadence stream 5 (preferred cadence walking condition, auxiliary event stream) |
-| `PreferredCadence_stream6` | 28708 | event | raw | Trial phase onset: PreferredCadence stream 6 (preferred cadence walking condition, auxiliary event stream) |
-| `PreferredCadence_stream7` | 20365 | event | raw | Trial phase onset: PreferredCadence stream 7 (preferred cadence walking condition, auxiliary event stream) |
-| `PreferredCadence_stream8` | 21070 | event | raw | Trial phase onset: PreferredCadence stream 8 (preferred cadence walking condition, auxiliary event stream) |
-| `UncuedWalking` | 1154 | event | raw | Trial phase onset: UncuedWalking (uncued walking condition with right/left heel strikes) |
-| `UncuedWalking_stream2` | 26402 | event | raw | Trial phase onset: UncuedWalking stream 2 (uncued walking condition, auxiliary event stream) |
-| `UncuedWalking_stream3` | 20441 | event | raw | Trial phase onset: UncuedWalking stream 3 (uncued walking condition, auxiliary event stream) |
-| `UncuedWalking_stream4` | 20635 | event | raw | Trial phase onset: UncuedWalking stream 4 (uncued walking condition, auxiliary event stream) |
-| `UncuedWalking_stream5` | 28730 | event | raw | Trial phase onset: UncuedWalking stream 5 (uncued walking condition, auxiliary event stream) |
-| `UncuedWalking_stream6` | 20482 | event | raw | Trial phase onset: UncuedWalking stream 6 (uncued walking condition, auxiliary event stream) |
-| `UncuedWalking_stream7` | 20683 | event | raw | Trial phase onset: UncuedWalking stream 7 (uncued walking condition, auxiliary event stream) |
-| `Walking_event_171` | 5715 | event | raw | Cue during standing previously associated with right heel strike |
-| `Walking_event_271` | 5678 | event | raw | Cue during standing previously associated with left heel strike |
-| `admin: marker-999` | 1153 | admin | raw | First auditory cue marking step delay tempo shift |
-
+| `AdvanceTempo` | 84987 | event | raw |  |
+| `AdvanceTempo_stream2` | 1154 | event | raw |  |
+| `DelayTempo` | 87755 | event | raw |  |
+| `DelayTempo_stream2` | 2368 | event | raw |  |
+| `PreferredCadence` | 147030 | event | raw |  |
+| `PreferredCadence_stream2` | 26354 | event | raw |  |
+| `PreferredCadence_stream3` | 20237 | event | raw |  |
+| `PreferredCadence_stream4` | 20692 | event | raw |  |
+| `PreferredCadence_stream5` | 34011 | event | raw |  |
+| `PreferredCadence_stream6` | 28708 | event | raw |  |
+| `PreferredCadence_stream7` | 20365 | event | raw |  |
+| `PreferredCadence_stream8` | 21070 | event | raw |  |
+| `STATUS` | 11393 | event | raw |  |
+| `UncuedWalking` | 67265 | event | raw |  |
+| `UncuedWalking_stream2` | 26402 | event | raw |  |
+| `UncuedWalking_stream3` | 20441 | event | raw |  |
+| `UncuedWalking_stream4` | 20635 | event | raw |  |
+| `UncuedWalking_stream5` | 28730 | event | raw |  |
+| `UncuedWalking_stream6` | 20482 | event | raw |  |
+| `UncuedWalking_stream7` | 20683 | event | raw |  |
+| `UncuedWalking_value100` | 32100 | event | raw |  |
+| `UncuedWalking_value200` | 34011 | event | raw |  |
+| `Walking_event_171` | 5715 | event | raw |  |
+| `Walking_event_271` | 5678 | event | raw |  |
+| `admin: marker-999` | 1153 | event | raw |  |
 
 ### Info
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `age` | complete | N/A |
-| `sex` | complete | N/A |
-| `device` | missing | N/A |
-
+| `age` | missing |  |
+| `amplifier` | complete | e.g. BioSemi ActiveTwo |
+| `cap` | complete | e.g. 64-channel BioSemi cap |
+| `handedness` | missing |  |
+| `sex` | missing |  |
 
 ## Tasks
 
 ### Classical Task 1: 3-class gait tempo condition classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 10 s, overlap = 0.5, target_events = [`AdvanceTempo`, `DelayTempo`, `PreferredCadence`]
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s, tmax = 10 s, target_events = [`AdvanceTempo`, `DelayTempo`, `PreferredCadence`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -67,12 +70,12 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 - **Evidence**:
   - 10.1038/s41597-019-0223-2 — Data descriptor explicitly describes 3-class classification of gait conditions: advance tempo shift, delay tempo shift, and preferred cadence baseline
   - 10.1523/jneurosci.3543.15.2016 — Primary research paper analyzes β-band modulations during gait adaptation to auditory metronome shifts, with sustained walking conditions lasting multiple seconds
-- **Notes**: All three event IDs (`AdvanceTempo`, `DelayTempo`, `PreferredCadence`) are trial phase onset markers directly from the BIDS events.tsv files. The `_streamN` auxiliary variants are parallel data stream duplicates and are excluded to avoid epoch duplication. The 10s window with 50% overlap is chosen to capture sustained adaptation dynamics while maintaining sufficient epoch count, given that walking conditions span multiple seconds per the data descriptor. Overlap value of 0.5 is inferred from standard practice for sustained-state EEG analysis when exact trial durations are variable.
+- **Notes**: All three event IDs (`AdvanceTempo`, `DelayTempo`, `PreferredCadence`) are point annotations for trial/phase onsets. The `_streamN` auxiliary variants are parallel data stream duplicates and are excluded to avoid epoch duplication. The 10s post-event window is chosen to capture sustained adaptation dynamics following each onset marker.
 
 ### Classical Task 2: 2-class tempo shift direction classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = -2 s, tmax = 8 s, overlap = 0.0, target_events = [`AdvanceTempo`, `DelayTempo`]
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = -2 s, tmax = 8 s, target_events = [`AdvanceTempo`, `DelayTempo`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -86,8 +89,8 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 
 ### Potential Task 1: Cued vs Uncued Walking Classification
 - **Task Type**: classification
-- **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 10 s, overlap = 0.5, target_events = [`PreferredCadence`, `UncuedWalking`]
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = 0 s, tmax = 10 s, target_events = [`PreferredCadence`, `UncuedWalking`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -100,7 +103,7 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
   - events.tsv (sub-001 run-01) — Confirms `PreferredCadence` and `UncuedWalking` as trial_type values marking distinct walking conditions
   - README — Describes auditory tone sequence pacing paradigm with shifts to faster/slower tempo, confirming externally-paced vs self-paced locomotion contrast
   - EEG header — Shows annotations including cued (114, 444, 101, 201, 151, 251) and uncued (100, 200) event codes present in raw data
-- **Notes**: The `PreferredCadence` condition represents cued walking with auditory metronome pacing at the participant's preferred cadence, while `UncuedWalking` represents self-paced walking without external auditory cues. This contrast isolates the neural effects of auditory-motor entrainment during locomotion. The 10-second window captures sustained gait dynamics; overlap=0.5 is set to increase usable epochs given the substantial event count imbalance (32100 vs 1154 primary events). The `_streamN` auxiliary variants are inferred parallel data streams from the original EEGLAB format and are not required for this task.
+- **Notes**: The `PreferredCadence` condition represents cued walking with auditory metronome pacing at the participant's preferred cadence, while `UncuedWalking` represents self-paced walking without external auditory cues. This contrast isolates the neural effects of auditory-motor entrainment during locomotion. The 10-second post-event window captures gait dynamics after each native onset/heel-strike marker. The `_streamN` auxiliary variants are inferred parallel data streams from the original EEGLAB format and are not required for this task.
 
 ### Potential Task 2: Standing Cue Lateralization Classification
 - **Task Type**: classification
@@ -120,17 +123,18 @@ A mobile brain-body imaging (MoBI) study where participants walked on a treadmil
 ### Potential Task 3: Heel Strike Lateralization During Uncued Walking
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_event_hdf5`
-- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [`UncuedWalking`]
+- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [`UncuedWalking_value100`, `UncuedWalking_value200`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
   | Event ID | y | Meaning |
   |---|---|---|
-  | `UncuedWalking` | 0 | Right heel strike (Value 100) |
-  | `UncuedWalking` | 1 | Left heel strike (Value 200) |
+  | `UncuedWalking_value100` | 0 | Right heel strike (Value 100) |
+  | `UncuedWalking_value200` | 1 | Left heel strike (Value 200) |
 - **Evidence**:
+  - events.tsv value column — `trial_type = UncuedWalking` rows carry `value = 100` or `value = 200`, which the kernel derives into value-specific event IDs.
 
-- **Notes**: The `UncuedWalking` trial_type events contain embedded trigger values. The kernel must extract the `value` column from events.tsv within `UncuedWalking` segments: value 100 -> y=0 (Right), value 200 -> y=1 (Left). This matches the structural parent ID `UncuedWalking` present in the Event Structure.
+- **Notes**: The `UncuedWalking` trial_type events contain embedded trigger values. The kernel derives `UncuedWalking_value100` and `UncuedWalking_value200` from the `value` column in events.tsv while preserving the parent `UncuedWalking` event for broader walking-state contrasts.
 
 ### Potential Task 4: Sex Classification from Walking EEG
 - **Task Type**: classification

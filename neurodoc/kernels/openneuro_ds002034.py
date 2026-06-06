@@ -270,17 +270,22 @@ def _annotations_from_events_tsv(events_df: pd.DataFrame) -> mne.Annotations:
         onset = float(ev["onset"])
         duration = float(ev.get("duration", 0)) if pd.notna(ev.get("duration", 0)) else 0
         
-        # Build description from value or trial_type
+        # Build description from numeric BIDS event code or textual label.
         desc = None
-        if "value" in ev and pd.notna(ev["value"]):
-            try:
-                val = int(ev["value"])
-                desc = _EVENT_VALUE_TO_ID.get(val, f"event_{val}")
-            except (ValueError, TypeError):
-                pass
+        for value_col in ("value", "event_value"):
+            if value_col in ev and pd.notna(ev[value_col]):
+                try:
+                    val = int(float(ev[value_col]))
+                    desc = _EVENT_VALUE_TO_ID.get(val, f"event_{val}")
+                    break
+                except (ValueError, TypeError):
+                    pass
         
-        if desc is None and "trial_type" in ev and pd.notna(ev["trial_type"]):
-            desc = str(ev["trial_type"])
+        if desc is None:
+            for text_col in ("trial_type", "event_name"):
+                if text_col in ev and pd.notna(ev[text_col]):
+                    desc = str(ev[text_col])
+                    break
         
         if desc is None:
             desc = "unknown"
@@ -296,25 +301,34 @@ def _annotations_from_events_tsv(events_df: pd.DataFrame) -> mne.Annotations:
     )
 
 
+def _annotations_are_unusable(raw: mne.io.BaseRaw) -> bool:
+    """Treat MNE's generic EDF placeholders as missing event annotations."""
+    if raw.annotations is None or len(raw.annotations) == 0:
+        return True
+    labels = {str(desc).strip().lower() for desc in raw.annotations.description}
+    labels.discard("")
+    return not labels or labels <= {"unknown", "nan", "none"}
+
+
 def _needs_events_from_tsv(file_path: str, raw: mne.io.BaseRaw) -> bool:
     """Check if raw file format likely needs events from sidecar."""
     ext = os.path.splitext(file_path)[1].lower()
     
     # EEGLAB .set without events
     if ext == ".set":
-        return len(raw.annotations) == 0
+        return _annotations_are_unusable(raw)
     
     # EDF without annotations
     if ext in [".edf", ".bdf"]:
-        return len(raw.annotations) == 0
+        return _annotations_are_unusable(raw)
     
     # BrainVision without proper marker file
     if ext == ".eeg":
-        return len(raw.annotations) == 0
+        return _annotations_are_unusable(raw)
     
     # Plain .fif without events
     if ext == ".fif":
-        return len(raw.annotations) == 0
+        return _annotations_are_unusable(raw)
     
     return False
 

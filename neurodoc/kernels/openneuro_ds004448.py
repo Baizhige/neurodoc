@@ -30,13 +30,58 @@ _REQUIRED_NATIVE_MISC = []
 _REQUIRED_DERIVED_MISC = ["trial_index"]
 
 
+# Source: dataset_document/openneuro_ds004448/analysis.md and public BIDS
+# events.tsv sidecars. Sidecar onsets are stored in milliseconds.
+# Annotator: human, 2026-06-04
+_RAW_META = {
+    "event_1": "Trial phase onset: Trial start",
+}
+
+_EVENT_HINTS = {
+    event_id: {
+        "type": "event",
+        "meta_level": "raw",
+        "meaning": meaning,
+    }
+    for event_id, meaning in _RAW_META.items()
+}
+
+
+def _get_file_path(row) -> str:
+    if hasattr(row, "get"):
+        for key in ("File Path", "file_path", "path"):
+            value = row.get(key)
+            if value:
+                return str(value)
+    return str(row)
+
+
+def _event_onset_seconds(value) -> float:
+    onset = float(value)
+    return onset / 1000.0 if onset > 1000.0 else onset
+
+
+def _event_description(value) -> str:
+    try:
+        numeric_value = float(value)
+    except (TypeError, ValueError):
+        return ""
+    if not np.isfinite(numeric_value) or not numeric_value.is_integer():
+        return ""
+    event_id = f"event_{int(numeric_value)}"
+    return event_id if event_id in _RAW_META else ""
+
+
 class OpenNeuroDS004448Kernel:
     """Stage1 kernel for OpenNeuro ds004448 (BMI-HDEEG dataset 4)."""
 
     KERNEL_ID: str = "openneuro-ds004448-stage1"
+    required_info_fields = list(_REQUIRED_INFO_FIELDS)
+    raw_meta = dict(_RAW_META)
+    super_meta = {}
 
     def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
-        file_path = row["File Path"]
+        file_path = _get_file_path(row)
 
         # Ensure data is preloaded before adding channels
         if not raw.preload:
@@ -165,16 +210,12 @@ class OpenNeuroDS004448Kernel:
                 has_trial_col = "trial" in events_df.columns
 
                 for idx, ev in events_df.iterrows():
-                    onset_sec = float(ev["onset"])
+                    onset_sec = _event_onset_seconds(ev["onset"])
                     duration_sec = float(ev["duration"]) if "duration" in ev and pd.notna(ev["duration"]) else 0.0
                     
-                    # Determine description from trial_type or value column
-                    if "trial_type" in ev and pd.notna(ev["trial_type"]):
-                        desc = str(ev["trial_type"])
-                    elif "value" in ev and pd.notna(ev["value"]):
-                        desc = str(ev["value"])
-                    else:
-                        desc = "event"
+                    desc = _event_description(ev.get("value"))
+                    if not desc:
+                        continue
                     
                     onsets.append(onset_sec)
                     durations.append(duration_sec)
@@ -226,6 +267,9 @@ class OpenNeuroDS004448Kernel:
         raw.info["description"] = json.dumps({
             "original_description": original_desc,
             "eegunity_description": participant_info,
+            "eegunity_scan_hints": {
+                "events": _EVENT_HINTS,
+            },
         })
 
         return raw

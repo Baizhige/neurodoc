@@ -1,7 +1,7 @@
 # Ear-EEG Sleep Monitoring 2023 (EESM23)
 
 **Dataset**: `openneuro_ds005178` | **Year**: 2020-2022/2023/2024 | **URL**: https://openneuro.org/datasets/ds005178
-**Category**: Biological State | **Subjects**: 10 | **Files (Completed)**: 159 | **Channels**: 4/13 | **Sampling Rate**: 250 Hz | **Manual Review**: Yikai Dong
+**Category**: Biological State | **Subjects**: 10 | **Files (Completed)**: 159 | **Channels**: 4/13 | **Sampling Rate**: 250 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -9,37 +9,35 @@ Naturalistic nightly sleep monitoring using ear-EEG (in-ear electrodes) and poly
 
 ## File Scan Result
 
-> **Kernel SHA256**: `bc63a68f9ba26c0981ba24bc421dde0b1f1f07f31c18c348a3eacd3f53b7c533`
-> **EEGUnity Version**: `0.8.1`
+> **Kernel SHA256**: `3c2a3755f2146fdccc0a07e4e71d731f6d4f4921f7ea34e4e0d31eb256876ec8`
+> **EEGUnity Version**: `0.8.2`
 > **Scan Type**: Full
 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |---|---|---|---|---|
-| `Artefact` | 1032 | admin | raw | Manual scoring artefact / unusable signal epoch |
-| `Sleep stage N1` | 2662 | event | raw | N1 sleep epoch |
-| `Sleep stage N2` | 15122 | event | raw | N2 sleep epoch |
-| `Sleep stage N3` | 5161 | event | raw | N3 sleep epoch |
-| `Sleep stage R` | 6259 | event | raw | REM sleep epoch |
-| `Sleep stage W` | 2879 | event | raw | Wake epoch |
-| `error -10` | 12535 | admin | raw |  |
-| `error -100` | 118 | admin | raw |  |
-| `event_2` | 72 | admin | raw |  |
-| `oLED` | 6 | admin | raw |  |
-| `trigger` | 243 | admin | raw |  |
-
+| `Artefact` | 1032 | event | raw |  |
+| `Sleep stage N1` | 2662 | event | raw |  |
+| `Sleep stage N2` | 15122 | event | raw |  |
+| `Sleep stage N3` | 5161 | event | raw |  |
+| `Sleep stage R` | 6259 | event | raw |  |
+| `Sleep stage W` | 2879 | event | raw |  |
+| `error -10` | 12535 | event | raw |  |
+| `error -100` | 118 | event | raw |  |
+| `event_2` | 72 | event | raw |  |
+| `oLED` | 6 | event | raw |  |
+| `trigger` | 243 | event | raw |  |
 
 ### Info
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `age` | missing | N/A |
-| `amplifier` | missing | N/A |
-| `cap` | missing | N/A |
-| `handedness` | missing | N/A |
-| `sex` | missing | N/A |
-
+| `age` | missing |  |
+| `amplifier` | missing |  |
+| `cap` | missing |  |
+| `handedness` | missing |  |
+| `sex` | missing |  |
 
 ## Tasks
 

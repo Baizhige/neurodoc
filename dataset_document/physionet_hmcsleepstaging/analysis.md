@@ -79,7 +79,7 @@ One hundred and fifty-one (151) overnight polysomnographic recordings from the H
 ### Potential Task 1: Sliding-Window Sleep Staging with Overlap (ECG-based Augmentation)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0.0 s, tmax = 30.0 s, overlap = 22.5, target_events = [`Sleep stage N1`, `Sleep stage N2`, `Sleep stage N3`, `Sleep stage R`, `Sleep stage W`]
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 30.0 s, overlap = 0.75, target_events = [`Sleep stage N1`, `Sleep stage N2`, `Sleep stage N3`, `Sleep stage R`, `Sleep stage W`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:

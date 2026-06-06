@@ -22,6 +22,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import tempfile
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 
@@ -37,6 +38,43 @@ _STAGE_MAP = {
     4: "Sleep stage 4",
     5: "Sleep stage REM",
     8: "Sleep stage 8",
+}
+
+# Source: dataset_document/physionet_ucddb/analysis.md and UCDDB *_stage.txt
+# scoring files.
+# Annotator: human, 2026-06-04
+_RAW_META = {
+    "Sleep stage W": "Wake",
+    "Sleep stage 1": "NREM Stage 1 (R&K scoring)",
+    "Sleep stage 2": "NREM Stage 2 (R&K scoring)",
+    "Sleep stage 3": "NREM Stage 3 / slow-wave sleep (R&K scoring)",
+    "Sleep stage 4": "NREM Stage 4 / deep slow-wave sleep (R&K scoring)",
+    "Sleep stage REM": "Rapid eye movement sleep",
+    "Sleep stage 8": "Undefined or artifact epoch; exclude from standard sleep-stage classification",
+}
+
+_EVENT_HINTS = {
+    event_id: {
+        "type": "event",
+        "meta_level": "raw",
+        "meaning": meaning,
+    }
+    for event_id, meaning in _RAW_META.items()
+}
+
+_MISC_HINTS = {
+    "apnea_label": {
+        "source": "derived (kernel)",
+        "meta_level": "super",
+        "notes": (
+            "Binary 0/1 derived from companion _respevt.txt files: 1 when an "
+            "APNEA-* or HYP-* event overlaps the current sample/window."
+        ),
+    }
+}
+
+_SUPER_META = {
+    "apnea_label": "Binary apnea/hypopnea window label",
 }
 
 _EPOCH_DURATION = 30.0  # seconds per epoch (fixed by dataset)
@@ -58,6 +96,15 @@ def _resp_event_path(file_path: str) -> str:
     """Map ucddbXXX.rec -> ucddbXXX_respevt.txt."""
     stem, _ = os.path.splitext(file_path)
     return f"{stem}_respevt.txt"
+
+
+def _get_file_path(row) -> str:
+    if hasattr(row, "get"):
+        for key in ("File Path", "file_path", "path"):
+            value = row.get(key)
+            if value:
+                return str(value)
+    return str(row)
 
 
 def _hhmmss_to_seconds(value: str) -> float:
@@ -144,8 +191,16 @@ def _build_apnea_label_channel(raw: mne.io.BaseRaw, resp_path: str) -> np.ndarra
 
 
 def _load_rec_preloaded(file_path: str) -> mne.io.BaseRaw:
-    """Load a .rec file through MNE's EDF reader with preload enabled."""
-    return mne.io.read_raw_edf(file_path, preload=True, verbose=False)
+    """Load a .rec file through MNE's EDF reader with an EDF suffix shim."""
+    fd, tmp_path = tempfile.mkstemp(suffix=".edf")
+    os.close(fd)
+    os.unlink(tmp_path)
+    try:
+        os.symlink(file_path, tmp_path)
+        return mne.io.read_raw_edf(tmp_path, preload=True, verbose=False)
+    finally:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
 
 
 def _ensure_loaded(raw: mne.io.BaseRaw, file_path: str) -> mne.io.BaseRaw:
@@ -162,6 +217,7 @@ class PhysionetUcddbKernel:
     """Stage1 kernel for the physionet-ucddb dataset."""
 
     KERNEL_ID: str = "physionet-ucddb-stage1"
+    HANDLES_UNAVAILABLE: bool = True
     required_info_fields: list = None
     required_native_misc: list = None
     derived_misc_channels: list = None
@@ -173,11 +229,33 @@ class PhysionetUcddbKernel:
             self.required_native_misc = []
         if self.derived_misc_channels is None:
             self.derived_misc_channels = ["apnea_label"]
+        self.raw_meta = dict(_RAW_META)
+        self.super_meta = dict(_SUPER_META)
+
+    def load(self, *args) -> mne.io.BaseRaw | None:
+        """Load PSG .rec files and mark Lifecard ECG files unavailable."""
+        row = args[-1]
+        file_path = _get_file_path(row)
+        file_name = os.path.basename(file_path)
+        if "_lifecard" in file_name.lower():
+            return None
+        if not file_path.lower().endswith(".rec"):
+            return None
+        return _load_rec_preloaded(file_path)
+
+    def export_include_row(self, row) -> bool:
+        """Only PSG .rec recordings should participate in task HDF5 export."""
+        file_path = _get_file_path(row).lower()
+        file_name = os.path.basename(file_path)
+        return file_path.endswith(".rec") and "_lifecard" not in file_name
 
     def apply(self, udataset, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
-        file_path = row["File Path"]
+        file_path = _get_file_path(row)
         file_name = os.path.basename(file_path)
         resp_path = _resp_event_path(file_path)
+
+        if "_lifecard" in file_name.lower():
+            raise ValueError("Lifecard ECG file is not an EEG/PSG benchmark recording")
 
         description_dict = {
             "original_description": raw.info.get("description", ""),
@@ -188,13 +266,12 @@ class PhysionetUcddbKernel:
                 "sex":       "unknown",
                 "handedness": "unknown",
             },
+            "eegunity_scan_hints": {
+                "events": _EVENT_HINTS,
+                "misc_channels": _MISC_HINTS,
+            },
         }
         raw.info["description"] = json.dumps(description_dict)
-
-        # _lifecard.edf files are ECG-only; skip annotation injection.
-        if "_lifecard" in file_name:
-            raw.set_annotations(mne.Annotations([], [], []))
-            return raw
 
         # Companion stage file: ucddbXXX.rec → ucddbXXX_stage.txt
         stage_path = file_path.replace(".rec", "_stage.txt")

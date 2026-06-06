@@ -94,6 +94,17 @@ def _read_participants_tsv(dataset_root: str) -> Optional[pd.DataFrame]:
     return None
 
 
+def _find_participants_tsv(file_path: str) -> Optional[str]:
+    """Find participants.tsv by walking up from an EEG file."""
+    current_dir = os.path.abspath(os.path.dirname(file_path))
+    while current_dir and current_dir != os.path.dirname(current_dir):
+        participants_path = os.path.join(current_dir, "participants.tsv")
+        if os.path.exists(participants_path):
+            return participants_path
+        current_dir = os.path.dirname(current_dir)
+    return None
+
+
 def _get_subject_info_from_tsv(
     participants_df: Optional[pd.DataFrame], subject_id: str
 ) -> Dict[str, str]:
@@ -163,6 +174,88 @@ def _read_events_tsv(file_path: str) -> Optional[pd.DataFrame]:
             return pd.read_csv(os.path.join(dir_path, f), sep="\t")
     
     return None
+
+
+# Source: ds002578 events.json / sub-*_task-attention_events.json sidecars.
+# Annotator: human, 2026-06-04
+_RAW_META: Dict[str, str] = {
+    "31": "Attend box 3, disc in box 1 (non-target distractor)",
+    "33": "Attend box 3, disc in box 3 (target oddball)",
+    "34": "Attend box 3, disc in box 4 (non-target distractor)",
+    "35": "Attend box 3, disc in box 5 (non-target distractor)",
+    "41": "Attend box 4, disc in box 1 (non-target distractor)",
+    "42": "Attend box 4, disc in box 2 (non-target distractor)",
+    "43": "Attend box 4, disc in box 3 (non-target distractor)",
+    "44": "Attend box 4, disc in box 4 (target oddball)",
+    "45": "Attend box 4, disc in box 5 (non-target distractor)",
+}
+
+_EVENT_HINTS: Dict[str, Dict[str, str]] = {
+    event_id: {
+        "type": "event",
+        "meta_level": "raw",
+        "meaning": meaning,
+    }
+    for event_id, meaning in _RAW_META.items()
+}
+
+
+def _normalize_task_event_value(value: Any) -> Optional[str]:
+    """Return a task event code from events.tsv value, or None for noise."""
+    if pd.isna(value):
+        return None
+    text = str(value).strip()
+    if text.lower() in {"", "n/a", "nan", "none", "picture", "response", "boundary"}:
+        return None
+
+    try:
+        numeric_value = float(text)
+    except (TypeError, ValueError):
+        return None
+
+    if not np.isfinite(numeric_value):
+        return None
+    if not numeric_value.is_integer():
+        return None
+
+    event_id = str(int(numeric_value))
+    return event_id if event_id in _RAW_META else None
+
+
+def _annotations_from_events_tsv(events_df: pd.DataFrame) -> Optional[mne.Annotations]:
+    """Create task-code annotations from the BIDS events.tsv value column."""
+    if "onset" not in events_df.columns or "value" not in events_df.columns:
+        return None
+
+    onsets: List[float] = []
+    durations: List[float] = []
+    descriptions: List[str] = []
+
+    for _, event in events_df.iterrows():
+        event_id = _normalize_task_event_value(event.get("value"))
+        if event_id is None:
+            continue
+
+        onset = pd.to_numeric(event.get("onset"), errors="coerce")
+        if pd.isna(onset):
+            continue
+
+        duration = pd.to_numeric(event.get("duration", 0.0), errors="coerce")
+        if pd.isna(duration):
+            duration = 0.0
+
+        onsets.append(float(onset))
+        durations.append(float(duration))
+        descriptions.append(event_id)
+
+    if not descriptions:
+        return None
+
+    return mne.Annotations(
+        onset=onsets,
+        duration=durations,
+        description=descriptions,
+    )
 
 
 def _rename_channels_to_biosemi_256(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
@@ -237,6 +330,8 @@ class OpenNeuroDS002578Kernel:
 
     # Required info fields to read from participants.tsv
     required_info_fields = ["age", "sex", "handedness"]
+    raw_meta = dict(_RAW_META)
+    super_meta: Dict[str, str] = {}
 
     def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
         # Extract file path and dataset root
@@ -247,7 +342,11 @@ class OpenNeuroDS002578Kernel:
         subject_id = _get_subject_id_from_path(file_path)
         
         # Read participants.tsv
-        participants_df = _read_participants_tsv(dataset_root)
+        participants_path = _find_participants_tsv(file_path)
+        if participants_path:
+            participants_df = pd.read_csv(participants_path, sep="\t")
+        else:
+            participants_df = _read_participants_tsv(dataset_root)
         subject_info = _get_subject_info_from_tsv(participants_df, subject_id)
         
         # Build eegunity_description
@@ -266,6 +365,9 @@ class OpenNeuroDS002578Kernel:
         raw.info["description"] = json.dumps({
             "original_description": original_description,
             "eegunity_description": eegunity_description,
+            "eegunity_scan_hints": {
+                "events": _EVENT_HINTS,
+            },
         })
         
         # Rename channels to standard BioSemi 256 names
@@ -277,18 +379,8 @@ class OpenNeuroDS002578Kernel:
         # Read and apply events from events.tsv if available
         events_df = _read_events_tsv(file_path)
         if events_df is not None and not events_df.empty:
-            # Check for required columns
-            if "onset" in events_df.columns and "trial_type" in events_df.columns:
-                onsets = events_df["onset"].values
-                durations = events_df["duration"].values if "duration" in events_df.columns else np.zeros(len(onsets))
-                descriptions = events_df["trial_type"].astype(str).values
-                
-                # Create annotations
-                annotations = mne.Annotations(
-                    onset=onsets,
-                    duration=durations,
-                    description=descriptions,
-                )
+            annotations = _annotations_from_events_tsv(events_df)
+            if annotations is not None:
                 raw.set_annotations(annotations)
         
         return raw

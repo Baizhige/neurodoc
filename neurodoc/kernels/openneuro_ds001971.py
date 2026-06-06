@@ -6,7 +6,9 @@ Participants walked on a treadmill and adapted gait to auditory tone sequences.
 This dataset uses EEGLAB .set files with embedded event codes. The BIDS events.tsv
 files exist but do not contain the full event structure (only UncuedWalking with
 value column for heel strikes). The kernel extracts the complete event structure
-from native EEGLAB annotations and maps them to canonical event IDs.
+from native EEGLAB annotations and maps them to canonical event IDs. It also
+derives value-specific UncuedWalking annotations from events.tsv for the
+right/left heel-strike classification task.
 
 Event structure (from native EEGLAB .set files):
 - 100: PreferredCadence
@@ -83,12 +85,33 @@ _EVENT_LABEL_MAP: Dict[int, str] = {
 }
 
 
+# Event label mapping: BIDS events.tsv value -> derived UncuedWalking annotation
+# Source: events.tsv value column for rows with trial_type == UncuedWalking.
+# Annotator: human, 2026-06-06
+_UNCUED_WALKING_VALUE_EVENT_MAP: Dict[str, str] = {
+    "100": "UncuedWalking_value100",
+    "200": "UncuedWalking_value200",
+}
+
+
 def _extract_subject_id_from_path(file_path: str) -> Optional[str]:
     """Extract BIDS subject ID from file path."""
     match = re.search(r'sub-([a-zA-Z0-9]+)', file_path)
     if match:
         return f"sub-{match.group(1)}"
     return None
+
+
+def _row_file_path(row: Any) -> str:
+    """Return file path from either EEGUnity or export-tool row schemas."""
+    if hasattr(row, "get"):
+        for key in ("file_path", "File Path", "path", "Path"):
+            value = row.get(key)
+            if value is not None and not pd.isna(value):
+                text = str(value).strip()
+                if text:
+                    return text
+    return str(row)
 
 
 def _read_participants_tsv(dataset_path: str) -> Optional[pd.DataFrame]:
@@ -119,8 +142,12 @@ def _get_subject_info(participants_df: Optional[pd.DataFrame], subject_id: str) 
         # Get age
         if "age" in row.columns:
             age_val = row["age"].values[0]
-            if pd.notna(age_val):
-                info["age"] = str(int(float(age_val)))
+            age_text = _metadata_text(age_val)
+            if age_text != "unknown":
+                try:
+                    info["age"] = str(int(float(age_text)))
+                except (TypeError, ValueError):
+                    info["age"] = age_text
         
         # Get sex - normalize to lowercase
         if "sex" in row.columns:
@@ -163,6 +190,48 @@ def _read_events_tsv(file_path: str) -> Optional[pd.DataFrame]:
     return None
 
 
+def _event_value_code(value: Any) -> Optional[str]:
+    """Normalize an events.tsv value cell to a compact string code."""
+    if value is None or pd.isna(value):
+        return None
+
+    text = str(value).strip()
+    if not text or text.lower() in {"nan", "n/a", "na", "none"}:
+        return None
+
+    try:
+        return str(int(float(text)))
+    except (TypeError, ValueError):
+        return text
+
+
+def _metadata_text(value: Any) -> str:
+    """Normalize a participants.tsv metadata cell without discarding ranges."""
+    if value is None or pd.isna(value):
+        return "unknown"
+
+    text = str(value).strip()
+    if not text or text.lower() in {"nan", "n/a", "na", "none"}:
+        return "unknown"
+
+    return text
+
+
+def _duration_to_float(value: Any) -> float:
+    """Return a valid annotation duration, defaulting invalid BIDS values to 0."""
+    if value is None or pd.isna(value):
+        return 0.0
+
+    text = str(value).strip()
+    if not text or text.lower() in {"nan", "n/a", "na", "none"}:
+        return 0.0
+
+    try:
+        return float(text)
+    except (TypeError, ValueError):
+        return 0.0
+
+
 def _events_tsv_to_annotations(events_df: pd.DataFrame, sfreq: float) -> mne.Annotations:
     """Convert BIDS events.tsv DataFrame to MNE Annotations."""
     if events_df is None or events_df.empty:
@@ -176,10 +245,7 @@ def _events_tsv_to_annotations(events_df: pd.DataFrame, sfreq: float) -> mne.Ann
         onset = float(event_row["onset"])
         
         # Duration: default to 0 if not present or invalid
-        if "duration" in event_row and pd.notna(event_row["duration"]):
-            duration = float(event_row["duration"])
-        else:
-            duration = 0.0
+        duration = _duration_to_float(event_row.get("duration")) if "duration" in event_row else 0.0
         
         # Description: prefer trial_type, fall back to value
         if "trial_type" in event_row and pd.notna(event_row["trial_type"]):
@@ -192,6 +258,13 @@ def _events_tsv_to_annotations(events_df: pd.DataFrame, sfreq: float) -> mne.Ann
         onsets.append(onset)
         durations.append(duration)
         descriptions.append(desc)
+
+        value_code = _event_value_code(event_row.get("value")) if "value" in event_row else None
+        derived_desc = _UNCUED_WALKING_VALUE_EVENT_MAP.get(value_code)
+        if desc == "UncuedWalking" and derived_desc is not None:
+            onsets.append(onset)
+            durations.append(duration)
+            descriptions.append(derived_desc)
     
     return mne.Annotations(
         onset=onsets,
@@ -250,7 +323,7 @@ class OpenneuroDs001971Kernel:
     
     def apply(self, udataset, raw, row) -> mne.io.BaseRaw:
         # Get file path and dataset path
-        file_path = row.get("file_path", "") if hasattr(row, "get") else str(row)
+        file_path = _row_file_path(row)
         dataset_path = udataset.dataset_path if hasattr(udataset, "dataset_path") else os.path.dirname(file_path)
         
         # Extract subject ID

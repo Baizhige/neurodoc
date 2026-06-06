@@ -12,7 +12,8 @@ Flow for one job:
     3. Compute config_key (epoch method + epoch params + pipeline + channel
        space signature) and check the on-disk cache.
     4. On miss: build a kernel-applied UnifiedDataset and call the matching
-       ``epoch_by_*_hdf5`` (pipeline = user pipeline -> common-channel align).
+       ``epoch_by_*_hdf5`` (pipeline = user pipeline -> common-channel align),
+       or the NeuroDoc misc route for ``/misc_meta`` targets.
     5. Read the HDF5 back for a lightweight validation summary.
 
 The output HDF5 is the EEGUnity v2 layout consumed by ``neurodoc.dataset_api``:
@@ -27,9 +28,6 @@ Channel handling
   set in the pipeline (missing channels interpolated, extras dropped), giving a
   uniform flat HDF5. A task whose recordings have no overlap with the requested
   set is skipped with a detailed log instead of crashing the batch.
-
-misc-route tasks are not supported by the pinned EEGUnity writer (v2.0, no
-``/misc_meta``); they are reported as skipped rather than silently mis-built.
 """
 from __future__ import annotations
 
@@ -179,6 +177,19 @@ def parse_epoch_params_text(text: str) -> Dict[str, float]:
     return out
 
 
+def parse_target_events_text(text: str) -> List[str]:
+    """Extract target_events=[...] from free Epoch Parameters text."""
+    m = re.search(r"\btarget_events\s*=\s*\[([^\]]*)\]", text)
+    if not m:
+        return []
+    events: List[str] = []
+    for raw in m.group(1).split(","):
+        val = raw.strip().strip("`").strip("'\"").strip()
+        if val:
+            events.append(val)
+    return events
+
+
 @dataclass
 class TaskSpec:
     index: int
@@ -246,8 +257,11 @@ def load_task_spec(dataset: str, task_index: int) -> TaskSpec:
                 row["meaning"] = val
         rows.append(row)
 
+    epoch_params_text = _task_field(block, "Epoch Parameters")
     target_events = [r["event_id"] for r in rows if r.get("event_id")]
-    doc_params = parse_epoch_params_text(_task_field(block, "Epoch Parameters"))
+    if not target_events:
+        target_events = parse_target_events_text(epoch_params_text)
+    doc_params = parse_epoch_params_text(epoch_params_text)
 
     return TaskSpec(
         index=task_index,
@@ -503,7 +517,8 @@ def _preflight_common_channels(locator_df, common_channels: List[str],
 def _make_combined_pipeline(user_pipeline: Optional[Callable],
                             common_channels: Optional[List[str]],
                             min_matched: int,
-                            pick_only: bool = False) -> Optional[Callable]:
+                            pick_only: bool = False,
+                            preserve_label_channels: bool = False) -> Optional[Callable]:
     """Compose user pipeline with channel handling.
 
     pick_only=True  -> just select `common_channels` in order (no interpolation);
@@ -514,6 +529,11 @@ def _make_combined_pipeline(user_pipeline: Optional[Callable],
     """
     if user_pipeline is None and not common_channels:
         return None
+
+    def _label_channel_names(raw) -> List[str]:
+        from eegunity.utils.label_channel import misc_channel_indices, stim_channel_indices
+        idx = sorted(set(misc_channel_indices(raw)) | set(stim_channel_indices(raw)))
+        return [raw.ch_names[i] for i in idx]
 
     def _pipe(raw):
         if user_pipeline is not None:
@@ -528,15 +548,369 @@ def _make_combined_pipeline(user_pipeline: Optional[Callable],
                     raw_map.setdefault(_normalize_ch_name(c).casefold(), c)
                 sel = [raw_map[c.casefold()] for c in common_channels
                        if c.casefold() in raw_map]
+                if preserve_label_channels:
+                    sel.extend(ch for ch in _label_channel_names(raw) if ch not in sel)
                 raw.pick_channels(sel, ordered=True)
             else:
                 from eegunity.utils import channel_align_raw
                 raw = channel_align_raw(raw, list(common_channels),
                                         min_matched_channel=min_matched)
-                raw.pick_channels(list(common_channels), ordered=True)
+                keep = list(common_channels)
+                if preserve_label_channels:
+                    keep.extend(ch for ch in _label_channel_names(raw) if ch not in keep)
+                raw.pick_channels(keep, ordered=True)
         return raw
 
     return _pipe
+
+
+def _make_target_event_priority_pipeline(
+    pipeline: Optional[Callable],
+    target_events: List[str],
+) -> Optional[Callable]:
+    """Prefer requested target annotations when multiple events share an onset."""
+    if not target_events:
+        return pipeline
+
+    target_set = {str(e) for e in target_events}
+
+    def _pipe(raw):
+        if pipeline is not None:
+            raw = pipeline(raw)
+        annotations = getattr(raw, "annotations", None)
+        if annotations is None or len(annotations) == 0:
+            return raw
+
+        sfreq = float(raw.info.get("sfreq") or 1.0)
+        buckets: Dict[int, List[int]] = {}
+        for idx, onset in enumerate(annotations.onset):
+            buckets.setdefault(int(round(float(onset) * sfreq)), []).append(idx)
+
+        keep: List[int] = []
+        changed = False
+        for indices in buckets.values():
+            target_indices = [
+                idx for idx in indices
+                if str(annotations.description[idx]) in target_set
+            ]
+            if target_indices:
+                keep.append(target_indices[0])
+                changed = changed or len(indices) != 1 or indices[0] != target_indices[0]
+            else:
+                keep.extend(indices)
+
+        if not changed:
+            return raw
+
+        keep = sorted(keep)
+        raw.set_annotations(type(annotations)(
+            onset=[float(annotations.onset[idx]) for idx in keep],
+            duration=[float(annotations.duration[idx]) for idx in keep],
+            description=[str(annotations.description[idx]) for idx in keep],
+            orig_time=annotations.orig_time,
+        ))
+        return raw
+
+    return _pipe
+
+
+def _canonical_misc_name(ch_name: str) -> str:
+    ch_name = str(ch_name)
+    return ch_name[len("misc:"):] if ch_name.startswith("misc:") else ch_name
+
+
+def _misc_reducer_for(name: str) -> str:
+    """Choose a conservative per-epoch reducer for known misc labels."""
+    if _canonical_misc_name(name).casefold() in {"apnea_label"}:
+        return "max"
+    return "mean"
+
+
+def _reduce_misc_epochs(values, reducer: str):
+    import numpy as np
+
+    arr = np.asarray(values, dtype=np.float64)
+    finite = np.isfinite(arr)
+    out = np.full(arr.shape[0], np.nan, dtype=np.float32)
+    has_value = finite.any(axis=1)
+    if not has_value.any():
+        return out
+
+    if reducer == "max":
+        masked = np.where(finite, arr, -np.inf)
+        out[has_value] = masked.max(axis=1)[has_value].astype(np.float32)
+    else:
+        sums = np.where(finite, arr, 0.0).sum(axis=1)
+        counts = finite.sum(axis=1)
+        out[has_value] = (sums[has_value] / counts[has_value]).astype(np.float32)
+    return out
+
+
+def _extract_source_attrs(raw, row) -> dict:
+    """Extract scalar source metadata for HDF5 /source_meta attrs."""
+    attrs = {"file_path": str(row.get("File Path", "unknown"))}
+    try:
+        desc = json.loads(raw.info.get("description", "{}"))
+        eu = desc.get("eegunity_description", {})
+        attrs["age"] = eu.get("age", "unknown")
+        attrs["gender"] = eu.get("sex", "unknown")
+        attrs["amplifier"] = eu.get("amplifier", "unknown")
+        attrs["cap"] = eu.get("cap", "unknown")
+        attrs["handedness"] = eu.get("handedness", "unknown")
+        for key, value in eu.items():
+            if key not in attrs and value is not None:
+                attrs[key] = value
+    except Exception:
+        for key in ("age", "gender", "amplifier", "cap", "handedness"):
+            attrs[key] = "unknown"
+    return attrs
+
+
+def _split_epoch_data_and_misc(epochs_obj, required_misc: List[str]):
+    """Return input epoch data, input names, misc_values, and input-only Info."""
+    import mne
+
+    all_data = epochs_obj.get_data()
+    required = {_canonical_misc_name(name).casefold() for name in required_misc if name}
+    input_idx: List[int] = []
+    misc_values: Dict[str, object] = {}
+
+    for idx, name in enumerate(epochs_obj.ch_names):
+        canonical = _canonical_misc_name(name)
+        try:
+            ch_type = mne.channel_type(epochs_obj.info, idx)
+        except Exception:
+            ch_type = ""
+        is_misc = (
+            ch_type == "misc"
+            or str(name).startswith("misc:")
+            or canonical.casefold() in required
+        )
+        if is_misc:
+            misc_values[canonical] = _reduce_misc_epochs(
+                all_data[:, idx, :], _misc_reducer_for(canonical))
+            continue
+        if ch_type == "stim":
+            continue
+        input_idx.append(idx)
+
+    if not input_idx:
+        raise ValueError("no input channels remain after removing misc/stim label channels.")
+
+    input_data = all_data[:, input_idx, :]
+    input_names = [epochs_obj.ch_names[i] for i in input_idx]
+    input_info = mne.pick_info(epochs_obj.info, input_idx, copy=True)
+    return input_data, input_names, misc_values, input_info
+
+
+def _write_misc_epoch_block(dataset_writer, raw, row, group_name: str,
+                            event_name: str, epochs_obj, required_misc: List[str]) -> int:
+    import pickle
+
+    epoch_data, ch_names, misc_values, input_info = _split_epoch_data_and_misc(
+        epochs_obj, required_misc)
+    if epoch_data.ndim != 3 or epoch_data.shape[0] == 0:
+        return 0
+
+    dataset_writer.add_epochs(
+        group_name=group_name,
+        event_name=event_name,
+        epoch_data=epoch_data,
+        info_bytes=pickle.dumps(input_info),
+        source_attrs=_extract_source_attrs(raw, row),
+        sfreq=raw.info["sfreq"],
+        ch_names=ch_names,
+        misc_values=misc_values,
+    )
+    return int(epoch_data.shape[0])
+
+
+def _load_raw_for_misc_export(ud, row):
+    """Load raw data, falling back to kernels that handle parser-unavailable rows."""
+    try:
+        return ud.eeg_batch._get_data_row(row)
+    except Exception as first_exc:
+        from eegunity.modules.parser.eeg_parser import apply_dataset_kernel_unavailable
+
+        raw = apply_dataset_kernel_unavailable(ud, row)
+        if raw is None:
+            raise first_exc
+        return raw
+
+
+def _misc_epoch_params(epoch_params: Dict) -> Dict:
+    params = dict(epoch_params)
+    params.setdefault("picks", "all")
+    params.setdefault("event_repeated", "drop")
+    return params
+
+
+def _export_misc_event_file(dataset_writer, raw, row, spec: TaskSpec,
+                            epoch_params: Dict, required_misc: List[str]) -> int:
+    import mne
+    from eegunity.modules.parser.eeg_parser import extract_events
+
+    events, event_id = extract_events(raw)
+    if events is None or len(events) == 0:
+        return 0
+    epochs = mne.Epochs(raw, events, event_id, **_misc_epoch_params(epoch_params))
+    epochs.drop_bad()
+
+    file_name = os.path.splitext(os.path.basename(row["File Path"]))[0]
+    written = 0
+    for event in event_id:
+        if spec.target_events and event not in spec.target_events:
+            continue
+        written += _write_misc_epoch_block(
+            dataset_writer, raw, row, file_name, event, epochs[event], required_misc)
+    return written
+
+
+def _export_misc_segmentation_file(dataset_writer, raw, row, epoch_params: Dict,
+                                   segment_params: Dict, required_misc: List[str]) -> int:
+    import mne
+    import numpy as np
+
+    sfreq = float(raw.info["sfreq"])
+    segment_length = float(segment_params["segment_length"])
+    overlap = float(segment_params["overlap"])
+    if segment_length <= 0:
+        raise ValueError("segment_length must be positive.")
+    if not 0.0 <= overlap < 1.0:
+        raise ValueError("overlap must be between 0.0 and less than 1.0.")
+
+    window_size = int(segment_length * sfreq)
+    step_size = int(window_size * (1 - overlap))
+    if window_size <= 0 or step_size <= 0:
+        raise ValueError(
+            f"invalid segmentation window/step: window={window_size}, step={step_size}."
+        )
+    if raw.n_times < window_size:
+        return 0
+
+    onset_samples = np.arange(0, raw.n_times - window_size + 1, step_size)
+    events = np.zeros((len(onset_samples), 3), dtype=int)
+    events[:, 0] = onset_samples
+    events[:, 2] = 1
+    event_id = {"Segment": 1}
+    epochs = mne.Epochs(
+        raw, events, event_id, tmin=0, tmax=segment_length,
+        **_misc_epoch_params(epoch_params))
+    epochs.drop_bad()
+
+    file_name = os.path.splitext(os.path.basename(row["File Path"]))[0]
+    return _write_misc_epoch_block(
+        dataset_writer, raw, row, file_name, "Segment", epochs, required_misc)
+
+
+def _export_misc_long_event_file(dataset_writer, raw, row, spec: TaskSpec,
+                                 epoch_params: Dict, overlap: float,
+                                 required_misc: List[str]) -> int:
+    import mne
+    import numpy as np
+
+    if not 0.0 <= overlap < 1.0:
+        raise ValueError("overlap must be between 0.0 and less than 1.0.")
+    annotations = raw.annotations
+    if annotations is None or len(annotations) == 0:
+        return 0
+
+    t_min = float(epoch_params.get("tmin", 0.0))
+    t_max = float(epoch_params.get("tmax", 1.0))
+    epoch_length = t_max - t_min
+    if epoch_length <= 0:
+        raise ValueError("tmax must be greater than tmin for long-event epoching.")
+    step = epoch_length * (1 - overlap)
+    if step <= 0:
+        raise ValueError("long-event step size must be positive.")
+
+    target_set = {str(e) for e in spec.target_events}
+    temp_annotations = []
+    eps = max(1e-9, 1.0 / max(float(raw.info.get("sfreq") or 1.0), 1.0))
+    for onset, duration, description in zip(
+            annotations.onset, annotations.duration, annotations.description):
+        description = str(description)
+        if target_set and description not in target_set:
+            continue
+        duration = float(duration)
+        if duration + eps < epoch_length:
+            continue
+        n_segments = int(np.floor((max(0.0, duration - epoch_length) + eps) / step)) + 1
+        for i in range(n_segments):
+            temp_annotations.append((float(onset) + i * step, epoch_length, description))
+
+    if not temp_annotations:
+        return 0
+
+    raw.set_annotations(mne.Annotations(
+        onset=[a[0] for a in temp_annotations],
+        duration=[a[1] for a in temp_annotations],
+        description=[a[2] for a in temp_annotations],
+    ))
+    events, event_id = mne.events_from_annotations(raw)
+    epochs = mne.Epochs(raw, events, event_id, **_misc_epoch_params(epoch_params))
+    epochs.drop_bad()
+
+    file_name = os.path.splitext(os.path.basename(row["File Path"]))[0]
+    written = 0
+    for event in event_id:
+        if target_set and event not in target_set:
+            continue
+        written += _write_misc_epoch_block(
+            dataset_writer, raw, row, file_name, event, epochs[event], required_misc)
+    return written
+
+
+def _build_misc_route_hdf5(*, ud, spec: TaskSpec, epoch_params: Dict,
+                           task_dir: Path, config_key: str,
+                           pipeline: Optional[Callable], log: Callable) -> int:
+    """Build a v2.1 HDF5 for Label Route=misc without changing EEGUnity's public API."""
+    from eegunity.utils.h5 import h5EpochDatasetV2
+
+    dataset_writer = h5EpochDatasetV2(Path(task_dir), name=config_key)
+    live = ud.get_shared_attr()["locator"]
+    available = live[live["Completeness Check"].astype(str) != "Unavailable"]
+    required_misc = [spec.label_field] + [
+        row.get("misc_channel") for row in spec.target_rows if row.get("misc_channel")
+    ]
+
+    total_written = 0
+    failed = 0
+    for _, row in available.iterrows():
+        try:
+            raw = _load_raw_for_misc_export(ud, row)
+            if pipeline is not None:
+                raw = pipeline(raw)
+
+            if spec.epoch_method == "epoch_by_event_hdf5":
+                written = _export_misc_event_file(
+                    dataset_writer, raw, row, spec, epoch_params, required_misc)
+            elif spec.epoch_method == "epoch_by_segmentation_hdf5":
+                written = _export_misc_segmentation_file(
+                    dataset_writer, raw, row,
+                    {"baseline": None},
+                    {"segment_length": epoch_params["segment_length"],
+                     "overlap": epoch_params["overlap"]},
+                    required_misc)
+            else:
+                long_epoch_params = {
+                    "tmin": epoch_params["tmin"],
+                    "tmax": epoch_params["tmax"],
+                    "baseline": None if epoch_params["tmin"] >= 0 else (None, 0),
+                    "event_repeated": "drop",
+                }
+                written = _export_misc_long_event_file(
+                    dataset_writer, raw, row, spec, long_epoch_params,
+                    float(epoch_params["overlap"]), required_misc)
+            total_written += written
+        except Exception as exc:  # noqa: BLE001 - keep batch export tolerant
+            failed += 1
+            log(f"    misc row skipped: {row.get('File Path', 'unknown')} :: {exc}")
+
+    dataset_writer.save()
+    if failed:
+        log(f"    misc export skipped {failed} recording(s) with row-level errors")
+    return total_written
 
 
 # ---------------------------------------------------------------------------
@@ -639,12 +1013,56 @@ def _ensure_locator(dataset: str, raw_path: str, kernel_spec: Optional[str],
     return str(locator_path)
 
 
+def _load_kernel_object(kernel_spec: Optional[str]):
+    if not kernel_spec:
+        return None
+    p = Path(kernel_spec)
+    if not p.is_file():
+        return None
+    module_name = f"_neurodoc_export_kernel_{hashlib.sha1(str(p).encode('utf-8')).hexdigest()[:10]}"
+    spec = importlib.util.spec_from_file_location(module_name, str(p))
+    if spec is None or spec.loader is None:
+        return None
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = mod
+    spec.loader.exec_module(mod)
+    return getattr(mod, "KERNEL", None)
+
+
+def _apply_kernel_export_filter(locator_df, kernel_spec: Optional[str], log: Callable):
+    """Let kernels exclude rows before export sampling/channel grouping.
+
+    The base EEGUnity locator is intentionally format-level metadata. Some
+    datasets contain parseable non-benchmark recordings beside the target EEG/PSG
+    files (for example ECG-only companion files). Kernels can expose
+    ``export_include_row(row) -> bool`` to mark those rows unavailable before the
+    exporter picks a channel group.
+    """
+    kernel = _load_kernel_object(kernel_spec)
+    include_row = getattr(kernel, "export_include_row", None) if kernel is not None else None
+    if not callable(include_row):
+        return locator_df
+
+    if "Error" not in locator_df.columns:
+        locator_df["Error"] = ""
+
+    avail = locator_df["Completeness Check"].astype(str) != "Unavailable"
+    keep = locator_df.apply(lambda row: bool(include_row(row)), axis=1)
+    drop_idx = locator_df.index[avail & ~keep]
+    if len(drop_idx):
+        locator_df.loc[drop_idx, "Completeness Check"] = "Unavailable"
+        locator_df.loc[drop_idx, "Error"] = "Excluded by kernel export_include_row"
+        log(f"    kernel export filter: dropped {len(drop_idx)} recording(s)")
+    return locator_df
+
+
 # ---------------------------------------------------------------------------
 # HDF5 validation summary  (h5py only — no torch dependency)
 # ---------------------------------------------------------------------------
 
 def _summarize_hdf5(hdf5_path: str, spec: TaskSpec) -> Dict:
     import h5py
+    import numpy as np
     summary: Dict = {}
     with h5py.File(hdf5_path, "r") as f:
         data = f.get("data")
@@ -668,7 +1086,42 @@ def _summarize_hdf5(hdf5_path: str, spec: TaskSpec) -> Dict:
                         y_counts[y] += n
                 summary["y_distribution"] = dict(sorted(y_counts.items(),
                                                          key=lambda kv: str(kv[0])))
+        if spec.label_route == "misc":
+            if "misc_meta" in f:
+                names = sorted(str(k) for k in f["misc_meta"].keys())
+                summary["misc_channels"] = names
+                counts: Dict[str, int] = {}
+                for name in names:
+                    values = np.asarray(f[f"misc_meta/{name}"][:], dtype=np.float64)
+                    finite = np.isfinite(values)
+                    counts[name] = int(finite.sum())
+                    if name == spec.label_field:
+                        label_stats = {"name": name, "count": int(finite.sum())}
+                        if finite.any():
+                            vals = values[finite]
+                            label_stats.update({
+                                "min": float(vals.min()),
+                                "max": float(vals.max()),
+                                "mean": float(vals.mean()),
+                            })
+                        summary["misc_label"] = label_stats
+                summary["misc_counts"] = counts
     return summary
+
+
+def _task_summary_failure(spec: TaskSpec, summary: Dict) -> Optional[str]:
+    if spec.label_route != "misc":
+        return None
+    label = spec.label_field
+    if not label:
+        return "misc route has no label_field parsed from Target Definition."
+    stats = summary.get("misc_label")
+    if not stats:
+        available = summary.get("misc_channels") or []
+        return f"misc channel '{label}' not found under /misc_meta (available={available})."
+    if int(stats.get("count") or 0) <= 0:
+        return f"misc channel '{label}' has no finite labels in /misc_meta."
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -705,12 +1158,6 @@ def build_task_hdf5(
         log(f"  task {task}: {spec.title}")
         log(f"    epoch_method={spec.epoch_method} route={spec.label_route} "
             f"type={spec.task_type}")
-
-        if spec.label_route == "misc":
-            raise TaskSkip(
-                "misc route needs an EEGUnity v2.1+ /misc_meta writer; the pinned "
-                "writer is v2.0 and cannot produce it. Skipping."
-            )
 
         # Resolve epoch params: doc defaults, overridden wholesale by scope epoch_param.
         epoch_params = dict(spec.doc_epoch_params)
@@ -751,6 +1198,11 @@ def build_task_hdf5(
         if hdf5_path.exists() and not rebuild:
             log(f"    cache hit: {hdf5_path}")
             summary = _summarize_hdf5(str(hdf5_path), spec)
+            failure = _task_summary_failure(spec, summary)
+            if failure:
+                return JobResult(dataset, task, "failed", reason=failure,
+                                 hdf5_path=str(hdf5_path), config_key=config_key,
+                                 n_epochs=summary.get("n_epochs"), summary=summary)
             return JobResult(dataset, task, "cached", hdf5_path=str(hdf5_path),
                              config_key=config_key,
                              n_epochs=summary.get("n_epochs"), summary=summary)
@@ -759,6 +1211,11 @@ def build_task_hdf5(
             if hdf5_path.exists() and not rebuild:
                 log(f"    cache hit after lock: {hdf5_path}")
                 summary = _summarize_hdf5(str(hdf5_path), spec)
+                failure = _task_summary_failure(spec, summary)
+                if failure:
+                    return JobResult(dataset, task, "failed", reason=failure,
+                                     hdf5_path=str(hdf5_path), config_key=config_key,
+                                     n_epochs=summary.get("n_epochs"), summary=summary)
                 return JobResult(dataset, task, "cached", hdf5_path=str(hdf5_path),
                                  config_key=config_key,
                                  n_epochs=summary.get("n_epochs"), summary=summary)
@@ -772,6 +1229,21 @@ def build_task_hdf5(
 
             import pandas as pd
             locator_df = pd.read_csv(base_locator)
+            locator_df = _apply_kernel_export_filter(locator_df, kernel_spec, log)
+
+            kernel_obj = _load_kernel_object(kernel_spec)
+            if bool(getattr(kernel_obj, "HANDLES_UNAVAILABLE", False)):
+                include_row = getattr(kernel_obj, "export_include_row", None)
+                if callable(include_row):
+                    can_load = locator_df.apply(lambda row: bool(include_row(row)), axis=1)
+                else:
+                    can_load = locator_df["File Path"].astype(str).str.len() > 0
+                unavailable = locator_df["Completeness Check"].astype(str) == "Unavailable"
+                promote_idx = locator_df.index[unavailable & can_load]
+                if len(promote_idx):
+                    locator_df.loc[promote_idx, "Completeness Check"] = "Completed"
+                    log(f"    kernel handles unavailable rows: allowing "
+                        f"{len(promote_idx)} recording(s) for export load()")
 
             # Optional sampling: keep the first N available recordings (testing /
             # quick smoke runs). Folded into config_key so it caches separately.
@@ -818,6 +1290,21 @@ def build_task_hdf5(
                 ud_kwargs["kernel_spec"] = kernel_spec
             ud = UnifiedDataset(**ud_kwargs)
 
+            if bool(getattr(kernel_obj, "HANDLES_UNAVAILABLE", False)):
+                live = ud.get_shared_attr()["locator"]
+                include_row = getattr(kernel_obj, "export_include_row", None)
+                if callable(include_row):
+                    can_load = live.apply(lambda row: bool(include_row(row)), axis=1)
+                else:
+                    can_load = live["File Path"].astype(str).str.len() > 0
+                unavailable = live["Completeness Check"].astype(str) == "Unavailable"
+                promote_idx = live.index[unavailable & can_load]
+                if len(promote_idx):
+                    live.loc[promote_idx, "Completeness Check"] = "Completed"
+                    ud.get_shared_attr()["locator"] = live
+                    log(f"    live locator: kernel re-enabled "
+                        f"{len(promote_idx)} recording(s) for export load()")
+
             if channel_auto:
                 # Dominant-montage grouping on the LIVE (post-kernel) locator —
                 # EEGUnity's auto_domain/group_by_domain done inline: keep only the
@@ -841,7 +1328,11 @@ def build_task_hdf5(
                     raise TaskSkip("auto dominant montage matched no recording.")
 
             combined_pipeline = _make_combined_pipeline(
-                pipeline_fn, common_channels, min_matched, pick_only=pick_only)
+                pipeline_fn, common_channels, min_matched, pick_only=pick_only,
+                preserve_label_channels=(spec.label_route == "misc"))
+            if spec.target_events:
+                combined_pipeline = _make_target_event_priority_pipeline(
+                    combined_pipeline, spec.target_events)
 
             # --rebuild: the EEGUnity writer refuses to overwrite, so clear any
             # stale output first.
@@ -852,7 +1343,18 @@ def build_task_hdf5(
             baseline = None if (tmin is None or tmin >= 0) else (None, 0)
 
             log(f"    building HDF5 (config_key={config_key}) ...")
-            if spec.epoch_method == "epoch_by_event_hdf5":
+            if spec.label_route == "misc":
+                n_misc = _build_misc_route_hdf5(
+                    ud=ud,
+                    spec=spec,
+                    epoch_params=epoch_params,
+                    task_dir=task_dir,
+                    config_key=config_key,
+                    pipeline=combined_pipeline,
+                    log=log,
+                )
+                log(f"    misc epochs written: {n_misc}")
+            elif spec.epoch_method == "epoch_by_event_hdf5":
                 ud.eeg_batch.epoch_by_event_hdf5(
                     output_path=str(task_dir),
                     file_name_prefix=config_key,
@@ -873,9 +1375,22 @@ def build_task_hdf5(
                     format_version="v2",
                     segment_params={"segment_length": epoch_params["segment_length"],
                                     "overlap": epoch_params["overlap"]},
+                    epoch_params={"baseline": None},
                     pipeline=combined_pipeline,
                 )
             else:  # epoch_by_long_event_hdf5
+                long_event_epoch_params = {
+                    "tmin": epoch_params["tmin"],
+                    "tmax": epoch_params["tmax"],
+                    "baseline": baseline,
+                    "event_repeated": "drop",
+                }
+                # EEGUnity 0.8.x only segments annotations whose duration is
+                # strictly greater than (tmax - tmin). Many sleep-stage labels
+                # are exactly 30 s long, so shrink the export-time window by an
+                # epsilon while preserving the document's 30 s task definition.
+                if long_event_epoch_params["tmax"] > long_event_epoch_params["tmin"]:
+                    long_event_epoch_params["tmax"] -= 1e-6
                 ud.eeg_batch.epoch_by_long_event_hdf5(
                     output_path=str(task_dir),
                     overlap=epoch_params["overlap"],
@@ -883,10 +1398,7 @@ def build_task_hdf5(
                     miss_bad_data=True,
                     include_events=spec.target_events or None,
                     format_version="v2",
-                    epoch_params={"tmin": epoch_params["tmin"],
-                                  "tmax": epoch_params["tmax"],
-                                  "baseline": baseline,
-                                  "event_repeated": "drop"},
+                    epoch_params=long_event_epoch_params,
                     pipeline=combined_pipeline,
                 )
 
@@ -909,6 +1421,13 @@ def build_task_hdf5(
                                  config_key=config_key)
 
             summary = _summarize_hdf5(str(hdf5_path), spec)
+            failure = _task_summary_failure(spec, summary)
+            if failure:
+                log(f"    FAILED: {failure}")
+                return JobResult(dataset, task, "failed", reason=failure,
+                                 hdf5_path=str(hdf5_path),
+                                 config_key=config_key,
+                                 n_epochs=summary.get("n_epochs"), summary=summary)
             log(f"    built: {hdf5_path}")
             log(f"    summary: {summary}")
             return JobResult(dataset, task, "success", hdf5_path=str(hdf5_path),

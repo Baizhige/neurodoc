@@ -44,7 +44,7 @@ The CAP Sleep Database comprises 108 overnight polysomnographic (PSG) recordings
 ### Classical Task 1: Sleep stage classification
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 1, target_events = [`SLEEP-S0`, `SLEEP-S1`, `SLEEP-S2`, `SLEEP-S3`, `SLEEP-S4`, `SLEEP-REM`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`SLEEP-S0`, `SLEEP-S1`, `SLEEP-S2`, `SLEEP-S3`, `SLEEP-S4`, `SLEEP-REM`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -64,7 +64,7 @@ The CAP Sleep Database comprises 108 overnight polysomnographic (PSG) recordings
 ### Classical Task 2: CAP A-phase detection
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 14 s, overlap = 1, target_events = [`A1`, `A2`, `A3`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 14 s, overlap = 0.0, target_events = [`A1`, `A2`, `A3`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -80,7 +80,7 @@ The CAP Sleep Database comprises 108 overnight polysomnographic (PSG) recordings
 ### Potential Task 1: CAP A-phase subtype classification (4 seconds)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 4 s, overlap = 1, target_events = [`A1`, `A2`, `A3`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 4 s, overlap = 0.0, target_events = [`A1`, `A2`, `A3`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:
@@ -96,7 +96,7 @@ The CAP Sleep Database comprises 108 overnight polysomnographic (PSG) recordings
 ### Potential Task 2: NREM classification (4-second)
 - **Task Type**: classification
 - **Epoch Method**: `epoch_by_long_event_hdf5`
-- **Epoch Parameters**: tmin = 0 s, tmax = 4 s, overlap = 1.0, target_events = [`SLEEP-S0`, `SLEEP-S1`, `SLEEP-S2`, `SLEEP-S3`, `SLEEP-S4`, `SLEEP-REM`]
+- **Epoch Parameters**: tmin = 0 s, tmax = 4 s, overlap = 0.0, target_events = [`SLEEP-S0`, `SLEEP-S1`, `SLEEP-S2`, `SLEEP-S3`, `SLEEP-S4`, `SLEEP-REM`]
 - **Label Route**: `event`
 - **Meta Level**: raw
 - **Target Definition**:

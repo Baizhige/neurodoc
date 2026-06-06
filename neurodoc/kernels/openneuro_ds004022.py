@@ -199,6 +199,16 @@ def _read_events_tsv(events_tsv: str) -> Optional[pd.DataFrame]:
         return None
 
 
+def _normalize_event_description(desc: str) -> str:
+    """Normalize BrainVision-style S markers to the document event IDs."""
+    # Annotator: human, 2026-06-04
+    desc_str = str(desc).strip()
+    match = re.match(r"^S\s+(\d+)$", desc_str)
+    if match:
+        return f"S {int(match.group(1))}"
+    return desc_str
+
+
 def _events_tsv_to_annotations(events_df: pd.DataFrame, sfreq: float) -> Optional[mne.Annotations]:
     """Convert events.tsv DataFrame to MNE Annotations."""
     if events_df is None or len(events_df) == 0:
@@ -471,19 +481,19 @@ class OpenNeuroDS004022Kernel:
             
             for desc in raw.annotations.description:
                 desc_str = str(desc).strip()
-                
-                # Try numeric mapping
+
+                # Try numeric mapping first, then normalize S-marker spacing.
                 try:
                     desc_int = int(float(desc_str))
                     if desc_int in _EVENT_MAP:
                         new_descriptions.append(_EVENT_MAP[desc_int])
                         needs_update = True
                     else:
-                        new_descriptions.append(desc_str)
+                        normalized = _normalize_event_description(desc_str)
+                        new_descriptions.append(normalized)
+                        needs_update = needs_update or normalized != desc_str
                 except (ValueError, TypeError):
-                    # Already string, check if needs S-prefix formatting
                     if re.match(r'^\d+$', desc_str):
-                        # Pure number without S prefix
                         try:
                             desc_int = int(desc_str)
                             if desc_int in _EVENT_MAP:
@@ -494,7 +504,9 @@ class OpenNeuroDS004022Kernel:
                         except ValueError:
                             new_descriptions.append(desc_str)
                     else:
-                        new_descriptions.append(desc_str)
+                        normalized = _normalize_event_description(desc_str)
+                        new_descriptions.append(normalized)
+                        needs_update = needs_update or normalized != desc_str
             
             if needs_update:
                 # Rebuild annotations with mapped descriptions

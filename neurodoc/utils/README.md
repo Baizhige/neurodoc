@@ -78,7 +78,7 @@ process exits non-zero if **any** job was skipped or failed.
 |-------------|-----------|-------|
 | `event`     | ✅ | `/epoch_meta/event_code` + `label_map` → `EventDataset` |
 | `info`      | ✅ | subject attrs in `/source_meta/<group>` → `InfoDataset` |
-| `misc`      | ⛔ | needs an EEGUnity v2.1+ `/misc_meta` writer; the pinned writer is v2.0 → such tasks are **skipped** with a clear message |
+| `misc`      | ✅ | NeuroDoc writes per-epoch labels to EEGUnity v2.1 `/misc_meta/<channel>` and removes misc/stim label channels from `/data` |
 
 ## EEGUnity location
 

@@ -1,7 +1,7 @@
 # Real-time EEG feedback on alpha power lateralization leads to behavioral improvements in a covert attention task
 
 **Dataset**: `openneuro_ds002034` | **Year**: 2019/2022 | **URL**: https://openneuro.org/datasets/ds002034
-**Category**: Action/Output | **Subjects**: 14 | **Files (Completed)**: 167 | **Channels**: 64 | **Sampling Rate**: 512 Hz | **Manual Review**: Liu Peng
+**Category**: Action/Output | **Subjects**: 14 | **Files (Completed)**: 167 | **Channels**: 64 | **Sampling Rate**: 512 Hz | **Manual Review**:
 
 ## Paradigm
 
@@ -9,37 +9,42 @@ Participants performed a covert spatial attention task where they were trained t
 
 ## File Scan Result
 
-> **Kernel SHA256**: `037acc48f2069aa8913ea20691642e0dde801f9e2a83f0e81feb91538fe9c21d`
-> **EEGUnity Version**: `0.8.1`
+> **Kernel SHA256**: `e4d6397b12f9a4a02f2680a0cd8647b2fc72a33dc9aefacca0304036d12afddb`
+> **EEGUnity Version**: `0.8.2`
 > **Scan Type**: Full
 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |---|---|---|---|---|
-| `event_1` | 16179 | event | raw | Trial phase onset: cue left |
-| `event_11` | 3013 | event | raw | Trial phase onset: target left |
-| `event_12` | 2248 | event | raw | Trial phase onset: target right |
-| `event_13` | 1129 | event | raw | Trial phase onset: target center |
-| `event_15` | 938 | event | raw | Button press correct |
-| `event_2` | 5020 | event | raw | Trial phase onset: cue right |
-| `event_4` | 5020 | admin | raw | Run start |
-| `event_5` | 9333 | admin | raw | Run end |
-| `event_6` | 6720 | event | raw | Trial phase onset: trial start |
-| `event_8` | 1711 | event | raw | Trial phase onset: trial start |
-| `event_9` | 4995 | event | raw | Trial phase onset: fixation on |
+| `event_1` | 5020 | event | raw |  |
+| `event_10` | 11160 | event | raw |  |
+| `event_11` | 5020 | event | raw |  |
+| `event_12` | 5020 | event | raw |  |
+| `event_13` | 1120 | event | raw |  |
+| `event_14` | 437 | event | raw |  |
+| `event_15` | 10897 | event | raw |  |
+| `event_2` | 5020 | event | raw |  |
+| `event_3` | 1120 | event | raw |  |
+| `event_4` | 167 | event | raw |  |
+| `event_5` | 167 | event | raw |  |
+| `event_9` | 11160 | event | raw |  |
 
+### MISC Label Summary
 
-> For details of the complete protocol, experimental design, feedback logic and recording parameters, please refer to the main text of the paper, Figures 1a–d, Supplementary Table S1 and the Methods section. Maybe we set super meta long, which belongs to epoch_by_long_event_hdf5, and rest for epoch_by_segmentation_hdf5.
+| Channel | Source | Meta | Notes |
+|---|---|---|---|
+| `Status` | native (raw misc in EEG file) | raw |  |
 
 ### Info
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `age` | complete | Range from 21-27 y, Mean age = 23 y |
-| `sex` | complete | 7 female, 7 male (sex distribution fully reported in the manuscript) |
-| `device` | missing | EEG recording: g.tec HIamp 64-channel active EEG amplifier (512 Hz sampling rate, linked ears reference, 10-10 international electrode system, ground at FCz); Eye tracking: SR Research EyeLink 1000 optical eye tracker (500 Hz sampling rate); Stimulus display: 24" LCD monitor (50 cm fixed viewing distance) |
-
+| `age` | complete | e.g. 24, 27, 22 |
+| `amplifier` | complete | e.g. BrainAmp |
+| `cap` | complete | e.g. Ag/AgCl |
+| `handedness` | missing |  |
+| `sex` | missing |  |
 
 ## Tasks
 

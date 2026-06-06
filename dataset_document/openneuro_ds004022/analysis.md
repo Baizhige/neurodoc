@@ -1,43 +1,45 @@
 # Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment
 
 **Dataset**: `openneuro_ds004022` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004022
-**Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 21 | **Channels**: 18 | **Sampling Rate**: 500 | **Manual Review**: Zhida Shang
+**Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 21 | **Channels**: 18 | **Sampling Rate**: 500 | **Manual Review**:
 ## Paradigm
 
 Seven participants with orthopedic impairment performed four right-upper-limb motor imagery tasks (reaching, grasping, lifting, and twisting) while 18-channel EEG and fNIRS were recorded simultaneously. Each participant completed three sessions; each session contained 40 trials with the four MI tasks presented in random order. Each trial consisted of 3 s fixation, a 4 s visual cue indicating the movement task, a 3 s ready/gray-screen period to reduce afterimage effects, and a 5 s instructed motor imagery period. Event markers `S 7`-`S 10` label the four MI task types, but their exact mapping to reaching/grasping/lifting/twisting is not recoverable from the available metadata.
 
 ## File Scan Result
 
-> **Kernel SHA256**: `f159e25f8de105c2cebaeb73c9854d33dff9482b7372c2ad586ca9542c5eedde`
-> **EEGUnity Version**: `0.8.1`
+> **Kernel SHA256**: `4f77771818c2331570de94279750023b5e5994decf339084f5b5b350a702d446`
+> **EEGUnity Version**: `0.8.2`
 > **Scan Type**: Full
 
 ### Event Structure
 
 | Event ID | Count (total) | Type | Meta Level | Meaning |
 |---|---|---|---|---|
-| `S 1` | 21 | admin | raw | Run/session start marker |
-| `S 10` | 840 | event | raw | Trial marker for one of four motor imagery task types (reaching, grasping, lifting, or twisting) |
-| `S 2` | 840 | event | raw | Trial phase onset or sub-event marker |
-| `S 3` | 210 | event | raw | Trial phase onset or sub-event marker |
-| `S 4` | 210 | event | raw | Trial phase onset or sub-event marker |
-| `S 5` | 210 | event | raw | Trial phase onset or sub-event marker |
-| `S 6` | 210 | event | raw | Trial phase onset or sub-event marker |
-| `S 7` | 840 | event | raw | Trial marker for one of four motor imagery task types (reaching, grasping, lifting, or twisting) |
-| `S 8` | 840 | event | raw | Trial marker for one of four motor imagery task types (reaching, grasping, lifting, or twisting) |
-| `S 9` | 840 | event | raw | Trial marker for one of four motor imagery task types (reaching, grasping, lifting, or twisting) |
-| `boundary` | 21 | admin | raw | Run boundary marker |
-| `condition 12` | 21 | admin | raw | Condition label marker |
-
+| `S 1` | 21 | event | raw |  |
+| `S 10` | 840 | event | raw |  |
+| `S 2` | 840 | event | raw |  |
+| `S 3` | 210 | event | raw |  |
+| `S 4` | 210 | event | raw |  |
+| `S 5` | 210 | event | raw |  |
+| `S 6` | 210 | event | raw |  |
+| `S 7` | 840 | event | raw |  |
+| `S 8` | 840 | event | raw |  |
+| `S 9` | 840 | event | raw |  |
+| `boundary` | 21 | event | raw |  |
+| `condition 12` | 21 | event | raw |  |
 
 ### Info
 
 | Field | Completeness | Notes |
 |---|---|---|
-| `age` | complete | N/A |
-| `sex` | complete | N/A |
-| `device` | missing | BrainVision ActiCHamp |
-
+| `Hand Dominance` | complete | e.g. R, L |
+| `Years Since Diagnosis` | complete | e.g. 21, 32, 73 |
+| `age` | complete | e.g. 75, 48, 78 |
+| `amplifier` | missing |  |
+| `cap` | missing |  |
+| `handedness` | complete | e.g. right, left |
+| `sex` | missing |  |
 
 ## Tasks
 
