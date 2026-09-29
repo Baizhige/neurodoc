@@ -1,0 +1,33 @@
+--- openneuro_ds005345/analysis.md (pre-v3)
++++ openneuro_ds005345/analysis.md (v3)
+@@ -3,7 +3,7 @@
+ **Dataset**: `openneuro_ds005345` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005345
+ **Category**: Complex Applied | **Subjects**: 25 | **Files (Completed)**: 28
+ **Channels**: 64 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -42,8 +42,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Stimulus/S 11` | 0 | Single-talker listening |
+   | `Stimulus/S 31` | 1 | Multi-talker mix_f attended |
+   | `Stimulus/S 32` | 2 | Multi-talker mix_m attended |
+@@ -61,8 +61,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Stimulus/S 11` | 0 | Single-talker word epoch |
+   | `Stimulus/S 31` | 1 | Multi-talker condition 31 word epoch |
+   | `Stimulus/S 32` | 2 | Multi-talker condition 32 word epoch |

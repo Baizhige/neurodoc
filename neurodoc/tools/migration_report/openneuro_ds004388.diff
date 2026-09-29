@@ -1,0 +1,44 @@
+--- openneuro_ds004388/analysis.md (pre-v3)
++++ openneuro_ds004388/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004388` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004388
+ **Category**: Sensory/Response | **Subjects**: 40 | **Files (Completed)**: 399 | **Channels**: 115 | **Sampling Rate**: 10000 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -37,8 +37,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Median - Stimulation` | 0 | Median nerve stimulation (upper limb SEP) |
+   | `Tibial - Stimulation` | 1 | Tibial nerve stimulation (lower limb SEP) |
+ - **Kernel Notes**: Bimodal event distribution (112,498 median + 111,997 tibial events) enables binary classification comparing upper vs lower limb somatosensory processing. The 2.0s window captures spinal (N13-P13) and cortical (N20-P37) SEP components. Channel mix includes scalp EEG, spinal ESG, and peripheral ENG/EMG—consider channel-specific filtering. Dataset includes both stimulation and resting state conditions across 399 files/40 subjects.
+@@ -51,8 +51,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | Value | Meaning |
++  |---|---|---|
+   | `Median - Stimulation` | 0 | Median nerve stimulation onset |
+ - **Kernel Notes**: Single-site SEP averaging for upper limb responses. The 10kHz sampling rate preserves fast somatosensory peak latencies; recommend downsampling to 1000Hz post-epoching for standard EEG analysis while retaining SEP fidelity. File naming conventions may encode stimulation parameters for regression targets.
+ - **Evidence**: Paradigm-plausible task: stimulus-locked SEP acquisition with known upper limb SEP generators (median nerve → cervicomedullary junction → primary somatosensory cortex).
+@@ -64,8 +64,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | Value | Meaning |
++  |---|---|---|
+   | `Tibial - Stimulation` | 0 | Tibial nerve stimulation onset |
+ - **Kernel Notes**: Single-site SEP averaging for lower limb responses. Lower limb SEPs show larger spinalcord involvement (lumbar enlargement) with distinct cortical generators compared to median nerve. Same epoching rationale as median stimulation task.
+ - **Evidence**: Paradigm-plausible task: stimulus-locked SEP acquisition with known lower limb SEP generators (tibial nerve → lumbar spinal cord → sensorimotor cortex).

@@ -1,0 +1,1524 @@
+% -----------------------------------------------------------------------
+% Required packages (add to your preamble if not already present):
+%   \usepackage[skins,breakable]{tcolorbox}
+%   \usepackage{enumitem}
+%   \usepackage{booktabs}
+%   \usepackage{xcolor}
+%   \usepackage{url}
+% -----------------------------------------------------------------------
+
+{\setlength{\parskip}{2pt}\setlength{\parindent}{0pt}
+\noindent\begin{tcolorbox}[breakable,enhanced,colback=white,colframe=gray!55,boxrule=0.9pt,arc=4pt,left=6pt,right=6pt,top=4pt,bottom=4pt,title={\small\bfseries BCI Competition IV Dataset 2a (4-Class Motor Imagery)\hfill \colorbox{gray!20}{\scriptsize\sffamily\bfseries Completed}},coltitle=black,colbacktitle=gray!12,titlerule=0.5pt]
+{\footnotesize \textbf{ID:}~\texttt{bcic\_iv\_2a} $\mid$ \textbf{Year:}~2008 $\mid$ \textbf{Category:}~Action/Output $\mid$ \textbf{Subjects:}~9 $\mid$ \textbf{Channels:}~25 $\mid$ \textbf{SR:}~250 Hz $\mid$ \textbf{Files (completed):}~18 $\mid$ \textbf{Super Meta:}~No $\mid$ \textbf{Reviewer:}~Anonymous}
+\par{\footnotesize\textbf{URL:}~\url{https://www.bbci.de/competition/iv/desc_2a.pdf}}
+\tcbline
+\noindent{\bfseries\footnotesize Paradigm}\par\smallskip
+{\footnotesize Nine subjects (A01-A09) performed four-class cued motor imagery (BCI Competition IV, 2008): left hand, right hand, feet, and tongue. Each session contained 6 runs of 48 trials each (288 trials per session), balanced across 4 classes (72 trials per class). A fixation cross preceded each trial, followed by a visual arrow cue indicating the imagery class, and a 4-second imagery period. Short resting intervals separated trials. Each subject was recorded in two sessions: a training session (suffix \texttt{T.gdf}) with event labels, and an evaluation session (suffix \texttt{E.gdf}) with initially unknown labels replaced by kernel-loaded \texttt{.mat} companion files. EEG was recorded from 22 channels (standard 10-20, sensorimotor focus) plus 3 bipolar EOG channels (filtered 0.5-100 Hz, notch at 50 Hz).}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize File Scan Result}\par\smallskip
+{\scriptsize
+\noindent\textbf{Kernel SHA256:}~\texttt{489182843c6974d9f77d2a7ccd1f1bad91a5f3eb1d01dfc7e15b3321e4eb8803}\par\smallskip
+\noindent\textbf{EEGUnity Version:}~\texttt{0.8.1}\par\smallskip
+\noindent\textbf{Scan Type:}~Full\par\smallskip
+}
+\smallskip\noindent{\footnotesize\bfseries Event Structure}\par\smallskip
+\begingroup\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.1567\linewidth}p{0.1567\linewidth}p{0.0783\linewidth}p{0.0783\linewidth}p{0.4700\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{Count (total)} & \textbf{Type} & \textbf{Meta Level} & \textbf{Meaning} \\
+\midrule
+\texttt{Cue onset foot (class 3)} & 1375 & event & raw & Feet motor imagery cue \\
+\texttt{Cue onset left (class 1)} & 1224 & event & raw & Left-hand motor imagery cue \\
+\texttt{Cue onset right (class 2)} & 1224 & event & raw & Right-hand motor imagery cue \\
+\texttt{Cue onset tongue (class 4)} & 1656 & event & raw & Tongue motor imagery cue \\
+\texttt{Eye movements} & 18 & admin & raw & Artifactual eye movement event \\
+\texttt{Idling EEG (eyes closed)} & 17 & admin & raw & Resting state with eyes closed \\
+\texttt{Idling EEG (eyes open)} & 17 & admin & raw & Resting state with eyes open \\
+\texttt{Rejected trial} & 488 & admin & raw & Trial rejected by experimenter \\
+\texttt{Start of a new run} & 153 & admin & raw & Run boundary marker \\
+\texttt{Start of a trial} & 4896 & admin & raw & Trial-onset fixation cross (pre-cue marker) \\
+\bottomrule
+\end{tabular}
+\endgroup
+\smallskip\noindent{\footnotesize\bfseries Info}\par\smallskip
+\begingroup\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.2350\linewidth}p{0.2350\linewidth}p{0.4700\linewidth}@{}}
+\toprule
+\textbf{Field} & \textbf{Completeness} & \textbf{Notes} \\
+\midrule
+\texttt{age} & complete & N/A \\
+\texttt{sex} & complete & N/A \\
+\texttt{device} & missing & N/A \\
+\bottomrule
+\end{tabular}
+\endgroup
+\noindent\rule{\linewidth}{0.7pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize Tasks}
+\noindent{\footnotesize\bfseries Classical~Task~1:} {\footnotesize Four-Class Motor Imagery Classification}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0.5 s, tmax = 2.5 s, target\_events = [\texttt{Cue onset left (class 1)}, \texttt{Cue onset right (class 2)}, \texttt{Cue onset foot (class 3)}, \texttt{Cue onset tongue (class 4)}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{Cue onset left (class 1)} & 0 & Left-hand motor imagery \\
+\texttt{Cue onset right (class 2)} & 1 & Right-hand motor imagery \\
+\texttt{Cue onset foot (class 3)} & 2 & Feet motor imagery \\
+\texttt{Cue onset tongue (class 4)} & 3 & Tongue motor imagery \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize DOI: official website --- Official BCI Competition IV Dataset 2a description defines four-class MI (left hand, right hand, feet, tongue) as benchmark task with 4s imagery window from cue onset.}
+\item[\scriptsize$\cdot$] {\scriptsize DOI: 10.1109/tnnls.2018.2789927 --- CNN trained on 0.5-2.5s MI period after cue onset.}
+\item[\scriptsize$\cdot$] {\scriptsize DOI: 10.1109/tnsre.2022.3156076 --- SincNet hybrid achieves 74.26\% accuracy.}
+\end{itemize}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~1:} {\footnotesize Binary Motor Imagery - Left vs. Right Hand}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0.5 s, tmax = 2.5 s, target\_events = [\texttt{Cue onset left (class 1)}, \texttt{Cue onset right (class 2)}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{Cue onset left (class 1)} & 0 & Left-hand motor imagery \\
+\texttt{Cue onset right (class 2)} & 1 & Right-hand motor imagery \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\smallskip
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize Data Quality Notes}\par\smallskip
+\begin{itemize}[leftmargin=1.4em,noitemsep,topsep=2pt]
+\item{\footnotesize Rejected trials (variable per subject/session) should be excluded from analysis.}
+\item{\footnotesize EOG channels present; apply artifact rejection or regression before motor imagery classification.}
+\item{\footnotesize Evaluation files initially contain \texttt{Cue unknown (class 783)} entries that the kernel replaces with proper class labels from \texttt{.mat} companion files; verify companion file presence.}
+\item{\footnotesize Class balance is enforced by design (72 trials per class per session); minor imbalance may arise from rejected trials.}
+\item{\footnotesize Subject age range: 17-26 years; 7 female, 2 male subjects.}
+\end{itemize}
+\end{tcolorbox}
+\vspace{3pt}
+\noindent\begin{tcolorbox}[breakable,enhanced,colback=white,colframe=gray!55,boxrule=0.9pt,arc=4pt,left=6pt,right=6pt,top=4pt,bottom=4pt,title={\small\bfseries EEG Motor Movement/Imagery Database\hfill \colorbox{gray!20}{\scriptsize\sffamily\bfseries Completed}},coltitle=black,colbacktitle=gray!12,titlerule=0.5pt]
+{\footnotesize \textbf{ID:}~\texttt{physionet\_eegmmidb} $\mid$ \textbf{Year:}~2009 $\mid$ \textbf{Category:}~Action/Output $\mid$ \textbf{Subjects:}~109 $\mid$ \textbf{Channels:}~64 $\mid$ \textbf{SR:}~160 Hz $\mid$ \textbf{Files (completed):}~1526 $\mid$ \textbf{Super Meta:}~No $\mid$ \textbf{Reviewer:}~Anonymous}
+\par{\footnotesize\textbf{URL:}~\url{https://physionet.org/content/eegmmidb/1.0.0/}}
+\tcbline
+\noindent{\bfseries\footnotesize Paradigm}\par\smallskip
+{\footnotesize One hundred and nine volunteers performed a series of motor movement and motor imagery tasks, recorded with 64 EEG electrodes (international 10-10 system) at 160 Hz using the BCI2000 system (Schalk et al., 2004). Each subject completed 14 runs (R01-R14): two baseline runs (eyes open and eyes closed), and twelve task runs organized in three repeating cycles of four run types. Task runs alternate between real movements and mental imagery of the same movements. Two movement classes are used: left/right fist, and both fists/both feet. Events T0 (rest), T1, and T2 are annotated within each run; T1/T2 meanings differ by run number.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize File Scan Result}\par\smallskip
+{\scriptsize
+\noindent\textbf{Kernel SHA256:}~\texttt{bd1ed7ea5b310949f1bb2ce29057964e4e25db94ffb6a393129b948b562b88b8}\par\smallskip
+\noindent\textbf{EEGUnity Version:}~\texttt{0.8.1}\par\smallskip
+\noindent\textbf{Scan Type:}~Full\par\smallskip
+}
+\smallskip\noindent{\footnotesize\bfseries Event Structure}\par\smallskip
+\begingroup\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.1567\linewidth}p{0.1567\linewidth}p{0.0783\linewidth}p{0.0783\linewidth}p{0.4700\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{Count (total)} & \textbf{Type} & \textbf{Meta Level} & \textbf{Meaning} \\
+\midrule
+\texttt{Baseline, eyes closed} & 109 & event & raw & Eyes closed resting state baseline recording \\
+\texttt{Baseline, eyes open} & 109 & event & raw & Eyes open resting state baseline recording \\
+\texttt{Imagine Opening Both Fists Movement} & 2465 & event & raw & Motor imagery cue: open both fists \\
+\texttt{Imagine Opening Feet Movement} & 2455 & event & raw & Motor imagery cue: open/move both feet \\
+\texttt{Imagine Opening Left Fist Movement} & 2480 & event & raw & Motor imagery cue: open left fist \\
+\texttt{Imagine Opening Right Fist Movement} & 2438 & event & raw & Motor imagery cue: open right fist \\
+\texttt{Open Both Feet Movement} & 2469 & event & raw & Real movement cue: open both feet \\
+\texttt{Open Both Fists Movement} & 2440 & event & raw & Real movement cue: open both fists \\
+\texttt{Open Left Fist Movement} & 2471 & event & raw & Real movement cue: open left fist \\
+\texttt{Open Right Fist Movement} & 2456 & event & raw & Real movement cue: open right fist \\
+\texttt{Rest} & 19675 & event & raw & Rest period / trial baseline marker \\
+\texttt{T1} & 2 & admin & raw & Task cue type 1 (meaning varies by run) \\
+\bottomrule
+\end{tabular}
+\endgroup
+\smallskip\noindent{\footnotesize\bfseries Info}\par\smallskip
+\begingroup\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.2350\linewidth}p{0.2350\linewidth}p{0.4700\linewidth}@{}}
+\toprule
+\textbf{Field} & \textbf{Completeness} & \textbf{Notes} \\
+\midrule
+\texttt{age} & missing & N/A \\
+\texttt{sex} & missing & N/A \\
+\texttt{device} & missing & N/A \\
+\bottomrule
+\end{tabular}
+\endgroup
+\noindent\rule{\linewidth}{0.7pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize Tasks}
+\noindent{\footnotesize\bfseries Classical~Task~1:} {\footnotesize 4-Class Motor Imagery Classification}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0 s, tmax = 3 s, target\_events = [\texttt{Imagine Opening Left Fist Movement}, \texttt{Imagine Opening Right Fist Movement}, \texttt{Imagine Opening Both Fists Movement}, \texttt{Imagine Opening Feet Movement}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{Imagine Opening Left Fist Movement} & 0 & Left-fist motor imagery \\
+\texttt{Imagine Opening Right Fist Movement} & 1 & Right-fist motor imagery \\
+\texttt{Imagine Opening Both Fists Movement} & 2 & Both-fists motor imagery \\
+\texttt{Imagine Opening Feet Movement} & 3 & Both-feet motor imagery \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize DOI: 10.1109/TNSRE.2022.3186442 --- 4-class motor imagery classification (left/right fist, both fists, both feet) using the PhysioNet EEG Motor Imagery Database with tmin=0.0s and tmax=3.0s}
+\end{itemize}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~1:} {\footnotesize 4-Class Motor Movement Classification}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0 s, tmax = 3 s, target\_events = [\texttt{Open Left Fist Movement}, \texttt{Open Right Fist Movement}, \texttt{Open Both Fists Movement}, \texttt{Open Both Feet Movement}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{Open Left Fist Movement} & 0 & Left-fist movement \\
+\texttt{Open Right Fist Movement} & 1 & Right-fist movement \\
+\texttt{Open Both Fists Movement} & 2 & Both-fists movement \\
+\texttt{Open Both Feet Movement} & 3 & Both-feet movement \\
+\bottomrule
+\end{tabular}
+\endgroup
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~2:} {\footnotesize 4-Class Motor Movement Classification}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0.0 s, tmax = 3 s, target\_events = [\texttt{Imagine Opening Left Fist Movement}, \texttt{Open Left Fist Movement}, \texttt{Imagine Opening Right Fist Movement}, \texttt{Open Right Fist Movement}, \texttt{Imagine Opening Both Fists Movement}, \texttt{Open Both Fists Movement}, \texttt{Imagine Opening Feet Movement}, \texttt{Open Both Feet Movement}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{Imagine Opening Left Fist Movement} & 0 & Left-fist motor imagery (R04/08/12) \\
+\texttt{Open Left Fist Movement} & 0 & Left-fist real movement (R03/07/11) \\
+\texttt{Imagine Opening Right Fist Movement} & 1 & Right-fist motor imagery (R04/08/12) \\
+\texttt{Open Right Fist Movement} & 1 & Right-fist real movement (R03/07/11) \\
+\texttt{Imagine Opening Both Fists Movement} & 2 & Both-fists motor imagery (R06/10/14) \\
+\texttt{Open Both Fists Movement} & 2 & Both-fists real movement (R05/09/13) \\
+\texttt{Imagine Opening Feet Movement} & 3 & Both-feet motor imagery (R06/10/14) \\
+\texttt{Open Both Feet Movement} & 3 & Both-feet real movement (R05/09/13) \\
+\bottomrule
+\end{tabular}
+\endgroup
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~3:} {\footnotesize Binary Left vs. Right Fist Motor Imagery}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0 s, tmax = 3 s, target\_events = [\texttt{Imagine Opening Left Fist Movement}, \texttt{Imagine Opening Right Fist Movement}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{Imagine Opening Left Fist Movement} & 0 & Left-fist motor imagery \\
+\texttt{Imagine Opening Right Fist Movement} & 1 & Right-fist motor imagery \\
+\bottomrule
+\end{tabular}
+\endgroup
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~4:} {\footnotesize Both Fists vs. Both Feet Motor Imagery}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0 s, tmax = 3 s, target\_events = [\texttt{Imagine Opening Both Fists Movement}, \texttt{Imagine Opening Feet Movement}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{Imagine Opening Both Fists Movement} & 0 & Both-fists motor imagery (R06/10/14) \\
+\texttt{Imagine Opening Feet Movement} & 1 & Both-feet motor imagery (R06/10/14) \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\smallskip
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize Data Quality Notes}\par\smallskip
+\begin{itemize}[leftmargin=1.4em,noitemsep,topsep=2pt]
+\item{\footnotesize Age and sex information are not available in the public metadata.}
+\item{\footnotesize Known data quality issues: several subjects have noisy recordings; EEG.physionet.org community notes suggest subjects S088, S089, S092, S100, S104 may have unusual recordings.}
+\item{\footnotesize T1/T2 event meaning \textbf{changes by run number}; always filter by run before assigning class labels.}
+\item{\footnotesize \texttt{Baseline} (T0) events in task runs are rest periods and should be excluded from MI classification targets.}
+\end{itemize}
+\end{tcolorbox}
+\vspace{3pt}
+\noindent\begin{tcolorbox}[breakable,enhanced,colback=white,colframe=gray!55,boxrule=0.9pt,arc=4pt,left=6pt,right=6pt,top=4pt,bottom=4pt,title={\small\bfseries Sleep-EDF Database Expanded\hfill \colorbox{gray!20}{\scriptsize\sffamily\bfseries Completed}},coltitle=black,colbacktitle=gray!12,titlerule=0.5pt]
+{\footnotesize \textbf{ID:}~\texttt{physionet\_sleepedfx} $\mid$ \textbf{Year:}~1987-1991/1994 $\mid$ \textbf{Category:}~Biological State $\mid$ \textbf{Subjects:}~106 $\mid$ \textbf{Channels:}~7 $\mid$ \textbf{SR:}~100 Hz $\mid$ \textbf{Files (completed):}~197 $\mid$ \textbf{Super Meta:}~No $\mid$ \textbf{Reviewer:}~Anonymous}
+\par{\footnotesize\textbf{URL:}~\url{https://physionet.org/content/sleep-edfx/1.0.0/}}
+\tcbline
+\noindent{\bfseries\footnotesize Paradigm}\par\smallskip
+{\footnotesize The sleep-edf database contains 197 whole-night PolySomnoGraphic sleep recordings, containing EEG, EOG, chin EMG, and event markers. Some records also contain respiration and body temperature. Corresponding hypnograms (sleep patterns) were manually scored by well-trained technicians according to the Rechtschaffen and Kales manual, and are also available.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize File Scan Result}\par\smallskip
+{\scriptsize
+\noindent\textbf{Kernel SHA256:}~\texttt{db96b3badc0af51588705980412f7ed0016ef5345e218e37bd3d1fd192911aad}\par\smallskip
+\noindent\textbf{EEGUnity Version:}~\texttt{0.8.1}\par\smallskip
+\noindent\textbf{Scan Type:}~Full\par\smallskip
+}
+\smallskip\noindent{\footnotesize\bfseries Event Structure}\par\smallskip
+\begingroup\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.1567\linewidth}p{0.1567\linewidth}p{0.0783\linewidth}p{0.0783\linewidth}p{0.4700\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{Count (total)} & \textbf{Type} & \textbf{Meta Level} & \textbf{Meaning} \\
+\midrule
+\texttt{Movement time} & 196 & event & raw & Subject movement marker; out-of-bed period during recording \\
+\texttt{Sleep stage 1} & 7292 & event & raw & Sleep stage 1 (light sleep) epoch annotation \\
+\texttt{Sleep stage 2} & 8171 & event & raw & Sleep stage 2 (light sleep) epoch annotation \\
+\texttt{Sleep stage 3} & 4820 & event & raw & Sleep stage 3 (slow wave sleep) epoch annotation \\
+\texttt{Sleep stage 4} & 1462 & event & raw & Sleep stage 4 (deep slow wave sleep) epoch annotation \\
+\texttt{Sleep stage ?} & 173 & event & raw & Unscored or ambiguous epoch; annotation uncertain \\
+\texttt{Sleep stage R} & 1953 & event & raw & Sleep stage R (REM sleep) epoch annotation \\
+\texttt{Sleep stage W} & 4461 & event & raw & Sleep stage W (wakefulness) epoch annotation \\
+\bottomrule
+\end{tabular}
+\endgroup
+\smallskip\noindent{\footnotesize\bfseries Info}\par\smallskip
+\begingroup\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.2350\linewidth}p{0.2350\linewidth}p{0.4700\linewidth}@{}}
+\toprule
+\textbf{Field} & \textbf{Completeness} & \textbf{Notes} \\
+\midrule
+\texttt{age} & complete & N/A \\
+\texttt{sex} & complete & N/A \\
+\texttt{device} & missing & N/A \\
+\bottomrule
+\end{tabular}
+\endgroup
+\noindent\rule{\linewidth}{0.7pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize Tasks}
+\noindent{\footnotesize\bfseries Classical~Task~1:} {\footnotesize Sleep stage classification (5-class)}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_long\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0.0 s, tmax = 30.0 s, overlap = 0.0, target\_events = [\texttt{Sleep stage W}, \texttt{Sleep stage 1}, \texttt{Sleep stage 2}, \texttt{Sleep stage 3}, \texttt{Sleep stage 4}, \texttt{Sleep stage R}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{Sleep stage W} & 0 & Wake \\
+\texttt{Sleep stage 1} & 1 & NREM Stage 1 \\
+\texttt{Sleep stage 2} & 2 & NREM Stage 2 \\
+\texttt{Sleep stage 3} & 3 & NREM Stage 3 (includes S3+S4 merged per AASM) \\
+\texttt{Sleep stage 4} & 3 & NREM Stage 3 (mapped to y=3; S3 and S4 merged) \\
+\texttt{Sleep stage R} & 4 & REM \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize 10.7717/peerjcs.1561\_table --- 2 --- Five-class sleep staging (W, N1, N2, N3, REM) on Sleep-EDF Expanded, 30-second epochs, AASM standard merging S3+S4 into N3}
+\end{itemize}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~1:} {\footnotesize Wake vs. Sleep Binary Classification (epoch\_by\_long\_event)}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_long\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0.0 s, tmax = 30.0 s, overlap = 0.0, target\_events = [\texttt{Sleep stage W}, \texttt{Sleep stage 1}, \texttt{Sleep stage 2}, \texttt{Sleep stage 3}, \texttt{Sleep stage 4}, \texttt{Sleep stage R}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{Sleep stage W} & 0 & Wake \\
+\texttt{Sleep stage 1} & 1 & Any sleep (stages 1-4 and R) \\
+\texttt{Sleep stage 2} & 1 & Any sleep \\
+\texttt{Sleep stage 3} & 1 & Any sleep \\
+\texttt{Sleep stage 4} & 1 & Any sleep \\
+\texttt{Sleep stage R} & 1 & Any sleep \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize \textbf{Notes}:}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize \textbf{Kernel Notes}:}
+\par\smallskip
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize Data Quality Notes}\par\smallskip
+\begin{itemize}[leftmargin=1.4em,noitemsep,topsep=2pt]
+\item{\footnotesize Only PSG files should be processed; Hypnogram files (matched companion files) are used for annotation only and are returned unchanged by the kernel.}
+\item{\footnotesize Class imbalance: Stage 2 is the most frequent stage; Wake also contributes large counts from lights-on periods at start/end of recording.}
+\item{\footnotesize Two EEG channels only (Fpz-Cz, Pz-Oz); limited spatial resolution.}
+\end{itemize}
+\end{tcolorbox}
+\vspace{3pt}
+\noindent\begin{tcolorbox}[breakable,enhanced,colback=white,colframe=gray!55,boxrule=0.9pt,arc=4pt,left=6pt,right=6pt,top=4pt,bottom=4pt,title={\small\bfseries TUH EEG Seizure Corpus\hfill \colorbox{gray!20}{\scriptsize\sffamily\bfseries Completed}},coltitle=black,colbacktitle=gray!12,titlerule=0.5pt]
+{\footnotesize \textbf{ID:}~\texttt{tuh\_eeg\_seizure} $\mid$ \textbf{Year:}~2018 $\mid$ \textbf{Category:}~Biological State $\mid$ \textbf{Subjects:}~675 $\mid$ \textbf{Channels:}~17-128 $\mid$ \textbf{SR:}~250/256/400/1000 Hz $\mid$ \textbf{Files (completed):}~7361 $\mid$ \textbf{Super Meta:}~No $\mid$ \textbf{Reviewer:}~Anonymous}
+\par{\footnotesize\textbf{URL:}~\url{https://isip.piconepress.com/projects/nedc/html/tuh_eeg}}
+\tcbline
+\noindent{\bfseries\footnotesize Paradigm}\par\smallskip
+{\footnotesize The TUH EEG Seizure Corpus (TUSZ) is a specialized dataset developed to advance seizure detection algorithms through machine learning. A subset of the broader TUH EEG Corpus, this dataset includes sessions specifically featuring seizure events, alongside sessions without seizures for testing false alarm rates. It consists of data from three primary directories: training (train), development (dev), and evaluation (eval), with 7361 files in total, across various seizure and non-seizure events. The dataset features EEG data in European Data Format (edf), with event-based annotations captured in both multi-class and bi-class formats. Multi-class annotations provide detailed seizure types, while bi-class annotations simplify the dataset into seizure (seiz) and background (bckg) labels. These annotations are recorded per channel, capturing the spread of seizures across multiple electrodes. EEG recordings are captured using two common reference configurations: averaged reference (AR) and linked ears reference (LE), with the data adhering to the standard 10/20 channel montage for consistency across files. The dataset includes a vast number of seizure events, with specific counts for training, development, and evaluation sets. The TUSZ corpus plays a vital role in the development and testing of advanced seizure detection systems, supporting both the detection of seizures and the analysis of seizure-free segments}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize File Scan Result}\par\smallskip
+{\scriptsize
+\noindent\textbf{Kernel SHA256:}~\texttt{0c90e3ec94547026731787ac95cb32b924b667dc778975c503f0d947daff981f}\par\smallskip
+\noindent\textbf{EEGUnity Version:}~\texttt{0.8.1}\par\smallskip
+\noindent\textbf{Scan Type:}~Full\par\smallskip
+\noindent the meaning from dataset file "seizures\_types\_v02.xlsx"\par\smallskip
+}
+\smallskip\noindent{\footnotesize\bfseries Event Structure}\par\smallskip
+\begingroup\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.1567\linewidth}p{0.1567\linewidth}p{0.0783\linewidth}p{0.0783\linewidth}p{0.4700\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{Count (total)} & \textbf{Type} & \textbf{Meta Level} & \textbf{Meaning} \\
+\midrule
+\texttt{absz} & 121 & event & raw & Absence seizure \\
+\texttt{bckg} & 15454 & event & raw & Background activity \\
+\texttt{cpsz} & 1520 & event & raw & Complex partial seizure \\
+\texttt{fnsz} & 4891 & event & raw & Focal non-specific seizure \\
+\texttt{gnsz} & 2491 & event & raw & Generalized non-specific seizure \\
+\texttt{mysz} & 3 & event & raw & Myoclonic seizure \\
+\texttt{seiz} & 146 & event & raw & Seizure event (Common seizure class which can include all types of seizure) \\
+\texttt{spsz} & 57 & event & raw & Simple partial seizure \\
+\texttt{tcsz} & 199 & event & raw & Tonic-clonic seizure (At first stiffening and then jerking of body (Grand Mal)) \\
+\texttt{tnsz} & 126 & event & raw & Tonic seizure (Stiffening of body during seizure, EEG effects disappears) \\
+\bottomrule
+\end{tabular}
+\endgroup
+\smallskip\noindent{\footnotesize\bfseries Info}\par\smallskip
+\begingroup\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.2350\linewidth}p{0.2350\linewidth}p{0.4700\linewidth}@{}}
+\toprule
+\textbf{Field} & \textbf{Completeness} & \textbf{Notes} \\
+\midrule
+\texttt{age} & missing & N/A \\
+\texttt{sex} & missing & N/A \\
+\texttt{device} & missing & N/A \\
+\bottomrule
+\end{tabular}
+\endgroup
+\noindent\rule{\linewidth}{0.7pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize Tasks}
+\noindent{\footnotesize\bfseries Classical~Task~1:} {\footnotesize Binary Seizure Detection (Seizure vs Background)}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_long\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0.0 s, tmax = 1 s, overlap = 0.0, target\_events = [\texttt{absz}, \texttt{bckg}, \texttt{cpsz}, \texttt{fnsz}, \texttt{gnsz}, \texttt{mysz}, \texttt{seiz}, \texttt{spsz}, \texttt{tcsz}, \texttt{tnsz}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{bckg} & 0 & Background / non-seizure \\
+\texttt{gnsz} & 1 & Generalized non-specific seizure \\
+\texttt{fnsz} & 1 & Focal non-specific seizure \\
+\texttt{cpsz} & 1 & Complex partial seizure \\
+\texttt{absz} & 1 & Absence seizure \\
+\texttt{tnsz} & 1 & Tonic seizure \\
+\texttt{spsz} & 1 & Simple Partial Seizure \\
+\texttt{mysz} & 1 & Myoclonic Seizure \\
+\texttt{tcsz} & 1 & Tonic Clonic Seizure \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize 10.1088/1741-2552/ac7d0d --- Uses TUH EEG with 1-second windows (50\% overlap) for binary seizure vs non-seizure classification; leave-one-out cross-subject evaluation}
+\item[\scriptsize$\cdot$] {\scriptsize 10.1109/tii.2023.3274913 --- Uses TUH EEG with 4-second non-overlapping epochs for binary seizure detection; CNN classifier achieved 98.48\% average accuracy with leave-one-patient-out cross-validation}
+\end{itemize}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~1:} {\footnotesize Multi-class Seizure Type Classification}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_long\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0.0 s, tmax = 1 s, overlap = 0.0, target\_events = [\texttt{absz}, \texttt{cpsz}, \texttt{fnsz}, \texttt{gnsz}, \texttt{mysz}, \texttt{spsz}, \texttt{tcsz}, \texttt{tnsz}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{gnsz} & 0 & Generalized non-specific seizure \\
+\texttt{fnsz} & 1 & Focal non-specific seizure \\
+\texttt{cpsz} & 2 & Complex partial seizure \\
+\texttt{absz} & 3 & Absence seizure \\
+\texttt{tnsz} & 4 & Tonic seizure \\
+\texttt{spsz} & 5 & Simple Partial Seizure \\
+\texttt{tcsz} & 6 & Tonic Clonic Seizure \\
+\texttt{mysz} & 7 & Myoclonic Seizure \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize classify further specific seizure, more challenge.}
+\par\smallskip
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize Data Quality Notes}\par\smallskip
+\begin{itemize}[leftmargin=1.4em,noitemsep,topsep=2pt]
+\item{\footnotesize \#\# Kernel Responsibilities}
+\end{itemize}
+\end{tcolorbox}
+\vspace{3pt}
+\noindent\begin{tcolorbox}[breakable,enhanced,colback=white,colframe=gray!55,boxrule=0.9pt,arc=4pt,left=6pt,right=6pt,top=4pt,bottom=4pt,title={\small\bfseries Healthy Brain Network (HBN) EEG - Release 1\hfill \colorbox{gray!20}{\scriptsize\sffamily\bfseries Completed}},coltitle=black,colbacktitle=gray!12,titlerule=0.5pt]
+{\footnotesize \textbf{ID:}~\texttt{openneuro\_ds005505} $\mid$ \textbf{Year:}~2017/2025 $\mid$ \textbf{Category:}~Complex Applied $\mid$ \textbf{Subjects:}~136 $\mid$ \textbf{Channels:}~129 $\mid$ \textbf{SR:}~500 Hz $\mid$ \textbf{Files (completed):}~1342 $\mid$ \textbf{Super Meta:}~Yes $\mid$ \textbf{Reviewer:}~Anonymous}
+\par{\footnotesize\textbf{URL:}~\url{https://openneuro.org/datasets/ds005505}}
+\tcbline
+\noindent{\bfseries\footnotesize Paradigm}\par\smallskip
+{\footnotesize The Healthy Brain Network (HBN) EEG Release 1 is a large-scale developmental EEG battery collected from children and adolescents. This release includes six paradigms: naturalistic movie watching, resting state with alternating eyes-open and eyes-closed periods, contrast change detection, surround suppression, sequence learning, and symbol search. For the current benchmark draft, we keep only the tasks that have strong grounding in the release documentation and can be implemented directly from native events or narrowly defined kernel derivations.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize File Scan Result}\par\smallskip
+{\scriptsize
+\noindent\textbf{Kernel SHA256:}~\texttt{d2a20370c75e70aa962603af5a1b27b44532d88150c49839b32b4d27ebabb160}\par\smallskip
+\noindent\textbf{EEGUnity Version:}~\texttt{0.8.1}\par\smallskip
+\noindent\textbf{Scan Type:}~Full\par\smallskip
+}
+\smallskip\noindent{\footnotesize\bfseries Event Structure}\par\smallskip
+\begingroup\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.1567\linewidth}p{0.1567\linewidth}p{0.0783\linewidth}p{0.0783\linewidth}p{0.4700\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{Count (total)} & \textbf{Type} & \textbf{Meta Level} & \textbf{Meaning} \\
+\midrule
+\texttt{9999} & 1136 & admin & raw & Administrative recording/session marker \\
+\texttt{boundary} & 728 & admin & raw & EEGLAB/BIDS boundary or discontinuity marker, not a stimulus class \\
+\texttt{break cnt} & 1488 & admin & raw & Administrative break counter marker, often at recording onset \\
+\texttt{contrastChangeB1\_\allowbreak{}start} & 102 & event & raw & Start of contrast change detection block/run 1 \\
+\texttt{contrastChangeB2\_\allowbreak{}start} & 117 & event & raw & Start of contrast change detection block/run 2 \\
+\texttt{contrastChangeB3\_\allowbreak{}start} & 143 & event & raw & Start of contrast change detection block/run 3 \\
+\texttt{contrastTrial\_\allowbreak{}start} & 8884 & event & raw & Start of a single contrast change detection trial \\
+\texttt{contrast\_\allowbreak{}response\_\allowbreak{}correct} & 6588 & event & super & Button response was correct for the preceding contrast target \\
+\texttt{contrast\_\allowbreak{}response\_\allowbreak{}incorrect} & 731 & event & super & Button response was incorrect for the preceding contrast target \\
+\texttt{dot\_\allowbreak{}no1\_\allowbreak{}OFF} & 600 & event & raw & Dot position 1 offset in sequence learning \\
+\texttt{dot\_\allowbreak{}no1\_\allowbreak{}ON} & 600 & event & raw & Dot position 1 onset in sequence learning \\
+\texttt{dot\_\allowbreak{}no2\_\allowbreak{}OFF} & 1202 & event & raw & Dot position 2 offset in sequence learning \\
+\texttt{dot\_\allowbreak{}no2\_\allowbreak{}ON} & 1234 & event & raw & Dot position 2 onset in sequence learning \\
+\texttt{dot\_\allowbreak{}no3\_\allowbreak{}OFF} & 600 & event & raw & Dot position 3 offset in sequence learning \\
+\texttt{dot\_\allowbreak{}no3\_\allowbreak{}ON} & 624 & event & raw & Dot position 3 onset in sequence learning \\
+\texttt{dot\_\allowbreak{}no4\_\allowbreak{}OFF} & 600 & event & raw & Dot position 4 offset in sequence learning \\
+\texttt{dot\_\allowbreak{}no4\_\allowbreak{}ON} & 600 & event & raw & Dot position 4 onset in sequence learning \\
+\texttt{dot\_\allowbreak{}no5\_\allowbreak{}OFF} & 600 & event & raw & Dot position 5 offset in sequence learning \\
+\texttt{dot\_\allowbreak{}no5\_\allowbreak{}ON} & 600 & event & raw & Dot position 5 onset in sequence learning \\
+\texttt{dot\_\allowbreak{}no6\_\allowbreak{}OFF} & 600 & event & raw & Dot position 6 offset in sequence learning \\
+\texttt{dot\_\allowbreak{}no6\_\allowbreak{}ON} & 600 & event & raw & Dot position 6 onset in sequence learning \\
+\texttt{dot\_\allowbreak{}no7\_\allowbreak{}OFF} & 793 & event & raw & Dot position 7 offset in sequence learning \\
+\texttt{dot\_\allowbreak{}no7\_\allowbreak{}ON} & 792 & event & raw & Dot position 7 onset in sequence learning \\
+\texttt{dot\_\allowbreak{}no8\_\allowbreak{}OFF} & 396 & event & raw & Dot position 8 offset in sequence learning \\
+\texttt{dot\_\allowbreak{}no8\_\allowbreak{}ON} & 396 & event & raw & Dot position 8 onset in sequence learning \\
+\texttt{fixpoint\_\allowbreak{}ON} & 13248 & event & raw & Fixation point onset in the surround suppression task \\
+\texttt{instructed\_\allowbreak{}toCloseEyes} & 680 & event & raw & Auditory instruction to close eyes during resting state \\
+\texttt{instructed\_\allowbreak{}toOpenEyes} & 816 & event & raw & Auditory instruction to open eyes during resting state \\
+\texttt{learningBlock\_\allowbreak{}1} & 122 & event & raw & Start of sequence learning block 1 \\
+\texttt{learningBlock\_\allowbreak{}2} & 121 & event & raw & Start of sequence learning block 2 \\
+\texttt{learningBlock\_\allowbreak{}3} & 120 & event & raw & Start of sequence learning block 3 \\
+\texttt{learningBlock\_\allowbreak{}4} & 119 & event & raw & Start of sequence learning block 4 \\
+\texttt{learningBlock\_\allowbreak{}5} & 118 & event & raw & Start of sequence learning block 5 \\
+\texttt{left\_\allowbreak{}buttonPress} & 5095 & event & raw & Left mouse button press response in contrast change detection \\
+\texttt{left\_\allowbreak{}target} & 4243 & event & raw & Left-tilted contrast target presentation \\
+\texttt{newPage} & 194 & event & raw & New symbol search page or query set presented \\
+\texttt{resting\_\allowbreak{}start} & 139 & event & raw & Start of resting-state recording \\
+\texttt{right\_\allowbreak{}buttonPress} & 4634 & event & raw & Right mouse button press response in contrast change detection \\
+\texttt{right\_\allowbreak{}target} & 4251 & event & raw & Right-tilted contrast target presentation \\
+\texttt{seqLearning\_\allowbreak{}start} & 122 & event & raw & Sequence learning task start \\
+\texttt{seqLearning\_\allowbreak{}stop} & 118 & event & raw & Sequence learning task stop \\
+\texttt{stim\_\allowbreak{}ON} & 13278 & event & raw & Surround suppression visual stimulus onset \\
+\texttt{surroundSuppB1\_\allowbreak{}start} & 108 & event & raw & Start of surround suppression block/run 1 \\
+\texttt{surroundSuppB2\_\allowbreak{}start} & 99 & event & raw & Start of surround suppression block/run 2 \\
+\texttt{symbolSearch\_\allowbreak{}start} & 76 & event & raw & Symbol search task start \\
+\texttt{trialResponse} & 1247 & event & raw & Participant response in the symbol search task \\
+\texttt{video\_\allowbreak{}start} & 761 & event & raw & Movie stimulus presentation start \\
+\texttt{video\_\allowbreak{}stop} & 723 & event & raw & Movie stimulus presentation stop \\
+\bottomrule
+\end{tabular}
+\endgroup
+\smallskip\noindent{\footnotesize\bfseries MISC Label Summary}\par\smallskip
+\begingroup\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{\dimexpr 0.94\linewidth/4\relax}p{\dimexpr 0.94\linewidth/4\relax}p{\dimexpr 0.94\linewidth/4\relax}p{\dimexpr 0.94\linewidth/4\relax}@{}}
+\toprule
+\textbf{Channel} & \textbf{Source} & \textbf{Meta} & \textbf{Notes} \\
+\midrule
+\texttt{response\_time} & derived (kernel) & super & Seconds from contrast target onset to the first valid button press within the same trial; filled from target onset through the matched response and NaN elsewhere \\
+\bottomrule
+\end{tabular}
+\endgroup
+\smallskip\noindent{\footnotesize\bfseries Info}\par\smallskip
+\begingroup\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.2350\linewidth}p{0.2350\linewidth}p{0.4700\linewidth}@{}}
+\toprule
+\textbf{Field} & \textbf{Completeness} & \textbf{Notes} \\
+\midrule
+\texttt{DespicableMe} & complete & Availability flag for the Despicable Me movie watching recording \\
+\texttt{DiaryOfAWimpyKid} & complete & Availability flag for the Diary of a Wimpy Kid movie watching recording \\
+\texttt{FunwithFractals} & complete & Availability flag for the Fun with Fractals movie watching recording \\
+\texttt{RestingState} & complete & Availability flag for the resting-state recording \\
+\texttt{ThePresent} & complete & Availability flag for The Present movie watching recording \\
+\texttt{age} & complete & Participant age in years \\
+\texttt{attention} & partial (1304/1342) & CBCL-derived attention dimension score \\
+\texttt{commercial\_\allowbreak{}use} & complete & Participant consent flag for commercial use \\
+\texttt{contrastChangeDetection\_\allowbreak{}1} & complete & Availability/QC flag for contrast change detection run 1 \\
+\texttt{contrastChangeDetection\_\allowbreak{}2} & complete & Availability/QC flag for contrast change detection run 2 \\
+\texttt{contrastChangeDetection\_\allowbreak{}3} & complete & Availability/QC flag for contrast change detection run 3 \\
+\texttt{dataset} & complete & Kernel-added dataset identifier \\
+\texttt{dataset\_\allowbreak{}root} & complete & Kernel-added absolute raw dataset root used for the scan \\
+\texttt{device} & complete & Hardware label combined from EEG sidecar manufacturer and model fields \\
+\texttt{eeg\_\allowbreak{}reference} & complete & EEG reference from the EEG sidecar \\
+\texttt{ehq\_\allowbreak{}total} & partial (1325/1342) & Edinburgh Handedness Questionnaire total score; positive is more right-handed and negative is more left-handed \\
+\texttt{externalizing} & partial (1304/1342) & CBCL-derived externalizing symptom dimension score \\
+\texttt{full\_\allowbreak{}pheno} & complete & Flag indicating whether a full phenotypic file is available \\
+\texttt{internalizing} & partial (1304/1342) & CBCL-derived internalizing symptom dimension score \\
+\texttt{manufacturer} & complete & EEG sidecar manufacturer field \\
+\texttt{manufacturers\_\allowbreak{}model\_\allowbreak{}name} & complete & EEG sidecar amplifier/cap model field \\
+\texttt{p\_\allowbreak{}factor} & partial (1304/1342) & Participant-level general psychopathology factor score \\
+\texttt{power\_\allowbreak{}line\_\allowbreak{}frequency} & complete & Power-line frequency in Hz from the EEG sidecar \\
+\texttt{recording\_\allowbreak{}type} & complete & BIDS recording type from the EEG sidecar \\
+\texttt{release\_\allowbreak{}number} & complete & HBN EEG release identifier \\
+\texttt{run} & partial (500/1342) & BIDS run entity; blank for tasks without an explicit run index \\
+\texttt{sampling\_\allowbreak{}frequency} & complete & EEG sampling frequency in Hz from the EEG sidecar \\
+\texttt{seqLearning6target} & complete & Availability flag for the 6-target sequence learning variant \\
+\texttt{seqLearning8target} & complete & Availability flag for the 8-target sequence learning variant \\
+\texttt{sex} & complete & Participant sex code from participants.tsv \\
+\texttt{subject\_\allowbreak{}id} & complete & BIDS participant identifier \\
+\texttt{surroundSupp\_\allowbreak{}1} & complete & Availability/QC flag for surround suppression run 1 \\
+\texttt{surroundSupp\_\allowbreak{}2} & complete & Availability/QC flag for surround suppression run 2 \\
+\texttt{symbolSearch} & complete & Availability/QC flag for the symbol search recording \\
+\texttt{task} & complete & BIDS task entity parsed from the file name \\
+\bottomrule
+\end{tabular}
+\endgroup
+\noindent\rule{\linewidth}{0.7pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize Tasks}
+\noindent{\footnotesize\bfseries Classical~Task~1:} {\footnotesize resting state eyes-open vs eyes-closed}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_long\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 2.0 s, tmax = 20.0 s, overlap = 0.0, target\_events = [\texttt{instructed\_toCloseEyes}, \texttt{instructed\_toOpenEyes}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{instructed\_toOpenEyes} & 0 & Eyes-open resting state \\
+\texttt{instructed\_toCloseEyes} & 1 & Eyes-closed resting state \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize 10.1101/2024.10.03.615261 --- The HBN-EEG release paper describes alternating eyes-open and eyes-closed resting-state periods and documents the corresponding instruction events in the release.}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize This is a sustained-state classification task. The first 2 seconds after each auditory instruction are skipped to reduce cue-evoked activity, and the 20-second window avoids crossing from the shorter eyes-open periods into the following eyes-closed period.}
+\noindent\rule{\linewidth}{0.7pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Classical~Task~2:} {\footnotesize contrast change target direction}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = -0.2 s, tmax = 1.5 s, target\_events = [\texttt{left\_target}, \texttt{right\_target}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{left\_target} & 0 & Left-leaning target stimulus \\
+\texttt{right\_target} & 1 & Right-leaning target stimulus \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize 10.1101/2024.10.03.615261 --- The release documentation explicitly identifies \texttt{left\_target} and \texttt{right\_target} as distinct contrast-detection stimulus events.}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize This is the cleanest native event classification task in the active contrast paradigm.}
+\noindent\rule{\linewidth}{0.7pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Classical~Task~3:} {\footnotesize contrast response time}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & regression \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = -0.2 s, tmax = 1.5 s, target\_events = [\texttt{left\_target}, \texttt{right\_target}] \\
+\textbf{Label Route} & \texttt{misc} \\
+\textbf{Meta Level} & super \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.1760\linewidth}p{0.7040\linewidth}@{}}
+\toprule
+\textbf{MISC Channel Name} & \textbf{Y Mapping Notes} \\
+\midrule
+\texttt{response\_time} & y directly equals the latency in seconds from contrast target onset to the first valid button press in the same trial; no class mapping \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize 10.1101/2024.10.03.615261 --- The release describes active button-press behavior for the contrast-change paradigm.}
+\item[\scriptsize$\cdot$] {\scriptsize EEG 2025 Challenge 1 tutorial --- The public challenge task for this paradigm uses a derived stimulus-to-response latency target (\texttt{rt\_from\_stimulus}), supporting the same label construction principle.}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize The kernel fills this misc channel only between the target onset and the matched button press. Samples outside those per-trial windows remain NaN.}
+\noindent\rule{\linewidth}{0.7pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Classical~Task~4:} {\footnotesize externalizing factor regression}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & regression \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_segmentation\_hdf5} \\
+\textbf{Epoch Params} & segment\_length = 4.0 s, overlap = 0.5, target\_events = [] \\
+\textbf{Label Route} & \texttt{info} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.1760\linewidth}p{0.7040\linewidth}@{}}
+\toprule
+\textbf{Info Field} & \textbf{Y Mapping Notes} \\
+\midrule
+\texttt{externalizing} & y directly equals the participant-level externalizing score from participants.tsv; no mapping \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize 10.1101/2024.10.03.615261 --- The HBN-EEG release paper states that openly available participant information includes externalizing, internalizing, attention, and p-factor dimensions derived from questionnaire modeling.}
+\item[\scriptsize$\cdot$] {\scriptsize EEG 2025 Challenge website --- The current Challenge 2 target is externalizing factor prediction from HBN-EEG recordings.}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize This is an info-route participant-level regression task. Windows with missing \texttt{externalizing} values should be excluded before training or evaluation.}
+\noindent\rule{\linewidth}{0.7pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Classical~Task~5:} {\footnotesize p-factor regression}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & regression \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_segmentation\_hdf5} \\
+\textbf{Epoch Params} & segment\_length = 4.0 s, overlap = 0.5, target\_events = [] \\
+\textbf{Label Route} & \texttt{info} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.1760\linewidth}p{0.7040\linewidth}@{}}
+\toprule
+\textbf{Info Field} & \textbf{Y Mapping Notes} \\
+\midrule
+\texttt{p\_factor} & y directly equals the participant-level p-factor score from participants.tsv; no mapping \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize 10.1101/2024.10.03.615261 --- The release paper explicitly exposes \texttt{p\_factor} as an openly available participant-level psychopathology dimension.}
+\item[\scriptsize$\cdot$] {\scriptsize EEGDash Challenge 2 tutorial --- Public benchmark materials for the HBN EEG release use \texttt{p\_factor} as a participant-level prediction target.}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize This is an info-route regression task. The current EEG 2025 final challenge target has shifted to \texttt{externalizing}, but \texttt{p\_factor} remains a documented HBN phenotype field and a previously published benchmark target.}
+\noindent\rule{\linewidth}{0.7pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Classical~Task~6:} {\footnotesize sequence learning 6-target stimulus position}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = -0.2 s, tmax = 0.8 s, target\_events = [\texttt{dot\_no1\_ON}, \texttt{dot\_no2\_ON}, \texttt{dot\_no3\_ON}, \texttt{dot\_no4\_ON}, \texttt{dot\_no5\_ON}, \texttt{dot\_no6\_ON}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{dot\_no1\_ON} & 0 & Dot position 1 onset \\
+\texttt{dot\_no2\_ON} & 1 & Dot position 2 onset \\
+\texttt{dot\_no3\_ON} & 2 & Dot position 3 onset \\
+\texttt{dot\_no4\_ON} & 3 & Dot position 4 onset \\
+\texttt{dot\_no5\_ON} & 4 & Dot position 5 onset \\
+\texttt{dot\_no6\_ON} & 5 & Dot position 6 onset \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize \texttt{10.1101/2024.10.03.615261} - The release paper states that younger participants completed a 6-target variant of the sequence-learning paradigm.}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize This task should be restricted to recordings or participants belonging to the 6-target variant, using dataset evidence such as \texttt{seqLearning6target} and the absence of \texttt{dot\_no7\_ON} and \texttt{dot\_no8\_ON}.}
+\noindent\rule{\linewidth}{0.7pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Classical~Task~7:} {\footnotesize sequence learning 8-target stimulus position}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = -0.2 s, tmax = 0.8 s, target\_events = [\texttt{dot\_no1\_ON}, \texttt{dot\_no2\_ON}, \texttt{dot\_no3\_ON}, \texttt{dot\_no4\_ON}, \texttt{dot\_no5\_ON}, \texttt{dot\_no6\_ON}, \texttt{dot\_no7\_ON}, \texttt{dot\_no8\_ON}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{dot\_no1\_ON} & 0 & Dot position 1 onset \\
+\texttt{dot\_no2\_ON} & 1 & Dot position 2 onset \\
+\texttt{dot\_no3\_ON} & 2 & Dot position 3 onset \\
+\texttt{dot\_no4\_ON} & 3 & Dot position 4 onset \\
+\texttt{dot\_no5\_ON} & 4 & Dot position 5 onset \\
+\texttt{dot\_no6\_ON} & 5 & Dot position 6 onset \\
+\texttt{dot\_no7\_ON} & 6 & Dot position 7 onset \\
+\texttt{dot\_no8\_ON} & 7 & Dot position 8 onset \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize 10.1101/2024.10.03.615261 --- The release paper states that older participants completed an 8-target sequence-learning variant in which each flashed dot position is explicitly encoded by native event IDs.}
+\item[\scriptsize$\cdot$] {\scriptsize 10.1101/2024.10.03.615261 --- The same paper notes that response timestamps for the later recall phase were not recorded, so the grounded task here is stimulus-position decoding, not recall-performance decoding.}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize This task captures sequence stimulus-position decoding during repeated observation. It should be restricted to the 8-target variant rather than pooled with the 6-target recordings.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~1:} {\footnotesize contrast response correctness}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = -0.6 s, tmax = 0.4 s, target\_events = [\texttt{contrast\_response\_correct}, \texttt{contrast\_response\_incorrect}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & super \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{contrast\_response\_correct} & 0 & Response side matched the preceding contrast target \\
+\texttt{contrast\_response\_incorrect} & 1 & Response side did not match the preceding contrast target \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize 10.1101/2024.10.03.615261 --- The release paper describes the contrast-change task as an active discrimination task with button-press responses and feedback.}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize The kernel derives these response-locked super events by pairing each \texttt{left\_target} or \texttt{right\_target} with the first subsequent \texttt{left\_buttonPress} or \texttt{right\_buttonPress} before the next target event. This is physiologically meaningful for response and error monitoring, but it is listed as potential because the current EEG 2025 challenge explicitly does not use correct/incorrect classification.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~2:} {\footnotesize internalizing factor regression}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & regression \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_segmentation\_hdf5} \\
+\textbf{Epoch Params} & segment\_length = 4.0 s, overlap = 0.5, target\_events = [] \\
+\textbf{Label Route} & \texttt{info} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.1760\linewidth}p{0.7040\linewidth}@{}}
+\toprule
+\textbf{Info Field} & \textbf{Y Mapping Notes} \\
+\midrule
+\texttt{internalizing} & y directly equals the participant-level internalizing score from participants.tsv; no mapping \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize 10.1101/2024.10.03.615261 --- The release paper lists internalizing as one of the openly available psychopathology dimensions.}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize This target is documented and directly available, but it is listed as potential because the current EEG 2025 final challenge no longer uses internalizing as the primary regression target.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~3:} {\footnotesize attention factor regression}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & regression \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_segmentation\_hdf5} \\
+\textbf{Epoch Params} & segment\_length = 4.0 s, overlap = 0.5, target\_events = [] \\
+\textbf{Label Route} & \texttt{info} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.1760\linewidth}p{0.7040\linewidth}@{}}
+\toprule
+\textbf{Info Field} & \textbf{Y Mapping Notes} \\
+\midrule
+\texttt{attention} & y directly equals the participant-level attention score from participants.tsv; no mapping \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize 10.1101/2024.10.03.615261 --- The release paper lists attention as one of the openly available psychopathology dimensions.}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize This target is documented and directly available, but it is listed as potential because the current EEG 2025 final challenge no longer uses attention as the primary regression target.}
+\par\smallskip
+\end{tcolorbox}
+\vspace{3pt}
+\noindent\begin{tcolorbox}[breakable,enhanced,colback=white,colframe=gray!55,boxrule=0.9pt,arc=4pt,left=6pt,right=6pt,top=4pt,bottom=4pt,title={\small\bfseries EEG During Mental Arithmetic Task\hfill \colorbox{gray!20}{\scriptsize\sffamily\bfseries Completed}},coltitle=black,colbacktitle=gray!12,titlerule=0.5pt]
+{\footnotesize \textbf{ID:}~\texttt{physionet\_eegmat} $\mid$ \textbf{Year:}~2018 $\mid$ \textbf{Category:}~High-level Mental $\mid$ \textbf{Subjects:}~36 $\mid$ \textbf{Channels:}~23 $\mid$ \textbf{SR:}~500 Hz $\mid$ \textbf{Files (completed):}~72 $\mid$ \textbf{Super Meta:}~No $\mid$ \textbf{Reviewer:}~Anonymous}
+\par{\footnotesize\textbf{URL:}~\url{https://physionet.org/content/eegmat/1.0.0/}}
+\tcbline
+\noindent{\bfseries\footnotesize Paradigm}\par\smallskip
+{\footnotesize Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly female) completed a mental arithmetic task while EEG was recorded monopolarly using a Neurocom 23-channel system with Ag/AgCl electrodes (Zyma et al., 2019). Each subject contributed two files: a background resting-state recording (suffix \texttt{\_1.edf}) and a mental arithmetic task recording (suffix \texttt{\_2.edf}). During the mental arithmetic task, subjects performed serial subtraction (e.g., 3141 minus 42) while EEG was recorded. A separate \texttt{Count quality} field in \texttt{subject-info.csv} rates the subject's arithmetic performance as Good or Bad, providing a behavioral quality label.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize File Scan Result}\par\smallskip
+{\scriptsize
+\noindent\textbf{Kernel SHA256:}~\texttt{2d377403dfb36e0b6ad6454cf2d69b00d8096cf9a7ebb560a8baff950dedaad6}\par\smallskip
+\noindent\textbf{EEGUnity Version:}~\texttt{0.8.1}\par\smallskip
+\noindent\textbf{Scan Type:}~Full\par\smallskip
+}
+\smallskip\noindent{\footnotesize\bfseries Event Structure}\par\smallskip
+\begingroup\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.1567\linewidth}p{0.1567\linewidth}p{0.0783\linewidth}p{0.0783\linewidth}p{0.4700\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{Count (total)} & \textbf{Type} & \textbf{Meta Level} & \textbf{Meaning} \\
+\midrule
+\texttt{Background EEG;Count Quality: Bad} & 12 & event & raw & Resting-state recording with poor arithmetic performance label \\
+\texttt{Background EEG;Count Quality: Good} & 24 & event & raw & Resting-state recording with good arithmetic performance label \\
+\texttt{Mental Arithmetic Task EEG;Count Quality: Bad} & 12 & event & raw & Mental arithmetic task recording with poor performance label \\
+\texttt{Mental Arithmetic Task EEG;Count Quality: Good} & 24 & event & raw & Mental arithmetic task recording with good performance label \\
+\bottomrule
+\end{tabular}
+\endgroup
+\smallskip\noindent{\footnotesize\bfseries Info}\par\smallskip
+\begingroup\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.2350\linewidth}p{0.2350\linewidth}p{0.4700\linewidth}@{}}
+\toprule
+\textbf{Field} & \textbf{Completeness} & \textbf{Notes} \\
+\midrule
+\texttt{age} & complete & Age range: 16--26 years, mean age: approximately 18.33 years \\
+\texttt{sex} & complete & Males (M): 8, females (F): 28, predominantly female \\
+\texttt{device} & missing & EEG was recorded using a 23-channel Neurocom monopolar system (XAI-MEDICA, Ukraine) with silver/silver chloride electrodes placed per the international 10--20 system, linked ear reference, 500 Hz sampling rate, 0.5--45 Hz bandpass filtering, 50 Hz notch filtering, and electrode impedance kept below 5 k$\Omega$. \\
+\bottomrule
+\end{tabular}
+\endgroup
+\noindent\rule{\linewidth}{0.7pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize Tasks}
+\noindent{\footnotesize\bfseries Classical~Task~1:} {\footnotesize Mental Arithmetic vs Rest Classification}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0 s, tmax = 60 s, target\_events = [\texttt{Background EEG;Count Quality: Bad}, \texttt{Background EEG;Count Quality: Good}, \texttt{Mental Arithmetic Task EEG;Count Quality: Bad}, \texttt{Mental Arithmetic Task EEG;Count Quality: Good}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{Background EEG;Count Quality: Bad} & 0 & Resting-state, bad quality \\
+\texttt{Background EEG;Count Quality: Good} & 1 & Resting-state, good quality \\
+\texttt{Mental Arithmetic Task EEG;Count Quality: Bad} & 2 & Mental arithmetic, bad quality \\
+\texttt{Mental Arithmetic Task EEG;Count Quality: Good} & 3 & Mental arithmetic, good quality \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize Paradigm section describes two conditions: background resting-state (\texttt{\_1.edf}) and mental arithmetic task (\texttt{\_2.edf})}
+\item[\scriptsize$\cdot$] {\scriptsize Event Structure table confirms four event types combining condition and count quality}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize Binary classification of cognitive state (rest vs mental arithmetic), collapsing across count quality. Long epochs (60s) assumed to capture full recording duration; adjust if actual durations differ.}
+\noindent\rule{\linewidth}{0.7pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Classical~Task~2:} {\footnotesize Mental Arithmetic Quality Classification}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0 s, tmax = 60 s, target\_events = [\texttt{Mental Arithmetic Task EEG;Count Quality: Bad}, \texttt{Mental Arithmetic Task EEG;Count Quality: Good}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{Mental Arithmetic Task EEG;Count Quality: Bad} & 0 & Poor arithmetic performance \\
+\texttt{Mental Arithmetic Task EEG;Count Quality: Good} & 1 & Good arithmetic performance \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize Paradigm section states \texttt{Count quality} field rates arithmetic performance as Good or Bad}
+\item[\scriptsize$\cdot$] {\scriptsize Event Structure table shows 10 Bad and 26 Good mental arithmetic recordings}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize Classifies arithmetic performance quality during mental arithmetic task only. Excludes background recordings. Imbalanced classes (10 vs 26).}
+\noindent\rule{\linewidth}{0.7pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Classical~Task~3:} {\footnotesize Resting-State Quality Classification}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0 s, tmax = 60 s, target\_events = [\texttt{Background EEG;Count Quality: Bad}, \texttt{Background EEG;Count Quality: Good}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{Background EEG;Count Quality: Bad} & 0 & Poor arithmetic performance (rest) \\
+\texttt{Background EEG;Count Quality: Good} & 1 & Good arithmetic performance (rest) \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize Paradigm section notes count quality is a behavioral label from \texttt{subject-info.csv}}
+\item[\scriptsize$\cdot$] {\scriptsize Event Structure table shows 10 Bad and 26 Good background recordings}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize Investigates whether arithmetic quality correlates with resting-state EEG patterns. Same subjects in both conditions, so quality label is subject-level. Imbalanced classes (10 vs 26).}
+\noindent\rule{\linewidth}{0.7pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Classical~Task~4:} {\footnotesize Four-Way Condition-Quality Classification}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0 s, tmax = 60 s, target\_events = [\texttt{Background EEG;Count Quality: Bad}, \texttt{Background EEG;Count Quality: Good}, \texttt{Mental Arithmetic Task EEG;Count Quality: Bad}, \texttt{Mental Arithmetic Task EEG;Count Quality: Good}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{Background EEG;Count Quality: Bad} & 0 & Rest, bad quality \\
+\texttt{Background EEG;Count Quality: Good} & 1 & Rest, good quality \\
+\texttt{Mental Arithmetic Task EEG;Count Quality: Bad} & 2 & Task, bad quality \\
+\texttt{Mental Arithmetic Task EEG;Count Quality: Good} & 3 & Task, good quality \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize Paradigm describes full 2x2 design: condition (rest/task) x quality (good/bad)}
+\item[\scriptsize$\cdot$] {\scriptsize Event Structure table provides all four combinations}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize Multi-class extension exploring interaction between cognitive state and performance quality. Very imbalanced (10/26/10/26). May require stratified sampling or class weighting.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~1:} {\footnotesize Subject Age Regression from Mental Arithmetic}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & regression \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0 s, tmax = 60 s, target\_events = [\texttt{Mental Arithmetic Task EEG;Count Quality: Bad}, \texttt{Mental Arithmetic Task EEG;Count Quality: Good}] \\
+\textbf{Label Route} & \texttt{info} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.1760\linewidth}p{0.7040\linewidth}@{}}
+\toprule
+\textbf{Info Field} & \textbf{Y Mapping Notes} \\
+\midrule
+\texttt{age} & no mapping \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize Paradigm section notes ages 16-26}
+\item[\scriptsize$\cdot$] {\scriptsize Info table confirms \texttt{age} is complete}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize Predicts subject age from mental arithmetic EEG. Requires pairing event epochs with info metadata by subject ID. Age range is narrow (10 years), limiting regression difficulty.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~2:} {\footnotesize Subject Sex Classification from Mental Arithmetic}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0 s, tmax = 60 s, target\_events = [\texttt{Mental Arithmetic Task EEG;Count Quality: Bad}, \texttt{Mental Arithmetic Task EEG;Count Quality: Good}] \\
+\textbf{Label Route} & \texttt{info} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.1760\linewidth}p{0.7040\linewidth}@{}}
+\toprule
+\textbf{Info Field} & \textbf{Y Mapping Notes} \\
+\midrule
+\texttt{sex} & no mapping \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize Paradigm notes predominantly female subjects}
+\item[\scriptsize$\cdot$] {\scriptsize Info table confirms \texttt{sex} is complete}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize Binary sex classification from mental arithmetic EEG. Predominantly female sample may cause class imbalance. Requires super meta pairing with subject info.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~3:} {\footnotesize Continuous Quality Regression (Rest Condition)}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & regression \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_long\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0 s, tmax = 4 s, overlap = 0.5, target\_events = [\texttt{Background EEG;Count Quality: Bad}, \texttt{Background EEG;Count Quality: Good}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{Value} & \textbf{Meaning} \\
+\midrule
+\texttt{Background EEG;Count Quality: Bad} & 0 & Bad quality label \\
+\texttt{Background EEG;Count Quality: Good} & 1 & Good quality label \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize Event Structure provides binary quality labels embedded in event descriptions}
+\item[\scriptsize$\cdot$] {\scriptsize Paradigm notes count quality is behavioral performance metric}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize Treats binary quality as pseudo-continuous regression target (0/1) using sliding windows. Alternative formulation of Task 3. Overlap creates more samples from limited data.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~4:} {\footnotesize Continuous Quality Regression (Task Condition)}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & regression \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_long\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0 s, tmax = 4 s, overlap = 0.5, target\_events = [\texttt{Mental Arithmetic Task EEG;Count Quality: Bad}, \texttt{Mental Arithmetic Task EEG;Count Quality: Good}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{Value} & \textbf{Meaning} \\
+\midrule
+\texttt{Mental Arithmetic Task EEG;Count Quality: Bad} & 0 & Bad quality label \\
+\texttt{Mental Arithmetic Task EEG;Count Quality: Good} & 1 & Good quality label \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize Same evidence as Potential Task 3, applied to mental arithmetic condition}
+\item[\scriptsize$\cdot$] {\scriptsize Event Structure confirms task condition events with quality labels}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize Regression formulation of Task 2. Sliding window approach for more samples. Quality label is subject-level, so all windows from same subject share identical target.}
+\par\smallskip
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize Data Quality Notes}\par\smallskip
+\begin{itemize}[leftmargin=1.4em,noitemsep,topsep=2pt]
+\item{\footnotesize Two files per subject (\texttt{\_1.edf} = background, \texttt{\_2.edf} = task); pair them by Subject ID.}
+\item{\footnotesize Count quality (Good/Bad) is embedded in the annotation description after the semicolon; always parse carefully.}
+\item{\footnotesize ECG channel present (channel \texttt{A2-A1}) in some recordings; exclude from EEG feature extraction.}
+\item{\footnotesize Small dataset (36 subjects x 2 = 72 files); limited generalization.}
+\end{itemize}
+\end{tcolorbox}
+\vspace{3pt}
+\noindent\begin{tcolorbox}[breakable,enhanced,colback=white,colframe=gray!55,boxrule=0.9pt,arc=4pt,left=6pt,right=6pt,top=4pt,bottom=4pt,title={\small\bfseries Visual Oddball Task (256 channels)\hfill \colorbox{gray!20}{\scriptsize\sffamily\bfseries Completed}},coltitle=black,colbacktitle=gray!12,titlerule=0.5pt]
+{\footnotesize \textbf{ID:}~\texttt{openneuro\_ds002578} $\mid$ \textbf{Year:}~2004/2021 $\mid$ \textbf{Category:}~Sensory/Response $\mid$ \textbf{Subjects:}~2 $\mid$ \textbf{Channels:}~256 $\mid$ \textbf{SR:}~256 Hz $\mid$ \textbf{Files (completed):}~2 $\mid$ \textbf{Super Meta:}~No $\mid$ \textbf{Reviewer:}~Anonymous}
+\par{\footnotesize\textbf{URL:}~\url{https://openneuro.org/datasets/ds002578}}
+\tcbline
+\noindent{\bfseries\footnotesize Paradigm}\par\smallskip
+{\footnotesize A continuous visual oddball / selective-attention task recorded with 256-channel BioSemi EEG. Five empty squares were presented continuously on screen, with participants instructed to attend to one designated location and press a mouse button whenever a white disk appeared at that attended location. Event codes encode both the attended position and the cued (stimulus) position, allowing separation of target oddballs (attended location = stimulus location) from non-target distractors. The dataset contains only 2 completed files and represents a very limited subset of the original study data.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize File Scan Result}\par\smallskip
+{\scriptsize
+\noindent\textbf{Kernel SHA256:}~\texttt{3c221cbb992edef968d255c442ebb1899989076165e8a307a10b84832e041755}\par\smallskip
+\noindent\textbf{EEGUnity Version:}~\texttt{0.8.1}\par\smallskip
+\noindent\textbf{Scan Type:}~Full\par\smallskip
+}
+\smallskip\noindent{\footnotesize\bfseries Event Structure}\par\smallskip
+\begingroup\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.1567\linewidth}p{0.1567\linewidth}p{0.0783\linewidth}p{0.0783\linewidth}p{0.4700\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{Count (total)} & \textbf{Type} & \textbf{Meta Level} & \textbf{Meaning} \\
+\midrule
+\texttt{203} & 1 & admin & raw & System marker: unknown function (spurious event removed during preprocessing) \\
+\texttt{217} & 2 & admin & raw & System marker: unknown function (spurious event removed during preprocessing) \\
+\texttt{237} & 1 & admin & raw & System marker: unknown function (spurious event removed during preprocessing) \\
+\texttt{31} & 240 & event & raw & Experimental stimulus onset: five rectangular boxes, box 3 highlighted/cued, disc in box 1 (distractor, expected) \\
+\texttt{33} & 240 & event & raw & Experimental stimulus onset: five rectangular boxes, box 3 highlighted/cued, disc in box 3 (target, unexpected oddball) \\
+\texttt{34} & 239 & event & raw & Experimental stimulus onset: five rectangular boxes, box 3 highlighted/cued, disc in box 4 (distractor, expected) \\
+\texttt{35} & 240 & event & raw & Experimental stimulus onset: five rectangular boxes, box 3 highlighted/cued, disc in box 5 (distractor, expected) \\
+\texttt{41} & 238 & event & raw & Experimental stimulus onset: five rectangular boxes, box 4 highlighted/cued, disc in box 1 (distractor, expected) \\
+\texttt{42} & 239 & event & raw & Experimental stimulus onset: five rectangular boxes, box 4 highlighted/cued, disc in box 2 (distractor, expected) \\
+\texttt{43} & 240 & event & raw & Experimental stimulus onset: five rectangular boxes, box 4 highlighted/cued, disc in box 3 (distractor, expected) \\
+\texttt{44} & 239 & event & raw & Experimental stimulus onset: five rectangular boxes, box 4 highlighted/cued, disc in box 4 (target, unexpected oddball) \\
+\texttt{45} & 239 & event & raw & Experimental stimulus onset: five rectangular boxes, box 4 highlighted/cued, disc in box 5 (distractor, expected) \\
+\texttt{Picture} & 5939 & event & raw & Experimental stimulus onset: drawing of five rectangular boxes with highlighted cue box and disc \\
+\texttt{Response} & 1202 & event & raw & Participant response: keyboard key press \\
+\texttt{boundary} & 58 & admin & raw & Trial phase onset: pause/discontinuous segment boundary \\
+\bottomrule
+\end{tabular}
+\endgroup
+\smallskip\noindent{\footnotesize\bfseries Info}\par\smallskip
+\begingroup\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.2350\linewidth}p{0.2350\linewidth}p{0.4700\linewidth}@{}}
+\toprule
+\textbf{Field} & \textbf{Completeness} & \textbf{Notes} \\
+\midrule
+\texttt{age} & complete & N/A \\
+\texttt{sex} & complete & N/A \\
+\texttt{device} & missing & N/A \\
+\bottomrule
+\end{tabular}
+\endgroup
+\noindent\rule{\linewidth}{0.7pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize Tasks}
+\noindent{\footnotesize\bfseries Classical~Task~1:} {\footnotesize visual oddball target vs distractor}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = -1 s, tmax = 2 s, target\_events = [\texttt{31}, \texttt{33}, \texttt{34}, \texttt{35}, \texttt{41}, \texttt{42}, \texttt{43}, \texttt{44}, \texttt{45}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{33} & 1 & target: attend-3 cue-3, disc in cued box (unexpected oddball) \\
+\texttt{44} & 1 & target: attend-4 cue-4, disc in cued box (unexpected oddball) \\
+\texttt{31} & 0 & distractor: attend-3 cue-3, disc in box 1 (expected) \\
+\texttt{34} & 0 & distractor: attend-3 cue-3, disc in box 4 (expected) \\
+\texttt{35} & 0 & distractor: attend-3 cue-3, disc in box 5 (expected) \\
+\texttt{41} & 0 & distractor: attend-4 cue-4, disc in box 1 (expected) \\
+\texttt{42} & 0 & distractor: attend-4 cue-4, disc in box 2 (expected) \\
+\texttt{43} & 0 & distractor: attend-4 cue-4, disc in box 3 (expected) \\
+\texttt{45} & 0 & distractor: attend-4 cue-4, disc in box 5 (expected) \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize 10.1523/jneurosci.3477.07.2007 --- Classical visual oddball task with target (attended=cued location) vs distractor (attended$\neq$cued location). Two target events exist: 33 (attend-3 cue-3) and 44 (attend-4 cue-4). Seven distractor events exist: 31, 34, 35, 41, 42, 43, 45. Total target trials: 479; distractor trials: 1675. Epoch window tmin=-1s to tmax=2s follows the published target-locked analysis window.}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize All nine numeric event codes (31-35, 41-45) appear in the exported EEG files as annotations, confirmed by events.tsv counts and events.json definitions. The two target conditions (33, 44) are merged to y=1; all seven distractor conditions (31, 34, 35, 41, 42, 43, 45) are merged to y=0, reflecting the core oddball manipulation of target vs non-target discrimination.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~1:} {\footnotesize visual oddball 9-class position decoding}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = -1 s, tmax = 2 s, target\_events = [\texttt{31}, \texttt{33}, \texttt{34}, \texttt{35}, \texttt{41}, \texttt{42}, \texttt{43}, \texttt{44}, \texttt{45}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{31} & 0 & Distractor: box 3 cued, disc in position 1 \\
+\texttt{33} & 1 & Target: box 3 cued, disc in position 3 (oddball) \\
+\texttt{34} & 2 & Distractor: box 3 cued, disc in position 4 \\
+\texttt{35} & 3 & Distractor: box 3 cued, disc in position 5 \\
+\texttt{41} & 4 & Distractor: box 4 cued, disc in position 1 \\
+\texttt{42} & 5 & Distractor: box 4 cued, disc in position 2 \\
+\texttt{43} & 6 & Distractor: box 4 cued, disc in position 3 \\
+\texttt{44} & 7 & Target: box 4 cued, disc in position 4 (oddball) \\
+\texttt{45} & 8 & Distractor: box 4 cued, disc in position 5 \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize events.json sidecar (sub-001, sub-002) --- HED tags and level descriptions confirm 31-35 and 41-45 encode box$\times$disc position combinations; target positions (33, 44) are oddball conditions where disc appears in cued box}
+\item[\scriptsize$\cdot$] {\scriptsize README --- describes selective attention visual oddball paradigm with five rectangular boxes and target detection task}
+\item[\scriptsize$\cdot$] {\scriptsize events.tsv counts --- confirm event IDs 31, 33, 34, 35, 41, 42, 43, 44, 45 all appear in the released data}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize 9-class classification tests spatial decodability beyond binary target/distractor. The 9 conditions are near-balanced (\textasciitilde{}238-240 trials each). y values assigned by sorting event IDs numerically: 31$\rightarrow$0, 33$\rightarrow$1, 34$\rightarrow$2, 35$\rightarrow$3, 41$\rightarrow$4, 42$\rightarrow$5, 43$\rightarrow$6, 44$\rightarrow$7, 45$\rightarrow$8. Note that position 2 in box 3 (code 32) is absent from actual data exports. Epoch window follows the published oddball target-locked analysis style rather than a parameter explicitly specified in the BIDS metadata.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~2:} {\footnotesize Visual Oddball Target vs Distractor (Attend-3 Only)}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = -1.0 s, tmax = 2.0 s, target\_events = [\texttt{31}, \texttt{33}, \texttt{34}, \texttt{35}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{33} & 1 & Target: box 3 highlighted/cued, disc in box 3 (unexpected oddball) \\
+\texttt{31} & 0 & Distractor: box 3 highlighted/cued, disc in box 1 (expected) \\
+\texttt{34} & 0 & Distractor: box 3 highlighted/cued, disc in box 4 (expected) \\
+\texttt{35} & 0 & Distractor: box 3 highlighted/cued, disc in box 5 (expected) \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize - events.json sidecar --- confirms event 33 is the attend-3 target oddball and events 31, 34, 35 are attend-3 distractors}
+\item[\scriptsize$\cdot$] {\scriptsize - README / EEG sidecar --- describe the selective-attention oddball task and target detection rule}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize Restricted to attend-3 condition where box 3 is always highlighted/cued. Target (event 33, disc in cued box 3) is contrasted against three distractor types (events 31, 34, 35) where the disc appears in non-cued boxes 1, 4, or 5. All distractor events are merged to y=0 to test within-condition oddball detection (target probability \textasciitilde{}25\% within attend-3 trials). Epoch window matches classical oddball stimulus-locked analysis; parameters inferred from standard visual oddball ERP literature as no explicit epoch window was specified in dataset documentation.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~3:} {\footnotesize Visual Oddball Target vs Distractor (Attend-4 Only)}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = -1.0 s, tmax = 2.0 s, target\_events = [\texttt{41}, \texttt{42}, \texttt{43}, \texttt{44}, \texttt{45}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{44} & 1 & target (attend-4, disc in cued box 4) \\
+\texttt{41} & 0 & distractor (attend-4, disc in box 1) \\
+\texttt{42} & 0 & distractor (attend-4, disc in box 2) \\
+\texttt{43} & 0 & distractor (attend-4, disc in box 3) \\
+\texttt{45} & 0 & distractor (attend-4, disc in box 5) \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize - events.json sidecar --- confirms event 44 is the attend-4 target oddball and events 41, 42, 43, 45 are attend-4 distractors}
+\item[\scriptsize$\cdot$] {\scriptsize - README / EEG sidecar --- describe the selective-attention oddball task and target detection rule}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize Restricted to attend-4 condition only (cue box 4 highlighted). Target event 44 (disc in cued box 4, unexpected oddball) vs distractor events 41-43,45 (disc in non-cued boxes 1-3,5, expected). Controls for attended location to test within-condition oddball effects. All five event codes confirmed in EEG file annotations and events.json sidecar definitions. Epoch window inferred from classical oddball timing (-1 to +2 s relative to stimulus onset).}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~4:} {\footnotesize Gender Classification from Continuous EEG}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_segmentation\_hdf5} \\
+\textbf{Epoch Params} & segment\_length = 10 s, overlap = 0.0, target\_events = [] \\
+\textbf{Label Route} & \texttt{info} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.1760\linewidth}p{0.7040\linewidth}@{}}
+\toprule
+\textbf{Info Field} & \textbf{Y Mapping Notes} \\
+\midrule
+\texttt{sex} & F -> 0; M -> 1 \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize participants.tsv --- N=2 subjects with gender field: 1 female (sub-001), 1 male (sub-002)}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize Segment-based approach required since no discriminating event structure exists for this subject-level label. 10-second non-overlapping segments at 256 Hz yield 2560 samples per segment. Only 2 subjects are available, with 1 subject per class; this is an extremely weak proof-of-concept subject-trait decoding task and will likely be filtered out downstream.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~5:} {\footnotesize Age Regression from Continuous EEG}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & regression \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_segmentation\_hdf5} \\
+\textbf{Epoch Params} & segment\_length = 10 s, overlap = 0.0, target\_events = [] \\
+\textbf{Label Route} & \texttt{info} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.1760\linewidth}p{0.7040\linewidth}@{}}
+\toprule
+\textbf{Info Field} & \textbf{Y Mapping Notes} \\
+\midrule
+\texttt{age} & no mapping \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize participants.tsv --- age column present for both subjects with value 30}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize Archetype B3: age is a native participants.tsv field (no kernel derivation needed). Segmentation-based epoching creates 10-second non-overlapping windows from continuous EEG; each segment inherits the subject's age as the regression target. However, both subjects are age 30, so this task has zero label variance and is effectively non-viable.}
+\par\smallskip
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize Data Quality Notes}\par\smallskip
+\begin{itemize}[leftmargin=1.4em,noitemsep,topsep=2pt]
+\item{\footnotesize Extremely small sample size: only 2 completed files/subjects available, severely limiting statistical power and generalizability.}
+\item{\footnotesize Missing device metadata in Info table; BioSemi 256-channel system inferred from dataset documentation and channel count.}
+\item{\footnotesize Age field shows zero variance (both subjects age 30), making age regression task non-viable; downstream pipeline should filter this task out.}
+\item{\footnotesize Gender classification task has only 1 sample per class (N=2 total), which is insufficient for meaningful machine learning.}
+\item{\footnotesize Event code 32 (distractor: attend-3 cue-2) is documented in paradigm description but absent from actual data exports; this appears to be a planned but unused condition.}
+\item{\footnotesize Spurious system markers (203, 217, 237) present in raw data but marked as removed during preprocessing; these should be excluded from analysis.}
+\item{\footnotesize High number of \texttt{Picture} events (5939) relative to trial-coded events (\textasciitilde{}2394) suggests screen refresh or frame-level triggers were logged, requiring careful event selection for epoching.}
+\item{\footnotesize \texttt{boundary} events (58) indicate discontinuous segments or pauses in recording; users should verify whether these affect trial integrity.}
+\end{itemize}
+\end{tcolorbox}
+\vspace{3pt}
+\noindent\begin{tcolorbox}[breakable,enhanced,colback=white,colframe=gray!55,boxrule=0.9pt,arc=4pt,left=6pt,right=6pt,top=4pt,bottom=4pt,title={\small\bfseries TUH EEG Artifact Corpus\hfill \colorbox{gray!20}{\scriptsize\sffamily\bfseries Completed}},coltitle=black,colbacktitle=gray!12,titlerule=0.5pt]
+{\footnotesize \textbf{ID:}~\texttt{tuh\_eeg\_artifact} $\mid$ \textbf{Year:}~2021-2020/2024 $\mid$ \textbf{Category:}~Others $\mid$ \textbf{Subjects:}~213 $\mid$ \textbf{Channels:}~27-41 $\mid$ \textbf{SR:}~250/256/400/512 Hz $\mid$ \textbf{Files (completed):}~310 $\mid$ \textbf{Super Meta:}~No $\mid$ \textbf{Reviewer:}~Anonymous}
+\par{\footnotesize\textbf{URL:}~\url{https://isip.piconepress.com/projects/nedc/html/tuh_eeg/}}
+\tcbline
+\noindent{\bfseries\footnotesize Paradigm}\par\smallskip
+{\footnotesize The TUH EEG Artifact Corpus (TUAR) is a comprehensive dataset designed for the identification and evaluation of various artifacts in electroencephalogram (EEG) signals. This dataset includes EEG recordings annotated for multiple types of artifacts such as eye movements, muscle artifacts, and electrode issues, among others. The corpus has been developed to assist in the training and evaluation of artifact detection models, with its latest release (v3.0.1) offering detailed annotations for all relevant events across different channel configurations. The data is divided into files containing EEG signals, with annotations provided in CSV format to mark the start and stop times of specific artifact events. It consists of over 160,000 events from 310 EEG files, covering 213 patients and a total of nearly 100 hours of data. This dataset is particularly useful for research involving artifact detection and seizure classification in clinical EEG data. Notably, it includes specific seizure annotations alongside standard artifact labels, facilitating the analysis of co-occurring events. Researchers are encouraged to cite the corresponding publications for more details on the dataset's creation and annotation methodology.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize File Scan Result}\par\smallskip
+{\scriptsize
+\noindent\textbf{Kernel SHA256:}~\texttt{a76e25dadae339282ebf9cccfcc2d5d2081b8e73ccf097ad905d7e92cc8fb67e}\par\smallskip
+\noindent\textbf{EEGUnity Version:}~\texttt{0.8.1}\par\smallskip
+\noindent\textbf{Scan Type:}~Full\par\smallskip
+}
+\smallskip\noindent{\footnotesize\bfseries Event Structure}\par\smallskip
+\begingroup\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.1567\linewidth}p{0.1567\linewidth}p{0.0783\linewidth}p{0.0783\linewidth}p{0.4700\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{Count (total)} & \textbf{Type} & \textbf{Meta Level} & \textbf{Meaning} \\
+\midrule
+\texttt{chew} & 6482 & event & raw & Chewing artifact period in EEG signal \\
+\texttt{chew\_\allowbreak{}elec} & 152 & event & raw & Concurrent chewing and electrode artifact in EEG \\
+\texttt{chew\_\allowbreak{}musc} & 243 & event & raw & Concurrent chewing and muscle artifact in EEG \\
+\texttt{elec} & 33130 & event & raw & Electrode artifact period in EEG signal \\
+\texttt{elpp} & 172 & event & raw & Electrode/potential artifact period in EEG signal \\
+\texttt{eyem} & 38569 & event & raw & Eye movement artifact period in EEG signal \\
+\texttt{eyem\_\allowbreak{}chew} & 864 & event & raw & Concurrent eye movement and chewing artifact in EEG \\
+\texttt{eyem\_\allowbreak{}elec} & 2422 & event & raw & Concurrent eye movement and electrode artifact in EEG \\
+\texttt{eyem\_\allowbreak{}musc} & 18677 & event & raw & Concurrent eye movement and muscle artifact in EEG \\
+\texttt{eyem\_\allowbreak{}shiv} & 45 & event & raw & Concurrent eye movement and shivering artifact in EEG \\
+\texttt{musc} & 51052 & event & raw & Muscle artifact period in EEG signal \\
+\texttt{musc\_\allowbreak{}elec} & 7651 & event & raw & Concurrent muscle and electrode artifact in EEG \\
+\texttt{shiv} & 613 & event & raw & Shivering artifact period in EEG signal \\
+\texttt{shiv\_\allowbreak{}elec} & 1 & event & raw & Concurrent shivering and electrode artifact in EEG \\
+\bottomrule
+\end{tabular}
+\endgroup
+\smallskip\noindent{\footnotesize\bfseries MISC Label Summary}\par\smallskip
+\begin{itemize}[leftmargin=1.4em,noitemsep,topsep=2pt]
+\item{\footnotesize \textbf{Route}: \texttt{misc}}
+\item{\footnotesize \textbf{Role}: Stores derived/continuous labels that are not native raw event IDs.}
+\item{\footnotesize \textbf{Candidate Labels}: \texttt{confidence}}
+\item{\footnotesize \textbf{Kernel Note}: Keep derivation source, unit, and version metadata.}
+\end{itemize}
+\smallskip\noindent{\footnotesize\bfseries Info}\par\smallskip
+\begingroup\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.2350\linewidth}p{0.2350\linewidth}p{0.4700\linewidth}@{}}
+\toprule
+\textbf{Field} & \textbf{Completeness} & \textbf{Notes} \\
+\midrule
+\texttt{age} & missing & N/A \\
+\texttt{sex} & missing & N/A \\
+\texttt{device} & missing & N/A \\
+\bottomrule
+\end{tabular}
+\endgroup
+\noindent\rule{\linewidth}{0.7pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize Tasks}
+\noindent{\footnotesize\bfseries Classical~Task~1:} {\footnotesize Artifact Type Classification (13-class, Event-based)}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_long\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0.0 s, tmax = 1.0 s, overlap = 0, target\_events = [\texttt{chew}, \texttt{chew\_elec}, \texttt{chew\_musc}, \texttt{elec}, \texttt{elpp}, \texttt{eyem}, \texttt{eyem\_chew}, \texttt{eyem\_elec}, \texttt{eyem\_musc}, \texttt{eyem\_shiv}, \texttt{musc}, \texttt{musc\_elec}, \texttt{shiv}, \texttt{shiv\_elec}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{eyem} & 0 & Eye movement artifact \\
+\texttt{musc} & 1 & Muscle (EMG) artifact \\
+\texttt{elec} & 2 & Electrode artifact \\
+\texttt{chew} & 3 & Chewing artifact \\
+\texttt{shiv} & 4 & Shivering artifact \\
+\texttt{elpp} & 5 & Electrode pop \\
+\texttt{eyem\_musc} & 6 & Combined eye movement + muscle \\
+\texttt{eyem\_elec} & 7 & Combined eye movement + electrode \\
+\texttt{eyem\_chew} & 8 & Combined eye movement + chewing \\
+\texttt{musc\_elec} & 9 & Combined muscle + electrode \\
+\texttt{chew\_elec} & 10 & Combined chewing + electrode \\
+\texttt{chew\_musc} & 11 & Combined chewing + muscle \\
+\texttt{eyem\_shiv} & 12 & Combined eye movement + shivering \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize 10.1109/EMBC48229.2022.9871413 --- Achieves 93.95\% accuracy with MMC on 1-second windows from artifact onset; uses FFT and DWT features on 4 temporal channels at 250 Hz}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize The source paper reports 13 classes; this release uses a 6-class grouping based on reviewer suggestions.}
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\footnotesize\bfseries Potential~Task~1:} {\footnotesize Pure Artifact Family Classification (6-class, Event-based)}\par\smallskip
+{\footnotesize\begin{tabular}{@{}lp{0.62\linewidth}@{}}
+\textbf{Type} & classification \\
+\textbf{Epoch Method} & \texttt{epoch\_by\_long\_event\_hdf5} \\
+\textbf{Epoch Params} & tmin = 0.0 s, tmax = 1.0 s, overlap = 0, target\_events = [\texttt{chew}, \texttt{elec}, \texttt{elpp}, \texttt{eyem}, \texttt{musc}, \texttt{shiv}] \\
+\textbf{Label Route} & \texttt{event} \\
+\textbf{Meta Level} & raw \\
+\end{tabular}}
+\par\noindent{\footnotesize\bfseries Target Definition:}\par\smallskip
+\begingroup\footnotesize
+\begin{tabular}{@{}p{0.3911\linewidth}p{0.0978\linewidth}p{0.3911\linewidth}@{}}
+\toprule
+\textbf{Event ID} & \textbf{y} & \textbf{Meaning} \\
+\midrule
+\texttt{eyem} & 0 & Eye movement artifact \\
+\texttt{musc} & 1 & Muscle (EMG) artifact \\
+\texttt{elec} & 2 & Electrode artifact \\
+\texttt{chew} & 3 & Chewing artifact \\
+\texttt{shiv} & 4 & Shivering artifact \\
+\texttt{elpp} & 5 & Electrode pop \\
+\bottomrule
+\end{tabular}
+\endgroup
+\par\noindent{\footnotesize\itshape Evidence:}\par
+\begin{itemize}[leftmargin=1.3em,noitemsep,topsep=1pt]
+\item[\scriptsize$\cdot$] {\scriptsize 10.1109/EMBC48229.2022.9871413 --- Achieves 93.95\% accuracy with MMC on 1-second windows from artifact onset; uses FFT and DWT features on 4 temporal channels at 250 Hz}
+\end{itemize}
+\par\noindent{\footnotesize\bfseries Notes:} {\footnotesize Restrict this potential task to the six pure artifact labels only. Multi-component labels such as \texttt{eyem\_musc} and \texttt{musc\_elec} are excluded because the current rulebook expects single integer class assignments rather than multi-label targets.}
+\par\smallskip
+\noindent\rule{\linewidth}{0.4pt}\par\nopagebreak
+\noindent{\bfseries\footnotesize Data Quality Notes}\par\smallskip
+\begin{itemize}[leftmargin=1.4em,noitemsep,topsep=2pt]
+\item{\footnotesize Annotations are at the channel level; aggregate to recording level or use channel-specific labels depending on the task.}
+\item{\footnotesize Variable channel count and sampling rate; normalize before cross-recording analysis.}
+\item{\footnotesize Sex is not reliably available.}
+\end{itemize}
+\end{tcolorbox}
+}

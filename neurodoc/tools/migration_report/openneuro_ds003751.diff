@@ -1,0 +1,412 @@
+--- openneuro_ds003751/analysis.md (pre-v3)
++++ openneuro_ds003751/analysis.md (v3)
+@@ -3,7 +3,7 @@
+ **Dataset**: `openneuro_ds003751` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds003751
+ **Category**: High-level Mental | **Subjects**: 40 | **Files (Completed)**: 40
+ **Channels**: 132 | **Sampling Rate**: 250 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -42,6 +42,32 @@
+ | `valence_negative_centered` | 431 | event | raw | Valence rating (negative-centered scale) |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `high_valence` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `low_valence` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `high_arousal` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `low_arousal` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `high_dominance` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `low_dominance` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `HVHA` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `HVLA` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `LVHA` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `LVLA` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `HVHA_HD` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `HVHA_LD` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `HVLA_HD` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `HVLA_LD` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `LVHA_HD` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `LVHA_LD` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `LVLA_HD` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `LVLA_LD` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `category_0–23` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `block_segment` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -51,74 +77,300 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Binary VAD (Valence-Arousal-Dominance) Classification
+-- **Task Type**: classification
+-- **Epoch Method**: `epoch_by_event_hdf5`
+-- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
+-- **Label Route**: `misc`
+-- **Meta Level**: super
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++### Classical Task 1: Binary VAD (Valence-Arousal-Dominance) Classification — high_valence
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `high_valence`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | high_valence | 1 | Valence rating ≥ 5 (high positive) |
++- **Evidence**:
++  - DOI: 10.1101/2021.08.05.455187 — Binary classification of valence, arousal, dominance (threshold 5) using EEG during naturalistic video stimuli; 465 emotional events from 40 participants
++  - DOI: 10.1109/ACCESS.2023.3266804 — Binary valence and arousal classification using temporally localized emotional events from DENS dataset
++- **Kernel Notes**: Labels derived from `valence_negative_centered` (431 events) and `dominance` (431 events) continuous rating events paired with `click` (744) subjective emotional moment markers. Merge epochs around `click` events with corresponding continuous ratings and threshold at 5. Original analysis.md used `clic` but available event is `click` (744 events).
++
++### Classical Task 2: Binary VAD (Valence-Arousal-Dominance) Classification — low_valence
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `low_valence`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | low_valence | 0 | Valence rating < 5 (negative/lower) |
++- **Evidence**:
++  - DOI: 10.1101/2021.08.05.455187 — Binary classification of valence, arousal, dominance (threshold 5) using EEG during naturalistic video stimuli; 465 emotional events from 40 participants
++  - DOI: 10.1109/ACCESS.2023.3266804 — Binary valence and arousal classification using temporally localized emotional events from DENS dataset
++- **Kernel Notes**: Labels derived from `valence_negative_centered` (431 events) and `dominance` (431 events) continuous rating events paired with `click` (744) subjective emotional moment markers. Merge epochs around `click` events with corresponding continuous ratings and threshold at 5. Original analysis.md used `clic` but available event is `click` (744 events).
++
++### Classical Task 3: Binary VAD (Valence-Arousal-Dominance) Classification — high_arousal
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `high_arousal`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | high_arousal | 1 | Arousal rating ≥ 5 (high) |
++- **Evidence**:
++  - DOI: 10.1101/2021.08.05.455187 — Binary classification of valence, arousal, dominance (threshold 5) using EEG during naturalistic video stimuli; 465 emotional events from 40 participants
++  - DOI: 10.1109/ACCESS.2023.3266804 — Binary valence and arousal classification using temporally localized emotional events from DENS dataset
++- **Kernel Notes**: Labels derived from `valence_negative_centered` (431 events) and `dominance` (431 events) continuous rating events paired with `click` (744) subjective emotional moment markers. Merge epochs around `click` events with corresponding continuous ratings and threshold at 5. Original analysis.md used `clic` but available event is `click` (744 events).
++
++### Classical Task 4: Binary VAD (Valence-Arousal-Dominance) Classification — low_arousal
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `low_arousal`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | low_arousal | 0 | Arousal rating < 5 (low) |
++- **Evidence**:
++  - DOI: 10.1101/2021.08.05.455187 — Binary classification of valence, arousal, dominance (threshold 5) using EEG during naturalistic video stimuli; 465 emotional events from 40 participants
++  - DOI: 10.1109/ACCESS.2023.3266804 — Binary valence and arousal classification using temporally localized emotional events from DENS dataset
++- **Kernel Notes**: Labels derived from `valence_negative_centered` (431 events) and `dominance` (431 events) continuous rating events paired with `click` (744) subjective emotional moment markers. Merge epochs around `click` events with corresponding continuous ratings and threshold at 5. Original analysis.md used `clic` but available event is `click` (744 events).
++
++### Classical Task 5: Binary VAD (Valence-Arousal-Dominance) Classification — high_dominance
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `high_dominance`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | high_dominance | 1 | Dominance rating ≥ 5 (high) |
++- **Evidence**:
++  - DOI: 10.1101/2021.08.05.455187 — Binary classification of valence, arousal, dominance (threshold 5) using EEG during naturalistic video stimuli; 465 emotional events from 40 participants
++  - DOI: 10.1109/ACCESS.2023.3266804 — Binary valence and arousal classification using temporally localized emotional events from DENS dataset
++- **Kernel Notes**: Labels derived from `valence_negative_centered` (431 events) and `dominance` (431 events) continuous rating events paired with `click` (744) subjective emotional moment markers. Merge epochs around `click` events with corresponding continuous ratings and threshold at 5. Original analysis.md used `clic` but available event is `click` (744 events).
++
++### Classical Task 6: Binary VAD (Valence-Arousal-Dominance) Classification — low_dominance
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `low_dominance`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | low_dominance | 0 | Dominance rating < 5 (low) |
+ - **Evidence**:
+   - DOI: 10.1101/2021.08.05.455187 — Binary classification of valence, arousal, dominance (threshold 5) using EEG during naturalistic video stimuli; 465 emotional events from 40 participants
+   - DOI: 10.1109/ACCESS.2023.3266804 — Binary valence and arousal classification using temporally localized emotional events from DENS dataset
+ - **Kernel Notes**: Labels derived from `valence_negative_centered` (431 events) and `dominance` (431 events) continuous rating events paired with `click` (744) subjective emotional moment markers. Merge epochs around `click` events with corresponding continuous ratings and threshold at 5. Original analysis.md used `clic` but available event is `click` (744 events).
+ 
+-### Classical Task 2: 4-Class VA (Valence-Arousal) Emotion Classification
+-- **Task Type**: classification
+-- **Epoch Method**: `epoch_by_event_hdf5`
+-- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
+-- **Label Route**: `misc`
+-- **Meta Level**: super
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++### Classical Task 7: 4-Class VA (Valence-Arousal) Emotion Classification — HVHA
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `HVHA`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | HVHA | 0 | High Valence, High Arousal |
+-  | HVLA | 1 | High Valence, Low Arousal |
+-  | LVHA | 2 | Low Valence, High Arousal |
+-  | LVLA | 3 | Low Valence, Low Arousal |
+ - **Evidence**:
+   - DOI: 10.1109/ACCESS.2023.3266804 — 4-class valence-arousal classification using 7-second EEG epochs around emotion click events; CNN-LSTM hybrid architecture; compares DENS with DEAP and SEED datasets
+ - **Kernel Notes**: Labels derived by mapping `valence_negative_centered` and `arousal_low` (431 events each) to binary thresholds and combining into 4 quadrants. Each `click` event mapped to corresponding VAD ratings within the trial window.
+ 
+-### Classical Task 3: 8-Class VAD (Valence-Arousal-Dominance) Emotion Classification
+-- **Task Type**: classification
+-- **Epoch Method**: `epoch_by_event_hdf5`
+-- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
+-- **Label Route**: `misc`
+-- **Meta Level**: super
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++### Classical Task 8: 4-Class VA (Valence-Arousal) Emotion Classification — HVLA
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `HVLA`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
++  | HVLA | 1 | High Valence, Low Arousal |
++- **Evidence**:
++  - DOI: 10.1109/ACCESS.2023.3266804 — 4-class valence-arousal classification using 7-second EEG epochs around emotion click events; CNN-LSTM hybrid architecture; compares DENS with DEAP and SEED datasets
++- **Kernel Notes**: Labels derived by mapping `valence_negative_centered` and `arousal_low` (431 events each) to binary thresholds and combining into 4 quadrants. Each `click` event mapped to corresponding VAD ratings within the trial window.
++
++### Classical Task 9: 4-Class VA (Valence-Arousal) Emotion Classification — LVHA
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `LVHA`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
++  | LVHA | 2 | Low Valence, High Arousal |
++- **Evidence**:
++  - DOI: 10.1109/ACCESS.2023.3266804 — 4-class valence-arousal classification using 7-second EEG epochs around emotion click events; CNN-LSTM hybrid architecture; compares DENS with DEAP and SEED datasets
++- **Kernel Notes**: Labels derived by mapping `valence_negative_centered` and `arousal_low` (431 events each) to binary thresholds and combining into 4 quadrants. Each `click` event mapped to corresponding VAD ratings within the trial window.
++
++### Classical Task 10: 4-Class VA (Valence-Arousal) Emotion Classification — LVLA
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `LVLA`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
++  | LVLA | 3 | Low Valence, Low Arousal |
++- **Evidence**:
++  - DOI: 10.1109/ACCESS.2023.3266804 — 4-class valence-arousal classification using 7-second EEG epochs around emotion click events; CNN-LSTM hybrid architecture; compares DENS with DEAP and SEED datasets
++- **Kernel Notes**: Labels derived by mapping `valence_negative_centered` and `arousal_low` (431 events each) to binary thresholds and combining into 4 quadrants. Each `click` event mapped to corresponding VAD ratings within the trial window.
++
++### Classical Task 11: 8-Class VAD (Valence-Arousal-Dominance) Emotion Classification — HVHA_HD
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `HVHA_HD`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | HVHA_HD | 0 | High V, High A, High D |
++- **Evidence**:
++  - DOI: 10.1101/2021.08.05.455187 — 8-class VAD classification from EEG; connectivity patterns and source localization analysis
++  - DOI: 10.1007/978-3-031-27199-1.8 — CNN-GRU hybrid model for 8-class VAD emotion classification using 7-second epochs; 465 emotional events; achieves high accuracy on naturalistic emotion recognition
++- **Kernel Notes**: Labels derived from ternary combination of binary-thresholded VAD ratings. Use `valence_negative_centered` (high/low threshold 5), `arousal_low` (high/low threshold 5), `dominance` (high/low threshold 5) to create 8 classes.
++
++### Classical Task 12: 8-Class VAD (Valence-Arousal-Dominance) Emotion Classification — HVHA_LD
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `HVHA_LD`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | HVHA_LD | 1 | High V, High A, Low D |
++- **Evidence**:
++  - DOI: 10.1101/2021.08.05.455187 — 8-class VAD classification from EEG; connectivity patterns and source localization analysis
++  - DOI: 10.1007/978-3-031-27199-1.8 — CNN-GRU hybrid model for 8-class VAD emotion classification using 7-second epochs; 465 emotional events; achieves high accuracy on naturalistic emotion recognition
++- **Kernel Notes**: Labels derived from ternary combination of binary-thresholded VAD ratings. Use `valence_negative_centered` (high/low threshold 5), `arousal_low` (high/low threshold 5), `dominance` (high/low threshold 5) to create 8 classes.
++
++### Classical Task 13: 8-Class VAD (Valence-Arousal-Dominance) Emotion Classification — HVLA_HD
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `HVLA_HD`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | HVLA_HD | 2 | High V, Low A, High D |
++- **Evidence**:
++  - DOI: 10.1101/2021.08.05.455187 — 8-class VAD classification from EEG; connectivity patterns and source localization analysis
++  - DOI: 10.1007/978-3-031-27199-1.8 — CNN-GRU hybrid model for 8-class VAD emotion classification using 7-second epochs; 465 emotional events; achieves high accuracy on naturalistic emotion recognition
++- **Kernel Notes**: Labels derived from ternary combination of binary-thresholded VAD ratings. Use `valence_negative_centered` (high/low threshold 5), `arousal_low` (high/low threshold 5), `dominance` (high/low threshold 5) to create 8 classes.
++
++### Classical Task 14: 8-Class VAD (Valence-Arousal-Dominance) Emotion Classification — HVLA_LD
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `HVLA_LD`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | HVLA_LD | 3 | High V, Low A, Low D |
++- **Evidence**:
++  - DOI: 10.1101/2021.08.05.455187 — 8-class VAD classification from EEG; connectivity patterns and source localization analysis
++  - DOI: 10.1007/978-3-031-27199-1.8 — CNN-GRU hybrid model for 8-class VAD emotion classification using 7-second epochs; 465 emotional events; achieves high accuracy on naturalistic emotion recognition
++- **Kernel Notes**: Labels derived from ternary combination of binary-thresholded VAD ratings. Use `valence_negative_centered` (high/low threshold 5), `arousal_low` (high/low threshold 5), `dominance` (high/low threshold 5) to create 8 classes.
++
++### Classical Task 15: 8-Class VAD (Valence-Arousal-Dominance) Emotion Classification — LVHA_HD
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `LVHA_HD`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | LVHA_HD | 4 | Low V, High A, High D |
++- **Evidence**:
++  - DOI: 10.1101/2021.08.05.455187 — 8-class VAD classification from EEG; connectivity patterns and source localization analysis
++  - DOI: 10.1007/978-3-031-27199-1.8 — CNN-GRU hybrid model for 8-class VAD emotion classification using 7-second epochs; 465 emotional events; achieves high accuracy on naturalistic emotion recognition
++- **Kernel Notes**: Labels derived from ternary combination of binary-thresholded VAD ratings. Use `valence_negative_centered` (high/low threshold 5), `arousal_low` (high/low threshold 5), `dominance` (high/low threshold 5) to create 8 classes.
++
++### Classical Task 16: 8-Class VAD (Valence-Arousal-Dominance) Emotion Classification — LVHA_LD
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `LVHA_LD`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | LVHA_LD | 5 | Low V, High A, Low D |
++- **Evidence**:
++  - DOI: 10.1101/2021.08.05.455187 — 8-class VAD classification from EEG; connectivity patterns and source localization analysis
++  - DOI: 10.1007/978-3-031-27199-1.8 — CNN-GRU hybrid model for 8-class VAD emotion classification using 7-second epochs; 465 emotional events; achieves high accuracy on naturalistic emotion recognition
++- **Kernel Notes**: Labels derived from ternary combination of binary-thresholded VAD ratings. Use `valence_negative_centered` (high/low threshold 5), `arousal_low` (high/low threshold 5), `dominance` (high/low threshold 5) to create 8 classes.
++
++### Classical Task 17: 8-Class VAD (Valence-Arousal-Dominance) Emotion Classification — LVLA_HD
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `LVLA_HD`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | LVLA_HD | 6 | Low V, Low A, High D |
++- **Evidence**:
++  - DOI: 10.1101/2021.08.05.455187 — 8-class VAD classification from EEG; connectivity patterns and source localization analysis
++  - DOI: 10.1007/978-3-031-27199-1.8 — CNN-GRU hybrid model for 8-class VAD emotion classification using 7-second epochs; 465 emotional events; achieves high accuracy on naturalistic emotion recognition
++- **Kernel Notes**: Labels derived from ternary combination of binary-thresholded VAD ratings. Use `valence_negative_centered` (high/low threshold 5), `arousal_low` (high/low threshold 5), `dominance` (high/low threshold 5) to create 8 classes.
++
++### Classical Task 18: 8-Class VAD (Valence-Arousal-Dominance) Emotion Classification — LVLA_LD
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `LVLA_LD`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | LVLA_LD | 7 | Low V, Low A, Low D |
+ - **Evidence**:
+   - DOI: 10.1101/2021.08.05.455187 — 8-class VAD classification from EEG; connectivity patterns and source localization analysis
+   - DOI: 10.1007/978-3-031-27199-1.8 — CNN-GRU hybrid model for 8-class VAD emotion classification using 7-second epochs; 465 emotional events; achieves high accuracy on naturalistic emotion recognition
+ - **Kernel Notes**: Labels derived from ternary combination of binary-thresholded VAD ratings. Use `valence_negative_centered` (high/low threshold 5), `arousal_low` (high/low threshold 5), `dominance` (high/low threshold 5) to create 8 classes.
+ 
+-### Classical Task 4: 24-Class Emotion Category Classification
+-- **Task Type**: classification
+-- **Epoch Method**: `epoch_by_event_hdf5`
+-- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
+-- **Label Route**: `misc`
+-- **Meta Level**: super
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++### Classical Task 19: 24-Class Emotion Category Classification
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 6.0 s, target_events = [`click`]
++- **Label Route**: `misc`
++- **Label Field**: `category_0–23`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | category_0–23 | 0–23 | 24 unique emotion categories from participant self-report |
+ - **Evidence**:
+   - DOI: 10.1109/ICCCNT61001.2024.10725514 — 24-class emotion classification using CNN-LSTM-GA model; 93.28% accuracy; 465 emotional events from 40 participants; 128-channel EEG at 125 Hz
+@@ -162,6 +414,7 @@
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0 s, tmax = video_duration, target_events = [`interval_begin`, `interval_end`]
+ - **Label Route**: `misc`
++- **Label Field**: `block_segment`
+ - **Meta Level**: super
+ - **Target Definition**:
+   | Event | y | Meaning |
+@@ -170,15 +423,16 @@
+ - **Evidence**: N/A (plausible from paradigm alone)
+ - **Kernel Notes**: Use `interval_begin` (134 events) and `interval_end` (133 events) as segment boundaries. Each segment corresponds to a full video clip with aggregated emotional labels. Supports continuous/long-segment analysis of emotion dynamics within videos.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 2: Stimulus-Locked Emotional Response Analysis
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 5.0 s, target_events = [`stimulus`]
+-- **Label Route**: `stim`
++- **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | stimulus | video_id | Video clip onset (432 events) |
+ - **Evidence**: N/A (plausible from paradigm alone)
+ - **Kernel Notes**: Alternative epoching approach using stimulus onset (`stimulus`, 432 events) instead of subjective click markers. Labels derived from subsequent continuous ratings. Captures initial stimulus-driven emotional response vs. self-initiated moment marking.

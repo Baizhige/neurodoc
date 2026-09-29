@@ -1,0 +1,177 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 20,
+    "category": "",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 2,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1
+  },
+  "timestamp": "2026-05-05T04:23:41.363601+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds001849.v1.0.2.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds001849.v1.0.2",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds001849.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1002_hbm_23938.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1002/hbm.23938",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1007_s11571_022_09794_2.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1007/s11571.022.09794.2",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1109_jproc_2015_2407272.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1109/jproc.2015.2407272",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1155_2016_2643491.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1155/2016.2643491",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1155_2016_7489108.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1155/2016.7489108",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1371_journal_pone_0216185.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1371/journal.pone.0216185",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3389_fneng_2010_00112.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fneng.2010.00112",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3389_fneur_2013_00008.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fneur.2013.00008",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3389_fnhum_2015_00391.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fnhum.2015.00391",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3389_fnhum_2015_00713.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fnhum.2015.00713",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3389_fnhum_2024_1347082.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fnhum.2024.1347082",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3389_fnins_2018_00513.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fnins.2018.00513",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3389_fnsys_2023_919977.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fnsys.2023.919977",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3389_fpsyg_2011_00253.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fpsyg.2011.00253",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3389_fpsyg_2016_00246.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fpsyg.2016.00246",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3390_biology12030371.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3390/biology12030371",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3390_diagnostics15040456.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3390/diagnostics15040456",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3390_s21186106.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3390/s21186106",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    }
+  ],
+  "feasible": false,
+  "feasibility_reason": "The dataset 'RS_TMSEEG_Data' consists of resting-state TMS-evoked EEG potentials with TaskName 'tmseegrest'. There are no events.tsv samples showing any 'value'→'instruction'/'trial_type' mapping, no phase markers, and no identifiable event/label structure. The recording is continuous resting-state data without trial structure, experimental conditions, or class labels. The cited paper focuses on identifying TMS-evoked potentials using cosine similarity metrics, not on paradigms with classifiable events.",
+  "status": "failed"
+}

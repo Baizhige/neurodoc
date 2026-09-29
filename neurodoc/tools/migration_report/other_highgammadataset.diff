@@ -1,0 +1,99 @@
+﻿--- other_highgammadataset/analysis.md (pre-v3)
++++ other_highgammadataset/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `other_highgammadataset` | **Year**: 2017 | **URL**: https://gin.g-node.org/robintibor/high-gamma-dataset/src/master/data
+ **Category**: Action/Output | **Subjects**: 14 | **Files (Completed)**: 28 | **Channels**: 133 | **Sampling Rate**: 500 Hz
+-**Manual Review**: anonymous for review
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -35,32 +35,75 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Four-Class Motor Imagery Classification
++### Classical Task 1: Four-Class Motor Imagery Classification — left_hand
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s, target_events = [`left_hand`, `right_hand`, `feet`, `tongue`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `left_hand`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `left_hand` | 0 | Left-hand motor imagery |
+-  | `right_hand` | 1 | Right-hand motor imagery |
+-  | `feet` | 2 | Feet motor imagery |
+-  | `tongue` | 3 | Tongue motor imagery |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `left_hand` | 0 | Left-hand motor imagery |  |
+ - **Evidence**:
+   - DOI: 10.1002/hbm.23730 — Uses the High-Gamma Dataset (HGD) with 14 subjects performing four-class motor imagery (left hand, right hand, feet, tongue) across two sessions per subject, evaluating deep ConvNets against FBCSP baseline for EEG decoding.
+ - **Kernel Notes**: 
+ 
+-### Classical Task 2: Left vs. Right Hand Motor Imagery Binary Classification
++### Classical Task 2: Four-Class Motor Imagery Classification — right_hand
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s, target_events = [`left_hand`, `right_hand`, `feet`, `tongue`]
++- **Label Route**: `info`
++- **Label Field**: `right_hand`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `right_hand` | 1 | Right-hand motor imagery |  |
++- **Evidence**:
++  - DOI: 10.1002/hbm.23730 — Uses the High-Gamma Dataset (HGD) with 14 subjects performing four-class motor imagery (left hand, right hand, feet, tongue) across two sessions per subject, evaluating deep ConvNets against FBCSP baseline for EEG decoding.
++- **Kernel Notes**: 
++
++### Classical Task 3: Four-Class Motor Imagery Classification — feet
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s, target_events = [`left_hand`, `right_hand`, `feet`, `tongue`]
++- **Label Route**: `info`
++- **Label Field**: `feet`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `feet` | 2 | Feet motor imagery |  |
++- **Evidence**:
++  - DOI: 10.1002/hbm.23730 — Uses the High-Gamma Dataset (HGD) with 14 subjects performing four-class motor imagery (left hand, right hand, feet, tongue) across two sessions per subject, evaluating deep ConvNets against FBCSP baseline for EEG decoding.
++- **Kernel Notes**: 
++
++### Classical Task 4: Four-Class Motor Imagery Classification — tongue
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s, target_events = [`left_hand`, `right_hand`, `feet`, `tongue`]
++- **Label Route**: `info`
++- **Label Field**: `tongue`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `tongue` | 3 | Tongue motor imagery |  |
++- **Evidence**:
++  - DOI: 10.1002/hbm.23730 — Uses the High-Gamma Dataset (HGD) with 14 subjects performing four-class motor imagery (left hand, right hand, feet, tongue) across two sessions per subject, evaluating deep ConvNets against FBCSP baseline for EEG decoding.
++- **Kernel Notes**: 
++
++### Classical Task 5: Left vs. Right Hand Motor Imagery Binary Classification
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 4.0 s, target_events = [`left_hand`, `right_hand`]
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `left_hand` | 0 | Left-hand motor imagery |
+   | `right_hand` | 1 | Right-hand motor imagery |
+ - **Evidence**:
+

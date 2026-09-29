@@ -1,0 +1,197 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 7,
+    "category": "",
+    "format_type": "edf",
+    "has_bids_sidecars": false
+  },
+  "budget_used": 41,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 21,
+    "task_synthesis": 6,
+    "kernel_loop": 9,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T08:09:52.545251+00:00",
+  "ref_extractions": [
+    {
+      "filename": "paper_10_1038_s41598_026_36434_0.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1038/s41598.026.36434.0",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3389_fnrgo_2024_1382919.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fnrgo.2024.1382919",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "official_doi.org_10.13026_C2VC79.html",
+      "ref": "10.13026/C2VC79",
+      "title": "CAP Sleep Database v1.0.0",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is the official PhysioNet database landing page describing the CAP Sleep Database itself, not a research paper using the dataset for ML. It provides metadata about recordings, annotations, and citations but does not define any machine learning task, labels, or experimental paradigm.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "Official database description page; source metadata",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "official_physionet.org_content_capslpdb_1.0.0.html",
+      "ref": "",
+      "title": "CAP Sleep Database v1.0.0",
+      "classification": "irrelevant",
+      "cot_reasoning": "Identical to File 1—this is the official PhysioNet database description page with no ML task defined. It describes data collection, annotations, and intended applications generically but contains no concrete supervised learning experiment.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "Official database description page; duplicate of File 1",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_1109_bibe_2017_00_10.pdf",
+      "ref": "10.1109/BIBE.2017.00085",
+      "title": "Analysis of Macrostructure of sleep apnea with respect to age and gender factors on CAP Database",
+      "classification": "partial",
+      "cot_reasoning": "This paper explicitly uses the CAP Sleep Database (physionet_capslpdb) with 108 recordings. However, the task is statistical analysis (ANOVA on macro-indices) rather than a concrete ML classification/regression setup. It explores group differences by pathology, age, and gender without defining predictive labels or train/test splits for supervised learning.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 8,
+      "paradigm": "Sleep disorder pathology classification (bruxism, insomnia, narcolepsy, NFLE, PLM, RBD, SDB, normal)",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "Whole-night macro-indices derived from polysomnography; 28 R&K-based indices per recording",
+      "target_events": [
+        "sleep stage transitions",
+        "macrostructure indices"
+      ],
+      "label_mapping": "Pathology labels: brux1-brux2=Bruxism, ins1-ins9=Insomnia, narco1-narco5=Narcolepsy, nfle1-nfle40=NFLE, plm1-plm10=PLM, rbd1-rbd22=RBD, sdb1-sdb4=SDB, n1-n16=Normal",
+      "meta_level": "super",
+      "super_meta_note": "Uses macrostructure indices (supervised features) rather than raw EEG epochs; statistical group comparison not predictive ML",
+      "evidence_desc": "ANOVA on 28 macro-indices across 7 pathologies + controls; age/gender stratification"
+    },
+    {
+      "filename": "paper_10_1109_tnsre_2019_2934828.pdf",
+      "ref": "10.1109/TNSRE.2019.2934828",
+      "title": "Automatic A-Phase Detection of Cyclic Alternating Patterns in Sleep Using Dynamic Temporal Information",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses the CAP Sleep Database from PhysioNet for a well-defined ML task: automated detection and subtype classification of CAP A-phases from EEG. It specifies train/test methodology (leave-one-out), ground truth annotations, target classes (A-phase vs. non-A-phase; subtypes A1/A2/A3), and reports sensitivity/F1 metrics. The task is clearly event-based classification on raw EEG with temporal context.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "CAP A-phase detection and subtype classification (A1, A2, A3, non-A)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Sliding windows around CAP events with temporal context for RNN/LSTM; pre-processing includes cardiac artifact removal, filtering, feature extraction",
+      "target_events": [
+        "CAP A-phase onset",
+        "CAP A-phase subtype (A1, A2, A3)"
+      ],
+      "label_mapping": "A1=synchronized high-voltage slow waves; A2=mixed; A3=desynchronized low-voltage fast; background=non-A",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "LSTM-RNN classifier on EEG channels; LOO cross-validation; 16 normal + 30 NFLE subjects benchmarked; sensitivity 76-78% for A-phase detection, 60-74% for subtypes"
+    },
+    {
+      "filename": "paper_https_iopscience_iop_org_article_10_1088_1361_6579_adfda8.pdf",
+      "ref": "10.1088/1361-6579/adfda8",
+      "title": "Introduction of sub-band augmentation with machine learning to develop an insomnia classification model using single-channel EEG signals",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper focuses on insomnia classification using single-channel EEG with sub-band augmentation, but there is no explicit mention of the CAP Sleep Database (physionet_capslpdb). It discusses insomnia detection generally, references small datasets, and mentions sleep stage annotations, but does not identify this specific PhysioNet dataset as its source.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "May use private or unspecified insomnia dataset; no evidence of physionet_capslpdb usage",
+      "evidence_desc": ""
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset supports two concrete ML tasks: (1) CAP A-phase detection and subtype classification (A1/A2/A3/non-A) as demonstrated by LSTM-RNN classification with 76-78% sensitivity, and (2) sleep disorder pathology classification across 8 classes including bruxism, insomnia, narcolepsy, NFLE, PLM, RBD, SDB, and normal. The CAP A-phase structure provides clear event-based labels derived from EEG patterns.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 108,
+    "total_n": 108,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 108,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [],
+    "notes": "No raw event IDs were detected in the dataset. The dataset contains sleep EEG recordings with EDF files and RemLogic Event Export .txt annotation files, but the available read_tsv tool could not parse the event data portions due to variable column counts (Expected 2 fields, saw 5-6). Evidence collected: (1) All .txt files are 'RemLogic Event Export' format with headers containing condition labels (BRUX, N, NFLE, RBD, PLM, INS, NARCO) and dates, followed by NaN padding; (2) The ANNOTATORS file indicates annotations consist of 'sleep stage and CAP phase A annotations'; (3) Files are organized by condition/prefix (bruxism, insomnia, normal, narcolepsy, nocturnal frontal lobe epilepsy, periodic limb movement, REM sleep behavior disorder). Without successfully parsing the event data tables, no specific event IDs could be identified for annotation."
+  },
+  "tasks_section": "## Tasks\n\n(All candidate tasks dropped during v3 schema fill — see logs.)\n",
+  "kernel_requirements": {
+    "required_event_ids": [],
+    "required_native_misc": [],
+    "required_info_fields": [],
+    "derived_misc_channels": []
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/physionet_capslpdb/kernel_final.py",
+  "kernel_code_len": 8925,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/physionet_capslpdb.py",
+    "kernel_sha256": "e8db40c3ba8481dacb9a0a5a1ff3b8944319db222f4477742cad7ac40a4724f9",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 108,
+    "total_n": 108,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 108,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": [
+      "A1",
+      "A2"
+    ]
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/physionet_capslpdb.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

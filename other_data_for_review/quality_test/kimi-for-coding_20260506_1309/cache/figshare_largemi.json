@@ -1,0 +1,352 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 9,
+    "category": "",
+    "format_type": "mat",
+    "has_bids_sidecars": false
+  },
+  "budget_used": 22,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 9,
+    "task_synthesis": 6,
+    "kernel_loop": 2,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-06T13:30:32.792907+00:00",
+  "ref_extractions": [
+    {
+      "filename": "paper_10_1109_tnnls_2022_3190448.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1109/tnnls.2022.3190448",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1109_tnsre_2021_3054733.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1109/tnsre.2021.3054733",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "official_doi.org_10.1038_sdata.2018.211.html",
+      "ref": "10.1038/sdata.2018.211",
+      "title": "A large electroencephalographic motor imagery dataset for electroencephalographic brain computer interfaces",
+      "classification": "relevant",
+      "cot_reasoning": "This is the official data descriptor paper for the figshare_largemi dataset (Kaya2018). It explicitly describes the dataset with 13 participants, 60,000+ motor imagery examples across 4 paradigms (CLA, HaLT, 5F, FreeForm) with up to 6 mental imagery states. The paper defines the task as motor imagery classification with discrete trial-based structure: 1s action signal, 1.5-2.5s pause, ~3s trials, 300 trials per 15-min segment. This is the canonical reference for this dataset.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 6,
+      "paradigm": "motor imagery (slow cortical potentials-based)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "trial: ~3s total (1s action signal + 1.5-2.5s pause); 300 trials per 15-min segment; pseudorandom selection of imagery type",
+      "target_events": [
+        "left hand MI",
+        "right hand MI",
+        "left leg MI",
+        "right leg MI",
+        "tongue MI",
+        "passive/rest"
+      ],
+      "label_mapping": "6-class: left hand, right hand, left leg, right leg, tongue, passive (circle); paradigms vary: CLA/HaLT use 6 icons, 5F uses 5 fingers, FreeForm uses left/right keys",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Official data descriptor: 13 subjects, 75 sessions, 201 session-segments, 60h recordings, 60,000+ MI examples, 4 paradigms (CLA, HaLT, 5F, FreeForm), up to 6 classes, trial-based with 1s cue + variable ISI"
+    },
+    {
+      "filename": "paper_10.1038_sdata.2018.211.pdf",
+      "ref": "10.1038/sdata.2018.211",
+      "title": "Data Descriptor: A large electroencephalographic motor imagery dataset for electroencephalographic brain computer interfaces",
+      "classification": "relevant",
+      "cot_reasoning": "Identical to File 1 - this is the PDF version of the official data descriptor for figshare_largemi (Kaya2018). Contains identical dataset description with 13 participants, 4 paradigms, up to 6-class MI classification, discrete trial structure with 1s cue period and 1.5-2.5s inter-trial interval. Explicitly defines the ML task as motor imagery classification.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 6,
+      "paradigm": "motor imagery (slow cortical potentials-based)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "trial: ~3s total (1s action signal + 1.5-2.5s pause); 300 trials per 15-min segment; pseudorandom selection; continuous EEG recording at 200Hz",
+      "target_events": [
+        "left hand MI",
+        "right hand MI",
+        "left leg MI",
+        "right leg MI",
+        "tongue MI",
+        "passive/rest"
+      ],
+      "label_mapping": "6-class: left hand, right hand, left leg, right leg, tongue, passive; paradigm-dependent subsets: CLA/HaLT=6-class, 5F=5-class, FreeForm=2-class",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "PDF of official descriptor: same details as HTML version - 13 subjects, 75 sessions, 4 paradigms, 60,000 trials, event-based with 1s cue + variable ITI 1.5-2.5s"
+    },
+    {
+      "filename": "paper_10_1016_j_bspc_2021_102826.pdf",
+      "ref": "10.1016/j.bspc.2021.102826",
+      "title": "Electroencephalography-based motor imagery classification using temporal convolutional network fusion",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper proposes TCNet-Fusion for MI-EEG classification but only evaluates on BCI Competition IV-2a and High Gamma Dataset (HGD). There is no mention of the figshare_largemi/Kaya2018 dataset. The datasets section explicitly names only BCI-IV 2a and HGD as benchmarks.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Uses BCI Competition IV-2a (4-class) and High Gamma Dataset only; no mention of figshare_largemi/Kaya2018"
+    },
+    {
+      "filename": "paper_10_1016_j_bspc_2021_102826_2.pdf",
+      "ref": "10.1016/j.bspc.2021.102826",
+      "title": "Electroencephalography-based motor imagery classification using temporal convolutional network fusion",
+      "classification": "irrelevant",
+      "cot_reasoning": "Duplicate content of File 3 - same TCNet-Fusion paper with identical evaluation on BCI Competition IV-2a and High Gamma Dataset. No mention of figshare_largemi/Kaya2018 dataset. The related literature section discusses these two datasets only.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Identical to File 3: only BCI-IV 2a and HGD datasets used; figshare_largemi not mentioned"
+    },
+    {
+      "filename": "paper_10_1038_sdata_2018_211.pdf",
+      "ref": "10.1038/sdata.2018.211",
+      "title": "Data Descriptor: A large electroencephalographic motor imagery dataset for electroencephalographic brain computer interfaces",
+      "classification": "relevant",
+      "cot_reasoning": "Another PDF version of the official figshare_largemi data descriptor. Identical content to Files 1 and 2, confirming this is the canonical reference. Describes 13 participants, 4 paradigms (CLA, HaLT, 5F, FreeForm), up to 6-class motor imagery, with explicit trial structure: 1s cue, 1.5-2.5s pause, pseudorandom selection, ~300 trials per 15-min segment.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 6,
+      "paradigm": "motor imagery (slow cortical potentials-based)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "trial: ~3s (1s action signal + 1.5-2.5s pause); 300 trials per 15-min segment; 3 segments per session; pseudorandom; 200Hz sampling; 38 channels",
+      "target_events": [
+        "left hand MI",
+        "right hand MI",
+        "left leg MI",
+        "right leg MI",
+        "tongue MI",
+        "passive/rest"
+      ],
+      "label_mapping": "6-class for CLA/HaLT: left hand, right hand, left leg, right leg, tongue, passive; 5F=5 fingers; FreeForm=left/right",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Official descriptor PDF: 13 subjects, 75 sessions, 201 segments, 60h, 60,000 MI examples, 4 paradigms, event-based trials with 1s cue + variable ITI, continuous recording"
+    },
+    {
+      "filename": "paper_10_1088_1741_2552_ac0584.pdf",
+      "ref": "10.1088/1741-2552/ac0584",
+      "title": "Benefits of deep learning classification of continuous noninvasive brain–computer interface control",
+      "classification": "partial",
+      "cot_reasoning": "This paper by Stieger et al. (2021) is cited in File 7 (EEGSym) as 'Stieger2021' dataset with accuracy 90.2±6.5, suggesting it uses or is related to a dataset that may include figshare_largemi. However, the text mentions 'an independent, large, and longitudinal online motor imagery BCI dataset with up to 4-classes and continuous 2D feedback' - this description matches the scale of figshare_largemi. The paper discusses continuous control rather than discrete trial classification, which is a different task framing. Need to verify if this is the same dataset used differently or a different dataset entirely.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery (SMR-based, continuous control)",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "continuous 2D feedback task; up to 4-class; full scalp EEG; online cursor control simulation",
+      "target_events": [
+        "motor imagery classes for continuous control"
+      ],
+      "label_mapping": "up to 4-class for continuous control",
+      "meta_level": "unclear",
+      "super_meta_note": "May be same dataset as figshare_largemi but used for continuous control paradigm rather than discrete trial classification; cited as 'Stieger2021' in EEGSym paper with 90.2% accuracy",
+      "evidence_desc": "Describes 'independent, large, longitudinal online MI BCI dataset with up to 4-classes and continuous 2D feedback'; matches scale of figshare_largemi but different task framing; cited as dataset benchmark in EEGSym"
+    },
+    {
+      "filename": "paper_10_1109_tnsre_2022_3186442.pdf",
+      "ref": "10.1109/TNSRE.2022.3186442",
+      "title": "EEGSym: Overcoming Inter-Subject Variability in Motor Imagery Based BCIs With Deep Learning",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly evaluates on 'Kaya2018' with accuracy 85.1±9.5, which is the figshare_largemi dataset (Kaya et al. 2018, DOI 10.1038/sdata.2018.211). The paper uses this as one of 5 benchmark datasets for inter-subject MI classification. It confirms left/right hand motor imagery from 280 subjects across datasets, with Kaya2018 being one source. The task is explicitly 2-class left/right hand MI classification.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery (left/right hand)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "inter-subject evaluation; 16 electrodes used from >60 available; data augmentation and transfer learning applied",
+      "target_events": [
+        "left hand MI",
+        "right hand MI"
+      ],
+      "label_mapping": "2-class: left hand vs right hand (subset of full Kaya2018 dataset)",
+      "meta_level": "super",
+      "super_meta_note": "Uses Kaya2018 as one of 5 datasets for inter-subject benchmark; likely uses preprocessed/curated version with left/right hand only (2-class subset); original dataset has up to 6 classes",
+      "evidence_desc": "Explicitly names 'Kaya2018' with 85.1±9.5 accuracy; 2-class left/right hand MI; part of 5-dataset benchmark with 280 total subjects; 16 electrodes used"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The official data descriptor (10.1038/sdata.2018.211) confirms this is a large-scale motor imagery dataset with 60,000+ labeled trials across up to 6 classes, 4 paradigms (CLA, HaLT, 5F, FreeForm), and event-based structure with 1s cues. Multiple papers benchmark on this dataset (Kaya2018) for MI classification.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "",
+    "eegunity_version": "",
+    "scan_type": "format_evidence_preview",
+    "sampled": true,
+    "sampled_n": 0,
+    "total_n": 0,
+    "cache_source": "format_evidence",
+    "event_counts": {
+      "1": 1,
+      "2": 1,
+      "3": 1,
+      "90": 1,
+      "91": 1,
+      "92": 1,
+      "99": 1
+    },
+    "subject_info": {},
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "1",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: motor imagery cue 1 (left hand MI in CLA/HaLT/FREEFORM paradigms; thumb MI in 5F paradigm)",
+        "confidence": "inferred",
+        "session_task_scope": "CLA, HaLT, FREEFORM, 5F"
+      },
+      {
+        "event_id": "2",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: motor imagery cue 2 (right hand MI in CLA/HaLT/FREEFORM paradigms; index finger MI in 5F paradigm)",
+        "confidence": "inferred",
+        "session_task_scope": "CLA, HaLT, FREEFORM, 5F"
+      },
+      {
+        "event_id": "3",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: motor imagery cue 3 (passive state/rest in CLA/HaLT paradigms; middle finger MI in 5F paradigm)",
+        "confidence": "inferred",
+        "session_task_scope": "CLA, HaLT, 5F"
+      },
+      {
+        "event_id": "90",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System marker: session start boundary",
+        "confidence": "inferred",
+        "session_task_scope": "CLA (marker_old field)"
+      },
+      {
+        "event_id": "91",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System marker: session end boundary",
+        "confidence": "inferred",
+        "session_task_scope": "CLA (marker_old field)"
+      },
+      {
+        "event_id": "92",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System marker: trigger synchronization or calibration pulse",
+        "confidence": "inferred",
+        "session_task_scope": "CLA (marker_old field)"
+      },
+      {
+        "event_id": "99",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System marker: end of recording or experiment termination",
+        "confidence": "inferred",
+        "session_task_scope": "FREEFORM, CLA (marker_old field)"
+      }
+    ],
+    "notes": "Evidence sources: (1) 1Description.txt explicitly documents marker codes: '1-left hand MI, 2-right hand MI, 3-passive state, 4-left leg MI, 5-tongue MI, 6-right leg MI' for CLA/HaLT/FreeForm, and '1-thumb MI, 2-index finger MI, 3-middle finger MI, 4-ring finger MI' for 5F. (2) MATLAB script nkExperimentMotor_1.m confirms 6 cues (HaLT), nkExperimentMotor_2.m confirms 5 fingers (5F), nkExperimentMotor_3.m confirms freeform keys 'd'/'l' (FREEFORM). (3) Programmatic whosmat data shows FREEFORM marker values [0,1,2,99] and CLA marker values [0,1,2,3] with marker_old [0,1,2,3,90,91,92,99]. The 90/91/92/99 codes appear only in marker_old (legacy marker channel), suggesting administrative session boundaries and sync markers. The 0 value appears in all files as baseline/no-marker state and is not listed as an event ID in the raw counts. Event IDs 1-3 are confirmed by direct documentation; 90-99 are inferred from their presence in marker_old alongside task markers and their typical administrative function in experimental control systems. No direct .mat sampling was possible for 5F/HaLT/NoMT due to binary format limitations, but filename patterns (5St, 6St, 0St) and description text provide strong converging evidence. NoMT (0St-NoMotor) has no motor imagery cues, explaining absence of event IDs 1-6 in that paradigm."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: 2-class left/right hand motor imagery\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 3 s *, target_events = [`1`, `2`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `1` | 0 | left hand MI (CLA/HaLT/FREEFORM paradigms) |\n  | `2` | 1 | right hand MI (CLA/HaLT/FREEFORM paradigms) |\n- **Evidence**:\n  - 10.1109/TNSRE.2022.3186442 — TNSRE 2022 paper explicitly uses Kaya2018 dataset for 2-class left/right hand MI inter-subject benchmark with 85.1±9.5% accuracy\n  - 10.1038/sdata.2018.211 — Original Kaya2018 dataset documentation; supports 2-class as natural subset of 6-class paradigm\n  - 1Description.txt — Marker codes: '1-left hand MI, 2-right hand MI, 3-passive state, 4-left leg MI, 5-tongue MI, 6-right leg MI' for CLA/HaLT/FreeForm paradigms\n  - Raw MAT file structure (CLA-SubjectJ-170508-3St-LRHand-Inter.mat, FREEFORMSubjectC1512102StLRHand.mat) — Confirms event IDs 1 and 2 present in marker channels alongside data\n- **Notes**: This task uses only events 1 and 2 from the full 6-class CLA/HaLT/FREEFORM paradigms, excluding other MI classes (legs, tongue, passive). The 2-class left/right hand subset is a well-established benchmark configuration in the motor imagery literature. Epoch timing inferred from parent paradigm structure with ~3s total trial duration (1s cue period plus variable ISI).\n\n### Classical Task 2: 5-class finger motor imagery (5F)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 3 s *, target_events = [`1`, `2`, `3`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `1` | 0 | thumb MI |\n  | `2` | 1 | index finger MI |\n  | `3` | 2 | middle finger MI |\n- **Evidence**:\n  - 10.1038/sdata.2018.211 — Official descriptor documents 5F paradigm with 5 finger classes: thumb (1), index (2), middle (3), ring (4), pinky (5)\n  - 1Description.txt — Confirms '1-thumb MI, 2-index finger MI, 3-middle finger MI, 4-ring finger MI' for 5F paradigm; event IDs 1-3 confirmed in raw data with established meanings\n- **Notes**: Event IDs 4 and 5 (ring finger MI, pinky MI) are documented in description text but not confirmed by direct sampling in available raw data. Task uses only the 3 confirmed event IDs. The 5-class paradigm is documented but only 3 classes are verifiable from available event ID evidence. Epoch timing inferred from official descriptor (~3s trials with 1s cue and variable ISI) matching other paradigms in dataset.\n\n### Classical Task 3: 2-class freeform left/right motor imagery\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 3 s *, target_events = [`1`, `2`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `1` | 0 | left hand MI (FREEFORM paradigm) |\n  | `2` | 1 | right hand MI (FREEFORM paradigm) |\n- **Evidence**:\n  - 10.1038/sdata.2018.211 — Official descriptor documents FREEFORM paradigm with left/right keypress control ('d'/'l' keys). 1Description.txt notes 'FREEFORM=FREE STYLE 5F' and 'L=Left, R=Right'. Raw whosmat on FREEFORMSubjectC1512102StLRHand.mat shows marker values [0,1,2,99], confirming event IDs 1 and 2 for left/right. This is a distinct 2-class paradigm from the standard left/right hand MI in CLA.\n- **Notes**: FREEFORM is a distinct interactive paradigm where subjects freely control left/right hand MI via keypress, unlike the cued CLA paradigm. Event IDs 1 and 2 are grounded by direct documentation in 1Description.txt ('1-left hand MI, 2-right hand MI' for FreeForm) and confirmed by raw marker values in FREEFORM .mat files. tmin/tmax inferred from standard motor imagery trial structure (~3s with 1s cue period) per epoch_hint.\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "1",
+      "2",
+      "3"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "resting state eyes-open/closed",
+        "reason": "No evidence of resting state with eyes-open/closed conditions in any source. Dataset is explicitly motor imagery with active task paradigms only."
+      },
+      {
+        "paradigm": "NoMT no-motor segmentation with subject-level labels",
+        "reason": "NoMT paradigm exists per filename patterns and description (0St-NoMotor), but it explicitly has NO motor imagery cues and no discriminable event structure. No participants.tsv columns available for archetype C segmentation task. Cannot ground any label field."
+      },
+      {
+        "paradigm": "subject-level age/regression from participants.tsv",
+        "reason": "No participants.tsv discovered in dataset. Subject information exists only in free-text 1Description.txt (age ranges, sex) which is not structured enough for B3 archetype."
+      },
+      {
+        "paradigm": "native misc channel regression (EMG/EOG)",
+        "reason": "No native misc channels discovered in raw .mat files. Only EEG data channels (22 channels) and marker channels present."
+      },
+      {
+        "paradigm": "derived misc from events.tsv numeric columns",
+        "reason": "No events.tsv with numeric columns discovered in dataset. All timing information appears embedded in .mat marker arrays."
+      }
+    ]
+  },
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/figshare_largemi/kernel_final.py",
+  "kernel_code_len": 9813,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/figshare_largemi.py",
+    "kernel_sha256": "55c7ba678b40646b57bb2155917f45d4e518b74b1905b4514176ac74095f0adf",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 92,
+    "total_n": 92,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "1": 16210,
+      "2": 15681,
+      "3": 14409,
+      "4": 9255,
+      "5": 9586,
+      "91": 128,
+      "92": 47,
+      "99": 265,
+      "90": 47,
+      "6": 5522
+    },
+    "subject_info": {
+      "record_count": 92,
+      "age_complete": 75,
+      "sex_complete": 75,
+      "device_complete": 0,
+      "age_examples": [
+        "25-30",
+        "20-25",
+        "30-35"
+      ],
+      "sex_examples": [
+        "female",
+        "male"
+      ]
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/figshare_largemi.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

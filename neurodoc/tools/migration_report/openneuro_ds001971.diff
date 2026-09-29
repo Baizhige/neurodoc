@@ -1,0 +1,115 @@
+--- openneuro_ds001971/analysis.md (pre-v3)
++++ openneuro_ds001971/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds001971` | **Year**: 2019 | **URL**: https://openneuro.org/datasets/ds001971
+ **Category**: Complex Applied | **Subjects**: 18 | **Files (Completed)**: 273 | **Channels**: 115 | **Sampling Rate**: 512 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -57,8 +57,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `AdvanceTempo` | 0 | Step shortening response to faster tempo cue |
+   | `DelayTempo` | 1 | Step lengthening response to slower tempo cue |
+ - **Evidence**:
+@@ -66,30 +66,78 @@
+   - DOI: 10.1523/jneurosci.3543.15.2016 — EEG analysis of tempo shifts comparing beta band oscillatory networks between step-advance and step-delay adaptation in same 18-subject cohort
+ - **Kernel Notes**: Extract epochs time-locked to tempo shift onset events. `AdvanceTempo` marks cue shifts to faster tempo (step shortening); `DelayTempo` marks cue shifts to slower tempo (step lengthening). Exclude `STATUS` and `admin` markers from analysis. ICA recommended for motion artifact removal from treadmill walking.
+ 
+-### Potential Task 1: Four-class gait condition classification
++### Potential Task 1: Four-class gait condition classification — PreferredCadence`, `PreferredCadence_stream2-8
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -1.0 s, tmax = 3.0 s, target_events = [`PreferredCadence`, `PreferredCadence_stream2`, `PreferredCadence_stream3`, `PreferredCadence_stream4`, `PreferredCadence_stream5`, `PreferredCadence_stream6`, `PreferredCadence_stream7`, `PreferredCadence_stream8`, `UncuedWalking`, `UncuedWalking_stream2`, `UncuedWalking_stream3`, `UncuedWalking_stream4`, `UncuedWalking_stream5`, `UncuedWalking_stream6`, `UncuedWalking_stream7`, `AdvanceTempo`, `AdvanceTempo_stream2`, `DelayTempo`, `DelayTempo_stream2`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `PreferredCadence`, `PreferredCadence_stream2-8`
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `PreferredCadence`, `PreferredCadence_stream2-8` | 0 | Walking at preferred self-selected cadence |
+-  | `UncuedWalking`, `UncuedWalking_stream2-7` | 1 | Uncued walking without tempo guidance |
+-  | `DelayTempo`, `DelayTempo_stream2` | 2 | Step lengthening response to slower tempo cue |
+-  | `AdvanceTempo`, `AdvanceTempo_stream2` | 3 | Step shortening response to faster tempo cue |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `PreferredCadence`, `PreferredCadence_stream2-8` | 0 | Walking at preferred self-selected cadence |  |
+ - **Evidence**: Supported by paradigm structure from DOI: 10.1038/s41597-019-0223-2 describing the four walking conditions. The stream variants represent different experimental blocks with matching event counts.
+ - **Kernel Notes**: Include all stream variants to maximize data utilization across experimental blocks. Exclude `admin: marker-999` (BioSemi system marker) and `Walking_event_171/271` (gait cycle markers, not primary classification targets). Verify consistent channel selection across 273 files before pooling.
+ 
+-### Potential Task 2: Sustained walking state analysis
++### Potential Task 2: Four-class gait condition classification — UncuedWalking`, `UncuedWalking_stream2-7
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 3.0 s, target_events = [`PreferredCadence`, `PreferredCadence_stream2`, `PreferredCadence_stream3`, `PreferredCadence_stream4`, `PreferredCadence_stream5`, `PreferredCadence_stream6`, `PreferredCadence_stream7`, `PreferredCadence_stream8`, `UncuedWalking`, `UncuedWalking_stream2`, `UncuedWalking_stream3`, `UncuedWalking_stream4`, `UncuedWalking_stream5`, `UncuedWalking_stream6`, `UncuedWalking_stream7`, `AdvanceTempo`, `AdvanceTempo_stream2`, `DelayTempo`, `DelayTempo_stream2`]
++- **Label Route**: `info`
++- **Label Field**: `UncuedWalking`, `UncuedWalking_stream2-7`
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `UncuedWalking`, `UncuedWalking_stream2-7` | 1 | Uncued walking without tempo guidance |  |
++- **Evidence**: Supported by paradigm structure from DOI: 10.1038/s41597-019-0223-2 describing the four walking conditions. The stream variants represent different experimental blocks with matching event counts.
++- **Kernel Notes**: Include all stream variants to maximize data utilization across experimental blocks. Exclude `admin: marker-999` (BioSemi system marker) and `Walking_event_171/271` (gait cycle markers, not primary classification targets). Verify consistent channel selection across 273 files before pooling.
++
++### Potential Task 3: Four-class gait condition classification — DelayTempo`, `DelayTempo_stream2
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 3.0 s, target_events = [`PreferredCadence`, `PreferredCadence_stream2`, `PreferredCadence_stream3`, `PreferredCadence_stream4`, `PreferredCadence_stream5`, `PreferredCadence_stream6`, `PreferredCadence_stream7`, `PreferredCadence_stream8`, `UncuedWalking`, `UncuedWalking_stream2`, `UncuedWalking_stream3`, `UncuedWalking_stream4`, `UncuedWalking_stream5`, `UncuedWalking_stream6`, `UncuedWalking_stream7`, `AdvanceTempo`, `AdvanceTempo_stream2`, `DelayTempo`, `DelayTempo_stream2`]
++- **Label Route**: `info`
++- **Label Field**: `DelayTempo`, `DelayTempo_stream2`
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `DelayTempo`, `DelayTempo_stream2` | 2 | Step lengthening response to slower tempo cue |  |
++- **Evidence**: Supported by paradigm structure from DOI: 10.1038/s41597-019-0223-2 describing the four walking conditions. The stream variants represent different experimental blocks with matching event counts.
++- **Kernel Notes**: Include all stream variants to maximize data utilization across experimental blocks. Exclude `admin: marker-999` (BioSemi system marker) and `Walking_event_171/271` (gait cycle markers, not primary classification targets). Verify consistent channel selection across 273 files before pooling.
++
++### Potential Task 4: Four-class gait condition classification — AdvanceTempo`, `AdvanceTempo_stream2
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 3.0 s, target_events = [`PreferredCadence`, `PreferredCadence_stream2`, `PreferredCadence_stream3`, `PreferredCadence_stream4`, `PreferredCadence_stream5`, `PreferredCadence_stream6`, `PreferredCadence_stream7`, `PreferredCadence_stream8`, `UncuedWalking`, `UncuedWalking_stream2`, `UncuedWalking_stream3`, `UncuedWalking_stream4`, `UncuedWalking_stream5`, `UncuedWalking_stream6`, `UncuedWalking_stream7`, `AdvanceTempo`, `AdvanceTempo_stream2`, `DelayTempo`, `DelayTempo_stream2`]
++- **Label Route**: `info`
++- **Label Field**: `AdvanceTempo`, `AdvanceTempo_stream2`
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `AdvanceTempo`, `AdvanceTempo_stream2` | 3 | Step shortening response to faster tempo cue |  |
++- **Evidence**: Supported by paradigm structure from DOI: 10.1038/s41597-019-0223-2 describing the four walking conditions. The stream variants represent different experimental blocks with matching event counts.
++- **Kernel Notes**: Include all stream variants to maximize data utilization across experimental blocks. Exclude `admin: marker-999` (BioSemi system marker) and `Walking_event_171/271` (gait cycle markers, not primary classification targets). Verify consistent channel selection across 273 files before pooling.
++
++### Potential Task 5: Sustained walking state analysis — PreferredCadence`, `PreferredCadence_stream2-8
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, segment_length = 4.0 s, overlap = 0.0, target_events = [`PreferredCadence`, `PreferredCadence_stream2`, `PreferredCadence_stream3`, `PreferredCadence_stream4`, `PreferredCadence_stream5`, `PreferredCadence_stream6`, `PreferredCadence_stream7`, `PreferredCadence_stream8`, `UncuedWalking`, `UncuedWalking_stream2`, `UncuedWalking_stream3`, `UncuedWalking_stream4`, `UncuedWalking_stream5`, `UncuedWalking_stream6`, `UncuedWalking_stream7`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `PreferredCadence`, `PreferredCadence_stream2-8`
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `PreferredCadence`, `PreferredCadence_stream2-8` | 0 | Sustained walking at preferred self-selected cadence |
+-  | `UncuedWalking`, `UncuedWalking_stream2-7` | 1 | Sustained uncued walking without tempo guidance |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `PreferredCadence`, `PreferredCadence_stream2-8` | 0 | Sustained walking at preferred self-selected cadence |  |
++- **Evidence**: Supported by epoch alignment recommendation for sustained walking analysis. High event counts (20k-34k per condition stream) confirm long-duration walking epochs suitable for 4-second segment extraction.
++- **Kernel Notes**: Use epoch_by_long_event_hdf5 to capture sustained neural dynamics during steady-state locomotion. Focus on baseline walking conditions without tempo modifications to study intrinsic gait-related neural oscillations. ICA recommended for artifact removal from treadmill walking. The misc/response_time label (derived data) should preserve metadata during extraction.### Potential Task 6: Sustained walking state analysis — UncuedWalking`, `UncuedWalking_stream2-7
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, segment_length = 4.0 s, overlap = 0.0, target_events = [`PreferredCadence`, `PreferredCadence_stream2`, `PreferredCadence_stream3`, `PreferredCadence_stream4`, `PreferredCadence_stream5`, `PreferredCadence_stream6`, `PreferredCadence_stream7`, `PreferredCadence_stream8`, `UncuedWalking`, `UncuedWalking_stream2`, `UncuedWalking_stream3`, `UncuedWalking_stream4`, `UncuedWalking_stream5`, `UncuedWalking_stream6`, `UncuedWalking_stream7`]
++- **Label Route**: `info`
++- **Label Field**: `UncuedWalking`, `UncuedWalking_stream2-7`
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `UncuedWalking`, `UncuedWalking_stream2-7` | 1 | Sustained uncued walking without tempo guidance |  |
+ - **Evidence**: Supported by epoch alignment recommendation for sustained walking analysis. High event counts (20k-34k per condition stream) confirm long-duration walking epochs suitable for 4-second segment extraction.
+ - **Kernel Notes**: Use epoch_by_long_event_hdf5 to capture sustained neural dynamics during steady-state locomotion. Focus on baseline walking conditions without tempo modifications to study intrinsic gait-related neural oscillations. ICA recommended for artifact removal from treadmill walking. The misc/response_time label (derived data) should preserve metadata during extraction.

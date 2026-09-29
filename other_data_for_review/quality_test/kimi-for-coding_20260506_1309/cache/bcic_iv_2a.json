@@ -1,0 +1,444 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 12,
+    "category": "",
+    "format_type": "mixed",
+    "has_bids_sidecars": false
+  },
+  "budget_used": 13,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 5,
+    "task_synthesis": 2,
+    "kernel_loop": 1,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-06T13:16:58.498481+00:00",
+  "ref_extractions": [
+    {
+      "filename": "desc_2a.pdf",
+      "ref": "",
+      "title": "BCI Competition 2008 – Graz data set A",
+      "classification": "relevant",
+      "cot_reasoning": "This is the official dataset description document for BCI Competition IV dataset 2a. It explicitly defines the four-class motor imagery task with left hand, right hand, both feet, and tongue classes. It provides complete paradigm details, event codes (768-772), trial structure, and evaluation methodology with labeled training and unlabeled test sessions.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "cue-based motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "trial start at t=0s, cue at t=2s, cue duration 1.25s, fixation cross disappears at t=6s; 22 EEG channels + 3 EOG at 250Hz",
+      "target_events": [
+        768,
+        769,
+        770,
+        771,
+        772
+      ],
+      "label_mapping": "769=left hand (class 1), 770=right hand (class 2), 771=both feet (class 3), 772=tongue (class 4)",
+      "meta_level": "raw",
+      "super_meta_note": "This is the canonical dataset description document; defines ground truth for all other papers",
+      "evidence_desc": "Official BCI Competition IV 2a documentation with complete experimental protocol, event definitions, and data format specifications"
+    },
+    {
+      "filename": "paper_10_1088_1741_2552_ab3471.pdf",
+      "ref": "10.1088/1741-2552/ab3471",
+      "title": "A novel hybrid deep learning scheme for four-class motor imagery classification",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses BCI competition IV dataset 2a for four-class motor imagery classification. The authors develop a CNN-LSTM hybrid network with OVR-FBCSP preprocessing, achieving 83% accuracy and kappa 0.80. They explicitly describe the dataset structure and their epoching approach.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "0.5s to 4s intervals extracted from whole datasets; mentions using 0.5s to 4s with 0.5s intervals for time course experiments",
+      "target_events": [],
+      "label_mapping": "four-class: left hand, right hand, both feet, tongue",
+      "meta_level": "super",
+      "super_meta_note": "Subject-independent shared neural network trained on merged data from all subjects; evaluates per-subject",
+      "evidence_desc": "Explicitly states 'The dataset we used in this work is BCI competition IV dataset 2a'; reports 83% accuracy and kappa 0.80"
+    },
+    {
+      "filename": "paper_10_1088_1741_2552_ac0584.pdf",
+      "ref": "10.1088/1741-2552/ac0584",
+      "title": "Benefits of deep learning classification of continuous noninvasive brain–computer interface control",
+      "classification": "partial",
+      "cot_reasoning": "This paper discusses BCI Competition IV datasets 2a and 2b among other datasets, but primarily focuses on a separate independent longitudinal online motor imagery BCI dataset with continuous 2D feedback. While it mentions 2a/2b as examples of small/simple public datasets used in prior work, it does not actually use 2a as its primary experimental dataset for the main results.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "Cites 2a/2b as examples of limitations in prior deep learning BCI research but uses different dataset for main experiments",
+      "evidence_desc": "Mentions 'BCI Competition IV datasets 2a and 2b' as 'comparatively small (9 subjects, 2–5 sessions) and simple' datasets used in prior work; main contribution uses independent dataset"
+    },
+    {
+      "filename": "paper_10_1109_access_2021_3056088.pdf",
+      "ref": "10.1109/access.2021.3056088",
+      "title": "Advanced TSGL-EEGNet for Motor Imagery EEG-Based Brain-Computer Interfaces",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly tests on BCI Competition IV 2a dataset with four-class classification. Proposes TSGL-EEGNet achieving 78.96% average accuracy (kappa 0.7194), with enhanced versions reaching 81.34% accuracy and 0.7511 kappa. Clearly defines the task and compares against EEGNet, FBCSP, and other baselines.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "mentions using cropped training to select optimal time windows; standard 2s-6s or 0.5s-4s epoching implied by BCI IV 2a conventions",
+      "target_events": [],
+      "label_mapping": "4-classes: left hand, right hand, feet, tongue",
+      "meta_level": "super",
+      "super_meta_note": "Uses average-validation and stacking for enhancement; interpretability analysis with Grad-CAM",
+      "evidence_desc": "Explicitly states 'tested on the BCI Competition IV 2a and BCI Competition III IIIa datasets that both are 4-classes classification MI tasks'; reports detailed accuracy and kappa metrics"
+    },
+    {
+      "filename": "paper_10_1109_smc42975_2020_9283028.pdf",
+      "ref": "10.1109/smc42975.2020.9283028",
+      "title": "EEG-TCNet: An Accurate Temporal Convolutional Network for Embedded Motor-Imagery Brain–Machine Interfaces",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly evaluates on BCI Competition IV-2a dataset with detailed dataset description matching the canonical protocol. Achieves 77.35% accuracy (standard) and 83.84% with subject-specific hyperparameter optimization. Also tests on MOABB benchmark. Provides specific epoching details and trial structure.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Each trial lasted 7.5s; 22 EEG electrodes at 250Hz; 288 trials per session; training/testing split by session; artifact trials (9.41%) excluded",
+      "target_events": [],
+      "label_mapping": "left hand, right hand, both feet, tongue",
+      "meta_level": "super",
+      "super_meta_note": "First external submission to MOABB; explores accuracy vs parameter efficiency tradeoffs",
+      "evidence_desc": "Explicit dataset description in Section II.A matches BCI IV 2a exactly; reports 77.35% and 83.84% accuracy results"
+    },
+    {
+      "filename": "paper_10_1109_tnnls_2018_2789927.pdf",
+      "ref": "10.1109/tnnls.2018.2789927",
+      "title": "Learning Temporal Information for Brain-Computer Interface Using Convolutional Neural Networks",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses BCI competition IV-2a 4-class MI dataset. Proposes a temporal representation of FBCSP features with CNN architecture, outperforming prior methods by 7% accuracy increase. The abstract and introduction clearly state the dataset and four-class task.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Modified FBCSP representation preserving temporal information; temporal dynamics extracted via CNN from filtered signal representations",
+      "target_events": [],
+      "label_mapping": "right hand, left hand, feet (and implicitly tongue for 4-class)",
+      "meta_level": "super",
+      "super_meta_note": "Novel temporal representation of FBCSP features to preserve dynamics lost in standard CSP energy features",
+      "evidence_desc": "Abstract states 'outperforms the best classification method in the literature on the BCI competition IV-2a 4-class MI data set by 7% increase in average subject accuracy'"
+    },
+    {
+      "filename": "paper_10_1109_tnsre_2022_3156076.pdf",
+      "ref": "10.1109/tnsre.2022.3156076",
+      "title": "SincNet-Based Hybrid Neural Network for Motor Imagery EEG Decoding",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses both BCI competition IV datasets 2a and 2b. For dataset 2a, reports mean classification accuracy 0.7426 (kappa 0.6648). Describes detailed preprocessing with CSP feature extraction, SincNet filtering, and GRU sequential modeling with specific time window segmentation.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Raw EEG segmented into different time windows and mapped into CSP feature space; multiple time windows used with learned CSP projection matrices",
+      "target_events": [],
+      "label_mapping": "dataset 2a: 4-class motor imagery",
+      "meta_level": "super",
+      "super_meta_note": "Hybrid architecture: CSP + SincNet + SE modules + CNN + GRU; ablation studies performed",
+      "evidence_desc": "Explicitly states 'We used the BCI competition IV datasets 2a and 2b to verify the effectiveness of our SHNN method'; reports 0.7426 accuracy and 0.6648 kappa on dataset 2a"
+    },
+    {
+      "filename": "paper_10_1186_s12859_018_2365_1.pdf",
+      "ref": "10.1186/s12859-018-2365-1",
+      "title": "Exploring spatial-frequency-sequential relationships for motor imagery classification with recurrent neural network",
+      "classification": "relevant",
+      "cot_reasoning": "This paper applies deep RNN with sliding window cropping strategy to BCI benchmark datasets including BCI Competition IV. Uses FB-CSP features cropped into time slices for sequential modeling with GRU-RNN and LSTM-RNN. Achieves lowest misclassification rates on BCI benchmark datasets.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Sliding window cropping strategy (SWCS) crops complete entity trial into several time slices; FB-CSP features extracted then cropped into time series segments",
+      "target_events": [],
+      "label_mapping": "4-class for BCI Competition IV 2a",
+      "meta_level": "super",
+      "super_meta_note": "Novel spatial-frequency-sequential relationships; increases sample size via SWCS for deep network training",
+      "evidence_desc": "States 'Experimental results on common BCI benchmark datasets show that the spatial-frequency-sequential relationships outperform all other competing spatial-frequency methods'; Table 1 shows BCI competition IV results"
+    },
+    {
+      "filename": "paper_10_3389_fnins_2012_00039.pdf",
+      "ref": "10.3389/fnins.2012.00039",
+      "title": "Filter bank common spatial pattern algorithm on BCI competition IV Datasets 2a and 2b",
+      "classification": "relevant",
+      "cot_reasoning": "This is the original FBCSP paper that explicitly presents the algorithm on BCI Competition IV Datasets 2a and 2b. Defines multi-class extensions (DC, PW, OVR) for 4-class dataset 2a. Reports mean kappa 0.569 on dataset 2a and 0.600 on dataset 2b. Provides complete methodology for filter bank CSP with specific filter bands and feature selection.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "9 band-pass filters (4-8, 8-12, ..., 36-40 Hz); m=2 CSP filters for dataset 2a; 10x10-fold cross-validation on training data; session-to-session transfer on evaluation data",
+      "target_events": [],
+      "label_mapping": "left hand, right hand, foot, tongue (4-class for 2a); left hand, right hand (2-class for 2b)",
+      "meta_level": "super",
+      "super_meta_note": "Winning algorithm of BCI Competition IV; introduces FBCSP with autonomous subject-specific frequency band selection",
+      "evidence_desc": "Title explicitly names 'Datasets 2a and 2b'; abstract states 'FBCSP algorithm performed relatively the best among the other submitted algorithms and yielded a mean kappa value of 0.569 and 0.600 across all subjects in Datasets 2a and 2b respectively'"
+    },
+    {
+      "filename": "paper_10_3389_fnins_2012_00151.pdf",
+      "ref": "10.3389/fnins.2012.00151",
+      "title": "Multi-class motor imagery EEG decoding for brain-computer interfaces",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly tests on dataset 2a from BCI Competition IV with four-class motor imagery. Proposes novel processing framework with automatic artifact correction, non-contiguous frequency band selection, channel selection, and SVM classification. Reports kappa values 0.41-0.80 across subjects.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Trial timing: fixation cross 2s, cue 1.25s, total trial with MI until cross disappears at 6s; 288 trials per session; 22 channels + EOG; automatic artifact correction without trial removal",
+      "target_events": [],
+      "label_mapping": "left hand (class 1), right hand (class 2), both feet (class 3), tongue (class 4)",
+      "meta_level": "super",
+      "super_meta_note": "Robust processing with automatic artifact correction; no trial removal; channel and frequency band selection",
+      "evidence_desc": "Explicitly states 'We tested our proposed algorithm on experimental data that was obtained from dataset 2a of BCI competition IV (2008)'; reports 'overall four-class kappa values (between 0.41 and 0.80)'"
+    },
+    {
+      "filename": "paper_10_3390_diagnostics12040995.pdf",
+      "ref": "10.3390/diagnostics12040995",
+      "title": "A Multi-Branch Convolutional Neural Network with Squeeze-and-Excitation Attention Blocks for EEG-Based Motor Imagery Signals Classification",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly tests on BCI-IV2a motor imagery dataset achieving 82.87% accuracy. Proposes MBEEGSE (Multi-Branch EEGNet with Squeeze-and-Excitation) with fixed hyperparameters for subject-independent use. Also tests on high gamma dataset.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Standard BCI IV 2a epoching implied; end-to-end architecture with fixed hyperparameters across subjects",
+      "target_events": [],
+      "label_mapping": "left hand, right hand, feet, tongue",
+      "meta_level": "super",
+      "super_meta_note": "Lightweight multi-branch attention model with fixed hyperparameters; addresses subject-specific problem via multi-scale architecture",
+      "evidence_desc": "Explicitly states 'good accuracy (82.87%) with reduced parameters in the BCI-IV2a motor imagery dataset'; describes 4-class MI task with left/right hand, feet, tongue"
+    },
+    {
+      "filename": "paper_www_hindawi_com_journals_cin_2018_7957408.pdf",
+      "ref": "10.1155/2018/7957408",
+      "title": "Decoding Motor Imagery through Common Spatial Pattern Filters at the EEG Source Space",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses BCI Competition IV dataset 2a for four-class motor imagery decoding. Proposes source imaging approach with CSP filters in cortical source space from selected ROIs, using ensemble classification. Reports mean accuracy increase of 5.6% over sensor-space CSP. Uses only training session data.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Band-pass filtered 7-15 Hz, down-sampled to 100 Hz, epoched 500msec after visual cue with epoch duration 3000msec; 22 EEG channels, average reference; only training session used",
+      "target_events": [],
+      "label_mapping": "right arm, left arm, feet, tongue",
+      "meta_level": "super",
+      "super_meta_note": "Source space CSP with EEG source imaging; ensemble model from selected ROIs; neuroanatomical constraints",
+      "evidence_desc": "Explicitly states 'The evaluation was performed on the BCI Competition IV dataset 2a, which features 4 motor imagery classes from 9 participants'; 'mean accuracy increase of 5.6% with respect to the conventional application method of CSP on sensors'"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "BCI Competition IV 2a is a well-established public EEG dataset with a clear 4-class motor imagery paradigm (left hand, right hand, feet, tongue). Multiple references confirm explicit event/label structure supporting classification tasks, including the official documentation and numerous published results with accuracy/kappa metrics.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 18,
+    "total_n": 18,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "1023": 488,
+      "1072": 18,
+      "276": 17,
+      "277": 17,
+      "32766": 160,
+      "768": 5184,
+      "783": 2592,
+      "769": 648,
+      "770": 648,
+      "771": 648,
+      "772": 648
+    },
+    "subject_info": {
+      "record_count": 18,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "32766",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System marker: recording boundary or session start/stop",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "1072",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: feedback or display event",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "276",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: fixation or display event",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "277",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: fixation or display event",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "768",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: trial start or preparation cue",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "769",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: class-specific cue (training, class 1)",
+        "confidence": "inferred",
+        "session_task_scope": "train"
+      },
+      {
+        "event_id": "770",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: class-specific cue (training, class 2)",
+        "confidence": "inferred",
+        "session_task_scope": "train"
+      },
+      {
+        "event_id": "771",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: class-specific cue (training, class 3)",
+        "confidence": "inferred",
+        "session_task_scope": "train"
+      },
+      {
+        "event_id": "772",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: class-specific cue (training, class 4)",
+        "confidence": "inferred",
+        "session_task_scope": "train"
+      },
+      {
+        "event_id": "783",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: evaluation cue with hidden class label",
+        "confidence": "inferred",
+        "session_task_scope": "test"
+      },
+      {
+        "event_id": "1023",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System marker: trial rejection or artifact flag",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      }
+    ],
+    "notes": "Evidence derived from GDF header annotation descriptions across 6 files (A01T, A01E, A02T, A02E, A05T, A05E) and MAT file structure scans showing 'classlabel' arrays with values 1-4. Key observations: (1) 769-772 appear exclusively in training files (T) with equal counts (648 each, totaling 2592), matching the 4 classlabel values in .mat files; (2) 783 appears exclusively in evaluation files (E) with count 2592, replacing 769-772; (3) 768 appears in all files with count 5184 (twice the trial count), suggesting a trial-start marker; (4) 32766 and 1023 have low counts consistent with system boundaries or rejection markers; (5) 276, 277, 1072 have very low counts (17-18) suggesting display/feedback events. The train/test split is indicated by 'T' and 'E' file suffixes and confirmed by mutually exclusive presence of 769-772 versus 783."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: 4-class motor imagery\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 4 s *, target_events = [`769`, `770`, `771`, `772`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `769` | 0 | class-specific cue (training, class 1) |\n  | `770` | 1 | class-specific cue (training, class 2) |\n  | `771` | 2 | class-specific cue (training, class 3) |\n  | `772` | 3 | class-specific cue (training, class 4) |\n- **Evidence**:\n  - desc_2a.pdf — Official BCI Competition IV 2a description; defines 4 MI classes with event codes 769-772 for training data\n  - 10.3389/fnins.2012.00039 — Classic EEG motor imagery decoding benchmark establishing the 4-class paradigm\n  - 10.1109/tnnls.2018.2789927 — Deep learning evaluation on BCIC IV 2a using 0.5-4s epochs from cue onset\n  - 10.1109/access.2021.3056088 — Comprehensive review confirming 769-772 as class-specific training cues and 783 as evaluation cue\n- **Notes**: Event IDs 769-772 are locked as class-specific cues per dataset sidecar. The canonical 4-class mapping (left hand, right hand, both feet, tongue) is well-established in literature though sidecar meanings use generic class numbering. Evaluation files use 783 with hidden labels from .mat classlabel arrays; this task focuses on the directly-labeled training protocol. Epoch window inferred from common practice capturing preparation and early MI phase.\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "769",
+      "770",
+      "771",
+      "772"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "evaluation/hidden-label motor imagery",
+        "reason": "Event 783 (evaluation cue with hidden class label) is only usable with external classlabel from .mat files, but the kernel pipeline for archetype A requires event-based labels directly from triggers. The 783 marker alone carries no class information in the event stream; it would require a B2 derivation from MAT file classlabel arrays, but no events.tsv numeric column exists and participants.tsv is empty. Not groundable as a standalone task without substantial kernel architecture changes."
+      },
+      {
+        "paradigm": "rest vs task state detection",
+        "reason": "Phase markers 276, 277, 1072 have extremely low counts (17-18 total across all files) and are described as fixation/display/feedback events, not sustained rest/task states. No reference proposes this as a task target."
+      },
+      {
+        "paradigm": "EOG/EMG artifact regression",
+        "reason": "No native misc channels discovered in raw files (channels.tsv or pre-scan). The 3 EOG channels mentioned in refs are part of the 25-channel montage but typed as EEG in BIDS, not continuous misc channels available for B1 regression."
+      },
+      {
+        "paradigm": "subject-level phenotype prediction",
+        "reason": "participants.tsv columns are empty — no age, sex, handedness, or behavioral scores available for B3 or C archetypes."
+      },
+      {
+        "paradigm": "trial-level response time/accuracy regression",
+        "reason": "events.tsv contains no numeric columns (no response_time, confidence, or other per-trial scalars). MAT files only contain classlabel, not behavioral metrics."
+      }
+    ]
+  },
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/bcic_iv_2a/kernel_final.py",
+  "kernel_code_len": 10085,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/bcic_iv_2a.py",
+    "kernel_sha256": "1fd8cd3352fc0426e4b2dcdead0dae2c4f1cdb23026acf8bab41e621deb5586f",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 18,
+    "total_n": 18,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "1023": 488,
+      "1072": 18,
+      "276": 17,
+      "277": 17,
+      "32766": 160,
+      "768": 5184,
+      "783": 2592,
+      "769": 648,
+      "770": 648,
+      "771": 648,
+      "772": 648
+    },
+    "subject_info": {
+      "record_count": 18,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/bcic_iv_2a.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

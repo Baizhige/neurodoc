@@ -1,0 +1,131 @@
+--- openneuro_ds003800/analysis.md (pre-v3)
++++ openneuro_ds003800/analysis.md (v3)
+@@ -3,7 +3,7 @@
+ **Dataset**: `openneuro_ds003800` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003800
+ **Category**: Sensory/Response | **Subjects**: 8 | **Files (Completed)**: 24
+ **Channels**: 19 | **Sampling Rate**: 250 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -31,37 +31,107 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Stimulus vs Rest Classification (Gamma Entrainment)
++### Classical Task 1: Stimulus vs Rest Classification (Gamma Entrainment) — -------
+ 
+ - **Task Type**: classification
+ - **Epoch Method**: epoch_by_long_event_hdf5
+ - **Epoch Parameters**: tmin = 0 s, tmax = 40 s (Stimulus), tmax = 20 s (Rest), overlap = 0.0, target_events = ["Stimulus", "Rest"]
+-- **Label Route**: event
++- **Label Route**: `info`
++- **Label Field**: `-------`
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 
+-  | Event | y | Meaning |
+-  |-------|---|—---|
+-  | `Stimulus` | 1 | 40 Hz AM auditory stimulation period (event code 2) |
+-  | `Rest` | 0 | Resting/quiet period (event code 1) |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | ------- | --- | —--- |  |
+ 
+ - **Evidence**:
+   - DOI: 10.18178/ijpmbs.13.1.14-18 — Binary classification of stimulus vs rest during 40 Hz auditory gamma entrainment. Stimulus trials: 40s duration; rest trials: 20s duration; total task: 340s (6x40s stimulus + 5x20s rest).
+ - **Kernel Notes**: Use long-event epoching to extract 40s windows for Stimulus and 20s windows for Rest periods. The dataset contains 6 stimulus and 5 rest periods per session.
+ 
+-### Classical Task 2: Entrained vs Non-Entrained Classification (Super Meta)
++### Classical Task 2: Stimulus vs Rest Classification (Gamma Entrainment) — Stimulus
++
++- **Task Type**: classification
++- **Epoch Method**: epoch_by_long_event_hdf5
++- **Epoch Parameters**: tmin = 0 s, tmax = 40 s (Stimulus), tmax = 20 s (Rest), overlap = 0.0, target_events = ["Stimulus", "Rest"]
++- **Label Route**: `info`
++- **Label Field**: `Stimulus`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Stimulus` | 1 | 40 Hz AM auditory stimulation period (event code 2) |  |
++
++- **Evidence**:
++  - DOI: 10.18178/ijpmbs.13.1.14-18 — Binary classification of stimulus vs rest during 40 Hz auditory gamma entrainment. Stimulus trials: 40s duration; rest trials: 20s duration; total task: 340s (6x40s stimulus + 5x20s rest).
++- **Kernel Notes**: Use long-event epoching to extract 40s windows for Stimulus and 20s windows for Rest periods. The dataset contains 6 stimulus and 5 rest periods per session.
++
++### Classical Task 3: Stimulus vs Rest Classification (Gamma Entrainment) — Rest
++
++- **Task Type**: classification
++- **Epoch Method**: epoch_by_long_event_hdf5
++- **Epoch Parameters**: tmin = 0 s, tmax = 40 s (Stimulus), tmax = 20 s (Rest), overlap = 0.0, target_events = ["Stimulus", "Rest"]
++- **Label Route**: `info`
++- **Label Field**: `Rest`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Rest` | 0 | Resting/quiet period (event code 1) |  |
++
++- **Evidence**:
++  - DOI: 10.18178/ijpmbs.13.1.14-18 — Binary classification of stimulus vs rest during 40 Hz auditory gamma entrainment. Stimulus trials: 40s duration; rest trials: 20s duration; total task: 340s (6x40s stimulus + 5x20s rest).
++- **Kernel Notes**: Use long-event epoching to extract 40s windows for Stimulus and 20s windows for Rest periods. The dataset contains 6 stimulus and 5 rest periods per session.
++
++### Classical Task 4: Entrained vs Non-Entrained Classification (Super Meta) — -------
+ 
+ - **Task Type**: classification
+ - **Epoch Method**: epoch_by_long_event_hdf5
+ - **Epoch Parameters**: tmin = 0 s, tmax = 40 s, overlap = 0.0, target_events = ["Stimulus"]
+-- **Label Route**: event
++- **Label Route**: `info`
++- **Label Field**: `-------`
+ - **Meta Level**: super
+ - **Target Definition**:
+ 
+-  | Event | y | Meaning |
+-  |-------|---|—---|
+-  | `Entrained` | 1 | Participant showed 40Hz response amplitude >= 3 SD above mean of adjacent frequencies (38-42Hz) |
+-  | `Non-Entrained` | 0 | Participant showed 40Hz response amplitude < 3 SD above mean of adjacent frequencies |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | ------- | --- | —--- |  |
++
++- **Super Meta Notes**: Derived from raw events ["Stimulus", "Rest"] by computing peak 40Hz response amplitude in the gamma band (38-42Hz) during stimulus periods. Kernel step: Compute FFT/power spectral density for each stimulus epoch, extract gamma band power, classify as entrained if >= 3 standard deviations above mean of adjacent frequencies.
++- **Evidence**:
++  - DOI: 10.18178/ijpmbs.13.1.14-18 — Binary classification of stimulus vs rest periods and entrained vs non-entrained patients based on gamma response. Entrained/non-entrained classification derived from whether peak 40Hz response amplitude >= 3 standard deviations above mean of adjacent frequencies.
++- **Kernel Notes**: Requires computing power spectral density for each stimulus epoch and applying threshold-based classification for entrainment status.### Classical Task 5: Entrained vs Non-Entrained Classification (Super Meta) — Entrained
++
++- **Task Type**: classification
++- **Epoch Method**: epoch_by_long_event_hdf5
++- **Epoch Parameters**: tmin = 0 s, tmax = 40 s, overlap = 0.0, target_events = ["Stimulus"]
++- **Label Route**: `info`
++- **Label Field**: `Entrained`
++- **Meta Level**: super
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Entrained` | 1 | Participant showed 40Hz response amplitude >= 3 SD above mean of adjacent frequencies (38-42Hz) |  |
++
++- **Super Meta Notes**: Derived from raw events ["Stimulus", "Rest"] by computing peak 40Hz response amplitude in the gamma band (38-42Hz) during stimulus periods. Kernel step: Compute FFT/power spectral density for each stimulus epoch, extract gamma band power, classify as entrained if >= 3 standard deviations above mean of adjacent frequencies.
++- **Evidence**:
++  - DOI: 10.18178/ijpmbs.13.1.14-18 — Binary classification of stimulus vs rest periods and entrained vs non-entrained patients based on gamma response. Entrained/non-entrained classification derived from whether peak 40Hz response amplitude >= 3 standard deviations above mean of adjacent frequencies.
++- **Kernel Notes**: Requires computing power spectral density for each stimulus epoch and applying threshold-based classification for entrainment status.### Classical Task 6: Entrained vs Non-Entrained Classification (Super Meta) — Non-Entrained
++
++- **Task Type**: classification
++- **Epoch Method**: epoch_by_long_event_hdf5
++- **Epoch Parameters**: tmin = 0 s, tmax = 40 s, overlap = 0.0, target_events = ["Stimulus"]
++- **Label Route**: `info`
++- **Label Field**: `Non-Entrained`
++- **Meta Level**: super
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Non-Entrained` | 0 | Participant showed 40Hz response amplitude < 3 SD above mean of adjacent frequencies |  |
+ 
+ - **Super Meta Notes**: Derived from raw events ["Stimulus", "Rest"] by computing peak 40Hz response amplitude in the gamma band (38-42Hz) during stimulus periods. Kernel step: Compute FFT/power spectral density for each stimulus epoch, extract gamma band power, classify as entrained if >= 3 standard deviations above mean of adjacent frequencies.
+ - **Evidence**:

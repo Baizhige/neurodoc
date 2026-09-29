@@ -1,0 +1,111 @@
+--- openneuro_ds003947/analysis.md (pre-v3)
++++ openneuro_ds003947/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds003947` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003947
+ **Category**: Biological State | **Subjects**: 61 | **Files (Completed)**: 61 | **Channels**: 64 | **Sampling Rate**: 3000 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -20,6 +20,15 @@
+ 
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `control` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `first_episode_psychosis` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `—` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -29,17 +38,32 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: First Episode Psychosis vs. Control Classification
++### Classical Task 1: First Episode Psychosis vs. Control Classification — control
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 4 s, overlap = 0.0
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `control`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-------|---------|
+-  | `control` | 0 | Healthy control subject |
+-  | `first_episode_psychosis` | 1 | First Episode Psychosis patient |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `control` | 0 | Healthy control subject |  |
++- **Evidence**:
++  - DOI: 10.48550/arxiv.2411.18392 — Binary classification of first episode psychosis vs healthy controls from resting-state EEG using ds003947 with 4-second windows
++- **Kernel Notes**: Load participants.tsv to obtain diagnosis labels for each subject (clinical_status/group column). Segment continuous EEG into 4-second non-overlapping windows. Assign subject-level diagnosis (FEP=1, control=0) to all corresponding epochs as super meta. Resample to 250 Hz or lower to reduce computational load while preserving frequencies up to 125 Hz (adequate for delta through gamma bands). 5-minute recording yields ~75 epochs per subject.
++
++### Classical Task 2: First Episode Psychosis vs. Control Classification — first_episode_psychosis
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 4 s, overlap = 0.0
++- **Label Route**: `info`
++- **Label Field**: `first_episode_psychosis`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `first_episode_psychosis` | 1 | First Episode Psychosis patient |  |
+ - **Evidence**:
+   - DOI: 10.48550/arxiv.2411.18392 — Binary classification of first episode psychosis vs healthy controls from resting-state EEG using ds003947 with 4-second windows
+ - **Kernel Notes**: Load participants.tsv to obtain diagnosis labels for each subject (clinical_status/group column). Segment continuous EEG into 4-second non-overlapping windows. Assign subject-level diagnosis (FEP=1, control=0) to all corresponding epochs as super meta. Resample to 250 Hz or lower to reduce computational load while preserving frequencies up to 125 Hz (adequate for delta through gamma bands). 5-minute recording yields ~75 epochs per subject.
+@@ -48,23 +72,35 @@
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 4 s, overlap = 0.0
+-- **Label Route**: `event`
++- **Label Route**: `misc`
++- **Label Field**: `—`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-------|---------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | — | — | No supervised labels; extract spectral features per epoch |
+ - **Notes**: Extract spectral power features (delta 1–4 Hz, theta 4–8 Hz, alpha 8–13 Hz, beta 13–30 Hz, gamma 30–100 Hz) within each 4-second epoch for normative baseline characterization. Consistent segmentation with Classical Task 1 enables cross-study comparison.
+ 
+-### Potential Task 2: Cross-dataset FEP Classification (ds003944 + ds003947)
++### Potential Task 2: Cross-dataset FEP Classification (ds003944 + ds003947) — control
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 4 s, overlap = 0.0
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `control`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-------|---------|
+-  | `control` | 0 | Healthy control subject |
+-  | `first_episode_psychosis` | 1 | First Episode Psychosis patient |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `control` | 0 | Healthy control subject |  |
++- **Notes**: Combine subjects from both resting-state datasets (ds003944 and ds003947) for larger sample size and improved generalization. Requires alignment of preprocessing pipeline across datasets. See DOI 10.1038/s41598-024.66110-0 for spectral-based FEP classification on ds003944.### Potential Task 3: Cross-dataset FEP Classification (ds003944 + ds003947) — first_episode_psychosis
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 4 s, overlap = 0.0
++- **Label Route**: `info`
++- **Label Field**: `first_episode_psychosis`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `first_episode_psychosis` | 1 | First Episode Psychosis patient |  |
+ - **Notes**: Combine subjects from both resting-state datasets (ds003944 and ds003947) for larger sample size and improved generalization. Requires alignment of preprocessing pipeline across datasets. See DOI 10.1038/s41598-024.66110-0 for spectral-based FEP classification on ds003944.

@@ -1,0 +1,83 @@
+--- openneuro_ds005509/analysis.md (pre-v3)
++++ openneuro_ds005509/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds005509` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005509
+ **Category**: Complex Applied | **Subjects**: 330 | **Files (Completed)**: 3326 | **Channels**: 129 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -65,6 +65,14 @@
+ | `video_stop` | 1190 | event | raw | Movie/video presentation offset |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `continuous` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `binary` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -112,14 +120,15 @@
+ - **Kernel Notes**: ERP analysis requires alignment to `stim_ON` (not `fixpoint_ON`). Compute correct/incorrect labels by matching button press timestamps to target side. N200/P300 components expected for high-contrast targets. Filter epochs using `contrastTrial_start` to isolate task blocks from inter-trial intervals.
+ 
+ ### Potential Task 1: Resting-State Psychiatric Multimorbidity Prediction
+-- **Task Type**: classification
++- **Task Type**: regression
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, overlap = 0.5, target_events = [`resting_start`, `instructed_toOpenEyes`, `instructed_toCloseEyes`]
+ - **Label Route**: `misc`
++- **Label Field**: `continuous`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | continuous | ADHD | SWAN score (attention dimension) |
+   | continuous | anxiety | SCARED score |
+   | continuous | internalizing | Internalizing factor from CBCL |
+@@ -130,19 +139,33 @@
+   - DOI: 10.1016/j.neuroimage.2022.119348 — EEG benchmark paper demonstrating 7-class DSM-V multimorbidity prediction from resting EEG in N=2042 HBN participants using frequency-domain features.
+ - **Kernel Notes**: Requires join between EEG connectivity features and phenotypic CSV tables by subject ID. Use subject-wise cross-validation splits to prevent data leakage. Extract spectral power (delta/theta/alpha/beta) and connectivity (coherence) features from 4-s resting epochs. Labels are multi-label (subjects may have multiple diagnoses) requiring appropriate binary classification approach.
+ 
+-### Potential Task 2: Phenotypic Regression from Resting Connectivity
++### Potential Task 2: Phenotypic Regression from Resting Connectivity — continuous
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.0, target_events = [`resting_start`, `instructed_toOpenEyes`, `instructed_toCloseEyes`]
+ - **Label Route**: `misc`
++- **Label Field**: `continuous`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | continuous | age | Participant age in years |
+-  | binary | sex | Participant sex (M/F) |
+   | continuous | IQ | WISC score |
+   | continuous | SES | Barratt SES score |
+ - **Evidence**:
+   - DOI: 10.1016/j.neuroimage.2020.117001 — EEG functional connectivity study demonstrating subject-specific phase-coupling associations with age, sex, IQ, and SES using HBN Biobank data (N=1657).
+ - **Kernel Notes**: Extract instantaneous coherence (iCOH) across frequency bands from resting-state epochs. Kernel must load phenotypic CSV files per subject and perform multivariate regression. Use age-appropriate train/test splits accounting for developmental non-stationarity. Consider frequency-band-specific models (delta/theta for younger, alpha/beta for older participants).
++### Potential Task 3: Phenotypic Regression from Resting Connectivity — binary
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0.0 s, tmax = 2.0 s, overlap = 0.0, target_events = [`resting_start`, `instructed_toOpenEyes`, `instructed_toCloseEyes`]
++- **Label Route**: `misc`
++- **Label Field**: `binary`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
++  | binary | sex | Participant sex (M/F) |
++- **Evidence**:
++  - DOI: 10.1016/j.neuroimage.2020.117001 — EEG functional connectivity study demonstrating subject-specific phase-coupling associations with age, sex, IQ, and SES using HBN Biobank data (N=1657).
++- **Kernel Notes**: Extract instantaneous coherence (iCOH) across frequency bands from resting-state epochs. Kernel must load phenotypic CSV files per subject and perform multivariate regression. Use age-appropriate train/test splits accounting for developmental non-stationarity. Consider frequency-band-specific models (delta/theta for younger, alpha/beta for older participants).

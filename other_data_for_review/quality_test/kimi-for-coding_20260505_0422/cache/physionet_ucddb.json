@@ -1,0 +1,244 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 10,
+    "category": "",
+    "format_type": "edf",
+    "has_bids_sidecars": false
+  },
+  "budget_used": 31,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 7,
+    "task_synthesis": 10,
+    "kernel_loop": 9,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T08:40:45.201814+00:00",
+  "ref_extractions": [
+    {
+      "filename": "paper_10.1111_jsr.13811.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1111/jsr.13811",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1038_s41597_022_01272_y.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1038/s41597.022.01272.y",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1371_journal_pone_0318622.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1371/journal.pone.0318622",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "official_doi.org_10.13026_C26C7D.html",
+      "ref": "10.13026/C26C7D",
+      "title": "St. Vincent's University Hospital / University College Dublin Sleep Apnea Database v1.0.0",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is the official PhysioNet dataset description page, not a research paper. It describes the dataset structure, signals, and annotations but does not define any ML task or provide experimental results.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "official_physionet.org_content_ucddb_1.0.0.html",
+      "ref": "",
+      "title": "St. Vincent's University Hospital / University College Dublin Sleep Apnea Database v1.0.0",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is the same official PhysioNet dataset description page as File 1, just a different URL. It is not a research paper and contains no ML task definition or experimental methodology.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_1038_s41598_019_53403_y.pdf",
+      "ref": "10.1038/s41598-019-53403-y",
+      "title": "Estimation of the apnea-hypopnea index in a heterogeneous sleep-disordered population using optimised cardiovascular features",
+      "classification": "partial",
+      "cot_reasoning": "This paper mentions using multiple datasets including heterogeneous clinical populations, but focuses primarily on ECG-based AHI estimation rather than EEG. While it references PhysioNet datasets broadly, it does not explicitly confirm use of the UCDDB specifically; the emphasis is on ECG/PPG features and AHI regression, not EEG-based sleep staging or apnea detection.",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 0,
+      "paradigm": "ECG-based AHI estimation, sleep/wake detection",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-second epochs surrounding respiratory events (RE-epochs); ratio of detected RE-epochs to total sleep epochs yields AHI",
+      "target_events": [
+        "respiratory events (apneas/hypopneas)"
+      ],
+      "label_mapping": "AHI continuous value; also OSA severity categories (mild: 5, moderate: 15, severe: 30 events/h)",
+      "meta_level": "super",
+      "super_meta_note": "Derives AHI from detected respiratory event epochs, not raw epoch classification. Uses ECG not EEG as primary signal.",
+      "evidence_desc": "Five-fold cross-validation on heterogeneous datasets; correlation 0.72 with gold standard AHI, ROC AUC >= 0.86 for screening"
+    },
+    {
+      "filename": "paper_10_1088_0967_3334_36_10_2103.pdf",
+      "ref": "10.1088/0967-3334/36/10/2103",
+      "title": "Probabilistic cardiac and respiratory based classification of sleep and apneic events in subjects with sleep apnea",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses the UCD database (UCDDB) from PhysioNet, with 25 overnight PSG recordings. It defines concrete ML tasks: sleep stage classification (WAKE/SLEEP, REM/NREM, light/deep) and apneic breathing detection (APNEIC vs HEALTHY), with clear epoch-based methodology and performance metrics reported.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "sleep stage classification, apneic event detection",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-second epochs; apneic epochs defined if >=1 second overlap with event-based annotation; R&K stages mapped to AASM N1-N3",
+      "target_events": [
+        "apneic events (apnea/hypopnea)",
+        "sleep stages"
+      ],
+      "label_mapping": "Sleep: WAKE, REM, N1N2 (light), N3 (deep); Breathing: APNEIC vs HEALTHY; R&K Stage 1-4 mapped to AASM N1-N3 with N1N2 combined, N3=Stage3+4",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Kappa values: WAKE vs SLEEP 0.439, REM vs NREM 0.298, light vs deep 0.339, APNEIC vs HEALTHY 0.272. Uses ECG and respiratory belt signals, not EEG primarily."
+    },
+    {
+      "filename": "paper_10_1109_iemcon_2019_8936154.pdf",
+      "ref": "10.1109/iemcon.2019.8936154",
+      "title": "Probabilistic Modelling of Sleep Stage and Apneaic Events in the University College of Dublin Database (UCDDB)",
+      "classification": "partial",
+      "cot_reasoning": "This paper explicitly uses UCDDB and analyzes sleep stages and apneaic events. However, it focuses on probabilistic modeling (Markov chains, distribution fitting) of sleep fragmentation patterns rather than defining a concrete supervised ML task with train/test evaluation. The goal is descriptive modeling for future algorithm development, not a deployed classifier.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "super",
+      "super_meta_note": "Analyzes hypnogram structure and transition probabilities; separates 'apnea' vs 'normal' components of sleep. Proposes future ML integration but current work is statistical modeling.",
+      "evidence_desc": "Static distributions (Gaussian, exponential, power law) and dynamic Markov chain models for WASO, REM, NREM stages. Reports transition probabilities: REM persistence drops from 81.0% to 13.7% after apneaic event."
+    },
+    {
+      "filename": "paper_10_1371_journal_pone_0256111.pdf",
+      "ref": "10.1371/journal.pone.0256111",
+      "title": "Inter-database validation of a deep learning approach for automatic sleep scoring",
+      "classification": "partial",
+      "cot_reasoning": "This paper presents a deep learning approach for sleep staging and validates on six public datasets. While it mentions using multiple public databases, the text does not explicitly confirm UCDDB is among them—the datasets are referenced by citations in the manuscript rather than being named directly in the extracted text. The focus is general sleep staging (5-class), not apnea detection specifically.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "automatic sleep staging",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-second epochs standard for sleep staging",
+      "target_events": [
+        "sleep stages"
+      ],
+      "label_mapping": "Wakefulness, N1, N2, N3, R (REM)",
+      "meta_level": "raw",
+      "super_meta_note": "CNN-LSTM architecture; local kappa 0.80, external dataset kappa 0.54-0.62 with ensemble. Unclear if UCDDB specifically included among the six datasets.",
+      "evidence_desc": "Six public datasets used; performance compared across local and external validation scenarios. Emphasizes inter-database generalization challenge."
+    },
+    {
+      "filename": "paper_ieeexplore_ieee_org_document_9230848.pdf",
+      "ref": "",
+      "title": "A Sub-frame Based Feature Extraction Approach from Split-Band EEG Signal for Sleep Apnea Event Detection Using Multi-Layer LSTM",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses the UCDDB (St. Vincent's University Hospital database on PhysioNet with 25 patients) for EEG-based apnea event detection. It defines a concrete ML task: binary classification of 10-second frames as apnea vs non-apnea, using sub-frame decomposition and LSTM-DNN architecture with post-processing. Clear task definition, dataset reference, and evaluation methodology.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "EEG-based sleep apnea event detection",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "10-second frames with 5 sub-bands (delta, theta, alpha, sigma, beta); each sub-band divided into 10 non-overlapping 1-second sub-frames; overlapping between successive frames for shorter apnea events",
+      "target_events": [
+        "sleep apnea events (all types: obstructive, central, mixed, hypopnea treated as single 'apnea' class)"
+      ],
+      "label_mapping": "Binary: apnea vs non-apnea; all apnea types merged",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Uses EEG signal specifically (not ECG); multi-layer LSTM for local feature extraction, DNN for global feature combination; post-processing with minimum apnea duration constraint. Evaluated on UCDDB with diverse AHI levels."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The UCDDB (University College Dublin Sleep Apnea Database) is a well-known PhysioNet dataset containing polysomnography recordings with EEG, ECG, and respiratory signals. Multiple references confirm sleep staging (5-class) and sleep apnea detection tasks are performed on this dataset, with one paper specifically using EEG-based deep learning for apnea event detection. The dataset contains scored sleep stages and annotated apneic events, providing clear label structure for classification.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 50,
+    "total_n": 50,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 50,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [],
+    "notes": "No events were detected in the pre-scan of either dataset (hmc-sleep-staging/1.1 and ucddb/1.0.0). All subsequent file exploration tools (read_file, list_directory, glob, tree) failed with 'unknown tool' errors after the initial directory scan. The initial scan showed two dataset root directories but no visible files at depth 4, and no events.tsv, annotation files, or event-related metadata could be accessed. Without any accessible event IDs or supporting documentation, no annotations can be produced."
+  },
+  "tasks_section": "## Tasks\n\n(All candidate tasks dropped during v3 schema fill — see logs.)\n",
+  "kernel_requirements": {
+    "required_event_ids": [],
+    "required_native_misc": [],
+    "required_info_fields": [],
+    "derived_misc_channels": []
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/physionet_ucddb/kernel_final.py",
+  "kernel_code_len": 14079,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/physionet_ucddb.py",
+    "kernel_sha256": "6b201c9527cebf683c67f59d4490ef6008d6de145ca6f031257918a946c0f981",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 50,
+    "total_n": 50,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 50,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": [
+      "SpO2",
+      "abdo"
+    ]
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/physionet_ucddb.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

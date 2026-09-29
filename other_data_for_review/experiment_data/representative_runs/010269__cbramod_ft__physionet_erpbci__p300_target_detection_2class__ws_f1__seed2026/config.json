@@ -1,0 +1,606 @@
+﻿{
+  "argv": [
+    "/anonymous/review_workspace/run_single_experiment.py",
+    "--model",
+    "cbramod_ft",
+    "--dataset",
+    "physionet_erpbci",
+    "--task",
+    "p300_target_detection_2class",
+    "--epochs",
+    "50",
+    "--batch_size",
+    "128",
+    "--num_workers",
+    "8",
+    "--seed",
+    "2026",
+    "--split_mode",
+    "ws",
+    "--fold",
+    "1",
+    "--channel_system",
+    "10-5",
+    "--classifier_lr_scale",
+    "1.0",
+    "--early_stopping_patience",
+    "10",
+    "--no-save_checkpoints",
+    "--output_dir",
+    "/anonymous/review_workspace/experiments/output/r0",
+    "--device",
+    "cuda:0",
+    "--cuda",
+    "0",
+    "--cache_dir",
+    "/anonymous/review_cache/",
+    "--lr",
+    "0.0001",
+    "--weight_decay",
+    "0.05",
+    "--optimizer",
+    "AdamW",
+    "--label_smoothing",
+    "0.1",
+    "--encoder_lr_scale",
+    "1.0",
+    "--pipeline",
+    "datasets/pipelines/cbramod_ft.py",
+    "--input_format",
+    "patched",
+    "--patch_size",
+    "200"
+  ],
+  "config_id": "cfg_5eada261dd1b",
+  "environment": {
+    "cuda_available": true,
+    "cuda_version": "12.8",
+    "git_commit": "724bb536ed9b226fc7c1f7b3886e153ae268b0c5",
+    "git_dirty": false,
+    "hostname": "gpua800n4",
+    "python_version": "3.12.11 | packaged by Anaconda, Inc. | (main, Jun  5 2025, 13:09:17) [GCC 11.2.0]",
+    "torch_version": "2.8.0+cu128"
+  },
+  "exp_id": 10269,
+  "paths": {
+    "output_dir": "/anonymous/review_workspace/experiments/output/r0",
+    "run_dir": "/anonymous/review_workspace/experiments/output/r0/runs/010269__cbramod_ft__physionet_erpbci__p300_target_detection_2class__ws_f1__seed2026"
+  },
+  "resolved_params": {
+    "batch_size": 128,
+    "cache_dir": "/anonymous/review_cache/",
+    "ch_names": [
+      "EEG:Fp1",
+      "EEG:AF7",
+      "EEG:AF3",
+      "EEG:F1",
+      "EEG:F3",
+      "EEG:F5",
+      "EEG:F7",
+      "EEG:FT7",
+      "EEG:FC5",
+      "EEG:FC3",
+      "EEG:FC1",
+      "EEG:C1",
+      "EEG:C3",
+      "EEG:C5",
+      "EEG:T7",
+      "EEG:TP7",
+      "EEG:CP5",
+      "EEG:CP3",
+      "EEG:CP1",
+      "EEG:P1",
+      "EEG:P3",
+      "EEG:P5",
+      "EEG:P7",
+      "EEG:P9",
+      "EEG:PO7",
+      "EEG:PO3",
+      "EEG:O1",
+      "EEG:Iz",
+      "EEG:Oz",
+      "EEG:POz",
+      "EEG:Pz",
+      "EEG:CPz",
+      "EEG:Fpz",
+      "EEG:Fp2",
+      "EEG:AF8",
+      "EEG:AF4",
+      "EEG:AFz",
+      "EEG:Fz",
+      "EEG:F2",
+      "EEG:F4",
+      "EEG:F6",
+      "EEG:F8",
+      "EEG:FT8",
+      "EEG:FC6",
+      "EEG:FC4",
+      "EEG:FC2",
+      "EEG:FCz",
+      "EEG:Cz",
+      "EEG:C2",
+      "EEG:C4",
+      "EEG:C6",
+      "EEG:T8",
+      "EEG:TP8",
+      "EEG:CP6",
+      "EEG:CP4",
+      "EEG:CP2",
+      "EEG:P2",
+      "EEG:P4",
+      "EEG:P6",
+      "EEG:P8",
+      "EEG:P10",
+      "EEG:PO8",
+      "EEG:PO4",
+      "EEG:O2"
+    ],
+    "ch_positions": {
+      "EEG:AF3": [
+        -0.048970799999999995,
+        0.0640872,
+        -0.047683
+      ],
+      "EEG:AF4": [
+        -0.018471699999999997,
+        0.0799041,
+        0.032752
+      ],
+      "EEG:AF7": [
+        0.00011229999999999999,
+        0.088247,
+        -0.0017130000000000001
+      ],
+      "EEG:AF8": [
+        0.0198203,
+        0.08030190000000001,
+        0.032764
+      ],
+      "EEG:AFz": [
+        -0.045430700000000004,
+        0.0728622,
+        0.005978
+      ],
+      "EEG:C1": [
+        -0.0841611,
+        -0.0160187,
+        -0.009346
+      ],
+      "EEG:C2": [
+        -0.06535809999999999,
+        -0.0116317,
+        0.064358
+      ],
+      "EEG:C3": [
+        -0.0858941,
+        -0.0158287,
+        -0.048283
+      ],
+      "EEG:C4": [
+        -0.036158,
+        -0.0099839,
+        0.089752
+      ],
+      "EEG:C5": [
+        0.0841131,
+        0.0143647,
+        -0.050538
+      ],
+      "EEG:C6": [
+        0.0004009,
+        -0.009167,
+        0.100244
+      ],
+      "EEG:CP1": [
+        -0.08483020000000001,
+        -0.046021700000000006,
+        -0.007056
+      ],
+      "EEG:CP2": [
+        -0.0635562,
+        -0.0470088,
+        0.065624
+      ],
+      "EEG:CP3": [
+        -0.0856192,
+        -0.0465147,
+        -0.045707
+      ],
+      "EEG:CP4": [
+        -0.0355131,
+        -0.0472919,
+        0.091315
+      ],
+      "EEG:CP5": [
+        0.0855599,
+        -0.0163613,
+        -0.048271
+      ],
+      "EEG:CP6": [
+        0.0003858,
+        -0.047318,
+        0.099432
+      ],
+      "EEG:CPz": [
+        -0.0795922,
+        -0.0465507,
+        0.030949
+      ],
+      "EEG:Cz": [
+        -0.08028010000000001,
+        -0.0137597,
+        0.02916
+      ],
+      "EEG:F1": [
+        -0.0702629,
+        0.0424743,
+        -0.01142
+      ],
+      "EEG:F2": [
+        -0.0502438,
+        0.0531112,
+        0.042192
+      ],
+      "EEG:F3": [
+        -0.0701019,
+        0.041652299999999996,
+        -0.049951999999999996
+      ],
+      "EEG:F4": [
+        -0.0274958,
+        0.0569311,
+        0.060342
+      ],
+      "EEG:F5": [
+        0.0504352,
+        0.0638698,
+        -0.048005000000000006
+      ],
+      "EEG:F6": [
+        0.0003122,
+        0.058512,
+        0.06646200000000001
+      ],
+      "EEG:F7": [
+        0.055743299999999996,
+        0.0696568,
+        -0.010755
+      ],
+      "EEG:F8": [
+        0.029514199999999997,
+        0.0576019,
+        0.059539999999999996
+      ],
+      "EEG:FC1": [
+        -0.080775,
+        0.0141203,
+        -0.011134999999999999
+      ],
+      "EEG:FC2": [
+        -0.060181899999999997,
+        0.0227162,
+        0.055543999999999996
+      ],
+      "EEG:FC3": [
+        -0.08407590000000001,
+        0.0145673,
+        -0.050429
+      ],
+      "EEG:FC4": [
+        -0.0340619,
+        0.0260111,
+        0.07998699999999999
+      ],
+      "EEG:FC5": [
+        0.07211409999999999,
+        0.0420667,
+        -0.050452
+      ],
+      "EEG:FC6": [
+        0.0003761,
+        0.02739,
+        0.08866800000000001
+      ],
+      "EEG:FCz": [
+        -0.0772149,
+        0.0186433,
+        0.024460000000000003
+      ],
+      "EEG:FT7": [
+        0.0730431,
+        0.0444217,
+        -0.012
+      ],
+      "EEG:FT8": [
+        0.034784100000000005,
+        0.0264379,
+        0.078808
+      ],
+      "EEG:Fp1": [
+        -0.08061611652374268,
+        -0.02908875234425068,
+        -0.04131076857447624
+      ],
+      "EEG:Fp2": [
+        0.08436284959316254,
+        -0.02850276418030262,
+        -0.041277434676885605
+      ],
+      "EEG:Fpz": [
+        0.0014676303835585713,
+        0.08506715297698975,
+        -0.03483611345291138
+      ],
+      "EEG:Fz": [
+        -0.0644658,
+        0.048035299999999996,
+        0.016921
+      ],
+      "EEG:Iz": [
+        0.0001076,
+        -0.114892,
+        0.014657
+      ],
+      "EEG:O1": [
+        0.0498196,
+        -0.0994461,
+        0.021727
+      ],
+      "EEG:O2": [
+        0.0549876,
+        -0.0980911,
+        -0.035540999999999996
+      ],
+      "EEG:Oz": [
+        0.055666600000000004,
+        -0.0976251,
+        0.00273
+      ],
+      "EEG:P1": [
+        -0.0724343,
+        -0.0734527,
+        -0.002487
+      ],
+      "EEG:P10": [
+        0.0556667,
+        -0.0785602,
+        0.056561
+      ],
+      "EEG:P2": [
+        -0.0530073,
+        -0.0787878,
+        0.05594
+      ],
+      "EEG:P3": [
+        -0.0730093,
+        -0.07376569999999999,
+        -0.040998
+      ],
+      "EEG:P4": [
+        -0.0286203,
+        -0.0805249,
+        0.075436
+      ],
+      "EEG:P5": [
+        0.0861618,
+        -0.0470353,
+        -0.045869
+      ],
+      "EEG:P6": [
+        0.0003247,
+        -0.08111499999999999,
+        0.082615
+      ],
+      "EEG:P7": [
+        0.0855488,
+        -0.0455453,
+        -0.00713
+      ],
+      "EEG:P8": [
+        0.0319197,
+        -0.08048709999999999,
+        0.07671599999999999
+      ],
+      "EEG:P9": [
+        0.0833218,
+        -0.046101300000000005,
+        0.031206
+      ],
+      "EEG:PO3": [
+        -0.054910400000000005,
+        -0.0980448,
+        -0.035465
+      ],
+      "EEG:PO4": [
+        -0.0189724,
+        -0.101768,
+        0.046536
+      ],
+      "EEG:PO7": [
+        0.0730557,
+        -0.07306829999999999,
+        -0.00254
+      ],
+      "EEG:PO8": [
+        0.019877600000000002,
+        -0.10179300000000001,
+        0.046393000000000004
+      ],
+      "EEG:POz": [
+        -0.0484244,
+        -0.0993408,
+        0.021599
+      ],
+      "EEG:Pz": [
+        -0.06727230000000001,
+        -0.0762907,
+        0.028382
+      ],
+      "EEG:T7": [
+        0.0818151,
+        0.0154167,
+        -0.01133
+      ],
+      "EEG:T8": [
+        0.037672,
+        -0.0096241,
+        0.088412
+      ],
+      "EEG:TP7": [
+        0.0850799,
+        -0.0150203,
+        -0.00949
+      ],
+      "EEG:TP8": [
+        0.0383838,
+        -0.0470731,
+        0.090695
+      ]
+    },
+    "channel_system": "10-5",
+    "checkpoint_dir": "/anonymous/review_workspace/experiments/output/r0/runs/010269__cbramod_ft__physionet_erpbci__p300_target_detection_2class__ws_f1__seed2026/checkpoints",
+    "classifier": "all_patch_reps",
+    "classifier_lr_scale": 1.0,
+    "clip_value": 1,
+    "config_id": null,
+    "console_log_path": "/anonymous/review_workspace/experiments/output/r0/runs/010269__cbramod_ft__physionet_erpbci__p300_target_detection_2class__ws_f1__seed2026/logs/console.log",
+    "cuda": 0,
+    "d_model": 200,
+    "data_ratio": 1.0,
+    "dataset": "physionet_erpbci",
+    "device": "cuda:0",
+    "device_obj": "cuda:0",
+    "dim_feedforward": 800,
+    "dropout": 0.1,
+    "early_stopping_patience": 10,
+    "encoder_lr_scale": 1.0,
+    "epoch_param": null,
+    "epochs": 50,
+    "exp_id": 10269,
+    "fold": 1,
+    "foundation_dir": "/anonymous/review_workspace/models/Weights/CBraMod/pretrained_weights.pth",
+    "frozen": false,
+    "gpu_ids": "1,2,3",
+    "held_out_subject": null,
+    "input_format": "patched",
+    "label_smoothing": 0.1,
+    "list_variants": false,
+    "log_dir": "/anonymous/review_workspace/experiments/output/r0/runs/010269__cbramod_ft__physionet_erpbci__p300_target_detection_2class__ws_f1__seed2026/logs",
+    "logs_dir": "/anonymous/review_workspace/experiments/output/r0/runs/010269__cbramod_ft__physionet_erpbci__p300_target_detection_2class__ws_f1__seed2026/logs",
+    "lr": 0.0001,
+    "metrics_dir": "/anonymous/review_workspace/experiments/output/r0/runs/010269__cbramod_ft__physionet_erpbci__p300_target_detection_2class__ws_f1__seed2026/metrics",
+    "model": "cbramod_ft",
+    "model_channel_indices": null,
+    "model_dir": "/anonymous/review_workspace/experiments/output/r0/runs/010269__cbramod_ft__physionet_erpbci__p300_target_detection_2class__ws_f1__seed2026/checkpoints",
+    "multi_lr": true,
+    "n_layer": 12,
+    "nhead": 8,
+    "num_channels": 64,
+    "num_of_classes": 4,
+    "num_workers": 8,
+    "optimizer": "AdamW",
+    "output_dir": "/anonymous/review_workspace/experiments/output/r0",
+    "patch_num": 1,
+    "patch_size": 200,
+    "pipeline": "datasets/pipelines/cbramod_ft.py",
+    "pipeline_param": null,
+    "rebuild_hdf5": false,
+    "run_dir": "/anonymous/review_workspace/experiments/output/r0/runs/010269__cbramod_ft__physionet_erpbci__p300_target_detection_2class__ws_f1__seed2026",
+    "run_id": "010269__cbramod_ft__physionet_erpbci__p300_target_detection_2class__ws_f1__seed2026",
+    "sample_counts": {
+      "test": 5166,
+      "test_original": 5166,
+      "train": 15497,
+      "train_original": 15497,
+      "val": 5166,
+      "val_original": 5166
+    },
+    "samples": 200,
+    "save_checkpoints": false,
+    "seed": 2026,
+    "split_mode": "ws",
+    "task": "p300_target_detection_2class",
+    "test_samples": 5166,
+    "test_samples_original": 5166,
+    "test_subjects": [
+      "rc01",
+      "rc02",
+      "rc03",
+      "rc04",
+      "rc05",
+      "rc06",
+      "rc07",
+      "rc08",
+      "rc09",
+      "rc10",
+      "rc11",
+      "rc12",
+      "rc13",
+      "rc14",
+      "rc15",
+      "rc16",
+      "rc17",
+      "rc18",
+      "rc19",
+      "rc20",
+      "rc21"
+    ],
+    "train_samples": 15497,
+    "train_samples_original": 15497,
+    "train_subjects": [
+      "rc01",
+      "rc02",
+      "rc03",
+      "rc04",
+      "rc05",
+      "rc06",
+      "rc07",
+      "rc08",
+      "rc09",
+      "rc10",
+      "rc11",
+      "rc12",
+      "rc13",
+      "rc14",
+      "rc15",
+      "rc16",
+      "rc17",
+      "rc18",
+      "rc19",
+      "rc20",
+      "rc21"
+    ],
+    "use_dataparallel": false,
+    "use_pretrained_weights": true,
+    "val_samples": 5166,
+    "val_samples_original": 5166,
+    "val_subjects": [
+      "rc01",
+      "rc02",
+      "rc03",
+      "rc04",
+      "rc05",
+      "rc06",
+      "rc07",
+      "rc08",
+      "rc09",
+      "rc10",
+      "rc11",
+      "rc12",
+      "rc13",
+      "rc14",
+      "rc15",
+      "rc16",
+      "rc17",
+      "rc18",
+      "rc19",
+      "rc20",
+      "rc21"
+    ],
+    "weight_decay": 0.05
+  },
+  "run_id": "010269__cbramod_ft__physionet_erpbci__p300_target_detection_2class__ws_f1__seed2026"
+}
+
+
+

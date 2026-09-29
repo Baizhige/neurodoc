@@ -1,0 +1,138 @@
+--- openneuro_ds004117/analysis.md (pre-v3)
++++ openneuro_ds004117/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004117` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004117
+ **Category**: High-level Mental | **Subjects**: 23 | **Files (Completed)**: 85 | **Channels**: 71 | **Sampling Rate**: 250 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -29,49 +29,107 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Working Memory Encoding - Memorize vs Ignore Classification
++### Classical Task 1: Working Memory Encoding - Memorize vs Ignore Classification — WM
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -1.0 s, tmax = 2.0 s, target_events = [`WM`, `nonWM`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `WM`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `WM` | 1 | Working memory encoding trial (Memorize letters) |
+-  | `nonWM` | 0 | Non-working-memory distractor trial (Ignore letters) |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `WM` | 1 | Working memory encoding trial (Memorize letters) |  |
+ - **Evidence**:
+   - DOI: `10.1016/j.neuroimage.2005.04.014` — Frontal midline theta dynamics analysis during modified Sternberg working memory task, classifying Memorize vs Ignore letter trials with memory load manipulation (3, 5, 7 letters), using 3-s epochs (tmin=-1.0s, tmax=2.0s) relative to letter onset.
+   - DOI: `10.1371/journal.pone.0030135` — Independent EEG sources analysis using the same SCCN 71-channel Sternberg WM dataset, validating Memorize vs Ignore trial classification paradigm.
+ - **Kernel Notes**: Extract epochs around WM and nonWM event markers. Exclude event ID `255` (admin/system marker). The WM event marks trial start where participants memorize g-prefixed target letters; nonWM marks distractor trials to ignore. Optionally analyze memory load (3, 5, 7 letters) as secondary analysis by examining preceding WM trial context. Primary frequency band of interest is frontal midline theta (4-8 Hz).
+ 
+-### Classical Task 2: Memory Load Classification (3, 5, 7 items)
++### Classical Task 2: Working Memory Encoding - Memorize vs Ignore Classification — nonWM
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 2.0 s, target_events = [`WM`, `nonWM`]
++- **Label Route**: `info`
++- **Label Field**: `nonWM`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `nonWM` | 0 | Non-working-memory distractor trial (Ignore letters) |  |
++- **Evidence**:
++  - DOI: `10.1016/j.neuroimage.2005.04.014` — Frontal midline theta dynamics analysis during modified Sternberg working memory task, classifying Memorize vs Ignore letter trials with memory load manipulation (3, 5, 7 letters), using 3-s epochs (tmin=-1.0s, tmax=2.0s) relative to letter onset.
++  - DOI: `10.1371/journal.pone.0030135` — Independent EEG sources analysis using the same SCCN 71-channel Sternberg WM dataset, validating Memorize vs Ignore trial classification paradigm.
++- **Kernel Notes**: Extract epochs around WM and nonWM event markers. Exclude event ID `255` (admin/system marker). The WM event marks trial start where participants memorize g-prefixed target letters; nonWM marks distractor trials to ignore. Optionally analyze memory load (3, 5, 7 letters) as secondary analysis by examining preceding WM trial context. Primary frequency band of interest is frontal midline theta (4-8 Hz).
++
++### Classical Task 3: Memory Load Classification (3, 5, 7 items) — WM` (load=3)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = -1.0 s, tmax = 2.0 s, target_events = [`WM`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `WM` (load=3)`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `WM` (load=3) | 0 | Working memory encoding with 3 letters |
+-  | `WM` (load=5) | 1 | Working memory encoding with 5 letters |
+-  | `WM` (load=7) | 2 | Working memory encoding with 7 letters |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `WM` (load=3) | 0 | Working memory encoding with 3 letters |  |
+ - **Evidence**:
+   - DOI: `10.1016/j.neuroimage.2005.04.014` — Analyzed theta power changes with memory load (3, 5, 7 letters), showing increased frontal midline theta for higher memory loads.
+ - **Kernel Notes**: Requires super-meta level labeling derived from trial metadata specifying set size. Load level (3/5/7) must be parsed from events.tsv sidecar or derived from count of preceding g-prefixed letter events within each WM trial context. Verify set-size encoding in dataset documentation before analysis. Exclude event ID `255` (admin/system marker).
+ 
+-### Potential Task 1: WM vs Non-WM Letter Encoding (binary)
++### Classical Task 4: Memory Load Classification (3, 5, 7 items) — WM` (load=5)
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 2.0 s, target_events = [`WM`]
++- **Label Route**: `info`
++- **Label Field**: `WM` (load=5)`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `WM` (load=5) | 1 | Working memory encoding with 5 letters |  |
++- **Evidence**:
++  - DOI: `10.1016/j.neuroimage.2005.04.014` — Analyzed theta power changes with memory load (3, 5, 7 letters), showing increased frontal midline theta for higher memory loads.
++- **Kernel Notes**: Requires super-meta level labeling derived from trial metadata specifying set size. Load level (3/5/7) must be parsed from events.tsv sidecar or derived from count of preceding g-prefixed letter events within each WM trial context. Verify set-size encoding in dataset documentation before analysis. Exclude event ID `255` (admin/system marker).
++
++### Classical Task 5: Memory Load Classification (3, 5, 7 items) — WM` (load=7)
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 2.0 s, target_events = [`WM`]
++- **Label Route**: `info`
++- **Label Field**: `WM` (load=7)`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `WM` (load=7) | 2 | Working memory encoding with 7 letters |  |
++- **Evidence**:
++  - DOI: `10.1016/j.neuroimage.2005.04.014` — Analyzed theta power changes with memory load (3, 5, 7 letters), showing increased frontal midline theta for higher memory loads.
++- **Kernel Notes**: Requires super-meta level labeling derived from trial metadata specifying set size. Load level (3/5/7) must be parsed from events.tsv sidecar or derived from count of preceding g-prefixed letter events within each WM trial context. Verify set-size encoding in dataset documentation before analysis. Exclude event ID `255` (admin/system marker).
++
++### Potential Task 1: WM vs Non-WM Letter Encoding (binary) — WM
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`WM`, `nonWM`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `WM`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `WM` | 1 | Working memory encoding trial |
+-  | `nonWM` | 0 | Non-working-memory (distractor) trial |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `WM` | 1 | Working memory encoding trial |  |
++- **Evidence**:
++  - DOI: `10.1016/j.neuroimage.2005.04.014` — Supports fine-grained analysis of letter-specific processing during the Sternberg WM paradigm.
++- **Kernel Notes**: Shorter epoch window focused on individual letter presentation events (gA-gZ for memorization targets, A-Z for distractors). Captures early ERP components (N100, P200) and letter-specific processing. Exclude event ID `255` (admin/system marker). Fine-grained letter event analysis (A-Z, gA-gZ) may provide additional ERP resolution but requires careful event code mapping. 23 subjects x ~3.7 sessions on average = 85 files.### Potential Task 2: WM vs Non-WM Letter Encoding (binary) — nonWM
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`WM`, `nonWM`]
++- **Label Route**: `info`
++- **Label Field**: `nonWM`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `nonWM` | 0 | Non-working-memory (distractor) trial |  |
+ - **Evidence**:
+   - DOI: `10.1016/j.neuroimage.2005.04.014` — Supports fine-grained analysis of letter-specific processing during the Sternberg WM paradigm.
+ - **Kernel Notes**: Shorter epoch window focused on individual letter presentation events (gA-gZ for memorization targets, A-Z for distractors). Captures early ERP components (N100, P200) and letter-specific processing. Exclude event ID `255` (admin/system marker). Fine-grained letter event analysis (A-Z, gA-gZ) may provide additional ERP resolution but requires careful event code mapping. 23 subjects x ~3.7 sessions on average = 85 files.

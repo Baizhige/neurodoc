@@ -1,0 +1,195 @@
+--- openneuro_ds003638/analysis.md (pre-v3)
++++ openneuro_ds003638/analysis.md (v3)
+@@ -3,7 +3,7 @@
+ **Dataset**: `openneuro_ds003638` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003638
+ **Category**: High-level Mental | **Subjects**: 57 | **Files (Completed)**: 57
+ **Channels**: 73 | **Sampling Rate**: 512 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -92,48 +92,137 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: 5C-CPT Target vs Nontarget Classification
++### Classical Task 1: 5C-CPT Target vs Nontarget Classification — 65281-65286 (stimulus codes, nontarget range)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [see Target Definition]
+-- **Label Route**: `event`
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | 65281-65286 (stimulus codes, nontarget range) | 0 | Nontarget stimuli (5C-CPT correct rejections) |
+-  | 65287 (target stimulus code) | 1 | Target stimuli (5C-CPT hits) |
++- **Label Route**: `info`
++- **Label Field**: `65281-65286 (stimulus codes, nontarget range)`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | 65281-65286 (stimulus codes, nontarget range) | 0 | Nontarget stimuli (5C-CPT correct rejections) |  |
+ - **Evidence**:
+   - DOI: 10.1038/s41398-021-01562-w — Primary dataset publication; describes 57 subjects, 73 channels at 512 Hz, and 5C-CPT paradigm with target/nontarget event codes. Paper explicitly identifies target vs nontarget as a primary classification dimension.
+ - **Kernel Notes**: Event code 65287 appears as the highest-count stimulus event (2911 occurrences) and likely represents target stimuli (hits). The 65281-65286 codes with ~1475-1476 counts each likely represent the 6 nontarget stimulus shapes. The paper specifies cue-locked analysis with tmin=-0.5s, tmax=+1.0s.
+ 
+-### Classical Task 2: Probabilistic Reward/Punishment (PRBP) Feedback Classification
++### Classical Task 2: 5C-CPT Target vs Nontarget Classification — 65287 (target stimulus code)
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [see Target Definition]
++- **Label Route**: `info`
++- **Label Field**: `65287 (target stimulus code)`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | 65287 (target stimulus code) | 1 | Target stimuli (5C-CPT hits) |  |
++- **Evidence**:
++  - DOI: 10.1038/s41398-021-01562-w — Primary dataset publication; describes 57 subjects, 73 channels at 512 Hz, and 5C-CPT paradigm with target/nontarget event codes. Paper explicitly identifies target vs nontarget as a primary classification dimension.
++- **Kernel Notes**: Event code 65287 appears as the highest-count stimulus event (2911 occurrences) and likely represents target stimuli (hits). The 65281-65286 codes with ~1475-1476 counts each likely represent the 6 nontarget stimulus shapes. The paper specifies cue-locked analysis with tmin=-0.5s, tmax=+1.0s.
++
++### Classical Task 3: Probabilistic Reward/Punishment (PRBP) Feedback Classification — 65291-65295
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [feedback event codes]
+-- **Label Route**: `event`
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | 65291-65295 | 0 | High probability reward/punishment feedback |
+-  | 65396, 65397 (high-frequency baseline events) | 1 | Low probability feedback / error feedback |
++- **Label Route**: `info`
++- **Label Field**: `65291-65295`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | 65291-65295 | 0 | High probability reward/punishment feedback |  |
+ - **Evidence**:
+   - DOI: 10.1038/s41398-021-01562-w — Paper describes PRBP task with probabilistic reward/punishment outcomes and identifies feedback-related EEG biomarkers (delta for reward learning).
+ - **Kernel Notes**: The most frequent events (65396: 22281, 65397: 14138) likely represent feedback baseline responses. The 65291-65295 range with ~1300-1370 counts each likely represents specific feedback conditions (high/low reward/punishment). Analysis may use feedback-locked epochs with tmin=+0.25s, tmax=+0.55s as suggested by the paper.
+ 
+-### Classical Task 3: Pavlovian-to-Instrumental Transfer (PST) Cue Classification
++### Classical Task 4: Probabilistic Reward/Punishment (PRBP) Feedback Classification — 65396, 65397 (high-frequency baseline events)
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [feedback event codes]
++- **Label Route**: `info`
++- **Label Field**: `65396, 65397 (high-frequency baseline events)`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | 65396, 65397 (high-frequency baseline events) | 1 | Low probability feedback / error feedback |  |
++- **Evidence**:
++  - DOI: 10.1038/s41398-021-01562-w — Paper describes PRBP task with probabilistic reward/punishment outcomes and identifies feedback-related EEG biomarkers (delta for reward learning).
++- **Kernel Notes**: The most frequent events (65396: 22281, 65397: 14138) likely represent feedback baseline responses. The 65291-65295 range with ~1300-1370 counts each likely represents specific feedback conditions (high/low reward/punishment). Analysis may use feedback-locked epochs with tmin=+0.25s, tmax=+0.55s as suggested by the paper.
++
++### Classical Task 5: Pavlovian-to-Instrumental Transfer (PST) Cue Classification — 65321
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [31 PST, 32 PST, 39 PST equivalents]
++- **Label Route**: `info`
++- **Label Field**: `65321`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | 65321 | 0 | Pavlovian cue Type A (appetitive) |  |
++- **Evidence**:
++  - DOI: 10.1038/s41398-021-01562-w — Paper describes PST task with three Pavlovian cue types (codes 31, 32, 39) and theta-band biomarkers for cognitive control.
++- **Kernel Notes**: Low-count events in scan output (65321:90, 65322:37, 65323:54) correspond to PST cue markers. Additional PST markers include 65398-65399 (370 each) and 65401-65402 (322 each). Verify exact mapping in events.tsv. Standard stimulus-locked window covers cue processing and anticipation period.
++
++### Normal Task 1: Response-Locked 5C-CPT Analysis
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.5 s, tmax = 0 s, target_events = [response event codes]
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+   | Event | y | Meaning |
+   |-------|---|---------|
+-  | 65321 | 0 | Pavlovian cue Type A (appetitive) |
+-  | 65322 | 1 | Pavlovian cue Type B (aversive) |
+-  | 65323 | 2 | Pavlovian cue Type C (neutral) |
++  | 65301-65313 range (response codes) | 0 | Correct responses |
++  | 65311 (highest count response) | 1 | Target responses (hits) |
++- **Evidence**:
++  - DOI: 10.1038/s41398-021-01562-w — Paper specifies response-locked analysis for 5C-CPT with tmin=-0.5s, tmax=0s.
++- **Kernel Notes**: Response codes 65301-65313 with counts ranging from 38 to 8199 likely represent different response outcomes. 65311 (8199) likely represents hit responses following target stimuli. Response-locked epochs capture motor preparation and execution; may complement stimulus-locked analysis for impulsivity assessment.
++
++### Classical Task 6: Pavlovian-to-Instrumental Transfer (PST) Cue Classification — 65322
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [31 PST, 32 PST, 39 PST equivalents]
++- **Label Route**: `info`
++- **Label Field**: `65322`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | 65322 | 1 | Pavlovian cue Type B (aversive) |  |
++- **Evidence**:
++  - DOI: 10.1038/s41398-021-01562-w — Paper describes PST task with three Pavlovian cue types (codes 31, 32, 39) and theta-band biomarkers for cognitive control.
++- **Kernel Notes**: Low-count events in scan output (65321:90, 65322:37, 65323:54) correspond to PST cue markers. Additional PST markers include 65398-65399 (370 each) and 65401-65402 (322 each). Verify exact mapping in events.tsv. Standard stimulus-locked window covers cue processing and anticipation period.
++
++### Normal Task 1: Response-Locked 5C-CPT Analysis
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.5 s, tmax = 0 s, target_events = [response event codes]
++- **Label Route**: `event`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Event | y | Meaning |
++  |-------|---|---------|
++  | 65301-65313 range (response codes) | 0 | Correct responses |
++  | 65311 (highest count response) | 1 | Target responses (hits) |
++- **Evidence**:
++  - DOI: 10.1038/s41398-021-01562-w — Paper specifies response-locked analysis for 5C-CPT with tmin=-0.5s, tmax=0s.
++- **Kernel Notes**: Response codes 65301-65313 with counts ranging from 38 to 8199 likely represent different response outcomes. 65311 (8199) likely represents hit responses following target stimuli. Response-locked epochs capture motor preparation and execution; may complement stimulus-locked analysis for impulsivity assessment.
++
++### Classical Task 7: Pavlovian-to-Instrumental Transfer (PST) Cue Classification — 65323
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, target_events = [31 PST, 32 PST, 39 PST equivalents]
++- **Label Route**: `info`
++- **Label Field**: `65323`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | 65323 | 2 | Pavlovian cue Type C (neutral) |  |
+ - **Evidence**:
+   - DOI: 10.1038/s41398-021-01562-w — Paper describes PST task with three Pavlovian cue types (codes 31, 32, 39) and theta-band biomarkers for cognitive control.
+ - **Kernel Notes**: Low-count events in scan output (65321:90, 65322:37, 65323:54) correspond to PST cue markers. Additional PST markers include 65398-65399 (370 each) and 65401-65402 (322 each). Verify exact mapping in events.tsv. Standard stimulus-locked window covers cue processing and anticipation period.
+@@ -157,7 +246,8 @@
+ - **Task Type**: regression/classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.5 s, tmax = 1.0 s, concatenated across all three paradigms
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
++- **Label Field**: `Combined task events`
+ - **Meta Level**: super
+ - **Target Definition**:
+   | Event | y | Meaning |
+@@ -172,10 +262,11 @@
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.5 s, tmax = 1.5 s, target_events = [all stimulus events]
+ - **Label Route**: `misc`
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++- **Label Field**: `Stimulus events`
++- **Meta Level**: raw
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | Stimulus events | Alpha power | Motivation/intrinsic reward signal |
+ - **Evidence**:
+   - DOI: 10.1038/s41398-021-01562-w — Paper identifies alpha-band activity as biomarker for motivation across paradigms.

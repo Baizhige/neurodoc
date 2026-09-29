@@ -1,0 +1,185 @@
+--- sleepdata_shhs/analysis.md (pre-v3)
++++ sleepdata_shhs/analysis.md (v3)
+@@ -3,7 +3,7 @@
+ **Dataset**: `sleepdata_shhs` | **Year**: 1995-2003 | **URL**: https://sleepdata.org/datasets/shhs
+ **Category**: Biological State | **Subjects**: 6441 | **Files (Completed)**: 5786
+ **Channels**: 14 | **Sampling Rate**: 125 Hz (EEG/EMG/ECG primary), 50 Hz (EOG), 10 Hz (respiratory), 1 Hz (SpO2/HR); exported EDF channels are resampled to 125 Hz
+-**Manual Review**: Jiping Cui
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -36,6 +36,17 @@
+ | `Stage 4|4` | rare | event | raw | Slow-wave sleep (legacy R&K stage) |
+ | `REM|5` | moderate | event | raw | REM sleep |
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `Wake` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Stage 1` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Stage 2` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Stage 3` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `REM` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++
+ ### Info
+ 
+ | Field | Completeness | Notes |
+@@ -45,44 +56,103 @@
+ | `device` | missing | N/A |
+ ## Tasks
+ 
+-### Classical Task 1: Sleep Stage Classification
+-- **Task Type**: classification
+-- **Epoch Method**: `epoch_by_long_event_hdf5`
+-- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`Stage 2|2`, `Stage 3|3`, `Stage 1|1`, `REM|5`, `Wake|0`]
+-- **Label Route**: `event`
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `Wake|0` | 0 | Wake |
+-  | `Stage 1|1` | 1 | N1 |
+-  | `Stage 2|2` | 2 | N2 |
+-  | `Stage 3|3` or `Stage 4|4` | 3 | N3/SWS |
+-  | `REM|5` | 4 | REM |
+-- **Evidence**:
+-  - DOI: `10.5665/sleep.5774` — National Sleep Research Resource provides SHHS PSG data with expert sleep-stage annotations in 30-second epochs
+-- **Kernel Notes**: Stage 4 is rare; merge Stage 3 and Stage 4 into N3/SWS class for robust modeling. (replaces Potential Task 1 from original analysis.md)
+-
+-### Classical Task 2: Sleep Spindle Density Regression in N2 Sleep
++### Classical Task 1: Sleep Stage Classification — Wake
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`Stage 2|2`, `Stage 3|3`, `Stage 1|1`, `REM|5`, `Wake|0`]
++- **Label Route**: `info`
++- **Label Field**: `Wake`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Wake | 0` | 0 | Wake |
++- **Evidence**:
++  - DOI: `10.5665/sleep.5774` — National Sleep Research Resource provides SHHS PSG data with expert sleep-stage annotations in 30-second epochs
++- **Kernel Notes**: Stage 4 is rare; merge Stage 3 and Stage 4 into N3/SWS class for robust modeling. (replaces Potential Task 1 from original analysis.md)
++
++### Classical Task 2: Sleep Stage Classification — Stage 1
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`Stage 2|2`, `Stage 3|3`, `Stage 1|1`, `REM|5`, `Wake|0`]
++- **Label Route**: `info`
++- **Label Field**: `Stage 1`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Stage 1 | 1` | 1 | N1 |
++- **Evidence**:
++  - DOI: `10.5665/sleep.5774` — National Sleep Research Resource provides SHHS PSG data with expert sleep-stage annotations in 30-second epochs
++- **Kernel Notes**: Stage 4 is rare; merge Stage 3 and Stage 4 into N3/SWS class for robust modeling. (replaces Potential Task 1 from original analysis.md)
++
++### Classical Task 3: Sleep Stage Classification — Stage 2
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`Stage 2|2`, `Stage 3|3`, `Stage 1|1`, `REM|5`, `Wake|0`]
++- **Label Route**: `info`
++- **Label Field**: `Stage 2`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Stage 2 | 2` | 2 | N2 |
++- **Evidence**:
++  - DOI: `10.5665/sleep.5774` — National Sleep Research Resource provides SHHS PSG data with expert sleep-stage annotations in 30-second epochs
++- **Kernel Notes**: Stage 4 is rare; merge Stage 3 and Stage 4 into N3/SWS class for robust modeling. (replaces Potential Task 1 from original analysis.md)
++
++### Classical Task 4: Sleep Stage Classification — Stage 3
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`Stage 2|2`, `Stage 3|3`, `Stage 1|1`, `REM|5`, `Wake|0`]
++- **Label Route**: `info`
++- **Label Field**: `Stage 3`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Stage 3 | 3` or `Stage 4 | 4` | 3 |
++- **Evidence**:
++  - DOI: `10.5665/sleep.5774` — National Sleep Research Resource provides SHHS PSG data with expert sleep-stage annotations in 30-second epochs
++- **Kernel Notes**: Stage 4 is rare; merge Stage 3 and Stage 4 into N3/SWS class for robust modeling. (replaces Potential Task 1 from original analysis.md)
++
++### Classical Task 5: Sleep Stage Classification — REM
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`Stage 2|2`, `Stage 3|3`, `Stage 1|1`, `REM|5`, `Wake|0`]
++- **Label Route**: `info`
++- **Label Field**: `REM`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `REM | 5` | 4 | REM |
++- **Evidence**:
++  - DOI: `10.5665/sleep.5774` — National Sleep Research Resource provides SHHS PSG data with expert sleep-stage annotations in 30-second epochs
++- **Kernel Notes**: Stage 4 is rare; merge Stage 3 and Stage 4 into N3/SWS class for robust modeling. (replaces Potential Task 1 from original analysis.md)
++
++### Classical Task 6: Sleep Spindle Density Regression in N2 Sleep
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = [`Stage 2|2`]
+-- **Label Route**: `event`
++- **Label Route**: `misc`
++- **Label Field**: `Stage 2`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `Stage 2|2` epochs | continuous | Spindle density (spindles per minute) computed from N2 sleep EEG |
++  | MISC Channel | Value | Notes |
++  |---|---|---|
++  | `Stage 2 | 2` epochs | continuous |
+ - **Super Meta Notes**: Derived from raw EEG signal in N2 (`Stage 2|2`) epochs by wavelet band-pass filtering (FC=8-18 Hz) and spindle detection (0.3-3.0 s duration windows). Kernel step: Apply Morlet wavelet transform centered at 13.5 Hz, detect spindle events via amplitude thresholding, compute density = (spindle count / epoch duration in minutes).
+ - **Evidence**:
+   - DOI: `10.1038/ncomms15930` — Characterizes sleep spindles in 11,630 individuals from NSRR including SHHS (N=5,793), analyzing spindle density, amplitude, duration and frequency during N2 sleep as heritable quantitative traits
+ - **Kernel Notes**: Requires EEG signal processing; compute spindle properties per N2 epoch. Spindle density is primary target; amplitude, duration, frequency are optional additional regression targets.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 2: Sleep vs Wake Detection (binary)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0 s, tmax = 30 s, overlap = 0.0, target_events = see Target Definition
+-- **Label Route**: `event`
++- **Label Route**: `info`
+ - **Target Definition**: Event-to-label mapping table below.
+ - **Notes**: Useful baseline task when class granularity is reduced.
+ 
+@@ -91,11 +161,12 @@
+ | `Wake|0` | 0 | Awake |
+ | Any sleep stage (`1/2/3/4/5`) | 1 | Asleep |
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 3: Arousal Detection (binary)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5` (or long-event segmentation if arousal duration labels are available)
+ - **Epoch Parameters**: tmin = -5.0 s, tmax = 5.0 s (event-centered), target_events = see Target Definition
+-- **Label Route**: `event`
++- **Label Route**: `info`
+ - **Target Definition**: Event-to-label mapping table below.
+ - **Notes**: Negative sampling strategy should be explicitly controlled to avoid label leakage.
+ 
+@@ -104,11 +175,12 @@
+ | `Arousals|Arousals` | 1 | Cortical arousal |
+ | Background non-arousal segments | 0 | Non-arousal |
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 4: Respiratory Event Detection (binary)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5` or `epoch_by_long_event_hdf5` (depends on event duration granularity)
+ - **Epoch Parameters**: task-dependent (for example, 10-30 s windows), target_events = see Target Definition
+-- **Label Route**: `event`
++- **Label Route**: `info`
+ - **Target Definition**: Event-to-label mapping table below.
+ - **Notes**: Respiratory subtype definitions should be verified per XML file and NSRR conversion version.
+ 

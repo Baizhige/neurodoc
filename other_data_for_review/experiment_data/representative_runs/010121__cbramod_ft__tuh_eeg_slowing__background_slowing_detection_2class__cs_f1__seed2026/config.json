@@ -1,0 +1,314 @@
+﻿{
+  "argv": [
+    "/anonymous/review_workspace/run_single_experiment.py",
+    "--model",
+    "cbramod_ft",
+    "--dataset",
+    "tuh_eeg_slowing",
+    "--task",
+    "background_slowing_detection_2class",
+    "--epochs",
+    "50",
+    "--batch_size",
+    "128",
+    "--num_workers",
+    "8",
+    "--seed",
+    "2026",
+    "--split_mode",
+    "cs",
+    "--fold",
+    "1",
+    "--channel_system",
+    "10-5",
+    "--classifier_lr_scale",
+    "1.0",
+    "--early_stopping_patience",
+    "10",
+    "--no-save_checkpoints",
+    "--output_dir",
+    "/anonymous/review_workspace/experiments/output/r0",
+    "--device",
+    "cuda:0",
+    "--cuda",
+    "0",
+    "--cache_dir",
+    "/anonymous/review_cache/",
+    "--lr",
+    "0.0001",
+    "--weight_decay",
+    "0.05",
+    "--optimizer",
+    "AdamW",
+    "--label_smoothing",
+    "0.1",
+    "--encoder_lr_scale",
+    "1.0",
+    "--pipeline",
+    "datasets/pipelines/cbramod_ft.py",
+    "--input_format",
+    "patched",
+    "--patch_size",
+    "200"
+  ],
+  "config_id": "cfg_924923fd893b",
+  "environment": {
+    "cuda_available": true,
+    "cuda_version": "12.8",
+    "git_commit": "724bb536ed9b226fc7c1f7b3886e153ae268b0c5",
+    "git_dirty": false,
+    "hostname": "gpua800n4",
+    "python_version": "3.12.11 | packaged by Anaconda, Inc. | (main, Jun  5 2025, 13:09:17) [GCC 11.2.0]",
+    "torch_version": "2.8.0+cu128"
+  },
+  "exp_id": 10121,
+  "paths": {
+    "output_dir": "/anonymous/review_workspace/experiments/output/r0",
+    "run_dir": "/anonymous/review_workspace/experiments/output/r0/runs/010121__cbramod_ft__tuh_eeg_slowing__background_slowing_detection_2class__cs_f1__seed2026"
+  },
+  "resolved_params": {
+    "batch_size": 128,
+    "cache_dir": "/anonymous/review_cache/",
+    "ch_names": [
+      "EEG:Fp1",
+      "EEG:Fp2",
+      "EEG:F3",
+      "EEG:F4",
+      "EEG:C3",
+      "EEG:C4",
+      "EEG:P3",
+      "EEG:P4",
+      "EEG:O1",
+      "EEG:O2",
+      "EEG:F7",
+      "EEG:F8",
+      "EEG:T3",
+      "EEG:T4",
+      "EEG:T5",
+      "EEG:T6",
+      "EEG:A1",
+      "EEG:A2",
+      "EEG:Fz",
+      "EEG:Cz",
+      "EEG:Pz"
+    ],
+    "ch_positions": {
+      "EEG:A1": [
+        0.0730557,
+        -0.07306829999999999,
+        -0.00254
+      ],
+      "EEG:A2": [
+        -0.0860761,
+        -0.0449897,
+        -0.067986
+      ],
+      "EEG:C3": [
+        -0.0858941,
+        -0.0158287,
+        -0.048283
+      ],
+      "EEG:C4": [
+        -0.036158,
+        -0.0099839,
+        0.089752
+      ],
+      "EEG:Cz": [
+        -0.08028010000000001,
+        -0.0137597,
+        0.02916
+      ],
+      "EEG:F3": [
+        -0.0701019,
+        0.041652299999999996,
+        -0.049951999999999996
+      ],
+      "EEG:F4": [
+        -0.0274958,
+        0.0569311,
+        0.060342
+      ],
+      "EEG:F7": [
+        0.055743299999999996,
+        0.0696568,
+        -0.010755
+      ],
+      "EEG:F8": [
+        0.029514199999999997,
+        0.0576019,
+        0.059539999999999996
+      ],
+      "EEG:Fp1": [
+        -0.08061611652374268,
+        -0.02908875234425068,
+        -0.04131076857447624
+      ],
+      "EEG:Fp2": [
+        0.08436284959316254,
+        -0.02850276418030262,
+        -0.041277434676885605
+      ],
+      "EEG:Fz": [
+        -0.0644658,
+        0.048035299999999996,
+        0.016921
+      ],
+      "EEG:O1": [
+        0.0498196,
+        -0.0994461,
+        0.021727
+      ],
+      "EEG:O2": [
+        0.0549876,
+        -0.0980911,
+        -0.035540999999999996
+      ],
+      "EEG:P3": [
+        -0.0730093,
+        -0.07376569999999999,
+        -0.040998
+      ],
+      "EEG:P4": [
+        -0.0286203,
+        -0.0805249,
+        0.075436
+      ],
+      "EEG:Pz": [
+        -0.06727230000000001,
+        -0.0762907,
+        0.028382
+      ],
+      "EEG:T3": [
+        -0.0293914,
+        -0.114511,
+        -0.01002
+      ],
+      "EEG:T4": [
+        0.029552600000000002,
+        -0.113636,
+        -0.010051000000000001
+      ],
+      "EEG:T5": [
+        5.2499999999999995e-05,
+        -0.119343,
+        -0.003936
+      ],
+      "EEG:T6": [
+        -0.0841611,
+        -0.0160187,
+        -0.009346
+      ]
+    },
+    "channel_system": "10-5",
+    "checkpoint_dir": "/anonymous/review_workspace/experiments/output/r0/runs/010121__cbramod_ft__tuh_eeg_slowing__background_slowing_detection_2class__cs_f1__seed2026/checkpoints",
+    "classifier": "all_patch_reps",
+    "classifier_lr_scale": 1.0,
+    "clip_value": 1,
+    "config_id": null,
+    "console_log_path": "/anonymous/review_workspace/experiments/output/r0/runs/010121__cbramod_ft__tuh_eeg_slowing__background_slowing_detection_2class__cs_f1__seed2026/logs/console.log",
+    "cuda": 0,
+    "d_model": 200,
+    "data_ratio": 1.0,
+    "dataset": "tuh_eeg_slowing",
+    "device": "cuda:0",
+    "device_obj": "cuda:0",
+    "dim_feedforward": 800,
+    "dropout": 0.1,
+    "early_stopping_patience": 10,
+    "encoder_lr_scale": 1.0,
+    "epoch_param": null,
+    "epochs": 50,
+    "exp_id": 10121,
+    "fold": 1,
+    "foundation_dir": "/anonymous/review_workspace/models/Weights/CBraMod/pretrained_weights.pth",
+    "frozen": false,
+    "gpu_ids": "1,2,3",
+    "held_out_subject": null,
+    "input_format": "patched",
+    "label_smoothing": 0.1,
+    "list_variants": false,
+    "log_dir": "/anonymous/review_workspace/experiments/output/r0/runs/010121__cbramod_ft__tuh_eeg_slowing__background_slowing_detection_2class__cs_f1__seed2026/logs",
+    "logs_dir": "/anonymous/review_workspace/experiments/output/r0/runs/010121__cbramod_ft__tuh_eeg_slowing__background_slowing_detection_2class__cs_f1__seed2026/logs",
+    "lr": 0.0001,
+    "metrics_dir": "/anonymous/review_workspace/experiments/output/r0/runs/010121__cbramod_ft__tuh_eeg_slowing__background_slowing_detection_2class__cs_f1__seed2026/metrics",
+    "model": "cbramod_ft",
+    "model_channel_indices": null,
+    "model_dir": "/anonymous/review_workspace/experiments/output/r0/runs/010121__cbramod_ft__tuh_eeg_slowing__background_slowing_detection_2class__cs_f1__seed2026/checkpoints",
+    "multi_lr": true,
+    "n_layer": 12,
+    "nhead": 8,
+    "num_channels": 21,
+    "num_of_classes": 2,
+    "num_workers": 8,
+    "optimizer": "AdamW",
+    "output_dir": "/anonymous/review_workspace/experiments/output/r0",
+    "patch_num": 6,
+    "patch_size": 200,
+    "pipeline": "datasets/pipelines/cbramod_ft.py",
+    "pipeline_param": null,
+    "rebuild_hdf5": false,
+    "run_dir": "/anonymous/review_workspace/experiments/output/r0/runs/010121__cbramod_ft__tuh_eeg_slowing__background_slowing_detection_2class__cs_f1__seed2026",
+    "run_id": "010121__cbramod_ft__tuh_eeg_slowing__background_slowing_detection_2class__cs_f1__seed2026",
+    "sample_counts": {
+      "test": 102,
+      "test_original": 102,
+      "train": 417,
+      "train_original": 417,
+      "val": 81,
+      "val_original": 81
+    },
+    "samples": 1200,
+    "save_checkpoints": false,
+    "seed": 2026,
+    "split_mode": "cs",
+    "task": "background_slowing_detection_2class",
+    "test_samples": 102,
+    "test_samples_original": 102,
+    "test_subjects": [
+      "aaaaaaju",
+      "aaaaaasy",
+      "aaaaabiw",
+      "aaaaachj",
+      "aaaaadsz",
+      "aaaaaedy"
+    ],
+    "train_samples": 417,
+    "train_samples_original": 417,
+    "train_subjects": [
+      "aaaaajqb",
+      "aaaaajqo",
+      "aaaaajrj",
+      "aaaaakbz",
+      "aaaaaltw",
+      "aaaaamhb",
+      "aaaaammu",
+      "aaaaamtj",
+      "aaaaamyc",
+      "aaaaanrc",
+      "aaaaaogd",
+      "aaaaaouk",
+      "aaaaapas",
+      "aaaaapks",
+      "aaaaapkv",
+      "aaaaaplb",
+      "aaaaapqh"
+    ],
+    "use_dataparallel": false,
+    "use_pretrained_weights": true,
+    "val_samples": 81,
+    "val_samples_original": 81,
+    "val_subjects": [
+      "aaaaaelb",
+      "aaaaagcs",
+      "aaaaagqb",
+      "aaaaaiat",
+      "aaaaaike",
+      "aaaaajns"
+    ],
+    "weight_decay": 0.05
+  },
+  "run_id": "010121__cbramod_ft__tuh_eeg_slowing__background_slowing_detection_2class__cs_f1__seed2026"
+}
+
+
+

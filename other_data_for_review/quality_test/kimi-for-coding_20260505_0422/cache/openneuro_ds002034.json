@@ -1,0 +1,403 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 9,
+    "category": "",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 32,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 5,
+    "task_synthesis": 14,
+    "kernel_loop": 9,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T04:49:07.728820+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_openneuro.org_datasets_ds002034.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1016_j_concog_2022_103381.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.concog.2022.103381",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1016_j_ijpsycho_2023_04_005.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.ijpsycho.2023.04.005",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2022_119400.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.neuroimage.2022.119400",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "auto_primary_reference_03.pdf",
+      "ref": "",
+      "title": "",
+      "classification": "uncertain",
+      "cot_reasoning": "This file appears to be supplementary material containing tables and figures with reaction time data and alpha lateralization indices for subject pairs across days. It mentions 'RT FB day 2' and 'RT FB day 3' with 7 subject pairs, matching the structure described in the main paper (14 subjects in crossover design). However, there is no explicit mention of OpenNeuro dataset ds002034, and the content is only supplementary tables/figures without methodological context that would confirm dataset usage.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "official_doi.org_10.1007_s10548-019-00725-9.html",
+      "ref": "10.1007/s10548-019-00725-9",
+      "title": "Real-time EEG Feedback on Alpha Power Lateralization Leads to Behavioral Improvements in a Covert Attention Task",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly describes a covert visuospatial attention (CVSA) study with 14 subjects, 3 recording days, offline runs (80 trials each), and real-time feedback runs (40 long trials each). The experimental structure matches OpenNeuro ds002034 metadata (14 subjects, 3 sessions, covert attention task with alpha lateralization feedback). The paper defines concrete ML/BCI tasks: single-trial classification of attention direction (left/right) from alpha lateralization for BCI control, and behavioral outcome measures (validity effect).",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "covert visuospatial attention (CVSA) with real-time neurofeedback",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Trials: cue onset (100ms), sustained attention phase 1-5s, target at 12° eccentricity; offline runs: 80 trials; feedback runs: 40 long trials with extended duration based on alpha-LI state",
+      "target_events": [
+        "cue onset (left/right half-circle)",
+        "target appearance",
+        "feedback threshold crossing"
+      ],
+      "label_mapping": "left attention vs right attention (binary); valid vs invalid trials for behavioral analysis; experimental vs sham feedback condition",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicit description of 14-subject 3-day crossover study with alpha lateralization neurofeedback for covert attention; single-trial BCI decoder calibration; behavioral validity effect as outcome measure"
+    },
+    {
+      "filename": "paper_10.1007_s10548-019-00725-9.pdf",
+      "ref": "10.1007/s10548-019-00725-9",
+      "title": "Real-time EEG Feedback on Alpha Power Lateralization Leads to Behavioral Improvements in a Covert Attention Task",
+      "classification": "relevant",
+      "cot_reasoning": "This is the full PDF of the same paper as FILE 2, with identical content confirming the study structure. It explicitly details the 14-subject covert attention paradigm with alpha lateralization neurofeedback, offline calibration runs (80 trials), and real-time feedback runs (40 trials). The paper defines concrete machine learning tasks: single-trial classification for BCI decoder calibration and behavioral modulation via feedback. The dataset structure matches OpenNeuro ds002034.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "covert visuospatial attention (CVSA) with real-time neurofeedback",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Offline runs: 80 trials each, cue 100ms, sustained attention 1-5s random, target placeholders at 12° eccentricity; Feedback runs: 40 long trials with dynamic duration extension based on alpha-LI threshold; pre/post offline runs on days 2-3",
+      "target_events": [
+        "left cue onset",
+        "right cue onset",
+        "central fixation cue",
+        "target appearance",
+        "alpha-LI feedback threshold"
+      ],
+      "label_mapping": "left covert attention vs right covert attention (2-class); valid cue vs invalid cue for behavioral analysis; experimental feedback vs sham feedback",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Full paper with Methods section detailing trial structure, 14 subjects, 3 days, decoder calibration procedure, and real-time feedback paradigm matching ds002034 structure"
+    },
+    {
+      "filename": "paper_10_1038_s41598_025_21635_w.pdf",
+      "ref": "10.1038/s41598-025-21635-w",
+      "title": "Decoding covert visual attention of electroencephalography signals using continuous wavelet transform and deep learning approach",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper studies covert visual attention decoding with CWT and deep learning (ShallowConvNet, EEGNet) on 10 healthy participants performing spatial and feature-based attention tasks. It cites Schneider et al. (2019) as reference 17 but explicitly states its own data collection with 10 participants, not 14. There is no mention of OpenNeuro ds002034 or use of this specific dataset. The study appears to be an independent replication/extension with different data.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_1109_tnsre_2025_3563416.pdf",
+      "ref": "10.1109/tnsre.2025.3563416",
+      "title": "A Multi-Level Integrated EEG-Channel Selection Method Based on the Lateralization Index",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper focuses on motor imagery (MI) BCI channel selection using lateralization index, not covert visual attention. It studies 21 healthy subjects for motor imagery tasks (left hand, right hand, feet, tongue imagination) with completely different paradigm and dataset. There is no mention of OpenNeuro ds002034, covert attention, or the Schneider et al. study. The lateralization index here refers to motor cortex asymmetry, not occipital alpha lateralization for attention.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset contains rich event structure with clear trial phases (fixation, cue left/right/center, target left/right/center, correct/incorrect button press) that support multiple ML tasks. The cue and target location labels (left/right/center) enable covert visuospatial attention classification, while reaction correctness permits cognitive/behavioral outcome prediction.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 167,
+    "total_n": 167,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_1": 16179,
+      "event_11": 3013,
+      "event_12": 2248,
+      "event_13": 1129,
+      "event_2": 5020,
+      "event_4": 5020,
+      "event_5": 9333,
+      "event_6": 6720,
+      "event_8": 1711,
+      "event_9": 4995,
+      "event_15": 938
+    },
+    "subject_info": {
+      "record_count": 167,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "event_1",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: cue left",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_2",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: cue right",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_3",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: cue center",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_4",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Run start",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_5",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Run end",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_6",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: trial start",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_7",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: trial start",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_8",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: trial start",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_9",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: fixation on",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_10",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: trial end",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_11",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: target left",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_12",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: target right",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_13",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: target center",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_14",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Button press wrong time",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_15",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Button press correct",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      }
+    ],
+    "notes": "All event mappings confirmed by events.json files from sub-01/ses-03/task-offlinecatch, sub-01/ses-03/task-onlinereal, sub-02/ses-02/task-onlinereal, and sub-02/ses-03/task-onlinesham, which all contain identical Level definitions. events.tsv samples from all 7 session-task groups (ses-01/task-offline, ses-02/task-offlinecatch, ses-02/task-onlinereal, ses-02/task-onlinesham, ses-03/task-offlinecatch, ses-03/task-onlinereal, ses-03/task-onlinesham) confirm the event_name labels match the JSON definitions. Note: values 6, 7, 8 are all redundantly defined as 'trial start' in JSON; value 9 is labeled 'fixation_on' in event_name column but defined as 'trial start' in JSON. The event_name column uses 'reaction_correct'/'reaction_wrong' while JSON uses 'button press correct'/'button press wrong time' for values 15/14."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: 2-class covert attention direction (cue left vs cue right)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 5.0 s *, target_events = [`event_1`, `event_2`]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | event_1 | 0 | cue left |\n  | event_2 | 1 | cue right |\n- **Evidence**:\n  - 10.1007/s10548-019-00725-9 — Primary task from Schneider et al. (2019): binary classification of left vs right covert attention based on cue onset. 14 subjects, offline runs with 80 trials each. Cue duration 100ms followed by 1-5s sustained attention period.\n- **Notes**: The two classes are cue left (event_1) and cue right (event_2). Central cue (event_3) excluded for pure lateral attention task. Epoch window from -0.2s to 5.0s captures pre-cue baseline and the full sustained attention period (1-5s after cue onset).\n\n### Classical Task 2: 2-class target location (target left vs target right)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = -0.5 s *, tmax = 2.0 s *, target_events = [`event_11`, `event_12`]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `event_11` | 0 | target left |\n  | `event_12` | 1 | target right |\n- **Evidence**:\n  - Schneider, C., Pereira, M., Tonin, L. et al. (2019) — https://doi.org/10.1007/s10548-019-00725-9 — Target appearance provides classification task: target left (event_11) vs target right (event_12). Targets appear at cued location on valid trials (~80%) or uncued location on invalid trials (~20%). Target onset follows the 1-5s sustained attention period, providing a later temporal anchor than cue onset.\n  - sub-01_ses-01_task-offline_run-01_events.json — event_value levels confirm x11='target left', x12='target right'\n  - sub-01_ses-01_task-offline_run-01_events.tsv — sample trigger sequence shows event_value 12 (target_right) following cue_right, and event_value 15 (reaction_correct) confirming behavioral response to target\n- **Notes**: Epoch window -0.5 to 2.0s captures pre-target attention state and post-target processing including reaction time period (~400ms). Both event_11 and event_12 are confirmed trial phase onset markers for target appearance, making this a valid event-route classification task distinct from the cue-based task (which uses event_1/event_2).\n\n### Classical Task 3: Valid vs Invalid Cue-Target Trial Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s *, tmax = 5.0 s *, target_events = [`event_1`, `event_2`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | event_1 | 0 | cue left → target left (valid trial) |\n  | event_1 | 0 | cue left → target right (invalid trial) |\n  | event_2 | 1 | cue right → target right (valid trial) |\n  | event_2 | 1 | cue right → target left (invalid trial) |\n- **Evidence**:\n  - 10.1007/s10548-019-00725-9 — Paper explicitly analyzes valid vs invalid trials as behavioral outcome measure; valid trials have target at cued location, invalid trials have target at uncued location\n- **Notes**: This task requires trial-level parsing of event sequences: after a cue event (event_1 or event_2), the subsequent target event (event_11 or event_12) determines validity. For cue left (event_1): target left (event_11) = valid (y=0), target right (event_12) = invalid (y=0). For cue right (event_2): target right (event_12) = valid (y=1), target left (event_11) = invalid (y=1). Center cues (event_3) and center targets (event_13) are excluded as they do not map to valid/invalid lateralized attention. The kernel must match cue-target pairs within a trial window and assign the validity label based on spatial congruency. Epochs are locked to cue onset to enable prediction of subsequent trial validity from early neural activity (alpha lateralization during sustained attention period).\n\n### Potential Task 1: 2-class trial phase (fixation vs sustained attention)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = 0 s *, tmax = 2 s *, target_events = [`event_6`, `event_9`]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `event_9` | 0 | fixation_on (fixation period) |\n  | `event_6` | 1 | trial_start (sustained attention period) |\n- **Evidence**:\n  - events.json — event_value 9 defined as \"trial start\" in JSON, but event_name column confirms \"fixation_on\"; values 6,7,8 all redundantly defined as \"trial start\" in JSON with event_name confirming trial start semantics\n  - events.tsv samples — fixation_on (value 9) appears before cue onset; trial_start (value 6) appears at cue onset marking sustained attention phase\n  - README — describes trial structure: 1-2s fixation period followed by 100ms cue, then 1-5s sustained attention period\n- **Notes**: Values 7 and 8 are also \"trial start\" per JSON but event_6 is selected as representative trial start marker. The 2s window captures comparable epochs from both the pre-cue fixation period (event_9) and the post-cue sustained attention period (event_6). This creates a task-vs-rest-like discrimination within the trial structure, distinguishing preparatory fixation state from active sustained attention state.\n\n### Potential Task 2: Age Prediction from EEG\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | age | Continuous age in years (21–27, mean 23±1.52). Each segment inherits the subject's age value from participants.tsv. |\n- **Evidence**:\n  - Schneider et al. (2019) — participants.tsv contains age values for all 14 subjects (21–27 years, mean 23±1.52)\n- **Notes**: Subject-level biomarker regression using native info field 'age' from participants.tsv. Segmentation-based epoching with 2-second non-overlapping windows (50% overlap) is used since no event structure is required for this subject-level prediction task. The small age range (6 years) and limited sample size (N=14) make this a challenging prediction problem; results should be interpreted with caution.\n\n### Potential Task 3: Sex Prediction from EEG\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | sex | 0=M (male), 1=F (female); balanced binary: 7 M / 7 F |\n- **Evidence**:\n- **Notes**: Subject-level biomarker task. Native info field `sex` from participants.tsv provides per-subject binary labels. EEG is segmented into 2-second non-overlapping windows (with 50% overlap) to create multiple samples per subject for classification. All segments from a given subject share the same sex label. This is a B3 archetype using native pre-existing info column, hence Meta Level = raw.\n\n### Potential Task 4: Segmentation-based Sex Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | sex | 0 = 'F' (female), 1 = 'M' (male); subject-level label applied to all segments from that participant |\n- **Evidence**:\n- **Notes**: Archetype C with info-native label. Continuous EEG is segmented into 2-second windows with 50% overlap. Each segment inherits the subject's sex from participants.tsv as its class label. This creates a subject-level classification task from continuous data without event locking. The kernel must read participants.tsv and broadcast the sex value to all segments belonging to each subject.\n\n### Potential Task 5: Segmentation-based Age Regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | `age` | Continuous age in years (range ~21–27); each segment inherits the subject's age for subject-level biomarker regression. |\n- **Evidence**:\n  - (none — potential task)\n- **Notes**: Archetype C segmentation formulation of age regression. Uses 2-second non-overlapping/overlapping segments (50% overlap) to create multiple samples per subject, all labeled with the same subject age from participants.tsv. Contrasts with event-locked B3 formulation by removing event-dependency entirely, enabling comparison of segment-based vs. event-based approaches for subject-level biomarker prediction. No kernel derivation needed — age is a native participants.tsv column.",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "event_1",
+      "event_11",
+      "event_12",
+      "event_13",
+      "event_14",
+      "event_15",
+      "event_2",
+      "event_3",
+      "event_6",
+      "event_9"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [
+      "age",
+      "sex"
+    ],
+    "derived_misc_channels": [
+      {
+        "name": "reaction_time",
+        "source_field": "events.tsv:event_value",
+        "derivation": "For each trial (bounded by trial_start/trial_end events), find target event (11/12/13) and subsequent correct button press (15). Compute RT = onset(event_15) - onset(target_event). Assign RT as constant misc channel value for all timepoints in that trial, or as step function active from trial start.",
+        "groundable_evidence": "events.tsv:event_value found in sub-01_ses-01_task-offline_run-01_events.tsv, sub-01_ses-02_task-offlinecatch_run-01_events.tsv, sub-01_ses-02_task-onlinesham_run-02_events.tsv",
+        "used_by": [
+          "regression: reaction time from event_value sequence"
+        ]
+      },
+      {
+        "name": "cue_direction",
+        "source_field": "events.tsv:event_value",
+        "derivation": "Parse event_value column: values 1→0 (left), 2→1 (right), 3→2 (center). Create step-function misc channel that holds the cue direction integer for the duration of each trial (from trial_start to trial_end).",
+        "groundable_evidence": "events.tsv:event_value found in sub-01_ses-01_task-offline_run-01_events.tsv, sub-01_ses-02_task-offlinecatch_run-01_events.tsv, sub-01_ses-02_task-onlinesham_run-02_events.tsv",
+        "used_by": [
+          "classification: cue direction from event_value (derived misc)"
+        ]
+      }
+    ],
+    "_dropped_candidates": [
+      {
+        "paradigm": "alpha lateralization index (LI) feedback decoding",
+        "reason": "The alpha-LI feedback threshold crossing events mentioned in the paper are not present in the available event IDs. The dataset's events.json and events.tsv only contain behavioral trial events (cues, targets, responses), not the computed neurofeedback LI values. The feedback was computed online and not stored as trigger events in the BIDS files."
+      },
+      {
+        "paradigm": "EMG/EOG native misc regression",
+        "reason": "No native misc channels discovered in raw files (EMGChannelCount=0, EOGChannelCount=0, ECGChannelCount=0 in eeg.json). The 16 MiscChannelCount channels are not identified as specific physiological signals in the available metadata."
+      },
+      {
+        "paradigm": "handedness classification",
+        "reason": "participants.tsv does not contain a handedness column. Only age and sex are available as subject-level variables."
+      }
+    ]
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/openneuro_ds002034/kernel_final.py",
+  "kernel_code_len": 18014,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds002034.py",
+    "kernel_sha256": "d908a3f6ed42add853145878a7bdd9f1d39451a8ab99d9a36c24a015a8138a42",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 167,
+    "total_n": 167,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_1": 16179,
+      "event_11": 3013,
+      "event_12": 2248,
+      "event_13": 1129,
+      "event_2": 5020,
+      "event_4": 5020,
+      "event_5": 9333,
+      "event_6": 6720,
+      "event_8": 1711,
+      "event_9": 4995,
+      "event_15": 938
+    },
+    "subject_info": {
+      "record_count": 167,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds002034.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

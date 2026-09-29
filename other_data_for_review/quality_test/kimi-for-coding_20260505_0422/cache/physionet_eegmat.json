@@ -1,0 +1,261 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 9,
+    "category": "",
+    "format_type": "edf",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 18,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 5,
+    "task_synthesis": 6,
+    "kernel_loop": 2,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T08:01:21.256363+00:00",
+  "ref_extractions": [
+    {
+      "filename": "paper_10_1038_s41598_026_36434_0.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1038/s41598.026.36434.0",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1088_1757_899x_1254_1_012025.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1088/1757.899x.1254.1.012025",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "official_doi.org_10.13026_C2JQ1P.html",
+      "ref": "https://doi.org/10.13026/C2JQ1P",
+      "title": "EEG During Mental Arithmetic Tasks",
+      "classification": "relevant",
+      "cot_reasoning": "This is the official PhysioNet dataset page for EEGMAT. It explicitly describes the dataset structure, with two conditions per subject (rest '_1' and mental arithmetic '_2'), and provides group labels (G=good performers, B=bad performers) in subject-info.csv. The dataset is clearly designed for binary classification of mental task states and/or performance quality.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "mental arithmetic task (serial subtraction) vs. rest baseline",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "60-second continuous segments, 2 files per subject (_1=rest, _2=task)",
+      "target_events": [
+        "rest_baseline",
+        "mental_arithmetic"
+      ],
+      "label_mapping": "subject-info.csv: Count quality 0=Group B (bad, n=12), 1=Group G (good, n=24); also implicit binary rest vs. task from file suffixes",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Official dataset documentation describing 36 subjects with 23-channel EEG, 60s artifact-free segments, two conditions per subject, and performance quality labels"
+    },
+    {
+      "filename": "official_physionet.org_content_eegmat_1.0.0.html",
+      "ref": "https://doi.org/10.13026/C2JQ1P",
+      "title": "EEG During Mental Arithmetic Tasks",
+      "classification": "relevant",
+      "cot_reasoning": "Identical to File 1 - the official PhysioNet dataset page for EEGMAT. Explicitly describes dataset structure with rest and mental arithmetic conditions, plus performance quality group labels in subject-info.csv.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "mental arithmetic task (serial subtraction) vs. rest baseline",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "60-second continuous segments, 2 files per subject (_1=rest, _2=task)",
+      "target_events": [
+        "rest_baseline",
+        "mental_arithmetic"
+      ],
+      "label_mapping": "subject-info.csv: Count quality 0=Group B (bad, n=12), 1=Group G (good, n=24); also implicit binary rest vs. task from file suffixes",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Official dataset documentation (duplicate of File 1) describing 36 subjects, 23-channel EEG, 60s segments, two conditions, performance quality labels"
+    },
+    {
+      "filename": "paper_10_1038_s41598_025_10270_0.pdf",
+      "ref": "https://doi.org/10.1038/s41598-025-10270-0",
+      "title": "Advancing EEG based stress detection using spiking neural networks and convolutional spiking neural networks",
+      "classification": "partial",
+      "cot_reasoning": "The paper mentions evaluating on 'the Physionet EEG dataset' and achieving 98.75% accuracy, but does not explicitly name EEGMAT or describe the specific dataset structure. The methodology mentions DWT and frequency sub-bands but lacks clear epoch/segmentation details for this specific dataset. The task appears to be stress classification but the dataset linkage is vague.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "stress detection (implied binary stress/rest or stress levels)",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "not specified for EEGMAT specifically",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "Claims to use 'Physionet EEG dataset' but insufficient evidence confirms EEGMAT specifically; may be conflating multiple PhysioNet EEG datasets",
+      "evidence_desc": "Mentions 'Physionet EEG dataset' with 98.75% accuracy and 98.60% F1, but no explicit EEGMAT naming or dataset-specific preprocessing details"
+    },
+    {
+      "filename": "paper_10_1088_2516_1091_ad8530.pdf",
+      "ref": "https://doi.org/10.1088/2516-1091/ad8530",
+      "title": "Systematic review of experimental paradigms and deep neural networks for electroencephalography-based cognitive workload detection",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a broad systematic review of cognitive workload detection methods. While it discusses mental arithmetic as one of many paradigms for inducing cognitive workload, it does not specifically analyze or use the EEGMAT dataset. The paper is a general methodology review without dataset-specific experiments.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "super",
+      "super_meta_note": "Systematic review paper covering multiple CWL paradigms and DNN approaches; EEGMAT may be mentioned among many datasets but not specifically studied",
+      "evidence_desc": "Review article discussing general CWL paradigms including mental arithmetic, n-back, Stroop, etc.; no specific EEGMAT dataset usage or analysis"
+    },
+    {
+      "filename": "paper_10_1109_indicon49873_2020_9342140.pdf",
+      "ref": "https://doi.org/10.1109/INDICON49873.2020.9342140",
+      "title": "Variational Mode Decomposition Based Mental Task Classification from Electroencephalogram",
+      "classification": "relevant",
+      "cot_reasoning": "Explicitly uses EEGMAT database with clear description of the dataset structure (36 subjects, 19 channels, 500Hz, 60s segments, baseline BST and serial-subtraction SRT tasks). Defines concrete binary classification task (baseline vs. mental arithmetic) with subject-specific accuracies reported. Also mentions performance quality labels (good/bad count) though focuses on task classification.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "baseline task (BST) vs. serial-subtraction task (SRT)",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "60-second continuous segments, single-channel or multichannel analysis; artifact-free and contaminated signals evaluated",
+      "target_events": [
+        "baseline_task_BST",
+        "serial_subtraction_task_SRT"
+      ],
+      "label_mapping": "implicit binary from task type (BST=0, SRT=1); also subject-info.csv has Count quality 0=B (bad), 1=G (good)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicit EEGMAT usage with 93% average subject-specific accuracy for baseline vs. mental task classification; describes 36 subjects, 19 channels, 500Hz sampling, 60s duration, two conditions per subject"
+    },
+    {
+      "filename": "paper_10_1109_jsen_2023_3337519.pdf",
+      "ref": "https://doi.org/10.1109/JSEN.2023.3337519",
+      "title": "Utilizing Graph Signal-Processing-Based Spectrum to Classify Mental Tasks With Multichannel EEG Signals",
+      "classification": "relevant",
+      "cot_reasoning": "Explicitly uses 'EEGMAT Database II' with detailed description. Evaluates binary classification of baseline (BT) vs. serial-subtraction (SS) task pairs, achieving 99.75% accuracy. Clearly defines the task, dataset structure, and uses the standard two-condition design of EEGMAT.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "baseline task (BT) vs. serial-subtraction task (SS)",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "60-second segments; graph signal processing with GFT/GWT features; multichannel analysis with 19 channels",
+      "target_events": [
+        "baseline_task_BT",
+        "serial_subtraction_task_SS"
+      ],
+      "label_mapping": "implicit binary from task condition pairs",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicit EEGMAT Database II usage with 99.75% accuracy for BT-SS pair; describes 36 subjects, 19 channels, 500Hz, mental arithmetic task database"
+    },
+    {
+      "filename": "paper_10_1109_wccest66994_2025_11389948.pdf",
+      "ref": "https://doi.org/10.1109/WCCEST66994.2025.11389948",
+      "title": "Hybrid CNN–LSTM Framework with Signal Filtering for EEG-Based Stress Classification on the Neurocom EEGMAT Dataset",
+      "classification": "relevant",
+      "cot_reasoning": "Explicitly uses 'Neurocom EEGMAT dataset' with detailed description of the acquisition protocol (36 subjects, rest phase vs. stress phase, 23 electrodes, 250Hz). Defines concrete stress classification task with label refinement via k-means clustering. Segments data into 5-second non-overlapping windows (684 total segments). Achieves 98% accuracy with hybrid CNN-LSTM.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "rest phase (relaxed) vs. stress phase (mental arithmetic under time pressure)",
+      "epoch_method_hint": "segmentation",
+      "epoch_params": "5-second non-overlapping windows, 684 total segments; bandpass 1-45Hz, normalization; original sessions ~5 minutes each phase",
+      "target_events": [
+        "rest_phase",
+        "stress_phase"
+      ],
+      "label_mapping": "original: performance-based labels (task proficiency); refined via k-means clustering on log-band-power features before supervised training",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicit Neurocom EEGMAT usage with 98% accuracy; 36 subjects, 23 channels, 250Hz; rest vs. stress phases; 5s segmentation; label refinement via unsupervised clustering"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset contains clear binary condition structure: resting baseline EEG ('_1' files) versus mental arithmetic task EEG ('_2' files) for each of 36 subjects, with additional performance quality labels (Group G vs Group B) enabling multiple classification tasks. Official documentation and multiple papers explicitly demonstrate ML classification on this dataset with high accuracies.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 72,
+    "total_n": 72,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 72,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [],
+    "notes": "No event IDs were detected in this dataset. Examination of EDF headers for multiple subjects (Subject00, 05, 10, 20, 35) across both conditions ('_1' background/rest and '_2' mental arithmetic) confirmed no embedded annotations, events, or EDF+ annotation channels exist. The dataset contains only continuous EEG recordings with no internal event markers. The two task conditions (background/rest vs. mental arithmetic) are distinguished solely by filename suffixes ('_1' and '_2'), not by any embedded event codes. The subject-info.csv file provides demographic and performance metadata but no event timing information."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Rest vs Mental Arithmetic Binary Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_long_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s, tmax = 60 s, overlap = 0.0, target_events = [`rest_baseline`, `mental_arithmetic`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `rest_baseline` | 0 | Resting baseline EEG (file suffix _1) |\n  | `mental_arithmetic` | 1 | Mental arithmetic task EEG (file suffix _2) |\n- **Evidence**:\n  - https://doi.org/10.13026/C2JQ1P — Official PhysioNet dataset documentation describing two conditions per subject: rest baseline (_1 files) and mental arithmetic task (_2 files)\n  - https://doi.org/10.1109/INDICON49873.2020.9342140 — Paper using this dataset for rest vs mental arithmetic binary classification with 60-second segments\n  - https://doi.org/10.1109/JSEN.2023.3337519 — Paper analyzing EEG mental arithmetic tasks using 60-second continuous epochs from this dataset\n- **Notes**: This is an archetype A (event route) task. The dataset uses separate EDF files per condition rather than internal event markers; the kernel must map file suffixes (_1 → rest_baseline event, _2 → mental_arithmetic event) to create synthetic long events spanning the full recording duration. The tmax=60s captures the standard block length; some files extend to ~180s but 60s represents the canonical task/rest epoch used in the literature.\n\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "mental_arithmetic",
+      "rest_baseline"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [
+      "Count quality"
+    ],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "stress detection (implied binary stress/rest or stress levels)",
+        "reason": "Paper 10.1038/s41598-025-10270-0 is only 'partial' relevance with super_meta_note stating it may be conflating multiple PhysioNet EEG datasets and lacks explicit EEGMAT naming. The actual stress/rest paradigm is already covered by the WCCEST2025 ref with explicit EEGMAT usage. No additional grounded label source beyond what's already captured."
+      },
+      {
+        "paradigm": "age regression from continuous EEG",
+        "reason": "Age column mentioned in subjects_info.xlsx but NOT discovered in participants.tsv by the grounded catalog scanner. Per H4/G3, must_have_info_fields must be in grounded catalog's participants.tsv list; (none discovered) was explicitly reported. Cannot ground this task."
+      },
+      {
+        "paradigm": "gender classification",
+        "reason": "Gender column mentioned in subjects_info.xlsx but NOT discovered in participants.tsv by the grounded catalog scanner. Per H4/G3, must_have_info_fields must be in grounded catalog's participants.tsv list; (none discovered) was explicitly reported. Cannot ground this task."
+      }
+    ]
+  },
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/physionet_eegmat/kernel_final.py",
+  "kernel_code_len": 9497,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/physionet_eegmat.py",
+    "kernel_sha256": "277e7cc6fb101a216dd966818c8e6341ac6c708f96702ce6f903f62fadb83888",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 72,
+    "total_n": 72,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "rest_baseline": 36,
+      "mental_arithmetic": 36
+    },
+    "subject_info": {
+      "record_count": 72,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/physionet_eegmat.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

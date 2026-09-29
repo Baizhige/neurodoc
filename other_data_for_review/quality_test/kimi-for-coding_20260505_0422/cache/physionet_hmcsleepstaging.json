@@ -1,0 +1,209 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 6,
+    "category": "",
+    "format_type": "edf",
+    "has_bids_sidecars": false
+  },
+  "budget_used": 29,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 7,
+    "task_synthesis": 14,
+    "kernel_loop": 3,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T08:25:56.788640+00:00",
+  "ref_extractions": [
+    {
+      "filename": "paper_10_1002_advs_202417408.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1002/advs.202417408",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1016_j_nbscr_2025_100140.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.nbscr.2025.100140",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "official_physionet.org_content_hmc-sleep-staging_1.1.html",
+      "ref": "https://doi.org/10.13026/t79q-fr32",
+      "title": "Haaglanden Medisch Centrum sleep staging database",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is the official PhysioNet dataset landing page that describes the HMC sleep staging database itself. It provides metadata about the dataset structure, signals, and annotations, but does not define any ML task or report experimental results. It is the dataset source documentation, not a research paper using the dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_1109_embc58623_2025_11252818.pdf",
+      "ref": "10.1109/embc58623.2025.11252818",
+      "title": "A Hybrid Deep Learning Model for Sleep Staging with Multi-Domain Feature Fusion from Single-Channel EEG",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses the HMC dataset with 151 subjects, validating on it as a primary dataset. It defines a concrete 5-class sleep staging classification task (W, N1, N2, N3, R) using 30-second non-overlapping epochs from single-channel C4/M1 EEG. The paper reports specific accuracy (0.747) and F1 (0.742) metrics with detailed epoch counts per class.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "sleep staging",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-sec non-overlapping epochs, bandpass 0.5-30 Hz, single channel C4/M1, 256 Hz sampling",
+      "target_events": [
+        "sleep stage W",
+        "sleep stage N1",
+        "sleep stage N2",
+        "sleep stage N3",
+        "sleep stage R"
+      ],
+      "label_mapping": "W, N1, N2, N3, R (five-class AASM sleep staging)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly states: 'Validated on the Haaglanden Medisch Centrum Sleep Centre Database (HMC) with EEG data from 151 subjects' and provides epoch counts: 23368 W, 15548 N1, 50083 N2, 26671 N3, 21255 R epochs"
+    },
+    {
+      "filename": "paper_10_3390_s23052458.pdf",
+      "ref": "10.3390/s23052458",
+      "title": "Cross-Domain Transfer of EEG to EEG or ECG Learning for CNN Classification Models",
+      "classification": "partial",
+      "cot_reasoning": "This paper mentions sleep staging as one of two applications and discusses cross-signal transfer learning (EEG to ECG). However, the visible text does not explicitly confirm use of the HMC dataset specifically—it mentions 'a sleep staging model classified signals into five stages' but the dataset details are truncated. The seizure prediction experiment appears primary. Insufficient evidence to confirm HMC dataset usage.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "ref": "10.1371/journal.pone.0256111",
+      "title": "Inter-database validation of a deep learning approach for automatic sleep scoring",
+      "classification": "relevant",
+      "cot_reasoning": "This is the original publication associated with the HMC dataset creation. It explicitly uses the HMC dataset as one of six public sleep staging databases for inter-database validation. It defines a 5-class sleep staging classification task (wakefulness, N1, N2, N3, R) with 30-second epochs. The paper evaluates CNN-LSTM architectures and reports kappa scores for both local (0.80) and external (0.54-0.62) validation scenarios.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "sleep staging",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-second epochs, five-class AASM sleep staging, multiple EEG/EOG/EMG channels",
+      "target_events": [
+        "wakefulness",
+        "stage N1",
+        "stage N2",
+        "stage N3",
+        "stage R"
+      ],
+      "label_mapping": "wakefulness, N1, N2, N3, R (AASM 2.4 guidelines)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly describes HMC dataset collection and use among six databases for inter-database validation of automatic sleep scoring with 30s epochs into five stages. Reports kappa performance metrics for local and external validation scenarios."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The HMC Sleep Staging dataset is explicitly validated in two relevant papers as a 5-class sleep staging benchmark (Wake, N1, N2, N3, REM) with 30-second epochs. One paper provides exact epoch counts across 151 subjects, confirming substantial labeled data for automatic sleep stage classification.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 77,
+    "total_n": 77,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 77,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [],
+    "notes": "No event IDs were detected in pre-scan (explicitly stated as '(no events detected)'). No events.tsv, events.json, or other event-related files were successfully read from the dataset. Multiple attempts to read README, RECORDS, subjects.csv, and directory listings failed due to tool errors or missing files. The dataset 'hmc-sleep-staging' appears to be a sleep staging dataset, but without access to actual event annotation files or documentation, no event mappings can be established. The truncated directory tree at depth 4 prevented identification of subject/session-level files where events might be stored."
+  },
+  "tasks_section": "## Tasks\n\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "Sleep stage N1",
+      "Sleep stage N2",
+      "Sleep stage N3",
+      "Sleep stage R",
+      "Sleep stage W"
+    ],
+    "required_native_misc": [
+      "ECG",
+      "EMG chin",
+      "EOG E1-M2",
+      "EOG E2-M2"
+    ],
+    "required_info_fields": [],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "subject-level demographic/regression tasks",
+        "reason": "No participants.tsv columns discovered in grounded catalog (none discovered — info route and derived misc unavailable). Cannot create B3 archetype tasks for age, sex, or other subject-level variables."
+      },
+      {
+        "paradigm": "events.tsv derived misc regression/classification",
+        "reason": "No per-trial numeric columns discovered in events.tsv (none discovered — no per-trial numeric columns in events.tsv). Cannot create B2 archetype tasks from trial-level behavioral or physiological measures."
+      },
+      {
+        "paradigm": "segmentation-only sleep staging without event labels",
+        "reason": "Sleep staging paradigm fundamentally requires stage labels for training; unsupervised or self-supervised segmentation without labels would be archetype C but no meaningful subject-level info fields exist to serve as labels. The dataset's scientific value is in its annotated sleep stages, making label-free segmentation inappropriate as a primary task."
+      }
+    ]
+  },
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/physionet_hmcsleepstaging/kernel_final.py",
+  "kernel_code_len": 10746,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/physionet_hmcsleepstaging.py",
+    "kernel_sha256": "02cc5cb5405dba539353f97eabb03f558a1ad9c11afbdf15d2372f13cae3e943",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 77,
+    "total_n": 77,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 77,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": [
+      "ECG"
+    ]
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/physionet_hmcsleepstaging.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

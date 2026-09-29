@@ -1,0 +1,68 @@
+# Multi-Stimulus SSVEP Database
+
+**Dataset**: `physionet_mssvepdb` | **Year**: 2021 | **URL**: N/A
+**Category**: Sensory/Response | **Subjects**: 11 | **Files (Completed)**: 235 | **Channels**: 14 | **Sampling Rate**: 128 Hz (dataset3) or 250 Hz (datasets 1-2) | **Manual Review**:
+
+## Paradigm
+
+Eleven subjects performed steady-state visual evoked potential (SSVEP) tasks across three recording datasets with different EEG hardware (Nakanishi et al., 2018). Subjects fixated on flickering visual stimuli at different frequencies while EEG was recorded. Datasets 1 and 2 used a BrainProducts system (256 channels, 250 Hz); dataset 3 used an Emotiv EPOC (14 channels, 128 Hz). Each recording corresponds to one SSVEP stimulus condition (frequency). The kernel creates a single whole-recording `SSVEP` annotation for each file; the stimulus frequency is encoded in the filename/subdirectory.
+
+## File Scan Result
+
+> **Kernel SHA256**: `b0fb53a13b65ddd627a459885811c0110078172e3fe0af22802920a04880cb10`
+> **EEGUnity Version**: `N/A`
+> **Scan Type**: Full
+
+- **Scan Status**: Pending
+- **Files Expected**: TBD
+- **Files Found**: TBD
+
+### Event Structure
+
+| Event ID | Count (total) | Type | Meta Level | Meaning |
+|----------|---------------|------|------------|---------|
+| `SSVEP` | 235 | long | raw | SSVEP stimulus period (spans entire recording); frequency encoded in filename |
+
+> **Event Type**: short=stimulus onset <2s; long=sustained state >=2s; rest=resting marker; admin=exclude
+>
+> Stimulus frequency information must be parsed from the filename or subdirectory (e.g., frequency in Hz). Each file corresponds to one stimulus frequency condition.
+
+### Info
+
+- **Dataset Overview**: Multi-stimulus SSVEP EEG database with 11 subjects across 3 recording sessions
+- **Stimulus Frequencies**: Encoded in filenames; must be parsed for classification targets
+- **Hardware**: BrainProducts (datasets 1-2) or Emotiv EPOC (dataset 3)
+
+## Tasks
+
+### Classical Task 1: SSVEP target/frequency decoding
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_event_hdf5`
+- **Epoch Parameters**: tmin = Needs Verification, tmax = Needs Verification, target_events = [Needs Verification] | tmin = Needs Verification, tmax = Needs Verification, overlap = Needs Verification, target_events = [Needs Verification]
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**: Stimulus frequency or target index
+- **Evidence**: SSVEP paradigm is explicitly stated in dataset metadata/reference. Source: https://www.physionet.org/ DOI: https://doi.org/10.1109/tbme.2017.2694818
+
+---
+
+### Potential Task 1: SSVEP Frequency Classification (epoch_by_long_event)
+- **Task Type**: classification
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, overlap = 2.0 s, target_events = see Target Definition
+- **Label Route**: `event`
+- **Meta Level**: raw
+- **Target Definition**: Frequency label derived from filename; e.g., map each stimulus frequency to a class index.
+- **Notes**: Stimulus frequencies and their mapping to class indices must be parsed from file paths or metadata. Process datasets 1/2 (BrainProducts, 256ch, 250Hz) and dataset 3 (Emotiv, 14ch, 128Hz) **separately** due to different channel counts and sampling rates.
+
+## Data Quality Notes
+
+- Hardware differences across datasets: datasets 1-2 (BrainProducts, 256 channels, 250 Hz) vs. dataset 3 (Emotiv EPOC, 14 channels, 128 Hz); do not mix datasets in cross-subject analysis without normalization.
+- Frequency labels are encoded in filenames, not event annotations; parse filenames to obtain classification targets.
+- Age range: 24-39 years; sex: ~171 male / 64 female recording sessions.
+- For SSVEP analysis, focus on occipital channels (Oz, O1, O2, POz) from the BrainProducts recordings.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

@@ -1,0 +1,122 @@
+{
+  "phase": "scan",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 4,
+    "category": "",
+    "format_type": "unknown",
+    "has_bids_sidecars": false
+  },
+  "budget_used": 6,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "task_synthesis": 1,
+    "kernel_loop": 2
+  },
+  "timestamp": "2026-05-05T08:12:21.470667+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.13026_C2101S.html",
+      "ref": "10.13026/C2101S",
+      "title": "ERP-based Brain-Computer Interface recordings",
+      "classification": "relevant",
+      "cot_reasoning": "This is the official PhysioNet dataset page for physionet_erpbci. It explicitly describes the dataset with detailed experimental protocol, data format, and annotations. The task is clearly defined: P300-based BCI spelling with target/non-target classification using a 6x6 matrix speller. Each run involves identifying a target character from row/column flashes.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "P300 speller (visual oddball)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Stimulus onset asynchrony (SOA) 150ms: 100ms flash + 50ms gap; each row/column flashes ~20 times per run; 64-channel EEG at 2048 Hz",
+      "target_events": [
+        "row/column intensification (flash)",
+        "target character flash",
+        "non-target character flash"
+      ],
+      "label_mapping": "target vs non-target based on whether intensified row/column contains the target character",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Official dataset documentation with complete protocol: 10 participants, 20 runs each, 64 EEG + 4 EOG channels, EDF+ format with annotations marking target character, start/end, and each intensification with character set"
+    },
+    {
+      "filename": "official_physionet.org_content_erpbci_1.0.0.html",
+      "ref": "10.13026/C2101S",
+      "title": "ERP-based Brain-Computer Interface recordings",
+      "classification": "relevant",
+      "cot_reasoning": "Identical to File 1 - this is the official PhysioNet dataset page for physionet_erpbci version 1.0.0. Contains the same comprehensive dataset description with explicit task definition for P300-based BCI character spelling.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "P300 speller (visual oddball)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "SOA 150ms (100ms on, 50ms off); ~20 flashes per row/column per run; 2048 Hz sampling; 64 EEG + 4 EOG channels",
+      "target_events": [
+        "row/column intensification",
+        "target flash",
+        "non-target flash"
+      ],
+      "label_mapping": "binary: target (contains target character) vs non-target (does not contain target character)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Mirror of official dataset documentation - same content as File 1 with full experimental protocol, annotation structure, and data format specifications for the ERP-BCI dataset"
+    },
+    {
+      "filename": "paper_10.1186_1744-9081-6-28.pdf",
+      "ref": "10.1186/1744-9081-6-28",
+      "title": "(C)overt attention and visual speller design in an ERP-based brain-computer interface",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper by Treder and Blankertz investigates overt vs covert attention in ERP-based BCIs using a custom Hex-o-Spell and Matrix speller design with 13 healthy participants. It does not mention or use the physionet_erpbci dataset; it describes a separate experimental study with different paradigm and hardware.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Separate BCI study with N=13, different speller designs (Hex-o-Spell vs Matrix), investigating attention mechanisms; no connection to PhysioNet ERP-BCI dataset by Citi, Poli, and Cinel"
+    },
+    {
+      "filename": "paper_10_3389_fnhum_2021_653659.pdf",
+      "ref": "10.3389/fnhum.2021.653659",
+      "title": "BENDR: Using Transformers and a Contrastive Self-Supervised Learning Task to Learn From Massive Amounts of EEG Data",
+      "classification": "partial",
+      "cot_reasoning": "The BENDR paper discusses self-supervised learning for EEG across multiple datasets and mentions BCI tasks including P300. While it references broad EEG datasets and discusses general BCI paradigms (P300, SMR), it does not explicitly confirm use of physionet_erpbci specifically. The paper focuses on pre-training methodology rather than defining a concrete task on this specific dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "General methodology paper on self-supervised EEG learning with transformers; mentions P300 and BCI broadly but lacks explicit confirmation of using physionet_erpbci dataset specifically; focuses on pre-training across multiple datasets rather than task definition on a specific dataset"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The official dataset documentation confirms a well-structured P300 speller paradigm with clear binary classification labels (target vs. non-target intensifications). Annotations explicitly mark target characters, start/end times, and each intensification with character set information, providing directly usable event structure for ML.",
+  "pre_scan_result": {
+    "event_counts": {},
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [],
+    "notes": "No data_dir available."
+  },
+  "tasks_section": "## Tasks\n\n(No tasks could be grounded from available references and sidecars.)\n",
+  "kernel_requirements": {
+    "required_event_ids": [],
+    "required_native_misc": [],
+    "required_info_fields": [],
+    "derived_misc_channels": []
+  },
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/physionet_erpbci/kernel_final.py",
+  "kernel_code_len": 8543,
+  "status": "error",
+  "last_error": "Dataset 'physionet_erpbci' not found in any configured directory: /home/public/eeg_dataset/openneuro_raw, /home/public/eeg_dataset/raw_datasets"
+}

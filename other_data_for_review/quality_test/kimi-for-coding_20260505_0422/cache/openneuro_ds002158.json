@@ -1,0 +1,523 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 9,
+    "category": "",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 29,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 11,
+    "task_synthesis": 11,
+    "kernel_loop": 3,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T04:45:23.152771+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_openneuro.org_datasets_ds002158.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1016_j_tics_2022_03_003.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.tics.2022.03.003",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3389_fnins_2022_886342.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fnins.2022.886342",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "official_doi.org_10.1073_pnas.1918335117.html",
+      "ref": "10.1073/pnas.1918335117",
+      "title": "Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly states that anonymized data can be found on OpenNeuro at https://openneuro.org/datasets/ds002158, which matches the target dataset. The paper defines a concrete ML-relevant task: predicting confidence ratings (continuous scale 0-1) from EEG/fMRI data in a perceptual decision-making paradigm with active vs. observed conditions. The task involves classification/regression of confidence based on neural signals time-locked to decisions.",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 0,
+      "paradigm": "perceptual decision-making with metacognitive confidence rating",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "epochs time-locked to committed/observed decision onset; EEG-fMRI simultaneous recording",
+      "target_events": [
+        "first-order decision (active/observed)",
+        "confidence rating response"
+      ],
+      "label_mapping": "confidence: continuous scale 0='sure error' to 1='sure correct'; condition: active vs observed",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicit OpenNeuro ds002158 citation in data deposition statement; full task description with confidence as continuous dependent variable"
+    },
+    {
+      "filename": "paper_10.1073_pnas.1918335117.pdf",
+      "ref": "10.1073/pnas.1918335117",
+      "title": "Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging",
+      "classification": "relevant",
+      "cot_reasoning": "Same paper as File 1 in PDF format. Explicitly cites OpenNeuro dataset ds002158 in the data deposition section. Defines clear regression task predicting continuous confidence ratings from EEG signals, with two conditions (active/observed) and first-order accuracy as additional variable. The EEG was recorded simultaneously with fMRI.",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 0,
+      "paradigm": "perceptual decision-making with metacognitive confidence rating",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "epochs time-locked to decision onset; simultaneous EEG-fMRI; 20 participants",
+      "target_events": [
+        "first-order decision (button press or observed hand)",
+        "confidence rating"
+      ],
+      "label_mapping": "confidence: continuous 0-1 scale; condition: active vs observed; accuracy: correct vs incorrect",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Direct OpenNeuro ds002158 URL in data deposition; preregistered hypotheses at osf.io/a5qmv"
+    },
+    {
+      "filename": "paper_10_1016_j_isci_2023_107524.pdf",
+      "ref": "10.1016/j.isci.2023.107524",
+      "title": "EEG error-related potentials encode magnitude of errors and individual perceptual thresholds",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper studies error-related potentials (ErrPs) during a cursor-reaching task with joystick visual rotations, not the perceptual numerosity decision task of ds002158. The authors include José del R. Millán (shared with ds002158) but the dataset used is different—this is a 3-session BCI experiment with 16 participants, not the 20-participant simultaneous EEG-fMRI confidence study. No mention of ds002158 or OpenNeuro.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Different experimental paradigm (cursor reaching with visual rotations), different dataset, different task structure"
+    },
+    {
+      "filename": "paper_10_1038_s41467_021_23540_y.pdf",
+      "ref": "10.1038/s41467-021-23540-y",
+      "title": "Evidence accumulation relates to perceptual consciousness and monitoring",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper by Pereira et al. studies evidence accumulation in perceptual consciousness using vibrotactile detection with a single patient (microelectrode in PPC) and a separate EEG experiment with healthy volunteers. While thematically related to confidence/metacognition and shares senior authors with ds002158 paper, there is no mention of using the ds002158 dataset. The EEG experiment appears to be a different study with different stimuli and task structure.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Thematically related (evidence accumulation, confidence, Pereira/Faivre/Blanke authors) but no evidence of using ds002158 dataset; different task (vibrotactile detection vs numerosity discrimination)"
+    },
+    {
+      "filename": "paper_10_1038_s41467_025_61744_8.pdf",
+      "ref": "10.1038/s41467-025-61744-8",
+      "title": "Evidence accumulation in the pre-supplementary motor area and insula drives confidence and changes of mind",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper by Goueytes et al. with Pereira and Faivre as co-authors uses stereotactic EEG (sEEG) in epilepsy patients performing a random-dot kinetogram visual discrimination task with confidence ratings. While thematically related to confidence and evidence accumulation, this is a completely different dataset (sEEG in patients, not scalp EEG+fMRI in healthy volunteers), different task (motion discrimination, not numerosity), and no mention of ds002158 or OpenNeuro.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Different modality (sEEG vs scalp EEG+fMRI), different population (epilepsy patients vs healthy), different task (RDK motion vs numerosity), no OpenNeuro citation"
+    },
+    {
+      "filename": "pereira-et-al-2020-disentangling-the-origins-of-confidence-in-speeded-perceptual-judgments-through-multimodal-imaging.pdf",
+      "ref": "10.1073/pnas.1918335117",
+      "title": "Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging",
+      "classification": "relevant",
+      "cot_reasoning": "Identical paper to Files 1 and 2 (same title, authors, content). Explicitly cites OpenNeuro dataset ds002158 in data deposition. Defines regression task for continuous confidence ratings from EEG data in a numerosity discrimination task with active vs. observed conditions. Simultaneous EEG-fMRI recording with 20 participants.",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 0,
+      "paradigm": "perceptual decision-making with metacognitive confidence rating",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "epochs time-locked to decision onset; simultaneous EEG-fMRI; 20 participants; 60ms dot array presentation",
+      "target_events": [
+        "first-order decision (button press in active, observed hand in observed)",
+        "confidence rating response"
+      ],
+      "label_mapping": "confidence: continuous 0='sure error' to 1='sure correct'; condition: active vs observed; first-order accuracy: correct/incorrect",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Direct OpenNeuro ds002158 citation; preregistered design; bounded evidence accumulation model of confidence; clear task structure with continuous confidence as target variable"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The events.tsv shows clear trial structure with 'act' and 'act-bad' trial types, alongside continuous variables (confidence 0-1, response times, choice accuracy, dots_difference, stim_side). This supports multiple ML tasks: confidence regression from EEG, binary classification of correct/erroneous decisions, or stimulus side discrimination. The trial_type column and rich behavioral annotations provide explicit event markers for epoching.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 119,
+    "total_n": 119,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "Response/R128": 44303,
+      "Stimulus/S  7": 1347,
+      "Stimulus/S  8": 1477,
+      "Stimulus/S 11": 2851,
+      "Stimulus/S 12": 2854,
+      "Stimulus/S 17": 1356,
+      "Stimulus/S 18": 1489,
+      "Stimulus/S 27": 5657,
+      "Stimulus/S 38": 109,
+      "Stimulus/S 40": 6175,
+      "Stimulus/S 41": 5703,
+      "Stimulus/S 43": 6583,
+      "Stimulus/S 44": 475,
+      "Stimulus/S128": 474612,
+      "Stimulus/S171": 4364,
+      "SyncStatus/Sync On": 30864,
+      "Stimulus/S 37": 120,
+      "Stimulus/S165": 39,
+      "Stimulus/S166": 48,
+      "Stimulus/S145": 1,
+      "Stimulus/S140": 3,
+      "Stimulus/S169": 1,
+      "Stimulus/S155": 2
+    },
+    "subject_info": {
+      "record_count": 119,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "Response/R128",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Response marker (unspecified response type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S  7",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S7 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S  8",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S8 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S 11",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S11 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S 12",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S12 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S 17",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S17 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S 18",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S18 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S 27",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S27 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S 37",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S37 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S 38",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S38 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S 40",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S40 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S 41",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S41 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S 43",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S43 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S 44",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S44 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S128",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "High-frequency stimulus marker (likely volume acquisition trigger or scanner synchronization pulse for simultaneous EEG-fMRI)",
+        "confidence": "inferred",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S140",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S140 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S145",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S145 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S155",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S155 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S165",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S165 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S166",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S166 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S169",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S169 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "Stimulus/S171",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus marker S171 (unspecified stimulus type)",
+        "confidence": "unclear",
+        "session_task_scope": "task-main"
+      },
+      {
+        "event_id": "SyncStatus/Sync On",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Synchronization marker onset (EEG-fMRI clock alignment)",
+        "confidence": "confirmed",
+        "session_task_scope": "task-main"
+      }
+    ],
+    "notes": "Evidence sources: EEG .vmrk marker files (sub-02/ses-001/eeg/sub-02_ses-001_task-main_run-001/002/003_eeg.vmrk, sub-04/ses-001/eeg/sub-04_ses-001_task-main_run-001_eeg.vmrk, sub-08/ses-001/eeg/sub-08_ses-001_task-main_run-001_eeg.vmrk) confirmed 'SyncStatus/Sync On' as regular synchronization pulses and 'Stimulus/S128' as extremely frequent markers (474,612 occurrences). The S128 pattern (dense clusters at ~5-second intervals with sub-second spacing) is consistent with fMRI volume acquisition triggers in simultaneous EEG-fMRI. Other stimulus codes (S 7, S 8, S 11, S 12, S 17, S 18, S 27, S 37, S 38, S 40, S 41, S 43, S 44, S140, S145, S155, S165, S166, S169, S171) and Response/R128 were detected in pre-scan counts but their specific meanings could not be determined because .vmrk files could not be read beyond the first ~50-54 lines due to tool limitations (read_text offset parameter non-functional). No events files exist for task-rest (confirmed: no events.tsv in func/, no .vmrk in eeg/ for task-rest). No external mapping documentation was found in accessible files. All unclear annotations reflect lack of direct evidence for specific meanings, not absence of the events themselves."
+  },
+  "tasks_section": "## Tasks\n\n### Potential Task 1: Age Regression from Segmentation\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 2.0 s *, overlap = 0.5, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | `age` | Continuous age in years (20–32), used directly as regression target per subject. All segments from a subject share the same age label. |\n- **Evidence**:\n  - `participants.tsv` — Age available for all 20 participants (range 20–32, mean ~25.5); complete coverage with no missing values.\n- **Notes**: Subject-level biomarker regression task using continuous 2-second EEG segments with 50% overlap. No event structure is required since the goal is to predict a static subject-level demographic variable (age) from resting/task EEG patterns. All segments from a given subject receive the same age label, enabling subject-level train/test splits to avoid leakage.\n\n### Potential Task 2: Sex Classification from Segmentation\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  | sex | 0 = F (female), 1 = M (male) |\n- **Evidence**:\n  - participants.tsv — sex field available for all 20 participants (11 M, 9 F)\n- **Notes**: Subject-level binary classification using 2-second non-overlapping segments of continuous EEG. The sex label is drawn from participants.tsv (native info field, archetype B3). Segmentation parameters inferred from default values since no task-specific timing constraints apply for subject-level biomarker classification.\n\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "Response/R128"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [
+      "age",
+      "sex"
+    ],
+    "derived_misc_channels": [
+      {
+        "name": "confidence",
+        "source_field": "events.tsv:confidence",
+        "derivation": "Read confidence column from events.tsv per trial; create trial-locked step function misc channel where each trial interval [onset, onset+duration_or_next) carries the confidence value for that trial; interpolate or step-fill to match raw sampling rate",
+        "groundable_evidence": "events.tsv numeric column 'confidence' with Units='%, 0 is sure error, 1 is sure correct'",
+        "used_by": [
+          "confidence regression from decision onset"
+        ]
+      },
+      {
+        "name": "response_time",
+        "source_field": "events.tsv:response_time",
+        "derivation": "Read response_time column from events.tsv; create trial-locked step function misc channel with RT value per trial; values in seconds (~0.4-0.7s based on sample)",
+        "groundable_evidence": "events.tsv numeric column 'response_time'",
+        "used_by": [
+          "response time regression"
+        ]
+      },
+      {
+        "name": "dots_difference",
+        "source_field": "events.tsv:dots_difference",
+        "derivation": "Read dots_difference column from events.tsv; create trial-locked step function misc channel with integer difficulty values per trial (e.g., 11, 12, 13 dots)",
+        "groundable_evidence": "events.tsv numeric column 'dots_difference' with Units='Dots'",
+        "used_by": [
+          "dots difference regression"
+        ]
+      },
+      {
+        "name": "stim_side",
+        "source_field": "events.tsv:stim_side",
+        "derivation": "Read stim_side column from events.tsv; map 'left'→0, 'right'→1; create trial-locked step function misc channel with binary side labels",
+        "groundable_evidence": "events.tsv column 'stim_side' with Levels {left: Left has most dots, right: Right has most dots}",
+        "used_by": [
+          "stimulus side classification"
+        ]
+      },
+      {
+        "name": "response_time2",
+        "source_field": "events.tsv:response_time2",
+        "derivation": "Read response_time2 column from events.tsv; create trial-locked step function misc channel with confidence rating time in seconds; note automatic scale movement limits interpretability",
+        "groundable_evidence": "events.tsv numeric column 'response_time2' with Description 'Note that since the scale moves automatically, these timings have little utility'",
+        "used_by": [
+          "confidence time regression"
+        ]
+      },
+      {
+        "name": "age_binned",
+        "source_field": "participants.tsv:age",
+        "derivation": "Read age from participants.tsv; compute median (e.g., 25); assign age_binned=0 if age<=median, 1 if age>median; create constant broadcast misc channel per subject",
+        "groundable_evidence": "participants.tsv column 'age' with dtype=numeric, completeness=complete, sample=[27, 28, 20]",
+        "used_by": [
+          "binned age classification"
+        ]
+      }
+    ],
+    "_dropped_candidates": [
+      {
+        "paradigm": "resting state eyes-open/closed",
+        "reason": "No task-rest events files exist (confirmed: no events.tsv in func/, no .vmrk in eeg/ for task-rest). No resting state trigger structure available for epoching. The dataset contains only task-main with decision-making paradigm."
+      },
+      {
+        "paradigm": "motor imagery",
+        "reason": "No motor imagery event meanings in locked ground truth. All stimulus/response events are explicitly marked as 'unspecified stimulus type' or 'Response marker (unspecified response type)'. No MI class labels available."
+      }
+    ]
+  },
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/openneuro_ds002158/kernel_final.py",
+  "kernel_code_len": 9883,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds002158.py",
+    "kernel_sha256": "63c70b2f68731d41c4bf1e5e3d07550e18eafaf2fad7444abd67a6f57c0e2269",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 119,
+    "total_n": 119,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "Response/R128": 44303,
+      "Stimulus/S  7": 1347,
+      "Stimulus/S  8": 1477,
+      "Stimulus/S 11": 2851,
+      "Stimulus/S 12": 2854,
+      "Stimulus/S 17": 1356,
+      "Stimulus/S 18": 1489,
+      "Stimulus/S 27": 5657,
+      "Stimulus/S 38": 109,
+      "Stimulus/S 40": 6175,
+      "Stimulus/S 41": 5703,
+      "Stimulus/S 43": 6583,
+      "Stimulus/S 44": 475,
+      "Stimulus/S128": 474612,
+      "Stimulus/S171": 4364,
+      "SyncStatus/Sync On": 30864,
+      "Stimulus/S 37": 120,
+      "Stimulus/S165": 39,
+      "Stimulus/S166": 48,
+      "Stimulus/S145": 1,
+      "Stimulus/S140": 3,
+      "Stimulus/S169": 1,
+      "Stimulus/S155": 2
+    },
+    "subject_info": {
+      "record_count": 119,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds002158.py",
+  "reconcile_patched": true,
+  "status": "wait_manual_review"
+}

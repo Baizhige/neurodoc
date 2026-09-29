@@ -1,0 +1,155 @@
+--- openneuro_ds005505/analysis.md (pre-v3)
++++ openneuro_ds005505/analysis.md (v3)
+@@ -87,30 +87,29 @@
+ - **Label Field**: `p_factor`
+ - **Meta Level**: `super`
+ - **Target Definition**:
+-  | MISC Channel | Value (unit) | Notes |
+-  |-------------|--------------|-------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | p_factor | Range: ~-2.5 to 2.5 (z-score) | Transdiagnostic latent psychopathology construct from bifactor model; derived from questionnaire battery |
+ - **Evidence**:
+   - DOI: 10.1016/j.neuroimage.2022.119348 — Benchmark for prediction of psychiatric multimorbidity from resting EEG; p-factor as primary continuous regression target
+   - DOI: 10.1101/2024.10.03.615261 — HBN-EEG dataset paper; defines p-factor as available phenotype label from bifactor questionnaire model
+-- **Kernel Notes**: p_factor is a super-level misc channel derived from participants.tsv. Kernel must load per-subject p_factor values and create a misc channel replicated across all epochs for the same subject. Partial completeness (132/136 subjects); epochs from subjects without p_factor should be excluded.
++- **Notes**: p_factor is a super-level misc channel derived from participants.tsv. Kernel must load per-subject p_factor values and create a misc channel replicated across all epochs for the same subject. Partial completeness (132/136 subjects); epochs from subjects without p_factor should be excluded.
+ 
+ ### Classical Task 2: Resting State Eyes State Classification
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 4.0 s, target_events = [`instructed_toOpenEyes`, `instructed_toCloseEyes`]
+ - **Label Route**: `event`
+-- **Label Field**: N/A (Route=event)
+ - **Meta Level**: `raw`
+ - **Target Definition**:
+   | Event ID | y | Meaning |
+-  |----------|---|--------|
++  |---|---|---|
+   | `instructed_toOpenEyes` | 0 | Eyes-open resting state |
+   | `instructed_toCloseEyes` | 1 | Eyes-closed resting state |
+ - **Evidence**:
+   - DOI: 10.1016/j.neuroimage.2020.117001 — Functional connectivity associated with phenotype; uses resting state eyes-open/closed as experimental manipulation affecting alpha power and connectivity
+   - DOI: 10.1101/2024.10.03.615261 — Resting state task with explicit eyes-open/closed instruction markers; HED-annotated event structure
+-- **Kernel Notes**: Phase markers (instructed_toOpenEyes, instructed_toCloseEyes) are trial phase markers, not motor imagery. This task correctly labels them as eyes state classification. Both events have sufficient counts (816 and 680 respectively) for cross-subject classification.
++- **Notes**: Phase markers (instructed_toOpenEyes, instructed_toCloseEyes) are trial phase markers, not motor imagery. This task correctly labels them as eyes state classification. Both events have sufficient counts (816 and 680 respectively) for cross-subject classification.
+ 
+ ### Classical Task 3: Resting State Internalizing/Externalizing/Attention Regression
+ - **Task Type**: regression
+@@ -120,13 +119,13 @@
+ - **Label Field**: `attention`
+ - **Meta Level**: `super`
+ - **Target Definition**:
+-  | MISC Channel | Value (unit) | Notes |
+-  |-------------|--------------|-------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | attention | Range: ~-2.5 to 2.5 (z-score) | Attention factor from bifactor psychopathology model; partial completeness (132/136) |
+ - **Evidence**:
+   - DOI: 10.1016/j.neuroimage.2022.119348 — Predicts dimensional symptom severity including attention dimensions from resting EEG
+   - DOI: 10.1101/2024.10.03.615261 — Defines internalizing, externalizing, attention as available dimensional phenotypes
+-- **Kernel Notes**: attention is a super-level misc channel. Kernel loads per-subject attention z-scores from participants.tsv. Separate task for each Label Field per HARD RULE #1 (one label per task). Internalizing and externalizing require their own separate tasks.
++- **Notes**: attention is a super-level misc channel. Kernel loads per-subject attention z-scores from participants.tsv. Separate task for each Label Field per HARD RULE #1 (one label per task). Internalizing and externalizing require their own separate tasks.
+ 
+ ### Classical Task 4: Contrast Change Detection p-Factor Regression
+ - **Task Type**: regression
+@@ -136,15 +135,15 @@
+ - **Label Field**: `p_factor`
+ - **Meta Level**: `super`
+ - **Target Definition**:
+-  | MISC Channel | Value (unit) | Notes |
+-  |-------------|--------------|-------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | p_factor | Range: ~-2.5 to 2.5 (z-score) | Same p-factor label as Task 1 but locked to contrast detection trials |
+ - **Evidence**:
+   - DOI: 10.1101/2024.10.03.615261 — Defines contrast change detection as one of three active paradigms; HED-annotated trial structure (1600ms target + 800ms comeback + 2400ms delay = 4800ms total)
+   - DOI: arXiv:2506.19141 — EEG Foundation Challenge; cross-task transfer learning across HBN paradigms including contrast detection for psychopathology prediction
+-- **Kernel Notes**: contrastTrial_start events (8,884 total) lock to the full structured trial. Using tmax=4.8s captures target, response, and feedback windows per HED schema. p_factor from participants.tsv (Meta Level=super).
+-
+-### Potential Task 5: Symbol Search p-Factor Regression
++- **Notes**: contrastTrial_start events (8,884 total) lock to the full structured trial. Using tmax=4.8s captures target, response, and feedback windows per HED schema. p_factor from participants.tsv (Meta Level=super).
++
++### Potential Task 1: Symbol Search p-Factor Regression
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 3.0 s, target_events = [`newPage`]
+@@ -152,15 +151,15 @@
+ - **Label Field**: `p_factor`
+ - **Meta Level**: `super`
+ - **Target Definition**:
+-  | MISC Channel | Value (unit) | Notes |
+-  |-------------|--------------|-------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | p_factor | Range: ~-2.5 to 2.5 (z-score) | Same p-factor label; epochs locked to symbol search page onsets |
+ - **Evidence**:
+   - DOI: 10.1101/2024.10.03.615261 — Symbol search task defined with newPage and trialResponse events; cognitive search paradigm
+   - DOI: arXiv:2506.19141 — Mentions symbol search as one of HBN paradigms supporting psychopathology prediction
+-- **Kernel Notes**: newPage events (194 occurrences) mark trial onset; 3s window captures search, decision, and response phases. p_factor from participants.tsv. Partial completeness (132/136).
+-
+-### Potential Task 6: Resting State Sex Classification
++- **Notes**: newPage events (194 occurrences) mark trial onset; 3s window captures search, decision, and response phases. p_factor from participants.tsv. Partial completeness (132/136).
++
++### Potential Task 2: Resting State Sex Classification
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 120.0 s, target_events = [`resting_start`]
+@@ -169,15 +168,15 @@
+ - **Meta Level**: `raw`
+ - **Target Definition**:
+   | Info Field | Value | y | Meaning |
+-  |------------|-------|---|---|--------|
++  |---|---|---|---|
+   | sex | F | 0 | Female |
+   | sex | M | 1 | Male |
+ - **Evidence**:
+   - DOI: 10.1101/089060 — Age and sex modulate neural responses to naturalistic videos; sex effects on EEG variability
+   - DOI: 10.1016/j.neuroimage.2020.117001 — EEG functional connectivity associated with sex phenotype
+-- **Kernel Notes**: sex is a native info field (categorical) from participants.tsv. Kernel creates binary labels (F=0, M=1). Both classes present in sample (46F, 90M).
+-
+-### Potential Task 7: Sequence Learning p-Factor Regression
++- **Notes**: sex is a native info field (categorical) from participants.tsv. Kernel creates binary labels (F=0, M=1). Both classes present in sample (46F, 90M).
++
++### Potential Task 3: Sequence Learning p-Factor Regression
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [`dot_no1_ON`, `dot_no2_ON`, `dot_no3_ON`, `dot_no4_ON`, `dot_no5_ON`, `dot_no6_ON`, `dot_no7_ON`, `dot_no8_ON`]
+@@ -185,30 +184,29 @@
+ - **Label Field**: `p_factor`
+ - **Meta Level**: `super`
+ - **Target Definition**:
+-  | MISC Channel | Value (unit) | Notes |
+-  |-------------|--------------|-------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | p_factor | Range: ~-2.5 to 2.5 (z-score) | Same p-factor label; epochs locked to dot sequence element onsets |
+ - **Evidence**:
+   - DOI: 10.1101/2024.10.03.615261 — Sequence learning paradigm with dot_ON/OFF events encoding sequence information
+   - DOI: arXiv:2506.19141 — Multi-task EEG decoding across HBN paradigms including sequence learning
+-- **Kernel Notes**: Epochs locked to dot_ON events capture neural response to each sequence element. Available for 6-target (seqLearning6target) and 8-target (seqLearning8target) variants. p_factor from participants.tsv.
+-
+-### Potential Task 8: Contrast Target Side Classification
++- **Notes**: Epochs locked to dot_ON events capture neural response to each sequence element. Available for 6-target (seqLearning6target) and 8-target (seqLearning8target) variants. p_factor from participants.tsv.
++
++### Potential Task 4: Contrast Target Side Classification
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0 s, tmax = 4.8 s, target_events = [`left_target`, `right_target`]
+ - **Label Route**: `event`
+-- **Label Field**: N/A (Route=event)
+ - **Meta Level**: `raw`
+ - **Target Definition**:
+   | Event ID | y | Meaning |
+-  |----------|---|--------|
++  |---|---|---|
+   | `left_target` | 0 | Left-side leaning target presented |
+   | `right_target` | 1 | Right-side leaning target presented |
+ - **Evidence**:
+   - DOI: 10.1101/2024.10.03.615261 — Contrast change detection task; left_target and right_target explicitly defined in HED schema and events.json
+   - DOI: arXiv:2506.19141 — Cross-task decoding including stimulus discrimination
+-- **Kernel Notes**: left_target (4,243) and right_target (4,251) have balanced counts. This task captures perceptual discrimination of target orientation. Response correctness cannot be determined without explicit accuracy columns in events.tsv, so stimulus-side classification is used as a proxy for stimulus-driven cognitive processing.
++- **Notes**: left_target (4,243) and right_target (4,251) have balanced counts. This task captures perceptual discrimination of target orientation. Response correctness cannot be determined without explicit accuracy columns in events.tsv, so stimulus-side classification is used as a proxy for stimulus-driven cognitive processing.
+ 
+ ## Data Quality Notes
+ 

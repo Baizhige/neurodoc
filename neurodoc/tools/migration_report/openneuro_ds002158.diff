@@ -1,0 +1,80 @@
+--- openneuro_ds002158/analysis.md (pre-v3)
++++ openneuro_ds002158/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds002158` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002158
+ **Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 119 | **Channels**: 63 | **Sampling Rate**: 5000 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -42,6 +42,15 @@
+ | `SyncStatus/Sync On` | 30864 | event | raw | EEG-fMRI sync pulse |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `confidence (continuous 0-1)` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `self (1)` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `other (0)` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -56,11 +65,12 @@
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.6 s, target_events = [`Response/R128`]
+ - **Label Route**: `misc`
++- **Label Field**: `confidence (continuous 0-1)`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | y | Meaning |
+-  |---|---|
+-  | confidence (continuous 0-1) | Metacognitive confidence rating (0=sure error, 0.5=unsure, 1=sure correct) |
++  | MISC Channel | Value | Notes |
++  |---|---|---|
++  | confidence (continuous 0-1) | Metacognitive confidence rating (0=sure error, 0.5=unsure, 1=sure correct) |  |
+ - **Evidence**:
+   - DOI: 10.1073/pnas.1918335117 — EEG amplitude time-locked to first-order response onset used to model confidence via linear regression; multivariate EEG decoding derived single-trial confidence predictions.
+ - **Kernel Notes**: High sampling rate (5000 Hz) requires downsampling (factor of 10 to 500 Hz or 20 to 250 Hz). The `Response/R128` event (44303 total, ~2215/subject) serves as the response onset anchor for epoching, consistent with the PNAS methodology. Extract confidence values from misc channel `confidence` and align with epochs. The original paper used 0-200ms and 200-450ms post-response windows for temporal decoding analysis.
+@@ -69,7 +79,7 @@
+ - **Task Type**: classification/regression (exploratory)
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.8 s, target_events = [`Stimulus/S 27`, `Stimulus/S 40`, `Stimulus/S 41`, `Stimulus/S 43`]
+-- **Label Route**: `misc`
++- **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+   | Event | y | Meaning |
+@@ -82,11 +92,26 @@
+   - DOI: 10.1073/pnas.1918335117 — Paradigm involved numerosity discrimination; stimulus events available for stimulus-locked analysis.
+ - **Kernel Notes**: High-count stimulus events (S27: 5657, S40: 6175, S41: 5703, S43: 6583) provide sufficient trials for ERP analysis. Exclude S128 (474612 events, fixation marker). Verify trial_type mappings in events.tsv if categorical analysis by condition (committed vs observed) is required. tmax=0.8s captures the full decision period from stimulus onset to confidence rating. Downsample from 5000 Hz before epoching.
+ 
+-### Potential Task 2: Self vs Other Confidence Comparison
++### Potential Task 2: Self vs Other Confidence Comparison — self (1)
+ - **Task Type**: classification (binary)
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 0.6 s, target_events = [`Response/R128`]
+ - **Label Route**: `misc`
++- **Label Field**: `self (1)`
++- **Meta Level**: super
++- **Target Definition**:
++  | y | Meaning |
++  |---|---|
++  | self (1) | Committed decision (self-reported confidence) |
++  | other (0) | Observed decision (confidence in other's choice) |
++- **Evidence**:
++  - DOI: 10.1073/pnas.1918335117 — Paradigm explicitly contrasts self vs other confidence; trial_type column in events.tsv may contain condition labels.
++- **Kernel Notes**: Requires verification of events.tsv `trial_type` column to map trials to self/other conditions. If confirmed, this enables comparison of neural correlates between self-generated and observed confidence. The misc channel stores confidence ratings for both conditions. Downsample from 5000 Hz before epoching.### Potential Task 3: Self vs Other Confidence Comparison — other (0)
++- **Task Type**: classification (binary)
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.6 s, target_events = [`Response/R128`]
++- **Label Route**: `misc`
++- **Label Field**: `other (0)`
+ - **Meta Level**: super
+ - **Target Definition**:
+   | y | Meaning |

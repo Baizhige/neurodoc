@@ -1,0 +1,64 @@
+﻿--- physionet_capslpdb/analysis.md (pre-v3)
++++ physionet_capslpdb/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `physionet_capslpdb` | **Year**: 2012 | **URL**: https://physionet.org/content/capslpdb/1.0.0/
+ **Category**: Biological State | **Subjects**: 108 | **Files (Completed)**: 108 | **Channels**: 5-36 | **Sampling Rate**: 100-512 Hz
+-**Manual Review**: anonymous for review
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -49,8 +49,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `SLEEP-S0` | 0 | Wake (S0) |
+   | `SLEEP-S1` | 1 | NREM Stage 1 |
+   | `SLEEP-S2` | 2 | NREM Stage 2 |
+@@ -62,6 +62,7 @@
+   - DOI: 10.1109/tnsre.2019.2934828 — The classification is typically performed on thirty-seconds windows of the electroencephalography (EEG) recording.
+ - **Kernel Notes**: 
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Classical Task 2: CAP A-phase detection
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+@@ -69,8 +70,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `A1` | 1 | CAP A-phase (subtype A1) |
+   | `A2` | 1 | CAP A-phase (subtype A2) |
+   | `A3` | 1 | CAP A-phase (subtype A3) |
+@@ -85,8 +86,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `A1` | 0 | CAP Phase A1 (synchronized EEG) |
+   | `A2` | 1 | CAP Phase A2 (mixed pattern) |
+   | `A3` | 2 | CAP Phase A3 (desynchronized EEG) |
+@@ -101,8 +102,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `SLEEP-S0` | 0 | Wake (S0) |
+   | `SLEEP-S1` | 1 | NREM Stage 1 |
+   | `SLEEP-S2` | 2 | NREM Stage 2 |
+

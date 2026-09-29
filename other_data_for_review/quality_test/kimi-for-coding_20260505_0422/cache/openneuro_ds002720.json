@@ -1,0 +1,169 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 4,
+    "category": "",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 29,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 5,
+    "task_synthesis": 9,
+    "kernel_loop": 11,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T05:09:25.424360+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds002720.v1.0.1.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds002720.v1.0.1",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds002720.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "omo-9781561592630-e-4002285347.pdf",
+      "classification": "junk",
+      "ref": "",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as junk in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1038_s41597_020_0507_6.pdf",
+      "ref": "10.1038/s41597-020-0507-6",
+      "title": "Neural and physiological data from participants listening to affective music",
+      "classification": "relevant",
+      "cot_reasoning": "This is the primary data descriptor paper for the dataset openneuro_ds002720. It explicitly describes four sub-datasets (Film clips, BCMI calibration/training/testing, BCMI tempo, Joint EEG-fMRI) with EEG recordings, affective response labels, and ML tasks (brain-computer music interface for affective state monitoring and modification). The paper defines concrete tasks with labels (Likert scales, FEELTRACE continuous ratings).",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 0,
+      "paradigm": "music listening with continuous affect self-report and EEG/physiology",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "3s fixation + 12s music + 0.5s pause + rating; 6 runs with 10 trials each; 2-4s ITI",
+      "target_events": [
+        "music_clip_onset",
+        "affective_rating"
+      ],
+      "label_mapping": "8-dimensional Likert scales (pleasantness, energy, sadness, anger, tenderness, happiness, fear, tension) on 9-point scale; FEELTRACE continuous 2D arousal-valence for BCMI datasets",
+      "meta_level": "raw",
+      "super_meta_note": "This is the original data descriptor publication; raw data deposited to OpenNeuro as ds002720",
+      "evidence_desc": "Explicit data descriptor for ds002720; Table 1 summarizes all sub-datasets with participant counts, recording types, stimuli, and task objectives; Film clips dataset has 31 participants with 8 emotional dimension ratings; BCMI datasets use FEELTRACE for continuous affective state tracking"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The events.tsv files contain clear trial_type labels (1='Lower alpha', 2='Raise alpha') with 20-second durations, forming a binary classification structure. Participants were instructed to either decrease or increase their alpha power to control music tempo, creating a two-class EEG-based BCI paradigm.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 165,
+    "total_n": 165,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 165,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "1",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Lower alpha: Participants are instructed to lower their alpha levels to modulate the position of an on-screen cue or the tempo of some music",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "2",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Raise alpha: Participants are instructed to increase their alpha levels to modulate the position of an on-screen cue or the tempo of some music",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      }
+    ],
+    "notes": "Event mappings confirmed from events.json files in sub-01 for task-runs 4-9 (all identical), with cross-subject verification from sub-02 and sub-03 events.tsv files showing consistent trial_type values 1 and 2. All non-empty events.tsv files contain 20-second duration trials with trial_type values 1 or 2. Task-run1 across all checked subjects (sub-01, sub-02, sub-03) contains zero events (empty files with headers only), so no additional event IDs exist for that task group. No other event IDs were found in any sampled files."
+  },
+  "tasks_section": "## Tasks\n\n### Potential Task 1: sex classification from resting EEG\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | sex | M → 0, F → 1 |\n- **Evidence**:\n- **Notes**: Subject-level sex prediction from segmented continuous EEG. All segments from a given subject share the same label (M/F). The 2-second segmentation with 50% overlap creates multiple samples per subject for training. Class imbalance: 14 male vs 4 female subjects. No event structure is used; segmentation extracts fixed-length windows from the continuous recording treating task periods as resting neural data.\n\n### Potential Task 2: Age Regression from Continuous EEG\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | age | Continuous age in years (18–28); native participants.tsv column |\n- **Evidence**:\n- **Notes**: Archetype C with segmentation-based epoching and info-native label. No events are used; continuous EEG is segmented into 2-second windows with 50% overlap, and each window inherits the subject's age from participants.tsv as the regression target. The narrow age range (18–28 years, N=18) makes this a challenging regression task. Segment length and overlap are inferred from standard continuous EEG analysis practices due to lack of explicit paradigm guidance.\n\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "1",
+      "2"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [
+      "age",
+      "sex"
+    ],
+    "derived_misc_channels": [
+      {
+        "name": "age_bin",
+        "source_field": "age",
+        "derivation": "Compute median of age across all subjects. For each subject, assign 0 if age <= median, 1 if age > median. Create constant misc channel with this binary value for all time points in that subject's recording.",
+        "groundable_evidence": "participants.tsv column 'age' (dtype=numeric, completeness=complete, sample=[23, 24, 28])",
+        "used_by": [
+          "binned age classification (young vs old median split)"
+        ]
+      }
+    ],
+    "_dropped_candidates": [
+      {
+        "paradigm": "music listening with continuous affect self-report",
+        "reason": "The reference 10.1038/s41597-020-0507-6 describes a different dataset variant (Film clips with 31 participants and 8-dimensional Likert scales). The actual ds002720 contains only alpha modulation BCI with trial_type 1/2, no affect ratings, no music clips, no FEELTRACE data. The events.tsv files lack 'music_clip_onset', 'affective_rating', or any continuous rating columns. Grounded catalog shows no events.tsv numeric columns for B2 derivation of affect dimensions. Cannot ground any affect-related task."
+      },
+      {
+        "paradigm": "FEELTRACE continuous arousal-valence regression",
+        "reason": "Reference mentions FEELTRACE for BCMI datasets, but ds002720 specifically contains only discrete trial_type labels (1/2) with 20s durations. No continuous tracking data exists in events.tsv or anywhere in the BIDS structure. No native misc channels for physiological correlates. Cannot derive FEELTRACE labels from available data."
+      },
+      {
+        "paradigm": "motor imagery left/right hand classification",
+        "reason": "README mentions 'kinaesthetically imagining squeezing a ball in their right hand' but this is the cognitive strategy for the Raise alpha condition, not a motor imagery class label. The locked event meanings explicitly state 'Raise alpha' and 'Lower alpha' as the labels, not motor imagery classes. No left/right hand events exist. Cannot override locked ground truth with inferred MI labels."
+      }
+    ]
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/openneuro_ds002720/kernel_final.py",
+  "kernel_code_len": 11564,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds002720.py",
+    "kernel_sha256": "20b02ceed02f2918a41ccdf3b05addfe491f0fd18b9fd72c0e6ad972d340c7af",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 165,
+    "total_n": 165,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 165,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds002720.py",
+  "reconcile_patched": true,
+  "status": "wait_manual_review"
+}

@@ -1,0 +1,107 @@
+--- openneuro_ds004121/analysis.md (pre-v3)
++++ openneuro_ds004121/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004121` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004121
+ **Category**: Complex Applied | **Subjects**: 60 | **Files (Completed)**: 60 | **Channels**: 74 | **Sampling Rate**: 1024 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -29,18 +29,18 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Lateral Perturbation Direction Classification
++### Classical Task 1: Lateral Perturbation Direction Classification — 4311
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [4311, 4312]
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
++- **Label Field**: `4311`
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|---|---|---|
+-| `4311` | 0 | Lateral perturbation - type 1 (e.g., leftward) |
+-| `4312` | 1 | Lateral perturbation - type 2 (e.g., rightward) |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `4311` | 0 | Lateral perturbation - type 1 (e.g., leftward) |  |
+ 
+ - **Evidence (DOI)**: Dataset reference: https://openneuro.org/datasets/ds004121 DOI: https://doi.org/10.18112/openneuro.ds004121.v1.0.0
+ - **Kernel Notes**: Lateral perturbation events (4311/4312) mark directional perturbations delivered during simulated driving. Epoch at event onset with baseline window [-0.2, 0] s and post-stimulus window [0, 1.0] s captures the neural response to directional vehicle sway. Full BCIT codebook required to confirm perturbation direction encoding. Additional perturbation-related events (4210, 4220, 4230, 3111) may provide supplementary timing information.
+@@ -63,18 +63,66 @@
+ - **Evidence (DOI)**: Dataset reference: https://openneuro.org/datasets/ds004121 DOI: https://doi.org/10.18112/openneuro.ds004121.v1.0.0
+ - **Kernel Notes**: Thought probe onset events (2221/2222) mark the presentation of mind wandering probes. Label derivation requires matching probe onset events with subsequent response events (2241/2242 for response type 1, 2251/2252 for response type 2) to determine on-task (0) vs. off-task (1) state. The extended epoch window [-0.5, 3.5] s accommodates the pre-probe baseline and the full response window. Kernel must implement label routing logic to merge probe and response events into binary state labels.
+ 
+-### Potential Task 3: Audio Condition Classification
++### Classical Task 2: Lateral Perturbation Direction Classification — 4312
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+-- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [4621, 4622]
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [4311, 4312]
++- **Label Route**: `info`
++- **Label Field**: `4312`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `4312` | 1 | Lateral perturbation - type 2 (e.g., rightward) |  |
++
++- **Evidence (DOI)**: Dataset reference: https://openneuro.org/datasets/ds004121 DOI: https://doi.org/10.18112/openneuro.ds004121.v1.0.0
++- **Kernel Notes**: Lateral perturbation events (4311/4312) mark directional perturbations delivered during simulated driving. Epoch at event onset with baseline window [-0.2, 0] s and post-stimulus window [0, 1.0] s captures the neural response to directional vehicle sway. Full BCIT codebook required to confirm perturbation direction encoding. Additional perturbation-related events (4210, 4220, 4230, 3111) may provide supplementary timing information.
++
++### Normal Task 2: Mind Wandering State Classification
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.5 s, tmax = 3.5 s, target_events = [2221, 2222]
+ - **Label Route**: `Annotation`
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 
+ | Event | y | Meaning |
+ |---|---|---|
+-| `4621` | 0 | Audio condition type 1 (e.g., silence) |
+-| `4622` | 1 | Audio condition type 2 (e.g., music/podcast) |
++| `2221` | 0 | Thought probe cue - on-task label derived from response |
++| `2221` | 1 | Thought probe cue - off-task label derived from response |
++| `2222` | 0 | Thought probe cue (variant 2) - on-task |
++| `2222` | 1 | Thought probe cue (variant 2) - off-task |
++
++- **Evidence (DOI)**: Dataset reference: https://openneuro.org/datasets/ds004121 DOI: https://doi.org/10.18112/openneuro.ds004121.v1.0.0
++- **Kernel Notes**: Thought probe onset events (2221/2222) mark the presentation of mind wandering probes. Label derivation requires matching probe onset events with subsequent response events (2241/2242 for response type 1, 2251/2252 for response type 2) to determine on-task (0) vs. off-task (1) state. The extended epoch window [-0.5, 3.5] s accommodates the pre-probe baseline and the full response window. Kernel must implement label routing logic to merge probe and response events into binary state labels.
++
++### Potential Task 1: Audio Condition Classification — 4621
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [4621, 4622]
++- **Label Route**: `info`
++- **Label Field**: `4621`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `4621` | 0 | Audio condition type 1 (e.g., silence) |  |
++
++- **Evidence (DOI)**: Supported by dataset paradigm description (driving with varying background audio conditions)
++- **Kernel Notes**: Audio condition events (4621/4622) mark transitions between silence, music, and podcast conditions. This task can serve as a between-condition variable for analyzing how background audio modulates neural activity during driving. Additional audio cue events (2811-2812) may provide supplementary auditory stimulus markers. Full codebook mapping required to confirm exact audio condition encoding.### Potential Task 2: Audio Condition Classification — 4622
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [4621, 4622]
++- **Label Route**: `info`
++- **Label Field**: `4622`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `4622` | 1 | Audio condition type 2 (e.g., music/podcast) |  |
+ 
+ - **Evidence (DOI)**: Supported by dataset paradigm description (driving with varying background audio conditions)
+ - **Kernel Notes**: Audio condition events (4621/4622) mark transitions between silence, music, and podcast conditions. This task can serve as a between-condition variable for analyzing how background audio modulates neural activity during driving. Additional audio cue events (2811-2812) may provide supplementary auditory stimulus markers. Full codebook mapping required to confirm exact audio condition encoding.

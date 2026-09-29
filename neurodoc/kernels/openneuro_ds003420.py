@@ -1,0 +1,373 @@
+"""openneuro_ds003420 stage1 kernel for EEGUnity.
+
+HD-EEG visual naming and spelling task (Dataset 1 of the conneXion project).
+Participants name/spell visually presented objects while 256-channel EEG is recorded.
+
+Source: https://openneuro.org/datasets/ds003420 (ds003420)
+Paper DOI: 10.1088/1741-2552.aad7b1
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import re
+from typing import Any, Dict, List, Optional
+
+import mne
+import numpy as np
+import pandas as pd
+
+
+# =============================================================================
+# subject
+# Annotator: LLM, 2026-06-02
+# =============================================================================
+_SUBJECT_DICT: Dict[str, Dict[str, Any]] = {
+    "sub-01": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-02": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-03": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-04": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-05": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-06": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-07": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-08": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-09": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-10": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-11": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-12": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-13": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-14": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-15": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-16": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-17": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-18": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-19": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-20": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-21": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-22": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+    "sub-23": {"age": "unknown", "sex": "unknown", "handedness": "unknown"},
+}
+# Source: inferred by LLM, needs human review
+
+# =============================================================================
+# channel
+# source: conneXion dataset
+# Annotator: LLM, 2026-06-02
+# =============================================================================
+# BrainVision 256-channel
+_BRAINVISION_256_CHANNELS = [
+    "Fp1", "Fp2", "Fpz", "AF7", "AF3", "AFz", "AF4", "AF8",
+    "F7", "F5", "F3", "F1", "Fz", "F2", "F4", "F6", "F8",
+    "FT7", "FT8", "FC5", "FC3", "FC1", "FCz", "FC2", "FC4", "FC6",
+    "T7", "T8", "C5", "C3", "C1", "Cz", "C2", "C4", "C6",
+    "TP7", "TP8", "CP5", "CP3", "CP1", "CPz", "CP2", "CP4", "CP6",
+    "P7", "P5", "P3", "P1", "Pz", "P2", "P4", "P6", "P8",
+    "PO7", "PO5", "PO3", "POz", "PO4", "PO6", "PO8",
+    "O1", "Oz", "O2",
+    "VEOa", "VEOb", "HEOl", "HEOr",
+]
+
+_ALIAS_GROUPS = [
+    ("Fp1", ["Fp1", "EEG-Fp1"]),
+    ("Fp2", ["Fp2", "EEG-Fp2"]),
+    ("Fpz", ["Fpz", "EEG-Fpz"]),
+    ("AF7", ["AF7", "EEG-AF7"]),
+    ("AF3", ["AF3", "EEG-AF3"]),
+    ("AFz", ["AFz", "EEG-AFz"]),
+    ("AF4", ["AF4", "EEG-AF4"]),
+    ("AF8", ["AF8", "EEG-AF8"]),
+    ("F7", ["F7", "EEG-F7"]),
+    ("F3", ["F3", "EEG-F3"]),
+    ("Fz", ["Fz", "EEG-Fz"]),
+    ("F4", ["F4", "EEG-F4"]),
+    ("F8", ["F8", "EEG-F8"]),
+    ("FC5", ["FC5", "EEG-FC5"]),
+    ("FC3", ["FC3", "EEG-FC3"]),
+    ("FC1", ["FC1", "EEG-FC1"]),
+    ("FCz", ["FCz", "EEG-FCz"]),
+    ("FC2", ["FC2", "EEG-FC2"]),
+    ("FC4", ["FC4", "EEG-FC4"]),
+    ("FC6", ["FC6", "EEG-FC6"]),
+    ("T7", ["T7", "EEG-T7"]),
+    ("T8", ["T8", "EEG-T8"]),
+    ("C5", ["C5", "EEG-C5"]),
+    ("C3", ["C3", "EEG-C3"]),
+    ("C1", ["C1", "EEG-C1"]),
+    ("Cz", ["Cz", "EEG-Cz"]),
+    ("C2", ["C2", "EEG-C2"]),
+    ("C4", ["C4", "EEG-C4"]),
+    ("C6", ["C6", "EEG-C6"]),
+    ("TP7", ["TP7", "EEG-TP7"]),
+    ("TP8", ["TP8", "EEG-TP8"]),
+    ("CP5", ["CP5", "EEG-CP5"]),
+    ("CP3", ["CP3", "EEG-CP3"]),
+    ("CP1", ["CP1", "EEG-CP1"]),
+    ("CPz", ["CPz", "EEG-CPz"]),
+    ("CP2", ["CP2", "EEG-CP2"]),
+    ("CP4", ["CP4", "EEG-CP4"]),
+    ("CP6", ["CP6", "EEG-CP6"]),
+    ("P7", ["P7", "EEG-P7"]),
+    ("P5", ["P5", "EEG-P5"]),
+    ("P3", ["P3", "EEG-P3"]),
+    ("P1", ["P1", "EEG-P1"]),
+    ("Pz", ["Pz", "EEG-Pz"]),
+    ("P2", ["P2", "EEG-P2"]),
+    ("P4", ["P4", "EEG-P4"]),
+    ("P6", ["P6", "EEG-P6"]),
+    ("P8", ["P8", "EEG-P8"]),
+    ("PO7", ["PO7", "EEG-PO7"]),
+    ("PO5", ["PO5", "EEG-PO5"]),
+    ("PO3", ["PO3", "EEG-PO3"]),
+    ("POz", ["POz", "EEG-POz"]),
+    ("PO4", ["PO4", "EEG-PO4"]),
+    ("PO6", ["PO6", "EEG-PO6"]),
+    ("PO8", ["PO8", "EEG-PO8"]),
+    ("O1", ["O1", "EEG-O1"]),
+    ("Oz", ["Oz", "EEG-Oz"]),
+    ("O2", ["O2", "EEG-O2"]),
+    ("VEOa", ["VEOa", "HEOGL", "VEO"]),
+    ("VEOb", ["VEOb", "HEOGR"]),
+    ("HEOl", ["HEOl", "EOGleft"]),
+    ("HEOr", ["HEOr", "EOGright"]),
+    ("Fz", ["31", "32"]),
+]
+
+_DIGIT_CHANNEL_MAP: Dict[str, str] = {}
+
+
+def _build_channel_rename_map(raw: mne.io.BaseRaw) -> Dict[str, str]:
+    """Build a channel rename map from raw channel names for EEGUnity."""
+    rename_map: Dict[str, str] = {}
+    existing_names = set(raw.ch_names)
+
+    for target_name, aliases in _ALIAS_GROUPS:
+        for source_name in aliases:
+            if source_name in existing_names and source_name != target_name:
+                rename_map[source_name] = target_name
+                break
+
+    # fallback:
+    for ch in existing_names:
+        if re.match(r"^(EEG[-_])?(\d+)$", ch):
+            mapped = _DIGIT_CHANNEL_MAP.get(ch)
+            if mapped:
+                rename_map[ch] = mapped
+
+    return rename_map
+
+
+def _detect_paradigm(file_path: str) -> Optional[str]:
+    """Detect paradigm type from file path.
+
+    Example path: sub-01/ses-S1/eeg/sub-01_ses-S1_task-pictureNaming_run-01_ieeg.fif
+    """
+    basename = os.path.basename(file_path).lower()
+    if "pictureNaming" in basename or "naming" in basename:
+        return "pictureNaming"
+    elif "spelling" in basename or "spell" in basename:
+        return "spelling"
+    elif "control" in basename:
+        return "control"
+    return None
+
+
+def _remap_events_from_tsv(
+    raw: mne.io.BaseRaw,
+    row,
+    file_path: str,
+) -> mne.io.BaseRaw:
+    """Read events from events.tsv and build MNE annotations.
+
+    events.tsv columns: onset, duration, trial_type, value, stimuli, response_time
+    value: 0 = stimulus onset (meaningful), 1 = response
+    Additional trial_type codes: D249/D250 distinguish meaningful/meaningless
+    """
+    events_tsv = None
+    base_dir = os.path.dirname(file_path)
+    for fname in os.listdir(base_dir):
+        if fname.endswith("_events.tsv"):
+            events_tsv = os.path.join(base_dir, fname)
+            break
+
+    if events_tsv is None or not os.path.exists(events_tsv):
+        return raw
+
+    events_df = pd.read_csv(events_tsv, sep="\t")
+    paradigm = _detect_paradigm(file_path)
+
+    onsets = []
+    durations = []
+    descriptions = []
+
+    for _, ev in events_df.iterrows():
+        onset = float(ev.get("onset", 0))
+        duration = float(ev.get("duration", 0))
+        value = str(ev.get("value", "")).strip()
+        trial_type = str(ev.get("trial_type", "")).strip()
+        stimuli = str(ev.get("stimuli", "")).strip()
+
+        if value == "0":
+            desc = f"stimulus_onset"
+            if trial_type in ("D249", "pictureNaming"):
+                desc = f"trigger/D249"
+            elif trial_type in ("D250", "meaningless"):
+                desc = f"trigger/D250"
+        elif value == "1":
+            desc = "response"
+        else:
+            desc = f"event_{value}"
+
+        # super meta:
+        if stimuli and stimuli not in ("n/a", "nan"):
+            desc = f"{desc}/{stimuli}"
+
+        onsets.append(onset)
+        durations.append(duration)
+        descriptions.append(desc)
+
+    if onsets:
+        annotations = mne.Annotations(
+            onset=np.array(onsets),
+            duration=np.array(durations),
+            description=descriptions,
+        )
+        raw.set_annotations(annotations)
+
+    return raw
+
+
+def _inject_reaction_time_misc(raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
+    """Inject reaction_time from events.tsv as a misc channel or annotation.
+
+    reaction_time is in seconds (from stimulus onset to vocalization).
+    """
+    file_path = row.get("File Path", "")
+    if not file_path:
+        return raw
+
+    base_dir = os.path.dirname(file_path)
+    events_tsv = None
+    for fname in os.listdir(base_dir):
+        if fname.endswith("_events.tsv"):
+            events_tsv = os.path.join(base_dir, fname)
+            break
+
+    if events_tsv is None or not os.path.exists(events_tsv):
+        return raw
+
+    try:
+        events_df = pd.read_csv(events_tsv, sep="\t")
+    except Exception:
+        return raw
+
+    if "response_time" not in events_df.columns and "response_time" not in events_df.columns:
+        return raw
+
+    # response_time
+    rt_col = "response_time" if "response_time" in events_df.columns else "response_time"
+    if rt_col not in events_df.columns:
+        for c in events_df.columns:
+            if "response" in c.lower() or "reaction" in c.lower():
+                rt_col = c
+                break
+
+    if rt_col not in events_df.columns:
+        return raw
+
+    annotations = raw.annotations.copy()
+    if len(annotations) > 0:
+        new_descriptions = []
+        for idx, desc in enumerate(annotations.description):
+            if idx < len(events_df):
+                ev_row = events_df.iloc[idx]
+                rt_val = ev_row.get(rt_col)
+                if pd.notna(rt_val) and rt_val != "n/a":
+                    try:
+                        rt_ms = float(rt_val) * 1000  # s → ms
+                        desc = f"{desc}/rt={rt_ms:.0f}ms"
+                    except (ValueError, TypeError):
+                        pass
+            new_descriptions.append(desc)
+        annotations.description = new_descriptions
+        raw.set_annotations(annotations)
+
+    return raw
+
+
+def _apply_montage(raw: mne.io.BaseRaw) -> mne.io.BaseRaw:
+    """Set standard 10-5 system montage.
+
+    Only applies montage to channels that have been renamed and exist in standard_1020.
+    """
+    try:
+        standard_montage = mne.channels.make_standard_montage("standard_1020")
+        common_chs = set(raw.ch_names) & set(standard_montage.ch_names)
+        if len(common_chs) >= 20:
+            raw.set_montage(standard_montage, on_missing="warn")
+    except Exception as e:
+        print(f"[openneuro_ds003420] Montage setup warning: {e}")
+
+    return raw
+
+
+class OpenNeuroDS003420Kernel:
+    """Stage1 kernel for openneuro_ds003420 — HD-EEG Visual Naming dataset."""
+
+    KERNEL_ID: str = "openneuro-ds003420-stage1"
+
+    def apply(self, udataset, raw: mne.io.BaseRaw, row) -> mne.io.BaseRaw:
+        file_path = str(row.get("File Path", ""))
+
+        # -------------------------------------------------------------------------
+        # 1. channel
+        # -------------------------------------------------------------------------
+        rename_map = _build_channel_rename_map(raw)
+        if rename_map:
+            renaming = {k: v for k, v in rename_map.items() if k in raw.ch_names}
+            if renaming:
+                raw.rename_channels(renaming)
+
+        # -------------------------------------------------------------------------
+        # 2.
+        # -------------------------------------------------------------------------
+        raw = _apply_montage(raw)
+
+        # -------------------------------------------------------------------------
+        # 3.
+        # -------------------------------------------------------------------------
+        raw = _remap_events_from_tsv(raw, row, file_path)
+
+        # -------------------------------------------------------------------------
+        # 4.
+        # -------------------------------------------------------------------------
+        raw = _inject_reaction_time_misc(raw, row)
+
+        # -------------------------------------------------------------------------
+        # 5. eegunity_description
+        # -------------------------------------------------------------------------
+        subject_id = ""
+        if "sub-" in file_path:
+            match = re.search(r"(sub-\d+)", file_path)
+            if match:
+                subject_id = match.group(1)
+
+        sub_info = _SUBJECT_DICT.get(subject_id, {})
+        original_desc = raw.info.get("description", "")
+
+        description_dict = {
+            "original_description": original_desc if original_desc else "",
+            "eegunity_description": {
+                "age": sub_info.get("age", "unknown"),   # inferred by LLM, needs human review
+                "sex": sub_info.get("sex", "unknown"),    # inferred by LLM, needs human review
+                "amplifier": "BrainAmp",
+                "cap": "Ag/AgCl",                          # inferred by LLM, needs human review
+                "handedness": sub_info.get("handedness", "unknown"),  # inferred by LLM, needs human review
+            },
+        }
+        raw.info["description"] = json.dumps(description_dict)
+
+        return raw
+
+
+KERNEL = OpenNeuroDS003420Kernel()

@@ -1,0 +1,52 @@
+--- openneuro_ds003710/analysis.md (pre-v3)
++++ openneuro_ds003710/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds003710` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003710
+ **Category**: Biological State | **Subjects**: 13 | **Files (Completed)**: 48 | **Channels**: 32 | **Sampling Rate**: 5000 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -48,8 +48,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `face` | 1 | Face stimulus (social) |
+   | `speech` | 1 | Speech stimulus (social) |
+   | `object` | 0 | Object stimulus (non-social) |
+@@ -65,8 +65,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `face` | 0 | Face stimulus |
+   | `speech` | 1 | Speech stimulus |
+   | `object` | 2 | Object stimulus |
+@@ -75,6 +75,7 @@
+   - DOI: 10.1016/j.dcn.2022.101163 — Paradigm includes all four stimulus categories presented during infant viewing; APPLESEED paper demonstrates feasibility of event-based epoching on these events. No reference explicitly validates multi-class classification, but all events are present with sufficient trial counts.
+ - **Kernel Notes**: Extract epochs for all four stimulus types. Apply 4-class labels (0=face, 1=speech, 2=object, 3=water). Expect class imbalance: face and speech have higher counts (~3300) than object and water (~2000). Longitudinal design (4, 8, 12 months) may enable age-stratified analysis. Same preprocessing as Classical Task 1 (downsampling, artifact rejection).
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 2: Attention-getter triggered response analysis
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+@@ -82,8 +83,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `admin: Stimulus/S  5` | 0 | Attention-getter onset |
+ - **Evidence**:
+   - Plausible from paradigm: The APPLESEED paradigm description indicates attention-getter events orient infant attention before stimulus trials. Event ID `admin: Stimulus/S  5` (1406 occurrences) likely corresponds to attention-getter markers based on count ratios and paradigm structure.

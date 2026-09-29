@@ -1,0 +1,253 @@
+{
+  "phase": "scan",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 10,
+    "category": "",
+    "format_type": "other",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 20,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 7,
+    "task_synthesis": 9,
+    "kernel_loop": 1
+  },
+  "timestamp": "2026-05-05T07:21:25.804495+00:00",
+  "ref_extractions": [
+    {
+      "filename": "paper_10_1371_journal_pone_0341497.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1371/journal.pone.0341497",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "classification": "junk",
+      "ref": "",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as junk in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "official_physionet.org_content_auditory-eeg_1.0.0.html",
+      "ref": "https://doi.org/10.13026/ps31-fc50",
+      "title": "Auditory evoked potential EEG-Biometric dataset",
+      "classification": "relevant",
+      "cot_reasoning": "This is the official PhysioNet page for the exact dataset in question. It explicitly describes the dataset structure, recording protocol, and states the goal is to develop an EEG-based biometric system. It defines concrete tasks: biometric identification, plus resting-state vs. auditory stimuli conditions with native/non-native song and in-ear/bone-conduction modalities.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 20,
+      "paradigm": "auditory evoked potential, resting-state, biometric identification",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "2-minute segments manually selected from ~3 minute recordings; segmented data provided with trim points in data_trim.csv",
+      "target_events": [
+        "resting-state eyes open",
+        "resting-state eyes closed",
+        "native song in-ear",
+        "non-native song in-ear",
+        "neutral music in-ear",
+        "native song bone-conduction",
+        "non-native song bone-conduction",
+        "neutral music bone-conduction"
+      ],
+      "label_mapping": "Subject identity (20 classes), experiment type (8 conditions), session number for ex01/ex02",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Official dataset documentation describing 20 subjects, 240+ two-minute recordings, 4 channels (T7, F8, Cz, P4), 200 Hz sampling, explicit biometric system goal with auditory stimuli conditions"
+    },
+    {
+      "filename": "paper_10_1038_s41598_025_13646_4.pdf",
+      "ref": "10.1038/s41598-025-13646-4",
+      "title": "Contrastive representation learning with transformers for robust auditory EEG decoding",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper focuses on the ICASSP 2023 Auditory EEG Decoding Challenge and the SparrKULee dataset (85 participants, 64-channel EEG, Dutch speech). It does not mention the PhysioNet auditory-eeg-biometric dataset with 20 participants, 4 channels, and song/music stimuli. The tasks are match-mismatch classification and envelope regression for continuous speech, not biometric identification.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Uses SparrKULee dataset and ICASSP challenge data, not the PhysioNet auditory-eeg-biometric dataset"
+    },
+    {
+      "filename": "paper_10_1038_s41598_025_25576_2.pdf",
+      "ref": "10.1038/s41598-025-25576-2",
+      "title": "A direct comparison of simultaneously recorded scalp, around-ear and in-ear EEG for neural selective auditory attention decoding to speech",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper presents a new AAD dataset with simultaneously recorded scalp, around-ear, and in-ear EEG for attention decoding to continuous speech. It does not use or mention the PhysioNet auditory-eeg-biometric dataset. The focus is on hearing device applications with different electrode configurations, not biometric identification from auditory evoked potentials.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Uses a custom dataset for auditory attention decoding, not the PhysioNet auditory-eeg-biometric dataset"
+    },
+    {
+      "filename": "paper_10_1088_1741_2552_ace73f.pdf",
+      "ref": "10.1088/1741-2552/ace73f",
+      "title": "Relating EEG to continuous speech using deep neural networks: a review",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a review paper about deep learning for continuous speech-EEG decoding. It discusses general methodologies, match-mismatch tasks, and regression approaches across multiple datasets. It does not specifically mention or use the PhysioNet auditory-eeg-biometric dataset. The focus is on speech envelope decoding and attention decoding, not biometric identification.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "General review paper on speech-EEG decoding, no mention of the specific PhysioNet auditory-eeg-biometric dataset"
+    },
+    {
+      "filename": "paper_10_1101_2023_07_24_550310.pdf",
+      "ref": "10.1101/2023.07.24.550310",
+      "title": "SparrKULee: A Speech-evoked Auditory Response Repository of the KU Leuven, containing EEG of 85 participants",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper introduces the SparrKULee dataset with 85 Dutch-speaking participants listening to natural speech for 90-150 minutes each, 64-channel EEG at 8192/1024 Hz. This is fundamentally different from the PhysioNet auditory-eeg-biometric dataset (20 participants, 4 channels, 200 Hz, 2-minute recordings, song/music stimuli, biometric focus). No mention of the target dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Introduces SparrKULee dataset, a completely different auditory EEG dataset from the PhysioNet auditory-eeg-biometric dataset"
+    },
+    {
+      "filename": "paper_10_1523_eneuro_0265_25_2025.pdf",
+      "ref": "10.1523/ENEURO.0265-25.2025",
+      "title": "TriNet-MTL: A Multi-Branch Deep Learning Framework for Biometric Identification and Cognitive State Inference from Auditory-Evoked EEG",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses the 'Auditory-Evoked Potential EEG Biometric Dataset v1.0.0' (the PhysioNet dataset) with 20 participants. It defines three concrete classification tasks: biometric identification (20-class user identity), stimulus language classification (native vs non-native), and stimulus delivery mode recognition (in-ear vs bone conduction). The paper describes sliding window approach and joint cross-entropy loss training.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 20,
+      "paradigm": "auditory evoked potential, biometric identification, language classification, modality classification",
+      "epoch_method_hint": "segmentation",
+      "epoch_params": "sliding window approach (specific window size not stated in excerpt, but mentions sliding windows for temporal encoding)",
+      "target_events": [
+        "native song in-ear",
+        "non-native song in-ear",
+        "neutral music in-ear",
+        "native song bone-conduction",
+        "non-native song bone-conduction",
+        "neutral music bone-conduction"
+      ],
+      "label_mapping": "Task 1: user identity (20 classes); Task 2: language (native vs non-native, 2 classes); Task 3: modality (in-ear vs bone conduction, 2 classes)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly states using 'Auditory-Evoked Potential EEG Biometric Dataset v1.0.0' with 20 participants, three classification tasks with >93% biometric accuracy, sliding window processing"
+    },
+    {
+      "filename": "paper_10_21203_rs_3_rs_3397581_v1.pdf",
+      "ref": "10.21203/rs.3.rs-3397581/v1",
+      "title": "SparrKULee: A Speech-evoked Auditory Response Repository of the KU Leuven, containing EEG of 85 participants",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is the Research Square preprint version of the SparrKULee dataset paper (same as File 5). It describes a dataset with 85 Dutch participants, 64-channel EEG, continuous speech listening. This is completely different from the PhysioNet auditory-eeg-biometric dataset in all key characteristics (participants, channels, sampling rate, stimuli, purpose). No mention of the target dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "SparrKULee dataset preprint, different dataset entirely from PhysioNet auditory-eeg-biometric"
+    },
+    {
+      "filename": "paper_10_3390_s26020399.pdf",
+      "ref": "10.3390/s26020399",
+      "title": "Enhancing EEG Decoding with Selective Augmentation Integration",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper evaluates on 'SparrKULee for signal reconstruction and WithMe for signal classification.' It proposes NeuroBrain architecture and adaptive augmentation for auditory EEG decoding. The WithMe dataset is for match-mismatch classification. Neither dataset is the PhysioNet auditory-eeg-biometric dataset. No mention of the 20-participant, 4-channel, song/music, biometric-focused dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Evaluates on SparrKULee and WithMe datasets, not the PhysioNet auditory-eeg-biometric dataset"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset contains 240+ two-minute recordings from 20 subjects with clearly defined conditions: resting-state (eyes open/closed) and auditory stimuli (native song, non-native song, neutral music × in-ear/bone-conducting). These conditions provide explicit labels for classification tasks including biometric identification, stimulus type classification, and conduction modality classification.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 718,
+    "total_n": 718,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 718,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [],
+    "notes": "No event IDs were detected in this dataset. The dataset is a non-BIDS collection of continuous EEG recordings without discrete event markers, events.tsv files, or events.json files. Evidence from Raw_Data/RECORDS.txt and Filtered_Data/RECORDS.txt confirms data files exist as continuous text/CSV files containing only EEG channel data (P4, Cz, F8, T7), accelerometer data, timestamps, and sample indices. No event columns or trigger channels with non-zero values were observed in inspected files (s01_ex01_s01.txt, s01_ex02_s01.txt, s01_ex05.txt through s01_ex10.txt). The Data_trim.csv file provides segment trimming parameters (From/To in seconds and samples) for 2-minute recordings but does not define event markers. The dataset structure consists of 8 experiment groups with actual files: ex01 and ex02 (3 sessions each, likely resting-state conditions based on README abstract mentioning 'eyes open and eyes closed'), and ex05-ex10 (1 session each, likely 6 auditory stimulus conditions: 3 in-ear + 3 bone-conducting with native/non-native/neutral music). Experiments ex03 and ex04 are referenced in Data_trim.csv but have no corresponding data files in either Raw_Data/ or Filtered_Data/ directories. Without explicit event markers or additional documentation parsing successfully, no event annotations can be assigned."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: 20-class biometric identification (all conditions)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 120 s *, overlap = 0.0, target_events = []\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `subject_01` | 0 | Subject 1 (all conditions) |\n  | `subject_02` | 1 | Subject 2 (all conditions) |\n  | `subject_03` | 2 | Subject 3 (all conditions) |\n  | `subject_04` | 3 | Subject 4 (all conditions) |\n  | `subject_05` | 4 | Subject 5 (all conditions) |\n  | `subject_06` | 5 | Subject 6 (all conditions) |\n  | `subject_07` | 6 | Subject 7 (all conditions) |\n  | `subject_08` | 7 | Subject 8 (all conditions) |\n  | `subject_09` | 8 | Subject 9 (all conditions) |\n  | `subject_10` | 9 | Subject 10 (all conditions) |\n  | `subject_11` | 10 | Subject 11 (all conditions) |\n  | `subject_12` | 11 | Subject 12 (all conditions) |\n  | `subject_13` | 12 | Subject 13 (all conditions) |\n  | `subject_14` | 13 | Subject 14 (all conditions) |\n  | `subject_15` | 14 | Subject 15 (all conditions) |\n  | `subject_16` | 15 | Subject 16 (all conditions) |\n  | `subject_17` | 16 | Subject 17 (all conditions) |\n  | `subject_18` | 17 | Subject 18 (all conditions) |\n  | `subject_19` | 18 | Subject 19 (all conditions) |\n  | `subject_20` | 19 | Subject 20 (all conditions) |\n- **Evidence**:\n  - https://doi.org/10.13026/ps31-fc50 — Official PhysioNet documentation describes 20 volunteers with 240+ two-minute EEG recordings across 8 conditions (resting-state EO/EC + 6 auditory stimuli) for EEG-based biometric system development.\n  - 10.1523/ENEURO.0265-25.2025 — Peer-reviewed paper reports >93% biometric identification accuracy using sliding windows across all conditions; segmentation-based approach validated.\n- **Notes**: Since no event triggers exist in raw files, segmentation is required. The 120-second segments correspond to the documented \"two-minute EEG recordings\" fundamental unit. The data_trim.csv file provides trim points to extract these segments from longer raw recordings. Subject identity is encoded via BIDS directory structure (sub-01 through sub-20), which the kernel must map to event-like labels for this archetype A formulation. Each subject contributes multiple segments across all 8 experimental conditions, and all conditions are pooled for the 20-class identification task as validated in the source paper.\n",
+  "kernel_requirements": {
+    "required_event_ids": [],
+    "required_native_misc": [],
+    "required_info_fields": [],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "participant demographic regression (age, etc.)",
+        "reason": "No participants.tsv columns discovered in grounded catalog — info route and derived misc unavailable. No questionnaire data columns were extractable."
+      },
+      {
+        "paradigm": "native misc channel regression (EOG, EMG, etc.)",
+        "reason": "No continuous non-EEG channels discovered in raw files. OpenBCI Ganglion with 4 EEG channels only (T7, F8, Cz, P4), no auxiliary sensors."
+      },
+      {
+        "paradigm": "events.tsv derived misc regression (response time, confidence, etc.)",
+        "reason": "No events.tsv numeric columns discovered in grounded catalog. The dataset uses manual segmentation with trim points in data_trim.csv rather than event-marked trials."
+      },
+      {
+        "paradigm": "session-level classification",
+        "reason": "While paper mentions 'session number for ex01/ex02', no explicit session column was found in grounded catalog, and the dataset structure uses condition labels rather than session identifiers as discriminable events."
+      }
+    ]
+  },
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/physionet_auditoryeeg/kernel_final.py",
+  "kernel_code_len": 19950,
+  "status": "error",
+  "last_error": "keyword argument repeated: tmin (physionet_auditoryeeg.py, line 411)"
+}

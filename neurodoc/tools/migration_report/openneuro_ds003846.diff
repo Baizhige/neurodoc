@@ -1,0 +1,68 @@
+--- openneuro_ds003846/analysis.md (pre-v3)
++++ openneuro_ds003846/analysis.md (v3)
+@@ -3,7 +3,7 @@
+ **Dataset**: `openneuro_ds003846` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds003846
+ **Category**: Complex Applied | **Subjects**: 19 | **Files (Completed)**: 50
+ **Channels**: 64 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -30,17 +30,17 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Prediction Error Detection (Normal vs Conflict)
++### Classical Task 1: Prediction Error Detection (Normal vs Conflict) — box` (normal_or_conflict:normal)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.1 s, tmax = 0.6 s, target_events = [`box`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `box` (normal_or_conflict:normal)`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `box` (normal_or_conflict:normal) | 0 | Normal (congruent) trial with expected feedback |
+-  | `box` (normal_or_conflict:conflict) | 1 | Conflict (prediction error) trial with incongruent feedback |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `box` (normal_or_conflict:normal) | 0 | Normal (congruent) trial with expected feedback |  |
+ - **Evidence**:
+   - DOI: `10.3389/fnrgo.2024.1411305` — Data descriptor paper describing binary classification of match (congruent/normal) vs mismatch (incongruent/conflict/prediction error) trials from openneuro_ds003846 dataset, using ERP epoch -0.1s to 0.6s relative to tap/box:touched event. Supports 2×3 design with visuo-haptic mismatch conditions.
+ - **Kernel Notes**: Extract events matching 'box' pattern; parse embedded annotation strings for `normal_or_conflict:normal` (label 0) vs `normal_or_conflict:conflict` (label 1). The box event serves as both spawn and touch marker; filter for touch events when extracting prediction error labels. Session-specific analysis recommended given three distinct feedback modality conditions (visual-only, vibrotactile-only, EMS). Reaction time available via misc route as optional regression target or covariate.
+@@ -59,3 +59,32 @@
+ - **Evidence**:
+   - DOI: `10.3389/fnrgo.2024.1411305` — Mentions three feedback modality conditions (visual-only, vibrotactile-only, EMS) run in separate sessions; evidence is partial as primary paper focuses on mismatch detection rather than explicit modality classification.
+ - **Kernel Notes**: Visual feedback events appear in fewer files (50) vs vibrotactile (198), suggesting uneven session completion. May require session-level stratification or separate modality-specific analysis pipelines. EMS condition events not listed in available event IDs—verify EMS feedback event naming convention in raw data.
++### Classical Task 2: Prediction Error Detection (Normal vs Conflict) — box` (normal_or_conflict:conflict)
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.6 s, target_events = [`box`]
++- **Label Route**: `info`
++- **Label Field**: `box` (normal_or_conflict:conflict)`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `box` (normal_or_conflict:conflict) | 1 | Conflict (prediction error) trial with incongruent feedback |  |
++- **Evidence**:
++  - DOI: `10.3389/fnrgo.2024.1411305` — Data descriptor paper describing binary classification of match (congruent/normal) vs mismatch (incongruent/conflict/prediction error) trials from openneuro_ds003846 dataset, using ERP epoch -0.1s to 0.6s relative to tap/box:touched event. Supports 2×3 design with visuo-haptic mismatch conditions.
++- **Kernel Notes**: Extract events matching 'box' pattern; parse embedded annotation strings for `normal_or_conflict:normal` (label 0) vs `normal_or_conflict:conflict` (label 1). The box event serves as both spawn and touch marker; filter for touch events when extracting prediction error labels. Session-specific analysis recommended given three distinct feedback modality conditions (visual-only, vibrotactile-only, EMS). Reaction time available via misc route as optional regression target or covariate.
++
++### Normal Task 1: Feedback Modality Comparison
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.1 s, tmax = 0.6 s, target_events = [`visualFeedback`, `vibroFeedback`]
++- **Label Route**: `event`
++- **Meta Level**: super
++- **Target Definition**:
++  | Event | y | Meaning |
++  |-------|---|---------|
++  | `visualFeedback` | 0 | Visual-only feedback modality session |
++  | `vibroFeedback` | 1 | Vibrotactile feedback modality session |
++- **Evidence**:
++  - DOI: `10.3389/fnrgo.2024.1411305` — Mentions three feedback modality conditions (visual-only, vibrotactile-only, EMS) run in separate sessions; evidence is partial as primary paper focuses on mismatch detection rather than explicit modality classification.
++- **Kernel Notes**: Visual feedback events appear in fewer files (50) vs vibrotactile (198), suggesting uneven session completion. May require session-level stratification or separate modality-specific analysis pipelines. EMS condition events not listed in available event IDs—verify EMS feedback event naming convention in raw data.

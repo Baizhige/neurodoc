@@ -1,0 +1,338 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 9,
+    "category": "",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 32,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 5,
+    "task_synthesis": 12,
+    "kernel_loop": 10,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T05:12:46.855400+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_openneuro.org_datasets_ds002722.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_doi.org_10.1145_3059005.html",
+      "classification": "irrelevant",
+      "ref": "10.1145/3059005",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "omo-9781561592630-e-4002285347.pdf",
+      "classification": "irrelevant",
+      "ref": "",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1016_j_eswa_2022_118190.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.eswa.2022.118190",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10.1038_s41597-020-0507-6.pdf",
+      "ref": "10.1038/s41597-020-0507-6",
+      "title": "Neural and physiological data from participants listening to affective music",
+      "classification": "relevant",
+      "cot_reasoning": "This is the primary data descriptor paper for OpenNeuro ds002722. It explicitly describes the dataset, including multiple sub-datasets (Film clips, BCMI calibration/training/testing, BCMI tempo, Joint EEG-fMRI) with EEG recordings and affective labels. The paper defines concrete tasks: emotion classification from EEG using Likert scales and FEELTRACE continuous ratings.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 8,
+      "paradigm": "music listening with affective self-report",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "3s fixation + 12s music + 0.5s pause; 6 runs with 10 trials each for film clips; continuous FEELTRACE for BCMI and joint EEG-fMRI",
+      "target_events": [
+        "music onset (film clips)",
+        "continuous affective state changes (BCMI/fMRI)",
+        "tempo changes (BCMI tempo)"
+      ],
+      "label_mapping": "8 Likert scales: pleasantness, energy, sadness, anger, tenderness, happiness, fear, tension (1-9 scale); FEELTRACE continuous valence/arousal",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Primary dataset publication describing ds002722; Table 1 summarizes all sub-datasets with participant counts, stimuli types, and recording objectives; explicit task definitions for emotion prediction from EEG and physiological signals"
+    },
+    {
+      "filename": "paper_10_1038_s41597_020_0507_6.pdf",
+      "ref": "10.1038/s41597-020-0507-6",
+      "title": "Neural and physiological data from participants listening to affective music",
+      "classification": "relevant",
+      "cot_reasoning": "This is a duplicate of File 1 with identical content - the same data descriptor paper for OpenNeuro ds002722. It contains the same explicit dataset description and task definitions. The DOI hint has a typo (dots instead of dashes) but resolves to the same paper.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 8,
+      "paradigm": "music listening with affective self-report",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "3s fixation + 12s music + 0.5s pause; 6 runs with 10 trials each for film clips; continuous FEELTRACE for BCMI and joint EEG-fMRI",
+      "target_events": [
+        "music onset (film clips)",
+        "continuous affective state changes (BCMI/fMRI)",
+        "tempo changes (BCMI tempo)"
+      ],
+      "label_mapping": "8 Likert scales: pleasantness, energy, sadness, anger, tenderness, happiness, fear, tension (1-9 scale); FEELTRACE continuous valence/arousal",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Duplicate of primary dataset publication; same content as File 1 with identical evidence for ds002722 task definitions and epoch structures"
+    },
+    {
+      "filename": "paper_10_1038_s41598_019_45105_2.pdf",
+      "ref": "10.1038/s41598-019-45105-2",
+      "title": "Electroencephalography reflects the activity of sub-cortical brain regions during approach-withdrawal behaviour while listening to music",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses the joint EEG-fMRI dataset from ds002722 (20 participants, synthetic and classical music, continuous FEELTRACE ratings). It defines a concrete ML-adjacent task: decoding approach-withdrawal behavior from EEG prefrontal asymmetry and relating it to sub-cortical fMRI activity. The continuous affective ratings provide labels for regression/classification of valence/arousal states.",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 0,
+      "paradigm": "joint EEG-fMRI music listening with continuous affective self-report",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "continuous music listening epochs with simultaneous EEG-fMRI recording; FEELTRACE continuous ratings throughout",
+      "target_events": [
+        "continuous music listening",
+        "FEELTRACE rating updates"
+      ],
+      "label_mapping": "continuous valence/arousal via FEELTRACE; approach-withdrawal derived from prefrontal EEG asymmetry",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly states 'Our two datasets contain neuroimaging data recorded from participants as they listen to music' and describes the joint EEG-fMRI paradigm with 20 participants; uses same FEELTRACE methodology as ds002722; analyzes continuous dynamics of self-reports, EEG, and sub-cortical activity"
+    },
+    {
+      "filename": "paper_10_1038_s41598_022_27361_x.pdf",
+      "ref": "10.1038/s41598-022-27361-x",
+      "title": "Neural decoding of music from the EEG",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses the ds002722 dataset - both the joint EEG-fMRI subset (20 participants, validated on 18) and a separate EEG-only dataset (19 participants). It defines concrete ML tasks: music identification (36-way classification) and music reconstruction from EEG. Mean rank accuracy of 71.8% with fMRI-informed source analysis and 59.2% with EEG-only.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 36,
+      "paradigm": "music listening for neural decoding",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "music listening epochs; 36 different music pieces; biLSTM used for temporal decoding",
+      "target_events": [
+        "music piece onset",
+        "music listening period"
+      ],
+      "label_mapping": "36 distinct music pieces as classes; reconstruction target is acoustic waveform",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly states 'Our first dataset contains jointly recorded EEG and fMRI recorded from a cohort of 20 adult participants' and 'second dataset containing just EEG (without fMRI) recorded from a further cohort of 19 participants'; reports mean rank accuracies for 36-way music identification; describes biLSTM decoding architecture"
+    },
+    {
+      "filename": "paper_10_3389_frai_2020_497864.pdf",
+      "ref": "10.3389/frai.2020.497864",
+      "title": "On the use of AI for Generation of Functional Music to Improve Mental Health",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper discusses AI-generated functional music for mental health using GSR and general EEG references, but does NOT use the specific ds002722 dataset. It cites related work by Daly et al. and Williams et al. but describes a different system with different case studies. No mention of OpenNeuro, the specific dataset, or its participant cohort.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Cites Daly et al. 2015 and Williams et al. 2019a/b as related work but does not mention ds002722; describes separate GSR-based music generation system with different experimental design; no specific EEG dataset identifiers match ds002722"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The events.tsv clearly shows two parallel event structures: trial_type values 1-9 encode 9 distinct valence-arousal affective states (LVLA through HVHA), while values 101-209 encode specific music pieces played. This supports both emotion/affect classification (9-class) and music identification (36-class per references) from EEG. The dataset also includes self-reported valence/arousal ratings per README, enabling regression tasks.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 94,
+    "total_n": 94,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 94,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "1",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial onset: Low valence, low arousal targetted affect",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "2",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial onset: Neutral valence, low arousal targetted affect",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "3",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial onset: High valence, low arousal targetted affect",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "4",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial onset: Low valence, neutral arousal targetted affect",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "5",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial onset: Neutral valence, neutral arousal targetted affect",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "6",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial onset: High valence, neutral arousal targetted affect",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "7",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial onset: Low valence, high arousal targetted affect",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "8",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial onset: Neutral valence, high arousal targetted affect",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "9",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial onset: High valence, high arousal targetted affect",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "101-209",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Music stimulus played: code minus 100 indexes stimulus list",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      }
+    ],
+    "notes": "Mappings confirmed from events.json files across sub-01, sub-02, and sub-03 (all runs). Codes 1-9 explicitly defined with LongName and Description fields indicating 'start of trial' for each valence/arousal condition. Code range 101-209 defined as 'musicPlayed' with lookup mechanism (subtract 100, index stimulus list). Events.tsv files confirm paired structure: affect condition code and music code share identical onset/duration (21s), indicating simultaneous trial condition marker and stimulus identifier. No class labels (left hand, right hand, etc.) are used in this dataset."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Continuous Affective Music Listening Segmentation (Age Regression)\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 21 s *, overlap = 0.0, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | `age` | Continuous subject age in years (19–30); same value assigned to all segments from a given participant |\n- **Evidence**:\n  - 10.1038/s41597-020-0507-6 — Dataset descriptor describing BCMI-MIdAS calibration with 21-s music trials targeting valence/arousal states\n  - 10.1038/s41598-019-45105-2 — Related BCMI-MIdAS work on affective brain-computer music interface with continuous music listening paradigm\n  - events.json — Confirmed trial duration of 21s for all affect condition and music stimulus events\n  - participants.tsv — Complete age field (19–30 years, N=19) with numeric dtype\n- **Notes**: This is a degraded archetype-C approximation. The true continuous FEELTRACE valence/arousal trajectories described in the paradigm literature are not present in the available BIDS files (no continuous misc channels, no per-trial numeric ratings in events.tsv). Segmentation at 21s matches the trial duration from events.tsv. Age is used as a fallback subject-level regression target since it is the only available complete numeric field in participants.tsv. The kernel does not need to derive any channels; Meta Level remains raw because `age` is a native info field.\n\n### Potential Task 1: Age Regression from EEG\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 10 s *, overlap = 0.0 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | age | Continuous numeric age in years (19–30 range); used directly as regression target. All epochs from a subject share the same age label. |\n- **Evidence**:\n- **Notes**: Subject-level biomarker regression task. The full continuous EEG recording is segmented into 10-second non-overlapping windows. Each window inherits the subject's age from participants.tsv as its regression target. No trial events are required since the label is per-subject rather than per-trial. Typical EEG brain-age estimation approach where model learns to predict chronological age from spontaneous/ongoing EEG patterns during music listening.\n\n### Potential Task 2: Sex Classification from EEG\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 10 s *, overlap = 0.0 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | sex | 0=F (female), 1=M (male) |\n- **Evidence**:\n- **Notes**: Subject-level biomarker classification using non-overlapping 10-second windows. The sex field from participants.tsv is a stable per-subject characteristic, making it suitable for subject-level classification. All windows from the same subject share the same label. Binary classes: 0=F (n=11 subjects), 1=M (n=8 subjects).",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "1",
+      "101-209",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [
+      "age",
+      "sex"
+    ],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "ECG/GSR-based affect prediction",
+        "reason": "Native misc channels (ECG, GSR) are mentioned in eeg.json (ECGChannelCount=1, MiscChannelCount=4) and README, but the grounded catalog reports 'none discovered in raw files' for native misc channels. The channels may exist in separate physiological recording files not accessible through the standard EEG raw reader. Without confirmed continuous misc channels on the raw object, archetype B1 cannot be grounded."
+      },
+      {
+        "paradigm": "response time / confidence regression",
+        "reason": "No per-trial numeric columns discovered in events.tsv beyond trial_type (categorical event codes). No response_time, confidence, or similar columns exist in the grounded catalog."
+      },
+      {
+        "paradigm": "binned age classification",
+        "reason": "While age could be binned (19-30 range), this is a derived transform that would use archetype B2. However, age as continuous regression (B3) is strictly more informative and already emitted. Binned-age would be redundant with no additional grounding."
+      }
+    ]
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/openneuro_ds002722/kernel_final.py",
+  "kernel_code_len": 17739,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds002722.py",
+    "kernel_sha256": "c73a2ecd98591288b7aac34886e4a13e7c32a4348ad28833dad178bc32bc52c5",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 94,
+    "total_n": 94,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 94,
+      "age_complete": 94,
+      "sex_complete": 94,
+      "device_complete": 0,
+      "age_examples": [
+        "22",
+        "24",
+        "30",
+        "20",
+        "23",
+        "19"
+      ],
+      "sex_examples": [
+        "female",
+        "male"
+      ]
+    },
+    "misc_channel_names": [
+      "TP10",
+      "TP9"
+    ]
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds002722.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

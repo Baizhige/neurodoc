@@ -1,0 +1,248 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 9,
+    "category": "",
+    "format_type": "edf",
+    "has_bids_sidecars": false
+  },
+  "budget_used": 41,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 21,
+    "task_synthesis": 6,
+    "kernel_loop": 9,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T13:01:35.356929+00:00",
+  "ref_extractions": [
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (0 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1088_1741_2552_ad38db.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1088/1741.2552.ad38db",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1109_tii_2023_3274913.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1109/tii.2023.3274913",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "official_doi.org_10.1109_globalsip.2013.6736803.html",
+      "ref": "10.1109/globalsip.2013.6736803",
+      "title": "The Temple University Hospital EEG corpus",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is the original TUH EEG Corpus paper, not the TUH EEG Seizure Corpus (TUSZ). It describes the general EEG database without seizure-specific annotations or the seizure detection task. The dataset described lacks the seizure event labels that define the tuh_eeg_seizure dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "official_isip.piconepress.com_projects_tuh_eeg.html",
+      "ref": "",
+      "title": "Temple University EEG Corpus",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is the official project landing page for the general TUH EEG Corpus, not specifically the TUH EEG Seizure Corpus (TUSZ). While it mentions the Seizure Detection Corpus in passing, it does not define any ML task, labels, or epoching methodology for seizure detection. It is a data access page, not a research paper.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_1088_1741_2552_ac7d0d.pdf",
+      "ref": "10.1088/1741-2552/ac7d0d",
+      "title": "Multi-view cross-subject seizure detection with information bottleneck attribution",
+      "classification": "partial",
+      "cot_reasoning": "The paper mentions experiments on 'two benchmark datasets' for cross-subject seizure detection, but the visible text does not explicitly name TUH EEG Seizure Corpus as one of them. The methodology describes seizure vs. non-seizure classification with adversarial learning, but dataset-specific details (epoching, exact label mapping) are not visible in the provided excerpt. Need full text to confirm TUSZ usage.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "cross-subject seizure detection",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [
+        "seizure",
+        "non-seizure"
+      ],
+      "label_mapping": "seizure vs non-seizure (binary)",
+      "meta_level": "unclear",
+      "super_meta_note": "Mentions 'two benchmark datasets' but TUSZ not explicitly confirmed in visible text",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_1109_spmb_2014_7002953.pdf",
+      "ref": "10.1109/spmb.2014.7002953",
+      "title": "The TUH EEG Corpus: A Big Data Resource for Automated EEG Interpretation",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper describes the original TUH EEG Corpus, not the TUH EEG Seizure Corpus (TUSZ). The 6-way classification mentioned (spike/sharp waves, PLED, GPED, artifacts, eye movement, background) is for general EEG event detection on the base corpus, not seizure detection. The seizure-specific annotations and task definition of TUSZ are absent.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_1109_spmb_2015_7405421.pdf",
+      "ref": "10.1109/spmb.2015.7405421",
+      "title": "Improved EEG Event Classification Using Differential Energy",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper uses the TUH EEG Corpus (base corpus) for 6-way EEG event classification (SPSW, PLED, GPED, ARTF, EYEM, BCKG), not the TUH EEG Seizure Corpus. The task is general EEG event detection, not seizure detection. The epoching described (1 sec epochs, 0.2 sec windows, 0.1 sec step) is for the base corpus event classification task, not TUSZ.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_1117_12_2670106.pdf",
+      "ref": "10.1117/12.2670106",
+      "title": "Seizure detection by analyzing the number of channels selected by cross-correlation using TUH EEG Seizure Corpus",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses 'The TUH EEG Seizure Corpus (TUSZ)' version 1.5.2 with the '02-tcp-le/' montage. It defines a concrete seizure detection task with binary classification (seizure vs background/non-seizure). The paper describes preprocessing (0.5-40 Hz bandpass), channel selection via cross-correlation, and evaluation using sensitivity metrics. The epoching method uses seizure start/end times from the .xls annotation files.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "seizure detection",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "seizure and background segments extracted using start/end times from annotation files; 22 channels in TCP montage, filtered 0.5-40 Hz",
+      "target_events": [
+        "seizure",
+        "background"
+      ],
+      "label_mapping": "seizure vs background (binary)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly states TUSZ v1.5.2 used; 119 files with at least one seizure from train/02-tcp-le/; seizure start/end times from .xls annotations; binary seizure vs background classification"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The TUH EEG Seizure Corpus (TUSZ) is a well-known public dataset with explicit seizure onset/offset annotations enabling binary seizure detection. Reference 10.1117/12.2670106 confirms seizure start/end times from .xls annotations and binary seizure vs background classification using TUSZ v1.5.2.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 7361,
+    "total_n": 7361,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 7361,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [],
+    "notes": "No raw event IDs were detected in the dataset. Extensive probing of the TUH EEG Corpus v2.0.3 directory structure confirmed the existence of group directories (dev/, eval/, train/) and subject-level subdirectories (e.g., aaaaaayf, aaaaabep, aaaaaaxg, aaaaefp) using the v2.0.3/ prefix path. However, no actual EDF files or annotation files could be located within any subject directory using numerous filename patterns including: subject_id.edf, subject_id_01.edf, subject_id_s001_t000.edf, subject_id_s001.edf, subject_id_0001.edf, subject_id.rec, subject_id.tse, subject_id.seizure, subject_id.lbl, data.edf, numeric filenames, date-stamped filenames, and compressed .edf.gz variants. All file access attempts returned 'file not found'. The read_events_tsv tool was unavailable for probing potential BIDS-style annotations. Without detectable events.tsv, events.json, or accessible EDF headers containing event markers, no event IDs could be identified for annotation. The dataset appears to have no extractable event information through the available tools."
+  },
+  "tasks_section": "## Tasks\n\n",
+  "kernel_requirements": {
+    "required_event_ids": [],
+    "required_native_misc": [],
+    "required_info_fields": [],
+    "derived_misc_channels": [
+      {
+        "name": "seizure_label",
+        "source_field": "events.tsv:seizure",
+        "derivation": "The TUH EEG Seizure Corpus provides seizure annotations in companion .csv/.xls files (not BIDS events.tsv). The kernel must parse these annotation files to create a binary label channel: 1 for seizure/ictal periods, 0 for background/interictal periods. Since no events.tsv numeric columns were discovered in pre-scan, the kernel must read the native TUH annotation format (seizure_start_time, seizure_stop_time fields) and construct a step-function misc channel aligned to the EEG time axis. Label 1=seizure, 0=background.",
+        "groundable_evidence": "No events.tsv columns discovered in pre-scan; annotations exist in external .xls files per ref 10.1117/12.2670106",
+        "used_by": [
+          "seizure detection"
+        ]
+      }
+    ],
+    "_dropped_candidates": [
+      {
+        "paradigm": "event-based seizure detection with BIDS events",
+        "reason": "Pre-scan detected no events in available event IDs. The TUH Seizure Corpus stores annotations in external .csv/.xls files, not BIDS events.tsv. Cannot ground archetype A (Route=event) tasks because no event IDs exist to anchor epochs."
+      },
+      {
+        "paradigm": "subject-level demographic or clinical prediction",
+        "reason": "No participants.tsv columns discovered in pre-scan. Cannot ground archetype B3 (native info) tasks for age, p_factor, or other subject-level variables. The TUH Seizure Corpus focuses on session-level annotations rather than rich subject metadata."
+      },
+      {
+        "paradigm": "native misc channel regression/classification",
+        "reason": "No native misc channels (EMG, EOG, GSR, etc.) discovered in raw files. All 32-33 channels are EEG channels (FP1, FP2, F3, F4, C3, C4, P3, P4, O1, O2, etc. with LE or REF references). Cannot ground archetype B1 tasks."
+      },
+      {
+        "paradigm": "per-trial events.tsv derived misc",
+        "reason": "No numeric columns discovered in events.tsv. The TUH Seizure Corpus does not use BIDS events.tsv for trial-level data; annotations are in external files. Cannot ground archetype B2 from events.tsv columns."
+      }
+    ]
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/tuh_eeg_seizure/kernel_final.py",
+  "kernel_code_len": 20988,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/tuh_eeg_seizure.py",
+    "kernel_sha256": "09bce1c379a94956ea8b16c965bfdc144b90df401d6e607b3d396b77358560c5",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 7361,
+    "total_n": 7361,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 7361,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": [
+      "seizure_label"
+    ]
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/tuh_eeg_seizure.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

@@ -1,0 +1,336 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 13,
+    "category": "",
+    "format_type": "mat",
+    "has_bids_sidecars": false
+  },
+  "budget_used": 26,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 9,
+    "task_synthesis": 3,
+    "kernel_loop": 9,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-06T13:25:42.893150+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.1016_j.neuroimage.2007.01.051.html",
+      "classification": "uncertain",
+      "ref": "10.1016/j.neuroimage.2007.01.051",
+      "error": "Extracted text too short (11 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1109_cvidliccea56201_2022_9824276.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1109/cvidliccea56201.2022.9824276",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1109_iaecst54258_2021_9695816.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1109/iaecst54258.2021.9695816",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "classification": "junk",
+      "ref": "",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as junk in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "official_www.bbci.de_competition_iv_desc_1.html.html",
+      "ref": "",
+      "title": "Data Set 1 for the BCI Competition IV",
+      "classification": "relevant",
+      "cot_reasoning": "This is the official competition description for BCI Competition IV Dataset 1 (bcic_iv_1). It explicitly defines the dataset structure, the motor imagery task with two classes (left hand/right hand or foot), calibration data with markers, and evaluation data without markers. The task requires continuous classification output (-1, 0, 1) for each sample point, making it a regression-like continuous output task with three target states.",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 3,
+      "paradigm": "motor imagery, uncued classifier application",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "continuous output for each sample; calibration: 4s cues with 2s blank + 2s fixation; evaluation: variable length 1.5-8s with acoustic cues",
+      "target_events": [
+        "cue onset left",
+        "cue onset right",
+        "cue onset foot",
+        "stop"
+      ],
+      "label_mapping": "-1: class one, 1: class two, 0: no control intention/rest",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Official dataset description; defines continuous classification task with three output states for asynchronous BCI"
+    },
+    {
+      "filename": "paper_10_1016_j_neunet_2009_06_003.pdf",
+      "ref": "10.1016/j.neunet.2009.06.003",
+      "title": "Subject-independent mental state classification in single trials",
+      "classification": "partial",
+      "cot_reasoning": "This paper uses a large database of 90 BCI datasets from 45 subjects with left/right hand motor imagery. While it describes the Berlin BCI data and motor imagery paradigm similar to bcic_iv_1, it does not explicitly state it uses BCI Competition IV Dataset 1 specifically. The paper focuses on subject-independent zero-training classification using CSP-LDA ensemble with l1 regularization, but the exact dataset provenance is unclear.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery (left hand vs right hand)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "3s time-window starting at 500ms after cue presentation",
+      "target_events": [
+        "visual cue for left hand",
+        "visual cue for right hand"
+      ],
+      "label_mapping": "left hand vs right hand",
+      "meta_level": "unclear",
+      "super_meta_note": "May include bcic_iv_1 data among 90 datasets, but not explicitly identified; uses leave-one-subject-out cross-validation",
+      "evidence_desc": "Uses 90 BCI datasets from 45 subjects with left/right hand motor imagery; similar paradigm but no explicit mention of BCI Competition IV Dataset 1"
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2010_03_022.pdf",
+      "ref": "10.1016/j.neuroimage.2010.03.022",
+      "title": "Neurophysiological predictor of SMR-based BCI performance",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper studies neurophysiological predictors of BCI performance using the Berlin BCI system with 80 BCI-naive participants. It focuses on predicting BCI illiteracy from resting EEG recordings, not on analyzing or benchmarking BCI Competition IV Dataset 1 specifically. The study uses their own BBCI system data, not the competition dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Uses BBCI system with 80 naive participants; focuses on predictor of SMR-based BCI performance, not on bcic_iv_1 dataset analysis"
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2010_06_048.pdf",
+      "ref": "10.1016/j.neuroimage.2010.06.048",
+      "title": "Single-trial analysis and classification of ERP components — A tutorial",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a tutorial paper on single-trial ERP classification using shrinkage LDA. The example dataset used is from an attention-based typewriter (Hex-o-Spell ERP paradigm), not motor imagery. The paper does not mention BCI Competition IV Dataset 1 or motor imagery data at all.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Tutorial on ERP classification; uses Hex-o-Spell attention-based typewriter data, not motor imagery or bcic_iv_1"
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2011_07_084.pdf",
+      "ref": "10.1016/j.neuroimage.2011.07.084",
+      "title": "Enhanced performance by a hybrid NIRS–EEG brain computer interface",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper investigates hybrid NIRS-EEG BCI with 14 healthy subjects performing motor execution and motor imagery with real-time EEG feedback. While it uses SMR-based BCI, it does not mention BCI Competition IV Dataset 1. The study involves simultaneous NIRS and EEG recording with their own experimental setup, not the competition dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Hybrid NIRS-EEG study with own 14 subjects; motor execution and imagery with coadaptive calibration; no mention of bcic_iv_1"
+    },
+    {
+      "filename": "paper_10_1109_icoras_2016_7872610.pdf",
+      "ref": "10.1109/icoras.2016.7872610",
+      "title": "Classification of EEG Signals for Brain-Computer Interface Applications: Performance Comparison",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly states it uses 'BCI competition IV - Dataset 1' for testing classifiers. It describes the dataset accurately: 4 healthy subjects + 3 artificial subjects, 59 channels, 2 classes from 3 (left hand, right hand, foot), calibration with markers and evaluation without markers. The task is explicit motor imagery classification using FFT features with SVM, k-NN, MLP-ANN, and LR classifiers.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "4s task period; calibration data only used (200 trials per subject); evaluation data excluded due to missing markers",
+      "target_events": [
+        "visual cue left",
+        "visual cue right",
+        "visual cue foot"
+      ],
+      "label_mapping": "two classes selected from left hand, right hand, foot for each subject",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly uses BCI Competition IV Dataset 1; compares SVM, k-NN, MLP-ANN, LR classifiers on motor imagery; uses only calibration data with known markers"
+    },
+    {
+      "filename": "paper_10_1109_tnsre_2020_3020975.pdf",
+      "ref": "10.1109/tnsre.2020.3020975",
+      "title": "Bispectrum-Based Channel Selection for Motor Imagery Based Brain-Computer Interfacing",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly mentions using 'BCI competition IV dataset 1' as one of three public datasets for validating bispectrum-based channel selection. The paper describes motor imagery BCI with ERD/ERS phenomena and uses the dataset for channel selection and classification performance comparison against using all channels.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "standard motor imagery epoching; compared against full channel set (83.8% vs 69.4% accuracy)",
+      "target_events": [
+        "motor imagery cue"
+      ],
+      "label_mapping": "left hand vs right hand (or foot, depending on subject)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly uses BCI Competition IV dataset 1 among three datasets; validates bispectrum-based channel selection for motor imagery classification"
+    },
+    {
+      "filename": "paper_10_1109_tnsre_2021_3071140.pdf",
+      "ref": "10.1109/tnsre.2021.3071140",
+      "title": "Learning Common Time-Frequency-Spatial Patterns for Motor Imagery Classification",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses 'Dataset 1 from the BCI Competition IV' as Dataset 3 (DS3) in their validation. Figure 1(c) shows the timeline for this dataset. The paper describes the paradigm: fixation cross for 2s, then arrow cue at t=2s for left/right hand/foot motor imagery until cross disappears. They apply their CTFSP method with sliding time windows and multi-band CSP features.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "fixation cross 2s, cue at t=2s, MI until cross disappears; sliding time window approach with multiple sub-windows; multi-band filtered CSP features",
+      "target_events": [
+        "fixation cross onset",
+        "arrow cue left/right/down"
+      ],
+      "label_mapping": "left hand, right hand, foot (two classes selected per subject)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly uses BCI Competition IV Dataset 1 as DS3; validates CTFSP algorithm with sliding time windows and multi-band CSP; Figure 1(c) shows dataset timeline"
+    },
+    {
+      "filename": "paper_10_3389_fnins_2010_00198.pdf",
+      "ref": "10.3389/fnins.2010.00198",
+      "title": "The Berlin brain–computer interface: non-medical uses of BCI technology",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a review paper about non-medical applications of BCI technology from the Berlin BCI group. While it discusses the BBCI system, motor imagery, and various methodological improvements, it does not explicitly analyze or benchmark BCI Competition IV Dataset 1. The paper mentions various datasets and studies but focuses on general BCI technology rather than a specific competition dataset analysis.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Review paper on non-medical BCI applications; discusses BBCI system generally; no explicit mention of BCI Competition IV Dataset 1 analysis"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "Multiple references explicitly confirm BCI Competition IV Dataset 1 contains motor imagery data with class labels. The official dataset description and three peer-reviewed papers explicitly use this dataset for motor imagery classification (left vs right hand, 2 classes) and one describes a 3-state continuous classification task. The event structure supports clear EEG classification.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "",
+    "eegunity_version": "",
+    "scan_type": "format_evidence_preview",
+    "sampled": true,
+    "sampled_n": 0,
+    "total_n": 0,
+    "cache_source": "format_evidence",
+    "event_counts": {
+      "-1": 1,
+      "1": 1
+    },
+    "subject_info": {},
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "-1",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: left",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "1",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: right",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      }
+    ],
+    "notes": "Evidence from nfo structure in BCICIV_calib_ds1c, ds1d, ds1e_1000Hz.mat explicitly shows classes=['left', 'right'] (confirmed). Programmatic scan confirms mrk.y contains values -1 and 1 (confirmed). The mapping between -1/1 and left/right is inferred from: (1) the classes array has two elements matching two marker values, (2) standard array ordering convention where first class corresponds to negative/lower value. All 7 files are calibration datasets with identical structure (200 markers each, same 59-channel montage, fs=1000Hz), confirming consistent event IDs across all files. No explicit -1/1-to-left/right mapping table was found in the files."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: 2-class motor imagery (left vs right)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 4 s *, target_events = [`-1`, `1`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `-1` | 0 | left |\n  | `1` | 1 | right |\n- **Evidence**:\n  - 10.1109/icoras.2016.7872610 — \"4s task period\" for calibration data; uses BCIC IV Dataset 1 for binary motor imagery classification\n  - 10.1109/tnsre.2020.3020975 — Uses BCIC IV Dataset 1 for motor imagery classification with multi-band CSP features\n  - 10.1109/tnsre.2021.3071140 — Describes fixation 2s then cue at t=2s with MI until cross disappears, suggesting 4s total trial length; sliding time windows with channel selection achieving ~83.8% accuracy\n- **Notes**: Event IDs `-1` and `1` are the literal marker values from mrk.y in the .mat files. The mapping to left/right is grounded by: (1) nfo.classes=['left', 'right'] array ordering convention where first class corresponds to negative/lower value (-1), and (2) the EVENT MEANINGS locked ground truth confirming `-1` = \"Trial phase onset: left\" and `1` = \"Trial phase onset: right\". Despite the \"Trial phase onset\" phrasing, these are the class-discriminative markers for motor imagery tasks in this dataset, with the actual MI period following the cue. The 4s epoch window captures the full task period from cue onset as described in the references.\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "-1",
+      "1"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "foot motor imagery",
+        "reason": "References mention foot as a possible third class, but the locked ground truth confirms only two event IDs exist in the raw data (-1 and 1, left and right). The foot class and three-class tasks are described for evaluation data or other subjects not present in these calibration files. No literal 'foot' event ID exists in the available event IDs."
+      },
+      {
+        "paradigm": "subject-level info regression/classification (age, p_factor, etc.)",
+        "reason": "No participants.tsv columns discovered in the grounded catalog. The .mat files contain only EEG data, markers, and header info with no subject-level demographic or behavioral variables available."
+      },
+      {
+        "paradigm": "native misc channel regression (EMG, EOG, GSR)",
+        "reason": "No native misc channels discovered in raw files. The .mat files contain only 59 EEG channels with no continuous non-EEG channels present."
+      },
+      {
+        "paradigm": "derived misc from events.tsv numeric columns (RT, confidence, accuracy)",
+        "reason": "No per-trial numeric columns discovered in events.tsv. The .mat marker structure only contains position (pos) and class label (y) with no additional trial metadata."
+      }
+    ]
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/bcic_iv_1/kernel_final.py",
+  "kernel_code_len": 14173,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/bcic_iv_1.py",
+    "kernel_sha256": "844c56afe0088cb28b36e025083f719e6f35afab2ab366b7ef160f8b88bc8bd1",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 7,
+    "total_n": 7,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "-1": 700,
+      "1": 700
+    },
+    "subject_info": {
+      "record_count": 7,
+      "age_complete": 5,
+      "sex_complete": 5,
+      "device_complete": 0,
+      "age_examples": [
+        "26",
+        "31",
+        "22",
+        "24"
+      ],
+      "sex_examples": [
+        "female",
+        "male"
+      ]
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/bcic_iv_1.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

@@ -1,0 +1,33 @@
+--- openneuro_ds004532/analysis.md (pre-v3)
++++ openneuro_ds004532/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004532` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004532
+ **Category**: High-level Mental | **Subjects**: 40 | **Files (Completed)**: 80 | **Channels**: 64 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -91,8 +91,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `correct` | 0 | Correct response (reward) |
+   | `incorrect` | 1 | Incorrect response (punishment) |
+ - **Super Meta Notes**: (NONE - meta_level is raw)
+@@ -108,8 +108,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `correct` | 0 | Correct response (reward) |
+   | `incorrect` | 1 | Incorrect response (punishment) |
+ - **Notes**: Shortened feedback-locked window focusing on early outcome processing phase (FRN/P300 components) while reducing potential contamination from adjacent events. Labels derived from `correct`/`incorrect` events following FB. This variation offers a more computationally efficient approach with potentially cleaner ERP components at the cost of missing later outcome processing phases.

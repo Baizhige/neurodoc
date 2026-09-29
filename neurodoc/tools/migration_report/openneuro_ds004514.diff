@@ -1,0 +1,30 @@
+--- openneuro_ds004514/analysis.md (pre-v3)
++++ openneuro_ds004514/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004514` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004514
+ **Category**: High-level Mental | **Subjects**: 22 | **Files (Completed)**: 22 | **Channels**: 32 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -33,6 +33,7 @@
+ 
+ ## Tasks
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Classical Task 1: Animal vs Tool Semantic Decoding during Mental Imagery
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+@@ -40,8 +41,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `event_255` | ? | Sustained imagery period (animal or tool) |
+ - **Evidence**:
+   - DOI: 10.1038/s41597-025-04967-0 — "This data descriptor paper describes simultaneous EEG and fNIRS recordings from 12 participants performing four mental tasks (silent naming, visual imagery, auditory imagery, tactile imagery) to distinguish between semantic categories of animals and tools, with mental task epochs lasting 3 seconds each."

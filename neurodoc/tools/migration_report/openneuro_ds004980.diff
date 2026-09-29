@@ -1,0 +1,86 @@
+--- openneuro_ds004980/analysis.md (pre-v3)
++++ openneuro_ds004980/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004980` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds004980
+ **Category**: Complex Applied | **Subjects**: 17 | **Files (Completed)**: 17 | **Channels**: 64 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -73,34 +73,63 @@
+ - **Evidence**: DOI: 10.1111/ejn.16461 — Mentions SAM ratings as experimental design element; paradigm explicitly records valence/arousal/dominance assessments during virtual navigation
+ - **Kernel Notes**: Separate task from navigation classification. Use SAM:start as alignment point to capture pre-rating baseline and rating response. Player entered/exited SAM Activator events provide zone context but SAM:start/SAM:completed are primary epoch alignment markers.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 1: Navigation Error Detection
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.3 s, tmax = 0.8 s, target_events = ["Wall touched: trial failed!"]
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
++- **Label Field**: `Wall touched: trial failed!`
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 
+-  | Event | y | Meaning |
+-  |-------|---|---|
+-  | `Wall touched: trial failed!` | 1 | Navigation error detected |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Wall touched: trial failed!` | 1 | Navigation error detected |  |
+ 
+ - **Evidence**: Paradigm supports error-related processing analysis; wall collision events indicate failed affordance actions
+ - **Kernel Notes**: Single-class detection task. Could be used as contrasting condition against successful navigation (Normal Task 1). Event count (2183 total across dataset) suggests adequate trials for detection analysis.
+ 
+-### Potential Task 2: Spatial Boundary Processing
++### Potential Task 1: Spatial Boundary Processing — Player left StartSquare
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.3 s, tmax = 1.2 s, target_events = ["ColliderRoom1 has been entered", "ColliderRoom2 has been entered", "Player left StartSquare"]
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
++- **Label Field**: `Player left StartSquare`
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 
+-  | Event | y | Meaning |
+-  |-------|---|---|
+-  | `Player left StartSquare` | 0 | Start zone exit |
+-  | `ColliderRoom1 has been entered` | 1 | Room 1 entered |
+-  | `ColliderRoom2 has been entered` | 2 | Room 2 entered |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `Player left StartSquare` | 0 | Start zone exit |  |
++
++- **Evidence**: DOI: 10.1111/ejn.16461 — Architectural transitions investigated as affordance markers
++- **Kernel Notes**: Focus on spatial boundary crossings as discrete environmental events. Plausible from paradigm alone without direct classification=relevant reference. Could complement door affordance analysis in Normal Task 1.### Potential Task 2: Spatial Boundary Processing — ColliderRoom1 has been entered
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.3 s, tmax = 1.2 s, target_events = ["ColliderRoom1 has been entered", "ColliderRoom2 has been entered", "Player left StartSquare"]
++- **Label Route**: `info`
++- **Label Field**: `ColliderRoom1 has been entered`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `ColliderRoom1 has been entered` | 1 | Room 1 entered |  |
++
++- **Evidence**: DOI: 10.1111/ejn.16461 — Architectural transitions investigated as affordance markers
++- **Kernel Notes**: Focus on spatial boundary crossings as discrete environmental events. Plausible from paradigm alone without direct classification=relevant reference. Could complement door affordance analysis in Normal Task 1.### Potential Task 3: Spatial Boundary Processing — ColliderRoom2 has been entered
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.3 s, tmax = 1.2 s, target_events = ["ColliderRoom1 has been entered", "ColliderRoom2 has been entered", "Player left StartSquare"]
++- **Label Route**: `info`
++- **Label Field**: `ColliderRoom2 has been entered`
++- **Meta Level**: raw
++- **Target Definition**:
++
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `ColliderRoom2 has been entered` | 2 | Room 2 entered |  |
+ 
+ - **Evidence**: DOI: 10.1111/ejn.16461 — Architectural transitions investigated as affordance markers
+ - **Kernel Notes**: Focus on spatial boundary crossings as discrete environmental events. Plausible from paradigm alone without direct classification=relevant reference. Could complement door affordance analysis in Normal Task 1.

@@ -1,0 +1,24 @@
+﻿{
+  "epoch": 1,
+  "metrics": {
+    "acc": 0.6782407407407407,
+    "confusion_matrix": [
+      [
+        18,
+        30
+      ],
+      [
+        1,
+        53
+      ]
+    ],
+    "f1_macro": 0.6555180302865236,
+    "f1_weighted": 0.6624712419012708,
+    "kappa": 0.3688622754491019
+  },
+  "selection_metric_name": "acc",
+  "selection_metric_value": 0.7962962962962963,
+  "timestamp": "2026-04-28T17:14:54+08:00"
+}
+
+

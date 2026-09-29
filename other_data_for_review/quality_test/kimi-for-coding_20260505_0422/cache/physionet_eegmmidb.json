@@ -1,0 +1,339 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 10,
+    "category": "",
+    "format_type": "edf",
+    "has_bids_sidecars": false
+  },
+  "budget_used": 34,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 11,
+    "task_synthesis": 11,
+    "kernel_loop": 7,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T09:46:03.559633+00:00",
+  "ref_extractions": [
+    {
+      "filename": "paper_10_1038_s41598_022_21376_0.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1038/s41598.022.21376.0",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1038_s41598_025_07703_1.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1038/s41598.025.07703.1",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "official_doi.org_10.13026_C28G6P.html",
+      "ref": "10.13026/C28G6P",
+      "title": "EEG Motor Movement/Imagery Dataset v1.0.0",
+      "classification": "partial",
+      "cot_reasoning": "This is the official PhysioNet dataset description page for EEGMMIDB. It explicitly describes the dataset structure, tasks, and annotation codes (T0/T1/T2), but does not define a specific ML task or label mapping for classification. It provides the foundational dataset metadata.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "motor execution and imagery (left/right fist, both fists/feet)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Events T0/T1/T2 mark onset of rest or movement; tasks are 2-minute runs with repeated movements",
+      "target_events": [
+        "T0",
+        "T1",
+        "T2"
+      ],
+      "label_mapping": "T0=rest, T1=left fist or both fists (run-dependent), T2=right fist or both feet (run-dependent)",
+      "meta_level": "raw",
+      "super_meta_note": "Official dataset documentation - defines raw data structure and event codes but not a specific ML pipeline",
+      "evidence_desc": "PhysioNet official page describing 64-channel EEG from 109 subjects, 14 runs per subject, EDF+ format at 160 Hz, with T0/T1/T2 annotations"
+    },
+    {
+      "filename": "official_physionet.org_content_eegmmidb_1.0.0.html",
+      "ref": "https://doi.org/10.13026/C28G6P",
+      "title": "EEG Motor Movement/Imagery Dataset v1.0.0",
+      "classification": "partial",
+      "cot_reasoning": "Identical to File 1 - official PhysioNet dataset documentation. Explicitly describes the EEGMMIDB dataset with experimental protocol and annotation codes, but does not specify a concrete ML task formulation.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "motor execution and imagery (left/right fist, both fists/feet)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Events T0/T1/T2 mark onset of rest or movement; tasks are 2-minute runs with repeated movements",
+      "target_events": [
+        "T0",
+        "T1",
+        "T2"
+      ],
+      "label_mapping": "T0=rest, T1=left fist or both fists (run-dependent), T2=right fist or both feet (run-dependent)",
+      "meta_level": "raw",
+      "super_meta_note": "Mirror of official dataset documentation",
+      "evidence_desc": "PhysioNet page with identical content to File 1: 109 subjects, 64 channels, 160 Hz, 14 runs, T0/T1/T2 event codes"
+    },
+    {
+      "filename": "paper_10_1016_j_cmpbup_2021_100027.pdf",
+      "ref": "10.1016/j.cmpbup.2021.100027",
+      "title": "A new method for accurate detection of movement intention from single channel EEG for online BCI",
+      "classification": "partial",
+      "cot_reasoning": "The paper mentions using 'Physionet RMI dataset' among three datasets, which is likely EEGMMIDB. However, the task is movement intention detection (RP detection) from continuous single-channel EEG, not standard epoch-based classification. The label/task definition is detection-oriented rather than discrete classification with clear class labels.",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 0,
+      "paradigm": "readiness potential (RP) detection for real and imagined movement",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "Continuous single-channel EEG (Cz), no trial splitting; RP detection with -384.9±296.5 ms latency",
+      "target_events": [
+        "movement onset (RP detection)"
+      ],
+      "label_mapping": "Binary detection: RP present vs. absent; TPR/FPR metrics used",
+      "meta_level": "raw",
+      "super_meta_note": "Uses Physionet RMI dataset but focuses on continuous RP detection rather than standard epoch classification",
+      "evidence_desc": "Mentions 'Physionet RMI dataset' with TPR 76.5±8.27%, FP/min 2.4±1.07; single channel Cz; continuous detection without trial-based epoching"
+    },
+    {
+      "filename": "paper_10_1088_1741_2552_ad905d.pdf",
+      "ref": "10.1088/1741-2552/ad905d",
+      "title": "Classification of hand movements from EEG using a FusionNet based LSTM network",
+      "classification": "relevant",
+      "cot_reasoning": "Explicitly states using 'publicly available EEG datasets comprising data collected from 109 subjects' which matches EEGMMIDB. Defines concrete 4-class and 2-class classification tasks for left/right hand movements with cross-subject and within-subject evaluation, achieving 87.1% and 99.1% accuracy. Clear ML task with labels.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery and execution (left hand, right hand, both hands, both feet)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "10-fold cross-validation; features extracted per trial; CNN for spatial, GRU/LSTM for temporal, AR for dynamics",
+      "target_events": [
+        "task onset markers for left hand, right hand, both hands, both feet"
+      ],
+      "label_mapping": "4-class: left hand, right hand, both hands, both feet; also 2-class left vs right hand",
+      "meta_level": "raw",
+      "super_meta_note": "Explicit 4-class and 2-class classification on 109-subject dataset matching EEGMMIDB demographics",
+      "evidence_desc": "109 subjects matches EEGMMIDB; 87.1% cross-subject accuracy, 99.1% within-subject; FusionNet-LSTM architecture; left/right/both hands/both feet classification"
+    },
+    {
+      "filename": "paper_10_1109_embc_2018_8512590.pdf",
+      "ref": "10.1109/embc.2018.8512590",
+      "title": "Improving EEG-Based Motor Imagery Classification via Spatial and Temporal Recurrent Neural Networks",
+      "classification": "relevant",
+      "cot_reasoning": "Explicitly names 'MI-based eegmmidb dataset' and defines multi-class trial-wise movement intention classification. Uses sliding window with 50% overlap, rearranged electrode indices, bi-LSTM for spatial and LSTM for temporal. Achieves 68.20% average accuracy with clear 4-class task formulation.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery (left fist, right fist, both fists, both feet)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Sliding window with 50% overlap, fixed length S; trial-wise and sample-wise training/testing strategies; bi-LSTM spatial + LSTM temporal",
+      "target_events": [
+        "trial onsets for tasks 1-4"
+      ],
+      "label_mapping": "4-class: left fist, right fist, both fists, both feet (from T1/T2 annotations in runs 3-14)",
+      "meta_level": "raw",
+      "super_meta_note": "Directly names eegmmidb; explicit 4-class MI classification with rigorous train/test split by trial index to maintain i.i.d.",
+      "evidence_desc": "Explicitly states 'MI-based eegmmidb dataset'; 68.20% accuracy; 4-class trial-wise classification; sliding window epoching; compares with CSP+LDA, FBCSP+LDA, CNN-RNN"
+    },
+    {
+      "filename": "paper_10_1109_tla_2018_8291481.pdf",
+      "ref": "10.1109/tla.2018.8291481",
+      "title": "EEG Signals Classification: Motor Imagery for Driving an Intelligent Wheelchair",
+      "classification": "relevant",
+      "cot_reasoning": "Explicitly states 'database eegmmidb - EEG Motor Movement/Imagery Dataset' and uses 106 individuals. Defines 4-class classification task for left fist, right fist, both fists, both feet motor imagery to control wheelchair. Achieves 74.96% efficiency with four specialized neural networks.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery (left fist, right fist, both fists, both feet)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Four specialized RNAs (one per class); single electrode acquisition; 74.96% classification efficiency",
+      "target_events": [
+        "movement imagination onsets"
+      ],
+      "label_mapping": "4-class: left fist, right fist, both fists, both feet; specialized binary classifiers per class",
+      "meta_level": "raw",
+      "super_meta_note": "Explicit eegmmidb usage with 106 of 109 subjects; 4-class motor imagery for wheelchair control application",
+      "evidence_desc": "Explicitly names 'eegmmidb - EEG Motor Movement/Imagery Dataset'; 106 subjects; 74.96% correct classification; four RNAs specialized for each movement class; single electrode Cz"
+    },
+    {
+      "filename": "paper_10_15368_theses_2017_62.pdf",
+      "ref": "10.15368/theses.2017.62",
+      "title": "Hand (Motor) Movement Imagery Classification of EEG Using Takagi-Sugeno-Kang Fuzzy-Inference Neural Network",
+      "classification": "relevant",
+      "cot_reasoning": "Explicitly names 'PhysioNet Motor Movement & Imagery Database' and uses 40 subjects. Defines concrete 2-class classification task for left hand vs right hand fist contraction/imagery. Uses 4.1-second event-related time courses with DWT energy features and TSKFNN classifier. Achieves 79.4% average accuracy.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor movement and imagery (left hand, right hand)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "4.1-second event-related time courses; FIR band-pass 0.5-45 Hz; DWT energy percentage features; 20 training sessions",
+      "target_events": [
+        "left hand fist contraction/imagery",
+        "right hand fist contraction/imagery"
+      ],
+      "label_mapping": "2-class: left hand vs right hand (fist contraction and imagery combined)",
+      "meta_level": "raw",
+      "super_meta_note": "Explicit PhysioNet MMI database usage; focused 2-class left/right hand classification with detailed signal processing pipeline",
+      "evidence_desc": "Explicitly names 'PhysioNet Motor Movement & Imagery Database'; 40 subjects; 79.4% accuracy; 4.1-second epochs; left vs right hand fist contraction and imagery; DWT+TSKFNN approach"
+    },
+    {
+      "filename": "paper_10_3389_fnins_2021_660032.pdf",
+      "ref": "10.3389/fnins.2021.660032",
+      "title": "Dynamics of Long-Range Temporal Correlations in Broadband EEG During Different Motor Execution and Imagery Tasks",
+      "classification": "relevant",
+      "cot_reasoning": "Explicitly describes using 'publicly available EEG dataset containing cued continuous movement and motor imagery of fists and feet' which matches EEGMMIDB characteristics. Defines binary classification tasks for multiple motor conditions using broadband LRTC features. Achieves 70.54-76.07% binary classification accuracy. Uses 2-second sliding windows on single trials.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor execution and imagery (fists and feet, multiple conditions)",
+      "epoch_method_hint": "segmentation",
+      "epoch_params": "2-second sliding windows on single trial EEG; detrended fluctuation analysis; binary classification of motor task vs rest",
+      "target_events": [
+        "motor execution and imagery task periods"
+      ],
+      "label_mapping": "Binary: motor task vs rest; multiple pairwise comparisons (fist vs rest, feet vs rest, etc.)",
+      "meta_level": "raw",
+      "super_meta_note": "Uses publicly available dataset with cued continuous movement and motor imagery matching EEGMMIDB; focuses on broadband LRTC as novel neural correlate",
+      "evidence_desc": "'Publicly available EEG dataset containing cued continuous movement and motor imagery of fists and feet' matches EEGMMIDB; 70.54-76.07% binary classification; 2-second sliding windows; contrasts broadband LRTC with alpha oscillation LRTC"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The EEGMMIDB dataset has well-documented event structure with T0/T1/T2 annotations corresponding to rest, left/right fist, and both fists/feet conditions across 109 subjects. Multiple papers confirm successful 2-class and 4-class motor imagery/execution classification using this exact dataset.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 1526,
+    "total_n": 1526,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "T0": 19893,
+      "T1": 9858,
+      "T2": 9818
+    },
+    "subject_info": {
+      "record_count": 1526,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "T0",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: inter-trial baseline/rest period (duration ~4.1-4.2s)",
+        "confidence": "inferred",
+        "session_task_scope": "task runs (R03-R14) across all subjects"
+      },
+      {
+        "event_id": "T1",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: task condition 1 (duration ~4.1s)",
+        "confidence": "inferred",
+        "session_task_scope": "task runs (R03-R14) across all subjects"
+      },
+      {
+        "event_id": "T2",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: task condition 2 (duration ~4.1s)",
+        "confidence": "inferred",
+        "session_task_scope": "task runs (R03-R14) across all subjects"
+      }
+    ],
+    "notes": "Evidence from .event files (read as text with latin-1 encoding) shows: (1) R01-R02 across all subjects (S001, S002, S003, S010) contain NO event annotations - only header 'time resolution: 160', indicating rest/baseline runs with no T0/T1/T2 markers; (2) R03-R14 across all subjects contain consistent T0/T1/T2 event patterns with ~4.1-4.2s durations. T0 appears most frequently (~2x T1/T2) in alternating pattern (T0-T1-T0-T2 or T0-T2-T0-T1), indicating inter-trial baseline periods. T1 and T2 appear in equal proportion as two distinct task conditions. The consistent structure across S001R03-R14, S002R03-R14, S003R03-R14, and S010R03-R14 confirms uniform event meanings. No explicit semantic labels for T1/T2 were found in any files - their meanings as 'task condition 1/2' are inferred from their alternating appearance with T0 baseline separators. Event IDs are directly readable from event files (raw meta level)."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: 2-class rest vs task state detection\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = 0 s *, tmax = 4.1 s *, target_events = [`T0`, `T1`, `T2`]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | T0 | 0 | rest (inter-trial baseline period) |\n  | T1 | 1 | task (merged task conditions) |\n  | T2 | 1 | task (merged task conditions) |\n- **Evidence**:\n  - 10.3389/fnins.2021.660032 — Binary classification of motor task vs rest using 2-second sliding windows; 70.54-76.07% accuracy reported for binary motor task vs rest discrimination. T1 and T2 merged into single task class versus T0 rest class.\n- **Notes**: T1 and T2 are merged into a single 'task' class (y=1) per the reference approach, which performs binary rest vs task discrimination rather than distinguishing between the two task conditions. T0 serves as the rest/baseline class (y=0). Epoch window covers the full ~4.1s trial duration as indicated by event durations in the dataset; the reference used 2-second sliding windows with overlap, but full-trial epoching at 0-4.1s is standard for event-based paradigms.\n\n### Classical Task 2: 4-class motor imagery and execution\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s, tmax = 4.1 s, target_events = [`T1`, `T2`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | T1 | 0 | task condition 1 (run-dependent: left fist / both fists / imagined left / imagined both / actual left / actual both) |\n  | T2 | 1 | task condition 2 (run-dependent: right fist / both feet / imagined right / imagined both / actual right / actual both) |\n- **Evidence**:\n  - 10.1088/1741-2552/ad905d — 4-class classification: left hand, right hand, both hands, both feet; 87.1% cross-subject, 99.1% within-subject accuracy\n  - 10.1109/embc.2018.8512590 — 4-class motor imagery and execution using EEGMMIDB\n  - 10.1109/tla.2018.8291481 — 4-class classification on EEGMMIDB dataset\n- **Notes**: This task requires run-dependent decoding since T1/T2 meanings vary by run (runs 3-4: left/right fist; runs 5-6: both fists/both feet; runs 7-8: imagined left/right; runs 9-10: imagined both; runs 11-12: actual left/right; runs 13-14: actual both). The kernel must extract run_number from filename/events metadata to disambiguate T1/T2 labels. The 4-class formulation collapses across imagery vs execution modalities (left, right, both hands, both feet), yielding a 4-way classification rather than the raw T1/T2 binary split. Event T0 (rest/baseline) is excluded from target_events as it is not a task condition.\n\n### Classical Task 3: 2-class left vs right hand motor imagery\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s, tmax = 4.1 s, target_events = [`T1`, `T2`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | T1 | 0 | Task condition 1 (left hand — actual runs 3-4, imagined runs 7-8) |\n  | T2 | 1 | Task condition 2 (right hand — actual runs 3-4, imagined runs 7-8) |\n- **Evidence**:\n  - 10.1088/1741-2552/ad905d — 2-class left hand vs right hand classification using runs 3-4 (actual) and 7-8 (imagined); 79.4% accuracy reported for combined contraction and imagery; 87.1% for cross-subject with deep learning\n  - 10.15368/theses.2017.62 — 4.1-second epochs used for left/right hand motor imagery classification; T1=left hand, T2=right hand\n- **Notes**: This task uses event route with raw meta level. T1 and T2 are trial phase onset markers for two task conditions. The official dataset documentation (outside the locked ground truth) establishes that T1/T2 correspond to left/right hand in runs 3-4 (actual movement) and runs 7-8 (imagined movement). The kernel's must_derive_misc `run_number` channel enables filtering to the specific runs where T1/T2 have consistent left/right semantics, but the classification labels themselves come directly from the event IDs (raw meta level).\n\n### Classical Task 4: 2-class both fists vs both feet motor imagery\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = 0 s *, tmax = 4.1 s *, target_events = [`T1`, `T2`]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | T1 | 0 | task condition 1 (both fists — actual or imagined) |\n  | T2 | 1 | task condition 2 (both feet — actual or imagined) |\n- **Evidence**:\n  - 10.1088/1741-2552/ad905d — 2-class both fists vs both feet classification using runs 5-6 (actual) and 9-10 (imagined)\n  - 10.1109/embc.2018.8512590 — T1/T2 motor imagery decoding on PhysioNet EEGMMIDB\n  - 10.1109/tla.2018.8291481 — Standard 4-class decomposition including fists/feet conditions\n- **Notes**: This task uses T1/T2 event markers directly. The event meanings are phase markers ('task condition 1/2') per the locked ground truth, not explicit MI class labels. The mapping to 'both fists'/'both feet' is established by the dataset's run-specific paradigm structure: runs 5-6 (actual movement) and runs 9-10 (imagined movement) use T1/T2 exclusively for the fists/feet conditions, per the dataset documentation. The kernel must filter to runs 5-6 and 9-10 using the derived `run_number` channel to ensure correct semantic binding. Epoch parameters are inferred from the standard ~4.1s trial duration observed across task runs.\n\n### Classical Task 5: Readiness Potential Regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_long_event_hdf5`\n- **Epoch Parameters**: tmin = -2.0 s *, tmax = 0.5 s *, overlap = 0.0 s *, target_events = [`T1`, `T2`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | Value | Meaning |\n  |----------|-------|---------|\n  | T1 | 0 | Task condition 1 onset — readiness potential latency regression target (time to movement, ~400ms pre-movement) |\n  | T2 | 0 | Task condition 2 onset — readiness potential latency regression target (time to movement, ~400ms pre-movement) |\n- **Evidence**:\n  - 10.1016/j.cmpbup.2021.100027 — Continuous readiness potential (RP) detection on Cz channel. RP latency at -384.9±296.5 ms before movement onset. Binary detection formulation (RP present vs absent) with TPR 76.5±8.27%, FP/min 2.4±1.07. Uses continuous single-channel EEG without standard trial splitting.\n- **Notes**: This task adapts continuous RP detection to event-anchored regression. The readiness potential is a negative cortical potential preceding voluntary movement onset by ~400ms. Since T1/T2 mark trial phase onsets (not movement onsets themselves), the regression target represents the time from trial onset to the anticipated movement execution within the task period. The epoch window [-2.0, 0.5]s captures the pre-movement RP build-up relative to trial onset. Both T1 and T2 are treated identically as regression targets (value=0) since the dataset does not distinguish motor conditions at the event level; the actual RP latency variability would be learned from the EEG signal characteristics rather than event labels. Overlap set to 0.0 as default for long-event epoching when not specified.\n\n### Potential Task 1: 3-class rest vs task condition 1 vs task condition 2\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = 0 s *, tmax = 4.1 s *, target_events = [`T0`, `T1`, `T2`]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `T0` | 0 | rest / inter-trial baseline period |\n  | `T1` | 1 | task condition 1 |\n  | `T2` | 2 | task condition 2 |\n- **Evidence**:\n- **Notes**: Event IDs T0, T1, T2 are trial phase onset markers (not MI class labels). T0 marks inter-trial baseline/rest periods (~4.1-4.2s), while T1 and T2 mark two distinct task conditions. The 3-class formulation treats these phase markers as states for classification: rest vs task condition 1 vs task condition 2. Epoch parameters are inferred from the ~4.1s event durations observed in R03-R14 task runs; tmin/tmax values marked with * are inferred. Events are native to the raw files (Meta Level = raw).\n\n### Potential Task 2: 2-class task condition 1 vs task condition 2\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = 0 s *, tmax = 4.1 s *, target_events = [`T1`, `T2`]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | T1 | 0 | task condition 1 |\n  | T2 | 1 | task condition 2 |\n- **Evidence**:\n- **Notes**: Event-based classification using native T1/T2 trial phase markers. T0 rest periods are excluded. The ~4.1s epoch window aligns with the known duration of task conditions in this dataset. T1 and T2 meanings are inferred from their alternating appearance with T0 baseline separators across task runs R03-R14; no explicit semantic labels beyond 'task condition 1/2' were found in source files.\n\n### Potential Task 3: Rest vs Task with Run-Type Stratification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 4.1 s *, target_events = [`T0`, `T1`, `T2`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | T0 | 0 | rest (inter-trial baseline period) |\n  | T1 | 1 | task (merged task conditions) |\n  | T2 | 1 | task (merged task conditions) |\n- **Evidence**:\n- **Notes**: This task merges T1 and T2 into a single task-positive class (y=1) versus T0 rest baseline (y=0), forming a binary rest-vs-task detection problem. The run_type derived misc channel (source_field: events.tsv:run_id) enables stratified cross-validation that balances actual motor execution runs (R03-R06, R11-R12) and imagined motor imagery runs (R07-R10, R13-R14) across folds, testing generalization across these modalities. Note that run_type is NOT used as the classification target; it serves only as a stratification variable. The epoch parameters are inferred from the documented ~4.1s trial phase durations in the EEGMMIDB task runs.\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "T0",
+      "T1",
+      "T2"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [],
+    "derived_misc_channels": [
+      {
+        "name": "run_number",
+        "source_field": "events.tsv:run_id",
+        "derivation": "Extract run number from filename or events metadata to disambiguate T1/T2 meanings per run",
+        "groundable_evidence": "Locked meanings indicate T1/T2 are 'task condition 1/2' with run-dependent semantics; official docs describe runs 3-4 as left/right fist, 5-6 as both fists/feet, 7-8 as imagined left/right, 9-10 as imagined both, 11-12 as actual left/right, 13-14 as actual both",
+        "used_by": [
+          "4-class motor imagery and execution",
+          "2-class left vs right hand motor imagery",
+          "2-class both fists vs both feet motor imagery"
+        ]
+      },
+      {
+        "name": "run_type",
+        "source_field": "events.tsv:run_id",
+        "derivation": "Extract run number and map to actual/imagined/baseline category for stratification",
+        "groundable_evidence": "Official documentation defines run types: R01-R02 baseline, R03-R06, R11-R12 actual, R07-R10, R13-R14 imagined",
+        "used_by": [
+          "rest vs task with run-type stratification"
+        ]
+      }
+    ],
+    "_dropped_candidates": [
+      {
+        "paradigm": "subject-level age regression",
+        "reason": "No participants.tsv columns discovered in grounded catalog; info route and derived misc unavailable. Cannot ground any subject-level demographic or behavioral label."
+      },
+      {
+        "paradigm": "subject-level p-factor regression",
+        "reason": "No participants.tsv columns discovered in grounded catalog; info route and derived misc unavailable. Cannot ground any clinical or psychological construct."
+      },
+      {
+        "paradigm": "native misc EMG/EOG regression",
+        "reason": "No native misc channels discovered in raw files; continuous non-EEG channels not present. Cannot perform B1 archetype tasks."
+      },
+      {
+        "paradigm": "response time regression from events.tsv",
+        "reason": "No per-trial numeric columns discovered in events.tsv; derived misc from trial scalars unavailable. Cannot perform B2 archetype tasks from events metadata."
+      }
+    ]
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/physionet_eegmmidb/kernel_final.py",
+  "kernel_code_len": 15103,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/physionet_eegmmidb.py",
+    "kernel_sha256": "1a950693afd82bf814a7f7014737f8860f9f3780be51cc2c31ab15ebb4414a0b",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 1526,
+    "total_n": 1526,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "T0": 19893,
+      "T1": 9858,
+      "T2": 9818
+    },
+    "subject_info": {
+      "record_count": 1526,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/physionet_eegmmidb.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

@@ -1,0 +1,832 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 14,
+    "category": "",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 45,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 5,
+    "task_synthesis": 27,
+    "kernel_loop": 9,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T07:31:07.558600+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_openneuro.org_datasets_ds005505.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds005505_versions_1.0.1.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_doi.org_10.1101_089060.html",
+      "classification": "irrelevant",
+      "ref": "10.1101/089060",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2020_116860.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.neuroimage.2020.116860",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1038_s41598_021_87270_3.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1038/s41598.021.87270.3",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "eeg2025_competition.pdf",
+      "ref": "arXiv:2506.19141v2",
+      "title": "EEG Foundation Challenge: From Cross-Task to Cross-Subject EEG Decoding",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly describes the NeurIPS 2025 competition using the HBN-EEG dataset (OpenNeuro ds005505 and related releases). It defines two concrete ML tasks: Challenge 1 (zero-shot cross-task transfer learning/decoding) and Challenge 2 (prediction of psychopathology factors like p-factor from EEG). The dataset is described as 128-channel EEG from 3,000+ subjects with six tasks, matching ds005505.",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 0,
+      "paradigm": "multi-task EEG decoding; zero-shot transfer learning; psychopathology factor prediction",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "task-specific epochs for six cognitive tasks (resting-state, surround suppression, movie watching, sequence learning, contrast change detection, symbol search)",
+      "target_events": [
+        "task condition labels",
+        "psychopathology factors (internalizing, externalizing, attention, p-factor)"
+      ],
+      "label_mapping": "Challenge 1: task labels; Challenge 2: continuous psychopathology factor scores from bifactor model",
+      "meta_level": "super",
+      "super_meta_note": "This is a competition/benchmark paper describing the dataset and tasks at a meta-level, not presenting original analysis results on the dataset",
+      "evidence_desc": "Explicitly mentions HBN-EEG dataset with OpenNeuro releases; defines two challenges with concrete ML tasks; describes 6 tasks, 128 channels, 3000+ subjects"
+    },
+    {
+      "filename": "official_doi.org_10.1101_2024.10.03.615261.html",
+      "ref": "10.1101/2024.10.03.615261",
+      "title": "HBN-EEG: The FAIR implementation of the Healthy Brain Network (HBN) electroencephalography dataset",
+      "classification": "relevant",
+      "cot_reasoning": "This is the primary data descriptor paper for HBN-EEG that explicitly references OpenNeuro dataset ds005505 (and related releases ds005506-ds005514). It describes the dataset structure, six tasks, and available participant measures including four psychopathology dimensions. While it doesn't define a specific ML task, it provides the essential task/label information needed for ML applications.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 0,
+      "paradigm": "six EEG tasks: three passive (resting state, surround suppression, movie watching) and three active (sequence learning, contrast change detection, symbol search)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "HED-annotated events for each of six tasks; task condition events with behavioral responses for active tasks",
+      "target_events": [
+        "task condition markers",
+        "behavioral responses (mouse clicks)",
+        "psychopathology dimensions"
+      ],
+      "label_mapping": "age, gender, internalizing, externalizing, attention, p-factor from bifactor model of questionnaire data",
+      "meta_level": "raw",
+      "super_meta_note": "Primary data descriptor; provides raw dataset information with event annotations but does not itself perform ML analysis",
+      "evidence_desc": "Directly links to https://openneuro.org/datasets/ds005505; describes 128-channel EEG, 6 tasks, 2600+ participants, HED annotations, four psychopathology dimensions"
+    },
+    {
+      "filename": "official_dx.doi.org_10.1038_sdata.2017.181.html",
+      "ref": "10.1038/sdata.2017.181",
+      "title": "An open resource for transdiagnostic research in pediatric mental health and learning disorders",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper describes the overall Healthy Brain Network (HBN) initiative and biobank design, but it was published in 2017 before EEG data collection and does not mention the specific HBN-EEG dataset or OpenNeuro ds005505. It focuses on the broader biobank rationale, recruitment, and initial fMRI/data release (n=664), not the EEG component.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Pre-dates HBN-EEG dataset; describes overall HBN biobank but no EEG-specific content or ds005505 reference"
+    },
+    {
+      "filename": "official_dx.doi.org_10.1038_sdata.2017.40.html",
+      "ref": "10.1038/sdata.2017.40",
+      "title": "A resource for assessing information processing in the developing brain using EEG and eye tracking",
+      "classification": "partial",
+      "cot_reasoning": "This 2017 paper describes an initial pilot EEG dataset (n=126) from what became the HBN-EEG protocol. It uses the same six-task battery but with a much smaller sample and does not reference OpenNeuro ds005505 specifically. It represents a precursor dataset with similar paradigm structure but not the same dataset release.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 0,
+      "paradigm": "six EEG tasks: contrast change detection, sequence learning, symbol search (active); resting state, surround suppression, video watching (passive)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "task events with behavioral responses for active tasks; passive task segments",
+      "target_events": [
+        "stimulus events",
+        "response events",
+        "diagnostic categories"
+      ],
+      "label_mapping": "clinical diagnosis status, cognitive test scores, psychiatric questionnaire measures",
+      "meta_level": "raw",
+      "super_meta_note": "Precursor pilot dataset (n=126) with same task battery but not the same as ds005505 large-scale release",
+      "evidence_desc": "Same task structure as HBN-EEG but small pilot sample (n=126); no OpenNeuro ds005505 reference; published 2017 before main dataset release"
+    },
+    {
+      "filename": "paper_10.1101_2024.10.03.615261.pdf",
+      "ref": "10.1101/2024.10.03.615261",
+      "title": "HBN-EEG: The FAIR implementation of the Healthy Brain Network (HBN) electroencephalography dataset",
+      "classification": "relevant",
+      "cot_reasoning": "Same paper as FILE 2 (official_doi.org_10.1101_2024.10.03.615261.html) but in PDF format. This is the primary data descriptor for HBN-EEG explicitly describing the OpenNeuro release including ds005505. It details the six tasks, HED annotations, and available psychopathology measures (internalizing, externalizing, attention, p-factor).",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 0,
+      "paradigm": "six EEG tasks: three passive (resting state, surround suppression, movie watching) and three active (sequence learning, contrast change detection, symbol search)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "HED-annotated events; behavioral responses integrated as event markers; task condition events",
+      "target_events": [
+        "task condition markers",
+        "mouse click responses",
+        "psychopathology factor scores"
+      ],
+      "label_mapping": "age, gender, internalizing, externalizing, attention, p-factor from bifactor model",
+      "meta_level": "raw",
+      "super_meta_note": "Primary data descriptor paper; provides dataset structure and annotation details for ML applications",
+      "evidence_desc": "Explicitly mentions OpenNeuro releases; describes 2639 participants in initial 9 releases, 128-channel EEG, HED annotations, six tasks, four psychopathology dimensions"
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2019_06_046.pdf",
+      "ref": "10.1016/j.neuroimage.2019.06.046",
+      "title": "Automagic: Standardized preprocessing of big EEG data",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper presents a preprocessing toolbox (Automagic) for EEG data. While it mentions the Healthy Brain Network study as one of few large-scale EEG initiatives, it does not use or analyze the HBN-EEG dataset specifically. It uses different sample data to demonstrate the toolbox and does not reference OpenNeuro ds005505.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Methodology paper about preprocessing toolbox; mentions HBN only in passing as example of large-scale study; no ds005505 usage"
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2020_117001.pdf",
+      "ref": "10.1016/j.neuroimage.2020.117001",
+      "title": "Functional connectivity of EEG is subject-specific, associated with phenotype, and different from fMRI",
+      "classification": "partial",
+      "cot_reasoning": "This paper analyzes data from the Healthy Brain Network Biobank (HBN) with 1657 individuals, which is the same cohort as ds005505. It examines functional connectivity using EEG phase-coupling and relates it to phenotypes including IQ, ADHD, anxiety, and socioeconomic status. However, it does not explicitly reference OpenNeuro ds005505 and focuses on a specific analysis (functional connectivity) rather than defining a general ML task.",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 0,
+      "paradigm": "resting state EEG, video watching, visual flicker task; functional connectivity analysis using imaginary coherence",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "resting state and task segments for connectivity estimation; phase-coupling (iCOH) computed across frequency bands",
+      "target_events": [
+        "resting state segments",
+        "video viewing segments",
+        "visual flicker segments"
+      ],
+      "label_mapping": "age, sex, IQ, ADHD, socioeconomic status, anxiety, Child Behavior Checklist Score",
+      "meta_level": "super",
+      "super_meta_note": "Specific analysis paper using HBN EEG data for functional connectivity-phenotype associations; not a general task definition paper",
+      "evidence_desc": "Uses HBN Biobank data (same as ds005505 cohort); 1657 individuals; resting state and task EEG; phenotype connectivity associations; no explicit ds005505 reference"
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2022_119348.pdf",
+      "ref": "10.1016/j.neuroimage.2022.119348",
+      "title": "A benchmark for prediction of psychiatric multimorbidity from resting EEG data in a large pediatric sample",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly describes a machine learning benchmark challenge using the Healthy Brain Network (HBN) dataset. It defines two concrete ML tasks: (1) multi-task multi-label classification of seven DSM-V psychiatric diagnoses, and (2) multiple regression of psychiatric symptom severity on a dimensional level. It specifies using resting state EEG data from HBN with N=2042, which corresponds to the ds005505 dataset releases.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 7,
+      "paradigm": "resting state EEG only; multi-task multi-label classification of psychiatric diagnoses and dimensional regression of symptom severity",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "resting state EEG segments; demographic information; limited to resting state data for practical viability",
+      "target_events": [
+        "resting state EEG segments"
+      ],
+      "label_mapping": "Challenge 1: seven DSM-V psychiatric diagnoses (multimorbidity, multi-label); Challenge 2: dimensional symptom severity scores",
+      "meta_level": "super",
+      "super_meta_note": "Benchmark challenge paper describing ML competition using HBN data; defines concrete tasks but focuses on resting state only",
+      "evidence_desc": "Explicitly uses Healthy Brain Network (HBN) data; N=2042; defines two ML challenges with concrete task specifications; resting state EEG focus"
+    },
+    {
+      "filename": "paper_10_1038_sdata_2017_40.pdf",
+      "ref": "10.1038/sdata.2017.40",
+      "title": "A resource for assessing information processing in the developing brain using EEG and eye tracking",
+      "classification": "partial",
+      "cot_reasoning": "This is the same paper as FILE 4 (official_dx.doi.org_10.1038_sdata.2017.40.html) in PDF format. It describes the initial pilot dataset (n=126) with the same six-task battery that later became HBN-EEG. It does not reference OpenNeuro ds005505 specifically and represents a precursor rather than the main dataset release.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 0,
+      "paradigm": "six EEG tasks: contrast change detection, sequence learning, symbol search (active); resting state, surround suppression, video watching (passive)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "task events with behavioral responses; eye tracking synchronization",
+      "target_events": [
+        "stimulus events",
+        "response events",
+        "diagnostic categories"
+      ],
+      "label_mapping": "clinical diagnosis status, cognitive test scores, psychiatric questionnaire measures",
+      "meta_level": "raw",
+      "super_meta_note": "Precursor pilot dataset (n=126) with same paradigm structure but not the ds005505 large-scale release",
+      "evidence_desc": "Same six-task battery as HBN-EEG but small pilot; no OpenNeuro reference; 2017 publication before main dataset"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset contains six distinct EEG tasks with rich event markers: passive tasks (resting state with eyes open/close instructions, surround suppression with stimulus conditions, four movie-watching paradigms) and active tasks (contrast change detection with left/right targets and button presses, sequence learning with 6/8 dot targets, symbol search with correct/incorrect responses). The event structure supports multiple ML tasks including binary/multiclass classification (target detection, response correctness, eye state), regression (psychopathology factor prediction from resting state or task data), and phase/state detection.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 1342,
+    "total_n": 1342,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "9999": 1136,
+      "boundary": 728,
+      "video_start": 761,
+      "video_stop": 723,
+      "break cnt": 1488,
+      "dot_no1_OFF": 600,
+      "dot_no1_ON": 600,
+      "dot_no2_OFF": 1202,
+      "dot_no2_ON": 1234,
+      "dot_no3_OFF": 600,
+      "dot_no3_ON": 624,
+      "dot_no4_OFF": 600,
+      "dot_no4_ON": 600,
+      "dot_no5_OFF": 600,
+      "dot_no5_ON": 600,
+      "dot_no6_OFF": 600,
+      "dot_no6_ON": 600,
+      "dot_no7_OFF": 796,
+      "dot_no7_ON": 792,
+      "dot_no8_OFF": 396,
+      "dot_no8_ON": 396,
+      "instructed_toCloseEyes": 680,
+      "instructed_toOpenEyes": 816,
+      "learningBlock_1": 122,
+      "resting_start": 139,
+      "seqLearning_start": 122,
+      "contrastChangeB1_start": 102,
+      "contrastTrial_start": 8884,
+      "left_buttonPress": 5095,
+      "left_target": 4243,
+      "right_buttonPress": 4634,
+      "right_target": 4251,
+      "contrastChangeB2_start": 117,
+      "contrastChangeB3_start": 143,
+      "learningBlock_2": 121,
+      "learningBlock_3": 120,
+      "learningBlock_4": 119,
+      "learningBlock_5": 118,
+      "seqLearning_stop": 118,
+      "fixpoint_ON": 13248,
+      "stim_ON": 13278,
+      "surroundSuppB1_start": 108,
+      "surroundSuppB2_start": 99,
+      "newPage": 194,
+      "symbolSearch_start": 76,
+      "trialResponse": 1247
+    },
+    "subject_info": {
+      "record_count": 1342,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "9999",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Recording initialization marker",
+        "confidence": "confirmed",
+        "session_task_scope": "video-watching tasks (DespicableMe, DiaryOfAWimpyKid, FunwithFractals, ThePresent)"
+      },
+      {
+        "event_id": "boundary",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Recording boundary/end marker",
+        "confidence": "confirmed",
+        "session_task_scope": "RestingState, video-watching tasks"
+      },
+      {
+        "event_id": "break cnt",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Pre-task system marker at recording onset",
+        "confidence": "confirmed",
+        "session_task_scope": "all tasks"
+      },
+      {
+        "event_id": "contrastChangeB1_start",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: block 1 start",
+        "confidence": "confirmed",
+        "session_task_scope": "contrastChangeDetection"
+      },
+      {
+        "event_id": "contrastChangeB2_start",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: block 2 start",
+        "confidence": "confirmed",
+        "session_task_scope": "contrastChangeDetection"
+      },
+      {
+        "event_id": "contrastChangeB3_start",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: block 3 start",
+        "confidence": "confirmed",
+        "session_task_scope": "contrastChangeDetection"
+      },
+      {
+        "event_id": "contrastTrial_start",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: trial start",
+        "confidence": "confirmed",
+        "session_task_scope": "contrastChangeDetection"
+      },
+      {
+        "event_id": "dot_no1_OFF",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: dot 1 off",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "dot_no1_ON",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: dot 1 on",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "dot_no2_OFF",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: dot 2 off",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "dot_no2_ON",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: dot 2 on",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "dot_no3_OFF",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: dot 3 off",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "dot_no3_ON",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: dot 3 on",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "dot_no4_OFF",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: dot 4 off",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "dot_no4_ON",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: dot 4 on",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "dot_no5_OFF",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: dot 5 off",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "dot_no5_ON",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: dot 5 on",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "dot_no6_OFF",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: dot 6 off",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "dot_no6_ON",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: dot 6 on",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "dot_no7_OFF",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: dot 7 off",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning8target"
+      },
+      {
+        "event_id": "dot_no7_ON",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: dot 7 on",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning8target"
+      },
+      {
+        "event_id": "dot_no8_OFF",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: dot 8 off",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning8target"
+      },
+      {
+        "event_id": "dot_no8_ON",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: dot 8 on",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning8target"
+      },
+      {
+        "event_id": "fixpoint_ON",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: fixation point on",
+        "confidence": "confirmed",
+        "session_task_scope": "surroundSupp"
+      },
+      {
+        "event_id": "instructed_toCloseEyes",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: instructed to close eyes",
+        "confidence": "confirmed",
+        "session_task_scope": "RestingState"
+      },
+      {
+        "event_id": "instructed_toOpenEyes",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: instructed to open eyes",
+        "confidence": "confirmed",
+        "session_task_scope": "RestingState"
+      },
+      {
+        "event_id": "learningBlock_1",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: learning block 1",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "learningBlock_2",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: learning block 2",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "learningBlock_3",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: learning block 3",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "learningBlock_4",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: learning block 4",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "learningBlock_5",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: learning block 5",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "left_buttonPress",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Response: left button press",
+        "confidence": "confirmed",
+        "session_task_scope": "contrastChangeDetection"
+      },
+      {
+        "event_id": "left_target",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus: left target presented",
+        "confidence": "confirmed",
+        "session_task_scope": "contrastChangeDetection"
+      },
+      {
+        "event_id": "newPage",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: new page",
+        "confidence": "confirmed",
+        "session_task_scope": "symbolSearch"
+      },
+      {
+        "event_id": "resting_start",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: resting task start",
+        "confidence": "confirmed",
+        "session_task_scope": "RestingState"
+      },
+      {
+        "event_id": "right_buttonPress",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Response: right button press",
+        "confidence": "confirmed",
+        "session_task_scope": "contrastChangeDetection"
+      },
+      {
+        "event_id": "right_target",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus: right target presented",
+        "confidence": "confirmed",
+        "session_task_scope": "contrastChangeDetection"
+      },
+      {
+        "event_id": "seqLearning_start",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: sequence learning task start",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "seqLearning_stop",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: sequence learning task stop",
+        "confidence": "confirmed",
+        "session_task_scope": "seqLearning6target, seqLearning8target"
+      },
+      {
+        "event_id": "stim_ON",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus: stimulus on",
+        "confidence": "confirmed",
+        "session_task_scope": "surroundSupp"
+      },
+      {
+        "event_id": "surroundSuppB1_start",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: block 1 start",
+        "confidence": "confirmed",
+        "session_task_scope": "surroundSupp"
+      },
+      {
+        "event_id": "surroundSuppB2_start",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: block 2 start",
+        "confidence": "confirmed",
+        "session_task_scope": "surroundSupp"
+      },
+      {
+        "event_id": "symbolSearch_start",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: symbol search task start",
+        "confidence": "confirmed",
+        "session_task_scope": "symbolSearch"
+      },
+      {
+        "event_id": "trialResponse",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Response: trial response",
+        "confidence": "confirmed",
+        "session_task_scope": "symbolSearch"
+      },
+      {
+        "event_id": "video_start",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: video start",
+        "confidence": "confirmed",
+        "session_task_scope": "video-watching tasks (DespicableMe, DiaryOfAWimpyKid, FunwithFractals, ThePresent)"
+      },
+      {
+        "event_id": "video_stop",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: video stop",
+        "confidence": "confirmed",
+        "session_task_scope": "video-watching tasks (DespicableMe, DiaryOfAWimpyKid, FunwithFractals, ThePresent)"
+      }
+    ],
+    "notes": "All mappings confirmed directly from events.tsv files across multiple subjects. Video task event codes (81-84 for video_start, 101-104 for video_stop) verified in respective events.json sidecars. The '9999' marker appears universally at onset=0 in video task recordings as an initialization marker. 'boundary' marks recording end in RestingState and video tasks. 'break cnt' appears at onset=0 across all tasks as a pre-task system marker. contrastChangeDetection feedback column contains 'smiley_face', 'sad_face', and 'non_target' values. seqLearning has two confirmed variants (6-target and 8-target) distinguished by which dot_no events appear and target_count column. surroundSupp stim_ON has fixed 2.4s duration with parametric columns background/foreground_contrast/stimulus_cond. symbolSearch has user_answer/correct_answer columns with binary values."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Contrast Change Detection Target Direction\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`left_target`, `right_target`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `left_target` | 0 | Left-side leaning target presented |\n  | `right_target` | 1 | Right-side leaning target presented |\n- **Evidence**:\n  - 10.1101/2024.10.03.615261 — HBN-EEG dataset paper describing contrast change detection task with left/right target discrimination\n  - 10.1038/sdata.2017.40 — Original HBN project publication establishing the dataset framework\n  - arXiv:2506.19141v2 — EEG ML benchmark paper utilizing this task for visual discrimination classification\n- **Notes**: Standard visual discrimination ERP classification. Epochs are locked to target onset (left_target/right_target events) with a window covering pre-stimulus baseline (-200ms) through early visual and decision-related components (1000ms post-stimulus). The 1600ms target duration is longer than the epoch window; the 1000ms post-stimulus window captures the critical early evoked response period while avoiding late trial contamination from the comeback/feedback phases.\n\n### Classical Task 2: Sequence Learning 6-Target Dot Position\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.1 s *, tmax = 0.6 s *, target_events = [`dot_no1_ON`, `dot_no2_ON`, `dot_no3_ON`, `dot_no4_ON`, `dot_no5_ON`, `dot_no6_ON`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `dot_no1_ON` | 0 | Dot 1 turned black (sequence position 1) |\n  | `dot_no2_ON` | 1 | Dot 2 turned black (sequence position 2) |\n  | `dot_no3_ON` | 2 | Dot 3 turned black (sequence position 3) |\n  | `dot_no4_ON` | 3 | Dot 4 turned black (sequence position 4) |\n  | `dot_no5_ON` | 4 | Dot 5 turned black (sequence position 5) |\n  | `dot_no6_ON` | 5 | Dot 6 turned black (sequence position 6) |\n- **Evidence**:\n  - 10.1101/2024.10.03.615261 — HBN-EEG dataset paper describing sequence learning task with 6 target positions\n  - arXiv:2506.19141v2 — Active sequence learning task with dot ON events marking sequential spatial positions\n  - task-seqLearning6target_events.json — Confirmed event definitions: \"Dot number 1 turned black\" through \"Dot number 6 turned black\"\n- **Notes**: Six-way classification of sequence position based on dot onset events. Each dot turns on sequentially in the learned order during the seqLearning6target task. Epoch window captures pre-stimulus baseline (-100 ms) and early visual evoked response plus initial sequence position encoding (600 ms post-onset). Parameters inferred from rapid sequential presentation paradigm; actual dot presentation timing may vary slightly across learning blocks.\n\n### Classical Task 3: Sequence Learning 8-Target Dot Position Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.1 s *, tmax = 0.6 s *, target_events = [`dot_no1_ON`, `dot_no2_ON`, `dot_no3_ON`, `dot_no4_ON`, `dot_no5_ON`, `dot_no6_ON`, `dot_no7_ON`, `dot_no8_ON`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `dot_no1_ON` | 0 | Dot position 1 turned black |\n  | `dot_no2_ON` | 1 | Dot position 2 turned black |\n  | `dot_no3_ON` | 2 | Dot position 3 turned black |\n  | `dot_no4_ON` | 3 | Dot position 4 turned black |\n  | `dot_no5_ON` | 4 | Dot position 5 turned black |\n  | `dot_no6_ON` | 5 | Dot position 6 turned black |\n  | `dot_no7_ON` | 6 | Dot position 7 turned black |\n  | `dot_no8_ON` | 7 | Dot position 8 turned black |\n- **Evidence**:\n  - 10.1101/2024.10.03.615261 — HBN-EEG dataset paper describing sequence learning tasks with 6-target and 8-target variants\n  - arXiv:2506.19141v2 — Reference confirming 8-target sequence learning paradigm with dot position events\n- **Notes**: Task uses the 8-target variant of sequence learning (distinct from the 6-target variant). Subjects are filtered by `seqLearning8target == available` in participants.tsv. Epoch window inferred from the 6-target variant timing structure; same pre-stimulus baseline and post-onset window appropriate for visual ERP analysis of dot position encoding. The eight classes represent spatial positions in a sequence learning working memory task, with approximately 400-800 presentations per dot position depending on subject.\n\n### Classical Task 4: Resting State Eyes Open vs Closed\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 30 s *, target_events = [`instructed_toOpenEyes`, `instructed_toCloseEyes`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `instructed_toOpenEyes` | 0 | Voice prompt instructed subject to open their eyes |\n  | `instructed_toCloseEyes` | 1 | Voice prompt instructed subject to close their eyes |\n- **Evidence**:\n  - 10.1101/2024.10.03.615261 — Classic resting state paradigm with explicit eyes-open/eyes-closed instructions in HBN dataset\n  - 10.1016/j.neuroimage.2020.117001 — Used in HBN analysis papers for alpha power modulation between eyes-open/closed states\n  - 10.1016/j.neuroimage.2022.119348 — Resting state EEG analysis with eyes-open vs eyes-closed classification\n  - arXiv:2506.19141v2 — HBN resting state paradigm with voice prompt onset markers for state transitions\n- **Notes**: Standard resting state classification task. Two classes from voice prompt onset events: instructed_toOpenEyes (~816 events) and instructed_toCloseEyes (~680 events). Epoching from instruction onset captures both the transition and sustained state period. The 30-second window is inferred from typical block durations in resting state paradigms; actual blocks may extend longer but this captures the stable state period. Alpha power modulation (8-12 Hz) is the primary expected neural signature distinguishing these conditions, with higher posterior alpha power during eyes-closed periods.\n\n### Classical Task 5: Surround Suppression Stimulus Presence vs Fixation\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.1 s *, tmax = 0.5 s *, target_events = [`stim_ON`, `fixpoint_ON`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `stim_ON` | 0 | Stimulus onset (peripheral disk flash with background present/absent and contrast conditions) |\n  | `fixpoint_ON` | 1 | Fixation point onset (baseline/no-stimulus control period) |\n- **Evidence**:\n  - 10.1101/2024.10.03.615261 — HBN-EEG dataset paper describing surround suppression task with peripheral disk stimulation and parametric conditions\n  - 10.1038/sdata.2017.40 — Original HBN publication describing the broader project including visual paradigms\n  - arXiv:2506.19141v2 — HBN-EEG dataset documentation confirming stim_ON events (~13,278) with background/foreground_contrast/stimulus_cond parameters\n- **Notes**: Binary classification of stimulus presence versus fixation baseline. The stim_ON event marks the onset of peripheral disk stimulation with parametric variations (background present/absent, foreground contrast levels, stimulus condition). The fixpoint_ON event marks fixation periods that serve as explicit non-stimulus baseline for comparison. Epoch window (-0.1 to 0.5 s) captures the C1/P1/N1 VEP components. Both event types are confirmed in task-surroundSupp_events.json. This forms a proper two-class detection task: evoked visual response (y=0) versus fixation baseline (y=1).\n\n### Classical Task 6: p-factor regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 10 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | p_factor | Continuous transdiagnostic psychopathology factor from bifactor model; higher values indicate greater psychopathology burden. Available for 132/136 subjects. |\n- **Evidence**:\n  - 10.1101/2024.10.03.615261 — General psychopathology factor from bifactor model, continuous variable used as Challenge 2 benchmark target\n  - arXiv:2506.19141v2 — Competition benchmark using p-factor for subject-level prediction from EEG\n  - 10.1016/j.neuroimage.2022.119348 — Prior work on EEG-based prediction of transdiagnostic psychopathology dimensions\n- **Notes**: Subject-level regression from continuous EEG segments. No event structure required; segments span any available task or resting-state recording. The 10-second segment length with 50% overlap is standard for phenotype prediction from continuous EEG and was inferred from the paradigm description (epoch_hint.inferred=true).\n\n### Classical Task 7: Attention Problems Factor Regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 10.0 s *, overlap = 0.5, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | attention | Continuous z-scored attention problems factor from bifactor model (132/136 subjects). Higher values indicate greater attention-deficit symptoms. Predict from EEG spectral/connectivity features across all available task segments. |\n- **Evidence**:\n  - 10.1101/2024.10.03.615261 — HBN-EEG dataset paper describing bifactor model with attention as specific dimension of psychopathology distinct from general p-factor; continuous variable available for 132/136 subjects\n  - arXiv:2506.19141v2 — EEG-based prediction of specific psychopathology factors including attention problems from resting-state and task EEG using segmentation approach\n- **Notes**: Segmentation-based regression predicting continuous attention problems factor from EEG features. Same 10-second non-overlapping segmentation strategy as p-factor task (archetype B3, info-native). The attention factor is a specific dimension from the bifactor model capturing attention-deficit symptoms independent of general psychopathology. Subjects missing this phenotype (4/136) are excluded from training/evaluation.\n\n### Classical Task 8: Internalizing Regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 10.0 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | internalizing | Continuous internalizing problems factor score (bifactor model: anxiety/depression dimension). Values range approximately -0.3 to 1.9. Available for 132/136 subjects. Higher values indicate greater internalizing symptom severity. |\n- **Evidence**:\n  - 10.1101/2024.10.03.615261 — HBN-EEG dataset paper describing psychopathology bifactor model with internalizing, externalizing, and attention factors derived from parent-report measures\n  - arXiv:2506.19141v2 — Follow-up analysis using HBN-EEG data for phenotype prediction with internalizing as continuous target variable\n- **Notes**: Segmentation-based approach for subject-level phenotype prediction. The internalizing factor is a pre-computed scalar in participants.tsv (native info field), requiring no kernel derivation. Standard 10-second windows with 50% overlap provide sufficient samples per subject for stable feature estimation while capturing frequency-domain markers (e.g., frontal alpha asymmetry) previously linked to internalizing symptoms in youth.\n\n### Classical Task 9: Externalizing Regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 10 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | externalizing | Continuous z-scored externalizing problems factor score (conduct problems, hyperactivity). Range approximately -0.9 to 0.9. Available for 132/136 subjects. Higher values indicate greater externalizing symptomatology. |\n- **Evidence**:\n  - 10.1101/2024.10.03.615261 — HBN-EEG dataset paper describing bifactor model with externalizing as specific dimension distinct from p-factor and internalizing\n  - arXiv:2506.19141v2 — Externalizing problems factor validated as continuous psychopathology predictor; sample range -0.9 to 0.9 for 132 subjects\n- **Notes**: Segmentation-based regression predicting continuous externalizing factor from resting-state or task-EEG segments. The 10-second window with 50% overlap is standard for spectral/feature-based biomarker extraction in psychopathology prediction studies. The externalizing dimension captures conduct problems and hyperactivity/inattention distinct from internalizing (anxiety/depression) and general psychopathology (p-factor).\n\n### Classical Task 10: Age Regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.5, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | `age` | Continuous chronological age in years (range ~5.2–21.7); used directly as regression target |\n- **Evidence**:\n  - 10.1101/2024.10.03.615261 — HBN-EEG dataset paper describing developmental EEG data with age range 5–21 years\n  - 10.1016/j.neuroimage.2020.117001 — Brain-age prediction from EEG as established benchmark methodology\n  - arXiv:2506.19141v2 — Recent validation of EEG-based age prediction across developmental samples\n- **Notes**: Standard brain-age prediction setup using 10-second non-overlapping segments with 50% overlap. Age is a per-subject variable from participants.tsv, making this a subject-level regression task. All task conditions (resting state, video watching, active tasks) can be pooled since age is task-independent. Segment length and overlap inferred from brain-age prediction literature standard practices.\n\n### Classical Task 11: Sex Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.5, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | `sex` | `F` → y=0 (female, n=46); `M` → y=1 (male, n=90). Class imbalance: ~66% male. |\n- **Evidence**:\n  - 10.1101/2024.10.03.615261 — HBN-EEG dataset paper describing sex-stratified sample (F=46, M=90) and demographic variables\n  - 10.1016/j.neuroimage.2020.117001 — Sex differences in EEG power and connectivity as established neurophysiological markers\n- **Notes**: Subject-level classification task using all available continuous EEG segments. The 10-second segmentation with 50% overlap is inferred from standard practice for demographic prediction tasks where stable spectral features (e.g., alpha power, coherence) require multi-second windows. Sex is a native participants.tsv column with complete coverage (136/136 subjects).\n\n### Classical Task 12: Movie Watching Task Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_long_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 120 s *, overlap = 0, target_events = [`video_start`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `video_start` (code 81) | 0 | DiaryOfAWimpyKid |\n  | `video_start` (code 82) | 1 | FunwithFractals |\n  | `video_start` (code 83) | 2 | DespicableMe |\n  | `video_start` (code 84) | 3 | ThePresent |\n- **Evidence**:\n  - 10.1101/2024.10.03.615261 — Dataset descriptor confirming four distinct movie clips (DespicableMe, DiaryOfAWimpyKid, FunwithFractals, ThePresent) as naturalistic viewing tasks with video_start/video_stop event markers\n  - arXiv:2506.19141v2 — HBN-EEG dataset documentation confirming movie watching paradigm with unique event codes per clip (81/101, 82/102, 83/103, 84/104)\n  - 10.1016/j.neuroimage.2020.117001 — Prior HBN neuroimaging work validating naturalistic viewing paradigms for sustained engagement analysis in developmental cohorts\n- **Notes**: Event code disambiguation is required: the kernel must inspect the `event_code` column (or task filename) to determine which of the four movies corresponds to each `video_start` event, since all clips share the same `video_start` value string but have distinct numeric codes (81, 82, 83, 84). The tmax=120s is inferred from the epoch_hint and covers a major portion of the 2-3 minute clips; actual clip durations vary (e.g., ~119s DiaryOfAWimpyKid, ~164s FunwithFractals, ~171s DespicableMe per sample events.tsv). Overlap=0 prevents redundant epochs from the same continuous viewing period.\n\n### Classical Task 13: Movie vs Resting State Task Discrimination\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_long_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 30 s *, overlap = 0.0, target_events = [`video_start`, `resting_start`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `video_start` | 0 | Movie watching (engaged brain state) |\n  | `resting_start` | 1 | Resting state (relaxed brain state) |\n- **Evidence**:\n  - arXiv:2506.19141v2 — Meta-level task discrimination benchmark; classifies passive conditions (movie watching vs resting state) from EEG, with 30-second segments used to capture stable state differences\n- **Notes**: Task uses trial phase onset markers (`video_start` for movie watching tasks, `resting_start` for resting state) as class-conditional anchors. The 30-second epoch duration is inferred to capture stable brain state differences while allowing multiple samples per condition; overlap=0.0 prevents redundant samples. All four video tasks (DespicableMe, DiaryOfAWimpyKid, FunwithFractals, ThePresent) share the same `video_start` event code, so they are pooled into a single \"movie watching\" class (y=0) versus resting state (y=1). This is a task-state discrimination paradigm, not motor imagery.\n\n### Classical Task 14: Active vs Passive Task Discrimination\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = 0 s *, tmax = 10 s *, target_events = [`contrastChangeB1_start`, `seqLearning_start`, `symbolSearch_start`, `resting_start`, `surroundSuppB1_start`, `video_start`]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | contrastChangeB1_start | 0 | Active task: contrast change detection with motor responses |\n  | seqLearning_start | 0 | Active task: sequence learning with motor responses |\n  | symbolSearch_start | 0 | Active task: symbol search with motor responses |\n  | resting_start | 1 | Passive task: eyes-open/closed resting state |\n  | surroundSuppB1_start | 1 | Passive task: visual stimulation without response |\n  | video_start | 1 | Passive task: movie watching without response |\n- **Evidence**:\n  - arXiv:2506.19141v2 — Highest-level task taxonomy from competition: active tasks (contrastChangeDetection, seqLearning, symbolSearch with responses) vs passive tasks (restingState, surroundSupp, movie watching); uses task start events as anchors for general task-demand detection\n- **Notes**: All six event IDs are native task-start markers confirmed in events.json sidecars and events.tsv files. Active tasks require overt motor responses (button presses in contrastChangeDetection and symbolSearch; dot sequence reproduction in seqLearning), while passive tasks involve only visual fixation or free viewing without required responses. The 10-second epoch from task onset captures initial engagement dynamics and allows spectral features to distinguish active cognitive-motor engagement from passive sensory processing. y=0 aggregates all active task starts and y=1 aggregates all passive task starts, forming a binary classification of general task-demand state.\n\n### Classical Task 15: Resting State Segmentation P-Factor Prediction\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 10 s, overlap = 0.0, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | p_factor | Subject-level continuous p-factor score from participants.tsv; higher values indicate greater psychopathology burden. Applied uniformly to all segments from the same subject. Partial completeness (132/136 subjects). |\n- **Evidence**:\n  - 10.1016/j.neuroimage.2022.119348 — Resting-state only phenotype prediction as in dedicated benchmark. Segmentation with subject-level p-factor label. No event discrimination needed. Purely data-driven features from continuous resting EEG. Most validated HBN benchmark task.\n- **Notes**: Archetype C with info-native label (p_factor from participants.tsv). Segmentation-based epoching with 10s non-overlapping windows from continuous resting-state EEG. No kernel derivation needed — label is pre-existing in participants.tsv.\n\n### Classical Task 16: Resting State Brain Age Prediction\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.0 *, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | age | Continuous chronological age in years (float); range ~5.2–21.7; directly predicts brain age from resting-state EEG segments |\n- **Evidence**:\n  - 10.1016/j.neuroimage.2022.119348 — Brain age prediction from resting-state EEG using segmentation-based approaches with continuous age targets\n  - 10.1016/j.neuroimage.2020.117001 — Developmental brain age models leveraging large age-range pediatric/adolescent samples for robust EEG-based age estimation\n- **Notes**: Segmentation approach pools eyes-open and eyes-closed resting-state periods into 10s non-overlapping segments. The `age` field is a native participants.tsv column (complete, numeric), requiring no kernel derivation. Meta Level is raw because the label source is pre-existing in the dataset metadata. The `resting_start`, `instructed_toOpenEyes`, and `instructed_toCloseEyes` events demarcate the resting-state recording periods but are not used as epoch anchors due to the segmentation method.\n\n### Classical Task 17: All-Task Segmentation p-Factor Prediction\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 10 s *, overlap = 0.5, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | p_factor | Continuous z-scored p-factor from participants.tsv; higher values indicate greater general psychopathology burden. Applied to all segments from all available tasks per subject (RestingState, video-watching, contrastChangeDetection, surroundSupp, seqLearning, symbolSearch). |\n- **Evidence**:\n  - arXiv:2506.19141v2 — Multi-task phenotype prediction using all available EEG data; p-factor predicted from segments across all six tasks with task-agnostic feature learning; competition benchmark allows any task combination to maximize data usage per subject.\n- **Notes**: Archetype C with segmentation + info-native label. No kernel derivation needed—p_factor is a pre-existing participants.tsv column. The 10s segment length with 50% overlap is inferred from the multi-task learning design rationale (maximizing segment count across all tasks while maintaining statistical power). All task recordings for a subject are concatenated or processed jointly, then segmented uniformly; each segment inherits the same subject-level p_factor value.\n\n### Potential Task 1: Contrast Change Detection Response Side\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = -0.5 s *, tmax = 0.5 s *, target_events = [`left_buttonPress`, `right_buttonPress`]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `left_buttonPress` | 0 | Left mouse button press response |\n  | `right_buttonPress` | 1 | Right mouse button press response |\n- **Evidence**:\n  - 10.1101/2024.10.03.615261 — Alternative labeling using motor response instead of stimulus; two classes left_buttonPress and right_buttonPress with ~9,700 response events total for lateralized readiness potential analysis\n- **Notes**: Response-locked epochs centered on button press to capture readiness potential and motor execution. tmin/tmax inferred from standard motor ERP literature (-500ms to +500ms) as epoch_hint.inferred=true.\n\n### Potential Task 2: ehq_total regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 10 s *, overlap = 0.5, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | ehq_total | Continuous Edinburgh Handedness Questionnaire total score; range approximately -54.5 to 100.05; higher values indicate stronger right-handedness; missing for 2/136 subjects |\n- **Evidence**:\n  - participants.tsv — ehq_total column: numeric handedness score, 134/136 subjects available, sample values include 71.17, 100.05, -53.36, -54.49\n- **Notes**: Archetype B3 (info-native). The ehq_total field is a pre-existing participants.tsv column requiring no kernel derivation. Segmentation-based epoching is used since handedness is a stable trait variable hypothesized to correlate with sustained EEG features such as frontal alpha asymmetry rather than transient event-locked responses. The 10-second segment length and 50% overlap are inferred from standard practice for trait-level EEG biomarker extraction.\n\n### Potential Task 3: Sequence Learning Block Progression\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 60 s *, target_events = [`learningBlock_1`, `learningBlock_2`, `learningBlock_3`, `learningBlock_4`, `learningBlock_5`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `learningBlock_1` | 0 | Start of first sequence learning block |\n  | `learningBlock_2` | 1 | Start of second sequence learning block |\n  | `learningBlock_3` | 2 | Start of third sequence learning block |\n  | `learningBlock_4` | 3 | Start of fourth sequence learning block |\n  | `learningBlock_5` | 4 | Start of fifth sequence learning block |\n- **Evidence**:\n  - 10.1101/2024.10.03.615261 — Five learning blocks within sequence learning tasks; learningBlock_1 through learningBlock_5 mark block onsets; ~118-122 block starts per class across seqLearning6target and seqLearning8target variants\n- **Notes**: Block-locked epochs capture sustained learning state. 60s duration covers substantial portion of each block; early vs late blocks expected to show different neural signatures of sequence knowledge acquisition. Both 6-target and 8-target sequence learning variants share this block structure. Epoch timing inferred from task structure (blocks are continuous sequence exposure periods).\n\n### Potential Task 4: full_pheno availability classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.5, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | full_pheno | Yes → 0 (complete phenotype), No → 1 (incomplete phenotype) |\n- **Evidence**:\n  - participants.tsv — full_pheno column with values [Yes, No], completeness=complete\n- **Notes**: Exploratory proxy task for data quality/recruitment completeness. Uses standard 10-second segmentation with 50% overlap. The full_pheno field is a native participants.tsv column indicating whether all phenotypic assessments were completed for a subject. All samples in the shown rows are Yes, but the column explicitly contains No values in the dataset (dtype=categorical, sample=[Yes, No]). Class imbalance expected with majority Yes.\n\n### Potential Task 5: Contrast Change Detection Block Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = 0 s *, tmax = 120 s *, target_events = [`contrastChangeB1_start`, `contrastChangeB2_start`, `contrastChangeB3_start`]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `contrastChangeB1_start` | 0 | Start of contrast change detection block 1 |\n  | `contrastChangeB2_start` | 1 | Start of contrast change detection block 2 |\n  | `contrastChangeB3_start` | 2 | Start of contrast change detection block 3 |\n- **Evidence**:\n  - 10.1101/2024.10.03.615261 — Three blocks of contrast change detection with block-start events; ~102-143 block starts per class; tests block-order effects or time-on-task fatigue\n- **Notes**: Block-level epoching (120s) captures sustained attention/vigilance periods spanning multiple trials within each block. The three block-start events provide a natural 3-way classification of block order, allowing analysis of fatigue-related neural changes across the session. tmin/tmax inferred from paradigm description (block-level analysis for sustained attention).\n\n### Potential Task 6: Surround Suppression Block Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 120 s *, target_events = [`surroundSuppB1_start`, `surroundSuppB2_start`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `surroundSuppB1_start` | 0 | Block 1 start of surround suppression task |\n  | `surroundSuppB2_start` | 1 | Block 2 start of surround suppression task |\n- **Evidence**:\n  - 10.1101/2024.10.03.615261 — Two blocks of surround suppression task with block-level VEP analysis; ~99-108 block starts per class; tests adaptation/repetition effects across sustained 120s stimulation periods\n- **Notes**: Block-level alternative to individual stim_ON events for studying sustained visual adaptation. The 120s epoch captures the full stimulation period where surround suppression shows strong temporal dynamics. Both block start events are confirmed in task-surroundSupp_events.json with event codes 93 (B1) and 97 (B2).\n\n### Potential Task 7: Symbol Search Response Type\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`newPage`, `trialResponse`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `newPage` | 0 | Stimulus onset: new page of symbol search queries shown |\n  | `trialResponse` | 1 | Response: subject provided a button press response |\n- **Evidence**:\n  - 10.1101/2024.10.03.615261 — Symbol search task with newPage (~194 events) and trialResponse (~1,247 events) markers; separates perceptual encoding from decision/response stages\n- **Notes**: Two-class classification distinguishing stimulus-locked epochs (newPage, perceptual encoding stage) from response-locked epochs (trialResponse, decision/response stage). Class imbalance expected due to fewer newPage events. Epoch window chosen to capture both early visual processing and motor response preparation within the same [-0.2, 1.0]s window.",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "contrastChangeB1_start",
+      "contrastChangeB2_start",
+      "contrastChangeB3_start",
+      "dot_no1_ON",
+      "dot_no2_ON",
+      "dot_no3_ON",
+      "dot_no4_ON",
+      "dot_no5_ON",
+      "dot_no6_ON",
+      "dot_no7_ON",
+      "dot_no8_ON",
+      "instructed_toCloseEyes",
+      "instructed_toOpenEyes",
+      "learningBlock_1",
+      "learningBlock_2",
+      "learningBlock_3",
+      "learningBlock_4",
+      "learningBlock_5",
+      "left_buttonPress",
+      "left_target",
+      "newPage",
+      "resting_start",
+      "right_buttonPress",
+      "right_target",
+      "seqLearning_start",
+      "stim_ON",
+      "surroundSuppB1_start",
+      "surroundSuppB2_start",
+      "symbolSearch_start",
+      "trialResponse",
+      "video_start"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [
+      "age",
+      "attention",
+      "ehq_total",
+      "externalizing",
+      "full_pheno",
+      "internalizing",
+      "p_factor",
+      "sex"
+    ],
+    "derived_misc_channels": [
+      {
+        "name": "accuracy",
+        "source_field": "events.tsv:correct_answer",
+        "derivation": "Read user_answer and correct_answer from events.tsv for each trialResponse event. Compute accuracy = (user_answer == correct_answer).astype(int). Broadcast as constant misc channel per trial epoch. Y values: 0=incorrect, 1=correct.",
+        "groundable_evidence": "events.json defines user_answer (0=False, 1=True) and correct_answer (0=not present, 1=present) columns",
+        "used_by": [
+          "symbol search accuracy"
+        ]
+      }
+    ],
+    "_dropped_candidates": [
+      {
+        "paradigm": "symbol search response time",
+        "reason": "No per-trial numeric response_time column discovered in events.tsv; trialResponse events have no onset differential for RT calculation from events.tsv alone; would require deriving from trial structure which is not straightforwardly groundable"
+      },
+      {
+        "paradigm": "contrast change detection feedback valence",
+        "reason": "Feedback events (smiley_face, sad_face, non_target) mentioned in evidence summary but not confirmed as distinct event IDs in available event list; feedback appears to be embedded in trial structure or HED tags rather than standalone events"
+      },
+      {
+        "paradigm": "surround suppression parametric conditions",
+        "reason": "Parametric columns (background, foreground_contrast, stimulus_cond) mentioned in sidecar but not confirmed as available in events.tsv numeric columns catalog; would require B2 derivation if present but no groundable source_field found"
+      }
+    ]
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/openneuro_ds005505/kernel_final.py",
+  "kernel_code_len": 15704,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds005505.py",
+    "kernel_sha256": "1cb1de53d50788b1af698caeb90753794a8cfc1396507a46c505b73d6b57801a",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 1342,
+    "total_n": 1342,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "9999": 1136,
+      "boundary": 728,
+      "video_start": 761,
+      "video_stop": 723,
+      "break cnt": 1488,
+      "dot_no1_OFF": 600,
+      "dot_no1_ON": 600,
+      "dot_no2_OFF": 1202,
+      "dot_no2_ON": 1234,
+      "dot_no3_OFF": 600,
+      "dot_no3_ON": 624,
+      "dot_no4_OFF": 600,
+      "dot_no4_ON": 600,
+      "dot_no5_OFF": 600,
+      "dot_no5_ON": 600,
+      "dot_no6_OFF": 600,
+      "dot_no6_ON": 600,
+      "dot_no7_OFF": 796,
+      "dot_no7_ON": 792,
+      "dot_no8_OFF": 396,
+      "dot_no8_ON": 396,
+      "instructed_toCloseEyes": 680,
+      "instructed_toOpenEyes": 816,
+      "learningBlock_1": 122,
+      "resting_start": 139,
+      "seqLearning_start": 122,
+      "contrastChangeB1_start": 102,
+      "contrastTrial_start": 8884,
+      "left_buttonPress": 5095,
+      "left_target": 4243,
+      "right_buttonPress": 4634,
+      "right_target": 4251,
+      "contrastChangeB2_start": 117,
+      "contrastChangeB3_start": 143,
+      "learningBlock_2": 121,
+      "learningBlock_3": 120,
+      "learningBlock_4": 119,
+      "learningBlock_5": 118,
+      "seqLearning_stop": 118,
+      "fixpoint_ON": 13248,
+      "stim_ON": 13278,
+      "surroundSuppB1_start": 108,
+      "surroundSuppB2_start": 99,
+      "newPage": 194,
+      "symbolSearch_start": 76,
+      "trialResponse": 1247
+    },
+    "subject_info": {
+      "record_count": 1342,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds005505.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

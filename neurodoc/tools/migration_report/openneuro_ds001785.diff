@@ -1,0 +1,38 @@
+--- openneuro_ds001785/analysis.md (pre-v3)
++++ openneuro_ds001785/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds001785` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds001785
+ **Category**: High-level Mental | **Subjects**: 21 | **Files (Completed)**: 54 | **Channels**: 71 | **Sampling Rate**: 1024 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -19,6 +19,12 @@
+ |----------|---------------|------|------------|---------|
+ 
+ 
++
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
+ 
+ ### Info
+ | Field | Completeness | Notes |
+@@ -47,11 +53,12 @@
+ - **Evidence**: https://doi.org/10.1038/s41467-021-23540-y
+ - **Kernel Notes**: Confidence ratings from misc channel serve as continuous regression target. Cross-reference confidence values with stimulus events 200/201 to align trials. The confidence channel contains derived labels requiring metadata preservation (source, unit, version). Response times available in `response_time` misc channel for auxiliary analysis.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 1: Signal Detection Theory Four-Class Classification
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s (relative to stimulus onset), target_events = see Target Definition
+-- **Label Route**: `event`
++- **Label Route**: `info`
+ - **Target Definition**: Event-to-label mapping table below.
+ - **Meta Level**: `super`
+ - **Target Definition Table**:

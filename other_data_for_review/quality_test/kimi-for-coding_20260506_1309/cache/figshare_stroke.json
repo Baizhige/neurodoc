@@ -1,0 +1,321 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 10,
+    "category": "",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 32,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 6,
+    "task_synthesis": 12,
+    "kernel_loop": 9,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-06T13:52:31.494163+00:00",
+  "ref_extractions": [
+    {
+      "filename": "paper_10_3389_fnins_2025_1580931.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fnins.2025.1580931",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "classification": "irrelevant",
+      "ref": "",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "1-s2.0-S0165027026000373-main.pdf",
+      "ref": "10.1016/j.jneumeth.2026.110707",
+      "title": "TPCNet: A Temporal Periodicity Convolutional Network for motor imagery EEG decoding in stroke patients",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly describes collecting a new stroke patient MI dataset with 24 subjects performing four unilateral upper limb MI tasks (forward/lateral arm raising/lowering). The dataset appears to be the figshare_stroke dataset or closely related, as it involves stroke patients performing upper limb motor imagery. The paper defines a concrete 4-class classification task with clear labels and evaluates TPCNet on this dataset achieving 86.53% accuracy. The authors established this dataset themselves, which matches the figshare_stroke description of stroke patient EEG data.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "sliding window structure for consistent MI initiation",
+      "target_events": [
+        "forward arm raising",
+        "forward arm lowering",
+        "lateral arm raising",
+        "lateral arm lowering"
+      ],
+      "label_mapping": "4-class: forward raise, forward lower, lateral raise, lateral lower (split across 12 subjects each for forward/lateral groups)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Authors collected 24 stroke patients from China Rehabilitation Research Center; 12 subjects did forward arm raising/lowering, 12 did lateral arm raising/lowering; explicit 4-class MI classification task with 86.53% accuracy reported"
+    },
+    {
+      "filename": "paper_10_1016_j_compbiomed_2025_111285.pdf",
+      "ref": "10.1016/j.compbiomed.2025.111285",
+      "title": "Multi-domain feature extraction and Sand Cat Swarm Optimized Broad Learning System for EEG-based Motor Imagery decoding in stroke patients",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly provides the figshare dataset link (https://figshare.com/articles/dataset/EEG_datasets_of_stroke_patients/21679035) in the article info section, confirming direct use of the figshare_stroke dataset. The paper defines a concrete classification task on this stroke dataset, achieving 96.41% accuracy. The task involves left/right motor imagery classification with ERD-based band selection, CSP, EMD, HHT, Riemannian Geometry features, and BLS classification. Multiple validation settings including subject-wise, all-subjects, and LOSO are evaluated.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "sliding window approach for ERD-based band selection; optimal discriminative frequency bands selected based on ERD scores from C3 and C4",
+      "target_events": [
+        "left hand motor imagery",
+        "right hand motor imagery"
+      ],
+      "label_mapping": "binary: left MI vs right MI",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicit figshare link provided (21679035); stroke patient EEG dataset with left/right hand MI tasks; 96.41% classification accuracy; ERD-based sliding window for band selection; evaluated with subject-wise, all-subjects, and LOSO validation"
+    },
+    {
+      "filename": "paper_10_1016_j_jneumeth_2026_110707.pdf",
+      "ref": "10.1016/j.jneumeth.2026.110707",
+      "title": "TPCNet: A Temporal Periodicity Convolutional Network for motor imagery EEG decoding in stroke patients",
+      "classification": "relevant",
+      "cot_reasoning": "This is the same paper as File 1 with identical content (duplicate DOI 10.1016/j.jneumeth.2026.110707). It explicitly describes collecting a stroke patient MI dataset with 24 subjects performing four unilateral upper limb MI tasks. The paper defines a concrete 4-class classification task with TPCNet achieving 86.53% accuracy. The dataset characteristics match figshare_stroke (stroke patients, upper limb motor imagery, clinical collection).",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "sliding window structure for consistent MI initiation across samples",
+      "target_events": [
+        "forward arm raising",
+        "forward arm lowering",
+        "lateral arm raising",
+        "lateral arm lowering"
+      ],
+      "label_mapping": "4-class: forward raise, forward lower, lateral raise, lateral lower (12 subjects each for forward/lateral groups)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Same as File 1: 24 stroke patients from China Rehabilitation Research Center; explicit 4-class MI task with forward/lateral arm raising/lowering; 86.53% accuracy; sliding window for temporal alignment"
+    },
+    {
+      "filename": "paper_10_1109_tbme_2026_3653824.pdf",
+      "ref": "10.1109/TBME.2026.3653824",
+      "title": "MSHANet: A Multiscale Hybrid Attention Network for Motor Imagery EEG Decoding",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper proposes MSHANet for MI-EEG decoding but only evaluates on BCI Competition IV Datasets 2a and 2b, and EEGMMID - all healthy subject datasets. There is no mention of stroke patients or the figshare_stroke dataset. The paper mentions clinical applications and stroke in the introduction as motivation, but does not actually use any stroke patient data.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Evaluated only on BCI-2a, BCI-2b, and EEGMMID datasets; no stroke patient data used; mentions stroke only as clinical motivation in introduction"
+    },
+    {
+      "filename": "paper_10_3389_fnhum_2025_1555690.pdf",
+      "ref": "10.3389/fnhum.2025.1555690",
+      "title": "Heterogeneous transfer learning model for improving the classification performance of fNIRS signals in motor imagery among cross-subject stroke patients",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper focuses on fNIRS (functional near-infrared spectroscopy) signals, not EEG. While it involves stroke patients and motor imagery, it uses EEG data from healthy individuals as a source domain for transfer learning to fNIRS data from stroke patients. The target modality is fNIRS, not EEG, and there is no mention of the figshare_stroke EEG dataset. The paper explicitly states it uses 'labeled electroencephalogram (EEG) data from healthy individuals as the source domain' and 'two MI-fNIRS datasets from eight stroke patients' - these are fNIRS datasets, not the figshare_stroke EEG dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Uses fNIRS data from stroke patients, not EEG; source domain is EEG from healthy individuals; no mention of figshare_stroke dataset; heterogeneous transfer from EEG to fNIRS modalities"
+    },
+    {
+      "filename": "paper_10_3389_fnins_2024_1493264.pdf",
+      "ref": "10.3389/fnins.2024.1493264",
+      "title": "Dynamic graph attention network based on multi-scale frequency domain features for motion imagery decoding in hemiplegic patients",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper focuses on hemiplegic patients (which includes stroke patients) but explicitly states it validated on 'the public PhysioNet dataset' - not the figshare_stroke dataset. The paper discusses stroke rehabilitation applications but uses a different public dataset (PhysioNet). There is no mention of figshare or the specific stroke patient EEG dataset. The within-subject accuracy of 61.6% and cross-subject of 52.7% are reported on PhysioNet data.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Validated on public PhysioNet dataset only; no mention of figshare_stroke dataset; mentions hemiplegic patients and stroke rehabilitation as application domain but uses different data source"
+    },
+    {
+      "filename": "paper_ieeexplore_ieee_org_document_11309705.pdf",
+      "ref": "10.1109/JBHI.2025.3646871",
+      "title": "Mutual Generation for Cross-domain Challenge in Stroke Patients' Motor Imagery Classification and Functional Recovery Prediction",
+      "classification": "partial",
+      "cot_reasoning": "This paper explicitly uses stroke patient MI-EEG data and mentions 'The Huashan Stroke MI dataset was collected at Huashan Hospital'. It describes two MI-EEG datasets of stroke patients performing motor imagery tasks with left-and right-handed MI classification. However, this appears to be a different dataset (Huashan Stroke MI dataset, collected at Huashan Hospital, Fudan University) rather than the figshare_stroke dataset. The paper focuses on cross-domain challenges between different hemiplegic sides and functional recovery prediction. While highly related to stroke patient MI-EEG, it does not explicitly mention figshare or the specific dataset identifier 21679035.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "",
+      "target_events": [
+        "left hand motor imagery",
+        "right hand motor imagery"
+      ],
+      "label_mapping": "binary: left MI vs right MI",
+      "meta_level": "raw",
+      "super_meta_note": "Different dataset: Huashan Stroke MI dataset from Huashan Hospital, not figshare_stroke; but very similar population and task",
+      "evidence_desc": "Uses Huashan Stroke MI dataset from Huashan Hospital, Fudan University; 2-class left/right hand MI for stroke patients; also includes functional recovery prediction task; different from figshare_stroke dataset but similar clinical population and paradigm"
+    },
+    {
+      "filename": "paper_www_etasr_com_index_php_etasr_article_view_15300.pdf",
+      "ref": "10.48084/etasr.15300",
+      "title": "Integrating EEG Artifact Removal with Deep Learning for Accurate Motor Imagery Classification in Acute Stroke",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly describes using EEG data from 50 acute stroke patients from Xuanwu Hospital, Capital Medical University, Beijing, performing left- and right-hand motor imagery tasks. The dataset description matches the figshare_stroke dataset characteristics: 50 acute stroke patients, 32-channel semi-dry EEG system (ZhenTec NT1), 500 Hz sampling, left/right hand MI tasks, 40 trials per participant, within 1-30 days post-stroke. The paper defines a concrete binary classification task using CNN, LSTM, and hybrid CNN-LSTM models. The citation [28] in the paper likely refers to the figshare dataset source. This strongly matches the known figshare_stroke dataset (21679035) which has 50 stroke patients with left/right hand MI.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "ICA-based artifact removal with MARA, SASICA, EMAR; filtering and re-referencing; .edf files with motor imagery event information",
+      "target_events": [
+        "left hand motor imagery",
+        "right hand motor imagery"
+      ],
+      "label_mapping": "binary: left hand MI vs right hand MI",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "50 acute stroke patients from Xuanwu Hospital, Beijing; 32-channel ZhenTec NT1 at 500 Hz; left/right hand MI tasks; 40 trials per participant; 1-30 days post-stroke; explicit comparison of CNN, LSTM, hybrid CNN-LSTM for binary classification; matches figshare_stroke dataset description"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset contains clear event structure with trial_type values 1 and 2 mapping to left hand and right hand motor imagery respectively, along with phase markers (instruction, MI beginning, break) in the value column. This supports a standard 2-class motor imagery classification task. The events.tsv sample confirms alternating left/right trials with consistent timing structure.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 50,
+    "total_n": 50,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 50,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "1",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: instruction",
+        "confidence": "confirmed",
+        "session_task_scope": "task-motor-imagery"
+      },
+      {
+        "event_id": "2",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: motor imagery",
+        "confidence": "confirmed",
+        "session_task_scope": "task-motor-imagery"
+      },
+      {
+        "event_id": "3",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: break",
+        "confidence": "confirmed",
+        "session_task_scope": "task-motor-imagery"
+      }
+    ],
+    "notes": "Event IDs 1, 2, 3 are defined in task-motor-imagery_events.json with explicit level mappings: '1'='Instruction beginning', '2'='Motor imagery beginning', '3'='Break beginning'. The events.tsv file confirms these appear as alternating trial phases with durations 2000ms (instruction/break) and 4000ms (motor imagery), matching the 8s trial structure (2s instruction + 4s MI + 2s break) × 40 trials = 320s total duration per EDF file. The MAT files (eeg.label with values 1/2) encode trial_type (left/right hand imagery), not the event IDs 1-3 which represent phase onsets. Stimulus files confirm: stim1.png=instruction, stim2.mp4=motor imagery, stim3.png=break. No event annotations were detected in EDF headers; events are external markers."
+  },
+  "tasks_section": "## Tasks\n\n### Potential Task 1: NIHSS regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | NIHSS | Numeric clinical severity score (range 2-11 in this sample), regressed directly as continuous target |\n- **Evidence**:\n- **Notes**: Segmentation-based epoching with subject-level label regression. No event structure exists that discriminates NIHSS values; all segments from a given subject share the same NIHSS score. 4-second segments with 50% overlap are standard defaults for continuous resting/paradigm-free EEG analysis. The NIHSS field is a native participants.tsv column with complete coverage across all 50 subjects.\n\n### Potential Task 2: mRS Regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | mRS | Numeric functional outcome score; values 1-4 in this sample, higher indicates greater disability |\n- **Evidence**:\n- **Notes**: Subject-level regression predicting modified Rankin Scale (mRS) from continuous resting/segmented EEG. Segmentation-based epoching (4s windows, 50% overlap) is used since there is no event structure suitable for this subject-level clinical prediction task. The mRS score is a native participants.tsv column, so Meta Level = raw.\n\n### Potential Task 3: MBI Regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | MBI | Numeric disability score (range 50-100 in this sample); higher values indicate greater functional independence. Used as continuous regression target at subject level. All segments from a subject share the same MBI value. |\n- **Evidence**:\n- **Notes**: Subject-level regression task using segmentation-based epoching. Since MBI is a per-subject clinical score (not time-varying), all 4-second segments extracted from a given subject's continuous EEG will share the same regression target. The kernel must read MBI from participants.tsv and broadcast it to all segments for that subject. Segmentation parameters fall back to Category SKILL defaults (4s segments, 50% overlap) as no event structure guides epoching for this subject-level clinical prediction task.\n\n### Potential Task 4: Age regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | Age | Numeric age in years (44-66), used directly as regression target |\n- **Evidence**:\n- **Notes**: Subject-level demographic regression. Each segmented epoch from a participant receives the same Age value from participants.tsv. No kernel derivation needed — Age is a native info field.\n\n### Potential Task 5: ParalysisSide classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | ParalysisSide | left → 0, right → 1 (2-class binary classification) |\n- **Evidence**:\n  - participants.tsv — ParalysisSide column with complete coverage (N=50), values 'left' and 'right'\n- **Notes**: Subject-level clinical characteristic classification using continuous EEG segmented into 4s windows. ParalysisSide is a native participants.tsv column (B3 archetype), requiring no kernel derivation. The 4s segment length and 0.5 overlap are inferred from Category SKILL defaults for continuous EEG with no event structure, as this dataset has no usable event-based labels for this task.\n\n### Potential Task 6: IsFirstTime classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | IsFirstTime | yes → 0 (first-ever stroke), no → 1 (recurrent stroke) |\n- **Evidence**:\n- **Notes**: Subject-level binary classification using clinical characteristic from participants.tsv. Since IsFirstTime is a per-subject categorical variable (yes/no) and EEG is recorded continuously with no trial-level event structure for this task, segmentation-based epoching is used to create multiple epochs per subject, all sharing the same label. The 4-second segment length with 50% overlap follows Category SKILL defaults for continuous EEG with no event markers. All segments from a given subject receive that subject's IsFirstTime value as label.\n\n### Potential Task 7: Handedness classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | Handedness | left → 0, right → 1 (2-class binary classification) |\n- **Evidence**:\n- **Notes**: Subject-level demographic classification using continuous EEG segmented into 4-second windows. Handedness is a native participants.tsv column with complete coverage across all 50 subjects (values: left, right). This is a subject-level prediction task where all epochs from a given subject share the same label. Epoch parameters use Category SKILL defaults for segmentation-based epoching (4s segments, 50% overlap) as no event structure is needed for this subject-level paradigm.\n\n### Potential Task 8: Gender classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  | Gender | male=0, female=1 (binary classification; 2 classes) |\n- **Evidence**:\n  - participants.tsv — Gender column available for all 50 participants with values 'male' and 'female'\n- **Notes**: Subject-level demographic classification using continuous EEG segmented into 4-second windows with 50% overlap. Each segment from a subject inherits the same gender label. Segmentation parameters inferred from Category SKILL defaults as no trial structure is required for this subject-level paradigm.\n\n### Potential Task 9: StrokeLocation classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 4 s *, overlap = 0.5, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | StrokeLocation | Kernel maps each unique anatomical location string to a 0-based sequential integer class label. Observed values include: 'Left pons', 'Right pons', 'Left cerebellum, bilateral paraventricular, Right corona radiata', 'Left frontal parietal cortex, Left centrum semiovale', etc. Multi-class classification with ≥4 distinct stroke locations expected. |\n- **Evidence**:\n- **Notes**: Subject-level clinical characteristic classification. Since StrokeLocation is a native participants.tsv column (B3 archetype), no kernel derivation is needed for the label itself. The kernel only needs to map the categorical string values to sequential integer class labels. Segmentation-based epoching is used because this is a subject-level characteristic with no trial event structure — all segments from a subject share the same label.\n\n### Potential Task 10: Duration regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | Duration | Numeric days post-stroke (range 1–14); subject-level continuous target assigned to all epochs from that participant |\n- **Evidence**:\n- **Notes**: Subject-level regression using continuous EEG segments. The `Duration` field from participants.tsv indicates days elapsed since stroke onset (range 1–14 days). Since this is a subject-level variable, all segmented epochs from a given participant share the same regression target. Segmentation parameters use Category SKILL defaults (4s windows, 50% overlap) as no trial-locked event structure is required for this subject-level clinical prediction task.\n",
+  "kernel_requirements": {
+    "required_event_ids": [],
+    "required_native_misc": [],
+    "required_info_fields": [
+      "Age",
+      "Duration",
+      "Gender",
+      "Handedness",
+      "IsFirstTime",
+      "MBI",
+      "NIHSS",
+      "ParalysisSide",
+      "StrokeLocation",
+      "mRS"
+    ],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "4-class forward/lateral arm raising/lowering motor imagery",
+        "reason": "The 4-class MI paradigm with forward arm raise/lower and lateral arm raise/lower is described in two references (10.1016/j.jneumeth.2026.110707), but these explicitly state a different dataset from China Rehabilitation Research Center with only 24 subjects and 12 subjects per forward/lateral group. The super_meta_note confirms this is NOT the figshare_stroke dataset. The figshare_stroke dataset has only 2-class left/right hand MI per its own events.json, events.tsv, and MAT file labels. No 4-class event IDs exist in the grounded catalog."
+      },
+      {
+        "paradigm": "2-class left/right hand MI from Huashan dataset",
+        "reason": "Reference 10.1109/JBHI.2025.3646871 explicitly uses the Huashan Stroke MI dataset, not figshare_stroke. Super_meta_note confirms 'Different dataset: Huashan Stroke MI dataset from Huashan Hospital, not figshare_stroke'. The paradigm is already covered by the grounded 2-class left/right MI task from other relevant references."
+      },
+      {
+        "paradigm": "phase state detection (instruction vs MI vs break)",
+        "reason": "While event IDs 1/2/3 represent instruction/MI/break phases, these are trial phase markers per the locked meanings, not discriminable task labels. No reference proposes classifying these phases as the primary task. The actual MI task uses trial_type (1/2) as class labels during the MI phase. Creating a phase-detection task would be manufacturing a task not grounded in references or dataset purpose."
+      }
+    ]
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/figshare_stroke/kernel_final.py",
+  "kernel_code_len": 15220,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/figshare_stroke.py",
+    "kernel_sha256": "4baa4ab200299cb30746c0076ea8818fb633816ad969d1e85ad907aca067d0b3",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 50,
+    "total_n": 50,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 50,
+      "age_complete": 50,
+      "sex_complete": 50,
+      "device_complete": 0,
+      "age_examples": [
+        "68",
+        "46",
+        "41",
+        "66",
+        "60",
+        "40"
+      ],
+      "sex_examples": [
+        "female",
+        "male"
+      ]
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/figshare_stroke.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

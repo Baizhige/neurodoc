@@ -1,0 +1,44 @@
+--- openneuro_ds004017/analysis.md (pre-v3)
++++ openneuro_ds004017/analysis.md (v3)
+@@ -3,7 +3,7 @@
+ **Dataset**: `openneuro_ds004017` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004017
+ **Category**: High-level Mental | **Subjects**: 21 | **Files (Completed)**: 126
+ **Channels**: 65 | **Sampling Rate**: 2048 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -55,8 +55,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|	---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `stimulus_b` | 0 | Letter type b stimulus onset |
+   | `stimulus_d` | 1 | Letter type d stimulus onset |
+ - **Evidence**:
+@@ -87,8 +87,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|	---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `stimulus_b` | 0 | Letter type b stimulus onset |
+   | `stimulus_d` | 1 | Letter type d stimulus onset |
+ - **Notes**: 21 subjects × 6 sessions = 126 files. Sessions 1-3 likely pre-intervention, sessions 4-6 post-intervention. Within-subject comparison of letter discrimination ERP changes across intervention timeline. Epoch parameters consistent with Classical Task 1 for valid comparison.
+@@ -101,8 +101,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|	---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `stimulus_b` | 0 | Letter type b stimulus onset |
+   | `stimulus_d` | 1 | Letter type d stimulus onset |
+ - **Notes**: Paradigm includes visual search task alongside letter discrimination. Stimulus events likely shared across both tasks within sessions. Plausible to extract visual search-specific epochs if task markers are present in annotations.

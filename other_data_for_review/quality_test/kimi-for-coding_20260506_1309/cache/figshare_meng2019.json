@@ -1,0 +1,275 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 8,
+    "category": "",
+    "format_type": "mat",
+    "has_bids_sidecars": false
+  },
+  "budget_used": 19,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 6,
+    "task_synthesis": 6,
+    "kernel_loop": 2,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-06T13:31:58.259621+00:00",
+  "ref_extractions": [
+    {
+      "filename": "paper_10_1016_j_neunet_2024_106617.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.neunet.2024.106617",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1016_j_neunet_2024_106617_2.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.neunet.2024.106617.2",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1038_s41598_022_25049_w.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1038/s41598.022.25049.w",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1109_tnsre_2024_3365197.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1109/tnsre.2024.3365197",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "fnhum-13-00128 (1).pdf",
+      "ref": "10.3389/fnhum.2019.00128",
+      "title": "Exploring Training Effect in 42 Human Subjects Using a Non-invasive Sensorimotor Rhythm Based Online BCI",
+      "classification": "relevant",
+      "cot_reasoning": "This is the original Meng & He 2019 paper that explicitly describes and uses the figshare_meng2019 dataset (42 subjects, 3 sessions, online motor imagery BCI). The paper defines a concrete 2-class classification task (left-hand vs right-hand motor imagery) with clear labels and online feedback-based control. The dataset is fully characterized with event-based epochs tied to motor imagery tasks.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery (sensorimotor rhythm-based online BCI)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "trials with motor imagery periods, online feedback epochs",
+      "target_events": [
+        "left-hand motor imagery",
+        "right-hand motor imagery"
+      ],
+      "label_mapping": "left-hand imagination = class 1, right-hand imagination = class 2",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Original publication of the dataset; 42 subjects across 3 training sessions; online BCI with left/right hand motor imagery; reports BCI accuracy and ITR as performance metrics"
+    },
+    {
+      "filename": "paper_10_1088_1741_2552_ac0584.pdf",
+      "ref": "10.1088/1741-2552.ac0584",
+      "title": "Benefits of deep learning classification of continuous noninvasive brain–computer interface control",
+      "classification": "relevant",
+      "cot_reasoning": "This Stieger et al. 2021 paper explicitly uses the Meng & He 2019 dataset (described as 'an independent, large, and longitudinal online motor imagery BCI dataset with up to 4-classes and continuous 2D feedback'). The paper defines a concrete classification task with up to 4 classes using deep learning (CNNs) on this specific dataset, comparing full scalp vs motor-only montages.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery with continuous 2D feedback",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "continuous control with discrete classification outputs; trial-based epochs for offline analysis",
+      "target_events": [
+        "left-hand motor imagery",
+        "right-hand motor imagery",
+        "both hands",
+        "feet/rest (up to 4 classes)"
+      ],
+      "label_mapping": "up to 4-class motor imagery: left, right, both, feet/rest",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly states using 'an independent, large, and longitudinal online motor imagery BCI dataset' which matches figshare_meng2019 (42 subjects, 3 sessions, from same CMU/Bin He group); uses CNN classification with 4-class continuous control"
+    },
+    {
+      "filename": "paper_10_3389_fnhum_2019_00128.pdf",
+      "ref": "10.3389/fnhum.2019.00128",
+      "title": "Exploring Training Effect in 42 Human Subjects Using a Non-invasive Sensorimotor Rhythm Based Online BCI",
+      "classification": "relevant",
+      "cot_reasoning": "This is identical content to FILE 1 (same DOI, same paper) - the original Meng & He 2019 publication that explicitly defines and uses the figshare_meng2019 dataset. Same 2-class motor imagery classification task with 42 subjects and 3 sessions.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery (sensorimotor rhythm-based online BCI)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "trials with motor imagery periods, online feedback epochs",
+      "target_events": [
+        "left-hand motor imagery",
+        "right-hand motor imagery"
+      ],
+      "label_mapping": "left-hand imagination = class 1, right-hand imagination = class 2",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Duplicate of FILE 1 - original dataset publication with identical content and task definition"
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "ref": "10.1088/1741-2552.ac0584",
+      "title": "Benefits of deep learning classification of continuous noninvasive brain–computer interface control",
+      "classification": "relevant",
+      "cot_reasoning": "This is the same Stieger et al. 2021 paper as FILE 2 (same DOI, same content) - explicitly uses the Meng & He 2019 dataset for deep learning classification. The PMC version confirms the same 4-class motor imagery task with continuous control using CNNs on this specific dataset.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery with continuous 2D feedback",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "continuous control with discrete classification outputs; trial-based epochs for offline analysis",
+      "target_events": [
+        "left-hand motor imagery",
+        "right-hand motor imagery",
+        "both hands",
+        "feet/rest (up to 4 classes)"
+      ],
+      "label_mapping": "up to 4-class motor imagery: left, right, both, feet/rest",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "PMC version of FILE 2 - same Stieger et al. 2021 paper explicitly using the Meng & He 2019 dataset for CNN-based 4-class continuous BCI control"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The figshare_meng2019 dataset is the original publication of a well-known motor imagery BCI dataset with 42 subjects across 3 training sessions. Multiple reference papers confirm it supports binary left/right hand motor imagery classification, and one paper additionally demonstrates 4-class continuous control using the same dataset.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 126,
+    "total_n": 126,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 126,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "TargetCode_0",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: no target / inter-trial interval",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "TargetCode_1",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: target presented",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "Feedback_0",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: feedback inactive / pre-feedback period",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "Feedback_1",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: feedback active",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "ResultCode_0",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System marker: trial result code 0 (no result / incomplete)",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "CursorPosX_change",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Continuous variable: cursor horizontal position update",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "CursorPosY_change",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Continuous variable: cursor vertical position update",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      }
+    ],
+    "notes": "Evidence derived from programmatic scan of Exp3/Subj30_S01_Exp3.mat and Exp3/Subj30_S03_Exp3.mat showing Experimental_states struct with TargetCode (values 0,1), ResultCode (value 0), Feedback (values 0,1), CursorPosX, and CursorPosY. All 126 .mat files follow identical structure per filename pattern (SubjX_SYZ_ExpZ.mat across 3 experiments × 3 sessions). No events.tsv or sidecar files exist; event markers are embedded state variables in continuous sample-by-sample arrays. TargetCode transitions between 0 and 1 indicate target absence/presence. Feedback transitions between 0 and 1 indicate feedback period state changes. ResultCode remains 0 in sampled data, suggesting incomplete trials or placeholder value. Cursor position variables (0 to 2047 range) encode continuous tracking state. Experiment_Parm contains timing parameters (PreFeedbackDuration, PostFeedbackDuration, ITIDuration) that contextualize state transitions. Confidence is 'inferred' because direct mapping documentation is absent and interpretations derive from variable naming conventions and value patterns rather than explicit documentation."
+  },
+  "tasks_section": "## Tasks\n\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "0",
+      "1"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "BCI performance regression (subject-level accuracy/ITR)",
+        "reason": "BCI_UseResults exists in .mat files (shape 5x2 cell) but contains summary statistics per subject/session, not per-trial or continuous labels. No participants.tsv columns available for archetype B3. Would require parsing cell arrays and mapping to subject-level targets, but no grounded info route fields exist."
+      },
+      {
+        "paradigm": "age/p_factor subject-level regression",
+        "reason": "No participants.tsv discovered; no demographic or behavioral columns in grounded catalog. Cannot construct archetype B3 or C tasks."
+      }
+    ]
+  },
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/figshare_meng2019/kernel_final.py",
+  "kernel_code_len": 9774,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/figshare_meng2019.py",
+    "kernel_sha256": "d11f8cf2a1dff68adaf5ebedf6674505708286aec9a5ef0ab338b664eb90fa8c",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 126,
+    "total_n": 126,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "1": 7679,
+      "2": 7681
+    },
+    "subject_info": {
+      "record_count": 126,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/figshare_meng2019.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

@@ -1,0 +1,440 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 11,
+    "category": "",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 35,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 5,
+    "task_synthesis": 15,
+    "kernel_loop": 10,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T05:14:08.630321+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds002718.v1.1.0.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds002718.v1.1.0",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds002718.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2020_116778.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.neuroimage.2020.116778",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2020_117012.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.neuroimage.2020.117012",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "classification": "junk",
+      "ref": "",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as junk in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10.1038_sdata.2015.1.pdf",
+      "ref": "10.1038/sdata.2015.1",
+      "title": "A multi-subject, multi-modal human neuroimaging dataset",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper describes the original Wakeman & Henson dataset, but explicitly states it is available from https://openfmri.org/ (later OpenNeuro ds000117), not ds002718. The dataset described has 19 subjects with MEG/EEG/fMRI face recognition data, which matches the well-known ds000117 dataset, not ds002718.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10.3389_fnins.2019.00300.pdf",
+      "ref": "10.3389/fnins.2019.00300",
+      "title": "Multimodal Integration of M/EEG and f/MRI Data in SPM12",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper explicitly uses OpenNeuro dataset ds000117 (https://openneuro.org/datasets/ds000117/versions/1.0.22), not ds002718. It is a methods/tutorial paper demonstrating SPM12 analysis on the Wakeman & Henson face recognition dataset. The dataset accession number is clearly stated as ds000117 throughout.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2014_09_066.pdf",
+      "ref": "10.1016/j.neuroimage.2014.09.066",
+      "title": "MEG source reconstruction based on identification of directed source interactions on whole-brain anatomical networks",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper presents a novel MEG source reconstruction method using multivariate autoregressive models with anatomical connectivity priors. It does not mention any specific OpenNeuro dataset, and certainly not ds002718. The paper focuses on methodological development with simulated and unspecified experimental data.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_1038_sdata_2015_1.pdf",
+      "ref": "10.1038/sdata.2015.1",
+      "title": "A multi-subject, multi-modal human neuroimaging dataset",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is the same paper as File 1 (duplicate with different filename formatting), describing the original Wakeman & Henson dataset available from https://openfmri.org/ (OpenNeuro ds000117), not ds002718. The dataset has 19 subjects with face recognition MEG/EEG/fMRI data, matching ds000117.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_1038_sdata_2018_110.pdf",
+      "ref": "10.1038/sdata.2018.110",
+      "title": "MEG-BIDS, the brain imaging data structure extended to magnetoencephalography",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper introduces the MEG-BIDS standard extension for organizing MEG data. While it mentions the Wakeman & Henson dataset as one example of MEG-BIDS adoption and cites ds000117, it does not use or mention ds002718. The paper is about data standardization, not a specific analysis task on ds002718.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_3389_fnins_2019_00300.pdf",
+      "ref": "10.3389/fnins.2019.00300",
+      "title": "Multimodal Integration of M/EEG and f/MRI Data in SPM12",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a duplicate of File 2 with different filename formatting. It explicitly uses OpenNeuro dataset ds000117, not ds002718. The paper demonstrates SPM12 analysis pipeline on the Wakeman & Henson face recognition dataset with 16 subjects, clearly stating https://openneuro.org/datasets/ds000117/.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has rich, structured event labels with clear categorical information: face types (famous/unfamiliar/scrambled), presentation order (new/second_early/second_late), and button press responses (symmetry judgments). These support multiple ML classification tasks such as face category decoding, repetition detection (new vs. repeated faces), or symmetry judgment prediction from EEG.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 18,
+    "total_n": 18,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "boundary": 90,
+      "famous_new": 2700,
+      "famous_second_early": 1313,
+      "famous_second_late": 1291,
+      "left_nonsym": 3532,
+      "right_sym": 4900,
+      "scrambled_new": 2700,
+      "scrambled_second_early": 1271,
+      "scrambled_second_late": 1334,
+      "unfamiliar_new": 2700,
+      "unfamiliar_second_early": 1304,
+      "unfamiliar_second_late": 1316,
+      "left_sym": 3381,
+      "right_nonsym": 3616
+    },
+    "subject_info": {
+      "record_count": 18,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "boundary",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Run boundary marker: indicates boundary between merged runs",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "famous_new",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus onset: famous face, first presentation",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "famous_second_early",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus onset: famous face, immediate repeat presentation",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "famous_second_late",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus onset: famous face, delayed repeat presentation",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "left_nonsym",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Response: left hand button press, 'less symmetric' judgment",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "left_sym",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Response: left hand button press, 'more symmetric' judgment",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "right_nonsym",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Response: right hand button press, 'less symmetric' judgment",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "right_sym",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Response: right hand button press, 'more symmetric' judgment",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "scrambled_new",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus onset: scrambled face, first presentation",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "scrambled_second_early",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus onset: scrambled face, immediate repeat presentation",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "scrambled_second_late",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus onset: scrambled face, delayed repeat presentation",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "unfamiliar_new",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus onset: unfamiliar face, first presentation",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "unfamiliar_second_early",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus onset: unfamiliar face, immediate repeat presentation",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "unfamiliar_second_late",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus onset: unfamiliar face, delayed repeat presentation",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      }
+    ],
+    "notes": "Mappings confirmed by: (1) sub-002/eeg/sub-002_task-FaceRecognition_events.tsv and sub-003/eeg/sub-003_task-FaceRecognition_events.tsv showing trial_type column with these exact values; (2) sub-002/eeg/sub-002_task-FaceRecognition_eeg.json describing the task as face viewing with symmetry judgments via left/right button presses; (3) columns face_type (famous/unfamiliar/scrambled), event_type (faces/button_press), event_order (1/2), and trial_dist/time_dist confirming new vs repeat presentations. The 'boundary' marker was identified in turn 0 summary as indicating run boundaries within merged continuous recordings. No session variation exists; single task (FaceRecognition) across all subjects."
+  },
+  "tasks_section": "## Tasks\n\n### Potential Task 1: 3-class face type classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`famous_new`, `famous_second_early`, `famous_second_late`, `unfamiliar_new`, `unfamiliar_second_early`, `unfamiliar_second_late`, `scrambled_new`, `scrambled_second_early`, `scrambled_second_late`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `famous_new` | 0 | famous face |\n  | `famous_second_early` | 0 | famous face |\n  | `famous_second_late` | 0 | famous face |\n  | `unfamiliar_new` | 1 | unfamiliar face |\n  | `unfamiliar_second_early` | 1 | unfamiliar face |\n  | `unfamiliar_second_late` | 1 | unfamiliar face |\n  | `scrambled_new` | 2 | scrambled face |\n  | `scrambled_second_early` | 2 | scrambled face |\n  | `scrambled_second_late` | 2 | scrambled face |\n- **Evidence**:\n  - sub-002/eeg/sub-002_task-FaceRecognition_events.tsv — trial_type column contains all 9 face presentation event types (famous_new, famous_second_early, famous_second_late, unfamiliar_new, unfamiliar_second_early, unfamiliar_second_late, scrambled_new, scrambled_second_early, scrambled_second_late)\n  - sub-002/eeg/sub-002_task-FaceRecognition_eeg.json — task described as face viewing with photographs of famous, unfamiliar, or scrambled faces presented for 800-1000ms; subjects make symmetry judgments via button presses\n  - task-FaceRecognition_events.json — trial_type levels confirm meanings: \"Initial presentation of famous face\", \"Immediate repeated presentation of famous face\", \"Delayed repeated presentation of famous face\", etc.\n- **Notes**: All 9 face presentation events are collapsed by face_type (famous/unfamiliar/scrambled), ignoring presentation order (new/second_early/second_late). This creates a balanced 3-class classification of face type based on ERP responses to face stimuli. The epoch window from -200ms to +1000ms captures the N170 component and subsequent face-selective ERP components.\n\n### Potential Task 2: Famous vs Unfamiliar Face Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`famous_new`, `famous_second_early`, `famous_second_late`, `unfamiliar_new`, `unfamiliar_second_early`, `unfamiliar_second_late`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `famous_new` | 0 | Famous face, first presentation |\n  | `famous_second_early` | 0 | Famous face, immediate repeat presentation |\n  | `famous_second_late` | 0 | Famous face, delayed repeat presentation |\n  | `unfamiliar_new` | 1 | Unfamiliar face, first presentation |\n  | `unfamiliar_second_early` | 1 | Unfamiliar face, immediate repeat presentation |\n  | `unfamiliar_second_late` | 1 | Unfamiliar face, delayed repeat presentation |\n- **Evidence**:\n  - sub-002_task-FaceRecognition_events.tsv / sub-003_task-FaceRecognition_events.tsv — trial_type column contains event markers for famous_new, famous_second_early, famous_second_late, unfamiliar_new, unfamiliar_second_early, unfamiliar_second_late confirming event structure and repetition conditions\n  - task-FaceRecognition_events.json — Defines trial_type levels: \"famous_new\": \"Initial presentation of famous face\", \"famous_second_early\": \"Immediate repeated presentation of famous face\", \"famous_second_late\": \"Delayed repeated presentation of famous face\", \"unfamiliar_new\": \"Initial presentation of unfamiliar face\", \"unfamiliar_second_early\": \"Immediate repeated presentation of unfamiliar face\", \"unfamiliar_second_late\": \"Delayed repeated presentation of unfamiliar face\"\n  - eeg.json — TaskDescription confirms face viewing paradigm with famous, unfamiliar, and scrambled faces presented for 800-1000ms with symmetry judgment responses\n- **Notes**: Famous faces (all repetition conditions merged to y=0) vs unfamiliar faces (all repetition conditions merged to y=1). Scrambled faces are excluded as they are structurally different control stimuli, not meaningful for the famous/unfamiliar memory distinction. The three repetition conditions (new, second_early, second_late) are collapsed within each face category to test general face familiarity recognition regardless of presentation history. Epoch window (-200ms to 1000ms) covers the N170 component (~170ms) associated with face processing and subsequent late positive components related to memory/recognition effects.\n\n### Potential Task 3: New vs Repeated Face Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`famous_new`, `unfamiliar_new`, `scrambled_new`, `famous_second_early`, `famous_second_late`, `unfamiliar_second_early`, `unfamiliar_second_late`, `scrambled_second_early`, `scrambled_second_late`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `famous_new` | 0 | New presentation (first occurrence of any face) |\n  | `unfamiliar_new` | 0 | New presentation (first occurrence of any face) |\n  | `scrambled_new` | 0 | New presentation (first occurrence of any face) |\n  | `famous_second_early` | 1 | Repeated presentation (immediate or delayed repeat) |\n  | `famous_second_late` | 1 | Repeated presentation (immediate or delayed repeat) |\n  | `unfamiliar_second_early` | 1 | Repeated presentation (immediate or delayed repeat) |\n  | `unfamiliar_second_late` | 1 | Repeated presentation (immediate or delayed repeat) |\n  | `scrambled_second_early` | 1 | Repeated presentation (immediate or delayed repeat) |\n  | `scrambled_second_late` | 1 | Repeated presentation (immediate or delayed repeat) |\n- **Evidence**:\n  - sub-002/eeg/sub-002_task-FaceRecognition_events.tsv — trial_type column contains all nine event types with face_type, event_order, trial_dist, and time_dist columns confirming new (event_order=1) vs repeat (event_order=2) structure\n  - task-FaceRecognition_events.json — Levels definitions explicitly describe \"Initial presentation\" vs \"Immediate repeated presentation\" / \"Delayed repeated presentation\" for each face type\n  - sub-002/eeg/sub-002_task-FaceRecognition_eeg.json — TaskDescription confirms face viewing paradigm with famous/unfamiliar/scrambled stimuli and symmetry judgment responses\n- **Notes**: Collapses across face type (famous/unfamiliar/scrambled) and repeat timing (early/late) to test pure repetition suppression/priming effects. All new presentations (event_order=1) map to y=0; all repeat presentations (event_order=2) map to y=1. Epoch window (-200ms to 1000ms) targets N250r and subsequent repetition-related ERP components.\n\n### Potential Task 4: Immediate vs Delayed Repeat Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s *, tmax = 1.0 s *, target_events = [`famous_second_early`, `famous_second_late`, `unfamiliar_second_early`, `unfamiliar_second_late`, `scrambled_second_early`, `scrambled_second_late`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | famous_second_early | 0 | Immediate repeat presentation (famous face) |\n  | unfamiliar_second_early | 0 | Immediate repeat presentation (unfamiliar face) |\n  | scrambled_second_early | 0 | Immediate repeat presentation (scrambled face) |\n  | famous_second_late | 1 | Delayed repeat presentation (famous face) |\n  | unfamiliar_second_late | 1 | Delayed repeat presentation (unfamiliar face) |\n  | scrambled_second_late | 1 | Delayed repeat presentation (scrambled face) |\n- **Evidence**:\n  - sub-002/eeg/sub-002_task-FaceRecognition_events.tsv, sub-003/eeg/sub-003_task-FaceRecognition_events.tsv — trial_type column contains all six target events with confirmed counts; event_order and trial_dist/time_dist columns distinguish immediate vs delayed repetitions\n  - task-FaceRecognition_events.json — defines `famous_second_early` as \"Immediate repeated presentation of famous face\" and `famous_second_late` as \"Delayed repeated presentation of famous face\", with equivalent definitions for unfamiliar and scrambled variants\n  - eeg.json — describes face viewing paradigm with repetition structure; events extracted from merged runs with corrected latencies\n- **Notes**: Collapses across all three face types (famous, unfamiliar, scrambled) to test pure repetition lag effect. All second_early events map to y=0 (immediate repeat) and all second_late events map to y=1 (delayed repeat), yielding a balanced binary classification of temporal dynamics in repetition priming. Epoch window from -200 ms to 1000 ms captures pre-stimulus baseline and early (N250r) through sustained repetition effects.\n\n### Potential Task 5: Symmetry Judgment Button Press Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.5 s *, tmax = 0.5 s *, target_events = [`left_sym`, `left_nonsym`, `right_sym`, `right_nonsym`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | left_sym | 0 | Left hand button press, 'more symmetric' judgment |\n  | left_nonsym | 1 | Left hand button press, 'less symmetric' judgment |\n  | right_sym | 2 | Right hand button press, 'more symmetric' judgment |\n  | right_nonsym | 3 | Right hand button press, 'less symmetric' judgment |\n- **Evidence**:\n  - task-FaceRecognition_events.json — trial_type levels define left_sym, left_nonsym, right_sym, right_nonsym as button press responses for symmetry judgments\n  - sub-002_task-FaceRecognition_events.tsv — actual event occurrences with trial_type column containing these four response events\n  - eeg.json — TaskDescription confirms subjects pressed left or right key based on symmetry judgment ('more' or 'less symmetric' than average)\n  - README — dataset derived from Wakeman & Henson (2015) face processing study with button press responses\n- **Notes**: Four-class classification of button press responses by hand (left/right) and judgment type (symmetric/nonsymmetric). Alternative 2-class collapses are possible: left hand (left_sym+left_nonsym → y=0) vs right hand (right_sym+right_nonsym → y=1) for motor lateralization, or symmetric (left_sym+right_sym → y=0) vs nonsymmetric (left_nonsym+right_nonsym → y=1) for decision content. Epoch window [-0.5, 0.5]s is response-locked and inferred from typical readiness potential and motor execution timing; shorter than stimulus-locked due to variable reaction times.\n\n### Potential Task 6: 2-class hand laterality (left vs right)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = -0.5 s *, tmax = 0.5 s *, target_events = [`left_sym`, `left_nonsym`, `right_sym`, `right_nonsym`]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `left_sym` | 0 | Left hand button press (more symmetric judgment) |\n  | `left_nonsym` | 0 | Left hand button press (less symmetric judgment) |\n  | `right_sym` | 1 | Right hand button press (more symmetric judgment) |\n  | `right_nonsym` | 1 | Right hand button press (less symmetric judgment) |\n- **Evidence**:\n  - sub-002/eeg/sub-002_task-FaceRecognition_events.tsv — shows trial_type values `left_sym`, `left_nonsym`, `right_sym`, `right_nonsym` with corresponding value codes 256/4096 confirming left/right hand responses\n  - task-FaceRecognition_events.json — defines `left_sym` as \"Left button press to indicated more symmetric face\", `left_nonsym` as \"Left button press to indicated less symmetric face\", `right_sym` as \"Right button press to indicated more symmetric face\", `right_nonsym` as \"Right button press to indicated less symmetric face\"\n  - eeg.json — describes task requiring left or right index finger key-press based on symmetry judgment, with assignment counter-balanced across participants\n- **Notes**: Response-locked epoch centered on button press. The two left-hand events are merged to y=0 and two right-hand events to y=1, collapsing across the symmetry judgment content to isolate motor lateralization. The -500ms to +500ms window captures readiness potential and motor execution. Epoch timing inferred from standard motor ERP literature as response-locked analysis.\n\n### Potential Task 7: Symmetric vs Nonsymmetric Judgment Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.5 s *, tmax = 0.5 s *, target_events = [`left_sym`, `right_sym`, `left_nonsym`, `right_nonsym`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `left_sym` | 0 | symmetric judgment (collapsed across left/right hand) |\n  | `right_sym` | 0 | symmetric judgment (collapsed across left/right hand) |\n  | `left_nonsym` | 1 | nonsymmetric judgment (collapsed across left/right hand) |\n  | `right_nonsym` | 1 | nonsymmetric judgment (collapsed across left/right hand) |\n- **Evidence**:\n  - sub-002/eeg/sub-002_task-FaceRecognition_events.tsv — shows trial_type column with `left_sym`, `right_sym`, `left_nonsym`, `right_nonsym` response events\n  - task-FaceRecognition_events.json — defines `right_sym` as \"Right button press to indicated more symmetric face\", `left_nonsym` as \"Left button press to indicated less symmetric face\", etc.\n  - eeg.json TaskDescription — describes symmetry judgment task where participants pressed left or right key based on whether face was 'more' or 'less symmetric' than average\n- **Notes**: Response-locked epochs centered on button press to capture decision-related activity. Collapses across response hand to test whether EEG carries information about perceptual decision content (symmetric vs nonsymmetric judgment) independent of motor execution. The epoch window (-0.5 to +0.5 s) is inferred as a reasonable response-locked window; symmetry judgment was made during stimulus viewing so pre-response activity may contain decision evidence.\n\n### Potential Task 8: Face vs Button Press Detection\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s *, tmax = 0.8 s *, target_events = [`famous_new`, `famous_second_early`, `famous_second_late`, `unfamiliar_new`, `unfamiliar_second_early`, `unfamiliar_second_late`, `scrambled_new`, `scrambled_second_early`, `scrambled_second_late`, `left_sym`, `left_nonsym`, `right_sym`, `right_nonsym`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `famous_new` | 0 | Face stimulus presentation (all face types) |\n  | `famous_second_early` | 0 | Face stimulus presentation (all face types) |\n  | `famous_second_late` | 0 | Face stimulus presentation (all face types) |\n  | `unfamiliar_new` | 0 | Face stimulus presentation (all face types) |\n  | `unfamiliar_second_early` | 0 | Face stimulus presentation (all face types) |\n  | `unfamiliar_second_late` | 0 | Face stimulus presentation (all face types) |\n  | `scrambled_new` | 0 | Face stimulus presentation (all face types) |\n  | `scrambled_second_early` | 0 | Face stimulus presentation (all face types) |\n  | `scrambled_second_late` | 0 | Face stimulus presentation (all face types) |\n  | `left_sym` | 1 | Button press response (all button types) |\n  | `left_nonsym` | 1 | Button press response (all button types) |\n  | `right_sym` | 1 | Button press response (all button types) |\n  | `right_nonsym` | 1 | Button press response (all button types) |\n- **Evidence**:\n  - sub-002/eeg/sub-002_task-FaceRecognition_events.tsv and sub-003/eeg/sub-003_task-FaceRecognition_events.tsv — trial_type column contains all 13 event types with event_type grouping faces vs button_press\n  - sub-002/eeg/sub-002_task-FaceRecognition_eeg.json — task described as face viewing with symmetry judgments via left/right button presses\n  - task-FaceRecognition_events.json — event_type column explicitly defines two general types: \"faces\" (face image presentation) and \"button_press\" (button pressing indicating level of symmetry)\n- **Notes**: Binary classification collapsing 9 face presentation event types (y=0) vs 4 button press event types (y=1). Epoch parameters inferred from typical event-related discrimination windows; -200ms pre-stimulus baseline to 800ms post captures visual evoked responses and motor potentials without excessive length. The event_type column in events.tsv provides direct grounding for the two-class grouping.\n\n### Potential Task 9: Age Regression from EEG\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.0, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | age | Continuous age in years (23–31); missing for 5/18 subjects; segments from subjects with missing age are excluded from training/evaluation. |\n- **Evidence**:\n  - participants.tsv — age column available for 13/18 subjects (range 23–31 years); used as regression target for subject-level biomarker prediction from segmented EEG\n- **Notes**: Segmentation-based approach for subject-level prediction: EEG is split into 2-second non-overlapping segments, each inheriting the subject's age as the regression target. Model learns age-correlated spectral/spatial patterns across the continuous recording without relying on event structure. Missing ages (5 subjects) handled by exclusion at sample level.\n\n### Potential Task 10: Gender Classification from EEG\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 2 s *, overlap = 0.0 *, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | gender | 0 = M (male), 1 = F (female); 5 subjects with n/a excluded |\n- **Evidence**:\n- **Notes**: Subject-level biomarker task using 2-second non-overlapping segments of continuous EEG. Gender labels are drawn from participants.tsv (13/18 subjects with valid M/F labels: 7 M, 6 F). No event-based segmentation needed; the kernel must filter out subjects with missing gender (n/a) during train/test splitting. Standard approach for demographic classification from resting-state or task-continuous EEG.\n\n### Potential Task 11: Continuous Face Viewing Segmentation Age Regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 4 s *, overlap = 0.5 *, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | `age` | Continuous subject age in years; value used directly as regression target. Partial coverage (13/18 subjects); subjects without age entry excluded. |\n- **Evidence**:\n- **Notes**: Segmentation-based task with no event locking. Uses 4-second sliding windows with 50% overlap to extract samples from continuous ~7.5-minute face viewing runs. Age is a native participants.tsv column, so Meta Level = raw. The kernel does not need to derive any channels; it only needs to read the `age` field from participants.tsv and assign the same label to all segments from a given subject.\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "famous_new",
+      "famous_second_early",
+      "famous_second_late",
+      "left_nonsym",
+      "left_sym",
+      "right_nonsym",
+      "right_sym",
+      "scrambled_new",
+      "scrambled_second_early",
+      "scrambled_second_late",
+      "unfamiliar_new",
+      "unfamiliar_second_early",
+      "unfamiliar_second_late"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [
+      "age",
+      "gender"
+    ],
+    "derived_misc_channels": [
+      {
+        "name": "event_order_misc",
+        "source_field": "events.tsv:event_order",
+        "derivation": "Read event_order column from events.tsv for each event row; create per-trial misc channel by broadcasting scalar value across the epoch window, or store as trial-level annotation for regression target",
+        "groundable_evidence": "events.tsv numeric column: event_order (found_in=sub-002_task-FaceRecognition_events.tsv)",
+        "used_by": [
+          "event order regression"
+        ]
+      },
+      {
+        "name": "trial_dist_misc",
+        "source_field": "events.tsv:trial_dist",
+        "derivation": "Read trial_dist column from events.tsv for each event row; value is 0 for new presentations and positive integer for repeats; create per-trial misc channel for regression target",
+        "groundable_evidence": "events.tsv numeric column: trial_dist (found_in=sub-002_task-FaceRecognition_events.tsv)",
+        "used_by": [
+          "trial distance regression"
+        ]
+      },
+      {
+        "name": "time_dist_misc",
+        "source_field": "events.tsv:time_dist",
+        "derivation": "Read time_dist column from events.tsv for each event row; value is 0 for new presentations and positive float for repeats indicating seconds elapsed; create per-trial misc channel for regression target",
+        "groundable_evidence": "events.tsv numeric column: time_dist (found_in=sub-002_task-FaceRecognition_events.tsv)",
+        "used_by": [
+          "time distance regression"
+        ]
+      }
+    ],
+    "_dropped_candidates": [
+      {
+        "paradigm": "resting state eyes-open/closed",
+        "reason": "No resting state events or blocks identified; task is active face viewing throughout all runs. No eyes-open/closed markers in events."
+      },
+      {
+        "paradigm": "motor imagery",
+        "reason": "No motor imagery events; button presses are actual motor responses, not imagined movements. Locked meanings explicitly describe these as actual button presses."
+      },
+      {
+        "paradigm": "P300 oddball",
+        "reason": "No oddball paradigm; all stimuli are faces with no rare/target distinction suitable for P300. Famous/unfamiliar/scrambled are not designed as oddball targets."
+      }
+    ]
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/openneuro_ds002718/kernel_final.py",
+  "kernel_code_len": 16498,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds002718.py",
+    "kernel_sha256": "94d41bf8ce64ceb228bcf2b2ac4d3c31cd2a29bd0b9b98da8e406504da789cbb",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 18,
+    "total_n": 18,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "boundary": 180,
+      "famous_new": 5400,
+      "famous_second_early": 2626,
+      "famous_second_late": 2582,
+      "left_nonsym": 7064,
+      "right_sym": 9800,
+      "scrambled_new": 5400,
+      "scrambled_second_early": 2542,
+      "scrambled_second_late": 2668,
+      "unfamiliar_new": 5400,
+      "unfamiliar_second_early": 2608,
+      "unfamiliar_second_late": 2632,
+      "left_sym": 6762,
+      "right_nonsym": 7232
+    },
+    "subject_info": {
+      "record_count": 18,
+      "age_complete": 13,
+      "sex_complete": 13,
+      "device_complete": 0,
+      "age_examples": [
+        "24",
+        "31",
+        "29",
+        "30",
+        "26",
+        "25"
+      ],
+      "sex_examples": [
+        "male",
+        "female"
+      ]
+    },
+    "misc_channel_names": [
+      "MISC"
+    ]
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds002718.py",
+  "reconcile_patched": true,
+  "status": "wait_manual_review"
+}

@@ -1,0 +1,331 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 8,
+    "category": "",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 25,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "event_annotation": 8,
+    "task_synthesis": 11,
+    "kernel_loop": 2,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T04:33:53.544292+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_openneuro.org_datasets_ds002578.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1016_j_jneumeth_2014_10_003.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.jneumeth.2014.10.003",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2010_01_030.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.neuroimage.2010.01.030",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2010_10_008.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.neuroimage.2010.10.008",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2014_09_010.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.neuroimage.2014.09.010",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1371_journal_pone_0030135.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1371/journal.pone.0030135",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1523_jneurosci_3477_07_2007.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1523/jneurosci.3477.07.2007",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "classification": "irrelevant",
+      "ref": "",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset contains a visual selective attention task with clearly defined event structures. The events.json sidecars map numerical values to specific experimental conditions: highlighted box position (1-5) crossed with disc presentation position (1-5), creating 25 distinct trial types. The events.tsv shows 'Picture' and 'Response' events with onsets, and the task involves participants responding to target stimuli, enabling classification of attention/location conditions or detection of target vs. non-target responses.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 2,
+    "total_n": 2,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "203": 1,
+      "217": 2,
+      "31": 240,
+      "33": 240,
+      "34": 239,
+      "35": 240,
+      "41": 238,
+      "42": 239,
+      "43": 240,
+      "44": 239,
+      "45": 239,
+      "Picture": 5939,
+      "Response": 1202,
+      "boundary": 58,
+      "237": 1
+    },
+    "subject_info": {
+      "record_count": 2,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "203",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Spurious presentation software marker removed during preprocessing",
+        "confidence": "inferred",
+        "session_task_scope": "none"
+      },
+      {
+        "event_id": "217",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Spurious presentation software marker removed during preprocessing",
+        "confidence": "inferred",
+        "session_task_scope": "none"
+      },
+      {
+        "event_id": "237",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Spurious presentation software marker removed during preprocessing",
+        "confidence": "inferred",
+        "session_task_scope": "none"
+      },
+      {
+        "event_id": "31",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: stimulus presentation with highlighted box 3, disc in box 1 (Attend-to X-Position/3, Cue X-Position/1, Expected, Distractor)",
+        "confidence": "confirmed",
+        "session_task_scope": "none"
+      },
+      {
+        "event_id": "33",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: stimulus presentation with highlighted box 3, disc in box 3 (Attend-to X-Position/3, Cue X-Position/3, Unexpected, Oddball, Target)",
+        "confidence": "confirmed",
+        "session_task_scope": "none"
+      },
+      {
+        "event_id": "34",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: stimulus presentation with highlighted box 3, disc in box 4 (Attend-to X-Position/3, Cue X-Position/4, Expected, Distractor)",
+        "confidence": "confirmed",
+        "session_task_scope": "none"
+      },
+      {
+        "event_id": "35",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: stimulus presentation with highlighted box 3, disc in box 5 (Attend-to X-Position/3, Cue X-Position/5, Expected, Distractor)",
+        "confidence": "confirmed",
+        "session_task_scope": "none"
+      },
+      {
+        "event_id": "41",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: stimulus presentation with highlighted box 4, disc in box 1 (Attend-to X-Position/4, Cue X-Position/1, Expected, Distractor)",
+        "confidence": "confirmed",
+        "session_task_scope": "none"
+      },
+      {
+        "event_id": "42",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: stimulus presentation with highlighted box 4, disc in box 2 (Attend-to X-Position/4, Cue X-Position/2, Expected, Distractor)",
+        "confidence": "confirmed",
+        "session_task_scope": "none"
+      },
+      {
+        "event_id": "43",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: stimulus presentation with highlighted box 4, disc in box 3 (Attend-to X-Position/4, Cue X-Position/3, Expected, Distractor)",
+        "confidence": "confirmed",
+        "session_task_scope": "none"
+      },
+      {
+        "event_id": "44",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: stimulus presentation with highlighted box 4, disc in box 4 (Attend-to X-Position/4, Cue X-Position/4, Unexpected, Oddball, Target)",
+        "confidence": "confirmed",
+        "session_task_scope": "none"
+      },
+      {
+        "event_id": "45",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: stimulus presentation with highlighted box 4, disc in box 5 (Attend-to X-Position/4, Cue X-Position/5, Expected, Distractor)",
+        "confidence": "confirmed",
+        "session_task_scope": "none"
+      },
+      {
+        "event_id": "Picture",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: stimulus presentation (experimental stimulus, drawing onset)",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "Response",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Participant response: keyboard key press",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "boundary",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: pause/discontinuity between blocks",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      }
+    ],
+    "notes": "Confirmed mappings from: (1) top-level events.json HED tags for codes 31-45, 'Picture', 'Response', 'boundary'; (2) sub-001/sub-002 events.json 'Levels' defining 11-55/x11-x55 as '[highlighted box] × [disc position]' in five rectangular boxes; (3) events.tsv showing only 'Picture', 'Response', and 'boundary' values in processed data. Codes 203/217/237 inferred as spurious presentation markers removed during preprocessing per README reference to 'clean_events.m' removing 'condition' and '201' events. Numeric codes 31-45 appear in raw data but were cleaned from processed events.tsv; their semantics are confirmed via HED tags in top-level events.json mapping them to Attend-to/Cue positions with Target/Non-target and Expected/Unexpected/Oddball/Distractor designations. The 'Picture' events represent generic stimulus onsets in the processed data, replacing the condition-specific numeric codes. Scope 'all' for surviving event types (Picture, Response, boundary) as they appear in both subjects' events.tsv; scope 'none' for cleaned codes as they do not appear in processed data."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Visual Oddball Target vs Distractor (Attend-3)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 0.8 s *, target_events = [`33`, `31`, `34`, `35`]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `33` | 1 | Target: Attend-to box 3, disc in box 3 (Unexpected, Oddball) |\n  | `31` | 0 | Distractor: Attend-to box 3, disc in box 1 (Expected, Distractor) |\n  | `34` | 0 | Distractor: Attend-to box 3, disc in box 4 (Expected, Distractor) |\n  | `35` | 0 | Distractor: Attend-to box 3, disc in box 5 (Expected, Distractor) |\n- **Evidence**:\n  - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6673364/ — Visual oddball paradigm with selective attention to one of five boxes; target detection requires button press when disc appears in attended box\n  - 10.18112/openneuro.ds002578.v1.1.0 — BIDS dataset with HED-tagged event codes 31-45 defining Attend-to/Cue positions; codes 31,34,35,33 confirmed for Attend-3 condition\n- **Notes**: Event codes 31-45 appear in raw EEG annotations but were cleaned from processed events.tsv by clean_events.m. The kernel must extract these numeric codes from the raw annotation channel. The `Picture` events in processed data are generic stimulus onsets that replaced condition-specific codes. Target (y=1) is code 33 (disc in attended box 3); distractors (y=0) are codes 31, 34, 35 (disc in non-attended boxes 1, 4, 5 while attending box 3).\n\n### Potential Task 1: Visual Oddball 5-Class Spatial Cue Position (Attend-4)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 0.8 s *, target_events = ['41', '42', '43', '44', '45']`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `41` | 0 | Disc in box 1, highlighted box 4 (Attend-4, Expected Distractor) |\n  | `42` | 1 | Disc in box 2, highlighted box 4 (Attend-4, Expected Distractor) |\n  | `43` | 2 | Disc in box 3, highlighted box 4 (Attend-4, Expected Distractor) |\n  | `44` | 3 | Disc in box 4, highlighted box 4 (Attend-4, Unexpected Oddball Target) |\n  | `45` | 4 | Disc in box 5, highlighted box 4 (Attend-4, Expected Distractor) |\n- **Evidence**:\n  - sub-001_task-attention_events.json / sub-002_task-attention_events.json — HED tags and Levels define codes 41-45 as Attend-to box 4 with disc positions 1-5; code 44 is designated Target/Oddball/Unexpected, codes 41-43 and 45 are Expected Distractors\n  - EEG file header samples — Raw annotations contain event codes '41', '42', '43', '44', '45' confirming these trigger values exist in the raw data\n  - README — References clean_events.m preprocessing that removes spurious markers but preserves condition-specific codes in raw data; processed events.tsv replaces them with generic 'Picture' events\n- **Notes**: This is a 5-class spatial cue discrimination task where participants attend to box 4 and respond when the disc appears in that box (code 44, y=3, oddball target). The other four positions (codes 41-43, 45) are expected distractors. Epoch window inferred from the Attend-3 condition for direct comparability across attention conditions. The task uses raw event annotations since the processed events.tsv only contains generic 'Picture' events without condition-specific information.\n\n### Potential Task 2: Expected vs Unexpected Stimulus (Attend-3)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 0.8 s *, target_events = ['33', '31', '34', '35']`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `33` | 1 | Unexpected — disc in attended box 3 (oddball/target) |\n  | `31` | 0 | Expected — disc in non-attended box 1 (distractor) |\n  | `34` | 0 | Expected — disc in non-attended box 4 (distractor) |\n  | `35` | 0 | Expected — disc in non-attended box 5 (distractor) |\n- **Evidence**:\n  - `events.json` (sub-001, sub-002) — HED tags and Levels define codes 31-35 as combinations of highlighted box (Attend-to position) and disc position (Cue position), with 33 being Unexpected/Oddball/Target when disc matches attended box 3, and 31/34/35 being Expected/Distractor when disc is in non-attended boxes\n  - `README` — describes `clean_events.m` removing spurious markers, confirming numeric codes 31-45 are the cleaned condition-specific trial markers underlying the generic `Picture` events in processed data\n- **Notes**: This task isolates the neural signature of prediction error by contrasting physically identical stimulus presentations (disc in box 3, highlighted box 3) that differ only in expectation: code 33 is unexpected because the disc appears in the attended location, while codes 31/34/35 are expected distractors in non-attended locations during Attend-3 blocks. The y=0 class merges three expected distractor types to balance against ~240 unexpected trials. Epoch window centered on stimulus onset captures mismatch negativity and early P300 components associated with expectation violation.\n\n### Potential Task 3: Stimulus Onset vs Response Onset\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s *, tmax = 0.8 s *, target_events = [`Picture`, `Response`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | Picture | 0 | Stimulus onset: trial phase onset for visual stimulus presentation (experimental drawing onset) |\n  | Response | 1 | Response onset: participant keyboard key press |\n- **Evidence**:\n  - events.tsv (sub-001, sub-002) — processed data contains `Picture` (5939 occurrences) and `Response` (1202 occurrences) as sole event types besides `boundary`; numeric condition codes cleaned during preprocessing\n  - sub-001_task-attention_events.json / sub-002_task-attention_events.json — HED tags confirm `Picture` = stimulus presentation onset, `Response` = keyboard key press; `value` column maps to trial_type with stimulus/response semantics\n  - README — describes `clean_events.m` removing spurious markers, leaving only canonical `Picture` and `Response` events in processed data\n- **Notes**: Classification distinguishes sensory-evoked (stimulus-locked) from motor-related (response-locked) neural activity. Both classes are time-locked to behaviorally relevant events with sufficient trial counts for ERP-based decoding. The `Picture` event replaces condition-specific numeric codes (31-45, x11-x55) after preprocessing, making it a generic stimulus onset marker across all trial types.\n\n### Potential Task 4: Gender Classification from Continuous EEG\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 2.0 s *, overlap = 0.5 *, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | `gender` | F → 0, M → 1 |\n- **Evidence**:\n- **Notes**: Segmentation-based subject-level decoding. Continuous EEG is sliced into 2-second half-overlapping segments; each segment inherits the participant's gender label from participants.tsv. Extremely small sample (N=2, 1F/1M) renders this exploratory only. All segments from a given subject share the same label, creating a subject-stratified classification problem.\n\n### Potential Task 5: Age Regression from Continuous EEG\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 2.0 s *, overlap = 0.5 *, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | age | Continuous chronological age in years; value = 30 for all subjects in this dataset (zero variance, degenerate regression) |\n- **Evidence**:\n- **Notes**: Segmentation-based epochs (2 s, 50% overlap) from continuous EEG with subject-level age label from participants.tsv. Degenerate task: N=2 subjects both age=30, resulting in zero label variance. Mathematically impossible for regression; included for completeness but will be filtered by downstream degeneracy checks. No kernel derivation needed — age is a native participants.tsv column.\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "31",
+      "32",
+      "33",
+      "34",
+      "35",
+      "41",
+      "42",
+      "43",
+      "44",
+      "45",
+      "Picture",
+      "Response"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [
+      "age",
+      "gender"
+    ],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "response time regression",
+        "reason": "No response_time values present in processed events.tsv (all 'n/a'). Column exists in sidecar definition but contains no usable numeric data for B2 derivation."
+      },
+      {
+        "paradigm": "trial_type classification",
+        "reason": "trial_type column in events.tsv contains only 'n/a' values; no discriminable categories present in processed data."
+      },
+      {
+        "paradigm": "stim_file classification",
+        "reason": "stim_file column in events.tsv contains only 'n/a' values; no stimulus identity information present in processed data."
+      },
+      {
+        "paradigm": "native misc regression/classification",
+        "reason": "No continuous non-EEG channels (EOG, EMG, ECG, GSR) present in raw data per eeg.json (all counts=0) and channels.tsv not indicating any misc channels."
+      }
+    ]
+  },
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/openneuro_ds002578/kernel_final.py",
+  "kernel_code_len": 11136,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds002578.py",
+    "kernel_sha256": "68ddb2d2f301427f52658a4712872ea184d34b62eb4e090604798c7c2e200ba8",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 2,
+    "total_n": 2,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "203": 1,
+      "217": 2,
+      "31": 240,
+      "33": 240,
+      "34": 239,
+      "35": 240,
+      "41": 238,
+      "42": 239,
+      "43": 240,
+      "44": 239,
+      "45": 239,
+      "Picture": 5939,
+      "Response": 1202,
+      "boundary": 58,
+      "237": 1
+    },
+    "subject_info": {
+      "record_count": 2,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds002578.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

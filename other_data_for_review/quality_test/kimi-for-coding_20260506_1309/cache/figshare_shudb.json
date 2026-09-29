@@ -1,0 +1,301 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 10,
+    "category": "",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 21,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 5,
+    "task_synthesis": 5,
+    "kernel_loop": 6,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-06T13:39:40.022244+00:00",
+  "ref_extractions": [
+    {
+      "filename": "paper_10_1016_j_neunet_2023_06_040.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.neunet.2023.06.040",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "classification": "irrelevant",
+      "ref": "",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "3D_Convolutional_Neural_Networks_on_an_EEG-Based_Motor_Imagery_Dataset.pdf",
+      "ref": "10.1109/SoutheastCon48659.2022.9764024",
+      "title": "3D Convolutional Neural Networks on an EEG-Based Motor Imagery Dataset",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper explicitly uses the PhysioNet 2009 EEG Motor Movement/Imagery Dataset by Schalk et al. (BCI2000), NOT the figshare_shudb (Shu Dataset). The dataset description mentions 109 subjects with 6 tasks, which matches the PhysioNet dataset, not the SHU dataset which has 25 subjects with 5 sessions of left/right hand MI.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_1016_j_heliyon_2024_e37343.pdf",
+      "ref": "10.1016/j.heliyon.2024.e37343",
+      "title": "Improving inter-session performance via relevant session-transfer for multi-session motor imagery classification",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses the 'Shu Dataset' (figshare_shudb) as one of two validation datasets. It clearly defines a concrete ML task: multi-session motor imagery classification using CNN with cosine similarity-based session transfer. The task is binary classification (left-hand vs right-hand MI) with 5 sessions across 25 subjects, comparing within-session, cross-session, and adaptation conditions.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery (left hand vs right hand grasping)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "100 trials per session, 5 sessions per subject, 2-3 days apart; likely 4s or standard MI epoch length (exact window not specified in excerpt)",
+      "target_events": [
+        "left hand motor imagery",
+        "right hand motor imagery"
+      ],
+      "label_mapping": "0: left hand, 1: right hand (or vice versa)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly states 'Shu Dataset' with 25 participants, 5 sessions each, 100 trials of left-hand and right-hand MI per session. Benchmarks WS/CS/CSA conditions with CNN classifier."
+    },
+    {
+      "filename": "paper_10_1016_j_jneumeth_2025_110483.pdf",
+      "ref": "10.1016/j.jneumeth.2025.110483",
+      "title": "A subject transfer neural network fuses Generator and Euclidean alignment for EEG-based motor imagery classification",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly validates on 'SHU datasets' (among BCI IV 2a and 2b) and reports specific accuracy of 67.2% on the SHU dataset. The task is clearly defined as subject transfer learning for motor imagery classification using the proposed ST-GENN model with CAT classifier. The SHU dataset is used as a benchmark for cross-subject transfer learning evaluation.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery (left hand vs right hand)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Standard MI epochs; specific parameters not detailed in excerpt but follows typical SHU dataset preprocessing",
+      "target_events": [
+        "left hand motor imagery",
+        "right hand motor imagery"
+      ],
+      "label_mapping": "binary: left vs right hand MI",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly mentions 'SHU datasets' with 67.2% accuracy reported. Used for evaluating subject transfer learning performance compared to baseline algorithms."
+    },
+    {
+      "filename": "paper_10_1038_s41597_022_01647_1.pdf",
+      "ref": "10.1038/s41597-022-01647-1",
+      "title": "A large EEG dataset for studying cross-session variability in motor imagery brain-computer interface",
+      "classification": "relevant",
+      "cot_reasoning": "This is the original data descriptor paper for the figshare_shudb dataset itself. It explicitly describes the dataset with 25 subjects, 5 sessions each, 100 trials of left-hand and right-hand MI per session. It defines three concrete ML tasks: within-session (WS), cross-session (CS), and cross-session adaptation (CSA) classification with benchmark results (68.8%, 53.7%, 78.9% respectively).",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery (left hand grasping vs right hand grasping)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Trial duration 7.5s; 100 trials per session; 5 sessions per subject; 2-3 days between sessions; 25 subjects total",
+      "target_events": [
+        "left hand grasping motor imagery",
+        "right hand grasping motor imagery"
+      ],
+      "label_mapping": "0: left hand, 1: right hand (based on cue: left or right arrow)",
+      "meta_level": "raw",
+      "super_meta_note": "This is the dataset publication paper itself - the primary reference for figshare_shudb",
+      "evidence_desc": "Original dataset descriptor: 25 subjects, 5 sessions each, 100 trials/session, left/right hand grasping MI. Benchmarks with CSP, FBCSP, FBCNet, EEGNet, deep ConvNets, adaptive transfer learning. ANOVA validation. Stored on figshare (link provided)."
+    },
+    {
+      "filename": "paper_10_1038_s41597_025_04826_y.pdf",
+      "ref": "10.1038/s41597-025-04826-y",
+      "title": "A multi-day and high-quality EEG dataset for motor imagery brain-computer interface",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper describes a DIFFERENT dataset from the same research group (Shanghai University). It has 62 subjects with 3 sessions from the 2019 World Robot Conference Contest-BCI Robot Contest, with both 2-class (51 subjects) and 3-class (11 subjects) paradigms. This is NOT the figshare_shudb dataset which has 25 subjects with 5 sessions. The DOI and figshare link (10.25452/figshare.plus.22671172) are different.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_1038_s41598_024_73536_z.pdf",
+      "ref": "10.1038/s41598-024-73536-z",
+      "title": "Joint hybrid recursive feature elimination based channel selection and ResGCN for cross session MI recognition",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses the 'SHU dataset' (also referred to as 'Shanghai University motor imagery dataset') for cross-session MI recognition. It reports specific results: 90.03% accuracy using 73.44% of channels. The task is clearly defined as cross-session motor imagery classification with channel selection and ResGCN classifier. Also uses PhysioNet dataset for comparison.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery (left hand vs right hand)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Cross-session evaluation; uses 73.44% of 64 channels; specific epoch length not stated in excerpt",
+      "target_events": [
+        "left hand motor imagery",
+        "right hand motor imagery"
+      ],
+      "label_mapping": "binary: left vs right hand MI",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly states 'SHU dataset' and 'Shanghai University motor imagery dataset' with 90.03% cross-session accuracy. Compares against PhysioNet dataset (93.99%)."
+    },
+    {
+      "filename": "paper_10_1109_jbhi_2024_3467090.pdf",
+      "ref": "10.1109/JBHI.2024.3467090",
+      "title": "MFRC-Net: Multi-Scale Feature Residual Convolutional Neural Network for Motor Imagery Decoding",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly tests on 'the SHU dataset' and reports 69.3% accuracy. The task is clearly defined as motor imagery classification using the proposed lightweight MFRC-Net CNN architecture. The paper compares performance on both BCI Competition IV 2a and SHU datasets, with the SHU result being specifically mentioned as 69.3%.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Standard MI preprocessing; specific epoch parameters not detailed in excerpt",
+      "target_events": [
+        "left hand motor imagery",
+        "right hand motor imagery"
+      ],
+      "label_mapping": "binary classification",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly mentions 'the SHU dataset' with 69.3% accuracy achieved by MFRC-Net with only 13K parameters. Lightweight model comparison against state-of-the-art."
+    },
+    {
+      "filename": "paper_10_31083_j_jin2308153.pdf",
+      "ref": "10.31083/j.jin2308153",
+      "title": "EEG-Based Feature Classification Combining 3D-Convolutional Neural Networks with Generative Adversarial Networks for Motor Imagery",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses the 'SHU laboratory dataset' (also referred to as 'SHU dataset') for both within-session and cross-session motor imagery classification. Reports specific accuracies: 67.64% (3D-CNN) and 71.63% (3D-CNN-GAN) for within-session; 58.06% (3D-CNN) and 63.04% (3D-CNN-GAN) for cross-session. The task is clearly defined with TFPF feature extraction, GAN data augmentation, and 3D-CNN classification.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery (two-class: left vs right hand)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Sliding window technique for TFPF feature extraction; temporal-frequency-phase 3D feature maps; within-session and cross-session evaluation",
+      "target_events": [
+        "left hand motor imagery",
+        "right hand motor imagery"
+      ],
+      "label_mapping": "binary: left vs right hand MI",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly states 'SHU laboratory dataset' and 'SHU dataset' with detailed within-session (67.64%/71.63%) and cross-session (58.06%/63.04%) accuracies. Also uses GigaDB dataset for comparison. Same research group as dataset creators (Banghua Yang affiliation)."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has clear event structure with two-class motor imagery labels (left hand vs right hand) encoded in both trial_type and value columns, with 100 trials per session across 5 sessions for 25 subjects. The events.tsv sample confirms trigger values 1='left' and 2='right' with 1000ms duration epochs, directly supporting binary classification.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 232,
+    "total_n": 232,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 232,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "1",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial onset: Imagining the movement of the left hand",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "2",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial onset: Imagining the movement of the right hand",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      }
+    ],
+    "notes": "Mappings confirmed by task-motorimagery_events.json which explicitly defines value 1 = 'Imagining the movement of the left hand' and value 2 = 'Imagining the movement of the right hand'. Verified across all checked events.tsv files (sub-001 ses-01 through ses-05, sub-010 ses-01, sub-015 ses-02, sub-020 ses-03, sub-025 ses-05) where trial_type column consistently shows 'left' for value 1 and 'right' for value 2. MAT files (sub-004_ses-01, sub-012_ses-04) contain matching labels with values 1 and 2. All trials have duration 1000ms. No other event values exist in the dataset."
+  },
+  "tasks_section": "## Tasks\n\n### Potential Task 1: Gender Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.0 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | gender | 0 = 'F' (female), 1 = 'M' (male); subject-level label applied to all segmented epochs |\n- **Evidence**:\n- **Notes**: Subject-level demographic classification task using gender from participants.tsv. All epochs from a given subject share the same label. This is a potential (non-classical) task as no literature references were found using gender as a prediction target for this dataset. The 4-second segmentation matches the MI task execution window (4-8s) and provides sufficient samples for subject-level prediction.\n\n### Potential Task 2: Age Regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 4 s *, overlap = 0.0 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | age | Continuous age in years (20–24); assigned to all epochs from the same subject. Predict age from resting/segmented EEG. |\n- **Evidence**:\n- **Notes**: Standard segmentation approach applied since age is a subject-level demographic variable with no trial-bound temporal structure. 4-second segments with no overlap match the MI task execution window (4–8s) and provide sufficient samples for subject-level label propagation. Small age range (4 years) limits predictive utility but enables exploratory age-regression benchmarking on this dataset.\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "1",
+      "2"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [
+      "age",
+      "gender"
+    ],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "group classification (novice only)",
+        "reason": "participants.tsv 'group' column contains only a single value 'novice' across all 25 subjects. Violates H2: classification requires >=2 distinct classes at the label-value level."
+      }
+    ]
+  },
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/figshare_shudb/kernel_final.py",
+  "kernel_code_len": 11930,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/figshare_shudb.py",
+    "kernel_sha256": "db2b397cd2a691b879f03b9483e8fc33f65748ca87e63a29109566fc226aeaf2",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 856,
+    "total_n": 856,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "1.0": 5524,
+      "2.0": 5537
+    },
+    "subject_info": {
+      "record_count": 856,
+      "age_complete": 232,
+      "sex_complete": 232,
+      "device_complete": 0,
+      "age_examples": [
+        "23",
+        "22",
+        "20",
+        "24",
+        "21"
+      ],
+      "sex_examples": [
+        "female",
+        "male"
+      ]
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/figshare_shudb.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

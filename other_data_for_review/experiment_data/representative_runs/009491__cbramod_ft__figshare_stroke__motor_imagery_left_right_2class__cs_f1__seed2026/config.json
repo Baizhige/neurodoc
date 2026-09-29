@@ -1,0 +1,389 @@
+﻿{
+  "argv": [
+    "/anonymous/review_workspace/run_single_experiment.py",
+    "--model",
+    "cbramod_ft",
+    "--dataset",
+    "figshare_stroke",
+    "--task",
+    "motor_imagery_left_right_2class",
+    "--epochs",
+    "50",
+    "--batch_size",
+    "128",
+    "--num_workers",
+    "8",
+    "--seed",
+    "2026",
+    "--split_mode",
+    "cs",
+    "--fold",
+    "1",
+    "--channel_system",
+    "10-5",
+    "--classifier_lr_scale",
+    "1.0",
+    "--early_stopping_patience",
+    "10",
+    "--no-save_checkpoints",
+    "--output_dir",
+    "/anonymous/review_workspace/experiments/output/r0",
+    "--device",
+    "cuda:0",
+    "--cuda",
+    "0",
+    "--cache_dir",
+    "/anonymous/review_cache/",
+    "--lr",
+    "0.0001",
+    "--weight_decay",
+    "0.05",
+    "--optimizer",
+    "AdamW",
+    "--label_smoothing",
+    "0.1",
+    "--encoder_lr_scale",
+    "1.0",
+    "--pipeline",
+    "datasets/pipelines/cbramod_ft.py",
+    "--input_format",
+    "patched",
+    "--patch_size",
+    "200"
+  ],
+  "config_id": "cfg_c5e031b0a84e",
+  "environment": {
+    "cuda_available": true,
+    "cuda_version": "12.8",
+    "git_commit": "724bb536ed9b226fc7c1f7b3886e153ae268b0c5",
+    "git_dirty": false,
+    "hostname": "anonymous-host",
+    "python_version": "3.12.11 | packaged by Anaconda, Inc. | (main, Jun  5 2025, 13:09:17) [GCC 11.2.0]",
+    "torch_version": "2.8.0+cu128"
+  },
+  "exp_id": 9491,
+  "paths": {
+    "output_dir": "/anonymous/review_workspace/experiments/output/r0",
+    "run_dir": "/anonymous/review_workspace/experiments/output/r0/runs/009491__cbramod_ft__figshare_stroke__motor_imagery_left_right_2class__cs_f1__seed2026"
+  },
+  "resolved_params": {
+    "batch_size": 128,
+    "cache_dir": "/anonymous/review_cache/",
+    "ch_names": [
+      "EEG:Fp1",
+      "EEG:Fp2",
+      "EEG:Fz",
+      "EEG:F3",
+      "EEG:F4",
+      "EEG:F7",
+      "EEG:F8",
+      "EEG:FCz",
+      "EEG:FC3",
+      "EEG:FC4",
+      "EEG:FT7",
+      "EEG:FT8",
+      "EEG:Cz",
+      "EEG:C3",
+      "EEG:C4",
+      "EEG:T3",
+      "EEG:T4",
+      "EEG:CPz",
+      "EEG:CP3",
+      "EEG:CP4",
+      "EEG:TP7",
+      "EEG:TP8",
+      "EEG:Pz",
+      "EEG:P3",
+      "EEG:P4",
+      "EEG:T5",
+      "EEG:T6",
+      "EEG:Oz",
+      "EEG:O1",
+      "EEG:O2"
+    ],
+    "ch_positions": {
+      "EEG:C3": [
+        -0.0858941,
+        -0.0158287,
+        -0.048283
+      ],
+      "EEG:C4": [
+        -0.036158,
+        -0.0099839,
+        0.089752
+      ],
+      "EEG:CP3": [
+        -0.0856192,
+        -0.0465147,
+        -0.045707
+      ],
+      "EEG:CP4": [
+        -0.0355131,
+        -0.0472919,
+        0.091315
+      ],
+      "EEG:CPz": [
+        -0.0795922,
+        -0.0465507,
+        0.030949
+      ],
+      "EEG:Cz": [
+        -0.08028010000000001,
+        -0.0137597,
+        0.02916
+      ],
+      "EEG:F3": [
+        -0.0701019,
+        0.041652299999999996,
+        -0.049951999999999996
+      ],
+      "EEG:F4": [
+        -0.0274958,
+        0.0569311,
+        0.060342
+      ],
+      "EEG:F7": [
+        0.055743299999999996,
+        0.0696568,
+        -0.010755
+      ],
+      "EEG:F8": [
+        0.029514199999999997,
+        0.0576019,
+        0.059539999999999996
+      ],
+      "EEG:FC3": [
+        -0.08407590000000001,
+        0.0145673,
+        -0.050429
+      ],
+      "EEG:FC4": [
+        -0.0340619,
+        0.0260111,
+        0.07998699999999999
+      ],
+      "EEG:FCz": [
+        -0.0772149,
+        0.0186433,
+        0.024460000000000003
+      ],
+      "EEG:FT7": [
+        0.0730431,
+        0.0444217,
+        -0.012
+      ],
+      "EEG:FT8": [
+        0.034784100000000005,
+        0.0264379,
+        0.078808
+      ],
+      "EEG:Fp1": [
+        -0.08061611652374268,
+        -0.02908875234425068,
+        -0.04131076857447624
+      ],
+      "EEG:Fp2": [
+        0.08436284959316254,
+        -0.02850276418030262,
+        -0.041277434676885605
+      ],
+      "EEG:Fz": [
+        -0.0644658,
+        0.048035299999999996,
+        0.016921
+      ],
+      "EEG:O1": [
+        0.0498196,
+        -0.0994461,
+        0.021727
+      ],
+      "EEG:O2": [
+        0.0549876,
+        -0.0980911,
+        -0.035540999999999996
+      ],
+      "EEG:Oz": [
+        0.055666600000000004,
+        -0.0976251,
+        0.00273
+      ],
+      "EEG:P3": [
+        -0.0730093,
+        -0.07376569999999999,
+        -0.040998
+      ],
+      "EEG:P4": [
+        -0.0286203,
+        -0.0805249,
+        0.075436
+      ],
+      "EEG:Pz": [
+        -0.06727230000000001,
+        -0.0762907,
+        0.028382
+      ],
+      "EEG:T3": [
+        -0.0293914,
+        -0.114511,
+        -0.01002
+      ],
+      "EEG:T4": [
+        0.029552600000000002,
+        -0.113636,
+        -0.010051000000000001
+      ],
+      "EEG:T5": [
+        5.2499999999999995e-05,
+        -0.119343,
+        -0.003936
+      ],
+      "EEG:T6": [
+        -0.0841611,
+        -0.0160187,
+        -0.009346
+      ],
+      "EEG:TP7": [
+        0.0850799,
+        -0.0150203,
+        -0.00949
+      ],
+      "EEG:TP8": [
+        0.0383838,
+        -0.0470731,
+        0.090695
+      ]
+    },
+    "channel_system": "10-5",
+    "checkpoint_dir": "/anonymous/review_workspace/experiments/output/r0/runs/009491__cbramod_ft__figshare_stroke__motor_imagery_left_right_2class__cs_f1__seed2026/checkpoints",
+    "classifier": "all_patch_reps",
+    "classifier_lr_scale": 1.0,
+    "clip_value": 1,
+    "config_id": null,
+    "console_log_path": "/anonymous/review_workspace/experiments/output/r0/runs/009491__cbramod_ft__figshare_stroke__motor_imagery_left_right_2class__cs_f1__seed2026/logs/console.log",
+    "cuda": 0,
+    "d_model": 200,
+    "data_ratio": 1.0,
+    "dataset": "figshare_stroke",
+    "device": "cuda:0",
+    "device_obj": "cuda:0",
+    "dim_feedforward": 800,
+    "dropout": 0.1,
+    "early_stopping_patience": 10,
+    "encoder_lr_scale": 1.0,
+    "epoch_param": null,
+    "epochs": 50,
+    "exp_id": 9491,
+    "fold": 1,
+    "foundation_dir": "/anonymous/review_workspace/models/Weights/CBraMod/pretrained_weights.pth",
+    "frozen": false,
+    "gpu_ids": "1,2,3",
+    "held_out_subject": null,
+    "input_format": "patched",
+    "label_smoothing": 0.1,
+    "list_variants": false,
+    "log_dir": "/anonymous/review_workspace/experiments/output/r0/runs/009491__cbramod_ft__figshare_stroke__motor_imagery_left_right_2class__cs_f1__seed2026/logs",
+    "logs_dir": "/anonymous/review_workspace/experiments/output/r0/runs/009491__cbramod_ft__figshare_stroke__motor_imagery_left_right_2class__cs_f1__seed2026/logs",
+    "lr": 0.0001,
+    "metrics_dir": "/anonymous/review_workspace/experiments/output/r0/runs/009491__cbramod_ft__figshare_stroke__motor_imagery_left_right_2class__cs_f1__seed2026/metrics",
+    "model": "cbramod_ft",
+    "model_channel_indices": null,
+    "model_dir": "/anonymous/review_workspace/experiments/output/r0/runs/009491__cbramod_ft__figshare_stroke__motor_imagery_left_right_2class__cs_f1__seed2026/checkpoints",
+    "multi_lr": true,
+    "n_layer": 12,
+    "nhead": 8,
+    "num_channels": 30,
+    "num_of_classes": 2,
+    "num_workers": 8,
+    "optimizer": "AdamW",
+    "output_dir": "/anonymous/review_workspace/experiments/output/r0",
+    "patch_num": 4,
+    "patch_size": 200,
+    "pipeline": "datasets/pipelines/cbramod_ft.py",
+    "pipeline_param": null,
+    "rebuild_hdf5": false,
+    "run_dir": "/anonymous/review_workspace/experiments/output/r0/runs/009491__cbramod_ft__figshare_stroke__motor_imagery_left_right_2class__cs_f1__seed2026",
+    "run_id": "009491__cbramod_ft__figshare_stroke__motor_imagery_left_right_2class__cs_f1__seed2026",
+    "sample_counts": {
+      "test": 400,
+      "test_original": 400,
+      "train": 1200,
+      "train_original": 1200,
+      "val": 400,
+      "val_original": 400
+    },
+    "samples": 800,
+    "save_checkpoints": false,
+    "seed": 2026,
+    "split_mode": "cs",
+    "task": "motor_imagery_left_right_2class",
+    "test_samples": 400,
+    "test_samples_original": 400,
+    "test_subjects": [
+      "sub-01_",
+      "sub-02_",
+      "sub-03_",
+      "sub-04_",
+      "sub-05_",
+      "sub-06_",
+      "sub-07_",
+      "sub-08_",
+      "sub-09_",
+      "sub-10_"
+    ],
+    "train_samples": 1200,
+    "train_samples_original": 1200,
+    "train_subjects": [
+      "sub-21_",
+      "sub-22_",
+      "sub-23_",
+      "sub-24_",
+      "sub-25_",
+      "sub-26_",
+      "sub-27_",
+      "sub-28_",
+      "sub-29_",
+      "sub-30_",
+      "sub-31_",
+      "sub-32_",
+      "sub-33_",
+      "sub-34_",
+      "sub-35_",
+      "sub-36_",
+      "sub-37_",
+      "sub-38_",
+      "sub-39_",
+      "sub-40_",
+      "sub-41_",
+      "sub-42_",
+      "sub-43_",
+      "sub-44_",
+      "sub-45_",
+      "sub-46_",
+      "sub-47_",
+      "sub-48_",
+      "sub-49_",
+      "sub-50_"
+    ],
+    "use_dataparallel": false,
+    "use_pretrained_weights": true,
+    "val_samples": 400,
+    "val_samples_original": 400,
+    "val_subjects": [
+      "sub-11_",
+      "sub-12_",
+      "sub-13_",
+      "sub-14_",
+      "sub-15_",
+      "sub-16_",
+      "sub-17_",
+      "sub-18_",
+      "sub-19_",
+      "sub-20_"
+    ],
+    "weight_decay": 0.05
+  },
+  "run_id": "009491__cbramod_ft__figshare_stroke__motor_imagery_left_right_2class__cs_f1__seed2026"
+}
+
+
+

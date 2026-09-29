@@ -1,0 +1,3251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EEG Audit Tool</title>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --sidebar-w: 240px;
+  --right-w: 340px;
+  --step-bar-h: 52px;
+  --header-h: 48px;
+  --bg: #f5f6f8;
+  --panel: #fff;
+  --border: #dde1e7;
+  --accent: #3b82f6;
+  --accent-dark: #1d4ed8;
+  --text: #1e2430;
+  --muted: #6b7280;
+  --green: #10b981;
+  --yellow: #f59e0b;
+  --red: #ef4444;
+  --purple: #8b5cf6;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+/* Header */
+#header { height: var(--header-h); background: var(--text); color: #fff; display: flex; align-items: center; padding: 0 16px; gap: 12px; flex-shrink: 0; }
+#header h1 { font-size: 15px; font-weight: 600; }
+#header .spacer { flex: 1; }
+#btn-settings { background: rgba(255,255,255,0.15); border: none; color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+#btn-settings:hover { background: rgba(255,255,255,0.25); }
+#save-status { font-size: 12px; color: rgba(255,255,255,0.6); }
+
+/* Layout */
+#layout { display: flex; flex: 1; overflow: hidden; }
+
+/* Left sidebar */
+#sidebar { width: var(--sidebar-w); background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; position: relative; overflow: hidden; transition: width .2s ease; }
+#sidebar.collapsed { width: 36px; }
+#sidebar-inner { display: flex; flex-direction: column; flex: 1; overflow: hidden; min-width: var(--sidebar-w); transition: opacity .15s; }
+#sidebar.collapsed #sidebar-inner { opacity: 0; pointer-events: none; }
+#sidebar-head { padding: 10px 12px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; }
+#sidebar-head label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; }
+#ds-search { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; }
+#filter-category { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; }
+/* Thinking animation */
+@keyframes thinking-dot { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
+.thinking-dots span { animation: thinking-dot 1.4s infinite both; display: inline-block; }
+.thinking-dots span:nth-child(2) { animation-delay: .2s; }
+.thinking-dots span:nth-child(3) { animation-delay: .4s; }
+/* Save-complete modal */
+#save-complete-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; align-items: center; justify-content: center; }
+#save-complete-overlay.open { display: flex; }
+#save-complete-modal { background: #fff; border-radius: 12px; padding: 28px 32px; width: 420px; max-width: 92vw; text-align: center; }
+#save-complete-icon { font-size: 40px; margin-bottom: 12px; }
+#save-complete-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+#save-complete-body { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+#save-complete-status { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 16px; }
+#dataset-list { flex: 1; overflow-y: auto; padding: 6px 0; }
+.ds-item { padding: 8px 12px; cursor: pointer; border-left: 3px solid transparent; }
+.ds-item:hover { background: #f0f4ff; }
+.ds-item.active { background: #eff6ff; border-left-color: var(--accent); }
+.ds-item.ds-error { cursor: default; opacity: 0.7; }
+.ds-item.ds-error:hover { background: #fff1f2; }
+.ds-name { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-meta { display: flex; align-items: center; gap: 6px; margin-top: 3px; }
+.ds-cat { font-size: 10px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px; }
+.badge { font-size: 10px; padding: 1px 6px; border-radius: 10px; font-weight: 500; flex-shrink: 0; }
+.badge-wait { background: #fef3c7; color: #92400e; }
+.badge-review { background: #dbeafe; color: #1e40af; }
+.badge-done { background: #d1fae5; color: #065f46; }
+.badge-rev { background: #fee2e2; color: #991b1b; }
+.badge-other { background: #e5e7eb; color: #374151; }
+
+/* Main */
+#main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+#step-bar { height: var(--step-bar-h); background: var(--panel); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 16px; gap: 4px; flex-shrink: 0; }
+.step-btn { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; border: none; background: none; cursor: pointer; font-size: 13px; color: var(--muted); transition: all .15s; }
+.step-btn .step-num { width: 20px; height: 20px; border-radius: 50%; background: #e5e7eb; color: var(--muted); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.step-btn.active { color: var(--accent); background: #eff6ff; }
+.step-btn.active .step-num { background: var(--accent); color: #fff; }
+.step-btn.done .step-num { background: var(--green); color: #fff; }
+.step-sep { color: var(--border); font-size: 18px; }
+#step-content { flex: 1; overflow-y: auto; padding: 20px; }
+#no-dataset { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--muted); font-size: 14px; }
+/* Bottom action bar */
+#action-bar { padding: 12px 20px; background: var(--panel); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+#ds-title { font-size: 13px; font-weight: 600; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.btn { padding: 7px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; font-weight: 500; transition: all .15s; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-dark); }
+.btn-secondary { background: #e5e7eb; color: var(--text); }
+.btn-secondary:hover { background: #d1d5db; }
+.btn-success { background: var(--green); color: #fff; }
+.btn-success:hover { background: #059669; }
+.btn-warning { background: var(--yellow); color: #fff; }
+.btn-warning:hover { background: #d97706; }
+.btn:disabled { opacity: .5; cursor: default; }
+
+/* Right panel */
+#right { width: var(--right-w); background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; position: relative; overflow: hidden; transition: width .2s ease; }
+#right.collapsed { width: 36px; }
+#right-inner { display: flex; flex-direction: column; flex: 1; overflow: hidden; min-width: var(--right-w); transition: opacity .15s; }
+#right.collapsed #right-inner { opacity: 0; pointer-events: none; }
+/* Panel toggle buttons (inner edge) */
+.panel-toggle { position: absolute; top: 50%; transform: translateY(-50%); width: 18px; height: 48px; background: var(--panel); border: 1px solid var(--border); cursor: pointer; font-size: 11px; color: var(--muted); display: flex; align-items: center; justify-content: center; z-index: 20; transition: background .15s, color .15s; line-height: 1; }
+.panel-toggle:hover { background: #eff6ff; color: var(--accent); }
+#sidebar-toggle { right: 0; border-right: none; border-radius: 4px 0 0 4px; }
+#right-toggle { left: 0; border-left: none; border-radius: 0 4px 4px 0; }
+#right-tabs { display: flex; border-bottom: 1px solid var(--border); }
+.rtab { flex: 1; padding: 10px 6px; border: none; background: none; cursor: pointer; font-size: 12px; color: var(--muted); border-bottom: 2px solid transparent; }
+.rtab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+#right-body { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+#pane-guide, #pane-rulebook, #pane-chat { display: none; flex-direction: column; flex: 1; overflow: hidden; }
+#pane-guide.visible, #pane-rulebook.visible, #pane-chat.visible { display: flex; }
+
+/* Step Guide */
+#guide-content { flex: 1; overflow-y: auto; padding: 12px; }
+.guide-step-title { font-size: 13px; font-weight: 700; color: var(--accent-dark); margin-bottom: 14px; padding: 8px 10px; background: #eff6ff; border-radius: 6px; border-left: 3px solid var(--accent); }
+.guide-section { margin-bottom: 16px; }
+.guide-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px; }
+.guide-section-title .sec-check-count { font-size: 10px; font-weight: 500; color: var(--green); margin-left: auto; }
+.guide-check { display: flex; gap: 8px; padding: 5px 6px; border-radius: 5px; margin-bottom: 2px; font-size: 12px; line-height: 1.5; color: var(--text); cursor: pointer; transition: background .1s; border: 1px solid transparent; }
+.guide-check:hover { background: #f8fafc; }
+.guide-check.checked { background: #f0fdf4; border-color: #bbf7d0; }
+.guide-check.highlight-warn { background: #fffbeb; border-color: #fcd34d !important; animation: pulse-warn 1s ease-in-out; }
+@keyframes pulse-warn { 0%,100% { border-color: #fcd34d; } 50% { border-color: #f59e0b; } }
+.guide-check-box { width: 16px; height: 16px; border: 2px solid var(--border); border-radius: 4px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all .1s; background: #fff; }
+.guide-check.checked .guide-check-box { background: var(--green); border-color: var(--green); }
+.guide-check.checked .guide-check-box::after { content: '✓'; color: #fff; font-size: 10px; font-weight: 700; }
+.guide-check-num { color: var(--accent); font-weight: 700; min-width: 18px; flex-shrink: 0; }
+.guide-check-text { flex: 1; }
+.guide-check code { background: #f3f4f6; padding: 1px 4px; border-radius: 3px; font-size: 11px; font-family: monospace; }
+
+/* Rulebook */
+#rulebook-search { padding: 10px; border-bottom: 1px solid var(--border); }
+#rulebook-search input { width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; }
+#rulebook-content { flex: 1; overflow-y: auto; padding: 12px; font-size: 12px; line-height: 1.6; }
+#rulebook-content h1, #rulebook-content h2 { font-size: 13px; font-weight: 700; margin: 12px 0 6px; }
+#rulebook-content h3, #rulebook-content h4 { font-size: 12px; font-weight: 600; margin: 8px 0 4px; }
+#rulebook-content p { margin-bottom: 6px; }
+#rulebook-content ul, #rulebook-content ol { padding-left: 16px; margin-bottom: 6px; }
+#rulebook-content li { margin-bottom: 2px; }
+#rulebook-content code { background: #f3f4f6; padding: 1px 4px; border-radius: 3px; font-size: 11px; font-family: monospace; }
+#rulebook-content pre { background: #f3f4f6; padding: 8px; border-radius: 4px; overflow-x: auto; font-size: 11px; }
+#rulebook-content blockquote { border-left: 3px solid var(--border); padding-left: 8px; color: var(--muted); }
+#rulebook-content table { border-collapse: collapse; width: 100%; font-size: 11px; }
+#rulebook-content th, #rulebook-content td { border: 1px solid var(--border); padding: 4px 6px; }
+.rb-step-hint { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; font-size: 11px; color: var(--accent-dark); }
+
+/* Chat */
+#chat-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.chat-msg { max-width: 90%; }
+.chat-msg.user { align-self: flex-end; }
+.chat-msg.assistant { align-self: flex-start; }
+.chat-bubble { padding: 8px 12px; border-radius: 10px; font-size: 12px; line-height: 1.5; }
+.chat-msg.user .chat-bubble { background: var(--accent); color: #fff; border-bottom-right-radius: 2px; }
+.chat-msg.assistant .chat-bubble { background: #f3f4f6; color: var(--text); border-bottom-left-radius: 2px; }
+.chat-bubble p { margin-bottom: 4px; }
+.chat-bubble p:last-child { margin-bottom: 0; }
+.chat-bubble code { font-size: 11px; background: rgba(0,0,0,0.1); padding: 1px 3px; border-radius: 3px; }
+#chat-toolbar { display: flex; gap: 6px; padding: 6px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.chat-tool-btn { font-size: 11px; padding: 3px 8px; border: 1px solid var(--border); border-radius: 4px; background: #fff; cursor: pointer; color: var(--muted); }
+.chat-tool-btn:hover { background: #f3f4f6; color: var(--text); }
+.chat-tool-btn.danger:hover { background: #fee2e2; color: var(--red); border-color: var(--red); }
+.thinking-block { margin-bottom: 6px; }
+.thinking-toggle { font-size: 10px; color: var(--muted); cursor: pointer; background: none; border: none; padding: 0; display: flex; align-items: center; gap: 4px; }
+.thinking-toggle:hover { color: var(--accent); }
+.thinking-content { font-size: 11px; color: var(--muted); background: #f8fafc; border-left: 2px solid var(--border); padding: 6px 8px; margin-top: 4px; line-height: 1.5; white-space: pre-wrap; display: none; }
+.thinking-content.open { display: block; }
+#chat-input-area { padding: 10px; border-top: 1px solid var(--border); }
+#chat-input-area textarea { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; resize: none; height: 64px; font-family: inherit; }
+#chat-context-label { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+
+/* Form */
+.section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 8px; }
+.form-row { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+.form-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 140px; }
+.form-group label { font-size: 11px; font-weight: 600; color: var(--muted); }
+.form-group input, .form-group select, .form-group textarea { padding: 7px 9px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; background: #fff; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+.form-group textarea { resize: vertical; }
+.full-textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: "Consolas","Monaco",monospace; min-height: 200px; resize: vertical; line-height: 1.6; }
+.full-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+.card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.card-title { font-size: 13px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+.field-readonly { background: #f3f4f6 !important; color: var(--muted) !important; cursor: not-allowed !important; }
+.field-hint { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+/* Manual review */
+.mr-display { font-size: 13px; color: var(--text); padding: 6px 0; min-height: 24px; }
+.mr-display.empty { color: var(--muted); font-style: italic; }
+.mr-append-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+.mr-append-row input { flex: 1; padding: 6px 9px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; }
+.mr-append-row input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+
+/* Bullet list editor */
+.bullet-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.bullet-row { display: flex; align-items: flex-start; gap: 6px; }
+.bullet-dot { width: 20px; color: var(--muted); font-size: 14px; padding-top: 7px; flex-shrink: 0; text-align: center; }
+.bullet-input { flex: 1; padding: 6px 8px; border: 1px solid var(--border); border-radius: 5px; font-size: 13px; font-family: inherit; resize: vertical; min-height: 34px; }
+.bullet-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+.bullet-del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; padding: 4px; flex-shrink: 0; line-height: 1; }
+.bullet-del:hover { color: var(--red); }
+.btn-add-bullet { font-size: 12px; color: var(--accent); background: none; border: 1px dashed var(--accent); border-radius: 4px; padding: 4px 12px; cursor: pointer; }
+
+/* Evidence editor */
+.evidence-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; padding: 8px 10px; background: #fafafa; border: 1px solid var(--border); border-radius: 6px; }
+.evidence-row-top { display: flex; gap: 6px; align-items: center; }
+.evidence-dot { color: var(--muted); font-size: 13px; flex-shrink: 0; }
+.evidence-ref { flex: 1; padding: 5px 8px; border: 1px solid var(--border); border-radius: 5px; font-size: 12px; font-family: monospace; min-width: 0; }
+.evidence-ref:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+.doi-link { font-size: 13px; flex-shrink: 0; text-decoration: none; transition: color .1s; }
+.evidence-desc { width: 100%; padding: 5px 8px; border: 1px solid var(--border); border-radius: 5px; font-size: 12px; font-family: inherit; box-sizing: border-box; }
+.evidence-desc:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+
+/* Event table */
+.event-table-wrap { overflow-x: auto; margin-bottom: 8px; }
+table.event-table { border-collapse: collapse; width: 100%; font-size: 12px; table-layout: fixed; }
+table.event-table th { background: #f8fafc; font-weight: 600; text-align: left; padding: 6px 8px; border: 1px solid var(--border); font-size: 11px; }
+table.event-table td { padding: 4px; border: 1px solid var(--border); vertical-align: top; }
+table.event-table td input, table.event-table td select { width: 100%; border: none; background: transparent; font-size: 12px; padding: 3px 4px; font-family: inherit; }
+table.event-table td input:focus, table.event-table td select:focus { outline: 1px solid var(--accent); border-radius: 3px; }
+table.event-table tr:hover td { background: #f9fafb; }
+/* Meaning textarea in event table */
+table.event-table td textarea.meaning-cell { width: 100%; border: none; background: transparent; font-size: 12px; padding: 3px 4px; font-family: inherit; resize: none; overflow: hidden; line-height: 1.5; min-height: 26px; display: block; }
+table.event-table td textarea.meaning-cell:focus { outline: 1px solid var(--accent); border-radius: 3px; }
+.btn-row-add { font-size: 11px; color: var(--accent); background: none; border: 1px dashed var(--accent); border-radius: 4px; padding: 4px 10px; cursor: pointer; margin-top: 4px; }
+.btn-row-del { color: var(--red); background: none; border: none; cursor: pointer; padding: 2px 6px; font-size: 14px; }
+
+/* Tabs */
+.tab-strip { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 14px; }
+.tab-opt { padding: 7px 14px; border: none; background: none; cursor: pointer; font-size: 13px; color: var(--muted); border-bottom: 2px solid transparent; }
+.tab-opt.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+/* Preview wrap */
+.preview-wrap { background: #fafafa; border: 1px solid var(--border); border-radius: 6px; padding: 14px; font-size: 13px; line-height: 1.7; }
+.preview-wrap h1 { font-size: 16px; margin-bottom: 8px; }
+.preview-wrap h2 { font-size: 14px; margin: 12px 0 6px; }
+.preview-wrap h3 { font-size: 13px; margin: 8px 0 4px; }
+.preview-wrap table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+.preview-wrap th, .preview-wrap td { border: 1px solid var(--border); padding: 5px 8px; font-size: 12px; }
+.preview-wrap code { background: #f3f4f6; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: monospace; }
+.preview-wrap blockquote { border-left: 3px solid var(--border); padding-left: 10px; color: var(--muted); margin: 6px 0; }
+
+/* KR */
+.kr-field { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 14px; }
+.kr-field label { font-size: 13px; font-weight: 600; min-width: 160px; padding-top: 2px; }
+.toggle-group { display: flex; gap: 0; }
+.toggle-opt { padding: 6px 16px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 13px; transition: all .1s; }
+.toggle-opt:first-child { border-radius: 6px 0 0 6px; }
+.toggle-opt:last-child { border-radius: 0 6px 6px 0; border-left: none; }
+.toggle-opt.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
+.status-select { padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; }
+
+/* Doc error banner */
+.doc-error-banner { background: #fee2e2; border: 1px solid var(--red); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; }
+.doc-error-banner h3 { font-size: 13px; font-weight: 700; color: #991b1b; margin-bottom: 8px; }
+.doc-error-banner ul { padding-left: 16px; margin: 0; }
+.doc-error-banner li { font-size: 12px; color: #991b1b; margin-bottom: 3px; }
+
+/* Task cards */
+.task-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 14px; }
+.task-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.task-kind-group { display: flex; gap: 0; }
+.task-kind-btn { padding: 4px 12px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 12px; font-weight: 500; transition: all .1s; }
+.task-kind-btn:first-child { border-radius: 4px 0 0 4px; }
+.task-kind-btn:last-child { border-radius: 0 4px 4px 0; border-left: none; }
+.task-kind-btn.selected-classical { background: var(--accent); color: #fff; border-color: var(--accent); }
+.task-kind-btn.selected-potential { background: var(--purple); color: #fff; border-color: var(--purple); }
+.task-name-input { flex: 1; padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; }
+.task-name-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+.btn-del-task { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; background: none; cursor: pointer; color: var(--red); font-size: 16px; line-height: 1; }
+.btn-del-task:hover { background: #fee2e2; }
+.task-fields-row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.task-field { display: flex; flex-direction: column; gap: 3px; }
+.task-field label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.task-field select, .task-field input[type=text] { padding: 5px 7px; border: 1px solid var(--border); border-radius: 5px; font-size: 12px; font-family: inherit; background: #fff; }
+.task-field select:focus, .task-field input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+
+/* Epoch params */
+.epoch-params-block { background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-bottom: 10px; }
+.epoch-params-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 10px; }
+.epoch-required-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.epoch-field { display: flex; flex-direction: column; gap: 3px; }
+.epoch-field label { font-size: 11px; font-weight: 600; color: var(--text); }
+.epoch-field .req-mark { color: var(--red); font-size: 11px; }
+.epoch-field input { padding: 5px 8px; border: 1px solid var(--border); border-radius: 5px; font-size: 12px; font-family: monospace; width: 100px; }
+.epoch-field input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+.epoch-field .unit { font-size: 11px; color: var(--muted); }
+.epoch-custom-title { font-size: 11px; color: var(--muted); margin-bottom: 6px; margin-top: 4px; }
+.epoch-custom-row { display: flex; gap: 6px; align-items: center; margin-bottom: 4px; }
+.epoch-custom-row input { padding: 4px 7px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: monospace; }
+.epoch-custom-row input:focus { outline: none; border-color: var(--accent); }
+.epoch-custom-key { width: 110px; }
+.epoch-custom-val { flex: 1; }
+.epoch-hint { font-size: 11px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+/* Task lock banner */
+.task-lock-banner { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
+.task-lock-header { font-weight: 700; color: #b91c1c; font-size: 13px; margin-bottom: 6px; }
+.task-lock-desc { font-size: 12px; color: #7f1d1d; margin: 0 0 10px; line-height: 1.5; }
+.task-lock-item { border-left: 3px solid #fca5a5; padding: 3px 0 3px 10px; margin-bottom: 6px; }
+.task-lock-title { font-weight: 600; font-size: 12px; color: #991b1b; margin-bottom: 2px; }
+.task-lock-msg { font-size: 11px; color: #b91c1c; line-height: 1.5; }
+.task-lock-preview { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; font-size: 13px; line-height: 1.6; }
+.task-raw-editor { width: 100%; min-height: 320px; font-family: monospace; font-size: 12px; border: 1px solid var(--border); border-radius: 5px; padding: 8px 10px; resize: vertical; box-sizing: border-box; line-height: 1.6; }
+.task-raw-editor:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+.task-lock-edit-label { font-size: 11px; color: var(--muted); margin-bottom: 5px; }
+/* TD Event ID select */
+.td-table td select.td-event-id-sel { width: 100%; border: none; background: transparent; font-size: 12px; padding: 2px 3px; font-family: monospace; cursor: pointer; }
+.td-table td select.td-event-id-sel:focus { outline: 1px solid var(--accent); border-radius: 3px; }
+/* target_events checkbox picker */
+.te-picker { max-height: 140px; overflow-y: auto; border: 1px solid var(--border); border-radius: 5px; padding: 4px 6px; background: #fff; display: flex; flex-direction: column; gap: 2px; }
+.te-picker-empty { color: var(--muted); font-size: 11px; font-style: italic; padding: 6px 4px; }
+.te-item { display: flex; align-items: baseline; gap: 5px; font-size: 12px; cursor: pointer; padding: 1px 2px; border-radius: 3px; }
+.te-item:hover { background: #f0f4ff; }
+.te-item input[type=checkbox] { cursor: pointer; margin: 0; flex-shrink: 0; position: relative; top: 1px; }
+.te-item code { font-size: 11px; font-family: monospace; background: #f3f4f6; padding: 0 3px; border-radius: 3px; white-space: nowrap; }
+.te-meaning { font-size: 10px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+
+/* Target definition */
+.task-td-section { margin-bottom: 10px; }
+.task-td-section > label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); display: block; margin-bottom: 6px; }
+.td-table { border-collapse: collapse; width: 100%; font-size: 12px; margin-bottom: 4px; }
+.td-table th { background: #f8fafc; font-weight: 600; text-align: left; padding: 5px 7px; border: 1px solid var(--border); font-size: 11px; }
+.td-table td { padding: 3px; border: 1px solid var(--border); }
+.td-table td input { width: 100%; border: none; background: transparent; font-size: 12px; padding: 3px 4px; font-family: inherit; }
+.td-table td input:focus { outline: 1px solid var(--accent); border-radius: 3px; }
+.td-table tr:hover td { background: #f9fafb; }
+.misc-channel-wrap { display: flex; flex-direction: column; gap: 6px; }
+.misc-channel-wrap input { padding: 6px 8px; border: 1px solid var(--border); border-radius: 5px; font-size: 12px; font-family: monospace; }
+.misc-channel-wrap input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px #bfdbfe; }
+.misc-warning { background: #fef3c7; border: 1px solid #f59e0b; border-radius: 5px; padding: 6px 10px; font-size: 11px; color: #92400e; }
+.task-text-field { margin-bottom: 10px; }
+.task-text-field > label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); display: block; margin-bottom: 6px; }
+.add-task-row { display: flex; gap: 8px; margin-bottom: 16px; }
+
+/* Modals */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 100; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+#modal { background: #fff; border-radius: 10px; padding: 24px; width: 420px; max-width: 90vw; }
+#modal h2 { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
+#modal .form-group { margin-bottom: 14px; }
+#modal .form-group label { font-size: 12px; font-weight: 600; color: var(--muted); display: block; margin-bottom: 5px; }
+#modal .form-group input { width: 100%; }
+#modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+
+/* Error modal */
+#err-modal { background: #fff; border-radius: 10px; padding: 24px; width: 480px; max-width: 90vw; }
+#err-modal h2 { font-size: 14px; font-weight: 700; color: #991b1b; margin-bottom: 12px; }
+#err-modal ul { padding-left: 18px; margin-bottom: 14px; }
+#err-modal li { font-size: 13px; margin-bottom: 4px; }
+#err-modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+/* Preview modal */
+#preview-modal { background: #fff; border-radius: 10px; padding: 0; width: 860px; max-width: 96vw; max-height: 92vh; display: flex; flex-direction: column; }
+#preview-modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+#preview-modal-header h2 { font-size: 15px; font-weight: 700; flex: 1; }
+#preview-modal-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
+#preview-modal-footer { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
+#preview-markdown { font-size: 13px; line-height: 1.7; }
+#preview-markdown h1 { font-size: 18px; margin-bottom: 10px; }
+#preview-markdown h2 { font-size: 15px; font-weight: 700; margin: 16px 0 8px; padding-bottom: 4px; border-bottom: 2px solid var(--border); }
+#preview-markdown h3 { font-size: 13px; font-weight: 700; margin: 12px 0 6px; }
+#preview-markdown ul, #preview-markdown ol { padding-left: 20px; margin: 6px 0; }
+#preview-markdown li { margin-bottom: 3px; }
+#preview-markdown table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+#preview-markdown th, #preview-markdown td { border: 1px solid var(--border); padding: 5px 8px; font-size: 12px; }
+#preview-markdown code { background: #f3f4f6; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: monospace; }
+#preview-markdown blockquote { border-left: 3px solid var(--border); padding-left: 10px; color: var(--muted); margin: 8px 0; }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <h1>EEG Audit Tool</h1>
+  <div class="spacer"></div>
+  <span id="save-status"></span>
+  <button id="btn-settings" onclick="openSettings()">&#9881; Settings</button>
+</div>
+
+<div id="layout">
+  <div id="sidebar">
+    <button id="sidebar-toggle" class="panel-toggle" onclick="toggleSidebar()" title="Toggle sidebar">‹</button>
+    <div id="sidebar-inner">
+      <div id="sidebar-head">
+        <label>Search / Filter</label>
+        <input type="text" id="ds-search" placeholder="Search dataset name…" oninput="renderDatasetList()">
+        <select id="filter-category" onchange="renderDatasetList()">
+          <option value="">All Categories</option>
+        </select>
+      </div>
+      <div id="dataset-list"></div>
+    </div>
+  </div>
+
+  <div id="main">
+    <div id="step-bar">
+      <button class="step-btn active" id="step-btn-0" onclick="goStep(0)"><span class="step-num">1</span> Meta-Paradigm</button>
+      <span class="step-sep">›</span>
+      <button class="step-btn" id="step-btn-1" onclick="goStep(1)"><span class="step-num">2</span> File Scan &amp; Tasks</button>
+      <span class="step-sep">›</span>
+      <button class="step-btn" id="step-btn-2" onclick="goStep(2)"><span class="step-num">3</span> DQN &amp; Kernel</button>
+    </div>
+    <div id="step-content">
+      <div id="no-dataset">&#8592; Select a dataset to start reviewing</div>
+    </div>
+    <div id="action-bar" style="display:none">
+      <span id="ds-title"></span>
+      <div class="spacer"></div>
+      <button class="btn btn-secondary" id="btn-prev" onclick="prevStep()" disabled>&#8592; Prev</button>
+      <button class="btn btn-secondary" id="btn-next" onclick="nextStep()">Next &#8594;</button>
+      <button class="btn btn-warning" id="btn-preview" onclick="confirmAndPreview()" style="display:none">&#128065; Confirm &amp; Preview</button>
+    </div>
+  </div>
+
+  <div id="right">
+    <button id="right-toggle" class="panel-toggle" onclick="toggleRightPanel()" title="Toggle panel">›</button>
+    <div id="right-inner">
+    <div id="right-tabs">
+      <button class="rtab active" id="rtab-guide" onclick="switchRightTab('guide')">Step Guide</button>
+      <button class="rtab" id="rtab-rulebook" onclick="switchRightTab('rulebook')">Rulebook</button>
+      <button class="rtab" id="rtab-chat" onclick="switchRightTab('chat')">LLM Chat</button>
+    </div>
+    <div id="right-body">
+      <div id="pane-guide" class="visible">
+        <div id="guide-content"><p style="color:var(--muted);font-size:12px;padding:12px">Select a dataset to begin.</p></div>
+      </div>
+      <div id="pane-rulebook">
+        <div id="rulebook-search">
+          <input type="text" id="rb-search" placeholder="Search rulebook..." oninput="filterRulebook()">
+        </div>
+        <div id="rulebook-content">Loading rulebook&#8230;</div>
+      </div>
+      <div id="pane-chat">
+        <div id="chat-toolbar">
+          <button class="chat-tool-btn danger" onclick="clearChat()" title="Clear all messages and history">🗑 Clear</button>
+          <button class="chat-tool-btn" onclick="compressChat()" title="Summarize history into one context message">⚡ Compress</button>
+          <span id="chat-token-hint" style="font-size:10px;color:var(--muted);margin-left:auto;align-self:center"></span>
+        </div>
+        <div id="chat-messages"></div>
+        <div id="chat-input-area">
+          <div id="chat-context-label">Context: —</div>
+          <textarea id="chat-input" placeholder="Ask about this dataset or rules&#8230;" onkeydown="chatKeydown(event)"></textarea>
+          <button class="btn btn-primary" style="width:100%;margin-top:6px" onclick="sendChat()">Send</button>
+        </div>
+      </div>
+    </div>
+    </div><!-- /#right-inner -->
+  </div>
+</div>
+
+<!-- Settings modal -->
+<div id="modal-overlay" class="modal-overlay">
+  <div id="modal">
+    <h2>LLM Settings</h2>
+    <div class="form-group"><label>BASE_URL (OpenAI-compatible)</label><input type="text" id="cfg-base-url" placeholder="https://api.minimax.io/v1"></div>
+    <div class="form-group"><label>ANTHROPIC_BASE_URL (Anthropic-compatible)</label><input type="text" id="cfg-anthropic-base-url" placeholder="https://api.kimi.com/coding/"></div>
+    <div class="form-group"><label>API Key</label><input type="password" id="cfg-key" placeholder="sk-..."></div>
+    <div class="form-group"><label>Model</label><input type="text" id="cfg-model" placeholder="MiniMax-M2.7"></div>
+    <div class="form-group"><label>Proxy (optional, e.g. http://localhost:7897)</label><input type="text" id="cfg-proxy" placeholder="Leave empty if not needed"></div>
+    <div id="modal-actions">
+      <button class="btn btn-secondary" onclick="closeSettings()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSettings()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modify Task with AI modal -->
+<div id="modify-task-overlay" class="modal-overlay">
+  <div id="modal" style="width:500px;max-width:92vw">
+    <h2>Modify Task with AI</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Describe what to change. The LLM will rewrite this task following all documentation rules. Review the result before saving.</p>
+    <textarea id="modify-task-instruction" style="width:100%;height:90px;border:1px solid var(--border);border-radius:6px;padding:8px;font-size:12px;font-family:inherit;resize:vertical" placeholder="e.g. Change tmax to 4.0 s and add a binary left vs right target definition"></textarea>
+    <div id="modify-task-status" style="font-size:11px;color:var(--red);margin-top:6px;min-height:16px"></div>
+    <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end">
+      <button class="btn btn-secondary" onclick="closeModifyTaskModal()">Cancel</button>
+      <button id="btn-apply-modify" class="btn btn-primary" onclick="applyModifyTask()">Apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- Error modal -->
+<div id="err-modal-overlay" class="modal-overlay">
+  <div id="err-modal">
+    <h2>&#9888; Document Structural Errors</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px">This document cannot be audited until structural errors are fixed. Edit the raw <code>analysis.md</code> directly.</p>
+    <ul id="err-modal-list"></ul>
+    <div id="err-modal-actions">
+      <button class="btn btn-secondary" onclick="closeErrModal()">Close</button>
+      <button class="btn btn-secondary" onclick="viewRawContent()">View Raw</button>
+    </div>
+  </div>
+</div>
+
+<!-- Preview modal -->
+<div id="preview-modal-overlay" class="modal-overlay">
+  <div id="preview-modal">
+    <div id="preview-modal-header">
+      <h2>&#128065; Document Preview</h2>
+      <button class="btn btn-secondary" onclick="closePreview()">Close</button>
+      <button class="btn btn-success" onclick="saveFromPreview()">&#128190; Save File</button>
+    </div>
+    <div id="preview-modal-body">
+      <div id="preview-markdown"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Save Complete Modal -->
+<div id="save-complete-overlay">
+  <div id="save-complete-modal">
+    <div id="save-complete-icon"></div>
+    <div id="save-complete-title"></div>
+    <div id="save-complete-status"></div>
+    <div id="save-complete-body"></div>
+    <button class="btn btn-primary" onclick="closeSaveComplete()" style="min-width:100px">OK</button>
+  </div>
+</div>
+
+<script>
+// ─── Constants ────────────────────────────────────────────────────────────────
+const STEP_LABELS = ['Meta-Paradigm', 'File Scan & Tasks', 'DQN & Kernel'];
+
+const STEP_RULEBOOK_HINTS = [
+  'Article 22 Dataset, Article 25 Category, Article 30 Manual Review, Article 31 Paradigm',
+  'Chapter 8 File Scan, Event Structure, MISC, Info; Chapter 10 Tasks, Label Route, Target',
+  'Chapter 11 Data Quality, Article 37 Super Meta Required, Article 42 Status',
+];
+
+const VALID_CATEGORIES = ['Complex Applied','High-level Mental','Action/Output','Sensory/Response','Biological State','Others'];
+const EPOCH_METHODS = ['epoch_by_event_hdf5','epoch_by_long_event_hdf5','epoch_by_segmentation_hdf5'];
+const LABEL_ROUTES = ['event','misc','info'];
+
+// Step guide content (flat items per step, sections for grouping)
+const STEP_GUIDE = [
+  {
+    title: 'Step 1: Meta-Paradigm',
+    sections: [
+      {
+        heading: 'Meta Fields',
+        items: [
+          { key: 's0-1', text: 'Verify <strong>URL</strong> — open the link; confirm it is accessible and points to the dataset info page (not a raw file download).' },
+          { key: 's0-0', text: 'Verify <strong>Year</strong> — cross-check with the official source or the earliest relevant paper.' },
+          { key: 's0-2', text: 'Verify <strong>Category</strong> — must be one of 6 valid values. Correct only if clearly wrong.' },
+          { key: 's0-3', text: 'Verify <strong>Subjects</strong> — use actual usable count, not the advertised number. Note discrepancies in DQN.' },
+          { key: 's0-5', text: 'Verify <strong>Channels</strong> — matches data files. Use <code>Variable</code> if complex.' },
+          { key: 's0-6', text: 'Verify <strong>Sampling Rate</strong> — matches data. Use <code>Variable</code> if differs across files.' },
+          { key: 's0-7', text: 'Add your name to <strong>Manual Review</strong> (append only).' },
+        ]
+      },
+      {
+        heading: 'Paradigm',
+        items: [
+          { key: 's0-8', text: 'Read the paradigm description in full, then cross-check with the official dataset page or README — are they consistent?' },
+          { key: 's0-9', text: 'Check consistency with the data directory and file structure — if online information is sufficient (e.g. OpenNeuro page, official README), local inspection can be skipped.' },
+        ]
+      }
+    ]
+  },
+  {
+    title: 'Step 2: File Scan & Tasks',
+    sections: [
+      {
+        heading: 'Event Structure',
+        items: [
+          { key: 's1-1', text: 'Check <strong>Type</strong> for each row — <code>event</code> (task-relevant signal) or <code>admin</code> (boundary / artifact marker)? If wrong, correct it via the dropdown.' },
+          { key: 's1-2', text: 'Check <strong>Meaning</strong> for each row — is the description accurate and unambiguous? Edit directly if needed.' },
+          { key: 's1-note', text: 'Check the <strong>Notes (blockquote)</strong> below the table — are there events that the scanner missed but you know exist? If so, add a pointer to where the information can be found (e.g. README section, companion file, paper Table 1). Do <em>not</em> manually enumerate all values — just say where to look.' },
+        ]
+      },
+      {
+        heading: 'Info',
+        items: [
+          { key: 's1-3', text: 'The <strong>Notes</strong> column is for flagging missing or incorrect entries, and for pointing to where correct information can be found. You do <em>not</em> need to manually fill in age ranges or sex breakdowns. For <code>device</code>: if the amplifier/hardware model is mentioned in the dataset page or README, write the model name in the Notes column — this is the one field the scanner cannot reliably detect.' },
+        ]
+      },
+      {
+        heading: 'Tasks — A: Understand & Verify References',
+        items: [
+          { key: 's1-4', text: '<strong>Classical Task</strong>: First understand the task\'s scientific meaning. Then review Evidence (keep at most 3 references): does each reference describe the <strong style="color:var(--red)">same dataset</strong> and the <strong style="color:var(--red)">same task</strong>? Delete irrelevant references. If <em>no valid reference remains</em>, delete the task entirely.' },
+          { key: 's1-5', text: '<strong>Potential Task</strong>: No Evidence required. Evaluate feasibility from File Scan results and your own experience — proceed directly to step B.' },
+        ]
+      },
+      {
+        heading: 'Tasks — B: Epoch Method & Parameters',
+        items: [
+          { key: 's1-6', text: 'Is the <strong>Epoch Method</strong> appropriate? Event-locked (<code>epoch_by_event_hdf5</code>) for discrete cues; continuous segmentation (<code>epoch_by_continuous_hdf5</code>) for resting-state or long recordings.' },
+          { key: 's1-7', text: 'Are <strong>Epoch Parameters</strong> consistent with your selected reference(s)? If multiple references report different windows, choose the most representative or a reasonable compromise, and note the rationale in the task <strong>Notes</strong>. Required minimum keys per method: <code>event</code>→tmin/tmax/target_events; <code>long-event</code>→tmin/tmax/overlap/target_events; <code>segmentation</code>→segment_length/overlap.' },
+        ]
+      },
+      {
+        heading: 'Tasks — C: Target Definition',
+        items: [
+          { key: 's1-8', text: 'Is the <strong>Target Definition</strong> complete — all relevant events/channels covered, y-values correctly assigned, consistent with Label Route (<code>event</code> / <code>misc</code> / <code>info</code>)?' },
+        ]
+      },
+      {
+        heading: 'Tasks — D: No Tasks Remaining',
+        items: [
+          { key: 's1-9', text: 'If all tasks were deleted after reference review: go back and check the removed references — do any of them describe a <em>different valid task</em> on this dataset? If yes, add a new task and repeat steps A → C.' },
+        ]
+      },
+    ]
+  },
+  {
+    title: 'Step 3: DQN & Kernel',
+    sections: [
+      {
+        heading: 'Data Quality Notes',
+        items: [
+          { key: 's2-0', text: 'Read through the existing Data Quality Notes — are they accurate and complete?' },
+          { key: 's2-1', text: 'Do you need to add any new notes? Consider: missing or corrupted files, channel substitutions or renamed channels, special preprocessing requirements, known artifacts, label inconsistencies, subject count discrepancies, multi-session quirks, etc.' },
+        ]
+      },
+      {
+        heading: 'Kernel Responsibilities',
+        items: [
+          { key: 's2-2', text: '<strong>Super Meta Required</strong>: check Step 2 Tasks — if any task has Meta Level = super, select Yes; otherwise No.' },
+          { key: 's2-3', text: '<strong>Status</strong>: as the reviewer, your final choice must be <code>completed</code> (review done, issues documented) or <code>hallucination</code> (entire document fundamentally unreliable, cannot be fixed). Do not leave it as <code>wait_manual_review</code> or <code>wait_kernel_update</code> after you finish.' },
+        ]
+      }
+    ]
+  }
+];
+
+// ─── Panel collapse ───────────────────────────────────────────────────────────
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const btn = document.getElementById('sidebar-toggle');
+  sb.classList.toggle('collapsed');
+  btn.textContent = sb.classList.contains('collapsed') ? '›' : '‹';
+}
+function toggleRightPanel() {
+  const rp = document.getElementById('right');
+  const btn = document.getElementById('right-toggle');
+  rp.classList.toggle('collapsed');
+  btn.textContent = rp.classList.contains('collapsed') ? '‹' : '›';
+}
+
+// ─── State ────────────────────────────────────────────────────────────────────
+let allDatasets = [];
+let currentDataset = null;
+let rawContent = '';
+let currentStep = 0;
+let rulebookRaw = '';
+let llmHistory = [];
+let dirty = false;
+let currentTasks = [];
+let taskEditorMode = 'form';
+let currentMiscSummaryBody = '';
+let pendingErrDataset = null;
+let isDatasetLoading = false;
+let datasetLoadSeq = 0;
+let renderedStep = null;
+let guideChecks = {};   // key → boolean
+let previewSeen = false;
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+async function init() {
+  updateStepBar();
+  await Promise.all([loadDatasets(), loadRulebook(), loadConfig()]);
+  updateStepBar();
+}
+
+async function loadDatasets() {
+  try {
+    const r = await fetch('/api/datasets');
+    const datasets = await r.json();
+    allDatasets = datasets.map(ds => ({
+      ...ds,
+      _errors: ds.template_errors || []
+    }));
+    populateCategoryFilter();
+    renderDatasetList();
+  } catch(e) {}
+}
+
+async function loadRulebook() {
+  try {
+    const r = await fetch('/api/rulebook');
+    const d = await r.json();
+    rulebookRaw = d.content;
+    renderRulebook();
+  } catch(e) {}
+}
+
+async function loadConfig() {
+  try {
+    const r = await fetch('/api/config');
+    const cfg = await r.json();
+    document.getElementById('cfg-base-url').value = cfg.BASE_URL || cfg.url || '';
+    document.getElementById('cfg-anthropic-base-url').value = cfg.ANTHROPIC_BASE_URL || '';
+    document.getElementById('cfg-key').value = cfg.key || '';
+    document.getElementById('cfg-model').value = cfg.model || '';
+    document.getElementById('cfg-proxy').value = cfg.proxy || '';
+  } catch(e) {}
+}
+
+// ─── Sidebar ──────────────────────────────────────────────────────────────────
+function populateCategoryFilter() {
+  const cats = [...new Set(allDatasets.map(d => d.category))].sort();
+  const sel = document.getElementById('filter-category');
+  sel.innerHTML = '<option value="">All Categories</option>';
+  cats.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; sel.appendChild(o); });
+}
+
+function renderDatasetList() {
+  const cat = document.getElementById('filter-category').value;
+  const q = (document.getElementById('ds-search')?.value || '').toLowerCase().trim();
+  const filtered = allDatasets.filter(d =>
+    (!cat || d.category === cat) &&
+    (!q || d.name.toLowerCase().includes(q))
+  );
+  const list = document.getElementById('dataset-list');
+  list.innerHTML = '';
+  filtered.forEach(d => {
+    const hasErr = d._errors && d._errors.length > 0;
+    const div = document.createElement('div');
+    div.className = 'ds-item' + (currentDataset === d.name ? ' active' : '') + (hasErr ? ' ds-error' : '');
+    div.onclick = () => hasErr ? showErrModal(d) : selectDataset(d.name);
+    div.innerHTML = `<div class="ds-name">${esc(d.name)}</div>
+      <div class="ds-meta"><span class="ds-cat">${esc(d.category)}</span>
+      <span class="badge ${hasErr ? 'badge-rev' : statusBadgeClass(d.status)}">${hasErr ? 'error' : esc(d.status)}</span></div>`;
+    list.appendChild(div);
+  });
+}
+
+function statusBadgeClass(s) {
+  if (!s || s === 'unknown') return 'badge-other';
+  if (s === 'wait_kernel_update') return 'badge-wait';
+  if (s === 'wait_manual_review') return 'badge-review';
+  if (s === 'completed') return 'badge-done';
+  if (s === 'hallucination') return 'badge-rev';
+  if (s.includes('wait')) return 'badge-wait';
+  if (s.includes('review')) return 'badge-review';
+  return 'badge-other';
+}
+
+function showErrModal(ds) {
+  pendingErrDataset = ds.name;
+  document.getElementById('err-modal-list').innerHTML = ds._errors.map(e => `<li>${esc(e)}</li>`).join('');
+  document.getElementById('err-modal-overlay').classList.add('open');
+}
+function closeErrModal() { document.getElementById('err-modal-overlay').classList.remove('open'); pendingErrDataset = null; }
+async function viewRawContent() {
+  if (!pendingErrDataset) return;
+  const dsName = pendingErrDataset;
+  closeErrModal();
+  const viewId = ++datasetLoadSeq;
+  isDatasetLoading = false;
+  try {
+    const r = await fetch(`/api/dataset/${encodeURIComponent(dsName)}`);
+    const d = await r.json();
+    if (viewId !== datasetLoadSeq) return;
+    currentDataset = null;
+    rawContent = '';
+    renderedStep = null;
+    document.getElementById('action-bar').style.display = 'none';
+    document.getElementById('step-content').removeAttribute('data-step');
+    const ds = allDatasets.find(x => x.name === dsName);
+    document.getElementById('step-content').innerHTML = `
+      <div class="doc-error-banner"><h3>&#9888; Document has structural errors — read-only</h3>
+        <ul>${ds?._errors?.map(e=>`<li>${esc(e)}</li>`).join('')||''}</ul></div>
+      <textarea class="full-textarea" style="min-height:500px" readonly>${esc(d.content)}</textarea>`;
+    renderDatasetList();
+    updateStepBar();
+  } catch(e) {}
+}
+document.getElementById('err-modal-overlay').onclick = function(e) { if (e.target===this) closeErrModal(); };
+
+async function selectDataset(name) {
+  if (isDatasetLoading && currentDataset === name) return;
+  if (dirty && !confirm('Unsaved changes — discard and switch?')) return;
+  const loadId = ++datasetLoadSeq;
+  isDatasetLoading = true;
+  currentDataset = name; dirty = false; currentStep = 0; previewSeen = false;
+  rawContent = '';
+  renderedStep = null;
+  currentTasks = [];
+  taskEditorMode = 'form';
+  currentMiscSummaryBody = '';
+  llmHistory = [];
+  document.getElementById('action-bar').style.display = 'none';
+  document.getElementById('ds-title').textContent = name;
+  const content = document.getElementById('step-content');
+  content.removeAttribute('data-step');
+  content.innerHTML = `<div id="no-dataset">Loading ${esc(name)}...</div>`;
+  renderDatasetList();
+  updateStepBar();
+  let errors = [];
+  let ds = allDatasets.find(d => d.name === name);
+  try {
+    const r = await fetch(`/api/dataset/${encodeURIComponent(name)}`);
+    const d = await r.json();
+    if (loadId !== datasetLoadSeq) return;
+    rawContent = d.content;
+    errors = d.template_check?.errors || [];
+    ds = allDatasets.find(item => item.name === name);
+    if (ds) ds._errors = errors;
+  } catch(e) {
+    if (loadId !== datasetLoadSeq) return;
+    currentDataset = null;
+    rawContent = '';
+    renderedStep = null;
+    document.getElementById('action-bar').style.display = 'none';
+    document.getElementById('step-content').removeAttribute('data-step');
+    document.getElementById('step-content').innerHTML = '<div id="no-dataset">Failed to load dataset.</div>';
+    isDatasetLoading = false;
+    renderDatasetList();
+    updateStepBar();
+    alert('Failed to load dataset');
+    return;
+  } finally {
+    if (loadId === datasetLoadSeq) isDatasetLoading = false;
+  }
+  if (loadId !== datasetLoadSeq) return;
+  renderDatasetList();
+  if (errors.length) {
+    currentDataset = null;
+    rawContent = '';
+    renderedStep = null;
+    document.getElementById('action-bar').style.display = 'none';
+    document.getElementById('step-content').removeAttribute('data-step');
+    document.getElementById('step-content').innerHTML = `<div id="no-dataset">Document has structural errors. Open the error dialog to view it read-only.</div>`;
+    showErrModal(ds || { name, _errors: errors });
+    renderDatasetList();
+    updateStepBar();
+    return;
+  }
+  document.getElementById('action-bar').style.display = 'flex';
+  document.getElementById('ds-title').textContent = name;
+  currentStep = 0;
+  renderStep(0);
+  updateStepBar();
+}
+
+// ─── Step Navigation ──────────────────────────────────────────────────────────
+function goStep(idx) {
+  if (isDatasetLoading || !currentDataset || idx === currentStep) return;
+  if (!collectStep(currentStep)) return;
+  currentStep = idx;
+  renderStep(idx);
+  updateStepBar();
+}
+function prevStep() {
+  if (isDatasetLoading || !currentDataset || currentStep===0) return;
+  if (!collectStep(currentStep)) return;
+  currentStep--;
+  renderStep(currentStep);
+  updateStepBar();
+}
+function nextStep() {
+  if (isDatasetLoading || !currentDataset || currentStep===2) return;
+  if (!collectStep(currentStep)) return;
+  currentStep++;
+  renderStep(currentStep);
+  updateStepBar();
+}
+
+function updateStepBar() {
+  const controlsDisabled = isDatasetLoading || !currentDataset || !rawContent;
+  for (let i=0;i<3;i++) {
+    const btn = document.getElementById(`step-btn-${i}`);
+    btn.classList.toggle('active', i===currentStep);
+    btn.disabled = controlsDisabled;
+  }
+  document.getElementById('btn-prev').disabled = controlsDisabled || currentStep===0;
+  document.getElementById('btn-next').disabled = controlsDisabled || currentStep===2;
+  document.getElementById('btn-preview').style.display = (!controlsDisabled && currentStep===2) ? '' : 'none';
+  renderRulebook(); renderStepGuide();
+  document.getElementById('chat-context-label').textContent =
+    currentDataset
+      ? `Context: ${currentDataset} — step ${currentStep+1}: ${STEP_LABELS[currentStep]} | full doc + rulebook injected`
+      : 'Context: no dataset selected';
+  updateChatTokenHint();
+}
+
+// ─── Parsing Helpers ──────────────────────────────────────────────────────────
+function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+function getSection(raw, h) {
+  const re = new RegExp(`\\n## ${escRe(h)}\\s*\\n([\\s\\S]*?)(?=\\n## |$)`);
+  const m = raw.match(re); return m ? m[1].trim() : '';
+}
+function replaceSection(raw, h, body) {
+  const re = new RegExp(`(\\n## ${escRe(h)}\\s*\\n)[\\s\\S]*?(?=\\n## |$)`);
+  const rep = `\n## ${h}\n\n${body}\n`;
+  return re.test(raw) ? raw.replace(re, rep) : raw.trimEnd() + `\n\n## ${h}\n\n${body}\n`;
+}
+function getSubSection(body, h) {
+  const re = new RegExp(`###\\s+${escRe(h)}\\s*\\n([\\s\\S]*?)(?=\\n### |$)`);
+  const m = body.match(re); return m ? m[1].trim() : '';
+}
+function parseMeta(raw) {
+  const f = {};
+  const l1 = raw.match(/\*\*Dataset\*\*[^\n]+/);
+  if (l1) l1[0].split('|').forEach(p => { const m=p.match(/\*\*([^*]+)\*\*:\s*`?([^`|*\n]+)`?/); if(m) f[m[1].trim()]=m[2].trim(); });
+  const l2 = raw.match(/\*\*Category\*\*[^\n]+/);
+  if (l2) l2[0].split('|').forEach(p => { const m=p.match(/\*\*([^*]+)\*\*:\s*`?([^`|*\n]*)`?/); if(m) f[m[1].trim()]=m[2].trim(); });
+  const tm = raw.match(/^#\s+(.+)/m); f['_title'] = tm ? tm[1].trim() : '';
+  const inlineMR = (f['Manual Review'] || '').trim();
+  const legacyMR = raw.match(/^\*\*Manual Review\*\*:\s*([^\n]*)$/m);
+  f['_manualReview'] = inlineMR || (legacyMR ? legacyMR[1].trim() : '');
+  return f;
+}
+function serializeMeta(f) {
+  const manualReview = ('_manualReview' in f ? f['_manualReview'] : (f['Manual Review'] || '')).trim();
+  return `**Dataset**: \`${f['Dataset']||''}\` | **Year**: ${f['Year']||''} | **URL**: ${f['URL']||''}\n**Category**: ${f['Category']||''} | **Subjects**: ${f['Subjects']||''} | **Files (Completed)**: ${f['Files (Completed)']||''} | **Channels**: ${f['Channels']||''} | **Sampling Rate**: ${f['Sampling Rate']||''} | **Manual Review**: ${manualReview}`;
+}
+function parseMarkdownTable(text) {
+  const lines = text.split('\n').filter(l => l.trim().startsWith('|'));
+  if (lines.length < 2) return { headers:[], rows:[] };
+  const headers = lines[0].split('|').map(c=>c.trim()).filter(Boolean);
+  const rows = [];
+  for (let i=2;i<lines.length;i++) { const c=lines[i].split('|').map(c=>c.trim()).filter(Boolean); if(c.length) rows.push(c); }
+  return { headers, rows };
+}
+
+// ─── Bullet List Helpers ──────────────────────────────────────────────────────
+function parseBullets(text) {
+  const raw = (text||'').replace(/\r\n/g,'\n');
+  const bulletLines = raw.split('\n').filter(l => l.trim().startsWith('-'));
+  if (bulletLines.length) {
+    return bulletLines.map(l => l.replace(/^\s*-\s*/,'').trim()).filter(Boolean);
+  }
+  // Fallback: preserve non-bullet content (e.g. single-line `Kernel Notes: foo`)
+  const trimmed = raw.trim();
+  return trimmed ? [trimmed] : [];
+}
+function buildBulletEditor(id, items) {
+  const rows = (items.length ? items : ['']).map((item,i) =>
+    `<div class="bullet-row" id="${id}-row-${i}">
+      <span class="bullet-dot">•</span>
+      <textarea class="bullet-input" rows="1" oninput="autoResize(this)">${esc(item)}</textarea>
+      <button class="bullet-del" onclick="delBullet('${id}',this)" title="Remove">×</button>
+    </div>`
+  ).join('');
+  return `<div class="bullet-list" id="${id}-list">${rows}</div>
+    <button class="btn-add-bullet" onclick="addBullet('${id}')">+ Add item</button>`;
+}
+function addBullet(id) {
+  const list = document.getElementById(`${id}-list`);
+  if (!list) return;
+  const idx = list.children.length;
+  const row = document.createElement('div');
+  row.className = 'bullet-row';
+  row.innerHTML = `<span class="bullet-dot">•</span>
+    <textarea class="bullet-input" rows="1" oninput="autoResize(this)"></textarea>
+    <button class="bullet-del" onclick="delBullet('${id}',this)" title="Remove">×</button>`;
+  list.appendChild(row);
+  row.querySelector('textarea').focus();
+}
+function delBullet(id, btn) { btn.closest('.bullet-row').remove(); }
+function collectBullets(id) {
+  const list = document.getElementById(`${id}-list`);
+  if (!list) return '';
+  return [...list.querySelectorAll('.bullet-input')].map(t=>t.value.trim()).filter(Boolean).map(t=>`- ${t}`).join('\n');
+}
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = (el.scrollHeight) + 'px';
+}
+
+// ─── Evidence Helpers ─────────────────────────────────────────────────────────
+function parseEvidence(text) {
+  const items = [];
+  text.split('\n').forEach(line => {
+    const l = line.replace(/^\s*-\s*/,'').trim();
+    if (!l) return;
+    const normalized = l.replace(/^DOI:\s*/, '').trim();
+    const sep = normalized.indexOf(' — ');
+    if (sep >= 0) {
+      items.push({
+        ref: normalized.slice(0, sep).trim(),
+        desc: normalized.slice(sep + 3).trim(),
+      });
+    } else {
+      items.push({ ref: normalized, desc: '' });
+    }
+  });
+  return items;
+}
+function doiLink(ref) {
+  const v = ref.trim();
+  if (!v) return `<span class="doi-link" style="color:var(--border);cursor:default">↗</span>`;
+  if (/^10\.\d{4,}\//.test(v))
+    return `<a href="https://doi.org/${encodeURIComponent(v)}" target="_blank" class="doi-link" style="color:var(--accent)" title="Open DOI">↗</a>`;
+  if (/^https?:\/\//.test(v))
+    return `<a href="${v}" target="_blank" class="doi-link" style="color:var(--accent)" title="Open URL">↗</a>`;
+  return `<span class="doi-link" style="color:var(--border);cursor:default" title="${esc(v)}">↗</span>`;
+}
+function buildEvidenceEditor(id, items) {
+  const rows = (items.length ? items : [{ref:'',desc:''}]).map((item,i) =>
+    `<div class="evidence-row">
+      <div class="evidence-row-top">
+        <span class="evidence-dot">•</span>
+        <input class="evidence-ref" type="text" value="${esc(item.ref)}" placeholder="DOI or reference ID" oninput="updateDoiLink(this)">
+        ${doiLink(item.ref)}
+        <button class="bullet-del" onclick="this.closest('.evidence-row').remove()" title="Remove">×</button>
+      </div>
+      <input class="evidence-desc" type="text" value="${esc(item.desc)}" placeholder="Description / annotation">
+    </div>`
+  ).join('');
+  return `<div id="${id}-list">${rows}</div>
+    <button class="btn-add-bullet" onclick="addEvidenceRow('${id}')">+ Add reference</button>`;
+}
+function addEvidenceRow(id) {
+  const list = document.getElementById(`${id}-list`);
+  if (!list) return;
+  const row = document.createElement('div');
+  row.className = 'evidence-row';
+  row.innerHTML = `
+    <div class="evidence-row-top">
+      <span class="evidence-dot">•</span>
+      <input class="evidence-ref" type="text" value="" placeholder="DOI or reference ID" oninput="updateDoiLink(this)">
+      <span class="doi-link" style="color:var(--border);cursor:default">↗</span>
+      <button class="bullet-del" onclick="this.closest('.evidence-row').remove()" title="Remove">×</button>
+    </div>
+    <input class="evidence-desc" type="text" value="" placeholder="Description / annotation">`;
+  list.appendChild(row);
+  row.querySelector('input').focus();
+}
+function updateDoiLink(input) {
+  const link = input.nextElementSibling;
+  if (!link) return;
+  const v = input.value.trim();
+  const isDoi = /^10\.\d{4,}\//.test(v);
+  if (isDoi) {
+    link.outerHTML = `<a href="https://doi.org/${encodeURIComponent(v)}" target="_blank" class="doi-link" style="color:var(--accent)" title="Open DOI">↗</a>`;
+  } else {
+    // check if it's currently an anchor
+    if (link.tagName === 'A') link.outerHTML = `<span class="doi-link" style="color:var(--border);cursor:default">↗</span>`;
+    else { link.style.color = 'var(--border)'; }
+  }
+}
+function collectEvidence(id) {
+  const list = document.getElementById(`${id}-list`);
+  if (!list) return '';
+  const lines = [];
+  list.querySelectorAll('.evidence-row').forEach(row => {
+    const ref = row.querySelector('.evidence-ref')?.value.trim() || '';
+    const desc = row.querySelector('.evidence-desc')?.value.trim() || '';
+    if (ref && desc) lines.push(`  - ${ref} — ${desc}`);
+    else if (ref) lines.push(`  - ${ref}`);
+    else if (desc) lines.push(`  - ${desc}`);
+  });
+  return lines.join('\n');
+}
+
+function getTaskBlockField(part, fields) {
+  const names = Array.isArray(fields) ? fields : [fields];
+  const lines = part.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    for (const field of names) {
+      const m = lines[i].match(new RegExp(`^-\\s*\\*\\*${escRe(field)}\\*\\*:[ \\t]*(.*)$`));
+      if (!m) continue;
+      const body = [];
+      if (m[1].trim()) body.push(m[1].trimEnd());
+      for (let j = i + 1; j < lines.length; j++) {
+        if (/^-\s*\*\*[^*]+\*\*:[ \t]*/.test(lines[j])) break;
+        body.push(lines[j]);
+      }
+      return body.join('\n').trim();
+    }
+  }
+  return null;
+}
+
+function getCurrentEventStructureFromDOM() {
+  const table = document.getElementById('event-table');
+  if (!table) return null;
+  const headers = [...table.querySelectorAll('thead th')].map(th => (th.textContent || '').trim().toLowerCase());
+  const idIdx = headers.findIndex(h => h.includes('event id'));
+  const meanIdx = headers.findIndex(h => h.includes('meaning'));
+  if (idIdx < 0) return [];
+  const result = [];
+  const seen = new Set();
+  table.querySelectorAll('tbody tr').forEach(tr => {
+    const cells = [...tr.querySelectorAll('td')];
+    const id = cleanQuotedToken(cells[idIdx]?.querySelector('input, textarea, select')?.value || cells[idIdx]?.textContent || '');
+    if (!id || seen.has(id) || id.toLowerCase() === 'event id' || /^-+$/.test(id)) return;
+    seen.add(id);
+    const meaning = meanIdx >= 0
+      ? ((cells[meanIdx]?.querySelector('input, textarea, select')?.value || cells[meanIdx]?.textContent || '').trim())
+      : '';
+    result.push({ id, meaning });
+  });
+  return result;
+}
+
+function getCurrentInfoFieldsFromDOM() {
+  const table = document.getElementById('info-table');
+  if (!table) return null;
+  const result = [];
+  const seen = new Set();
+  table.querySelectorAll('tbody tr').forEach(tr => {
+    const field = cleanQuotedToken(tr.querySelector('td:first-child input')?.value || '');
+    if (!field || seen.has(field) || field.toLowerCase() === 'field' || /^-+$/.test(field)) return;
+    seen.add(field);
+    result.push(field);
+  });
+  return result;
+}
+
+function getCurrentMiscBody() {
+  return currentMiscSummaryBody || getSubSection(getSection(rawContent, 'File Scan Result'), 'MISC Label Summary');
+}
+
+// ─── Event Structure helpers ──────────────────────────────────────────────────
+function getEventStructureFromRawContent() {
+  const fromDom = getCurrentEventStructureFromDOM();
+  if (fromDom) return fromDom;
+  // Returns [{id, meaning}] for all rows in ### Event Structure.
+  const fsrM = rawContent.match(/## File Scan Result([\s\S]*?)(?=\n## |\n# |\Z)/);
+  if (!fsrM) return [];
+  const esM = fsrM[1].match(/### Event Structure([\s\S]*?)(?=\n### |\n## |\Z)/);
+  if (!esM) return [];
+  const result = [];
+  const seen = new Set();
+  for (const row of (esM[1].match(/^\|[^|\n]+\|[^\n]*/gm) || [])) {
+    const cols = row.split('|').slice(1).map(c => c.trim());
+    // cols: Event ID, Count, Type, Meta Level, Meaning  (5 columns)
+    const id = cleanQuotedToken(cols[0] || '');
+    if (!id || id.toLowerCase() === 'event id' || /^-+$/.test(id)) continue;
+    if (seen.has(id)) continue;
+    seen.add(id);
+    result.push({ id, meaning: cols[4] || '' });
+  }
+  return result;
+}
+
+function getMiscFieldsFromRawContent() {
+  const body = getCurrentMiscBody();
+  if (!body) return [];
+  const seen = new Set();
+  const result = [];
+  for (const row of (body.match(/^\|[^|\n]+\|[^\n]*/gm) || [])) {
+    const cols = row.split('|').slice(1).map(c => c.trim());
+    const field = cleanQuotedToken(cols[0] || '');
+    if (!field || field.toLowerCase() === 'channel' || /^-+$/.test(field) || seen.has(field)) continue;
+    seen.add(field);
+    result.push(field);
+  }
+  return result;
+}
+
+function getInfoFieldsFromRawContent() {
+  const fromDom = getCurrentInfoFieldsFromDOM();
+  if (fromDom) return fromDom;
+  const fsrM = rawContent.match(/## File Scan Result([\s\S]*?)(?=\n## |\n# |\Z)/);
+  if (!fsrM) return [];
+  const infoM = fsrM[1].match(/### Info([\s\S]*?)(?=\n### |\n## |\Z)/);
+  if (!infoM) return [];
+  const seen = new Set();
+  const result = [];
+  for (const row of (infoM[1].match(/^\|[^|\n]+\|[^\n]*/gm) || [])) {
+    const cols = row.split('|').slice(1).map(c => c.trim());
+    const field = cleanQuotedToken(cols[0] || '');
+    if (!field || field.toLowerCase() === 'field' || /^-+$/.test(field) || seen.has(field)) continue;
+    seen.add(field);
+    result.push(field);
+  }
+  return result;
+}
+
+// ─── Epoch Params Helpers ─────────────────────────────────────────────────────
+function cleanQuotedToken(value) {
+  let out = (value || '').trim();
+  let changed = true;
+  while (out && changed) {
+    changed = false;
+    if ((out.startsWith('`') && out.endsWith('`')) ||
+        (out.startsWith('"') && out.endsWith('"')) ||
+        (out.startsWith("'") && out.endsWith("'"))) {
+      out = out.slice(1, -1).trim();
+      changed = true;
+    }
+  }
+  return out;
+}
+
+function normalizeLabelRouteValue(value) {
+  const cleaned = cleanQuotedToken(value).toLowerCase();
+  if (cleaned === 'annotation' || cleaned === 'stim') return 'event';
+  return cleaned;
+}
+
+function parseEpochParams(epLine, method) {
+  const get = (key) => {
+    const m = epLine.match(new RegExp(`${escRe(key)}\\s*=\\s*([^,*\\]\\n]+)`));
+    return m ? m[1].replace(/\s*s\s*$/, '').replace(/\*/g, '').trim() : '';
+  };
+  const result = { tmin:'', tmax:'', overlap:'', segment_length:'', target_events:[], custom:[] };
+  result.tmin = get('tmin');
+  result.tmax = get('tmax');
+  result.overlap = get('overlap');
+  result.segment_length = get('segment_length');
+  // Extract target_events array (v3 decouples this from Target Definition rows).
+  const teMatch = epLine.match(/target_events\s*=\s*\[([^\]]*)\]/);
+  if (teMatch) {
+    const inner = teMatch[1];
+    const backticked = [...inner.matchAll(/`([^`]+)`/g)].map(m=>m[1]);
+    result.target_events = backticked.length
+      ? backticked
+      : inner.split(',').map(s => cleanQuotedToken(s)).filter(Boolean);
+  }
+  // Extract custom params: any key=value not in required set
+  const required = new Set(['tmin','tmax','overlap','segment_length','target_events']);
+  const allPairs = [...epLine.matchAll(/(\w+)\s*=\s*([^,\n\]]+)/g)];
+  allPairs.forEach(m => {
+    const k = m[1].trim();
+    if (!required.has(k)) result.custom.push({ key: k, val: m[2].replace(/\*/g,'').trim() });
+  });
+  return result;
+}
+
+function buildEpochParamsEditor(ep, method, idx) {
+  const isEvent = method === 'epoch_by_event_hdf5';
+  const isLong = method === 'epoch_by_long_event_hdf5';
+  const isSeg = method === 'epoch_by_segmentation_hdf5';
+  const customRows = (ep.custom || []).map((c,ci) =>
+    `<div class="epoch-custom-row">
+      <input class="epoch-custom-key" type="text" value="${esc(c.key)}" placeholder="param_name">
+      <span style="color:var(--muted);font-size:12px">=</span>
+      <input class="epoch-custom-val" type="text" value="${esc(c.val)}" placeholder="value">
+      <button class="bullet-del" onclick="this.closest('.epoch-custom-row').remove()">×</button>
+    </div>`
+  ).join('');
+
+  const teArr = Array.isArray(ep.target_events) ? ep.target_events : [];
+  const selectedSet = new Set(teArr);
+  const availableEvents = getEventStructureFromRawContent();
+
+  let teFieldHtml;
+  if (isSeg) {
+    teFieldHtml = `
+      <div class="epoch-field" style="flex:2;min-width:240px">
+        <label>target_events <span class="unit">(segmentation)</span></label>
+        <div class="epoch-hint" style="font-size:10px;margin-top:2px">Segmentation has no event anchors — locked to [].</div>
+      </div>`;
+  } else if (availableEvents.length === 0) {
+    const fallbackJson = JSON.stringify(teArr).replace(/"/g, '&quot;');
+    const teDisplay = teArr.length
+      ? teArr.map(id => `<code style="background:#f3f4f6;padding:1px 4px;border-radius:3px;font-size:11px">${esc(id)}</code>`).join(' ')
+      : '<span style="color:var(--muted);font-size:11px">none</span>';
+    teFieldHtml = `
+      <div class="epoch-field" style="flex:2;min-width:240px">
+        <label>target_events</label>
+        <input type="hidden" class="ep-te-fallback" value="${fallbackJson}">
+        <div class="te-picker te-picker-empty" style="padding:6px 8px">
+          <div style="margin-bottom:4px">${teDisplay}</div>
+          <div style="font-size:10px;color:var(--muted)">Event Structure not yet populated — existing values preserved. Complete File Scan to edit.</div>
+        </div>
+      </div>`;
+  } else {
+    const items = availableEvents.map(ev => {
+      const checked = selectedSet.has(ev.id) ? 'checked' : '';
+      const mHint = ev.meaning ? ` — <span class="te-meaning">${esc(ev.meaning)}</span>` : '';
+      return `<label class="te-item"><input type="checkbox" class="ep-te-check" value="${esc(ev.id)}" ${checked}><code>${esc(ev.id)}</code>${mHint}</label>`;
+    }).join('');
+    teFieldHtml = `
+      <div class="epoch-field" style="flex:2;min-width:240px">
+        <label>target_events <span class="req-mark">*</span></label>
+        <div class="te-picker" id="te-picker-${idx}">${items}</div>
+        <div class="epoch-hint" style="font-size:10px;margin-top:2px">Select event IDs from Event Structure that anchor each epoch.</div>
+      </div>`;
+  }
+
+  let requiredHtml = '';
+  if (isEvent || isLong) {
+    requiredHtml = `
+      <div class="epoch-field">
+        <label>tmin <span class="req-mark">*</span> <span class="unit">(s)</span></label>
+        <input type="text" class="ep-tmin" value="${esc(ep.tmin)}" placeholder="e.g. 0">
+      </div>
+      <div class="epoch-field">
+        <label>tmax <span class="req-mark">*</span> <span class="unit">(s)</span></label>
+        <input type="text" class="ep-tmax" value="${esc(ep.tmax)}" placeholder="e.g. 0.667">
+      </div>
+      ${isLong ? `<div class="epoch-field">
+        <label>overlap <span class="req-mark">*</span> <span class="unit">(0–1)</span></label>
+        <input type="text" class="ep-overlap" value="${esc(ep.overlap)}" placeholder="e.g. 0.5">
+      </div>` : ''}
+      ${teFieldHtml}`;
+  } else if (isSeg) {
+    requiredHtml = `
+      <div class="epoch-field">
+        <label>segment_length <span class="req-mark">*</span> <span class="unit">(s)</span></label>
+        <input type="text" class="ep-seg-len" value="${esc(ep.segment_length)}" placeholder="e.g. 4">
+      </div>
+      <div class="epoch-field">
+        <label>overlap <span class="req-mark">*</span> <span class="unit">(0–1)</span></label>
+        <input type="text" class="ep-overlap" value="${esc(ep.overlap)}" placeholder="e.g. 0.5">
+      </div>
+      ${teFieldHtml}`;
+  }
+
+  return `<div class="epoch-params-block" id="ep-block-${idx}">
+    <div class="epoch-params-title">Epoch Parameters <span class="req-mark" style="font-size:10px">* required</span></div>
+    <div class="epoch-required-row">${requiredHtml}</div>
+    <div class="epoch-custom-title">Optional parameters (key = value)</div>
+    <div class="epoch-custom-list" id="ep-custom-${idx}">${customRows}</div>
+    <button class="btn-add-bullet" onclick="addEpochCustom(${idx})" style="margin-top:4px">+ Add param</button>
+    <div class="epoch-hint">Set parameters based on your selected reference(s). If multiple references report different windows, choose the most representative or a reasonable compromise — note the rationale in the task <strong>Notes</strong>. Required minimum keys: event→tmin/tmax/target_events; long-event→tmin/tmax/overlap/target_events; segmentation→segment_length/overlap.</div>
+    <div class="epoch-hint" style="margin-top:3px">Params map to <code>epoch_params</code> / <code>segment_params</code> in EEGUnity. Valid keys: <code>baseline</code>, <code>reject</code>, <code>picks</code>, etc.</div>
+  </div>`;
+}
+
+function addEpochCustom(idx) {
+  const list = document.getElementById(`ep-custom-${idx}`);
+  if (!list) return;
+  const row = document.createElement('div');
+  row.className = 'epoch-custom-row';
+  row.innerHTML = `<input class="epoch-custom-key" type="text" value="" placeholder="param_name">
+    <span style="color:var(--muted);font-size:12px">=</span>
+    <input class="epoch-custom-val" type="text" value="" placeholder="value">
+    <button class="bullet-del" onclick="this.closest('.epoch-custom-row').remove()">×</button>`;
+  list.appendChild(row);
+  row.querySelector('input').focus();
+}
+
+function collectEpochParams(card, idx, method) {
+  const block = card.querySelector(`#ep-block-${idx}`);
+  if (!block) return { str: '', target_events: [], tmin: '', tmax: '', overlap: '', segment_length: '', custom: [] };
+  const isEvent = method === 'epoch_by_event_hdf5';
+  const isLong = method === 'epoch_by_long_event_hdf5';
+  const isSeg = method === 'epoch_by_segmentation_hdf5';
+  const parts = [];
+  let tmin = '', tmax = '', overlap = '', segment_length = '';
+  if (isEvent || isLong) {
+    tmin = block.querySelector('.ep-tmin')?.value.trim() || '';
+    tmax = block.querySelector('.ep-tmax')?.value.trim() || '';
+    if (tmin) parts.push(`tmin = ${tmin} s`);
+    if (tmax) parts.push(`tmax = ${tmax} s`);
+    if (isLong) {
+      overlap = block.querySelector('.ep-overlap')?.value.trim() || '';
+      if (overlap) parts.push(`overlap = ${overlap}`);
+    }
+  } else if (isSeg) {
+    segment_length = block.querySelector('.ep-seg-len')?.value.trim() || '';
+    overlap = block.querySelector('.ep-overlap')?.value.trim() || '';
+    if (segment_length) parts.push(`segment_length = ${segment_length} s`);
+    if (overlap) parts.push(`overlap = ${overlap}`);
+  }
+  const custom = [];
+  block.querySelectorAll(`#ep-custom-${idx} .epoch-custom-row`).forEach(row => {
+    const k = row.querySelector('.epoch-custom-key')?.value.trim();
+    const v = row.querySelector('.epoch-custom-val')?.value.trim();
+    if (k && v) { parts.push(`${k} = ${v}`); custom.push({ key: k, val: v }); }
+  });
+  // target_events: locked to [] for segmentation.
+  // When Event Structure is empty, no checkboxes exist — read from hidden fallback input.
+  let teArr = [];
+  if (!isSeg) {
+    const checkboxes = block.querySelectorAll('.ep-te-check:checked');
+    if (checkboxes.length > 0) {
+      teArr = Array.from(checkboxes).map(cb => cb.value);
+    } else {
+      const fallbackInput = block.querySelector('.ep-te-fallback');
+      if (fallbackInput) {
+        try { teArr = JSON.parse(fallbackInput.value || '[]'); } catch (_) { teArr = []; }
+      }
+    }
+  }
+  const teStr = teArr.length
+    ? `target_events = [${teArr.map(e => `\`${e}\``).join(', ')}]`
+    : `target_events = []`;
+  parts.push(teStr);
+  return { str: parts.join(', '), target_events: teArr, tmin, tmax, overlap, segment_length, custom };
+}
+
+// ─── Step Dispatch ────────────────────────────────────────────────────────────
+function renderStep(idx) {
+  if (isDatasetLoading || !currentDataset || !rawContent) return false;
+  const c = document.getElementById('step-content');
+  c.innerHTML = '';
+  c.dataset.step = String(idx);
+  if (idx===0) renderMetaParadigm(c);
+  else if (idx===1) renderFileScanTasks(c);
+  else if (idx===2) renderDQNKernel(c);
+  else return false;
+  renderedStep = idx;
+  return hasStepDom(idx);
+}
+
+function hasStepDom(idx) {
+  const c = document.getElementById('step-content');
+  if (!c || c.dataset.step !== String(idx) || renderedStep !== idx) return false;
+  if (idx===0) return !!(document.getElementById('m-title') && document.getElementById('para-body'));
+  if (idx===1) return !!(document.getElementById('fst-tabs') && document.getElementById('event-table') && document.getElementById('info-table'));
+  if (idx===2) return !!document.getElementById('kr-status');
+  return false;
+}
+
+// ─── Step 0: Meta-Paradigm ────────────────────────────────────────────────────
+function renderMetaParadigm(content) {
+  const meta = parseMeta(rawContent);
+  const catOpts = VALID_CATEGORIES.map(c => `<option value="${esc(c)}" ${meta['Category']===c?'selected':''}>${esc(c)}</option>`).join('');
+  const catInvalid = meta['Category'] && !VALID_CATEGORIES.includes(meta['Category']);
+  const catInvalidOpt = catInvalid ? `<option value="${esc(meta['Category'])}" selected style="color:var(--red)">[INVALID] ${esc(meta['Category'])}</option>` : '';
+  const mr = meta['_manualReview'] || '';
+  const paradigmBody = getSection(rawContent, 'Paradigm');
+
+  content.innerHTML = `
+  <div class="card">
+    <div class="card-title">Meta Fields</div>
+    <p class="field-hint" style="margin-bottom:12px">Verify all fields against the official dataset page. URL and Category are the most important to check.</p>
+    <div class="form-row">
+      <div class="form-group" style="flex:2"><label>Title</label><input id="m-title" value="${esc(meta['_title'])}"></div>
+      <div class="form-group">
+        <label>Dataset ID <span style="color:var(--muted);font-size:10px">(read-only, admin only)</span></label>
+        <input id="m-dataset" value="${esc(meta['Dataset']||'')}" class="field-readonly" readonly tabindex="-1">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Year</label>
+        <input id="m-year" value="${esc(meta['Year']||'')}">
+        <p class="field-hint">Publication or collection year. Multiple years allowed, e.g. <code style="font-size:10px;background:#f3f4f6;padding:1px 4px;border-radius:3px">2008/2015</code>.</p>
+      </div>
+      <div class="form-group" style="flex:3"><label>URL</label>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input id="m-url" value="${esc(meta['URL']||'')}" style="flex:1">
+          <button type="button" title="Open URL in new tab" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;font-size:13px;flex-shrink:0" onclick="const u=document.getElementById('m-url').value.trim();if(u)window.open(u,'_blank');else alert('No URL set.')">↗</button>
+        </div>
+        <p class="field-hint">Official dataset page or download page. Click ↗ to verify it opens correctly.</p>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Category</label>
+        <select id="m-category">${catInvalidOpt}${catOpts}</select>
+        <p class="field-hint">Paradigm type. Only change if clearly wrong (6 fixed values).</p>
+      </div>
+      <div class="form-group">
+        <label>Subjects</label>
+        <input id="m-subjects" value="${esc(meta['Subjects']||'')}">
+        <p class="field-hint">Number of valid participants. Use actual available count, not official claimed count if different.</p>
+      </div>
+      <div class="form-group"><label>Files (Completed) <span style="font-size:10px;color:var(--muted)">(read-only)</span></label><input id="m-files" value="${esc(meta['Files (Completed)']||'')}" class="field-readonly" readonly tabindex="-1"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Channels</label><input id="m-channels" value="${esc(meta['Channels']||'')}"></div>
+      <div class="form-group"><label>Sampling Rate</label><input id="m-sr" value="${esc(meta['Sampling Rate']||'')}"></div>
+    </div>
+    <div style="border-top:1px solid var(--border);padding-top:12px;margin-top:4px">
+      <div class="section-label">Manual Review</div>
+      <p class="field-hint" style="margin-bottom:8px">Enter your name and click Append to sign off that you have reviewed this dataset.</p>
+      <div class="mr-display ${mr?'':'empty'}" id="mr-display">${mr?`Reviewed by: <strong>${esc(mr)}</strong>`:'Not yet reviewed.'}</div>
+      <div class="mr-append-row">
+        <input id="m-mr-append" placeholder="Enter your name to append&#8230;">
+        <button class="btn btn-secondary" onclick="appendManualReview()" style="white-space:nowrap;flex-shrink:0">Append Name</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Paradigm</div>
+    <p class="field-hint" style="margin-bottom:10px">Describe the experimental setup, stimuli, recording conditions and subject protocol. Must be consistent with the official page and the actual data files.</p>
+    <div class="tab-strip">
+      <button class="tab-opt active" id="tab-para-edit" onclick="switchParaTab('edit')">Edit</button>
+      <button class="tab-opt" id="tab-para-preview" onclick="switchParaTab('preview')">Preview</button>
+    </div>
+    <div id="para-edit-area"><textarea class="full-textarea" id="para-body" style="min-height:260px">${esc(paradigmBody)}</textarea></div>
+    <div id="para-preview-area" style="display:none"><div class="preview-wrap" id="para-preview-html"></div></div>
+  </div>`;
+}
+
+function appendManualReview() {
+  const name = document.getElementById('m-mr-append').value.trim();
+  if (!name) return;
+  const cat2 = rawContent.match(/^\*\*Category\*\*[^\n]*$/m);
+  if (cat2) {
+    const catLine = cat2[0];
+    const inlineMR = catLine.match(/\|\s*\*\*Manual Review\*\*:\s*([^\n]*)$/);
+    const legacyMR = rawContent.match(/^\*\*Manual Review\*\*:\s*([^\n]*)$/m);
+    const existing = inlineMR ? inlineMR[1].trim() : (legacyMR ? legacyMR[1].trim() : '');
+    const nextValue = existing ? `${existing} / ${name}` : name;
+    const nextCatLine = inlineMR
+      ? catLine.replace(/\|\s*\*\*Manual Review\*\*:\s*[^\n]*$/, `| **Manual Review**: ${nextValue}`)
+      : `${catLine} | **Manual Review**: ${nextValue}`;
+    rawContent = rawContent.replace(catLine, nextCatLine);
+    rawContent = rawContent.replace(/\n\*\*Manual Review\*\*:[^\n]*\n(?=\s*##\s+Paradigm)/m, '\n');
+  }
+  dirty = true;
+  document.getElementById('m-mr-append').value = '';
+  const meta = parseMeta(rawContent);
+  const mr = meta['_manualReview'] || '';
+  const disp = document.getElementById('mr-display');
+  if (disp) { disp.className = 'mr-display' + (mr?'':' empty'); disp.innerHTML = mr ? `Reviewed by: <strong>${esc(mr)}</strong>` : 'Not yet reviewed.'; }
+}
+
+function switchParaTab(mode) {
+  document.getElementById('tab-para-edit').classList.toggle('active', mode==='edit');
+  document.getElementById('tab-para-preview').classList.toggle('active', mode==='preview');
+  document.getElementById('para-edit-area').style.display = mode==='edit' ? '' : 'none';
+  document.getElementById('para-preview-area').style.display = mode==='preview' ? '' : 'none';
+  if (mode==='preview') document.getElementById('para-preview-html').innerHTML = marked.parse(document.getElementById('para-body').value);
+}
+
+function collectMetaParadigm() {
+  const title = document.getElementById('m-title')?.value.trim()||'';
+  const meta = parseMeta(rawContent);
+  const fields = { Dataset: meta['Dataset']||'', Year: document.getElementById('m-year')?.value.trim()||'',
+    URL: document.getElementById('m-url')?.value.trim()||'', Category: document.getElementById('m-category')?.value.trim()||'',
+    Subjects: document.getElementById('m-subjects')?.value.trim()||'', 'Files (Completed)': document.getElementById('m-files')?.value.trim()||'',
+    Channels: document.getElementById('m-channels')?.value.trim()||'', 'Sampling Rate': document.getElementById('m-sr')?.value.trim()||'',
+    _manualReview: meta['_manualReview'] || '' };
+  const newMeta = serializeMeta(fields);
+  if (title) rawContent = rawContent.replace(/^#\s+.+/m, `# ${title}`);
+  rawContent = rawContent.replace(/\*\*Dataset\*\*[^\n]+\n\*\*Category\*\*[^\n]+/, newMeta);
+  rawContent = rawContent.replace(/\n\*\*Manual Review\*\*:[^\n]*\n(?=\s*##\s+Paradigm)/m, '\n');
+  rawContent = replaceSection(rawContent, 'Paradigm', document.getElementById('para-body')?.value||'');
+  dirty = true;
+}
+
+// ─── Step 1: File Scan & Tasks ────────────────────────────────────────────────
+function renderFileScanTasks(content) {
+  const fsrBody = getSection(rawContent, 'File Scan Result');
+  const fpMatch = fsrBody.match(/^((?:>.*\n?)*)/);
+  const fingerprintBlock = fpMatch ? fpMatch[1].trim() : '';
+  const esBody = getSubSection(fsrBody, 'Event Structure');
+  const esNoteM = esBody.match(/\n>([\s\S]+)$/);
+  const esNote = esNoteM ? esNoteM[1].replace(/^>\s?/gm,'').trim() : '';
+  const miscBody = getSubSection(fsrBody, 'MISC Label Summary');
+  const infoBody = getSubSection(fsrBody, 'Info');
+  const tasksBody = getSection(rawContent, 'Tasks');
+  currentMiscSummaryBody = miscBody || '';
+  currentTasks = parseTasks(tasksBody);
+  taskEditorMode = checkTaskViolations(currentTasks).length ? 'raw' : 'form';
+
+  content.innerHTML = `
+  <div class="tab-strip" id="fst-tabs">
+    <button class="tab-opt active" id="fst-tab-scan" onclick="switchFSTTab('scan')">File Scan</button>
+    <button class="tab-opt" id="fst-tab-tasks" onclick="switchFSTTab('tasks')">Tasks (${currentTasks.length})</button>
+  </div>
+  <div id="fst-pane-scan">
+    <div class="card">
+      <div class="card-title">Kernel Fingerprint <span style="font-size:11px;font-weight:400;color:var(--muted)">(read-only)</span></div>
+      <div class="preview-wrap" style="font-size:12px">${fingerprintBlock ? marked.parse(fingerprintBlock) : '<span style="color:var(--muted)">N/A</span>'}</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="display:flex;align-items:center;gap:8px">Event Structure <span style="font-size:11px;font-weight:400;color:var(--muted)">— Type &amp; Meaning editable; others read-only</span><button id="btn-ai-meanings" class="btn btn-secondary" style="margin-left:auto;font-size:11px;padding:2px 10px" onclick="getAIMeanings()">Get AI Meaning</button></div>
+      <p class="field-hint" style="margin-bottom:8px">Check <strong>Type</strong>: <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">event</code> = task-relevant stimulus/response; <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">admin</code> = boundary/artifact. Edit <strong>Meaning</strong> to be accurate. Only <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">event</code> rows can be used as target_events in Tasks.</p>
+      <div class="event-table-wrap">${buildEventTableEditor(esBody)}</div>
+      <div style="margin-top:10px">
+        <label class="section-label">Notes (blockquote)</label>
+        <p class="field-hint" style="margin-bottom:6px">Optional. Record parsing ambiguities, multi-source events, or anything the scanner missed that the kernel team should know.</p>
+        <textarea class="full-textarea" id="es-notes" style="min-height:50px">${esc(esNote)}</textarea>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">MISC Label Summary <span style="font-size:11px;font-weight:400;color:var(--muted)">(read-only)</span></div>
+      <p class="field-hint" style="margin-bottom:8px">Auto-generated by the kernel. Present only if a task uses <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">Label Route = misc</code> (continuous/scalar targets stored in MISC channels).</p>
+      ${miscBody ? `<div class="preview-wrap" style="max-height:200px;overflow-y:auto">${marked.parse(miscBody)}</div>` : '<p style="font-size:12px;color:var(--muted)">No MISC Label Summary for this dataset.</p>'}
+    </div>
+    <div class="card">
+      <div class="card-title">Info</div>
+      <p class="field-hint" style="margin-bottom:8px">Completeness (complete/partial/incomplete/missing) is auto-filled by the kernel scan. Fill in the <strong>Notes</strong> column for <strong>device</strong> manually — check the official README or dataset page for the recording hardware name.</p>
+      <div class="event-table-wrap">${buildInfoTableEditor(infoBody)}</div>
+    </div>
+  </div>
+  <div id="fst-pane-tasks" style="display:none">
+    <div class="card" style="margin-bottom:12px;background:#f8fafc;border-color:#e2e8f0">
+      <div class="card-title" style="display:flex;align-items:center;gap:8px">
+        Regenerate Tasks from References
+        <button id="btn-regen-tasks" class="btn btn-secondary" style="margin-left:auto;font-size:11px;padding:2px 10px" onclick="regenTasksFromRefs()">Regenerate All Tasks</button>
+      </div>
+      <p class="field-hint" style="margin-bottom:6px">Reads every file in <code>references/</code>, runs Phase-1 analysis per paper, then synthesises the full Tasks section. <strong>This will overwrite all existing tasks.</strong></p>
+      <div id="regen-progress" style="display:none;font-size:12px;padding:6px 0;color:var(--muted)"></div>
+    </div>
+    <div class="add-task-row">
+      <button class="btn btn-primary" onclick="addTask('Classical')">+ Classical Task</button>
+      <button class="btn btn-secondary" style="color:var(--purple);border-color:var(--purple)" onclick="addTask('Potential')">+ Potential Task</button>
+    </div>
+    <p class="field-hint" style="margin:4px 0 10px">Classical Tasks require at least one Evidence entry (DOI or URL) and fully specified parameters. Use Potential Tasks for plausible analyses that lack strong external evidence.</p>
+    <div id="task-cards-container"></div>
+  </div>`;
+
+  renderTaskCards(document.getElementById('task-cards-container'));
+  // Init auto-resize for meaning-cell textareas
+  document.querySelectorAll('.meaning-cell').forEach(ta => autoResize(ta));
+}
+
+function switchFSTTab(tab) {
+  // Sync pending Task edits before re-rendering the Tasks pane.
+  try { collectTaskDraft(); } catch (_) {}
+  document.getElementById('fst-tab-scan').classList.toggle('active', tab==='scan');
+  document.getElementById('fst-tab-tasks').classList.toggle('active', tab==='tasks');
+  document.getElementById('fst-pane-scan').style.display = tab==='scan' ? '' : 'none';
+  document.getElementById('fst-pane-tasks').style.display = tab==='tasks' ? '' : 'none';
+  if (tab === 'tasks') renderTaskCards(document.getElementById('task-cards-container'));
+}
+
+// ─── Event / Info Tables ──────────────────────────────────────────────────────
+function buildEventTableEditor(esBody) {
+  const { headers, rows } = parseMarkdownTable(esBody);
+  const hdrs = headers.length ? headers : ['Event ID','Count (total)','Type','Meta Level','Meaning'];
+  // Col widths: Event ID 22%, Count 10%, Type 9%, Meta 9%, Meaning 50%
+  const colWidths = { 'event id': '22%', 'count': '10%', 'type': '9%', 'meta': '9%', 'meaning': '50%' };
+  const colgroup = hdrs.map(h => {
+    const key = Object.keys(colWidths).find(k => h.toLowerCase().includes(k));
+    return `<col style="width:${key ? colWidths[key] : 'auto'}">`;
+  }).join('');
+  let html = `<table class="event-table" id="event-table"><colgroup>${colgroup}</colgroup><thead><tr>${hdrs.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody id="event-tbody">`;
+  (rows.length ? rows : [['','','event','raw','']]).forEach(row => { html += buildEventRow(row, hdrs); });
+  return html + '</tbody></table>';
+}
+function buildEventRow(cells, headers) {
+  const ti = headers.findIndex(h=>h.toLowerCase()==='type');
+  const meanI = headers.findIndex(h=>h.toLowerCase().includes('meaning'));
+  let html = '<tr>';
+  headers.forEach((h,ci) => {
+    const v = (cells[ci]||'').replace(/^`|`$/g,'');
+    if (ci===ti) {
+      html += `<td><select><option ${v==='event'?'selected':''}>event</option><option ${v==='admin'?'selected':''}>admin</option></select></td>`;
+    } else if (ci===meanI) {
+      html += `<td><textarea class="meaning-cell" rows="1" oninput="autoResize(this)">${esc(v)}</textarea></td>`;
+    } else {
+      html += `<td><input type="text" value="${esc(v)}" class="field-readonly" readonly tabindex="-1"></td>`;
+    }
+  });
+  return html + '</tr>';
+}
+
+function buildInfoTableEditor(infoBody) {
+  const { headers, rows } = parseMarkdownTable(infoBody);
+  const hdrs = headers.length ? headers : ['Field','Completeness','Notes'];
+  const COMP = ['complete','partial','incomplete','missing'];
+  let html = `<table class="event-table" id="info-table"><thead><tr>${hdrs.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>`;
+  (rows.length ? rows : [['subject_age','missing','N/A'],['subject_sex','missing','N/A'],['device','missing','N/A']]).forEach(row => {
+    const field=(row[0]||'').replace(/^`|`$/g,''), comp=row[1]||'missing', notes=row[2]||'N/A';
+    const COMP_OPTS = COMP.map(c=>`<option ${comp===c?'selected':''}>${c}</option>`).join('');
+    // All rows: Field + Completeness readonly, Notes editable
+    html += `<tr>
+      <td style="width:130px"><input type="text" value="${esc(field)}" class="field-readonly" readonly tabindex="-1"></td>
+      <td style="width:110px"><input type="text" value="${esc(comp)}" class="field-readonly" readonly tabindex="-1"></td>
+      <td><input type="text" value="${esc(notes)}" placeholder="${field==='device'?'e.g. BrainProducts actiCAP 64ch':''}"></td>
+    </tr>`;
+  });
+  return html + '</tbody></table>';
+}
+function serializeEventTable() {
+  const table = document.getElementById('event-table'); if (!table) return '';
+  const headers = [...table.querySelectorAll('thead th')].map(th=>th.textContent).filter(t=>t!=='');
+  let md = '| '+headers.join(' | ')+' |\n|'+headers.map(()=>'---').join('|')+'|\n';
+  table.querySelectorAll('tbody tr').forEach(tr => {
+    const cells=[...tr.querySelectorAll('td')].slice(0,headers.length);
+    const vals=cells.map((td,i)=>{ const ta=td.querySelector('textarea'); const inp=td.querySelector('input'); const sel=td.querySelector('select'); if(ta) return ta.value.trim(); if(inp) return inp.value.trim(); if(sel) return sel.value; return ''; });
+    if (vals.some(v=>v)) md+='| '+vals.map((v,i)=>i===0&&v&&!v.startsWith('`')?`\`${v}\``:v).join(' | ')+' |\n';
+  });
+  return md;
+}
+function serializeInfoTable() {
+  const table = document.getElementById('info-table'); if (!table) return '';
+  const headers = [...table.querySelectorAll('thead th')].map(th=>th.textContent);
+  let md = '| '+headers.join(' | ')+' |\n|'+headers.map(()=>'---').join('|')+'|\n';
+  table.querySelectorAll('tbody tr').forEach(tr => {
+    const cells=[...tr.querySelectorAll('td')];
+    const vals=cells.map(td=>{ const i=td.querySelector('input'); const s=td.querySelector('select'); if(i) return i.value.trim(); if(s) return s.value; return ''; });
+    if (vals[0]) md+=`| \`${vals[0]}\` | ${vals[1]} | ${vals[2]||'N/A'} |\n`;
+  });
+  return md;
+}
+
+// ─── MISC Validation ──────────────────────────────────────────────────────────
+function getMiscChannels() {
+  const body = getCurrentMiscBody();
+  const ch = new Set();
+  for (const m of body.matchAll(/`([^`]+)`/g)) ch.add(m[1]);
+  return ch;
+}
+function getMiscWarning(channelName) {
+  if (!channelName) return '⚠ MISC channel name is required.';
+  const ch = getMiscChannels();
+  if (ch.size===0) return '⚠ MISC Label Summary is empty. This task will require <code>wait_kernel_update</code> — kernel must provide this MISC channel.';
+  if (!ch.has(channelName)) return `⚠ "<code>${esc(channelName)}</code>" not found in MISC Label Summary (found: ${[...ch].map(c=>`<code>${esc(c)}</code>`).join(', ')}). Verify or flag as <code>wait_kernel_update</code>.`;
+  return null;
+}
+
+// ─── v3 Target Definition schema helpers ─────────────────────────────────────
+// Modes driven by Label Route x Task Type (see rulebook Article 77.4).
+function tdMode(task) {
+  const lr = task.labelRoute || 'event';
+  const tt = task.taskType || 'classification';
+  if (lr === 'event'  && tt === 'classification') return 'ev_cls';
+  if (lr === 'event'  && tt === 'regression')     return 'ev_reg';
+  if (lr === 'misc')                              return 'misc_any';
+  if (lr === 'info')                              return 'info_any';
+  return 'ev_cls';
+}
+const _TD_SCHEMA = {
+  ev_cls:   { headers: ['Event ID','y','Meaning'],            placeholders: ['event id','0 or 0,1','meaning'] },
+  ev_reg:   { headers: ['Event ID','Value','Meaning'],        placeholders: ['event id','value','meaning'] },
+  misc_any: { headers: ['MISC Channel Name','Y Mapping Notes'], placeholders: ['channel','no mapping'] },
+  info_any: { headers: ['Info Field','Y Mapping Notes'],       placeholders: ['info field','no mapping'] },
+};
+function tdHeaders(mode) { return (_TD_SCHEMA[mode] || _TD_SCHEMA.ev_cls).headers; }
+function tdPlaceholders(mode) { return (_TD_SCHEMA[mode] || _TD_SCHEMA.ev_cls).placeholders; }
+function tdRowCells(mode, row, fallbackLabel='') {
+  const l = (row.label || fallbackLabel || '').trim();
+  switch (mode) {
+    case 'misc_any':
+    case 'info_any': return [l, (row.meaning || 'no mapping')];
+    default:         return [l, (row.y||''), (row.meaning||'')];
+  }
+}
+function tdRowFromCells(mode, cells) {
+  const get = (i) => (cells[i]||'').trim();
+  if (mode === 'misc_any' || mode === 'info_any') {
+    return { label: get(0), y: '', meaning: get(1) || 'no mapping' };
+  }
+  return { label: get(0), y: get(1), meaning: get(2) };
+}
+
+// ─── Task Parsing ─────────────────────────────────────────────────────────────
+function parseTasks(body) {
+  const tasks = [];
+  const parts = body.split(/(?=\n###\s+(?:Classical|Potential)\s+Task\s+\d+)/);
+  for (const part of parts) {
+    const hm = part.match(/###\s+(Classical|Potential)\s+Task\s+(\d+):\s*(.+)/);
+    if (!hm) continue;
+    const task = { kind:hm[1], num:parseInt(hm[2]), name:hm[3].trim(),
+      taskType:'classification', epochMethod:'epoch_by_event_hdf5',
+      epochParams:{ tmin:'', tmax:'', overlap:'', segment_length:'', target_events:[], custom:[] },
+      labelRoute:'event', labelField:'', metaLevel:'raw', targetRows:[], miscChannel:'', evidence:[], kernelNotes:'',
+      _legacyLabelFieldPresent:false, _parsedTdHeaders:[] };
+
+    const fv = (field) => {
+      const re = new RegExp(`^\\s*-\\s*\\*\\*${escRe(field)}\\*\\*:\\s*(.+)$`, 'm');
+      const m = part.match(re);
+      if (!m) return '';
+      const value = m[1].trim();
+      // Only strip a single outer pair of backticks; keep any inner backticks
+      // such as target_events = [`event_a`, `event_b`] intact.
+      return /^`[^`\n]*`$/.test(value) ? value.slice(1, -1).trim() : value;
+    };
+    task.taskType = fv('Task Type') || 'classification';
+    task.epochMethod = fv('Epoch Method') || 'epoch_by_event_hdf5';
+    task.metaLevel = cleanQuotedToken(fv('Meta Level') || 'raw') || 'raw';
+    task.labelRoute = normalizeLabelRouteValue(fv('Label Route') || 'event') || 'event';
+    task.labelField = cleanQuotedToken(fv('Label Field') || '');
+    task._legacyLabelFieldPresent = !!task.labelField;
+    task.epochParams = parseEpochParams(fv('Epoch Parameters'), task.epochMethod);
+
+    const tdb = getTaskBlockField(part, 'Target Definition');
+    if (tdb !== null) {
+      if (tdb.includes('|')) {
+        const { headers, rows } = parseMarkdownTable(tdb);
+        task._parsedTdHeaders = headers;
+        const mode = tdMode(task);
+        task.targetRows = rows.map(r => tdRowFromCells(mode, r.map(c => cleanQuotedToken(c || ''))));
+        if (task.labelRoute === 'misc') {
+          const first = cleanQuotedToken(task.targetRows[0]?.label || '');
+          task.miscChannel = first;
+          task.labelField = first || task.labelField;
+        } else if (task.labelRoute === 'info' && task.targetRows.length) {
+          task.labelField = cleanQuotedToken(task.targetRows[0].label || '') || task.labelField;
+        }
+      } else {
+        const mm = tdb.match(/`([^`]+)`/);
+        task.miscChannel = cleanQuotedToken(mm ? mm[1] : tdb.replace(/MISC\s+channel:?\s*/i,'').trim());
+        task.labelField = task.miscChannel;
+      }
+    }
+
+    const evb = getTaskBlockField(part, 'Evidence');
+    if (evb !== null) task.evidence = parseEvidence(evb);
+
+    // v3 uses `**Notes**:`; legacy docs use `**Kernel Notes**:`. Accept either.
+    const knb = getTaskBlockField(part, ['Notes', 'Kernel Notes']);
+    if (knb !== null) task.kernelNotes = knb;
+
+    tasks.push(task);
+  }
+  return tasks;
+}
+
+function serializeTasks(tasks) {
+  let classN=0, potN=0;
+  return tasks.map(task => {
+    const num = task.kind === 'Classical' ? ++classN : ++potN;
+    const taskType = task.taskType || 'classification';
+    const effectiveTask = { ...task, taskType };
+    const mode = tdMode(effectiveTask);
+
+    // epochParamsStr already contains target_events = [...] (from collectEpochParams).
+    // If it's missing (e.g. freshly parsed), append one from epochParams.target_events.
+    let epStr = task.epochParamsStr || '';
+    if (!/target_events\s*=/.test(epStr)) {
+      const teArr = (task.epochMethod === 'epoch_by_segmentation_hdf5')
+        ? []
+        : (task.epochParams?.target_events || []).map(e => cleanQuotedToken(e)).filter(Boolean);
+      const teStr = teArr.length
+        ? `target_events = [${teArr.map(e => `\`${e}\``).join(', ')}]`
+        : `target_events = []`;
+      epStr = epStr ? `${epStr}, ${teStr}` : teStr;
+    }
+
+    // Target Definition table — schema-aware per Route × Task Type.
+    const hdrs = tdHeaders(mode);
+    const headerLine = `| ${hdrs.join(' | ')} |`;
+    const sepLine = `|${hdrs.map(() => '---').join('|')}|`;
+    const fallback = (mode === 'misc_any' || mode === 'info_any')
+      ? cleanQuotedToken(task.labelField || task.miscChannel || task.targetRows?.[0]?.label || '')
+      : '';
+    let rowsArr = task.targetRows && task.targetRows.length ? task.targetRows : [];
+    if (!rowsArr.length) {
+      // Emit one placeholder row so the table is well-formed.
+      rowsArr = [{ label: fallback, y: '', meaning: (mode === 'misc_any' || mode === 'info_any') ? 'no mapping' : '', value: '' }];
+    }
+    if (mode === 'misc_any' || mode === 'info_any') rowsArr = [rowsArr[0]];
+    const rowLines = rowsArr.map(r => {
+      const cells = tdRowCells(mode, r, fallback);
+      const wrap = (c, i) => {
+        const v = cleanQuotedToken((c || '').toString().trim());
+        // Backtick the first column (ID column) when non-empty.
+        if (i === 0 && v) return `\`${v}\``;
+        return v;
+      };
+      return `  | ${cells.map(wrap).join(' | ')} |`;
+    });
+    const targetDef = `${headerLine}\n  ${sepLine}\n${rowLines.join('\n')}`;
+
+    const evLines = (task.evidence || []).map(e => {
+      const ref = (e.ref || '').trim();
+      const desc = (e.desc || '').trim();
+      if (ref && desc) return `  - ${ref} — ${desc}`;
+      if (ref) return `  - ${ref}`;
+      if (desc) return `  - ${desc}`;
+      return '';
+    }).filter(Boolean).join('\n');
+
+    // v3 Notes: multi-line → markdown bullet list; single-line → inline.
+    const knRaw = (task.kernelNotes || '').trim();
+    const knLines = knRaw ? knRaw.split('\n').map(s => s.trim()).filter(Boolean) : [];
+    const kernelNotesBlock = knLines.length <= 1
+      ? `- **Notes**: ${knLines[0] || ''}`
+      : `- **Notes**:\n${knLines.map(l => `  - ${l}`).join('\n')}`;
+
+    return `### ${task.kind} Task ${num}: ${task.name}
+- **Task Type**: ${taskType}
+- **Epoch Method**: \`${task.epochMethod}\`
+- **Epoch Parameters**: ${epStr}
+- **Label Route**: \`${normalizeLabelRouteValue(task.labelRoute)}\`
+- **Meta Level**: ${task.metaLevel}
+- **Target Definition**:
+  ${targetDef}
+- **Evidence**:
+${evLines}
+${kernelNotesBlock}`;
+  }).join('\n\n');
+}
+
+// ─── Task Card Rendering ──────────────────────────────────────────────────────
+// ─── Task Consistency Check ───────────────────────────────────────────────────
+function checkTaskViolations(tasks) {
+  // Returns [{idx, title, violations:[string]}] for each task that has issues.
+  const eventIds = new Set(getEventStructureFromRawContent().map(e => e.id));
+  const miscFields = new Set(getMiscFieldsFromRawContent());
+  const infoFields = new Set(getInfoFieldsFromRawContent());
+  const hasEventStructure = eventIds.size > 0;
+  const result = [];
+  tasks.forEach((task, idx) => {
+    const violations = [];
+    const isSeg  = task.epochMethod === 'epoch_by_segmentation_hdf5';
+    const isEvt  = task.epochMethod === 'epoch_by_event_hdf5';
+    const isLong = task.epochMethod === 'epoch_by_long_event_hdf5';
+    const te     = Array.isArray(task.epochParams?.target_events) ? task.epochParams.target_events : [];
+    const teSet  = new Set(te);
+    const mode   = tdMode(task);
+    const route  = normalizeLabelRouteValue(task.labelRoute || '');
+    const labelField = cleanQuotedToken(task.labelField || task.miscChannel || '');
+    const parsedHeaders = Array.isArray(task._parsedTdHeaders) ? task._parsedTdHeaders : [];
+    const normalizedHeaders = parsedHeaders.map(h => cleanQuotedToken(h).toLowerCase());
+
+    if (!['event', 'misc', 'info'].includes(route)) {
+      violations.push(`Label Route must be one of event/misc/info, got "${task.labelRoute || ''}".`);
+    }
+
+    // 1. Segmentation + event route
+    if (isSeg && route === 'event') {
+      violations.push('Epoch Method = segmentation cannot use Label Route = event.');
+    }
+    if (isSeg && te.length > 0) {
+      violations.push('Segmentation tasks must use target_events = [].');
+    }
+    // 2. target_events empty for event / long-event (only flag when Event Structure has IDs to choose from)
+    if ((isEvt || isLong) && hasEventStructure && te.length === 0) {
+      violations.push('target_events must not be empty for event-based epoch methods.');
+    }
+    // 3. target_events entries not in Event Structure
+    if ((isEvt || isLong) && hasEventStructure && te.length > 0) {
+      const invalid = te.filter(id => !eventIds.has(id));
+      if (invalid.length) violations.push(`target_events contains IDs not in Event Structure: ${invalid.map(id => `"${id}"`).join(', ')}.`);
+    }
+    // 4. Target Definition Event IDs not in task's target_events (ev_cls / ev_reg)
+    if ((mode === 'ev_cls' || mode === 'ev_reg') && te.length > 0) {
+      const badTd = (task.targetRows || []).map(r => (r.label || '').trim()).filter(id => id && !teSet.has(id));
+      if (badTd.length) violations.push(`Target Definition has Event IDs not in target_events: ${badTd.map(id => `"${id}"`).join(', ')}.`);
+    }
+    // 5. Missing required epoch param keys (excluding target_events, covered above)
+    const ep = task.epochParams || {};
+    const hasVal = v => v !== undefined && v !== null && String(v).trim() !== '';
+    const reqByMethod = {
+      epoch_by_event_hdf5:        ['tmin', 'tmax'],
+      epoch_by_long_event_hdf5:   ['tmin', 'tmax', 'overlap'],
+      epoch_by_segmentation_hdf5: ['segment_length', 'overlap'],
+    };
+    const missingKeys = (reqByMethod[task.epochMethod] || []).filter(k => !hasVal(ep[k]));
+    if (missingKeys.length) violations.push(`Epoch Parameters missing required key(s): ${missingKeys.join(', ')}.`);
+    // 6. Event-route classification: y values must define >=2 classes.
+    if (task.taskType === 'classification' && route === 'event') {
+      const allYInts = new Set();
+      (task.targetRows || []).forEach(r => {
+        (r.y || '').split(',').forEach(t => {
+          const n = parseInt(t.trim(), 10);
+          if (!isNaN(n)) allYInts.add(n);
+        });
+      });
+      if (allYInts.size < 2) violations.push('Classification requires ≥2 distinct class indices in y (multi-label comma-separated integers allowed, e.g. "0,1").');
+    }
+    // 7. info/misc route uses single-source TD schema and must not keep legacy Label Field.
+    if ((route === 'misc' || route === 'info') && task._legacyLabelFieldPresent) {
+      violations.push('Label Field is deprecated for info/misc routes; use Target Definition only.');
+    }
+    if (route === 'misc' || route === 'info') {
+      if ((task.targetRows || []).length !== 1) {
+        violations.push(`${route} tasks must use exactly one Target Definition row.`);
+      }
+      const source = cleanQuotedToken(task.targetRows?.[0]?.label || labelField || '');
+      const notes = (task.targetRows?.[0]?.meaning || '').trim();
+      if (!source) violations.push(`${route} tasks must select exactly one ${route === 'misc' ? 'MISC channel' : 'Info field'} in Target Definition.`);
+      if (!notes) violations.push('Y Mapping Notes is required (use "no mapping" when y directly follows the source value).');
+      if (route === 'misc' && miscFields.size > 0 && source && !miscFields.has(source)) {
+        violations.push(`MISC Channel Name "${source}" is not listed in MISC Label Summary.`);
+      }
+      if (route === 'info' && infoFields.size > 0 && source && !infoFields.has(source)) {
+        violations.push(`Info Field "${source}" is not listed in Info.`);
+      }
+      const expectedHeaders = route === 'misc'
+        ? ['misc channel name', 'y mapping notes']
+        : ['info field', 'y mapping notes'];
+      if (normalizedHeaders.length && JSON.stringify(normalizedHeaders) !== JSON.stringify(expectedHeaders)) {
+        violations.push(`Target Definition headers must be "${expectedHeaders.join(' | ')}" for ${route} route.`);
+      }
+    }
+    if (task.taskType === 'classification' && route === 'event') {
+      const tokens = [];
+      let sawInvalidY = false;
+      (task.targetRows || []).forEach(r => {
+        (r.y || '').split(',').forEach(t => {
+          const token = t.trim();
+          if (!token) return;
+          if (!/^-?\d+$/.test(token)) {
+            sawInvalidY = true;
+            return;
+          }
+          tokens.push(parseInt(token, 10));
+        });
+      });
+      const uniq = [...new Set(tokens)].sort((a, b) => a - b);
+      const sequential = uniq.every((n, i) => n === i);
+      if (sawInvalidY || !sequential) {
+        violations.push('Classification y values must be 0-based sequential integers.');
+      }
+    }
+
+    if (violations.length) {
+      const title = `${task.kind} Task ${task.num || (idx + 1)}: ${task.name || '(unnamed)'}`;
+      result.push({ idx, title, violations });
+    }
+  });
+  return result;
+}
+
+function renderTaskCards(container) {
+  if (!container) return;
+
+  // Number tasks before any check.
+  let classN = 0, potN = 0;
+  currentTasks.forEach(t => { t.num = t.kind === 'Classical' ? ++classN : ++potN; });
+
+  const addRow = document.querySelector('.add-task-row');
+
+  // Violations from imported/raw tasks may require raw repair mode.
+  const taskViolations = checkTaskViolations(currentTasks);
+  if (taskEditorMode === 'raw' && taskViolations.length > 0) {
+    if (addRow) addRow.style.display = 'none';
+    const items = taskViolations.map(v =>
+      `<div class="task-lock-item">
+        <div class="task-lock-title">${esc(v.title)}</div>
+        ${v.violations.map(m => `<div class="task-lock-msg">• ${esc(m)}</div>`).join('')}
+      </div>`
+    ).join('');
+    const tasksBody = getSection(rawContent, 'Tasks');
+    container.innerHTML = `
+      <div class="task-lock-banner">
+        <div class="task-lock-header">⚠ Task inconsistencies detected — editing disabled</div>
+        <p class="task-lock-desc">Fix the issues below in the editor, then click <strong>Apply Changes</strong>. Or use <strong>Regenerate All Tasks</strong> to rebuild from references.</p>
+        ${items}
+      </div>
+      <div style="margin-top:10px">
+        <div class="task-lock-edit-label">Tasks section (raw markdown) — edit directly to fix:</div>
+        <textarea id="task-raw-editor" class="task-raw-editor">${esc(tasksBody || '')}</textarea>
+        <button class="btn btn-primary" style="margin-top:8px" onclick="applyTaskEdits()">Apply Changes</button>
+      </div>`;
+    return;
+  }
+  if (addRow) addRow.style.display = '';
+  const violationsByIdx = new Map(taskViolations.map(v => [v.idx, v.violations]));
+
+  if (!currentTasks.length) {
+    container.innerHTML = `
+      <div style="text-align:center;color:var(--muted);padding:24px 32px 12px;font-size:13px">No tasks defined. Use the buttons above to add one.</div>
+      <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:14px 16px;margin:0 0 16px;font-size:12px;color:#92400e;line-height:1.6">
+        <strong>Step D reminder:</strong> If tasks were removed during reference review, check those references again —
+        do any describe a <em>different valid task</em> on this dataset? If yes, add a new task and repeat Steps A → C.
+      </div>`;
+    return;
+  }
+  container.innerHTML = currentTasks.map((t, i) => buildTaskCard(t, i, violationsByIdx.get(i) || [])).join('');
+  container.querySelectorAll('.bullet-input').forEach(ta => autoResize(ta));
+}
+
+function applyTaskEdits() {
+  const ta = document.getElementById('task-raw-editor');
+  if (!ta) return;
+  const newBody = ta.value;
+  rawContent = replaceSection(rawContent, 'Tasks', newBody);
+  currentTasks = parseTasks(newBody);
+  taskEditorMode = checkTaskViolations(currentTasks).length ? 'raw' : 'form';
+  dirty = true;
+  const container = document.getElementById('task-cards-container');
+  renderTaskCards(container);
+  const tb = document.getElementById('fst-tab-tasks');
+  if (tb) tb.textContent = `Tasks (${currentTasks.length})`;
+}
+
+function buildTargetDefEditor(task, idx) {
+  const mode = tdMode(task);
+  const hdrs = tdHeaders(mode);
+  const phs = tdPlaceholders(mode);
+  const nCols = hdrs.length;
+  const isEventMode = (mode === 'ev_cls' || mode === 'ev_reg');
+  const isSourceMode = (mode === 'misc_any' || mode === 'info_any');
+  const fallback = isSourceMode ? cleanQuotedToken(task.labelField || task.miscChannel || '') : '';
+  const rowsArr = isSourceMode
+    ? [task.targetRows?.[0] || {label:'',y:'',meaning:'no mapping',value:''}]
+    : ((task.targetRows && task.targetRows.length) ? task.targetRows : [{label:'',y:'',meaning:'',value:''}]);
+  const widths = (nCols === 2) ? ['42%','50%'] : ['34%','22%','40%'];
+
+  const teOptions = isEventMode ? (task.epochParams?.target_events || []) : [];
+  const sourceOptions = mode === 'misc_any'
+    ? getMiscFieldsFromRawContent()
+    : (mode === 'info_any' ? getInfoFieldsFromRawContent() : []);
+  const uniqueSourceOptions = [...new Set(sourceOptions)];
+
+  let thead = '<thead><tr>';
+  hdrs.forEach((h, i) => { thead += `<th style="width:${widths[i]}">${h}</th>`; });
+  thead += '<th style="width:30px"></th></tr></thead>';
+  let tbody = `<tbody id="td-tbody-${idx}">`;
+  rowsArr.forEach(row => {
+    const cells = tdRowCells(mode, row, fallback);
+    tbody += '<tr>';
+    cells.forEach((v, ci) => {
+      if (isEventMode && ci === 0) {
+        const opts = teOptions.map(id =>
+          `<option value="${esc(id)}" ${v === id ? 'selected' : ''}>${esc(id)}</option>`
+        ).join('') || `<option value="" disabled selected>— select target_events first —</option>`;
+        tbody += `<td><select class="td-event-id-sel">${opts}</select></td>`;
+      } else if (isSourceMode && ci === 0) {
+        const hasCurrentValue = !!v && uniqueSourceOptions.includes(v);
+        const placeholderText = uniqueSourceOptions.length ? '— select source —' : '— no sources available —';
+        const invalidOpt = (v && !hasCurrentValue)
+          ? `<option value="${esc(v)}" selected disabled>[missing] ${esc(v)}</option>`
+          : '';
+        const opts = [
+          `<option value="" ${!v ? 'selected' : ''}>${placeholderText}</option>`,
+          invalidOpt,
+          ...uniqueSourceOptions.map(source => `<option value="${esc(source)}" ${v === source ? 'selected' : ''}>${esc(source)}</option>`),
+        ].join('');
+        tbody += `<td><select class="td-source-sel">${opts}</select></td>`;
+      } else {
+        tbody += `<td><input type="text" value="${esc(v||'')}" placeholder="${esc(phs[ci]||'')}"></td>`;
+      }
+    });
+    tbody += isSourceMode
+      ? `<td><span style="color:#9ca3af">—</span></td></tr>`
+      : `<td><button class="btn-row-del" onclick="this.closest('tr').remove()">×</button></td></tr>`;
+  });
+  tbody += '</tbody>';
+  const addBtn = isSourceMode ? '' : `<button class="btn-row-add" onclick="addTdRow(${idx})">+ Add row</button>`;
+  return `<table class="td-table" id="td-table-${idx}" data-td-mode="${mode}">${thead}${tbody}</table>${addBtn}`;
+}
+
+function getSelectableLabelFields(route) {
+  if (route === 'misc') return getMiscFieldsFromRawContent();
+  if (route === 'info') return getInfoFieldsFromRawContent();
+  return [];
+}
+
+function buildTaskCard(task, idx, draftViolations=[]) {
+  const classSelClass = task.kind==='Classical' ? 'selected-classical' : '';
+  const potSelClass = task.kind==='Potential' ? 'selected-potential' : '';
+  const epOpts = EPOCH_METHODS.map(m=>`<option value="${m}" ${task.epochMethod===m?'selected':''}>${m}</option>`).join('');
+  const isSeg = task.epochMethod === 'epoch_by_segmentation_hdf5';
+  const isEventRoute = task.labelRoute === 'event';
+  const isInfoRoute = task.labelRoute === 'info';
+  const lrOpts = LABEL_ROUTES.map(lr => {
+    const disabled = (isSeg && lr === 'event') ? 'disabled' : '';
+    const selected = task.labelRoute === lr ? 'selected' : '';
+    return `<option value="${lr}" ${selected} ${disabled}>${lr}</option>`;
+  }).join('');
+  const mlOpts = ['raw','super'].map(ml=>`<option value="${ml}" ${task.metaLevel===ml?'selected':''}>${ml}</option>`).join('');
+  const ttOpts = ['classification','regression'].map(tt => `<option value="${tt}" ${task.taskType===tt?'selected':''}>${tt}</option>`).join('');
+
+  const targetDefHtml = buildTargetDefEditor(task, idx);
+
+  const epHtml = buildEpochParamsEditor(task.epochParams, task.epochMethod, idx);
+  const evHtml = buildEvidenceEditor(`ev-${idx}`, task.evidence||[]);
+  const tdHint = isEventRoute
+    ? 'For event route, the first TD column must stay within the current target_events list.'
+    : (isInfoRoute
+        ? 'Choose exactly one field from the current Info table. Use "no mapping" when y directly equals that field value.'
+        : 'Choose exactly one channel from the current MISC Label Summary. Use "no mapping" when y directly equals that channel value.');
+
+  const draftHintHtml = draftViolations.length
+    ? `<div style="margin:8px 0 10px;padding:8px 10px;border:1px solid #fde68a;background:#fffbeb;border-radius:6px;font-size:11px;color:#92400e;line-height:1.5">
+        ${draftViolations.map(v => `• ${esc(v)}`).join('<br>')}
+      </div>`
+    : '';
+
+
+  return `<div class="task-card" data-task-idx="${idx}">
+    <div class="task-card-header">
+      <div class="task-kind-group">
+        <button class="task-kind-btn ${classSelClass}" data-kind="Classical" onclick="selectTaskKind(${idx},'Classical',this)">Classical</button>
+        <button class="task-kind-btn ${potSelClass}" data-kind="Potential" onclick="selectTaskKind(${idx},'Potential',this)">Potential</button>
+      </div>
+      <input class="task-name-input" value="${esc(task.name)}" placeholder="Task name">
+      <button class="btn btn-secondary" style="font-size:10px;padding:1px 8px;white-space:nowrap" onclick="openModifyTaskModal(${idx})">Modify with AI</button>
+      <button class="btn btn-secondary" style="font-size:10px;padding:1px 8px;white-space:nowrap" onclick="duplicateTask(${idx})" title="Duplicate this task">Duplicate</button>
+      <button class="btn-del-task" onclick="deleteTask(${idx})">×</button>
+    </div>
+    ${draftHintHtml}
+    <div class="task-fields-row">
+      <div class="task-field"><label>Task Type</label><select class="task-type-sel" onchange="onTaskTypeChange(${idx},this)">${ttOpts}</select></div>
+      <div class="task-field" style="flex:2;min-width:200px"><label>Epoch Method</label>
+        <select class="task-epoch-method-sel" onchange="onEpochMethodChange(${idx},this)">${epOpts}</select></div>
+      <div class="task-field">
+        <label>Label Route</label>
+        <select class="task-lr-sel" onchange="onLabelRouteChange(${idx},this)">${lrOpts}</select>
+        <p class="field-hint" style="margin-top:3px"><code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">event</code> = event stream, <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">misc</code> = scalar/continuous channel, <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">info</code> = subject metadata</p>
+      </div>
+      <div class="task-field">
+        <label>Meta Level</label>
+        <select class="task-ml-sel">${mlOpts}</select>
+        <p class="field-hint" style="margin-top:3px"><code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">raw</code> = labels exist directly in data; <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">super</code> = derived via pairing/mapping/aggregation</p>
+      </div>
+    </div>
+    <div id="ep-wrap-${idx}">${epHtml}</div>
+    <div class="task-td-section">
+      <label>Target Definition</label>
+      <p class="field-hint" style="margin-bottom:6px">${tdHint}</p>
+      <div id="task-td-${idx}">${targetDefHtml}</div>
+    </div>
+    <div class="task-text-field">
+      <label>Evidence <span style="font-size:10px;font-weight:400;color:var(--muted)">— DOI: reference — description</span></label>
+      <p class="field-hint" style="margin-bottom:6px">Paste a DOI (e.g. <code style="font-size:10px;background:#f3f4f6;padding:1px 3px;border-radius:3px">10.1109/tnnls.2018.2789927</code>) or full URL. At least one is required for Classical Tasks. Verify each reference actually uses this dataset.</p>
+      ${evHtml}
+    </div>
+    <div class="task-text-field">
+      <label>Notes <span style="font-size:10px;font-weight:400;color:var(--muted)">— free-form (super-meta derivation, parameter rationale, audit notes)</span></label>
+      ${buildBulletEditor(`kn-${idx}`, parseBullets(task.kernelNotes))}
+    </div>
+  </div>`;
+}
+
+function addTdRow(taskIdx) {
+  const table = document.getElementById(`td-table-${taskIdx}`);
+  const tbody = document.getElementById(`td-tbody-${taskIdx}`);
+  if (!tbody || !table) return;
+  const mode = table.getAttribute('data-td-mode') || 'ev_cls';
+  if (mode === 'misc_any' || mode === 'info_any') return;
+  const phs = tdPlaceholders(mode);
+  const nCols = tdHeaders(mode).length;
+  const isEventMode = (mode === 'ev_cls' || mode === 'ev_reg');
+  const tr = document.createElement('tr');
+  let html = '';
+  for (let i = 0; i < nCols; i++) {
+    if (isEventMode && i === 0) {
+      const task = currentTasks[taskIdx];
+      const teOpts = (task?.epochParams?.target_events || []).map(id =>
+        `<option value="${esc(id)}">${esc(id)}</option>`
+      ).join('') || `<option value="" disabled selected>— select target_events first —</option>`;
+      html += `<td><select class="td-event-id-sel">${teOpts}</select></td>`;
+    } else {
+      html += `<td><input type="text" value="" placeholder="${esc(phs[i]||'')}"></td>`;
+    }
+  }
+  html += `<td><button class="btn-row-del" onclick="this.closest('tr').remove()">×</button></td>`;
+  tr.innerHTML = html;
+  tbody.appendChild(tr);
+}
+
+function onTaskTypeChange(idx, sel) {
+  collectTaskCards();
+  if (!currentTasks[idx]) return;
+  currentTasks[idx].taskType = sel.value;
+  taskEditorMode = 'form';
+  renderTaskCards(document.getElementById('task-cards-container'));
+}
+function selectTaskKind(idx, kind, btn) {
+  const card = btn.closest('.task-card');
+  card.querySelectorAll('.task-kind-btn').forEach(b => b.classList.remove('selected-classical','selected-potential'));
+  btn.classList.add(kind==='Classical' ? 'selected-classical' : 'selected-potential');
+}
+function onEpochMethodChange(idx, sel) {
+  collectTaskCards();
+  if (!currentTasks[idx]) return;
+  currentTasks[idx].epochMethod = sel.value;
+  if (sel.value === 'epoch_by_segmentation_hdf5') {
+    currentTasks[idx].epochParams = currentTasks[idx].epochParams || {tmin:'',tmax:'',overlap:'',segment_length:'',target_events:[],custom:[]};
+    currentTasks[idx].epochParams.target_events = [];
+    // event route is forbidden for segmentation — auto-switch to misc.
+    if (currentTasks[idx].labelRoute === 'event') {
+      currentTasks[idx].labelRoute = 'misc';
+      const firstRow = currentTasks[idx].targetRows?.[0] || {};
+      const source = cleanQuotedToken(firstRow.label || '');
+      const allowed = getSelectableLabelFields('misc');
+      const nextSource = allowed.includes(source) ? source : '';
+      currentTasks[idx].targetRows = [{
+        label: nextSource,
+        y: '',
+        meaning: (firstRow.meaning || 'no mapping').trim() || 'no mapping',
+        value: '',
+      }];
+      currentTasks[idx].labelField = nextSource;
+      currentTasks[idx].miscChannel = nextSource;
+    }
+  }
+  taskEditorMode = 'form';
+  renderTaskCards(document.getElementById('task-cards-container'));
+}
+function onLabelRouteChange(idx, sel) {
+  collectTaskCards();
+  const newLr = sel.value;
+  if (!currentTasks[idx]) return;
+  const task = currentTasks[idx];
+  task.labelRoute = newLr;
+  if (newLr === 'event') {
+    task.labelField = '';
+    task.miscChannel = '';
+    task.targetRows = [];
+  } else {
+    const allowed = getSelectableLabelFields(newLr);
+    const firstRow = task.targetRows?.[0] || {};
+    const source = cleanQuotedToken(firstRow.label || task.labelField || task.miscChannel || '');
+    const nextSource = allowed.includes(source) ? source : '';
+    task.targetRows = [{
+      label: nextSource,
+      y: '',
+      meaning: (firstRow.meaning || 'no mapping').trim() || 'no mapping',
+      value: '',
+    }];
+    task.labelField = nextSource;
+    task.miscChannel = newLr === 'misc' ? nextSource : '';
+  }
+  taskEditorMode = 'form';
+  renderTaskCards(document.getElementById('task-cards-container'));
+}
+function updateMiscWarning(idx, input) {
+  const w = getMiscWarning(input.value.trim());
+  const el = document.getElementById(`misc-warn-${idx}`);
+  if (!el) return;
+  el.innerHTML = w||''; el.style.display = w ? '' : 'none';
+}
+function addTask(kind) {
+  collectTaskCards();
+  currentTasks.push({ kind, num:0, name:'', taskType:'classification', epochMethod:'epoch_by_event_hdf5',
+    epochParams:{tmin:'',tmax:'',overlap:'',segment_length:'',target_events:[],custom:[]},
+    labelRoute:'event', labelField:'', metaLevel:'raw', targetRows:[], miscChannel:'', evidence:[], kernelNotes:'' });
+  taskEditorMode = 'form';
+  renderTaskCards(document.getElementById('task-cards-container'));
+  const tb = document.getElementById('fst-tab-tasks'); if(tb) tb.textContent=`Tasks (${currentTasks.length})`;
+}
+function deleteTask(idx) {
+  if (!confirm('Remove this task?')) return;
+  collectTaskCards(); currentTasks.splice(idx,1);
+  taskEditorMode = 'form';
+  renderTaskCards(document.getElementById('task-cards-container'));
+  const tb = document.getElementById('fst-tab-tasks'); if(tb) tb.textContent=`Tasks (${currentTasks.length})`;
+}
+function duplicateTask(idx) {
+  collectTaskCards();
+  const clone = JSON.parse(JSON.stringify(currentTasks[idx]));
+  currentTasks.splice(idx + 1, 0, clone);
+  taskEditorMode = 'form';
+  renderTaskCards(document.getElementById('task-cards-container'));
+  const tb = document.getElementById('fst-tab-tasks'); if(tb) tb.textContent=`Tasks (${currentTasks.length})`;
+  // Scroll the new card into view
+  const cards = document.querySelectorAll('#task-cards-container .task-card');
+  if (cards[idx + 1]) cards[idx + 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function collectTaskCards() {
+  const cards = document.querySelectorAll('.task-card[data-task-idx]');
+  if (!cards.length) return;
+  currentTasks = [];
+  cards.forEach((card, i) => {
+    const kindBtn = card.querySelector('.task-kind-btn.selected-classical,.task-kind-btn.selected-potential');
+    const kind = kindBtn ? kindBtn.dataset.kind : 'Classical';
+    const method = card.querySelector('.task-epoch-method-sel')?.value || 'epoch_by_event_hdf5';
+    const lr = card.querySelector('.task-lr-sel')?.value || 'event';
+    const taskType = card.querySelector('.task-type-sel')?.value || 'classification';
+    const ep = collectEpochParams(card, i, method);
+    const task = {
+      kind, num:0,
+      name: card.querySelector('.task-name-input')?.value.trim() || '',
+      taskType,
+      epochMethod: method,
+      epochParams: {
+        tmin: ep.tmin || '',
+        tmax: ep.tmax || '',
+        overlap: ep.overlap || '',
+        segment_length: ep.segment_length || '',
+        target_events: ep.target_events || [],
+        custom: ep.custom || [],
+      },
+      labelRoute: lr,
+      labelField: '',
+      metaLevel: card.querySelector('.task-ml-sel')?.value || 'raw',
+      targetRows: [],
+      miscChannel: '',
+      evidence: [],
+      kernelNotes: '',
+      epochParamsStr: ep.str,
+    };
+    // Collect TD rows per mode (from the rendered table's data-td-mode).
+    const tdTable = card.querySelector(`#td-table-${i}`);
+    const mode = tdTable ? (tdTable.getAttribute('data-td-mode') || tdMode(task)) : tdMode(task);
+    card.querySelectorAll(`#td-tbody-${i} tr`).forEach(tr => {
+      // Collect each data cell (skip last td which holds the delete button).
+      const tds = [...tr.querySelectorAll('td:not(:last-child)')];
+      const cells = tds.map(td => {
+        const sel = td.querySelector('select.td-event-id-sel, select.td-source-sel');
+        if (sel) return sel.value;
+        const inp = td.querySelector('input');
+        return inp ? inp.value : '';
+      });
+      const row = tdRowFromCells(mode, cells);
+      const anyVal = Object.values(row).some(v => (v||'').toString().trim() !== '');
+      if (anyVal) task.targetRows.push(row);
+    });
+    if (lr === 'misc') {
+      const first = task.targetRows[0]?.label || '';
+      task.labelField = first;
+      task.miscChannel = first;
+    } else if (lr === 'info' && task.targetRows.length) {
+      task.labelField = task.targetRows[0].label || '';
+    }
+    // Collect evidence
+    const evList = card.querySelector(`#ev-${i}-list`);
+    if (evList) evList.querySelectorAll('.evidence-row').forEach(row => {
+      const ref = row.querySelector('.evidence-ref')?.value.trim() || '';
+      const desc = row.querySelector('.evidence-desc')?.value.trim() || '';
+      if (ref || desc) task.evidence.push({ ref, desc });
+    });
+    // Collect kernel notes
+    const knList = card.querySelector(`#kn-${i}-list`);
+    if (knList) {
+      task.kernelNotes = [...knList.querySelectorAll('.bullet-input')]
+        .map(t => t.value.trim()).filter(Boolean).join('\n');
+    }
+    currentTasks.push(task);
+  });
+}
+
+function collectTaskDraft() {
+  const rawEditor = document.getElementById('task-raw-editor');
+  if (rawEditor) {
+    const newBody = rawEditor.value || '';
+    rawContent = replaceSection(rawContent, 'Tasks', newBody);
+    currentTasks = parseTasks(newBody);
+    taskEditorMode = checkTaskViolations(currentTasks).length ? 'raw' : 'form';
+    dirty = true;
+    return true;
+  }
+  const cards = document.querySelectorAll('.task-card[data-task-idx]');
+  if (cards.length) {
+    collectTaskCards();
+    rawContent = replaceSection(rawContent, 'Tasks', serializeTasks(currentTasks));
+    dirty = true;
+    return true;
+  }
+  return false;
+}
+
+function collectFileScanTasks() {
+  if (!document.getElementById('event-table') || !document.getElementById('info-table')) {
+    console.warn('Skipped File Scan collection because the File Scan DOM is not mounted.');
+    return false;
+  }
+  const fsrBody = getSection(rawContent, 'File Scan Result');
+  const fpMatch2 = fsrBody.match(/^((?:>.*\n?)*)/);
+  const fingerprintBlock2 = fpMatch2 ? fpMatch2[1].trim() : '';
+  const fingerprintSection = fingerprintBlock2 ? `${fingerprintBlock2}\n\n` : '';
+  const esTable = serializeEventTable();
+  const esNotes = document.getElementById('es-notes')?.value.trim()||'';
+  const esNoteBlock = esNotes ? '\n\n'+esNotes.split('\n').map(l=>'> '+l).join('\n') : '';
+  // MISC is read-only — preserve original content from rawContent
+  const miscVal = getSubSection(getSection(rawContent,'File Scan Result'),'MISC Label Summary');
+  currentMiscSummaryBody = miscVal || '';
+  const miscSection = miscVal ? `\n\n### MISC Label Summary\n\n${miscVal}` : '';
+  const infoTable = serializeInfoTable();
+  if (!esTable || !infoTable) {
+    console.warn('Skipped File Scan collection because a table could not be serialized.');
+    return false;
+  }
+  rawContent = replaceSection(rawContent, 'File Scan Result',
+    `${fingerprintSection}### Event Structure\n\n${esTable}${esNoteBlock}${miscSection}\n\n### Info\n\n${infoTable}`);
+  collectTaskDraft();
+  dirty = true;
+  return true;
+}
+
+// ─── Get AI Meanings ──────────────────────────────────────────────────────────
+async function getAIMeanings() {
+  if (!confirm('This will overwrite all existing Meanings with AI-generated content. Proceed?')) return;
+
+  const btn = document.getElementById('btn-ai-meanings');
+  if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
+
+  try {
+    const table = document.getElementById('event-table');
+    if (!table) throw new Error('Event table not found. Make sure you are on the File Scan tab.');
+
+    const headers = [...table.querySelectorAll('thead th')].map(th => th.textContent);
+    const idIdx   = headers.findIndex(h => h.toLowerCase().includes('event id'));
+    const typeIdx = headers.findIndex(h => h.toLowerCase() === 'type');
+    const meanIdx = headers.findIndex(h => h.toLowerCase().includes('meaning'));
+    if (idIdx < 0 || meanIdx < 0) throw new Error('Could not locate Event ID or Meaning columns.');
+
+    // Collect event rows from DOM (reflects unsaved edits)
+    const rows = [];
+    table.querySelectorAll('tbody tr').forEach(tr => {
+      const cells = [...tr.querySelectorAll('td')];
+      const id   = (cells[idIdx]?.querySelector('input')?.value || '').trim().replace(/^`|`$/g, '');
+      const type = cells[typeIdx]?.querySelector('select')?.value || '';
+      if (id) rows.push({ id, type });
+    });
+    if (!rows.length) throw new Error('No event rows found in the table.');
+
+    const eventList = rows.map(r => `- "${r.id}" (Type: ${r.type})`).join('\n');
+    const paradigmText = getSection(rawContent, 'Paradigm');
+
+    const systemPrompt = `You are an EEG dataset documentation assistant. Your task is to generate concise, accurate Meaning descriptions for EEG event markers in an Event Structure table.
+
+Rules:
+- English only, brief phrase style — NOT full sentences
+- 5–15 words per Meaning
+- Describe what the event represents in the experimental context
+- For motor imagery cues: specify the body part, action, and paradigm group if the Event ID encodes it (e.g. "[CLA] Left-hand motor imagery cue")
+- For admin/boundary markers: describe their role (e.g. "Trial boundary / session end marker")
+- Use the Paradigm description to resolve ambiguous or abbreviated event names
+
+Good Meaning examples from other EEG datasets:
+- "Left-hand motor imagery cue"
+- "Flash of the row or column containing the target character"
+- "BCI decoded + direction (feedback signal)"
+- "Target positioned above center; subject imagines right movement"
+- "Cue onset for foot motor imagery"
+- "Onset of each character sequence (boundary marker)"
+
+Respond ONLY with a valid JSON object mapping each Event ID string (exact, no backticks) to its Meaning string. No explanation, no markdown fences, no extra text.`;
+
+    const userMsg = `Dataset: ${currentDataset}
+
+## Paradigm
+${paradigmText}
+
+## Events to label
+${eventList}
+
+Return a JSON object with a Meaning for every Event ID listed above.`;
+
+    const r = await fetch('/api/llm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user',   content: userMsg }
+      ]})
+    });
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+
+    let raw = (d.choices?.[0]?.message?.content || '').trim();
+    // Strip <think>...</think> blocks emitted by reasoning models (e.g. DeepSeek-R1)
+    raw = raw.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+    // Strip optional markdown code fences the LLM may add despite instructions
+    raw = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+
+    let meanings;
+    try { meanings = JSON.parse(raw); }
+    catch(e) { throw new Error('LLM returned invalid JSON:\n' + raw.slice(0, 300)); }
+
+    // Fill Meaning textareas
+    table.querySelectorAll('tbody tr').forEach(tr => {
+      const cells = [...tr.querySelectorAll('td')];
+      const id = (cells[idIdx]?.querySelector('input')?.value || '').trim().replace(/^`|`$/g, '');
+      if (id && meanings[id] !== undefined) {
+        const ta = cells[meanIdx]?.querySelector('textarea');
+        if (ta) { ta.value = meanings[id]; autoResize(ta); }
+      }
+    });
+  } catch(e) {
+    alert('AI Meaning generation failed:\n' + e.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Get AI Meaning'; }
+  }
+}
+
+// ─── Regenerate Tasks from References (Feature 1) ────────────────────────────
+async function regenTasksFromRefs() {
+  if (!currentDataset) { alert('No dataset selected.'); return; }
+  if (!confirm(
+    'This will overwrite ALL existing tasks by:\n' +
+    '  Phase 0: Extract DOI/URL per reference\n' +
+    '  Phase 1: Analyse each reference for task evidence\n' +
+    '  Phase 2: Run rulebook v1.0.0 task synthesis + repair + rule gate\n\n' +
+    'This may take several minutes. Proceed?'
+  )) return;
+  if (!collectStep(currentStep)) {
+    alert('The current form is not ready yet. Please wait for the dataset to finish loading.');
+    return;
+  }
+  const analysisDraft = rawContent;
+
+  const btn  = document.getElementById('btn-regen-tasks');
+  const prog = document.getElementById('regen-progress');
+  btn.disabled = true; btn.textContent = 'Running…';
+  prog.style.display = '';
+
+  const setProgress = (html) => { prog.innerHTML = html; };
+
+  try {
+    // ── Phase 0: list files ───────────────────────────────────────────────────
+    setProgress('Loading reference list…');
+    const listResp = await fetch(`/api/refs/${encodeURIComponent(currentDataset)}`);
+    const listData = await listResp.json();
+    if (listData.error && !listData.files?.length) throw new Error(listData.error);
+    const files = listData.files || [];
+    if (!files.length) throw new Error('No reference files found in references/ directory.');
+
+    const total = files.length;
+
+    // ── Phase 0: DOI/URL extraction (parallel pool of 4) ─────────────────────
+    setProgress(`Phase 0: Extracting references from ${total} files…`);
+    const p0Results = {};
+    const POOL = 4;
+    let p0done = 0;
+    for (let i = 0; i < files.length; i += POOL) {
+      const chunk = files.slice(i, i + POOL);
+      const settled = await Promise.allSettled(chunk.map(f =>
+        fetch(`/api/refs/phase0/${encodeURIComponent(currentDataset)}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ file: f })
+        }).then(r => r.json())
+      ));
+      for (let j = 0; j < settled.length; j++) {
+        p0done++;
+        const res = settled[j];
+        const fname = chunk[j];
+        if (res.status === 'fulfilled' && !res.value.error) {
+          p0Results[fname] = res.value;
+        }
+      }
+      const found = Object.values(p0Results).filter(r => r.ref).length;
+      setProgress(`Phase 0: ${p0done}/${total} files — ${found} refs identified…`);
+    }
+    const p0found = Object.values(p0Results).filter(r => r.ref).length;
+    const p0llm   = Object.values(p0Results).filter(r => r.source === 'llm').length;
+    setProgress(
+      `✓ Phase 0 complete: ${p0found}/${total} refs found (${p0llm} via LLM fallback)<br>` +
+      `Running Phase 1: per-file relevance analysis…`
+    );
+
+    // ── Phase 1: relevance + task extraction (parallel pool of 4) ────────────
+    const extractions = [];
+    let p1done = 0;
+    for (let i = 0; i < files.length; i += POOL) {
+      const chunk = files.slice(i, i + POOL);
+      const settled = await Promise.allSettled(chunk.map(f =>
+        fetch(`/api/refs/phase1/${encodeURIComponent(currentDataset)}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ file: f, p0: p0Results[f] || {}, analysis_md: analysisDraft })
+        }).then(r => r.json())
+      ));
+      for (const res of settled) {
+        p1done++;
+        if (res.status === 'fulfilled' && !res.value.error) {
+          extractions.push(res.value);
+        }
+      }
+      const relevant = extractions.filter(e => e.classification === 'relevant').length;
+      const partial  = extractions.filter(e => e.classification === 'partial').length;
+      setProgress(
+        `✓ Phase 0 complete (${p0found}/${total} refs)<br>` +
+        `Phase 1: ${p1done}/${total} analyzed — ${relevant} relevant, ${partial} partial…`
+      );
+    }
+
+    const relevant = extractions.filter(e => e.classification === 'relevant');
+    const partial  = extractions.filter(e => e.classification === 'partial');
+    const allUseful = [...relevant, ...partial];
+
+    setProgress(
+      `✓ Phase 0 complete (${p0found}/${total} refs)<br>` +
+      `✓ Phase 1 complete: ${relevant.length} relevant, ${partial.length} partial, ` +
+      `${extractions.length - relevant.length - partial.length} irrelevant/junk<br>` +
+      `Running Phase 2: strict task synthesis…`
+    );
+
+    // ── Phase 2 (2-1 + 2-2 in server): synthesis ─────────────────────────────
+    const p2Resp = await fetch(`/api/tasks/phase2/${encodeURIComponent(currentDataset)}`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ extractions: allUseful, analysis_md: analysisDraft })
+    });
+    const p2Data = await p2Resp.json();
+    if (!p2Resp.ok || p2Data.error) throw new Error(p2Data.error || `HTTP ${p2Resp.status}`);
+    if (!p2Data.ok) {
+      const errs = (p2Data.semantic_errors || []).slice(0, 6).map(e => esc(e)).join('<br>');
+      const reason = esc(p2Data.hard_fail_reason || 'Strict regeneration failed.');
+      setProgress(
+        `✓ Phase 0 complete (${p0found}/${total} refs)<br>` +
+        `✓ Phase 1 complete: ${relevant.length} relevant, ${partial.length} partial<br>` +
+        `<span style="color:var(--red)">Phase 2 failed. Existing Tasks were kept unchanged.<br>${reason}</span>` +
+        (errs ? `<br><div style="color:#b45309">${errs}</div>` : '')
+      );
+      return;
+    }
+
+    const tasksSection = p2Data.tasks_section || '';
+    const tasksBody = tasksSection.replace(/^##\s*Tasks\s*\n+/, '');
+
+    rawContent = replaceSection(rawContent, 'Tasks', tasksBody);
+    currentTasks = parseTasks(tasksBody);
+    taskEditorMode = (p2Data.semantic_errors || []).length > 0 || checkTaskViolations(currentTasks).length ? 'raw' : 'form';
+    renderTaskCards(document.getElementById('task-cards-container'));
+    const tb = document.getElementById('fst-tab-tasks');
+    if (tb) tb.textContent = `Tasks (${currentTasks.length})`;
+    dirty = true;
+
+    const nC = p2Data.num_classical_tasks >= 0
+      ? p2Data.num_classical_tasks
+      : currentTasks.filter(t => t.kind === 'Classical').length;
+    const nP = p2Data.num_potential_tasks >= 0
+      ? p2Data.num_potential_tasks
+      : currentTasks.filter(t => t.kind === 'Potential').length;
+    const modeNote = p2Data.generation_mode ? ` | Mode: ${esc(p2Data.generation_mode)}` : '';
+    const semErrors = p2Data.semantic_errors || [];
+    const semNote = semErrors.length > 0
+      ? `<br><span style="color:#b45309">⚠ ${semErrors.length} issue(s) remain after strict generation — edit mode opened below.</span>`
+      : '';
+
+    setProgress(
+      `✓ Phase 0 complete (${p0found}/${total} refs)<br>` +
+      `✓ Phase 1 complete: ${relevant.length} relevant, ${partial.length} partial<br>` +
+      `<span style="color:#16a34a">✓ Done — ${nC} Classical + ${nP} Potential tasks. ` +
+      `${esc(p2Data.summary||'')}${modeNote}</span>${semNote}`
+    );
+  } catch(e) {
+    setProgress(`<span style="color:var(--red)">Error: ${esc(e.message)}</span>`);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Regenerate All Tasks';
+  }
+}
+
+// ─── Modify Single Task with AI (Feature 2) ───────────────────────────────────
+let _modifyTaskIdx = -1;
+
+function openModifyTaskModal(idx) {
+  collectTaskCards();  // sync DOM → currentTasks before modal opens
+  _modifyTaskIdx = idx;
+  const task = currentTasks[idx];
+  const title = task ? `${task.kind} Task: ${task.name || '(unnamed)'}` : `Task #${idx + 1}`;
+  document.querySelector('#modify-task-overlay h2').textContent = `Modify with AI — ${title}`;
+  document.getElementById('modify-task-instruction').value = '';
+  document.getElementById('modify-task-status').textContent = '';
+  document.getElementById('btn-apply-modify').disabled = false;
+  document.getElementById('btn-apply-modify').textContent = 'Apply';
+  document.getElementById('modify-task-overlay').classList.add('open');
+}
+
+function closeModifyTaskModal() {
+  document.getElementById('modify-task-overlay').classList.remove('open');
+  _modifyTaskIdx = -1;
+}
+
+async function applyModifyTask() {
+  const idx = _modifyTaskIdx;
+  if (idx < 0 || idx >= currentTasks.length) return;
+  const instruction = document.getElementById('modify-task-instruction').value.trim();
+  if (!instruction) { alert('Please enter an instruction.'); return; }
+
+  const btn    = document.getElementById('btn-apply-modify');
+  const status = document.getElementById('modify-task-status');
+  btn.disabled = true; btn.textContent = 'Applying…'; status.textContent = '';
+
+  // Serialise just this one task (serializeTasks renumbers — use a placeholder copy)
+  const taskCopy = { ...currentTasks[idx] };
+  const taskMd = serializeTasks([taskCopy]);
+
+  const systemPrompt =
+`You are an EEG dataset documentation expert. Modify a single Task block in the current online analysis draft.
+
+You receive: the full current draft for context, the Task block to modify, and a user instruction.
+
+Rules:
+- Modify ONLY what the instruction specifies; keep all other fields unchanged
+- Task heading: "### Classical Task N: Name" or "### Potential Task N: Name" (preserve original type/number)
+- Event IDs in target_events MUST come from the Event Structure table in the current draft
+- Valid epoch methods: epoch_by_event_hdf5, epoch_by_long_event_hdf5, epoch_by_segmentation_hdf5
+- Do NOT fabricate DOIs — only use DOIs explicitly in the task or instruction
+- Return ONLY valid JSON, no surrounding text:
+{"task_markdown": "### Classical Task 1: Name\\n- **Task Type**: ...\\n..."}`;
+
+  const userMsg =
+`Dataset: ${currentDataset}
+
+=== Full current online draft ===
+${rawContent}
+
+=== Task to modify ===
+${taskMd}
+
+=== Instruction ===
+${instruction}`;
+
+  try {
+    const r = await fetch('/api/llm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user',   content: userMsg }
+      ]})
+    });
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+
+    let raw = (d.choices?.[0]?.message?.content || '').trim();
+    raw = raw.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+    raw = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+
+    let parsed;
+    try {
+      parsed = JSON.parse(raw);
+    } catch(_) {
+      // Fallback: find ### heading block directly
+      const mFb = raw.match(/(###\s+(?:Classical|Potential)\s+Task[\s\S]+)/);
+      if (mFb) parsed = { task_markdown: mFb[1].trim() };
+      else throw new Error('LLM returned invalid JSON:\n' + raw.slice(0, 300));
+    }
+
+    const taskMarkdown = (parsed.task_markdown || '').trim();
+    if (!taskMarkdown) throw new Error('LLM returned empty task_markdown.');
+
+    // Parse the returned task block
+    const parsedTasks = parseTasks('\n' + taskMarkdown);
+    if (!parsedTasks.length) throw new Error('Could not parse the modified task block. Check LLM output.');
+
+    // Preserve original kind/num to avoid renumbering confusion
+    parsedTasks[0].kind = parsedTasks[0].kind || currentTasks[idx].kind;
+    currentTasks[idx] = parsedTasks[0];
+    taskEditorMode = checkTaskViolations(currentTasks).length ? 'raw' : 'form';
+    renderTaskCards(document.getElementById('task-cards-container'));
+    dirty = true;
+    closeModifyTaskModal();
+  } catch(e) {
+    status.textContent = 'Error: ' + e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Apply';
+  }
+}
+
+document.getElementById('modify-task-overlay').onclick = function(e) {
+  if (e.target === this) closeModifyTaskModal();
+};
+
+// ─── Step 2: DQN & Kernel ─────────────────────────────────────────────────────
+function renderDQNKernel(content) {
+  const dqnBody = getSection(rawContent, 'Data Quality Notes');
+  const dqnBullets = parseBullets(dqnBody);
+  const krBody = getSection(rawContent, 'Kernel Responsibilities');
+  const smrM = krBody.match(/\*\*Super Meta Required\*\*:\s*(\S+)/);
+  const smr = smrM ? smrM[1].trim() : 'No';
+  const statusM = krBody.match(/\*\*Status\*\*:\s*(\S+)/);
+  const status = statusM ? statusM[1].trim() : 'wait_manual_review';
+  const STATUS_OPTS = ['wait_kernel_update','wait_manual_review','completed','hallucination'];
+  const statusInvalid = status && !STATUS_OPTS.includes(status);
+  const statusInvalidOpt = statusInvalid ? `<option value="${esc(status)}" selected style="color:var(--red)">[INVALID] ${esc(status)}</option>` : '';
+
+  content.innerHTML = `
+  <div class="card">
+    <div class="card-title">Data Quality Notes</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Review existing notes and add any new quality issues: missing files, channel substitutions, special preprocessing, known artifacts, label inconsistencies, etc.</div>
+    ${buildBulletEditor('dqn', dqnBullets)}
+  </div>
+  <div class="card">
+    <div class="card-title">Kernel Responsibilities</div>
+    <div class="kr-field">
+      <label>Super Meta Required</label>
+      <div>
+        <div class="toggle-group">
+          <button class="toggle-opt ${smr==='Yes'?'selected':''}" id="smr-yes" onclick="selectSMR('Yes')">Yes</button>
+          <button class="toggle-opt ${smr!=='Yes'?'selected':''}" id="smr-no" onclick="selectSMR('No')">No</button>
+        </div>
+        <div class="field-hint">Select <strong>Yes</strong> if any Task has <strong>Meta Level = super</strong>. Otherwise select <strong>No</strong>.</div>
+      </div>
+    </div>
+    <div class="kr-field">
+      <label>Status</label>
+      <div>
+        <select class="status-select" id="kr-status" onchange="onStatusChange(this)">
+          ${statusInvalidOpt}
+          ${STATUS_OPTS.map(s=>`<option value="${s}" ${status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+        <div class="field-hint" id="status-hint">${buildStatusHint(status)}</div>
+      </div>
+    </div>
+  </div>`;
+
+  // Re-init autoResize for any bullet inputs; apply status styling
+  setTimeout(() => {
+    content.querySelectorAll('.bullet-input').forEach(ta => autoResize(ta));
+    const sel = document.getElementById('kr-status');
+    if (sel) onStatusChange(sel);
+  }, 0);
+}
+
+function selectSMR(val) {
+  document.getElementById('smr-yes').classList.toggle('selected', val==='Yes');
+  document.getElementById('smr-no').classList.toggle('selected', val!=='Yes');
+}
+
+function buildStatusHint(s) {
+  const hints = {
+    'wait_kernel_update':  '<span style="color:var(--yellow)">⚠ Pre-review state (set by LLM).</span> Structural gaps in Event Structure / Label Route / MISC remain. Reviewers should not leave the document in this state after completing their review.',
+    'wait_manual_review':  '<span style="color:var(--accent)">ℹ Pre-review state (set by LLM).</span> Document is structurally sufficient; awaiting human reviewer sign-off.',
+    'completed':           '<span style="color:var(--green)">✓ Reviewer sign-off.</span> You confirm the review is complete. Known issues should be documented in DQN above. This is the normal final state after a review.',
+    'hallucination':       '<span style="color:var(--red)">✗ Document-level failure.</span> Use only when the entire document is fundamentally unreliable and cannot be reviewed or fixed (e.g. URL dead, content completely mismatched, no credible basis for any field). Admin will consider deletion or re-scan.',
+  };
+  return hints[s] || 'Select a status value.';
+}
+
+function onStatusChange(sel) {
+  const hint = document.getElementById('status-hint');
+  if (hint) hint.innerHTML = buildStatusHint(sel.value);
+  // Style the select itself for hallucination
+  sel.style.color = sel.value === 'hallucination' ? 'var(--red)' : '';
+  sel.style.fontWeight = sel.value === 'hallucination' ? '700' : '';
+}
+
+function collectDQNKernel() {
+  const dqnText = collectBullets('dqn');
+  rawContent = replaceSection(rawContent, 'Data Quality Notes', dqnText);
+  const smr = document.getElementById('smr-yes')?.classList.contains('selected') ? 'Yes' : 'No';
+  const status = document.getElementById('kr-status')?.value || 'wait_manual_review';
+  rawContent = replaceSection(rawContent, 'Kernel Responsibilities', `> **Super Meta Required**: ${smr}\n> **Status**: ${status}`);
+  const ds = allDatasets.find(d=>d.name===currentDataset);
+  if (ds) { ds.status=status; renderDatasetList(); }
+  dirty = true;
+}
+
+// ─── Collect Step ─────────────────────────────────────────────────────────────
+function collectStep(idx) {
+  if (isDatasetLoading || !currentDataset) return false;
+  if (!hasStepDom(idx)) {
+    console.warn(`Skipped collectStep(${idx}) because the mounted form does not match the active step.`);
+    return false;
+  }
+  try {
+    if (idx===0) collectMetaParadigm();
+    else if (idx===1) return collectFileScanTasks();
+    else if (idx===2) collectDQNKernel();
+    else return false;
+    return true;
+  } catch(e) {
+    console.warn('collectStep error',e);
+    return false;
+  }
+}
+
+// ─── Confirm & Preview ────────────────────────────────────────────────────────
+function confirmAndPreview() {
+  if (!collectStep(currentStep)) {
+    alert('The current form is not ready yet. Please wait for the dataset to finish loading.');
+    return;
+  }
+  // Check guide items
+  const allItems = [];
+  STEP_GUIDE.forEach((step, si) => step.sections.forEach(sec => sec.items.forEach(item => allItems.push(item.key))));
+  const unchecked = allItems.filter(key => !guideChecks[key]);
+  if (unchecked.length > 0) {
+    // Highlight in guide
+    switchRightTab('guide');
+    renderStepGuide();
+    setTimeout(() => {
+      unchecked.forEach(key => {
+        const el = document.querySelector(`.guide-check[data-key="${key}"]`);
+        if (el) el.classList.add('highlight-warn');
+      });
+    }, 100);
+    if (!confirm(`${unchecked.length} step guide item(s) not yet checked. Proceed to preview anyway?`)) return;
+  }
+  // Open preview
+  document.getElementById('preview-markdown').innerHTML = marked.parse(rawContent);
+  document.getElementById('preview-modal-overlay').classList.add('open');
+  previewSeen = true;
+}
+
+function closePreview() { document.getElementById('preview-modal-overlay').classList.remove('open'); }
+
+async function saveFromPreview() {
+  closePreview();
+  await saveFile();
+}
+
+document.getElementById('preview-modal-overlay').onclick = function(e) { if (e.target===this) closePreview(); };
+
+// ─── Save Complete Modal ───────────────────────────────────────────────────────
+const STATUS_MESSAGES = {
+  completed: {
+    icon: '✅',
+    title: 'Review Complete — Thank you!',
+    body: 'Your review has been recorded. This dataset is marked <strong>completed</strong> and is ready for kernel implementation.',
+    badgeStyle: 'background:#d1fae5;color:#065f46',
+  },
+  hallucination: {
+    icon: '⚠️',
+    title: 'Document Flagged',
+    body: 'This dataset has been flagged as <strong>hallucination</strong>. An administrator will re-examine the document and may delete or re-scan it. No further action is required from you.',
+    badgeStyle: 'background:#fee2e2;color:#991b1b',
+  },
+  wait_kernel_update: {
+    icon: '🔄',
+    title: 'Saved — Kernel Update Pending',
+    body: 'The document has been saved with status <strong>wait_kernel_update</strong>. The kernel team will re-scan this dataset and update the File Scan Result. The status will return to <em>wait_manual_review</em> once the scan is complete.',
+    badgeStyle: 'background:#fef3c7;color:#92400e',
+  },
+  wait_manual_review: {
+    icon: '📋',
+    title: 'Saved',
+    body: 'The document has been saved. Status is still <strong>wait_manual_review</strong> — please complete your review and set the status to <em>completed</em> or <em>hallucination</em> before finishing.',
+    badgeStyle: 'background:#dbeafe;color:#1e40af',
+  },
+};
+
+function showSaveComplete(status) {
+  const cfg = STATUS_MESSAGES[status] || {
+    icon: '💾', title: 'Saved', body: `Status: <strong>${esc(status)}</strong>.`, badgeStyle: 'background:#e5e7eb;color:#374151',
+  };
+  document.getElementById('save-complete-icon').textContent = cfg.icon;
+  document.getElementById('save-complete-title').textContent = cfg.title;
+  document.getElementById('save-complete-body').innerHTML = cfg.body;
+  const badge = document.getElementById('save-complete-status');
+  badge.textContent = status;
+  badge.style.cssText = cfg.badgeStyle + ';display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:12px';
+  document.getElementById('save-complete-overlay').classList.add('open');
+}
+function closeSaveComplete() { document.getElementById('save-complete-overlay').classList.remove('open'); }
+
+// ─── Save File ────────────────────────────────────────────────────────────────
+async function saveFile() {
+  if (!currentDataset) return;
+  if (!collectStep(currentStep)) {
+    alert('The current form is not ready yet. Please wait for the dataset to finish loading.');
+    return;
+  }
+  if (!previewSeen) { alert('Please click "Confirm & Preview" first to review the document before saving.'); return; }
+  const saveStatus = document.getElementById('save-status');
+  saveStatus.textContent = 'Saving…';
+  try {
+    const r = await fetch(`/api/dataset/${encodeURIComponent(currentDataset)}`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: rawContent }),
+    });
+    if (r.ok) {
+      const d = await r.json().catch(() => ({}));
+      dirty = false;
+      saveStatus.textContent = '✓ Saved';
+      setTimeout(() => saveStatus.textContent = '', 3000);
+      const ds = allDatasets.find(item => item.name === currentDataset);
+      if (ds) ds._errors = d.template_check?.errors || [];
+      // Clear LLM chat and reset step guide checkboxes
+      llmHistory = [];
+      document.getElementById('chat-messages').innerHTML = '';
+      guideChecks = {};
+      renderStepGuide();
+      // Get current status from document
+      const statusM = rawContent.match(/\*\*Status\*\*:\s*(\S+)/);
+      const status = statusM ? statusM[1].trim() : 'unknown';
+      showSaveComplete(status);
+    } else {
+      const d = await r.json().catch(() => ({}));
+      saveStatus.textContent =
+        '✗ ' +
+        (
+          d.error ||
+          (d.template_check?.errors || []).join(' | ') ||
+          'Save failed'
+        );
+    }
+  } catch(e) { saveStatus.textContent = '✗ ' + e.message; }
+}
+
+// ─── Step Guide ───────────────────────────────────────────────────────────────
+function toggleGuideCheck(key) {
+  guideChecks[key] = !guideChecks[key];
+  renderStepGuide();
+}
+
+function renderStepGuide() {
+  const container = document.getElementById('guide-content');
+  if (!currentDataset) { container.innerHTML='<p style="color:var(--muted);font-size:12px;padding:12px">Select a dataset to begin.</p>'; return; }
+  const guide = STEP_GUIDE[currentStep];
+  if (!guide) return;
+  let html = `<div class="guide-step-title">${esc(guide.title)}</div>`;
+  guide.sections.forEach(sec => {
+    const total = sec.items.length;
+    const done = sec.items.filter(item => guideChecks[item.key]).length;
+    html += `<div class="guide-section">
+      <div class="guide-section-title">${esc(sec.heading)}<span class="sec-check-count">${done}/${total}</span></div>`;
+    sec.items.forEach((item, i) => {
+      const checked = guideChecks[item.key] || false;
+      html += `<div class="guide-check ${checked?'checked':''}" data-key="${item.key}" onclick="toggleGuideCheck('${item.key}')">
+        <div class="guide-check-box"></div>
+        <span class="guide-check-num">${i+1}.</span>
+        <span class="guide-check-text">${item.text}</span>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  // Overall progress
+  const allItems = guide.sections.flatMap(s=>s.items);
+  const totalDone = allItems.filter(item=>guideChecks[item.key]).length;
+  html += `<div style="margin-top:8px;font-size:11px;color:var(--muted);text-align:right">${totalDone}/${allItems.length} checks complete for this step</div>`;
+  container.innerHTML = html;
+}
+
+// ─── Right Panel ──────────────────────────────────────────────────────────────
+function switchRightTab(tab) {
+  ['guide','rulebook','chat'].forEach(t => {
+    document.getElementById(`rtab-${t}`).classList.toggle('active', t===tab);
+    document.getElementById(`pane-${t}`).classList.toggle('visible', t===tab);
+  });
+}
+
+// ─── Rulebook ─────────────────────────────────────────────────────────────────
+function renderRulebook() {
+  const hint = STEP_RULEBOOK_HINTS[currentStep]||'';
+  const search = document.getElementById('rb-search')?.value.trim()||'';
+  const query = search||hint;
+  let html = '';
+  if (hint&&!search) html+=`<div class="rb-step-hint">Step hints: ${esc(hint)}</div>`;
+  if (!rulebookRaw) { document.getElementById('rulebook-content').innerHTML='Loading…'; return; }
+  if (query) {
+    const terms=query.split(/[,\s]+/).filter(Boolean).map(t=>t.toLowerCase());
+    const lines=rulebookRaw.split('\n'); let sections=[],buf=[],inMatch=false;
+    lines.forEach(line => {
+      const isH=/^#{1,3}\s/.test(line);
+      if (isH) { if(inMatch&&buf.length) sections.push(buf.join('\n')); buf=[line]; inMatch=terms.some(t=>line.toLowerCase().includes(t)); }
+      else { buf.push(line); if(!inMatch&&terms.some(t=>line.toLowerCase().includes(t))) inMatch=true; }
+    });
+    if(inMatch&&buf.length) sections.push(buf.join('\n'));
+    html+=sections.length ? marked.parse(sections.join('\n\n---\n\n')) : '<p style="color:var(--muted);font-size:12px">No matching sections.</p>';
+    if (!sections.length&&!search) html+=marked.parse(rulebookRaw.slice(0,3000)+'\n\n…');
+  } else { html+=marked.parse(rulebookRaw); }
+  document.getElementById('rulebook-content').innerHTML=html;
+}
+function filterRulebook() { renderRulebook(); }
+
+// ─── LLM Chat ─────────────────────────────────────────────────────────────────
+const STEP_FOCUS = [
+  'Focus on: Meta fields (Dataset, Year, URL, Category, Subjects, Channels, Sampling Rate), Manual Review, and the Paradigm description.',
+  'Focus on: File Scan Result (Event Structure, MISC, Info), and all Tasks (Epoch Method, Epoch Parameters, Target Definition, Evidence, Label Route).',
+  'Focus on: Data Quality Notes and Kernel Responsibilities (Super Meta Required, Status).',
+];
+
+function buildChatSystemPrompt() {
+  const stepFocus = STEP_FOCUS[currentStep] || '';
+  return [
+    `You are an expert EEG dataset documentation auditor. You are currently reviewing the dataset "${currentDataset || '(none selected)'}" at step ${currentStep+1}: "${STEP_LABELS[currentStep]}".`,
+    stepFocus,
+    '',
+    '=== FULL ANALYSIS DOCUMENT ===',
+    '```markdown',
+    rawContent || '(No dataset selected)',
+    '```',
+    '',
+    '=== RULEBOOK (full) ===',
+    rulebookRaw || '(Rulebook not loaded)',
+    '',
+    'Answer concisely and precisely. Reference specific sections or rules by name when relevant.',
+  ].join('\n');
+}
+
+function chatKeydown(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();} }
+
+async function sendChat() {
+  const input=document.getElementById('chat-input');
+  const msg=input.value.trim(); if(!msg) return;
+  // Sync current DOM edits into rawContent before building system prompt
+  if (currentDataset && !collectStep(currentStep)) {
+    alert('The current form is not ready yet. Please wait for the dataset to finish loading.');
+    return;
+  }
+  input.value=''; appendChat('user',msg);
+  llmHistory.push({role:'user',content:msg});
+  const thinkingHtml='<div class="thinking-dots"><span>●</span><span>●</span><span>●</span></div>';
+  appendChat('assistant', thinkingHtml);
+  updateChatTokenHint();
+  try {
+    const r=await fetch('/api/llm',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:[{role:'system',content:buildChatSystemPrompt()},...llmHistory]})});
+    const d=await r.json();
+    const la=document.querySelector('#chat-messages .chat-msg.assistant:last-child');
+    if(d.error){
+      if(la) la.querySelector('.chat-bubble').innerHTML=`<span style="color:var(--red)">${esc(d.error)}</span>`;
+    } else {
+      const rawReply=d.choices?.[0]?.message?.content||JSON.stringify(d);
+      // Strip and render <think> blocks separately
+      const thinkMatch = rawReply.match(/<think>([\s\S]*?)<\/think>/i);
+      const thinkText = thinkMatch ? thinkMatch[1].trim() : null;
+      const mainText = rawReply.replace(/<think>[\s\S]*?<\/think>/gi,'').trim();
+      if(la) renderAssistantMessage(la, thinkText, mainText);
+      // Store clean reply (without think tags) in history
+      llmHistory.push({role:'assistant',content:rawReply});
+      updateChatTokenHint();
+    }
+  } catch(e) {
+    const la=document.querySelector('#chat-messages .chat-msg.assistant:last-child');
+    if(la) la.querySelector('.chat-bubble').textContent='Error: '+e.message;
+  }
+}
+
+function renderAssistantMessage(wrapper, thinkText, mainText) {
+  const bubble = wrapper.querySelector('.chat-bubble');
+  let html = '';
+  if(thinkText) {
+    const id = 'think-' + Date.now();
+    html += `<div class="thinking-block">
+      <button class="thinking-toggle" onclick="document.getElementById('${id}').classList.toggle('open')">
+        💭 <span>Show thinking (${thinkText.length} chars)</span>
+      </button>
+      <div class="thinking-content" id="${id}">${esc(thinkText)}</div>
+    </div>`;
+  }
+  html += marked.parse(mainText || '(empty response)');
+  bubble.innerHTML = html;
+  const c = document.getElementById('chat-messages');
+  c.scrollTop = c.scrollHeight;
+}
+
+function appendChat(role, text) {
+  const c=document.getElementById('chat-messages');
+  const d=document.createElement('div'); d.className=`chat-msg ${role}`;
+  const b=document.createElement('div'); b.className='chat-bubble';
+  if(role==='assistant') {
+    b.innerHTML = text; // placeholder; replaced by renderAssistantMessage
+  } else {
+    b.innerHTML = esc(text);
+  }
+  d.appendChild(b); c.appendChild(d); c.scrollTop=c.scrollHeight;
+}
+
+function clearChat() {
+  if(llmHistory.length && !confirm('Clear all chat history?')) return;
+  llmHistory=[];
+  document.getElementById('chat-messages').innerHTML='';
+  updateChatTokenHint();
+}
+
+async function compressChat() {
+  if(llmHistory.length<2) { alert('Not enough history to compress.'); return; }
+  appendChat('assistant','⚡ Compressing history…');
+  try {
+    const summary_prompt = 'Summarize the following conversation history into a compact context paragraph that preserves all key decisions, findings, and open questions. Be brief.\n\n' +
+      llmHistory.map(m=>`${m.role.toUpperCase()}: ${m.content}`).join('\n\n');
+    const r=await fetch('/api/llm',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:[{role:'user',content:summary_prompt}]})});
+    const d=await r.json();
+    const la=document.querySelector('#chat-messages .chat-msg.assistant:last-child');
+    if(d.error){ if(la) la.querySelector('.chat-bubble').innerHTML=`<span style="color:var(--red)">${esc(d.error)}</span>`; return; }
+    const summary=d.choices?.[0]?.message?.content||'';
+    // Replace history with single summary message
+    llmHistory=[{role:'assistant',content:`[Compressed context]\n${summary}`}];
+    if(la) la.querySelector('.chat-bubble').innerHTML=`<strong>⚡ History compressed.</strong><br><small style="color:var(--muted)">Previous conversation summarized into context.</small><br><br>${marked.parse(summary)}`;
+    updateChatTokenHint();
+  } catch(e) {
+    const la=document.querySelector('#chat-messages .chat-msg.assistant:last-child');
+    if(la) la.querySelector('.chat-bubble').textContent='Error: '+e.message;
+  }
+}
+
+function updateChatTokenHint() {
+  const hint=document.getElementById('chat-token-hint');
+  if(!hint) return;
+  const total = llmHistory.reduce((n,m)=>n+m.content.length,0);
+  hint.textContent = `~${Math.round((rawContent.length+rulebookRaw.length+total)/4).toLocaleString()} tokens`;
+}
+
+// ─── Settings ─────────────────────────────────────────────────────────────────
+function openSettings(){document.getElementById('modal-overlay').classList.add('open');}
+function closeSettings(){document.getElementById('modal-overlay').classList.remove('open');}
+async function saveSettings(){
+  const BASE_URL=document.getElementById('cfg-base-url').value.trim();
+  const ANTHROPIC_BASE_URL=document.getElementById('cfg-anthropic-base-url').value.trim();
+  const key=document.getElementById('cfg-key').value.trim();
+  const model=document.getElementById('cfg-model').value.trim();
+  const proxy=document.getElementById('cfg-proxy').value.trim();
+  if(BASE_URL && ANTHROPIC_BASE_URL){
+    alert('Please configure only one of BASE_URL or ANTHROPIC_BASE_URL.');
+    return;
+  }
+  const r = await fetch('/api/config',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({BASE_URL,ANTHROPIC_BASE_URL,key,model,proxy})
+  });
+  const d = await r.json();
+  if(!r.ok){
+    alert(d.error || 'Failed to save settings.');
+    return;
+  }
+  closeSettings();
+}
+document.getElementById('modal-overlay').onclick=function(e){if(e.target===this)closeSettings();};
+
+// ─── Utils ────────────────────────────────────────────────────────────────────
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ─── Start ────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>

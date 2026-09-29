@@ -1,0 +1,251 @@
+--- openneuro_ds003626/analysis.md (pre-v3)
++++ openneuro_ds003626/analysis.md (v3)
+@@ -3,7 +3,7 @@
+ **Dataset**: `openneuro_ds003626` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds003626
+ **Category**: High-level Mental | **Subjects**: 10 | **Files (Completed)**: 30
+ **Channels**: 137 | **Sampling Rate**: 1024 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -44,6 +44,24 @@
+ | `event_65536` | 1 | admin | raw | Recording initialization or metadata marker |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `child` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `daughter` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `father` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `wife` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `four` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `three` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `ten` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `six` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Up` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Down` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Left` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Right` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -53,39 +71,184 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Inner speech word classification
+-- **Task Type**: classification
+-- **Epoch Method**: `epoch_by_event_hdf5`
+-- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, target_events = ["child", "daughter", "father", "wife", "four", "three", "ten", "six"]
+-- **Label Route**: `event`
+-- **Meta Level**: raw
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|--------|
+-  | `child` | 0 | Social word - child |
+-  | `daughter` | 1 | Social word - daughter |
+-  | `father` | 2 | Social word - father |
+-  | `wife` | 3 | Social word - wife |
+-  | `four` | 4 | Numerical word - four |
+-  | `three` | 5 | Numerical word - three |
+-  | `ten` | 6 | Numerical word - ten |
+-  | `six` | 7 | Numerical word - six |
+-- **Evidence**:
+-  - DOI: 10.3389/fnhum.2025.1668935 — Uses OpenNeuro ds003626 to classify 8 imagined words (social and numerical categories) from EEG using EEGNet and Transformer models with LOSO cross-validation
+-- **Kernel Notes**: ⚠️ **Event ID Mapping Verification Required**: The target_events listed are semantic labels. Actual event IDs in the dataset are numeric (event_11-event_17). Kernel must verify mapping between semantic word labels and numeric event IDs from events.tsv. Available event IDs with 30 counts (event_11, event_12, event_13, event_14) are candidates for the 4 social word categories; verify correspondence. Bandpass 0.1-50Hz FIR filtering and artifact rejection ±300μV recommended per literature.
+-
+-### Potential Task 2: Directional command decoding (inner speech, pronounced speech, visualization)
+-- **Task Type**: classification
+-- **Epoch Method**: `epoch_by_segmentation_hdf5`
+-- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5 s, tmin = null, tmax = null, target_events = ["Up", "Down", "Left", "Right"]
+-- **Label Route**: `misc`
+-- **Meta Level**: super
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|--------|
++### Classical Task 1: Inner speech word classification — child
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, target_events = ["child", "daughter", "father", "wife", "four", "three", "ten", "six"]
++- **Label Route**: `info`
++- **Label Field**: `child`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `child` | 0 | Social word - child |  |
++- **Evidence**:
++  - DOI: 10.3389/fnhum.2025.1668935 — Uses OpenNeuro ds003626 to classify 8 imagined words (social and numerical categories) from EEG using EEGNet and Transformer models with LOSO cross-validation
++- **Kernel Notes**: ⚠️ **Event ID Mapping Verification Required**: The target_events listed are semantic labels. Actual event IDs in the dataset are numeric (event_11-event_17). Kernel must verify mapping between semantic word labels and numeric event IDs from events.tsv. Available event IDs with 30 counts (event_11, event_12, event_13, event_14) are candidates for the 4 social word categories; verify correspondence. Bandpass 0.1-50Hz FIR filtering and artifact rejection ±300μV recommended per literature.
++
++### Classical Task 2: Inner speech word classification — daughter
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, target_events = ["child", "daughter", "father", "wife", "four", "three", "ten", "six"]
++- **Label Route**: `info`
++- **Label Field**: `daughter`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `daughter` | 1 | Social word - daughter |  |
++- **Evidence**:
++  - DOI: 10.3389/fnhum.2025.1668935 — Uses OpenNeuro ds003626 to classify 8 imagined words (social and numerical categories) from EEG using EEGNet and Transformer models with LOSO cross-validation
++- **Kernel Notes**: ⚠️ **Event ID Mapping Verification Required**: The target_events listed are semantic labels. Actual event IDs in the dataset are numeric (event_11-event_17). Kernel must verify mapping between semantic word labels and numeric event IDs from events.tsv. Available event IDs with 30 counts (event_11, event_12, event_13, event_14) are candidates for the 4 social word categories; verify correspondence. Bandpass 0.1-50Hz FIR filtering and artifact rejection ±300μV recommended per literature.
++
++### Classical Task 3: Inner speech word classification — father
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, target_events = ["child", "daughter", "father", "wife", "four", "three", "ten", "six"]
++- **Label Route**: `info`
++- **Label Field**: `father`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `father` | 2 | Social word - father |  |
++- **Evidence**:
++  - DOI: 10.3389/fnhum.2025.1668935 — Uses OpenNeuro ds003626 to classify 8 imagined words (social and numerical categories) from EEG using EEGNet and Transformer models with LOSO cross-validation
++- **Kernel Notes**: ⚠️ **Event ID Mapping Verification Required**: The target_events listed are semantic labels. Actual event IDs in the dataset are numeric (event_11-event_17). Kernel must verify mapping between semantic word labels and numeric event IDs from events.tsv. Available event IDs with 30 counts (event_11, event_12, event_13, event_14) are candidates for the 4 social word categories; verify correspondence. Bandpass 0.1-50Hz FIR filtering and artifact rejection ±300μV recommended per literature.
++
++### Classical Task 4: Inner speech word classification — wife
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, target_events = ["child", "daughter", "father", "wife", "four", "three", "ten", "six"]
++- **Label Route**: `info`
++- **Label Field**: `wife`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `wife` | 3 | Social word - wife |  |
++- **Evidence**:
++  - DOI: 10.3389/fnhum.2025.1668935 — Uses OpenNeuro ds003626 to classify 8 imagined words (social and numerical categories) from EEG using EEGNet and Transformer models with LOSO cross-validation
++- **Kernel Notes**: ⚠️ **Event ID Mapping Verification Required**: The target_events listed are semantic labels. Actual event IDs in the dataset are numeric (event_11-event_17). Kernel must verify mapping between semantic word labels and numeric event IDs from events.tsv. Available event IDs with 30 counts (event_11, event_12, event_13, event_14) are candidates for the 4 social word categories; verify correspondence. Bandpass 0.1-50Hz FIR filtering and artifact rejection ±300μV recommended per literature.
++
++### Classical Task 5: Inner speech word classification — four
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, target_events = ["child", "daughter", "father", "wife", "four", "three", "ten", "six"]
++- **Label Route**: `info`
++- **Label Field**: `four`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `four` | 4 | Numerical word - four |  |
++- **Evidence**:
++  - DOI: 10.3389/fnhum.2025.1668935 — Uses OpenNeuro ds003626 to classify 8 imagined words (social and numerical categories) from EEG using EEGNet and Transformer models with LOSO cross-validation
++- **Kernel Notes**: ⚠️ **Event ID Mapping Verification Required**: The target_events listed are semantic labels. Actual event IDs in the dataset are numeric (event_11-event_17). Kernel must verify mapping between semantic word labels and numeric event IDs from events.tsv. Available event IDs with 30 counts (event_11, event_12, event_13, event_14) are candidates for the 4 social word categories; verify correspondence. Bandpass 0.1-50Hz FIR filtering and artifact rejection ±300μV recommended per literature.
++
++### Classical Task 6: Inner speech word classification — three
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, target_events = ["child", "daughter", "father", "wife", "four", "three", "ten", "six"]
++- **Label Route**: `info`
++- **Label Field**: `three`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `three` | 5 | Numerical word - three |  |
++- **Evidence**:
++  - DOI: 10.3389/fnhum.2025.1668935 — Uses OpenNeuro ds003626 to classify 8 imagined words (social and numerical categories) from EEG using EEGNet and Transformer models with LOSO cross-validation
++- **Kernel Notes**: ⚠️ **Event ID Mapping Verification Required**: The target_events listed are semantic labels. Actual event IDs in the dataset are numeric (event_11-event_17). Kernel must verify mapping between semantic word labels and numeric event IDs from events.tsv. Available event IDs with 30 counts (event_11, event_12, event_13, event_14) are candidates for the 4 social word categories; verify correspondence. Bandpass 0.1-50Hz FIR filtering and artifact rejection ±300μV recommended per literature.
++
++### Classical Task 7: Inner speech word classification — ten
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, target_events = ["child", "daughter", "father", "wife", "four", "three", "ten", "six"]
++- **Label Route**: `info`
++- **Label Field**: `ten`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `ten` | 6 | Numerical word - ten |  |
++- **Evidence**:
++  - DOI: 10.3389/fnhum.2025.1668935 — Uses OpenNeuro ds003626 to classify 8 imagined words (social and numerical categories) from EEG using EEGNet and Transformer models with LOSO cross-validation
++- **Kernel Notes**: ⚠️ **Event ID Mapping Verification Required**: The target_events listed are semantic labels. Actual event IDs in the dataset are numeric (event_11-event_17). Kernel must verify mapping between semantic word labels and numeric event IDs from events.tsv. Available event IDs with 30 counts (event_11, event_12, event_13, event_14) are candidates for the 4 social word categories; verify correspondence. Bandpass 0.1-50Hz FIR filtering and artifact rejection ±300μV recommended per literature.
++
++### Classical Task 8: Inner speech word classification — six
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2 s, tmax = 0.5 s, target_events = ["child", "daughter", "father", "wife", "four", "three", "ten", "six"]
++- **Label Route**: `info`
++- **Label Field**: `six`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `six` | 7 | Numerical word - six |  |
++- **Evidence**:
++  - DOI: 10.3389/fnhum.2025.1668935 — Uses OpenNeuro ds003626 to classify 8 imagined words (social and numerical categories) from EEG using EEGNet and Transformer models with LOSO cross-validation
++- **Kernel Notes**: ⚠️ **Event ID Mapping Verification Required**: The target_events listed are semantic labels. Actual event IDs in the dataset are numeric (event_11-event_17). Kernel must verify mapping between semantic word labels and numeric event IDs from events.tsv. Available event IDs with 30 counts (event_11, event_12, event_13, event_14) are candidates for the 4 social word categories; verify correspondence. Bandpass 0.1-50Hz FIR filtering and artifact rejection ±300μV recommended per literature.
++
++### Potential Task 1: Directional command decoding (inner speech, pronounced speech, visualization) — Up
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5 s, tmin = null, tmax = null, target_events = ["Up", "Down", "Left", "Right"]
++- **Label Route**: `misc`
++- **Label Field**: `Up`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `Up` | 0 | Upward directional command |
++- **Super Meta Notes**: Three modalities captured: inner speech, pronounced speech, and visualization. No EEG trigger markers present in raw data. Trial onsets and modality labels must be reconstructed from events.tsv or behavioral logs. Modality and directional command labels are embedded in external timing files, requiring super-meta extraction.
++- **Evidence**:
++  - DOI: 10.1038/s41597-022-01147-2 — Dataset descriptor paper for OpenNeuro ds003626; provides acquisition protocol but does not define specific ML classification task for directional commands
++  - Partial Support: Paradigm description indicates 4 directional commands (Up/Down/Left/Right) across 3 modalities, but no reference provides validated epoch parameters or event mapping for this specific classification task
++- **Kernel Notes**: ⚠️ **Validation Needed**: (1) Directional command event IDs not found in available event IDs — must verify mapping from events.tsv. (2) Three modalities require modality label extraction as part of super-meta. (3) Epoch parameters tmin/tmax undefined — reconstruction from external timing required. (4) High-density 137-channel EEG at 1024Hz; segmentation with 0.5s overlap enables continuous BCI decoding approach. Small sample size (n=10) limits generalization.
++### Potential Task 2: Directional command decoding (inner speech, pronounced speech, visualization) — Down
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5 s, tmin = null, tmax = null, target_events = ["Up", "Down", "Left", "Right"]
++- **Label Route**: `misc`
++- **Label Field**: `Down`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `Down` | 1 | Downward directional command |
++- **Super Meta Notes**: Three modalities captured: inner speech, pronounced speech, and visualization. No EEG trigger markers present in raw data. Trial onsets and modality labels must be reconstructed from events.tsv or behavioral logs. Modality and directional command labels are embedded in external timing files, requiring super-meta extraction.
++- **Evidence**:
++  - DOI: 10.1038/s41597-022-01147-2 — Dataset descriptor paper for OpenNeuro ds003626; provides acquisition protocol but does not define specific ML classification task for directional commands
++  - Partial Support: Paradigm description indicates 4 directional commands (Up/Down/Left/Right) across 3 modalities, but no reference provides validated epoch parameters or event mapping for this specific classification task
++- **Kernel Notes**: ⚠️ **Validation Needed**: (1) Directional command event IDs not found in available event IDs — must verify mapping from events.tsv. (2) Three modalities require modality label extraction as part of super-meta. (3) Epoch parameters tmin/tmax undefined — reconstruction from external timing required. (4) High-density 137-channel EEG at 1024Hz; segmentation with 0.5s overlap enables continuous BCI decoding approach. Small sample size (n=10) limits generalization.
++### Potential Task 3: Directional command decoding (inner speech, pronounced speech, visualization) — Left
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5 s, tmin = null, tmax = null, target_events = ["Up", "Down", "Left", "Right"]
++- **Label Route**: `misc`
++- **Label Field**: `Left`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `Left` | 2 | Left directional command |
++- **Super Meta Notes**: Three modalities captured: inner speech, pronounced speech, and visualization. No EEG trigger markers present in raw data. Trial onsets and modality labels must be reconstructed from events.tsv or behavioral logs. Modality and directional command labels are embedded in external timing files, requiring super-meta extraction.
++- **Evidence**:
++  - DOI: 10.1038/s41597-022-01147-2 — Dataset descriptor paper for OpenNeuro ds003626; provides acquisition protocol but does not define specific ML classification task for directional commands
++  - Partial Support: Paradigm description indicates 4 directional commands (Up/Down/Left/Right) across 3 modalities, but no reference provides validated epoch parameters or event mapping for this specific classification task
++- **Kernel Notes**: ⚠️ **Validation Needed**: (1) Directional command event IDs not found in available event IDs — must verify mapping from events.tsv. (2) Three modalities require modality label extraction as part of super-meta. (3) Epoch parameters tmin/tmax undefined — reconstruction from external timing required. (4) High-density 137-channel EEG at 1024Hz; segmentation with 0.5s overlap enables continuous BCI decoding approach. Small sample size (n=10) limits generalization.
++### Potential Task 4: Directional command decoding (inner speech, pronounced speech, visualization) — Right
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2.0 s, overlap = 0.5 s, tmin = null, tmax = null, target_events = ["Up", "Down", "Left", "Right"]
++- **Label Route**: `misc`
++- **Label Field**: `Right`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `Right` | 3 | Right directional command |
+ - **Super Meta Notes**: Three modalities captured: inner speech, pronounced speech, and visualization. No EEG trigger markers present in raw data. Trial onsets and modality labels must be reconstructed from events.tsv or behavioral logs. Modality and directional command labels are embedded in external timing files, requiring super-meta extraction.
+ - **Evidence**:

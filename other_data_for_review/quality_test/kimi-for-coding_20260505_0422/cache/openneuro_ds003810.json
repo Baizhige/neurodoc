@@ -1,0 +1,378 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 9,
+    "category": "",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 24,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 5,
+    "task_synthesis": 6,
+    "kernel_loop": 9,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T05:09:09.496544+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.1016_j.heliyon.2020.e03425.html",
+      "classification": "uncertain",
+      "ref": "10.1016/j.heliyon.2020.e03425",
+      "error": "Extracted text too short (11 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds003810.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1038_s41597_022_01147_2.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1038/s41597.022.01147.2",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1109_access_2022_3150587.pdf",
+      "classification": "junk",
+      "ref": "10.1109/access.2022.3150587",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as junk in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1016_j_dib_2022_108225.pdf",
+      "ref": "10.1016/j.dib.2022.108225",
+      "title": "A motor imagery vs. rest dataset with low-cost consumer grade EEG hardware",
+      "classification": "relevant",
+      "cot_reasoning": "This is the primary data descriptor paper for OpenNeuro ds003810. It explicitly describes the dataset, its BIDS format, event markers (OVTK_GDF_Right for motor imagery, OVTK_GDF_Tongue for rest), and the experimental protocol with RUN0-RUN4. It defines a clear two-class classification task (motor imagery vs. rest) with 80 trials per class per subject.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery vs. rest",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Modified Graz protocol: trials with motor imagery and rest conditions; event markers OVTK_GDF_Right (MI) and OVTK_GDF_Tongue (rest)",
+      "target_events": [
+        "OVTK_GDF_Right",
+        "OVTK_GDF_Tongue"
+      ],
+      "label_mapping": "OVTK_GDF_Right = motor imagery/grasping; OVTK_GDF_Tongue = rest/idle",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Primary dataset descriptor; explicitly states BIDS format, event markers, trial counts (20 trials x 4 runs = 80 per class), sampling rate 125 Hz, 15 electrodes, bandpass 0.5-45 Hz"
+    },
+    {
+      "filename": "paper_10_1016_j_jneumeth_2024_110215.pdf",
+      "ref": "10.1016/j.jneumeth.2024.110215",
+      "title": "EEG-based motor imagery channel selection and classification using hybrid optimization and two-tier deep learning",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper discusses motor imagery classification using BCI competition datasets (implied by references to left-hand/right-hand tasks typical of BCI Competition). There is no mention of OpenNeuro ds003810 or the Peterson low-cost dataset. The abstract mentions 95.06% accuracy but does not specify which dataset was used.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "No mention of ds003810; appears to use standard BCI competition datasets for left-hand/right-hand motor imagery"
+    },
+    {
+      "filename": "paper_10_1088_1741_2552_ad7f8d.pdf",
+      "ref": "10.1088/1741-2552/ad7f8d",
+      "title": "A shared robot control system combining augmented reality and motor imagery brain–computer interfaces with eye tracking",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper describes a novel BCI system using motor imagery with eye tracking and augmented reality for robot control. The study uses their own custom hardware and protocol with a user study, not the OpenNeuro ds003810 dataset. No mention of Peterson's dataset or OpenNeuro.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Custom in-house BCI system with online decoding; uses their own data collection, not ds003810"
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "ref": "",
+      "title": "A motor imagery vs. rest dataset with low-cost consumer grade EEG hardware",
+      "classification": "relevant",
+      "cot_reasoning": "This is the same paper as File 1 (Data in Brief 42 2022 108225), accessed via Europe PMC. It contains identical content describing OpenNeuro ds003810 with the same event markers (OVTK_GDF_Right for MI, OVTK_GDF_Tongue for rest), protocol details, and task definition.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery vs. rest",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Modified Graz protocol: 5 runs (RUN0 with real movement, RUN1-RUN4 with MI vs rest); 20 trials per condition per run; event markers OVTK_GDF_Right (MI) and OVTK_GDF_Tongue (rest)",
+      "target_events": [
+        "OVTK_GDF_Right",
+        "OVTK_GDF_Tongue"
+      ],
+      "label_mapping": "OVTK_GDF_Right = motor imagery/grasping; OVTK_GDF_Tongue = rest/idle",
+      "meta_level": "raw",
+      "super_meta_note": "Duplicate of File 1, same paper via different access route",
+      "evidence_desc": "Same dataset descriptor as File 1; confirms ds003810, BIDS format, 15 channels, 125 Hz, event markers, 160 total trials per subject (80 MI, 80 rest)"
+    },
+    {
+      "filename": "paper_https_www_sciencedirect_com_science_article_pii_s240584402030270x.pdf",
+      "ref": "10.1016/j.heliyon.2020.e03425",
+      "title": "A feasibility study of a complete low-cost consumer-grade brain-computer interface system",
+      "classification": "partial",
+      "cot_reasoning": "This is the original research article associated with the dataset, referenced in the Data in Brief paper. It describes building and evaluating the low-cost BCI system that generated the data later deposited as ds003810. It mentions filter-bank based classification method and compares performance, but the full task details (exact epoching, cross-validation) are not completely specified in the excerpt provided. The data is described as being made available but the specific OpenNeuro identifier is not visible in this excerpt.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery vs. rest",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Modified Graz protocol with MI vs rest; filter-bank based method mentioned for classification; specific epoch window not detailed in excerpt",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "Original study that produced ds003810; data availability statement references GitHub repository https://github.com/vpeterson/MI-OpenBCI, which was later deposited to OpenNeuro as ds003810",
+      "evidence_desc": "Original feasibility study; describes low-cost OpenBCI system, filter-bank classification, mentions data will be publicly available; GitHub link provided in paper corresponds to ds003810 dataset"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The BIDS events sidecar explicitly defines a two-class structure with value codes 770 (MI) and 772 (Rest), directly supporting motor imagery vs. rest classification. The dataset descriptor paper confirms 80 trials per class per subject across 4 runs with 15-channel EEG at 125 Hz.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 50,
+    "total_n": 50,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "OVTK_GDF_Correct": 697,
+      "OVTK_GDF_Cross_On_Screen": 1691,
+      "OVTK_GDF_End_Of_Session": 48,
+      "OVTK_GDF_End_Of_Trial": 1689,
+      "OVTK_GDF_Feedback_Continuous": 1689,
+      "OVTK_GDF_Incorrect": 697,
+      "OVTK_GDF_Right": 845,
+      "OVTK_GDF_Start_Of_Trial": 1691,
+      "OVTK_GDF_Tongue": 845,
+      "OVTK_StimulationId_BaselineStart": 50,
+      "OVTK_StimulationId_BaselineStop": 50,
+      "OVTK_StimulationId_Beep": 1790,
+      "OVTK_StimulationId_ExperimentStart": 46,
+      "OVTK_StimulationId_ExperimentStop": 48,
+      "OVTK_StimulationId_Train": 48
+    },
+    "subject_info": {
+      "record_count": 50,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "OVTK_GDF_Correct",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: correct feedback",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "OVTK_GDF_Cross_On_Screen",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: fixation cross",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "OVTK_GDF_End_Of_Session",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Session boundary: end of session",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "OVTK_GDF_End_Of_Trial",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: trial end",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "OVTK_GDF_Feedback_Continuous",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: continuous feedback",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "OVTK_GDF_Incorrect",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: incorrect feedback",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "OVTK_GDF_Right",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: right cue",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "OVTK_GDF_Start_Of_Trial",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: trial start",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "OVTK_GDF_Tongue",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: tongue cue",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "OVTK_StimulationId_BaselineStart",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: baseline start",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "OVTK_StimulationId_BaselineStop",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: baseline stop",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "OVTK_StimulationId_Beep",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: auditory beep cue",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "OVTK_StimulationId_ExperimentStart",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Session boundary: experiment start",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "OVTK_StimulationId_ExperimentStop",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Session boundary: experiment stop",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "OVTK_StimulationId_Train",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System marker: training run indicator",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      }
+    ],
+    "notes": "All 15 event IDs were identified from EDF annotation headers across 12 files from 7 subjects (sub-02, sub-03, sub-04, sub-05, sub-07, sub-08, sub-09, sub-10, sub-12) covering all run types (run-0 through run-4). No events.tsv or events.json files exist; mappings are inferred from the self-descriptive OVTK_GDF_* and OVTK_StimulationId_* naming conventions embedded in EDF annotations, event counts, and contextual patterns (e.g., Start_Of_Trial/End_Of_Trial pairs, BaselineStart/BaselineStop pairs, Correct/Incorrect as feedback markers, ExperimentStart/ExperimentStop as boundaries). Event counts (1691 Start_Of_Trial, 1689 End_Of_Trial, 48 ExperimentStart/ExperimentStop/End_Of_Session/Train, 50 BaselineStart/BaselineStop, 1790 Beep, 845 Right/Tongue, 697 Correct/Incorrect) support the functional interpretations. One file (sub-08 run-0) was truncated and lacked boundary markers but contained core trial events. No explicit class labels are stated verbatim in any sidecar file; 'Right' and 'Tongue' are treated as cue names from the raw annotation text, not as BCI class assignments."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: 2-class motor imagery vs rest\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = 0 s *, tmax = 4 s *, target_events = [`OVTK_GDF_Right`, `OVTK_GDF_Tongue`]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `OVTK_GDF_Right` | 0 | Right hand motor imagery cue |\n  | `OVTK_GDF_Tongue` | 1 | Rest/idle condition cue (tongue cue used as rest marker in protocol) |\n- **Evidence**:\n  - 10.1016/j.dib.2022.108225 — Modified Graz protocol with 2 conditions: motor imagery (grasping of dominant hand) and rest/idle; 20 trials per condition per run, 4 MI runs (RUN1-RUN4), 15 EEG channels at 125 Hz\n  - 10.1016/j.heliyon.2020.e03425 — Feasibility study of low-cost consumer-grade BCI system; RUN0 with real movement excluded from MI analysis; task-MIvsRest_events.json defines value 770 as \"MI\" and 772 as \"Rest\"\n- **Notes**: The task-MIvsRest_events.json sidecar explicitly maps value 770 to \"MI\" and 772 to \"Rest\", confirming the two-class structure. OVTK_GDF_Right serves as the motor imagery cue (dominant hand grasping imagination) while OVTK_GDF_Tongue serves as the rest/idle condition cue in this modified protocol. The epoch window 0-4s post-cue is inferred from standard Graz-style MI timing as no explicit window is specified in the references.\n\n### Potential Task 1: age regression from resting segments\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.0 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | age | continuous age in years (20–30 range) |\n- **Evidence**:\n  - participants.tsv — age column present for all 10 subjects, range 20–30 years\n- **Notes**: Segmentation-based resting-state regression. 2-second non-overlapping segments are used to create multiple samples per recording; each segment inherits the subject's age from participants.tsv. Baseline periods (BaselineStart/BaselineStop) exist in the data but are not used as event anchors due to the segmentation approach. Segment length inferred from typical short-rest analysis windows; overlap set to 0 for independent samples.\n\n### Potential Task 2: Gender Classification from Resting Segments\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.0 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | gender | M → 0 (male, N=6); F → 1 (female, N=4) |\n- **Evidence**:\n- **Notes**: Segmentation-based approach required because no event structure discriminates gender. The 2-second non-overlapping segments are inferred from the resting-state paradigm with ~447s runs and 10 subjects, yielding sufficient samples for binary classification. Gender labels are drawn from participants.tsv, a native info field.\n\n### Potential Task 3: age regression from MI epochs\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 4 s *, target_events = [`OVTK_GDF_Right`]\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | age | Continuous age in years (range 20–30), broadcast per-subject to all MI epochs. Each epoch from a given subject receives the same age value. |\n- **Evidence**:\n- **Notes**: Uses native participants.tsv `age` column (B3 archetype, Meta Level = raw). Epoch window inferred from classical MI task paradigm. Age range is narrow (20–30 years) but provides non-trivial variance for regression across 10 subjects. The `OVTK_GDF_Right` event marks right-hand motor imagery cue onset; epochs are extracted around these cues and paired with subject-level age labels.\n\n### Potential Task 4: Age Regression from Rest Epochs\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 4 s *, target_events = [`OVTK_GDF_Tongue`]\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | age | Continuous age in years (20–30), broadcast from participants.tsv to all rest epochs per subject |\n- **Evidence**:\n- **Notes**: This task uses OVTK_GDF_Tongue events as rest condition markers (the dataset's events.json maps value 772 to \"Rest\", and the README describes RUN1-RUN4 as MI vs. Rest conditions). The epoch window is inferred from the classical MI task parameters. Age is a native participants.tsv field, making this a B3 (info-native) archetype with Meta Level = raw. The task is complementary to MI-age regression to test whether rest-state EEG carries age-predictive information comparable to task-state EEG.\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "OVTK_GDF_Right",
+      "OVTK_GDF_Tongue"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [
+      "age",
+      "gender"
+    ],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "EMG-based regression/classification",
+        "reason": "README mentions EMG signals were acquired for protocol control, but no continuous EMG channels discovered in raw files (native misc channels list is empty). Cannot ground B1 archetype."
+      },
+      {
+        "paradigm": "response time regression",
+        "reason": "events.json defines response_time column but states 'not use for this data'; no per-trial numeric values available. No events.tsv numeric columns discovered."
+      },
+      {
+        "paradigm": "dominant hand classification",
+        "reason": "participants.tsv 'dominant hand' column is constant (all 'R') across all 10 subjects; violates H2 requiring >=2 distinct label values for classification."
+      }
+    ]
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/openneuro_ds003810/kernel_final.py",
+  "kernel_code_len": 13392,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds003810.py",
+    "kernel_sha256": "2b7a47bc771270e9496e1f82087f3e11a7b8612fc1ccb4981f1084a51031ae24",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 50,
+    "total_n": 50,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "OVTK_GDF_Correct": 697,
+      "OVTK_GDF_Cross_On_Screen": 1691,
+      "OVTK_GDF_End_Of_Session": 48,
+      "OVTK_GDF_End_Of_Trial": 1689,
+      "OVTK_GDF_Feedback_Continuous": 1689,
+      "OVTK_GDF_Incorrect": 697,
+      "OVTK_GDF_Right": 845,
+      "OVTK_GDF_Start_Of_Trial": 1691,
+      "OVTK_GDF_Tongue": 845,
+      "OVTK_StimulationId_BaselineStart": 50,
+      "OVTK_StimulationId_BaselineStop": 50,
+      "OVTK_StimulationId_Beep": 1790,
+      "OVTK_StimulationId_ExperimentStart": 46,
+      "OVTK_StimulationId_ExperimentStop": 48,
+      "OVTK_StimulationId_Train": 48
+    },
+    "subject_info": {
+      "record_count": 50,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds003810.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

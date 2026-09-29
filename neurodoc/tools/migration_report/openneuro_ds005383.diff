@@ -1,0 +1,33 @@
+--- openneuro_ds005383/analysis.md (pre-v3)
++++ openneuro_ds005383/analysis.md (v3)
+@@ -3,7 +3,7 @@
+ **Dataset**: `openneuro_ds005383` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005383
+ **Category**: High-level Mental | **Subjects**: 30 | **Files (Completed)**: 720
+ **Channels**: 30 | **Sampling Rate**: 200 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -230,8 +230,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `31` | 0 | Non-target sentence (no fuzzy semantic target word) |
+   | `32` | 1 | Target sentence (contains fuzzy semantic target word: name, means of transportation, animal, or fruit) |
+ - **Evidence**:
+@@ -273,8 +273,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|
++  | Event ID | Value | Meaning |
++  |---|---|---|
+   | `31` | continuous | Non-target sentence reading time |
+   | `32` | continuous | Target sentence reading time |
+ - **Evidence**: Paradigm description states "self-paced natural reading" but paper focuses on 2-second fixed presentation windows; plausible extended analysis examining reading time differences between target/non-target conditions.

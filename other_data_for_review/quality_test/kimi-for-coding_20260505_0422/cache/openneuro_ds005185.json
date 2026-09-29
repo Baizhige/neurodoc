@@ -1,0 +1,856 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 12,
+    "category": "",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 35,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 10,
+    "task_synthesis": 11,
+    "kernel_loop": 9,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T13:05:30.425238+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_openneuro.org_datasets_ds005185.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1016_j_bspc_2022_104496.pdf",
+      "classification": "junk",
+      "ref": "10.1016/j.bspc.2022.104496",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as junk in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_ieeexplore_ieee_org_document_10568242.pdf",
+      "classification": "irrelevant",
+      "ref": "",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "auto_primary_reference_03.pdf",
+      "ref": "",
+      "title": "Accurate whole-night sleep monitoring with dry-contact ear-EEG",
+      "classification": "relevant",
+      "cot_reasoning": "This is the original 2019 paper describing the EESM19 study with 80 nights of ear-EEG recordings from 20 subjects. It explicitly describes automatic sleep staging as a classification task using 30-second epochs with 5 sleep stages (W, N1, N2, N3, REM). The supplementary methods detail extensive feature engineering for ML-based sleep stage classification.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "sleep staging",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-second epochs, standard sleep staging epochs",
+      "target_events": [
+        "sleep_stage_W",
+        "sleep_stage_N1",
+        "sleep_stage_N2",
+        "sleep_stage_N3",
+        "sleep_stage_REM"
+      ],
+      "label_mapping": "AASM standard: W, N1, N2, N3, REM",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Original publication of EESM19 dataset; describes 80 nights, 20 subjects, 4 nights each, dry-contact ear-EEG with PSG reference; automatic sleep staging with 5-class classification; epoch-based analysis with 30s windows"
+    },
+    {
+      "filename": "official_doi.org_10.1038_s41598-019-53115-3.html",
+      "ref": "10.1038/s41598-019-53115-3",
+      "title": "Accurate whole-night sleep monitoring with dry-contact ear-EEG",
+      "classification": "relevant",
+      "cot_reasoning": "This is the same 2019 study as File 1 but in HTML format from Scientific Reports. It explicitly describes the EESM19 dataset with 80 recordings from 20 subjects, automatic sleep scoring using machine learning, and compares ear-EEG to PSG gold standard. Cohen's kappa of 0.73 reported for 5-class sleep staging.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "sleep staging",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-second epochs, 78799 epochs total (72942 after rejection)",
+      "target_events": [
+        "sleep_stage_W",
+        "sleep_stage_N1",
+        "sleep_stage_N2",
+        "sleep_stage_N3",
+        "sleep_stage_REM"
+      ],
+      "label_mapping": "AASM standard: W, N1, N2, N3, REM",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Scientific Reports publication of EESM19; 80 nights, 20 subjects × 4 nights; automatic sleep staging with ML; 5-class classification; 30-second epochs; 4.3% epoch rejection rate; dry ear-EEG vs PSG comparison"
+    },
+    {
+      "filename": "paper_10.1038_s41597-025-04579-8.pdf",
+      "ref": "10.1038/s41597-025-04579-8",
+      "title": "Ear-EEG sleep monitoring data sets",
+      "classification": "relevant",
+      "cot_reasoning": "This is the 2025 data descriptor paper that explicitly presents the OpenNeuro ds005185 dataset (EESM19 and EESM23 combined). It describes 320 total nights, 30 subjects, with manual PSG scoring providing 5-class sleep stage labels. This is the direct reference for the dataset in question.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "sleep staging",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-second epochs, AASM standard scoring",
+      "target_events": [
+        "sleep_stage_W",
+        "sleep_stage_N1",
+        "sleep_stage_N2",
+        "sleep_stage_N3",
+        "sleep_stage_REM"
+      ],
+      "label_mapping": "AASM standard: W, N1, N2, N3, REM; unscored epochs allowed (5% EESM19, 3% EESM23)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Data descriptor for OpenNeuro ds005185; combines EESM19 (80 nights, 20 subjects, individualized ear pieces) and EESM23 (240 nights, 10 subjects, generic ear pieces); 320 total nights; PSG manual scoring with 5 AASM stages; includes actigraphy, questionnaires, calibration and ASSR recordings"
+    },
+    {
+      "filename": "paper_10_1038_s41597_025_04579_8.pdf",
+      "ref": "10.1038/s41597-025-04579-8",
+      "title": "Ear-EEG sleep monitoring data sets",
+      "classification": "relevant",
+      "cot_reasoning": "Duplicate of File 3 with same DOI and content. This is the 2025 data descriptor for the OpenNeuro ds005185 dataset, explicitly describing EESM19 and EESM23 with 320 nights, 30 subjects, and 5-class sleep stage labels from manual PSG scoring.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "sleep staging",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-second epochs, AASM standard scoring",
+      "target_events": [
+        "sleep_stage_W",
+        "sleep_stage_N1",
+        "sleep_stage_N2",
+        "sleep_stage_N3",
+        "sleep_stage_REM"
+      ],
+      "label_mapping": "AASM standard: W, N1, N2, N3, REM; unscored epochs allowed",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Identical to File 3 - data descriptor for ds005185; 320 nights total; EESM19 and EESM23; manual PSG scoring; 5 sleep stages"
+    },
+    {
+      "filename": "paper_10_1109_jbhi_2023_3303197.pdf",
+      "ref": "10.1109/jbhi.2023.3303197",
+      "title": "L-SeqSleepNet: Whole-cycle Long Sequence Modeling for Automatic Sleep Staging",
+      "classification": "partial",
+      "cot_reasoning": "This paper evaluates L-SeqSleepNet on four databases including 'ear-EEG' database, which appears to be derived from the EESM19/EESM23 datasets. However, it does not explicitly name OpenNeuro ds005185 or clearly distinguish whether the ear-EEG data used is exactly this dataset. The task is clearly 5-class sleep staging classification.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "sleep staging",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "sequence-to-sequence, whole-cycle modeling (~180-220 epochs)",
+      "target_events": [
+        "sleep_stage_W",
+        "sleep_stage_N1",
+        "sleep_stage_N2",
+        "sleep_stage_N3",
+        "sleep_stage_REM"
+      ],
+      "label_mapping": "AASM standard 5 stages",
+      "meta_level": "raw",
+      "super_meta_note": "Uses ear-EEG database but unclear if exactly ds005185; may be subset or related dataset",
+      "evidence_desc": "L-SeqSleepNet evaluated on ear-EEG database among 4 databases; 5-class sleep staging; sequence-to-sequence modeling; mentions in-ear EEG setup from Mikkelsen et al. references"
+    },
+    {
+      "filename": "paper_10_1109_tbme_2022_3147187.pdf",
+      "ref": "10.1109/tbme.2022.3147187",
+      "title": "SleepTransformer: Automatic Sleep Staging with Interpretability and Uncertainty Quantification",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper focuses on SleepTransformer architecture and evaluates only on SHHS and Sleep-EDF databases. There is no mention of ear-EEG or the EESM19/EESM23 datasets. While it addresses sleep staging, it does not use the specific OpenNeuro ds005185 dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Evaluates on SHHS and Sleep-EDF only; no mention of ear-EEG or ds005185"
+    },
+    {
+      "filename": "paper_10_3389_fnins_2023_987578.pdf",
+      "ref": "10.3389/fnins.2023.987578",
+      "title": "At-home sleep monitoring using generic ear-EEG",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly describes the EESM23 study (10 subjects, 12 nights each = 120 nights, though text says 10 nights in part B). It uses generic ear-EEG and validates against PSG with automatic sleep scoring achieving Cohen's kappa of 0.71. This is one of the two constituent datasets that make up OpenNeuro ds005185.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "sleep staging",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-second epochs, standard sleep staging",
+      "target_events": [
+        "sleep_stage_W",
+        "sleep_stage_N1",
+        "sleep_stage_N2",
+        "sleep_stage_N3",
+        "sleep_stage_REM"
+      ],
+      "label_mapping": "AASM standard: W, N1, N2, N3, REM",
+      "meta_level": "raw",
+      "super_meta_note": "EESM23 is part of ds005185; this paper describes the generic earpiece portion",
+      "evidence_desc": "EESM23 study; 10 subjects, 2 nights with PSG + 10 nights ear-EEG only; generic earpieces; automatic sleep staging with 5 classes; Cohen's kappa 0.71 vs PSG; part of OpenNeuro ds005185"
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "ref": "",
+      "title": "Hearables: Bioelectronics technological challenges and opportunities",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a general review article about hearables and ear-EEG technology. While it mentions ear-EEG for sleep monitoring and cites Mikkelsen et al. 2019, it does not explicitly use or analyze the OpenNeuro ds005185 dataset. It is a broad technological review without specific dataset usage.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "General review of hearables technology; mentions ear-EEG sleep monitoring in passing but does not use ds005185 dataset"
+    },
+    {
+      "filename": "s41597-025-04579-8.pdf",
+      "ref": "10.1038/s41597-025-04579-8",
+      "title": "Ear-EEG sleep monitoring data sets",
+      "classification": "relevant",
+      "cot_reasoning": "Identical to Files 3 and 4 - the 2025 data descriptor for OpenNeuro ds005185. Explicitly describes the dataset with 320 nights (EESM19 + EESM23), 30 subjects, manual PSG scoring with 5 sleep stages, and various additional recordings (actigraphy, questionnaires, calibration, ASSR).",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "sleep staging",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-second epochs, AASM standard scoring",
+      "target_events": [
+        "sleep_stage_W",
+        "sleep_stage_N1",
+        "sleep_stage_N2",
+        "sleep_stage_N3",
+        "sleep_stage_REM"
+      ],
+      "label_mapping": "AASM standard: W, N1, N2, N3, REM; unscored epochs allowed (5% EESM19, 3% EESM23)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Data descriptor for ds005185; 320 nights total; EESM19 (80 nights, individualized) + EESM23 (240 nights, generic); manual PSG scoring with 5 AASM stages; includes actigraphy, questionnaires, calibration, ASSR recordings"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset contains explicit sleep stage annotations in the events structure: 'Scoring1' and 'Scoring2' columns with 5-class labels (Wake, REM, N1, N2, N3) plus arousal markers, which directly supports sleep staging classification. The epoch-based scoring with 30-second windows is a standard ML-ready format for EEG sleep analysis.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 516,
+    "total_n": 516,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      " Lights Out ": 94,
+      " Biocalibrations ": 79,
+      " Gik i seng ": 80,
+      " Start af måling ": 75,
+      " Stod op ": 70,
+      " Sync ": 77,
+      " Biocalibrations start ": 11,
+      " vågen i lidt tid ": 2,
+      "event_1": 25,
+      "event_2": 88,
+      "event_5": 51,
+      "event_6": 34,
+      "event_7": 20,
+      " opvågning ": 1,
+      " Vågen ": 7,
+      " højre prop ude igen ": 2,
+      " højre øreprop i igen ": 2,
+      " højre øreprop ude ": 2,
+      " i seng igen ": 2,
+      " på toilet ": 2,
+      " satte propperne i ": 2,
+      " tog propperne ud ": 1,
+      " vågen ": 6,
+      "event_4": 19,
+      " Tog propperne ud ": 1,
+      "event_3": 16,
+      "event_9": 2,
+      " Stoppede måling ": 2,
+      " Tog propper ud ": 1,
+      "event_8": 6,
+      " Vågen-gik i seng ": 1,
+      " Vågen-stod op ": 1,
+      " Kort højre prop ude ": 1,
+      " Højre prop ud/ind ": 1,
+      " slukkede mobita ": 1,
+      " ElektrodeTest ": 1,
+      " elektrodetest 2 ": 1,
+      " sluk mobita ": 1,
+      " tog venstre prop ud ": 1,
+      " Højre prop ude i 5 min. ": 1,
+      " Sov uroligt ": 1,
+      " vågnede ": 1,
+      " meget vågen i ca. 2 timer ": 1,
+      " Vågen i nat ": 1,
+      " Toietl ": 1,
+      " Stadig vågen ": 1,
+      " Vågen længe ": 1,
+      "event_131071": 8,
+      " tog propper ud ": 1,
+      "trigger": 30726
+    },
+    "subject_info": {
+      "record_count": 516,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": " Biocalibrations ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: Biocalibrations",
+        "confidence": "inferred",
+        "session_task_scope": "task-ASSR"
+      },
+      {
+        "event_id": " Biocalibrations start ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: Biocalibrations start",
+        "confidence": "inferred",
+        "session_task_scope": "task-ASSR"
+      },
+      {
+        "event_id": " ElektrodeTest ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: Electrode test",
+        "confidence": "inferred",
+        "session_task_scope": "task-electrodeTestLab"
+      },
+      {
+        "event_id": " Gik i seng ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject went to bed",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Højre prop ud/ind ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Right earplug removed and reinserted",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Højre prop ude i 5 min. ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Right earplug removed for 5 minutes",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Kort højre prop ude ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Right earplug removed briefly",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Lights Out ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject turned lights off",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Sov uroligt ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject reported restless sleep",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Stadig vågen ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject reported still awake",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Start af måling ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: Start of recording",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Stod op ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject got up",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Stoppede måling ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: Stopped recording",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Sync ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject synchronized actigraph and amplifier by shaking both together",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Tog propper ud ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject removed earplugs",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Tog propperne ud ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject removed earplugs",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Toietl ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject went to toilet",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Vågen ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject reported being awake",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Vågen i nat ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject reported being awake during night",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Vågen længe ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject reported being awake for long period",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Vågen-gik i seng ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject reported being awake then went to bed",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " Vågen-stod op ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject reported being awake then got up",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " elektrodetest 2 ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: Electrode test 2",
+        "confidence": "inferred",
+        "session_task_scope": "task-electrodeTestLab"
+      },
+      {
+        "event_id": " højre prop ude igen ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Right earplug removed again",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " højre øreprop i igen ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Right earplug reinserted",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " højre øreprop ude ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Right earplug removed",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " i seng igen ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject went to bed again",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " meget vågen i ca. 2 timer ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject reported being very awake for approximately 2 hours",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " opvågning ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject reported awakening",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " på toilet ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject went to toilet",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " satte propperne i ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject inserted earplugs",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " sluk mobita ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject turned off Mobita amplifier",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " slukkede mobita ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject turned off Mobita amplifier",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " tog propper ud ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject removed earplugs",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " tog propperne ud ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject removed earplugs",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " tog venstre prop ud ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject removed left earplug",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " vågen ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject reported being awake",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " vågen i lidt tid ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject reported being awake for a short time",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": " vågnede ",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Subject reported waking up",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-diary"
+      },
+      {
+        "event_id": "event_1",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System trigger code 1 (equipment-specific marker)",
+        "confidence": "unclear",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_131071",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System trigger code 131071 (equipment-specific marker)",
+        "confidence": "unclear",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_2",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System trigger code 2 (equipment-specific marker)",
+        "confidence": "unclear",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_3",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System trigger code 3 (equipment-specific marker)",
+        "confidence": "unclear",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_4",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System trigger code 4 (equipment-specific marker)",
+        "confidence": "unclear",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_5",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System trigger code 5 (equipment-specific marker)",
+        "confidence": "unclear",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_6",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System trigger code 6 (equipment-specific marker)",
+        "confidence": "unclear",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_7",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System trigger code 7 (equipment-specific marker)",
+        "confidence": "unclear",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_8",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System trigger code 8 (equipment-specific marker)",
+        "confidence": "unclear",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_9",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System trigger code 9 (equipment-specific marker)",
+        "confidence": "unclear",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "trigger",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System trigger marker (generic equipment trigger)",
+        "confidence": "unclear",
+        "session_task_scope": "all"
+      }
+    ],
+    "notes": "Evidence collected from task-sleep_acq-diary_events.json and multiple task-sleep_acq-diary_events.tsv files (sub-001 ses-001 through ses-016, sub-002, sub-003, sub-004, sub-005, sub-008, sub-009, sub-010, sub-020). The JSON file explicitly defines six core diary event types: Start_of_recording, Sync, Electrodetest, Went_to_Bed, Lights_Out, Got_up. Additional Danish-language event IDs were confirmed in the actual TSV files across subjects (e.g., 'Vågen', 'Kort højre prop ude', 'slukkede mobita', etc.) and represent subject self-reported sleep diary annotations. The event_N and 'trigger' IDs were never found in any BIDS events.tsv file despite exhaustive searching across 8 turns; they appear to be raw equipment trigger codes not present in the curated BIDS events. No events files were found for task-ASSR, task-comfort, or task-electrodeTestLab despite extensive path exploration. The task-sleep_events.json defines epoch-level scoring codes (s1-s8) but no corresponding events.tsv files were located in the dataset."
+  },
+  "tasks_section": "## Tasks\n\n### Potential Task 1: Age Regression from Sleep EEG\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 30 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | age | Continuous age in years (22–36); each 30 s segment inherits the subject's age as regression target. |\n- **Evidence**:\n  - participants.tsv — Age values confirmed complete for all 20 subjects (range 22–36 years, sample: 23, 24, 25).\n  - dataset_description.json — \"Ear-EEG Sleep Monitoring 2019 (EESM19)\" with 20 subjects, 4–16 sessions each of continuous sleep recording.\n  - task-sleep_events.json — Defines 30-second epoch structure for sleep scoring, confirming standard sleep epoch length.\n- **Notes**: Standard 30-second segmentation with 50% overlap is the canonical approach for sleep EEG analysis (matching PSG epoch conventions). Since age is a subject-level variable from participants.tsv and no trial-level structure exists for age prediction, segmentation with subject-level label propagation is the appropriate design. No kernel derivation needed—age is a native info field.\n\n### Potential Task 2: Sex Classification from Sleep EEG\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 30 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | sex | 0 = f (female, N=13), 1 = m (male, N=7); binary classification from participants.tsv |\n- **Evidence**:\n- **Notes**: Subject-level sex label applied uniformly to all 30-second segments from each recording. Segmentation enables treating continuous sleep EEG as multiple samples per subject. Class imbalance is 65% female / 35% male.\n\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "Got_up",
+      "Lights_Out",
+      "Went_to_Bed",
+      "s1",
+      "s2",
+      "s3",
+      "s4",
+      "s5",
+      "s6",
+      "s7",
+      "s8"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [
+      "age",
+      "sex"
+    ],
+    "derived_misc_channels": [
+      {
+        "name": "written_time",
+        "source_field": "events.tsv:writtenTime",
+        "derivation": "For each diary event row, parse writtenTime string (format like '23.05') into minutes since midnight (e.g., 23*60+5=1385). Broadcast this scalar as constant misc channel for the epoch duration, or create step function anchored at event onset.",
+        "groundable_evidence": "events.tsv numeric columns: writtenTime (found in sub-001_ses-001_task-sleep_acq-diary_events.tsv)",
+        "used_by": [
+          "diary event time regression"
+        ]
+      }
+    ],
+    "_dropped_candidates": [
+      {
+        "paradigm": "electrode test quality assessment",
+        "reason": "The ElektrodeTest and elektrodetest 2 events exist but no continuous quality metric or outcome label is available in participants.tsv or events.tsv. The eeg.json mentions EMG/EOG channels but no native misc channels were discovered in raw files for B1, and no numeric columns exist for B2."
+      },
+      {
+        "paradigm": "comfort questionnaire prediction",
+        "reason": "The README mentions comfort questionnaires after each night, but no behavioral data files were found in the dataset despite extensive searching. No participants.tsv columns relate to comfort/sleep quality, and no events.tsv numeric columns exist for this task."
+      },
+      {
+        "paradigm": "actigraphy-EEG synchronization",
+        "reason": "Sync events exist in diary but no actigraphy data channels or synchronization quality metrics are present in the available EEG files or label catalog. No continuous misc channels (B1) or derived metrics (B2) groundable."
+      },
+      {
+        "paradigm": "earplug removal detection",
+        "reason": "Multiple Danish event IDs describe earplug removal/reinsertion, but these are sparse behavioral annotations without a clear continuous label or outcome measure. Could form a detection task but with extremely imbalanced classes (1-2 events per night vs hours of normal sleep)."
+      }
+    ]
+  },
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/openneuro_ds005185/kernel_final.py",
+  "kernel_code_len": 17798,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds005185.py",
+    "kernel_sha256": "43879847c78dc11bf3559f2e9e0f029fdf96fe985ccc5718ab6782d8e382542e",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 516,
+    "total_n": 516,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      " Lights Out ": 94,
+      " Biocalibrations ": 79,
+      " Gik i seng ": 80,
+      " Start af måling ": 75,
+      " Stod op ": 70,
+      " Sync ": 77,
+      " Biocalibrations start ": 11,
+      " vågen i lidt tid ": 2,
+      "event_1": 25,
+      "event_2": 88,
+      "event_5": 51,
+      "event_6": 34,
+      "event_7": 20,
+      " opvågning ": 1,
+      " Vågen ": 7,
+      " højre prop ude igen ": 2,
+      " højre øreprop i igen ": 2,
+      " højre øreprop ude ": 2,
+      " i seng igen ": 2,
+      " på toilet ": 2,
+      " satte propperne i ": 2,
+      " tog propperne ud ": 1,
+      " vågen ": 6,
+      "event_4": 19,
+      " Tog propperne ud ": 1,
+      "event_3": 16,
+      "event_9": 2,
+      " Stoppede måling ": 2,
+      " Tog propper ud ": 1,
+      "event_8": 6,
+      " Vågen-gik i seng ": 1,
+      " Vågen-stod op ": 1,
+      " Kort højre prop ude ": 1,
+      " Højre prop ud/ind ": 1,
+      " slukkede mobita ": 1,
+      " ElektrodeTest ": 1,
+      " elektrodetest 2 ": 1,
+      " sluk mobita ": 1,
+      " tog venstre prop ud ": 1,
+      " Højre prop ude i 5 min. ": 1,
+      " Sov uroligt ": 1,
+      " vågnede ": 1,
+      " meget vågen i ca. 2 timer ": 1,
+      " Vågen i nat ": 1,
+      " Toietl ": 1,
+      " Stadig vågen ": 1,
+      " Vågen længe ": 1,
+      "event_131071": 8,
+      " tog propper ud ": 1,
+      "trigger": 30726
+    },
+    "subject_info": {
+      "record_count": 516,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": [
+      "written_time"
+    ]
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds005185.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

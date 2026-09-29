@@ -1,0 +1,52 @@
+--- zenodo_saa/analysis.md (pre-v3)
++++ zenodo_saa/analysis.md (v3)
+@@ -32,26 +32,42 @@
+ | `device` | missing | N/A |
+ ## Tasks
+ 
+-### Classical Task 1: Spatial auditory attention decoding
++### Classical Task 1: Spatial auditory attention decoding — (trigger code for attended speaker)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.1 s *, tmax = 1.0 s *, target_events = [`Needs verification from trigger codes`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `(trigger code for attended speaker)`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | (trigger code for attended speaker) | 0 | Attend to left/right spatial location * |
+-  | (trigger code for unattended) | 1 | Attend to other location * |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | (trigger code for attended speaker) | 0 | Attend to left/right spatial location * |  |
+ - **Evidence**:
+   - DOI: 10.5281/zenodo.3357164 — Spatial Auditory Attention dataset for decoding attended spatial auditory stream/location
+ - **Kernel Notes**: Trigger codes (~3856-3966) in Status channel mark stimulus onsets. Exact mapping to attention conditions requires dataset README verification. Variable sampling rates (1024-4096 Hz) require per-subject resampling.
+ 
++### Classical Task 2: Spatial auditory attention decoding — (trigger code for unattended)
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.1 s *, tmax = 1.0 s *, target_events = [`Needs verification from trigger codes`]
++- **Label Route**: `info`
++- **Label Field**: `(trigger code for unattended)`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | (trigger code for unattended) | 1 | Attend to other location * |  |
++- **Evidence**:
++  - DOI: 10.5281/zenodo.3357164 — Spatial Auditory Attention dataset for decoding attended spatial auditory stream/location
++- **Kernel Notes**: Trigger codes (~3856-3966) in Status channel mark stimulus onsets. Exact mapping to attention conditions requires dataset README verification. Variable sampling rates (1024-4096 Hz) require per-subject resampling.
++
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 1: Spatial Attention Decoding - Present Stimulus (epoch_by_event)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.1 s, tmax = 1.0 s (per stimulus onset event), target_events = see Target Definition
+-- **Label Route**: `event`
++- **Label Route**: `info`
+ - **Target Definition**: Requires mapping trigger codes to stimulus/attention labels from the dataset documentation. Stimulus-onset codes (~3856-3966) mark individual sound presentations.
+ - **Notes**: Trigger code semantics must be verified against the dataset README or companion paper. Variable sampling rates across subjects require per-subject resampling to a common rate.
+ 

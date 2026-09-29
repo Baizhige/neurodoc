@@ -1,0 +1,1197 @@
+% Required packages (add to your preamble if not already present):
+%   \usepackage[skins,breakable]{tcolorbox}
+%   \usepackage{enumitem}
+%   \usepackage{booktabs}
+%   \usepackage{xcolor}
+
+\begin{tcolorbox}[breakable,enhanced,colback=white,colframe=gray!50,boxrule=0.8pt,arc=4pt,left=8pt,right=8pt,top=6pt,bottom=6pt,title={\normalsize\bfseries NeuroAudit Rulebook v1.0.0},coltitle=black,colbacktitle=gray!15,titlerule=0.5pt]
+\small
+\par\bigskip
+\noindent\rule{\linewidth}{0.8pt}\par\nopagebreak
+\noindent{\bfseries\normalsize Part I. General Provisions}\par\nopagebreak
+\noindent\rule{\linewidth}{0.8pt}\par\smallskip
+
+\medskip\noindent{\bfseries\normalsize Chapter 1. Purpose and Scope}
+\par\nopagebreak\noindent\rule{\linewidth}{0.4pt}\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 1. Purpose}\par\smallskip
+
+\noindent This rulebook standardizes generation, review, revision, and re-review of EEG dataset \texttt{analysis.md} documents so that they can:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Provide human reviewers with consistent, explicit, actionable review standards.
+\item Provide LLM review scripts with stable, programmable, traceable decision rules.
+\item Provide structured implementation guidance for later kernels, EEGUnity exports, and HDF5 production.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 2. Scope}\par\smallskip
+
+\noindent This rulebook applies to:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Creating new dataset documents.
+\item Revising existing dataset documents.
+\item Reviewing core areas such as \texttt{Classical Task}, \texttt{Potential Task}, \texttt{Event Structure}, and metadata.
+\item Writing later LLM review rules, prompt rules, and fallback rules.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 3. Core Principles}\par\smallskip
+
+\noindent Document generation and review must follow these principles:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Truthfulness first.
+\item Actual data has priority over web descriptions.
+\item Conservatism has priority over guessing.
+\item Traceability has priority over brevity.
+\item Implementable task definitions have priority over theoretically imaginable ones.
+\end{enumerate}
+
+\medskip\noindent{\bfseries\normalsize Chapter 2. Terms}
+\par\nopagebreak\noindent\rule{\linewidth}{0.4pt}\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 4. Dataset Document}\par\smallskip
+
+\noindent A dataset document means the \texttt{analysis.md} file under a single dataset directory, or a same-structure successor version.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 5. Raw Meta}\par\smallskip
+
+\noindent \texttt{raw meta} means labels, events, codes, annotations, fields, or markers that already exist in the raw data and can be read without additional derivation. Examples include:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{trial\_type}, event codes, and event names in \texttt{events.tsv}.
+\item Raw codes in trigger or stim channels.
+\item Discrete events in raw annotation files.
+\item Directly available behavioral fields in raw tables.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 6. Super Meta}\par\smallskip
+
+\noindent \texttt{super meta} means labels or targets that do not directly exist in the raw data and must be generated, mapped, folded, paired, aggregated, joined, or otherwise derived by code, rules, or human logic. Examples include:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Response events.
+\item Binary labels folded from multiple raw classes.
+\item Clinical groups derived from filenames, participant tables, or external tables.
+\item Correct or incorrect, target or non-target, fast or slow, and similar labels derived by pairing multiple events.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 7. Kernel}\par\smallskip
+
+\noindent \texttt{kernel} means the later data-processing code or data-loading logic used to parse raw data, construct labels, route labels, and generate EEGUnity-compatible output.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 8. Label Route}\par\smallskip
+
+\noindent Historically, \texttt{Label Route} meant the final EEGUnity or MNE-compatible path where labels landed, not necessarily the raw storage form. Earlier values were:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Annotation}: time-based annotations with \texttt{onset}, \texttt{duration}, and \texttt{description}.
+\item \texttt{STIM}: trigger or stim channel route for code values or trigger pulses.
+\item \texttt{MISC}: misc channel route for numeric auxiliary labels, continuous quantities, or attached labels unsuitable as event names.
+\end{enumerate}
+
+\noindent Deprecated: \texttt{Annotation}, \texttt{STIM}, and \texttt{MISC} as route values are not allowed in new documents. Current legal values are \texttt{event}, \texttt{misc}, and \texttt{info}; see Article 77.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 9. Task}\par\smallskip
+
+\noindent A \texttt{Task} is a definition that can directly guide EEG epoching, label construction, and supervised-learning configuration.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 10. Classical Task}\par\smallskip
+
+\noindent A \texttt{Classical Task} is a core task that is supported by external evidence and can be implemented from the currently public data.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 11. Potential Task}\par\smallskip
+
+\noindent A \texttt{Potential Task} is supported by the data itself but lacks enough external evidence to confirm it as a core benchmark task, or is only a recommended, extended, or derived task.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 12. Evidence}\par\smallskip
+
+\noindent \texttt{Evidence} means external material supporting a task, parameter choice, or document judgment. It includes:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item The official dataset page.
+\item Official documentation.
+\item Papers that clearly use the dataset.
+\item Other authoritative sources.
+\end{enumerate}
+
+\medskip\noindent{\bfseries\normalsize Chapter 3. Evidence Priority and Conflict Handling}
+\par\nopagebreak\noindent\rule{\linewidth}{0.4pt}\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 13. Evidence Priority}\par\smallskip
+
+\noindent When sources conflict, use this priority order:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Verifiable data files and accompanying annotation files.
+\item Official dataset page, official README, or official documentation.
+\item Official papers or papers that clearly use the dataset.
+\item Third-party pages, blogs, or unofficial descriptions.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 14. General Conflict Rule}\par\smallskip
+
+\noindent When sources conflict, use the higher-priority evidence and record the conflict and decision in \texttt{Data Quality Notes}.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 15. Data Priority}\par\smallskip
+
+\noindent When online material or paper descriptions conflict with actual data files, the actual data files prevail. The inconsistency must still be stated explicitly.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 16. Conservative Handling}\par\smallskip
+
+\noindent If existing evidence is insufficient to confirm a field, task, or label:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Prefer downgrading it to \texttt{Potential Task}.
+\item Use placeholders such as \texttt{Needs verification}, \texttt{Variable}, \texttt{N/A}, or \texttt{null} when appropriate.
+\item Do not fabricate missing information.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 17. Implementability}\par\smallskip
+
+\noindent Even if a paper used the dataset, a task must not be treated as a valid \texttt{Classical Task} unless the public data contains labels, events, or a verifiable derivation path sufficient to implement it.\par\smallskip
+
+\medskip\noindent{\bfseries\normalsize Chapter 4. Roles}
+\par\nopagebreak\noindent\rule{\linewidth}{0.4pt}\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 18. Administrator Responsibilities}\par\smallskip
+
+\noindent Administrators are responsible for:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Deciding dataset entry names.
+\item Deciding whether to accept human revisions or rule updates in pull requests.
+\item Deciding whether a kernel must be added or rewritten.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 19. Human Reviewer Responsibilities}\par\smallskip
+
+\noindent Human reviewers are responsible for:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Reviewing whether a \texttt{Classical Task} is valid.
+\item Reviewing whether fields match actual data and official material.
+\item Deciding how to resolve conflicting information.
+\item Filling \texttt{Manual Review} when appropriate.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 20. LLM Review Script Responsibilities}\par\smallskip
+
+\noindent LLM review scripts are responsible for:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Pre-generating or pre-correcting documents under the rulebook.
+\item Detecting likely conflicts, omissions, and invalid tasks.
+\item Producing conservative, traceable suggestions without inventing raw labels.
+\end{enumerate}
+
+\par\bigskip
+\noindent\rule{\linewidth}{0.8pt}\par\nopagebreak
+\noindent{\bfseries\normalsize Part II. Specific Rules}\par\nopagebreak
+\noindent\rule{\linewidth}{0.8pt}\par\smallskip
+
+\medskip\noindent{\bfseries\normalsize Chapter 5. Meta Area}
+\par\nopagebreak\noindent\rule{\linewidth}{0.4pt}\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 21. General Field Rule}\par\smallskip
+
+\noindent \texttt{Meta Area} records identifying dataset metadata. Unless otherwise specified, fields should be concise, stable, and easy for programs to read.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 22. \texttt{Dataset}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Dataset} is the dataset identifier.
+\item It should follow \texttt{<source\_name\_id>}.
+\item Administrators decide this name.
+\item Reviewers and LLMs must not proactively modify it.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 23. \texttt{Year}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Year} records key years related to collection, processing, or release.
+\item It does not need to distinguish collection year from release year.
+\item Multiple key years may be joined with \texttt{/}, for example \texttt{2004/2021}.
+\item Continuous ranges may use \texttt{-}, for example \texttt{2008-2015/2017}.
+\item The field need not cover every historical year, but should be updated as well as trusted sources allow.
+\item Do not ignore key years clearly present in the data because a web page title shows a different year.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 24. \texttt{URL}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{URL} should preferably point to an information page that gives access to downloads or documentation.
+\item If both a direct file link and an information page exist, keep the information page.
+\item If a link is dead and cannot be replaced with an authoritative information page, delete it or replace it with an accessible authoritative page.
+\item The field does not need to be permanently valid, but must have practical review value at the time of review.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 25. \texttt{Category}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Category} must be exactly one of:
+\begin{itemize}[leftmargin=1.2em,noitemsep,topsep=1pt]
+\item \texttt{Complex Applied}
+\item \texttt{High-level Mental}
+\item \texttt{Action/Output}
+\item \texttt{Sensory/Response}
+\item \texttt{Biological State}
+\item \texttt{Others}
+\end{itemize}
+\item The field is normally proposed by a program or preprocessing LLM.
+\item Human reviewers should correct it only when the classification is clearly wrong.
+\item Do not create category values outside the six listed values.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 26. \texttt{Subjects}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Subjects} is the integer number of valid subjects in the dataset.
+\item If the official count differs from the actually usable count, prefer the actually usable count.
+\item Record this conflict in \texttt{Data Quality Notes}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 27. \texttt{Files (Completed)}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Files (Completed)} is the number of files parsed by EEGUnity as \texttt{Completed}.
+\item LLMs and human reviewers normally must not edit this field manually.
+\item If the parser result is clearly abnormal, report that the dataset needs a rescan or kernel correction instead of manually changing the count.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 28. \texttt{Channels}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Channels} is the number of channels used by files, including non-EEG channels.
+\item If only a few channel counts exist and can be listed clearly, use forms such as \texttt{32/64} or \texttt{22-128}.
+\item If the situation is complex and should not be fully enumerated, use \texttt{Variable}.
+\item LLMs or reviewers may use the clearest representation, but must avoid ambiguity.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 29. \texttt{Sampling Rate}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Sampling Rate} records the main sampling-rate information.
+\item If the whole dataset has one sampling rate, write a single value.
+\item If files, modalities, or phases differ, use multiple values or explanatory wording.
+\item If differences are complex, use \texttt{Variable} and explain in \texttt{Data Quality Notes}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 30. \texttt{Manual Review}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Only human reviewers may fill \texttt{Manual Review}.
+\item The value may be a real name, alias, or reviewer-approved identifier.
+\item Multiple reviewers should be separated by \texttt{/} in review order.
+\item LLMs must not forge, add, or impersonate a \texttt{Manual Review} mark.
+\item \texttt{Manual Review} must be inline at the end of the second meta line, after \texttt{Sampling Rate}, using \texttt{| **Manual Review**: ...}.
+\item A separate third-line \texttt{Manual Review} field is no longer allowed.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 30.1. Fixed Structure}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item The current template normally keeps only these top-level sections in this order:
+\begin{itemize}[leftmargin=1.2em,noitemsep,topsep=1pt]
+\item \texttt{\#\# Paradigm}
+\item \texttt{\#\# File Scan Result}
+\item \texttt{\#\# Tasks}
+\item \texttt{\#\# Data Quality Notes}
+\item \texttt{\#\# Kernel Responsibilities}
+\end{itemize}
+\item \texttt{\#\# File Scan Result} contains these third-level subsections in fixed order:
+\begin{itemize}[leftmargin=1.2em,noitemsep,topsep=1pt]
+\item \texttt{\#\#\# Event Structure} (required)
+\item \texttt{\#\#\# MISC Label Summary} (optional)
+\item \texttt{\#\#\# Info} (required)
+\end{itemize}
+\item Do not rename fixed section headings except for explicitly optional sections listed in this rulebook.
+\item \texttt{STIM Label Summary} is deprecated and must not be added to new documents. Discrete events from trigger or stim channels must be registered in \texttt{\#\#\# Event Structure}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 30.2. No Extra Sections}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Unless maintainers explicitly request it, do not add non-template top-level sections such as \texttt{\#\# Meta}, standalone \texttt{\#\# References}, or custom extension sections.
+\item If extra explanation is necessary, prefer task \texttt{Notes}, \texttt{Data Quality Notes}, \texttt{\#\#\# Kernel Notes} under \texttt{\#\# Kernel Responsibilities}, or review records.
+\item When substantially revising historical documents, remove extra sections that violate the current structure unless maintainers explicitly request otherwise.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 30.3. Automated Behavior for \texttt{Manual Review}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item LLM stages in generation pipelines must not fill \texttt{Manual Review}, including placeholders such as \texttt{Pending}, \texttt{TBD}, or \texttt{N/A}.
+\item LLMs should output \texttt{| **Manual Review**:} at the end of the second meta line with nothing after the colon. If template reuse accidentally inserts a non-empty value, post-processing must clear it.
+\item This field may be non-empty only when a human reviewer manually edits \texttt{analysis.md}; use Article 30 for formatting.
+\end{enumerate}
+
+\medskip\noindent{\bfseries\normalsize Chapter 6. Paradigm Area}
+\par\nopagebreak\noindent\rule{\linewidth}{0.4pt}\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 31. General Paradigm Rule}\par\smallskip
+
+\noindent \texttt{Paradigm Area} should describe the dataset`s experimental paradigm, task form, subject behavior, and recording method, and should match the actual data.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 32. Consistency Requirements}\par\smallskip
+
+\noindent Paradigm descriptions must align with:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Data directories and file structure.
+\item Event files.
+\item Official pages and official documentation.
+\item Authoritative papers that clearly use the dataset.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 33. Data Priority}\par\smallskip
+
+\noindent When online material conflicts with data material, the data prevails.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 34. No Over-Inference}\par\smallskip
+
+\noindent Paradigm descriptions must not turn a paper`s experimental goal, theoretical hypothesis, or common analysis style into a label task supposedly supported by the public data unless the data provides implementable events or labels.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 35. Description Boundary}\par\smallskip
+
+\noindent Paradigm descriptions may state the original experimental intent, but must distinguish:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item The goal of the experimental design.
+\item The labels and tasks actually available in the public data.
+\end{enumerate}
+
+\medskip\noindent{\bfseries\normalsize Chapter 7. Kernel Responsibilities Area}
+\par\nopagebreak\noindent\rule{\linewidth}{0.4pt}\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 36. Purpose and Structure}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Kernel Responsibilities Area} records the core semantic judgment for the dataset at the kernel level.
+\item The section uses blockquote metadata fields. The current version keeps only \texttt{Super Meta Required} and \texttt{Status}, in that order.
+\item Do not add other fields, custom blocks, or explanatory text in this section.
+\item Historical fields such as Type 1/2/3 template text, \texttt{Selected Mode}, \texttt{Why}, \texttt{Primary Label Routes}, and \texttt{Web Reference Used for Decision} are deprecated and should be removed during substantial revisions.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 37. \texttt{Super Meta Required}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Super Meta Required} states whether the dataset has target labels that require extra derivation, pairing, folding, mapping, or cross-file joining.
+\item Legal values are exactly:
+\begin{itemize}[leftmargin=1.2em,noitemsep,topsep=1pt]
+\item \texttt{Yes}: at least one task in \texttt{Tasks Area} has \texttt{Meta Level = super}.
+\item \texttt{No}: all tasks have \texttt{Meta Level = raw}.
+\end{itemize}
+\item Do not use synonyms or case variants.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 38. Deciding \texttt{Super Meta Required}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item If any task, including \texttt{Classical Task} or \texttt{Potential Task}, has \texttt{Meta Level = super}, \texttt{Super Meta Required} must be \texttt{Yes}.
+\item If all tasks have \texttt{Meta Level = raw}, \texttt{Super Meta Required} should be \texttt{No}.
+\item If this field conflicts with \texttt{Tasks Area}, \texttt{Tasks Area} prevails and this field must be corrected.
+\item LLM review scripts may infer and fill this field from \texttt{Tasks Area}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 42.1. \texttt{Status}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Status} marks whether the current document text is sufficient to support later kernel refactoring, EEGUnity export, or event and label reconstruction.
+\item \texttt{Status} is a dataset-level field, not a per-task field.
+\item Although \texttt{Status} is metadata, it must currently be written in the \texttt{Kernel Responsibilities Area} blockquote, not in a new top-level section.
+\item LLM review scripts, human reviewers, or maintainers may update \texttt{Status} according to the latest judgment.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 42.2. Legal \texttt{Status} Values}\par\smallskip
+
+\noindent \texttt{Status} may use only these four machine-readable values:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{wait\_kernel\_update}
+\item \texttt{wait\_manual\_review}
+\item \texttt{completed}
+\item \texttt{hallucination}
+\end{enumerate}
+
+\noindent Do not replace them with synonyms, natural-language phrases, or case variants.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 42.2.1. Authority Boundary for \texttt{completed} and \texttt{hallucination}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Only human reviewers may assign \texttt{completed} or \texttt{hallucination}. LLM review scripts must not proactively assign either value.
+\item At the current stage, LLM review scripts should choose only between \texttt{wait\_kernel\_update} and \texttt{wait\_manual\_review}, and should default conservatively to \texttt{wait\_manual\_review}.
+\item If the current text is already sufficient to support existing tasks and does not expose a clear structural kernel gap, LLM review scripts should output \texttt{wait\_manual\_review} and wait for final human confirmation.
+\item After human review is complete, the final status must be \texttt{completed} or \texttt{hallucination}; it must not remain \texttt{wait\_manual\_review} or \texttt{wait\_kernel\_update}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 42.2.2. Boundary for \texttt{hallucination}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{hallucination} is a severe document-level defect flag for cases where the entire \texttt{analysis.md} cannot be trusted.
+\item Triggering conditions include, but are not limited to:
+\begin{itemize}[leftmargin=1.2em,noitemsep,topsep=1pt]
+\item The dataset URL is invalid and no key field can be verified.
+\item The document describes a dataset that does not match the actual dataset.
+\item Task definitions, \texttt{Event Structure}, and \texttt{Paradigm} have no credible basis and cannot be repaired by reasonable supplementation.
+\item Dataset information is so incomplete that even experts cannot make a reliable judgment.
+\end{itemize}
+\item \texttt{hallucination} does not apply to local issues such as one incorrect task citation or partially inaccurate channel description. Local issues should be recorded in \texttt{Data Quality Notes}, and status should remain \texttt{completed} after human review.
+\item For datasets marked \texttt{hallucination}, administrators will consider deleting the document or arranging a rescan. Reviewers are not required to keep repairing it.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 42.3. Deciding \texttt{Status}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{wait\_kernel\_update} means the document clearly exposes a structural semantic kernel gap: \texttt{Event Structure}, \texttt{MISC Label Summary}, \texttt{Label Route}, companion-file ingestion, or \texttt{super meta} integration is not yet sufficient to support existing tasks stably. This is an intermediate state for LLM scripts or automatic scanning.
+\item \texttt{wait\_manual\_review} means no clear structural kernel gap is exposed, or remaining doubts mainly require human confirmation of task validity, task retention, or final release. This is the default LLM output status.
+\item \texttt{completed} means a human reviewer confirms that document review is finished. Known quality issues may still exist if they are recorded in \texttt{Data Quality Notes} and the overall document is trustworthy and ready to proceed. \texttt{completed} means the reviewer has done due diligence, not that the document is flawless.
+\item \texttt{hallucination} means a human reviewer judges the whole document to have unrecoverable severe defects and that it should be handled by administrators.
+\item The following must not, by themselves, justify \texttt{wait\_kernel\_update}:
+\begin{itemize}[leftmargin=1.2em,noitemsep,topsep=1pt]
+\item Routine preprocessing, filtering, rereferencing, or downsampling.
+\item Artifact rejection, bad-segment removal, or bad-file exclusion.
+\item General data quality control.
+\item Implementation details such as training parameters, epoch length, or model hyperparameters.
+\item Guessing from outside the document that the kernel might be unfinished or unverified.
+\end{itemize}
+\item If the document semantically explains relevant events, labels, companion files, or metadata access paths and presents tasks as currently valid, do not mark \texttt{wait\_kernel\_update} only because of implementation caution.
+\item When a dataset has multiple issue types, judgment priority is: \texttt{hallucination} above all other values; \texttt{wait\_manual\_review} above \texttt{wait\_kernel\_update}; \texttt{wait\_kernel\_update} above \texttt{completed}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 42.4. Blockquote Position and Order}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item In the current version, blockquote metadata under \texttt{Kernel Responsibilities Area} must appear in this order:
+\begin{itemize}[leftmargin=1.2em,noitemsep,topsep=1pt]
+\item \texttt{Super Meta Required}
+\item \texttt{Status}
+\end{itemize}
+\item Do not create separate top-level sections or custom blocks for these fields.
+\item If a maintenance script batch-rewrites \texttt{Status}, it should modify only the fixed line for that field and should not rewrite unrelated body text.
+\end{enumerate}
+
+\medskip\noindent{\bfseries\normalsize Chapter 8. File Scan Result Area}
+\par\nopagebreak\noindent\rule{\linewidth}{0.4pt}\par\smallskip
+
+\noindent \texttt{\#\# File Scan Result} summarizes the kernel scan over raw data files, including kernel fingerprint, event structure, MISC labels, and subject information. It always contains \texttt{\#\#\# Event Structure} and \texttt{\#\#\# Info}; \texttt{\#\#\# MISC Label Summary} appears only when the dataset exposes misc-route labels or scanned native misc channels. The area begins with a kernel fingerprint blockquote.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 42.5. Kernel Fingerprint}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item The start of \texttt{\#\# File Scan Result} should record the kernel fingerprint used to generate the scan result as a blockquote.
+\item The reference format is:
+\begin{quote}\ttfamily\footnotesize
+> **Kernel SHA256**: `<full\_hash>`\\
+> **EEGUnity Version**: `X.Y.Z`\\
+> **Scan Type**: Full\\
+\end{quote}
+\item \texttt{Kernel SHA256} is the hash of the kernel file content and is calculated by maintenance scripts; it should not be filled manually. \texttt{EEGUnity Version} is the version used during scanning.
+\item \texttt{Scan Type} is \texttt{Full} or \texttt{Sampled (N/M files)}.
+\item If the dataset has no dataset-specific kernel, or scanning can be completed through the default/generic parser path without a dedicated kernel file, \texttt{Kernel SHA256} may be \texttt{N/A}.
+\item Neurodoc maintains this blockquote automatically. Human reviewers and LLMs must not manually edit the hash value.
+\item The frontend display layer treats all consecutive \texttt{>} lines at the beginning of \texttt{\#\# File Scan Result} as Kernel Fingerprint and renders them as one blockquote without parsing field names. This keeps the frontend independent of field changes.
+\item Do not insert HTML comments such as \texttt{<!-- AUTO-KERNEL-... -->} inside \texttt{\#\#\# Event Structure} or other subsections. All kernel-derived information must be written directly in standard Markdown.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 43. Table Form}\par\smallskip
+
+\noindent \texttt{\#\#\# Event Structure} must be presented as a table. The table may be empty, but emptiness has rule consequences.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 44. Required Columns}\par\smallskip
+
+\noindent The table must contain at least:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Event ID}
+\item \texttt{Count (total)}
+\item \texttt{Type}
+\item \texttt{Meta Level}
+\item \texttt{Meaning}
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 45. Consequences of an Empty Table}\par\smallskip
+
+\noindent When \texttt{Event Structure} is empty or explicitly states that no valid event labels exist:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Do not keep \texttt{epoch\_by\_event\_hdf5} tasks.
+\item Do not keep \texttt{epoch\_by\_long\_event\_hdf5} tasks.
+\item Normally only \texttt{epoch\_by\_segmentation\_hdf5} may be considered.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 46. Legal \texttt{Type} Values}\par\smallskip
+
+\noindent \texttt{Type} may use only:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{event}: discrete events or time spans that can be used for tasks, including stimuli, responses, state transitions, sleep stages, and other domain events.
+\item \texttt{admin}: system, boundary, or excluded events, such as device markers, file boundaries, or motion-artifact markers.
+\end{enumerate}
+
+\noindent The historical \texttt{short}, \texttt{long}, and \texttt{rest} subdivisions are deprecated. Event duration behavior is determined by \texttt{Epoch Method} in \texttt{Tasks Area}, not repeated in \texttt{Event Structure}.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 47. \texttt{admin} Events}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{admin} events should remain explicitly listed in \texttt{Event Structure}; do not delete them by default.
+\item \texttt{admin} events must not normally be used as \texttt{target\_events} for supervised-learning tasks.
+\item Any exception requires strong evidence and a reason in task \texttt{Notes}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 48. Deciding \texttt{Meta Level}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Events that can be read directly from raw data are \texttt{raw}.
+\item Events that require pairing, folding, derivation, mapping, joining, or reconstruction are \texttt{super}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 49. First-Pass Documentation}\par\smallskip
+
+\noindent On first document creation, \texttt{Event Structure} should normally record only \texttt{raw meta}. If \texttt{super meta} is not yet supported by a stable kernel, do not pretend it is a raw event.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 50. Handling Mismatches with Source Material}\par\smallskip
+
+\noindent When \texttt{Event Structure} seriously disagrees with dataset documentation:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item If task validity is not affected, warn in \texttt{Data Quality Notes}.
+\item If task validity is affected, correct event interpretation, downgrade tasks, delete tasks, or report that a rescan is needed.
+\item Do not keep incorrect tasks without explaining the conflict.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 51. Parser Differences}\par\smallskip
+
+\noindent When mismatch is likely caused by kernel parser differences:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item If task validity is not affected, correction may be postponed.
+\item If task validity is affected, clearly mark that a rescan or kernel correction is needed.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 51.1. Linkage with \texttt{Status}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item If \texttt{Event Structure}, \texttt{MISC Label Summary} when present, and \texttt{Tasks Area} already form a sufficiently consistent evidence chain, do not mark \texttt{wait\_kernel\_update} only because of preprocessing, artifact rejection, quality control, or implementation details.
+\item If the document is already sufficient as textual support for existing \texttt{Classical Task} or \texttt{Potential Task} entries, but final release still requires administrator or human-reviewer confirmation, LLM review scripts should temporarily mark \texttt{wait\_manual\_review}.
+\item If \texttt{Event Structure} cannot support existing tasks and the issue mainly concerns human judgment about task validity, event semantics, evidence conflict, label mapping, deletion, or downgrading, \texttt{Status} should normally be \texttt{wait\_manual\_review}.
+\item \texttt{Status} may be \texttt{completed} only when \texttt{Event Structure}, relevant tasks, route explanations, and \texttt{MISC Label Summary} when present form a sufficiently consistent and traceable implementation basis, and a human reviewer or administrator has confirmed it.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 52. Context-Dependent Events}\par\smallskip
+
+\noindent If the same event code has different meanings across files, tasks, or experimental phases, it is a context-dependent event. For such events:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Do not interpret their meaning without file-level context.
+\item Warn explicitly in \texttt{Event Structure} or \texttt{Data Quality Notes}.
+\item Without stable context rules, do not use them directly in high-confidence \texttt{Classical Task} entries.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 53. Later Updates for \texttt{super meta}}\par\smallskip
+
+\noindent When a \texttt{Classical Task} depends on \texttt{super meta}, human reviewers are normally not required to manually rewrite \texttt{Event Structure} first. Such updates should be handled by later kernel and LLM automation.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 53.1. Optional Notes under \texttt{Event Structure}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item An optional explanatory \texttt{Note} may appear after the \texttt{Event Structure} table, but is not required.
+\item The note must not repeat the meanings of the \texttt{Type} enum values; \texttt{event} and \texttt{admin} are defined by this rulebook.
+\item Use the note only when:
+\begin{itemize}[leftmargin=1.2em,noitemsep,topsep=1pt]
+\item Raw data has parsing ambiguity, such as the same event code meaning different things in different files.
+\item Events come from multiple sources, such as companion files and trigger channels, and their merge logic matters.
+\item Other explanations materially affect kernel implementation.
+\end{itemize}
+\item Do not use the note to introduce new events that are absent from the table.
+\item If a later kernel update changes event representation, first update this note and related task routes, then decide whether to rewrite the main \texttt{Event Structure} table.
+\item When neurodoc writes new scan results, any change to the \texttt{Event Structure} table, including count changes or event additions or removals, clears this note automatically. If the table is unchanged, the note remains unchanged.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 53.2. Companion Files and External Tables}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Labels, event intervals, or auxiliary fields directly present in official companion files, \texttt{participants.tsv}, behavioral tables, sleep-stage files, or other formal sidecars may normally be used as valid information sources.
+\item If such information is a discrete event or time span and will be used for \texttt{target\_events} or event-route tasks, it must first be registered in \texttt{Event Structure}.
+\item If such information is an epoch-level class, scalar, count, score, or continuous quantity, do not force it into \texttt{Event Structure}; route it through \texttt{MISC Label Summary} or task \texttt{Notes} as appropriate.
+\item These fields are \texttt{raw} only when directly readable without extra derivation. If they require pairing, mapping, normalization, cross-file joining, or rule-based reconstruction, they are \texttt{super}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 54. General Rule}\par\smallskip
+
+\noindent \texttt{\#\#\# MISC Label Summary} describes the source, meaning, and implementation of numeric or continuous auxiliary labels.\par\smallskip
+
+\noindent \texttt{STIM Label Summary} is deprecated. Discrete events originally stored in trigger or stim channels must be registered in \texttt{\#\#\# Event Structure} instead.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 55. When It Appears}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item If any task uses \texttt{misc} as \texttt{Label Route}, \texttt{\#\#\# MISC Label Summary} must exist.
+\item If no task uses the \texttt{misc} route, this subsection may be omitted.
+\item Native misc channels found during scanning may be registered here for future tasks even when no current task uses them.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 56. Content Requirements}\par\smallskip
+
+\noindent \texttt{\#\#\# MISC Label Summary} is a table with fixed columns \texttt{Channel | Source | Meta | Notes}:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Channel}: misc channel name, referenced by \texttt{Label Route = misc} tasks in the first column of \texttt{Target Definition}.
+\item \texttt{Source}: field source, such as \texttt{native (raw misc in EEG file)}, \texttt{native (events.tsv column: response\_time)}, or \texttt{derived from participants.tsv: p\_factor}.
+\item \texttt{Meta}: \texttt{raw} or \texttt{super}. Derived misc must be \texttt{super}; see Article 77.8.
+\item \texttt{Notes}: units, alignment, derivation logic, fill rules, and other implementation notes.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 57. Automation Principle}\par\smallskip
+
+\noindent This section is normally generated by the kernel and LLM. Human reviewers should edit it only when it is clearly wrong, incomplete, or in conflict with task dependencies.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 57.1. General Rule}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{\#\#\# Info} records availability of file-level metadata exported by the kernel for \texttt{Label Route = info} tasks, typically from \texttt{raw.info["description"]["eegunity\_description"]}.
+\item This subsection is required and must not be omitted. If information is entirely missing, still list the relevant fields and mark them \texttt{missing}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 57.2. Fields and Completeness}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{\#\#\# Info} is a table with fixed columns \texttt{Field}, \texttt{Completeness}, and \texttt{Notes}.
+\item \texttt{Field} names come from the kernel-exported \texttt{eegunity\_description} dictionary. The rulebook does not define a closed mandatory field list.
+\item Common examples include \texttt{age}, \texttt{sex}, \texttt{device}, \texttt{handedness}, \texttt{group}, or other dataset-specific metadata keys. Any key exported by the kernel should be registered as-is and should appear only once.
+\item If the kernel exports no usable info fields, the table may still contain placeholder rows such as \texttt{age}, \texttt{sex}, or \texttt{device}, marked \texttt{missing}, to make missingness explicit.
+\item Any \texttt{Info Field} referenced by a \texttt{Label Route = info} task must be one of the fields registered in this table.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 57.3. Legal \texttt{Completeness} Values}\par\smallskip
+
+\noindent \texttt{Completeness} may use only:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{complete}: every EEG record in the dataset has this field.
+\item \texttt{partial (x/n)}: the field exists for \texttt{x} out of \texttt{n} scanned records.
+\item \texttt{partial}: the field is known to be incomplete, but the stable scanned ratio is not recorded in the table.
+\item \texttt{incomplete}: many missing values are known, but a stable ratio is not recorded.
+\item \texttt{missing}: the field is entirely absent.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 57.4. \texttt{Notes} Column}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Notes} is optional supplementary explanation, such as numeric range, enum values, or missingness reasons.
+\item If no supplement is needed, write \texttt{N/A}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 57.5. Automation Principle}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Field discovery and \texttt{Completeness} should normally be inferred automatically from kernel scan results, based on the metadata the kernel actually writes into \texttt{eegunity\_description}.
+\item \texttt{Notes} may be assisted by the LLM during document generation, but the existence of fields and their completeness status should remain scan-derived.
+\item Human reviewers should edit this subsection only when automatic filling is clearly wrong, stale, or semantically misleading.
+\end{enumerate}
+
+\medskip\noindent{\bfseries\normalsize Chapter 9. Retired}
+\par\nopagebreak\noindent\rule{\linewidth}{0.4pt}\par\smallskip
+
+\noindent The former Chapter 9, \texttt{MISC Label Summary}, has been merged into the \texttt{MISC Label Summary} articles under Chapter 8. This chapter number is retained as a placeholder and has no active content.\par\smallskip
+
+\medskip\noindent{\bfseries\normalsize Chapter 10. Tasks Area}
+\par\nopagebreak\noindent\rule{\linewidth}{0.4pt}\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 58. Role of the Tasks Area}\par\smallskip
+
+\noindent \texttt{Tasks Area} is the most important executable area in the document. It should directly guide EEG epoching, label generation, and later implementation.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 59. Task Headings}\par\smallskip
+
+\noindent Task headings must use one of:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{\#\#\# Classical Task N: ...}
+\item \texttt{\#\#\# Potential Task N: ...}
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 60. Task Field Order}\par\smallskip
+
+\noindent Each task should normally contain these fields in stable order:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Task Type}
+\item \texttt{Epoch Method}
+\item \texttt{Epoch Parameters}
+\item \texttt{Label Route}
+\item \texttt{Meta Level}
+\item \texttt{Target Definition}
+\item \texttt{Super Meta Notes}, if applicable
+\item \texttt{Evidence}, required for \texttt{Classical Task}
+\item \texttt{Notes}, as free supplementary text with no forced format. It may be used for super-meta derivation steps, parameter inference, review notes, and similar content. The old field name \texttt{Kernel Notes} is unified as \texttt{Notes} from v3 onward.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 61. Historical Legacy Syntax}\par\smallskip
+
+\noindent Some historical documents may write \texttt{segmentation} as \texttt{Task Type}. From this rulebook onward:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Task Type} should use only \texttt{classification} or \texttt{regression}.
+\item \texttt{epoch\_by\_segmentation\_hdf5} is only an \texttt{Epoch Method}.
+\item Historical documents need not be batch-cleaned immediately, but new documents and new revisions should follow this rule.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 62. Conditions for \texttt{Classical Task}}\par\smallskip
+
+\noindent A \texttt{Classical Task} is valid only when both conditions hold:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Evidence shows that external literature or an authoritative source clearly used this dataset or an identifiable subset of it.
+\item The evidence clearly supports the current task objective, label definition, or supervision target.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 62.1. Explicitness Required for \texttt{Classical Task}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Key fields in a \texttt{Classical Task} must not use vague placeholders.
+\item Key fields include at least:
+\begin{itemize}[leftmargin=1.2em,noitemsep,topsep=1pt]
+\item \texttt{Task Type}
+\item \texttt{Epoch Method}
+\item \texttt{Epoch Parameters}
+\item \texttt{Label Route}
+\item \texttt{Meta Level}
+\item \texttt{Target Definition}
+\item \texttt{Evidence}
+\end{itemize}
+\item Vague placeholders or vague styles include:
+\begin{itemize}[leftmargin=1.2em,noitemsep,topsep=1pt]
+\item \texttt{Needs verification}
+\item \texttt{TBD}
+\item \texttt{task-dependent}
+\item \texttt{see Target Definition}
+\item \texttt{Variable}
+\item \texttt{N/A}
+\item \texttt{unknown}
+\item parameters marked with \texttt{*} or another undefined uncertainty marker
+\item any broad description that cannot directly guide implementation
+\end{itemize}
+\item If there is not enough basis for explicit values, the task must not remain a \texttt{Classical Task}; downgrade it to \texttt{Potential Task}, mark it for review, or delete it.
+\item LLMs and human reviewers may use judgment to choose the best explicit values for \texttt{Classical Task}.
+\item The best explicit value should be chosen in this priority order:
+\begin{itemize}[leftmargin=1.2em,noitemsep,topsep=1pt]
+\item official page or official documentation recommendation
+\item actual values used in papers that clearly use the dataset
+\item reasonable values chosen by a reviewer or LLM based on domain knowledge
+\end{itemize}
+\item If the chosen value is not quoted directly from the official page or paper, briefly explain the judgment in task \texttt{Notes}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 63. When to Use \texttt{Potential Task}}\par\smallskip
+
+\noindent Use \texttt{Potential Task} when:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item The data itself supports the task, but external evidence is insufficient.
+\item Literature proves the dataset was used, but does not prove this exact task.
+\item The task is a reasonable derived, recommended, or engineering task rather than the dataset`s recognized main task.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 63.1. Minimum Explicitness for \texttt{Potential Task}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item A \texttt{Potential Task} may be more conservative than a \texttt{Classical Task}, but must remain readable, reviewable, and implementable.
+\item At minimum, \texttt{Task Type}, \texttt{Epoch Method}, \texttt{Label Route}, and \texttt{Meta Level} must have explicit legal values.
+\item If required parameters for an \texttt{Epoch Method} are unclear, do not merge alternatives into one task using \texttt{or}, \texttt{task-dependent}, or \texttt{see Target Definition}. Split into multiple candidates, move the uncertainty to review notes, or delete the task.
+\item If a task is only a possible research direction without a stable label source or epoch definition, do not keep it in \texttt{Tasks Area}; move it to review records or \texttt{Data Quality Notes}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 64. Downgrading}\par\smallskip
+
+\noindent When an existing \texttt{Classical Task} no longer satisfies Article 62, downgrade it to \texttt{Potential Task} rather than keeping it as \texttt{Classical Task}.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 65. Deletion}\par\smallskip
+
+\noindent When a task depends on labels, events, or derivation paths that do not exist in the data and cannot be reconstructed by trusted stable rules, delete it.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 66. Coexistence}\par\smallskip
+
+\noindent One dataset may contain multiple \texttt{Classical Task} and multiple \texttt{Potential Task} entries, but each task must have independent and self-consistent support.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 67. \texttt{Task Type}}\par\smallskip
+
+\noindent \texttt{Task Type} may use only:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{classification}
+\item \texttt{regression}
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 68. \texttt{Epoch Method}}\par\smallskip
+
+\noindent \texttt{Epoch Method} may use only:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{epoch\_by\_event\_hdf5}
+\item \texttt{epoch\_by\_long\_event\_hdf5}
+\item \texttt{epoch\_by\_segmentation\_hdf5}
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 69. General Rule for \texttt{Epoch Parameters}}\par\smallskip
+
+\noindent \texttt{Epoch Parameters} must include at least the parameters required by the selected \texttt{Epoch Method}; see Articles 70-72. The semantic rule \texttt{epoch\_parameters\_complete} in \texttt{detect.py} enforces this minimum set with severity \texttt{error} for both \texttt{Classical Task} and \texttt{Potential Task}.\par\smallskip
+
+\noindent Additional optional parameters accepted by \texttt{MNE.Epoch}, such as \texttt{baseline}, \texttt{reject}, or \texttt{picks}, may be added as \texttt{key = value} pairs and are not constrained by \texttt{epoch\_parameters\_complete}.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 70. Required Parameters for \texttt{epoch\_by\_event\_hdf5}}\par\smallskip
+
+\noindent When using \texttt{epoch\_by\_event\_hdf5}, provide at least:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{tmin}
+\item \texttt{tmax}
+\item \texttt{target\_events}
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 71. Required Parameters for \texttt{epoch\_by\_long\_event\_hdf5}}\par\smallskip
+
+\noindent When using \texttt{epoch\_by\_long\_event\_hdf5}, provide at least:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{tmin}
+\item \texttt{tmax}
+\item \texttt{overlap}
+\item \texttt{target\_events}
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 72. Required Parameters for \texttt{epoch\_by\_segmentation\_hdf5}}\par\smallskip
+
+\noindent When using \texttt{epoch\_by\_segmentation\_hdf5}, provide at least:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{segment\_length}
+\item \texttt{overlap}
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 73. Parameter Sources}\par\smallskip
+
+\noindent \texttt{Epoch Parameters} should be supported by \texttt{Evidence} when possible. If evidence does not provide all parameters, human reviewers and LLMs may choose the best explicit values conservatively, using this priority:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Recommended values from official pages or official documentation.
+\item Actual values used in references that clearly use the dataset.
+\item Reasonable values chosen by a reviewer or LLM based on domain knowledge.
+\end{enumerate}
+
+\noindent Filled parameters must be explicit and directly implementable; do not replace them with vague placeholders.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 74. Valid Sources for \texttt{target\_events}}\par\smallskip
+
+\noindent \texttt{target\_events} in \texttt{Epoch Parameters} may only come from entries in \texttt{Event Structure} that explicitly exist and have \texttt{Type = event}.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 75. No Invented \texttt{target\_events}}\par\smallskip
+
+\noindent If a task`s \texttt{target\_events} do not exist in \texttt{Event Structure}, or the corresponding entries have \texttt{Type = admin}, the task must not be treated as valid.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 76. Human Review Handling}\par\smallskip
+
+\noindent When \texttt{target\_events} and \texttt{Event Structure} are inconsistent, human reviewers should do one of:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Adjust them to real existing labels.
+\item Mark in the submission notes that a rescan is needed.
+\item Delete the task.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 77. \texttt{Label Route}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Label Route} describes the source and storage form of the task`s supervision signal. Legal values are:
+\begin{itemize}[leftmargin=1.2em,noitemsep,topsep=1pt]
+\item \texttt{event}: supervision comes from the event stream, namely discrete events in \texttt{\#\#\# Event Structure}, regardless of whether raw storage was annotation or stim channel.
+\item \texttt{misc}: supervision is numeric or continuous and stored in a misc channel registered in \texttt{\#\#\# MISC Label Summary}.
+\item \texttt{info}: supervision comes from file-level subject or device properties registered in \texttt{\#\#\# Info}, such as sex, age, or group.
+\end{itemize}
+\item \texttt{Label Route}, \texttt{target\_events}, and \texttt{Target Definition} must be consistent:
+\begin{itemize}[leftmargin=1.2em,noitemsep,topsep=1pt]
+\item \texttt{Label Route = event}: \texttt{Target Definition} uses an \texttt{Event ID -> y} mapping table.
+\item \texttt{Label Route = misc}: \texttt{Target Definition} uses two columns, \texttt{MISC Channel Name} and \texttt{Y Mapping Notes}.
+\item \texttt{Label Route = info}: \texttt{Target Definition} uses two columns, \texttt{Info Field} and \texttt{Y Mapping Notes}; see Article 77.2.
+\end{itemize}
+\item For \texttt{misc} and \texttt{info} routes, the label source is uniquely specified by the first column of \texttt{Target Definition}; do not additionally declare \texttt{Label Field}.
+\item If a task is an exception, explain the reason in task \texttt{Notes}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 77.1. \texttt{misc} Route Usage: Epoch-Level Scalars and Continuous Values}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item The \texttt{misc} route stores epoch-level numeric labels, continuous quantities, or categorical labels mapped from channel values, such as \texttt{response\_time}, ratings, density, duration, physiological indicators, or derived factor scores such as \texttt{p\_factor}.
+\item Epoch anchor events, which define epoch boundaries, are independent from the supervision-signal route. \texttt{Label Route = misc} does not prevent \texttt{Epoch Method} from using event anchoring or segmentation.
+\item \texttt{misc} sources are of two kinds:
+\begin{itemize}[leftmargin=1.2em,noitemsep,topsep=1pt]
+\item Native misc: a misc channel already present in raw files, or a numeric \texttt{events.tsv} column such as \texttt{response\_time} that can be directly read and filled per segmentation. \texttt{Meta Level = raw}.
+\item Derived misc: a misc channel newly created by the kernel from external tables, such as \texttt{participants.tsv} or companion files, or from derivation logic. Values are filled per segmentation, with subject-level values constant across all segmentations for that subject. \texttt{Meta Level = super}; Article 77.8 applies.
+\end{itemize}
+\item One dataset may contain multiple misc channels, such as \texttt{misc:p\_factor}, \texttt{misc:externalizing}, or \texttt{misc:response\_time}. Each task may reference only one; that channel name must appear in the first column of \texttt{Target Definition}.
+\item Tasks using this route require \texttt{\#\#\# MISC Label Summary} to register source, unit, alignment, and necessary derivation logic.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 77.2. \texttt{Target Definition} Format for \texttt{Label Route = info}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item When \texttt{Label Route = info}, \texttt{Target Definition} uses this format:
+\begingroup\footnotesize
+\begin{tabular}{@{}p{\dimexpr 0.88\linewidth/2\relax}p{\dimexpr 0.88\linewidth/2\relax}@{}}
+\toprule
+\textbf{Info Field} & \textbf{Y Mapping Notes} \\
+\midrule
+\texttt{sex} & Male -> 0; Female -> 1 \\
+\bottomrule
+\end{tabular}
+\endgroup
+\item Values in \texttt{Info Field} must match field names registered in \texttt{\#\#\# Info}.
+\item If that field has \texttt{Completeness = missing}, \texttt{partial (x/n)}, or \texttt{incomplete}, the task cannot be a \texttt{Classical Task}; it may be at most a \texttt{Potential Task}, and task \texttt{Notes} should describe missingness.
+\item The \texttt{info} route applies only to raw file-level fields directly exported by the kernel into \texttt{\#\#\# Info}, such as sex, age, device, or native group. If median split, normalization, pairing, cross-file joining, or derivation is needed, use derived misc instead; see Articles 77.1 and 77.8.
+\item \texttt{Y Mapping Notes} may freely describe how original values map to \texttt{y}. If \texttt{y} directly follows the field value, write \texttt{no mapping}.
+\item Each \texttt{info} route task may use only one source field; therefore \texttt{Target Definition} may contain only one row.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 77.3. \texttt{Label Field} and the Single-Source Rule}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Label Route = event} tasks do not use \texttt{Label Field}.
+\item \texttt{Label Route} in \texttt{\{misc, info\}} tasks also no longer declare \texttt{Label Field}; the label source is specified by the first column of \texttt{Target Definition}.
+\item The first column of \texttt{Target Definition} must be locatable inside the document:
+\begin{itemize}[leftmargin=1.2em,noitemsep,topsep=1pt]
+\item \texttt{Label Route = misc}: it appears in the \texttt{Channel} column of \texttt{\#\#\# MISC Label Summary}.
+\item \texttt{Label Route = info}: it appears in the \texttt{Field} column of \texttt{\#\#\# Info}.
+\end{itemize}
+\item For \texttt{misc} and \texttt{info}, the first column of \texttt{Target Definition} may contain only one unique value, and the table may contain only one row. This restriction does not apply to \texttt{event} tasks.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 77.4. \texttt{Target Definition} Format Matrix}\par\smallskip
+
+\noindent \texttt{Target Definition} table columns are determined by \texttt{Label Route x Task Type}:\par\smallskip
+
+\begingroup\footnotesize
+\begin{tabular}{@{}p{\dimexpr 0.88\linewidth/3\relax}p{\dimexpr 0.88\linewidth/3\relax}p{\dimexpr 0.88\linewidth/3\relax}@{}}
+\toprule
+\textbf{Label Route} & \textbf{Task Type} & \textbf{Header columns} \\
+\midrule
+\texttt{event} & \texttt{classification} & \texttt{\textbar{} Event ID \textbar{} y \textbar{} Meaning \textbar{}} \\
+\texttt{event} & \texttt{regression} & \texttt{\textbar{} Event ID \textbar{} Value \textbar{} Meaning \textbar{}} (rare) \\
+\texttt{misc} & \texttt{classification} & \texttt{\textbar{} MISC Channel Name \textbar{} Y Mapping Notes \textbar{}} \\
+\texttt{misc} & \texttt{regression} & \texttt{\textbar{} MISC Channel Name \textbar{} Y Mapping Notes \textbar{}} \\
+\texttt{info} & \texttt{classification} & \texttt{\textbar{} Info Field \textbar{} Y Mapping Notes \textbar{}} \\
+\texttt{info} & \texttt{regression} & \texttt{\textbar{} Info Field \textbar{} Y Mapping Notes \textbar{}} \\
+\bottomrule
+\end{tabular}
+\endgroup
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Headers and column order must exactly match this matrix. LLMs and human reviewers must not add or remove columns.
+\item For event routes, every \texttt{Event ID} cell must come from \texttt{\#\#\# Event Structure}; see Article 74.
+\item For \texttt{misc} and \texttt{info} routes, \texttt{Y Mapping Notes} may be \texttt{no mapping} when \texttt{y} equals the raw field or channel value, or may freely describe a custom conversion.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 77.5. Single-Target Task Rule}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Each task encodes one learning target: one task equals one supervision route and one target schema.
+\item Multidimensional labels, such as psychological four-factor scores \texttt{internalizing/externalizing/attention/p\_factor}, must be split into separate tasks. Each \texttt{misc} or \texttt{info} task may use only one \texttt{MISC Channel Name} or one \texttt{Info Field}.
+\item \texttt{event} tasks may contain multiple \texttt{Event ID} rows when those rows jointly define a valid classification or regression mapping.
+\item If one external evidence item covers multiple dimensions, reuse the same evidence in each split task instead of merging tasks.
+\item For \texttt{misc} and \texttt{info}, the first column of \texttt{Target Definition}, namely \texttt{MISC Channel Name} or \texttt{Info Field}, may contain only one unique value within the task.
+\item More complex composite tasks, such as a joint label built from multiple sources, may conceptually be expressed through combinations of simpler tasks. For consistency and brevity, this document currently defines no dedicated schema for complex tasks.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 77.6. Mapping Requirements for the \texttt{misc} Route}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Label Route = misc} tasks may be \texttt{classification} or \texttt{regression}.
+\item When \texttt{Task Type = classification} and the label comes from a misc channel, \texttt{Y Mapping Notes} must clearly explain how channel values map to class labels.
+\item Thresholding, binning, median split, taking the first value, aggregation, or any other conversion on \texttt{misc} must be described in \texttt{Y Mapping Notes} or \texttt{Notes}.
+\item If the misc channel itself is kernel-derived, Article 77.8 still applies.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 77.7. Multiple-Class Requirement for \texttt{classification}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item For \texttt{Task Type = classification}, the \texttt{y} column in \texttt{Target Definition} must contain at least two distinct values.
+\item For \texttt{Label Route = event}, a \texttt{y} cell may be either one class id or a comma-separated list of class ids when one event is intentionally mapped to multiple categories.
+\item If evidence or data supports only a single class, for example only a cue-onset marker with no contrast class, change the task to \texttt{regression} when applicable or downgrade/delete it. Do not keep a one-class classification task.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 77.8. Derived Misc Implies Super Meta}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Any misc channel newly created by a kernel is derived data. Any task carried by it must have \texttt{Meta Level = super}, and \texttt{Super Meta Required = Yes}; see Article 37.
+\item Derived misc must be explicitly declared as derived in \texttt{\#\#\# MISC Label Summary}. It is recommended to describe derivation steps in task \texttt{Notes}, including source column, fill method per segmentation, units, and outlier handling. This recommendation is not enforced by \texttt{detect.py}; it is review and implementation guidance.
+\item If the source field for derivation does not exist in the dataset, including \texttt{events.tsv}, \texttt{participants.tsv}, or native misc channels, the task is invalid and must be deleted.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 78. \texttt{Meta Level}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Meta Level = raw} means the task can be implemented from raw labels.
+\item \texttt{Meta Level = super} means the task depends on additional derived, joined, or transformed labels.
+\item If the label requires event pairing, class folding, subject-info mapping, standard-system mapping, or continuous-variable calculation, mark it \texttt{super}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 79. \texttt{Evidence}}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Evidence} presents external support for task validity or parameter choice.
+\item \texttt{Classical Task} must provide \texttt{Evidence}.
+\item \texttt{Potential Task} may provide \texttt{Evidence}, but it is not mandatory.
+\item \texttt{Evidence} for \texttt{Classical Task} must be a specific locatable and identifiable source, not a vague placeholder.
+\item If a DOI is unknown but an official page, competition page, or formal literature page is locatable, write that specific source instead of a vague phrase such as \texttt{DOI unknown}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 80. Evidence Review Focus}\par\smallskip
+
+\noindent Human reviewers and LLMs should focus on:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Whether the evidence clearly used this dataset.
+\item Whether the evidence clearly supports this task rather than only a similar task.
+\item Whether label definitions in the evidence match the public data.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 81. Hallucination Prevention}\par\smallskip
+
+\noindent Because LLMs may hallucinate paper interpretations, any case that cannot be confirmed as both using this dataset and supporting the task should be downgraded or deleted rather than forced to remain a \texttt{Classical Task}.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 82. Task \texttt{Notes}}\par\smallskip
+
+\noindent From v3 onward, \texttt{- **Notes**:} inside a task block, formerly \texttt{Kernel Notes}, is free supplementary explanation with no forced structure and no \texttt{detect.py} enforcement. Common uses include:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Label mapping details, file-level context dependencies, or external table parsing requirements.
+\item Event pairing, window-generation rules, or admin and pseudo-events to exclude.
+\item Super-meta derivation steps; see Article 77.8.
+\item Rationale for inferred \texttt{Epoch Parameters}; see Article 73.
+\item Human judgment when \texttt{Classical Task} parameters differ from official or reference values.
+\end{enumerate}
+
+\noindent Task \texttt{Notes} and \texttt{\#\#\# Kernel Notes} under \texttt{\#\# Kernel Responsibilities} are different: the former is free annotation for a single task; the latter is implementation-level, cross-task kernel memo. They may both exist, but should not be conflated.\par\smallskip
+
+\medskip\noindent{\bfseries\normalsize Chapter 11. Data Quality Notes Area}
+\par\nopagebreak\noindent\rule{\linewidth}{0.4pt}\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 83. General Requirement}\par\smallskip
+
+\noindent \texttt{Data Quality Notes Area} should use bullet points to record data quality issues, source conflicts, parsing risks, and use limitations.\par\smallskip
+\noindent The \texttt{\#\# Data Quality Notes} heading must always be present. If there are no material notes to record, the area may be left empty; placeholder bullets are not required.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 84. Cases to Record}\par\smallskip
+
+\noindent Record these cases when possible:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Official material conflicts with actual data.
+\item Data are missing, excluded, empty, or lack events or fields.
+\item Subject count, file count, channel count, or sampling rate differs from official description.
+\item Event semantics depend on file-level context.
+\item Some tasks are valid only for a subset of files.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 85. Stance Requirement}\par\smallskip
+
+\noindent When official material conflicts with real data, explicitly state that this document follows the real data.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 86. No Exhaustiveness Requirement}\par\smallskip
+
+\noindent This area does not need to list every issue, but human reviewers and LLMs should try to record quality issues that materially affect task validity.\par\smallskip
+
+\medskip\noindent{\bfseries\normalsize Chapter 12. References Area, Deprecated}
+\par\nopagebreak\noindent\rule{\linewidth}{0.4pt}\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 87. Deprecation}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{References Area} is a legacy section from early document versions.
+\item Current \texttt{analysis.md} documents should normally not keep a standalone \texttt{References Area}.
+\item Sources directly related to a task should be written under \texttt{Evidence} in the corresponding \texttt{Classical Task} or \texttt{Potential Task}.
+\item Sources related to data conflicts, quality issues, or review decisions should be written in the relevant note or review record, not separately summarized as \texttt{References Area}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 88. Transition Rule}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Historical documents may temporarily keep \texttt{References Area}.
+\item Once a document is substantially revised, remove that section unless maintainers explicitly request otherwise.
+\item LLMs should not add \texttt{References Area} when generating new versions.
+\end{enumerate}
+
+\medskip\noindent{\bfseries\normalsize Chapter 12.1. STIM Label Summary Transition Rule}
+\par\nopagebreak\noindent\rule{\linewidth}{0.4pt}\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 88.1. Deprecation}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{STIM Label Summary} is a v0.1 legacy section and is deprecated from v0.2 onward.
+\item All discrete events from trigger or stim channels should be registered in \texttt{Event Structure}, with \texttt{Type} set to \texttt{event} or \texttt{admin}.
+\item Deprecated \texttt{Event Structure.Type} values \texttt{short}, \texttt{long}, and \texttt{rest} are also no longer used from v0.2 onward. Their information is now represented by \texttt{Epoch Method} in \texttt{Tasks Area}.
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 88.2. Existing-Document Transition}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item Existing historical \texttt{STIM Label Summary} sections do not have to be migrated immediately.
+\item Once a document is substantially revised, migrate discrete events from \texttt{STIM Label Summary} into \texttt{Event Structure} and delete \texttt{STIM Label Summary}.
+\item Existing \texttt{Event Structure} rows with \texttt{Type} equal to \texttt{short}, \texttt{long}, or \texttt{rest} should be rewritten to \texttt{event} during substantial revision; \texttt{admin} remains unchanged.
+\item LLM review scripts must not add \texttt{STIM Label Summary} or use deprecated \texttt{Event Structure.Type} enum values when generating or revising documents.
+\end{enumerate}
+
+\par\bigskip
+\noindent\rule{\linewidth}{0.8pt}\par\nopagebreak
+\noindent{\bfseries\normalsize Part III. Supplementary Rules}\par\nopagebreak
+\noindent\rule{\linewidth}{0.8pt}\par\smallskip
+
+\medskip\noindent{\bfseries\normalsize Chapter 13. Placeholders, Format, and Style}
+\par\nopagebreak\noindent\rule{\linewidth}{0.4pt}\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 90. Allowed Placeholders}\par\smallskip
+
+\noindent When specific information cannot be determined, use:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{Needs verification}
+\item \texttt{Variable}
+\item \texttt{N/A}
+\item \texttt{null}
+\end{enumerate}
+
+\noindent These placeholders should normally not be used in key fields of \texttt{Classical Task}.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 91. Preserve Raw Names}\par\smallskip
+
+\noindent When raw event names, raw code values, or raw labels can be used directly, preserve them as-is. Do not rename them merely for language polish.\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 92. Style}\par\smallskip
+
+\noindent Documents should be technical, factual, and executable. Avoid promotional, exaggerated, or unverifiable conclusions.\par\smallskip
+
+\medskip\noindent{\bfseries\normalsize Chapter 14. Review Action Types}
+\par\nopagebreak\noindent\rule{\linewidth}{0.4pt}\par\smallskip
+
+\smallskip\noindent{\bfseries\normalsize Article 93. Review Actions}\par\smallskip
+
+\noindent Later human and LLM reviews may use these action categories:\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item \texttt{keep}
+\item \texttt{correct}
+\item \texttt{downgrade}
+\item \texttt{delete}
+\item \texttt{mark Needs verification}
+\item \texttt{mark rescan required}
+\item \texttt{mark kernel correction required}
+\end{enumerate}
+
+\smallskip\noindent{\bfseries\normalsize Article 94. Action Use}\par\smallskip
+
+\begin{enumerate}[leftmargin=1.5em,noitemsep,topsep=2pt]
+\item If a field adjustment can solve the problem, prefer \texttt{correct}.
+\item If task evidence is insufficient but the data support the task, prefer \texttt{downgrade}.
+\item If the label source does not exist or cannot be reconstructed stably, use \texttt{delete}.
+\item If the parsing chain has an obvious programmatic issue, mark \texttt{rescan required} or \texttt{kernel correction required}.
+\end{enumerate}
+\normalsize
+\end{tcolorbox}

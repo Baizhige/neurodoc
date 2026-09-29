@@ -1,0 +1,307 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 8,
+    "category": "",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 30,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 5,
+    "task_synthesis": 11,
+    "kernel_loop": 9,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T05:31:29.750094+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds004447.v1.0.1.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds004447.v1.0.1",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds004447.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_3389_fneur_2026_1746958.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fneur.2026.1746958",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "classification": "junk",
+      "ref": "",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as junk in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10.1038_s41597-023-02260-6.pdf",
+      "ref": "10.1038/s41597-023-02260-6",
+      "title": "High-density scalp electroencephalogram dataset during sensorimotor rhythm-based brain-computer interfacing",
+      "classification": "relevant",
+      "cot_reasoning": "This is the primary data descriptor paper for openneuro_ds004447. It explicitly describes the dataset consisting of 4 separate datasets with 128-channel HD-EEG during SMR-based BCI neurofeedback training. The paper details the experimental paradigm with motor imagery of right-hand movement, trial structures (rest, ready, imagery, blank periods), and defines the BCI task with trial-by-trial performance feedback. The dataset contains event markers for different trial periods and performance outcomes, enabling ML tasks.",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 0,
+      "paradigm": "SMR-based BCI neurofeedback with right-hand motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "6s rest + 1s ready + 6s imagery + 8s blank; 20 trials/block, 6 blocks/day for Dataset 1",
+      "target_events": [
+        "rest onset",
+        "ready cue",
+        "imagery period onset",
+        "blank period onset",
+        "feedback delivery"
+      ],
+      "label_mapping": "Continuous SMR-ERD magnitude (relative spectral power change 8-13Hz at C3) used as feedback signal; binary reward/punishment/neutral feedback groups in Dataset 1",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Primary dataset publication describing 130+ participants across 4 sub-datasets with detailed trial structure, event markers, and SMR-ERD magnitude as continuous outcome measure for BCI performance"
+    },
+    {
+      "filename": "paper_10_1038_s41597_023_02260_6.pdf",
+      "ref": "10.1038/s41597-023-02260-6",
+      "title": "High-density scalp electroencephalogram dataset during sensorimotor rhythm-based brain-computer interfacing",
+      "classification": "relevant",
+      "cot_reasoning": "This appears to be a duplicate of File 1 with identical content and DOI (10.1038/s41597-023-02260-6). It is the same data descriptor paper for openneuro_ds004447, describing the same 4-dataset collection of 128-channel HD-EEG during SMR-based BCI neurofeedback with right-hand motor imagery. All experimental details, trial structures, and task definitions are identical to File 1.",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 0,
+      "paradigm": "SMR-based BCI neurofeedback with right-hand motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "6s rest + 1s ready + 6s imagery + 8s blank; 20 trials/block, 6 blocks/day for Dataset 1",
+      "target_events": [
+        "rest onset",
+        "ready cue",
+        "imagery period onset",
+        "blank period onset",
+        "feedback delivery"
+      ],
+      "label_mapping": "Continuous SMR-ERD magnitude (relative spectral power change 8-13Hz at C3) used as feedback signal; binary reward/punishment/neutral feedback groups in Dataset 1",
+      "meta_level": "raw",
+      "super_meta_note": "Duplicate of File 1 - same paper",
+      "evidence_desc": "Identical to File 1: primary dataset publication with detailed trial structure, event markers, and SMR-ERD magnitude as continuous outcome measure"
+    },
+    {
+      "filename": "paper_10_1088_2057_1976_ada1dc.pdf",
+      "ref": "10.1088/2057-1976/ada1dc",
+      "title": "Identification and analysis of reference-independent movement event-related desynchronization",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper focuses on reference-independent ERD analysis for motor execution tasks, not motor imagery. The study uses a different experimental paradigm (actual upper-limb movement, not imagery) and does not mention openneuro_ds004447 or any of the Iwama/Ushiba datasets. The authors are from USP/UNICAMP Brazil, not Keio University. The work is methodological (exploring electrode pair combinations) and uses their own data, not the target dataset.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "No mention of openneuro_ds004447; different institution, different paradigm (motor execution vs. motor imagery), different dataset"
+    },
+    {
+      "filename": "paper_10_1109_tnsre_2024_3365197.pdf",
+      "ref": "10.1109/tnsre.2024.3365197",
+      "title": "Rapid-IAF: Rapid Identification of Individual Alpha Frequency in EEG Data Using Sequential Bayesian Estimation",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses the openneuro_ds004447 dataset (described as 'large-scale dataset of scalp EEG during motor imagery-based BCI use (N = 138, the total number of participants across four data collections)'). The authors (Iwama and Ushiba from Keio University) are the same as the dataset creators. The paper defines a concrete ML task: predicting individual alpha frequency (IAF) from short resting-state EEG segments and validating against SMR-ERD frequency (ISF) during BCI use. The task involves regression of IAF and classification-like evaluation of BCI performance using pseudo-online operation.",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 0,
+      "paradigm": "SMR-based BCI neurofeedback with right-hand motor imagery; resting-state IAF estimation",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Resting-state EEG segments (<26 seconds); task periods with 6s imagery for SMR-ERD validation",
+      "target_events": [
+        "rest period for IAF estimation",
+        "motor imagery period for ISF validation"
+      ],
+      "label_mapping": "Continuous IAF estimate (Hz) compared to ISF (Hz); SMR-ERD magnitude as continuous performance measure",
+      "meta_level": "super",
+      "super_meta_note": "Uses derived features (power spectral density, IAF estimates) from raw EEG; performs algorithmic analysis on dataset",
+      "evidence_desc": "Explicitly states 'large-scale dataset of scalp EEG during motor imagery-based BCI use (N = 138, the total number of participants across four data collections)' which matches openneuro_ds004447; validates Rapid-IAF algorithm against SMR-ERD performance"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset contains clear event markers with phase-based trial structure (rest/ready/task/interval) that supports multiple ML tasks. The 'task' phase (value=3) corresponds to right-hand motor imagery periods, enabling SMR-ERD classification/regression against rest (value=1), as well as phase detection across the full trial structure. The primary publication confirms this is an SMR-based BCI neurofeedback dataset with continuous SMR-ERD magnitude as outcome measure.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 418,
+    "total_n": 418,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_2": 5090,
+      "event_4": 1237,
+      "event_5": 1237,
+      "event_6": 91,
+      "event_1": 327,
+      "event_3": 3270
+    },
+    "subject_info": {
+      "record_count": 418,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "event_1",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: rest",
+        "confidence": "confirmed",
+        "session_task_scope": "Pattern A sessions (ses-01, ses-19)"
+      },
+      {
+        "event_id": "event_2",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: task",
+        "confidence": "confirmed",
+        "session_task_scope": "Pattern B sessions (ses-02 through ses-18)"
+      },
+      {
+        "event_id": "event_3",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: rest",
+        "confidence": "confirmed",
+        "session_task_scope": "Pattern B sessions (ses-02 through ses-18)"
+      },
+      {
+        "event_id": "event_4",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: ready",
+        "confidence": "confirmed",
+        "session_task_scope": "Pattern A sessions (ses-01, ses-19)"
+      },
+      {
+        "event_id": "event_5",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: interval",
+        "confidence": "confirmed",
+        "session_task_scope": "Pattern A sessions (ses-01, ses-19)"
+      },
+      {
+        "event_id": "event_6",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: task",
+        "confidence": "confirmed",
+        "session_task_scope": "Pattern A sessions (ses-01, ses-19)"
+      }
+    ],
+    "notes": "Two distinct session paradigms confirmed across all subjects. Pattern A (ses-01, ses-19): 4-event cycle with values 1=rest, 2=ready, 3=task, 4=interval — evidenced by sub-001/ses-01, sub-001/ses-19, sub-002/ses-01, sub-002/ses-19, sub-003/ses-01, sub-003/ses-19. Pattern B (ses-02 through ses-18): 2-event cycle with values 1=rest, 2=task — evidenced by sub-001/ses-02, sub-001/ses-05, sub-001/ses-10, sub-001/ses-11, sub-001/ses-15, sub-002/ses-02, sub-002/ses-05, sub-002/ses-10, sub-002/ses-11, sub-002/ses-15, sub-003/ses-02, sub-003/ses-04, sub-003/ses-10. The task-smrbmi_events.json confirms 'value' column stores 'EEG Marker or Trigger value' and 'instruction' column stores 'content of task participants executed'. Event counts match: event_1 (327) = rest in Pattern A; event_2 (5090) = task in Pattern B; event_3 (3270) = rest in Pattern B; event_4 (1237) = ready in Pattern A; event_5 (1237) = interval in Pattern A; event_6 (91) = task in Pattern A."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Rest vs Task State Detection (Pattern B)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 6 s *, target_events = [`event_2`, `event_3`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `event_3` | 0 | rest (Pattern B sessions: ses-02 through ses-18) |\n  | `event_2` | 1 | task (Pattern B sessions: ses-02 through ses-18) |\n- **Evidence**:\n  - 10.1038/s41597-023-02260-6 — Pattern B sessions (ses-02 through ses-18) contain two trial phases: rest (event_3, value=1) and task (event_2, value=2), forming a simplified 2-event cycle that supports rest vs task state classification.\n  - 10.1109/tnsre.2024.3365197 — Task periods are 6s duration; rest periods vary but typically 5-6s; epoch window 0-6s from phase onset used for consistency.\n- **Notes**: This task uses Pattern B's phase markers (event_2=task, event_3=rest) for binary state classification. These are trial phase onsets, not motor imagery class labels. The 0-6s window captures the full task period and comparable rest period. Sessions ses-01 and ses-19 (Pattern A) are excluded as they use a different 4-event structure.\n\n### Potential Task 1: Age Regression from Continuous EEG\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 6 s *, overlap = 0.0, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | `age` | Continuous age in years (18.0–27.0); used as regression target |\n- **Evidence**:\n  - `participants.tsv` — Age values complete for all 30 subjects (range 18–27, mean ~22.5)\n- **Notes**: Segmentation-based approach with no event dependency; each 6-second segment from continuous EEG is labeled with the subject's age from participants.tsv. This tests whether EEG spectral or spatial features during SMR-BCI task performance predict participant age. Segment length matches typical task period duration in the paradigm.\n\n### Potential Task 2: Gender Classification from Continuous EEG\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 6 s *, overlap = 0.0 *, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | gender | female → 0, male → 1 (binary; 5 female / 25 male, class imbalance) |\n- **Evidence**:\n  - (none — potential task)\n- **Notes**: Segmentation-based task using 6-second non-overlapping windows from continuous SMR-BCI neurofeedback EEG. Subject-level gender label from participants.tsv applied to all segments from that subject. Tests sex-related EEG differences during SMR-BCI neurofeedback training.\n\n### Potential Task 3: Handedness Classification from Continuous EEG\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 6 s *, overlap = 0.0 *, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | handedness | left → y=0, right → y=1 (29 right, 1 left; severely imbalanced) |\n- **Evidence**:\n- **Notes**: Segments continuous EEG into non-overlapping 6-second windows. Each segment inherits the subject's handedness from participants.tsv as the label. Tests whether lateralization-related EEG features during SMR-based BCI neurofeedback (right-hand motor imagery) can discriminate left- vs right-handed individuals despite the extreme class imbalance (1:29 ratio).\n\n### Potential Task 4: Continuous EEG Segmentation with Age Regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 6 s *, overlap = 0.0 *, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | `age` | Continuous age in years (18.0–27.0); used directly as regression target |\n- **Evidence**:\n- **Notes**: Archetype C segmentation task with no event discrimination. The 6-second non-overlapping windows partition continuous EEG recordings into fixed-length segments, with each segment inheriting the participant's age from participants.tsv as the regression target. This differs from event-based approaches by treating the data as naturalistic/continuous without relying on trial phase markers.\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "event_1",
+      "event_2",
+      "event_3",
+      "event_4",
+      "event_5",
+      "event_6"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [
+      "age",
+      "gender",
+      "handedness"
+    ],
+    "derived_misc_channels": [
+      {
+        "name": "trial_index",
+        "source_field": "events.tsv:trial",
+        "derivation": "Extract 'trial' column from events.tsv and broadcast as constant misc channel value for each trial's epochs. For each event row, assign the trial number to all timepoints in that trial's epoch.",
+        "groundable_evidence": "events.tsv numeric columns catalog: trial (found_in=sub-001_ses-01_task-smrbmi_events.tsv)",
+        "used_by": [
+          "trial phase detection with trial index regression"
+        ]
+      }
+    ],
+    "_dropped_candidates": [
+      {
+        "paradigm": "EMG-based regression",
+        "reason": "No native misc channels discovered in raw files (EMGChannelCount=2 in eeg.json but not found in actual channel list from EDF header sample). Catalog shows none discovered."
+      },
+      {
+        "paradigm": "SMR-ERD magnitude from events.tsv columns",
+        "reason": "The events.tsv 'value' and 'instruction' columns are categorical/integer codes for trial phases, not continuous SMR-ERD magnitude. No numeric column in events.tsv provides ERD magnitude. The primary paper describes ERD as computed from signal, not stored in events."
+      },
+      {
+        "paradigm": "feedback type classification (reward/punishment/neutral)",
+        "reason": "Paper mentions binary reward/punishment/neutral feedback groups in Dataset 1, but this dataset is specifically Dataset 3 (BMI-HDEEG dataset 3) with 30 subjects, not Dataset 1 with 130+ subjects. No events.tsv column or participants.tsv column indicates feedback type for this dataset."
+      },
+      {
+        "paradigm": "IAF/ISF regression from events",
+        "reason": "Paper 10.1109/tnsre.2024.3365197 mentions IAF estimation, but this is derived from signal analysis, not stored in events.tsv or participants.tsv. No groundable source for IAF values in catalog."
+      }
+    ]
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/openneuro_ds004447/kernel_final.py",
+  "kernel_code_len": 14553,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds004447.py",
+    "kernel_sha256": "d00e23c7d1839dd526925e72f4d56bb242867eebd3bb53938d58fb8b7fc7e15b",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 418,
+    "total_n": 418,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_1": 4180,
+      "event_2": 4180,
+      "event_3": 910,
+      "event_4": 910
+    },
+    "subject_info": {
+      "record_count": 418,
+      "age_complete": 418,
+      "sex_complete": 418,
+      "device_complete": 0,
+      "age_examples": [
+        "22",
+        "24",
+        "27",
+        "26",
+        "20",
+        "23"
+      ],
+      "sex_examples": [
+        "female",
+        "male"
+      ]
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds004447.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

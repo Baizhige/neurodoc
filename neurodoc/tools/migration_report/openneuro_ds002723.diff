@@ -1,0 +1,132 @@
+--- openneuro_ds002723/analysis.md (pre-v3)
++++ openneuro_ds002723/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds002723` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002723
+ **Category**: Complex Applied | **Subjects**: 8 | **Files (Completed)**: 44 | **Channels**: 37 | **Sampling Rate**: 1000 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -29,23 +29,108 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Affective Music Condition Classification (8-class)
++### Classical Task 1: Affective Music Condition Classification (8-class) — 1
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0 s, tmax = 60 s, overlap = 0.0, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `1`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|-|
+-  | `1` | 0 | Music condition 1 |
+-  | `2` | 1 | Music condition 2 |
+-  | `3` | 2 | Music condition 3 |
+-  | `4` | 3 | Music condition 4 |
+-  | `5` | 4 | Music condition 5 |
+-  | `6` | 5 | Music condition 6 |
+-  | `7` | 6 | Music condition 7 |
+-  | `9` | 7 | Music condition 9 |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `1` | 0 | Music condition 1 |  |
++- **Evidence**:
++  - DOI: 10.1038/s41597-020-0507-6 — Data descriptor explicitly describing the BCMI testing dataset (ds002723) with 8 participants, ~1.3 hours per participant of EEG+ECG+GSR recordings. The synthetic music conditions 1-9 are used as affective state markers, with condition 8 excluded from analysis per the experimental protocol.
++- **Kernel Notes**: Events are long-type markers representing sustained 60-second trials with three distinct phases: 20s target affective state, 20s identify state, and 20s alter state. Use epoch_by_long_event_hdf5 to extract the full 60s window capturing the complete affective trajectory. Verify EEG-only channel selection from the 37-channel array (includes physiological channels). Validate channel count consistency across subjects before pooling.### Classical Task 2: Affective Music Condition Classification (8-class) — 2
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0 s, tmax = 60 s, overlap = 0.0, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
++- **Label Route**: `info`
++- **Label Field**: `2`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `2` | 1 | Music condition 2 |  |
++- **Evidence**:
++  - DOI: 10.1038/s41597-020-0507-6 — Data descriptor explicitly describing the BCMI testing dataset (ds002723) with 8 participants, ~1.3 hours per participant of EEG+ECG+GSR recordings. The synthetic music conditions 1-9 are used as affective state markers, with condition 8 excluded from analysis per the experimental protocol.
++- **Kernel Notes**: Events are long-type markers representing sustained 60-second trials with three distinct phases: 20s target affective state, 20s identify state, and 20s alter state. Use epoch_by_long_event_hdf5 to extract the full 60s window capturing the complete affective trajectory. Verify EEG-only channel selection from the 37-channel array (includes physiological channels). Validate channel count consistency across subjects before pooling.### Classical Task 3: Affective Music Condition Classification (8-class) — 3
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0 s, tmax = 60 s, overlap = 0.0, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
++- **Label Route**: `info`
++- **Label Field**: `3`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `3` | 2 | Music condition 3 |  |
++- **Evidence**:
++  - DOI: 10.1038/s41597-020-0507-6 — Data descriptor explicitly describing the BCMI testing dataset (ds002723) with 8 participants, ~1.3 hours per participant of EEG+ECG+GSR recordings. The synthetic music conditions 1-9 are used as affective state markers, with condition 8 excluded from analysis per the experimental protocol.
++- **Kernel Notes**: Events are long-type markers representing sustained 60-second trials with three distinct phases: 20s target affective state, 20s identify state, and 20s alter state. Use epoch_by_long_event_hdf5 to extract the full 60s window capturing the complete affective trajectory. Verify EEG-only channel selection from the 37-channel array (includes physiological channels). Validate channel count consistency across subjects before pooling.### Classical Task 4: Affective Music Condition Classification (8-class) — 4
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0 s, tmax = 60 s, overlap = 0.0, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
++- **Label Route**: `info`
++- **Label Field**: `4`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `4` | 3 | Music condition 4 |  |
++- **Evidence**:
++  - DOI: 10.1038/s41597-020-0507-6 — Data descriptor explicitly describing the BCMI testing dataset (ds002723) with 8 participants, ~1.3 hours per participant of EEG+ECG+GSR recordings. The synthetic music conditions 1-9 are used as affective state markers, with condition 8 excluded from analysis per the experimental protocol.
++- **Kernel Notes**: Events are long-type markers representing sustained 60-second trials with three distinct phases: 20s target affective state, 20s identify state, and 20s alter state. Use epoch_by_long_event_hdf5 to extract the full 60s window capturing the complete affective trajectory. Verify EEG-only channel selection from the 37-channel array (includes physiological channels). Validate channel count consistency across subjects before pooling.### Classical Task 5: Affective Music Condition Classification (8-class) — 5
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0 s, tmax = 60 s, overlap = 0.0, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
++- **Label Route**: `info`
++- **Label Field**: `5`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `5` | 4 | Music condition 5 |  |
++- **Evidence**:
++  - DOI: 10.1038/s41597-020-0507-6 — Data descriptor explicitly describing the BCMI testing dataset (ds002723) with 8 participants, ~1.3 hours per participant of EEG+ECG+GSR recordings. The synthetic music conditions 1-9 are used as affective state markers, with condition 8 excluded from analysis per the experimental protocol.
++- **Kernel Notes**: Events are long-type markers representing sustained 60-second trials with three distinct phases: 20s target affective state, 20s identify state, and 20s alter state. Use epoch_by_long_event_hdf5 to extract the full 60s window capturing the complete affective trajectory. Verify EEG-only channel selection from the 37-channel array (includes physiological channels). Validate channel count consistency across subjects before pooling.### Classical Task 6: Affective Music Condition Classification (8-class) — 6
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0 s, tmax = 60 s, overlap = 0.0, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
++- **Label Route**: `info`
++- **Label Field**: `6`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `6` | 5 | Music condition 6 |  |
++- **Evidence**:
++  - DOI: 10.1038/s41597-020-0507-6 — Data descriptor explicitly describing the BCMI testing dataset (ds002723) with 8 participants, ~1.3 hours per participant of EEG+ECG+GSR recordings. The synthetic music conditions 1-9 are used as affective state markers, with condition 8 excluded from analysis per the experimental protocol.
++- **Kernel Notes**: Events are long-type markers representing sustained 60-second trials with three distinct phases: 20s target affective state, 20s identify state, and 20s alter state. Use epoch_by_long_event_hdf5 to extract the full 60s window capturing the complete affective trajectory. Verify EEG-only channel selection from the 37-channel array (includes physiological channels). Validate channel count consistency across subjects before pooling.### Classical Task 7: Affective Music Condition Classification (8-class) — 7
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0 s, tmax = 60 s, overlap = 0.0, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
++- **Label Route**: `info`
++- **Label Field**: `7`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `7` | 6 | Music condition 7 |  |
++- **Evidence**:
++  - DOI: 10.1038/s41597-020-0507-6 — Data descriptor explicitly describing the BCMI testing dataset (ds002723) with 8 participants, ~1.3 hours per participant of EEG+ECG+GSR recordings. The synthetic music conditions 1-9 are used as affective state markers, with condition 8 excluded from analysis per the experimental protocol.
++- **Kernel Notes**: Events are long-type markers representing sustained 60-second trials with three distinct phases: 20s target affective state, 20s identify state, and 20s alter state. Use epoch_by_long_event_hdf5 to extract the full 60s window capturing the complete affective trajectory. Verify EEG-only channel selection from the 37-channel array (includes physiological channels). Validate channel count consistency across subjects before pooling.### Classical Task 8: Affective Music Condition Classification (8-class) — 9
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0 s, tmax = 60 s, overlap = 0.0, target_events = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `9`]
++- **Label Route**: `info`
++- **Label Field**: `9`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `9` | 7 | Music condition 9 |  |
+ - **Evidence**:
+   - DOI: 10.1038/s41597-020-0507-6 — Data descriptor explicitly describing the BCMI testing dataset (ds002723) with 8 participants, ~1.3 hours per participant of EEG+ECG+GSR recordings. The synthetic music conditions 1-9 are used as affective state markers, with condition 8 excluded from analysis per the experimental protocol.
+ - **Kernel Notes**: Events are long-type markers representing sustained 60-second trials with three distinct phases: 20s target affective state, 20s identify state, and 20s alter state. Use epoch_by_long_event_hdf5 to extract the full 60s window capturing the complete affective trajectory. Verify EEG-only channel selection from the 37-channel array (includes physiological channels). Validate channel count consistency across subjects before pooling.

@@ -1,0 +1,9 @@
+# Per-machine runtime data — not synced
+locator_cache/
+progress/
+evidence_cache/
+logs/
+sandbox/
+machine_config/
+__pycache__/
+*.pyc

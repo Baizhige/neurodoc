@@ -1,0 +1,99 @@
+--- openneuro_ds004022/analysis.md (pre-v3)
++++ openneuro_ds004022/analysis.md (v3)
+@@ -3,7 +3,7 @@
+ **Dataset**: `openneuro_ds004022` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004022
+ **Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 21
+ **Channels**: 18 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -41,17 +41,33 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Binary Health Classification (Healthy vs Orthopedic Impairment)
++### Classical Task 1: Binary Health Classification (Healthy vs Orthopedic Impairment) — healthy
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 1.0 s, overlap = 0.0 *, target_events = [`S 7`, `S 8`, `S 9`, `S 10`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `healthy`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `healthy` | 0 | Healthy control EEG segment |
+-  | `orthopedic` | 1 | Orthopedic impairment EEG segment |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `healthy` | 0 | Healthy control EEG segment |  |
++- **Super Meta Notes**: Labels derived from subject population metadata (healthy controls vs patients with orthopedic impairment). Binary classification target distinguishes clinical population from healthy baseline.
++- **Evidence**:
++  - DOI: 10.1371/journal.pone.0335364 — Explicitly cites ds004022, performs binary classification achieving 93% accuracy using Conditional VAE with nonlinear dynamics features (HE, DFA, CD, LLE, KS-proxy) from windowed EEG segments; distinguishes healthy (0) vs orthopedic impairment (1) populations
++- **Kernel Notes**: Exclude `condition 12` admin block marker. Use 11 scalp channels (C3, Cz, C4, FC3, FCz, FC4, CP3, CPz, CP4, F3, F4) as specified in reference. Apply windowed feature extraction (STFT, HE, DFA, CD, KS-entropy, LLE) rather than raw epoching. Align segments to MI cue events S 7-S 10. (replaces Classical Task 1 from original analysis.md)
++
++### Classical Task 2: Binary Health Classification (Healthy vs Orthopedic Impairment) — orthopedic
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 1.0 s, overlap = 0.0 *, target_events = [`S 7`, `S 8`, `S 9`, `S 10`]
++- **Label Route**: `info`
++- **Label Field**: `orthopedic`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `orthopedic` | 1 | Orthopedic impairment EEG segment |  |
+ - **Super Meta Notes**: Labels derived from subject population metadata (healthy controls vs patients with orthopedic impairment). Binary classification target distinguishes clinical population from healthy baseline.
+ - **Evidence**:
+   - DOI: 10.1371/journal.pone.0335364 — Explicitly cites ds004022, performs binary classification achieving 93% accuracy using Conditional VAE with nonlinear dynamics features (HE, DFA, CD, LLE, KS-proxy) from windowed EEG segments; distinguishes healthy (0) vs orthopedic impairment (1) populations
+@@ -64,8 +80,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `S 7` | 0 | Motor imagery - Reach |
+   | `S 8` | 1 | Motor imagery - Twist |
+   | `S 9` | 2 | Motor imagery - Lift |
+@@ -73,17 +89,30 @@
+ - **Evidence**: None — task supported by paradigm description alone (4 MI conditions encoded in S 7-S 10). Reference 10.3389/fnhum.2025.1583342 uses this dataset for denoising but does not define MI classification task. Reference 10.1371/journal.pone.0335364 performs binary health classification, not 4-class MI.
+ - **Kernel Notes**: Extract epochs time-locked to MI cue onsets (S 7-S 10). Exclude `condition 12` admin block marker and rest cues (S 1, S 3, S 4). Use all 18 channels including sensorimotor C3, C4, Cz for classification. Alignment assumption: S 7-S 10 markers represent MI cue onset per standard BCI paradigm convention.
+ 
+-### Potential Task 2: EEG Anomaly Detection
++### Potential Task 2: EEG Anomaly Detection — healthy segment
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_segmentation_hdf5`
+ - **Epoch Parameters**: segment_length = 0.512 s * (256 samples at 500 Hz), overlap = 0.2, target_events = [`S 7`, `S 8`, `S 9`, `S 10`, `S 1`, `S 3`, `S 4`, `S 2`, `S 5`, `S 6`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `healthy segment`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
+-  | `healthy segment` | 0 | Normal EEG segment without artifacts |
+-  | `anomalous segment` | 1 | EEG segment with artifacts or anomalies |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `healthy segment` | 0 | Normal EEG segment without artifacts |  |
++- **Super Meta Notes**: Derived by applying pre-trained BiLSTM classifier to all continuous EEG data; labels are model predictions distinguishing healthy from anomalous segments. Requires pre-trained model availability.
++- **Evidence**: None — plausible from paradigm for artifact detection pipeline but no direct reference found.
++- **Kernel Notes**: Apply sliding window segmentation across entire recording (all events are candidate boundaries). Train BiLSTM or apply pre-trained model to classify each window. Post-process overlapping predictions via majority voting.### Potential Task 3: EEG Anomaly Detection — anomalous segment
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 0.512 s * (256 samples at 500 Hz), overlap = 0.2, target_events = [`S 7`, `S 8`, `S 9`, `S 10`, `S 1`, `S 3`, `S 4`, `S 2`, `S 5`, `S 6`]
++- **Label Route**: `info`
++- **Label Field**: `anomalous segment`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `anomalous segment` | 1 | EEG segment with artifacts or anomalies |  |
+ - **Super Meta Notes**: Derived by applying pre-trained BiLSTM classifier to all continuous EEG data; labels are model predictions distinguishing healthy from anomalous segments. Requires pre-trained model availability.
+ - **Evidence**: None — plausible from paradigm for artifact detection pipeline but no direct reference found.
+ - **Kernel Notes**: Apply sliding window segmentation across entire recording (all events are candidate boundaries). Train BiLSTM or apply pre-trained model to classify each window. Post-process overlapping predictions via majority voting.

@@ -1,0 +1,369 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 9,
+    "category": "",
+    "format_type": "edf",
+    "has_bids_sidecars": false
+  },
+  "budget_used": 32,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 9,
+    "task_synthesis": 8,
+    "kernel_loop": 10,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T09:30:49.729009+00:00",
+  "ref_extractions": [
+    {
+      "filename": "paper_10_1016_j_bspc_2025_108505.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.bspc.2025.108505",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1088_1741_2552_ae17e9.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1088/1741.2552.ae17e9",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1109_spmb_2014_7002953.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1109/spmb.2014.7002953",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "Recent_Advances_in_the_TUH_EEG_Corpus_Improving_the_Interrater_Agreement_for_Artifacts_and_Epileptiform_Events.pdf",
+      "ref": "10.1109/SPMB52430.2021.9672302",
+      "title": "Recent Advances in the TUH EEG Corpus: Improving the Interrater Agreement for Artifacts and Epileptiform Events",
+      "classification": "partial",
+      "cot_reasoning": "This paper explicitly discusses the TUH EEG Artifact Corpus (TUAR) and describes improvements to the dataset including v2.0.0 release with hierarchical XML annotations and handling of overlapping artifacts. However, it is a dataset description/improvement paper rather than defining a concrete ML task with labels for benchmarking. It mentions TUAR can be used to evaluate artifact detection technology but does not specify train/test splits or a standardized ML task.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "super",
+      "super_meta_note": "Dataset description paper; describes annotation improvements, interrater agreement, and corpus statistics but does not define a concrete ML benchmark task",
+      "evidence_desc": "Describes TUAR v2.0.0 with 5 artifact classes (CHEW, ELEC, EYEM, MUSC, SHIV) plus combinations; mentions XML format for overlapping events; discusses use for artifact detection and suppression technology evaluation"
+    },
+    {
+      "filename": "official_doi.org_10.1109_SPMB52430.2021.9672302.html",
+      "ref": "10.1109/SPMB52430.2021.9672302",
+      "title": "Recent Advances in the TUH EEG Corpus: Improving the Interrater Agreement for Artifacts and Epileptiform Events",
+      "classification": "uncertain",
+      "cot_reasoning": "This is just an IEEE Xplore landing page with no actual content about the paper. Only shows navigation elements and copyright information. Cannot determine relevance from this content alone.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "No extractable content; IEEE Xplore wrapper page only"
+    },
+    {
+      "filename": "paper_10_1038_s41598_024_52551_0.pdf",
+      "ref": "10.1038/s41598-024-52551-0",
+      "title": "Minimizing artifact-induced false-alarms for seizure detection in wearable EEG devices with gradient-boosted tree classifiers",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses the TUH-EEG Artifact Corpus (TUAR) dataset for artifact detection, achieving 93.95% accuracy. It defines a concrete binary artifact detection task (artifact vs. non-artifact) integrated with seizure detection for wearable devices. The paper specifies using gradient-boosted tree classifiers and reports specific performance metrics on TUAR.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "supervised artifact detection",
+      "epoch_method_hint": "segmentation",
+      "epoch_params": "Not explicitly stated in excerpt; likely fixed-length windows for feature extraction",
+      "target_events": [
+        "artifact",
+        "background"
+      ],
+      "label_mapping": "binary: artifact present vs. no artifact (background)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly states 'artifact detector achieves a state-of-the-art accuracy of 93.95% (on the TUH-EEG Artifact Corpus dataset)'; uses gradient-boosted trees; focuses on temporal electrodes; integrates with seizure detection to reduce false alarms by 96%"
+    },
+    {
+      "filename": "paper_10_1109_embc48229_2022_9871413.pdf",
+      "ref": "10.1109/EMBC48229.2022.9871413",
+      "title": "Energy-Efficient Tree-Based EEG Artifact Detection",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses the TUH EEG Artifact Corpus (TUAR) dataset and defines concrete ML tasks. It describes three classification setups: binary classification (BC), multi-label classification (MC), and multi-class multi-output classification (MMC). Achieves 93.95% accuracy with 0.838 F1 score for 4 temporal channel setup. Uses automated ML framework (TPOT) with FFT/DWT features and decision trees, optimized for PULP embedded platform.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 13,
+      "paradigm": "supervised artifact detection",
+      "epoch_method_hint": "segmentation",
+      "epoch_params": "Fixed-length windows with FFT/DWT feature extraction; 4 temporal EEG channels",
+      "target_events": [
+        "CHEW",
+        "ELEC",
+        "EYEM",
+        "MUSC",
+        "SHIV",
+        "EYEM+CHEW",
+        "EYEM+SHIV",
+        "CHEW+SHIV",
+        "EYEM+ELEC",
+        "ELEC+MUSC",
+        "EYEM+MUSC",
+        "ELEC+SHIV",
+        "BACKGROUND"
+      ],
+      "label_mapping": "13 classes: 5 individual artifacts, 7 combinations of two artifacts, and background (no artifact); also discusses binary and multi-label formulations",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicitly states 'analyses are based on the TUH EEG Artifact Corpus dataset'; describes 13 labels (5 individual + 7 combinations + background); achieves '93.95% accuracy, with a 0.838 F1 score for a 4 temporal EEG channel setup'; uses automated ML with TPOT; implements on PULP platform with ~4 µJ per inference"
+    },
+    {
+      "filename": "paper_10_1109_spmb50085_2020_9353647.pdf",
+      "ref": "10.1109/SPMB50085.2020.9353647",
+      "title": "The Temple University Artifact Corpus: An Annotated Corpus of EEG Artifacts",
+      "classification": "partial",
+      "cot_reasoning": "This is the original dataset description paper for TUAR. It explicitly defines the TUH EEG Artifact Corpus with 5 artifact classes and describes the annotation methodology. However, it does not define a concrete ML benchmark task with train/test splits or standardized evaluation protocol. It is primarily a corpus announcement describing data collection and annotation standards.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "super",
+      "super_meta_note": "Original dataset description paper; defines annotation schema and corpus structure but no ML benchmark",
+      "evidence_desc": "Describes 5 basic artifact tags (CHEW, ELEC, EYEM, MUSC, SHIV) with concatenated label format for overlaps; 310 EEG files from 213 patients; mentions XML format for overlapping events; states corpus 'can be used to evaluate artifact reduction technology'"
+    },
+    {
+      "filename": "paper_10_1109_spmb62441_2024_10842264.pdf",
+      "ref": "10.1109/SPMB62441.2024.10842264",
+      "title": "Annotation of Ambulatory EEGs",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper discusses a new ambulatory EEG dataset (NMAE) from Natus Medical Inc., not the TUH EEG Artifact Corpus. While it mentions TUEG and TUAR in references, the focus is entirely on annotating a different dataset for seizure prediction and detection. Does not use TUAR for any ML task.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Discusses NMAE (Natus Medical Ambulatory EEG) dataset with 1,400+ studies; mentions TUAR only in reference [2] as prior work; focuses on seizure annotation in ambulatory settings, not artifact detection on TUAR"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The TUH EEG Artifact Corpus (TUAR) has well-defined artifact labels including 5 base classes (CHEW, ELEC, EYEM, MUSC, SHIV) plus combination labels and background, with explicit ML usage demonstrated in multiple papers achieving 93.95% accuracy on supervised artifact detection. The event structure supports multi-class classification of artifact types and their combinations.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 310,
+    "total_n": 310,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 310,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "bckg",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Background/non-seizure period",
+        "confidence": "confirmed",
+        "session_task_scope": "seizure recordings"
+      },
+      {
+        "event_id": "gnsz",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Generalized seizure",
+        "confidence": "confirmed",
+        "session_task_scope": "seizure recordings"
+      },
+      {
+        "event_id": "tcsz",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Tonic-clonic seizure",
+        "confidence": "confirmed",
+        "session_task_scope": "seizure recordings"
+      },
+      {
+        "event_id": "cpsz",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Complex partial seizure",
+        "confidence": "confirmed",
+        "session_task_scope": "seizure recordings"
+      },
+      {
+        "event_id": "fnsz",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Focal non-specific seizure",
+        "confidence": "confirmed",
+        "session_task_scope": "seizure recordings"
+      },
+      {
+        "event_id": "eyem",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Eye movement artifact",
+        "confidence": "confirmed",
+        "session_task_scope": "artifact recordings"
+      },
+      {
+        "event_id": "musc",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Muscle artifact",
+        "confidence": "confirmed",
+        "session_task_scope": "artifact recordings"
+      },
+      {
+        "event_id": "elec",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Electrode artifact",
+        "confidence": "confirmed",
+        "session_task_scope": "artifact recordings"
+      },
+      {
+        "event_id": "eyem_musc",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Combined eye movement and muscle artifact",
+        "confidence": "confirmed",
+        "session_task_scope": "artifact recordings"
+      },
+      {
+        "event_id": "musc_elec",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Combined muscle and electrode artifact",
+        "confidence": "confirmed",
+        "session_task_scope": "artifact recordings"
+      },
+      {
+        "event_id": "elpp",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Electrode pop artifact",
+        "confidence": "confirmed",
+        "session_task_scope": "artifact recordings"
+      },
+      {
+        "event_id": "eyem_elec",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Combined eye movement and electrode artifact",
+        "confidence": "confirmed",
+        "session_task_scope": "artifact recordings"
+      }
+    ],
+    "notes": "Event IDs derived from TUH EEG Corpus v3.0.1 CSV annotation files (csv_v1.0.0 format). Seizure labels confirmed from _seiz.csv files: aaaaajns_s001_t001_seiz.csv (bckg, gnsz), aaaaaayg_s002_t001_seiz.csv and aaaaabiw_s005_t000_seiz.csv (tcsz), aaaaajrj_s005_t007_seiz.csv and aaaaacyf_s009_t001_seiz.csv (cpsz), aaaaajoe_s001_t001_seiz.csv (fnsz). Artifact labels confirmed from regular .csv files: aaaaaaju_s005_t000.csv and aaaaacyf_s007_t002.csv (eyem, musc), aaaaakeq_s001_t000.csv (elec, eyem_musc), aaaaaels_s006_t006.csv (musc_elec, elpp, eyem_elec, eyem_elec). All labels appear in the 'label' column with confidence=1.0000. The annotation_label_file header references $TUAR/v3.0.0/DOCS/nedc_ann_eeg_tools_map_v01.txt but this mapping file was not readable. No BIDS events.tsv/events.json files exist; this is a non-BIDS dataset with custom CSV annotation format."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Binary Artifact vs Background Detection\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | bckg | 0 | Background/non-seizure period |\n  | eyem | 1 | Eye movement artifact |\n  | musc | 1 | Muscle artifact |\n  | elec | 1 | Electrode artifact |\n  | elpp | 1 | Electrode pop artifact |\n  | eyem_musc | 1 | Combined eye movement and muscle artifact |\n  | musc_elec | 1 | Combined muscle and electrode artifact |\n  | eyem_elec | 1 | Combined eye movement and electrode artifact |\n- **Evidence**:\n  - 10.1038/s41598-024-52551-0 — Binary classification of artifact present versus background using gradient-boosted trees achieving 93.95% accuracy; maps 11 event IDs into 2 classes (bckg=0, all artifact types=1)\n- **Notes**: All artifact event IDs (eyem, musc, elec, elpp, eyem_musc, musc_elec, eyem_elec) are merged into a single positive class y=1, with bckg as the negative class y=0. The epoch parameters use 2-second windows with 50% overlap based on common artifact detection literature practices; these are inferred values as the reference does not specify exact windowing parameters.\n\n### Classical Task 2: 13-class artifact type detection\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | bckg | 0 | Background/non-seizure period |\n  | eyem | 1 | Eye movement artifact |\n  | musc | 2 | Muscle artifact |\n  | elec | 3 | Electrode artifact |\n  | elpp | 4 | Electrode pop artifact |\n  | eyem_musc | 5 | Combined eye movement and muscle artifact |\n  | musc_elec | 6 | Combined muscle and electrode artifact |\n  | eyem_elec | 7 | Combined eye movement and electrode artifact |\n- **Evidence**:\n  - 10.1109/EMBC48229.2022.9871413 — 13-class artifact classification with 5 individual artifacts, 7 combinations, and background; achieves 93.95% accuracy with 0.838 F1 using AutoML/TPOT on 4 temporal channels. Note: reference uses CHEW and SHIV which map to elpp in this dataset's locked meanings; combination labels differ (eyem_musc, musc_elec, eyem_elec match). Only 8 of 13 classes are available in this dataset's event IDs.\n- **Notes**: The reference describes 13 classes but this dataset contains only 8 distinct artifact-related event IDs (bckg, eyem, musc, elec, elpp, eyem_musc, musc_elec, eyem_elec). The remaining 5 classes from the paper (CHEW, SHIV, and 4 additional combinations) are not present in the locked event meanings. The task is formulated as an 8-class classification using available labels. Segment length and overlap are inferred from standard artifact detection practice as exact values were not specified in the reference.\n\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "bckg",
+      "elec",
+      "elpp",
+      "eyem",
+      "eyem_elec",
+      "eyem_musc",
+      "musc",
+      "musc_elec"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [],
+    "derived_misc_channels": [
+      {
+        "name": "artifact_label",
+        "source_field": "events.tsv:label",
+        "derivation": "For each 2-second segment, compute proportion overlap with each artifact annotation; assign label of maximum overlap, or background if no overlap exceeds threshold (e.g., 0.5)",
+        "groundable_evidence": "No events.tsv columns available; this derived misc requires custom kernel implementation reading from native CSV annotation files directly",
+        "used_by": [
+          "segmentation-based artifact detection (no event anchor)"
+        ]
+      }
+    ],
+    "_dropped_candidates": [
+      {
+        "paradigm": "seizure detection",
+        "reason": "Locked meanings include seizure types (gnsz, tcsz, cpsz, fnsz) but these are scoped to 'seizure recordings' per the evidence summary, while this dataset is the artifact corpus (tuh_eeg_artifact). The seizure event IDs appear in the locked meanings from the broader TUH EEG Corpus documentation but are not expected to occur in actual artifact corpus files. No reference supports seizure detection on this specific artifact dataset."
+      },
+      {
+        "paradigm": "resting state eyes-open/closed",
+        "reason": "No event IDs or annotations indicate resting state with eyes-open/closed conditions. The dataset is explicitly an artifact corpus with annotated artifact events, not a resting state protocol."
+      },
+      {
+        "paradigm": "subject-level demographic or clinical prediction",
+        "reason": "No participants.tsv columns discovered in the grounded catalog. The dataset appears to be a file-level artifact corpus without subject-level tabular data. Cannot ground any B3 or C-info tasks."
+      },
+      {
+        "paradigm": "native misc channel regression (EOG, EMG)",
+        "reason": "No native misc channels discovered in raw files per the grounded catalog. The EDF files contain only EEG channels (FP1-REF, etc.). No continuous non-EEG channels available for B1 archetype."
+      },
+      {
+        "paradigm": "response time or confidence prediction",
+        "reason": "No events.tsv numeric columns discovered in the grounded catalog. The dataset uses custom CSV annotation format rather than BIDS events.tsv with per-trial metrics. Cannot derive B2 tasks from behavioral data."
+      }
+    ]
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/tuh_eeg_artifact/kernel_final.py",
+  "kernel_code_len": 19103,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/tuh_eeg_artifact.py",
+    "kernel_sha256": "cc3bb89e5bd9abac7e263b2261823dedca7480d3cb7b281fc7f12a11b151b144",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 310,
+    "total_n": 310,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 310,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/tuh_eeg_artifact.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

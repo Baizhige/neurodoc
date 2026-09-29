@@ -1,0 +1,179 @@
+--- openneuro_ds001784/analysis.md (pre-v3)
++++ openneuro_ds001784/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds001784` | **Year**: 2019 | **URL**: https://openneuro.org/datasets/ds001784
+ **Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 38 | **Channels**: 65 | **Sampling Rate**: 1450 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -22,6 +22,20 @@
+ | `event_6` | 1296 | event | raw | AFMSIT trial (active foreground MSIT task trial) |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `interference_trial` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `control_trial` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `DBS_ON` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `DBS_OFF` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `afmsit_trial` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `engaged` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `passive` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `trial_outcome` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -31,74 +45,122 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Cognitive control decoding (interference vs control trials)
++### Classical Task 1: Cognitive control decoding (interference vs control trials) — interference_trial` (event_2)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -1.5 s, tmax = 3.4 s, target_events = [`event_2`, `event_4`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `interference_trial` (event_2)`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-----|---------|
+-  | `interference_trial` (event_2) | 1 | High-interference MSIT trial (cognitive conflict) |
+-  | `control_trial` (event_4) | 0 | Control trial (low interference) |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `interference_trial` (event_2) | 1 | High-interference MSIT trial (cognitive conflict) |  |
+ - **Evidence**:
+   - DOI: 10.1038/s41467-019-09557-4
+ - **Kernel Notes**: Dataset has no inline EEG event triggers; all trial labels must be derived by parsing BIDS events.tsv files to extract `trial_type` column. Verify mapping: event_2 (1296 occurrences) → interference trials, event_4 (2592 occurrences) → control trials. Epoch window captures pre-stimulus baseline (-1.5s) and post-stimulus cognitive processing (+3.4s) aligned to MSIT trial onset.
+ 
+-### Classical Task 2: DBS stimulation state classification (ON vs OFF)
++### Classical Task 2: Cognitive control decoding (interference vs control trials) — control_trial` (event_4)
+ - **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.5 s, tmax = 3.4 s, target_events = [`event_2`, `event_4`]
++- **Label Route**: `info`
++- **Label Field**: `control_trial` (event_4)`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `control_trial` (event_4) | 0 | Control trial (low interference) |  |
++- **Evidence**:
++  - DOI: 10.1038/s41467-019-09557-4
++- **Kernel Notes**: Dataset has no inline EEG event triggers; all trial labels must be derived by parsing BIDS events.tsv files to extract `trial_type` column. Verify mapping: event_2 (1296 occurrences) → interference trials, event_4 (2592 occurrences) → control trials. Epoch window captures pre-stimulus baseline (-1.5s) and post-stimulus cognitive processing (+3.4s) aligned to MSIT trial onset.
++
++### Classical Task 3: DBS stimulation state classification (ON vs OFF) — DBS_ON
++- **Task Type**: regression
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0 s, tmax = 4.9 s, overlap = 0.0, target_events = [`event_2`, `event_4`, `event_6`]
+ - **Label Route**: `misc`
++- **Label Field**: `DBS_ON`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-----|---------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `DBS_ON` | 1 | Deep brain stimulation turned ON during recording |
++- **Evidence**:
++  - DOI: 10.1038/s41467-019-09557-4
++- **Kernel Notes**: DBS ON/OFF is a sustained experimental condition stored as subject-level metadata (participants.tsv), NOT as inline EEG events. All three event types (event_2, event_4, event_6) share the same DBS condition within a recording session. Use epoch_by_long_event_hdf5 with tmin=0, tmax=4.9s matching trial duration. Implement metadata lookup table mapping subject/session/run to DBS_ON/DBS_OFF for label assignment.
++
++### Classical Task 4: DBS stimulation state classification (ON vs OFF) — DBS_OFF
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_long_event_hdf5`
++- **Epoch Parameters**: tmin = 0 s, tmax = 4.9 s, overlap = 0.0, target_events = [`event_2`, `event_4`, `event_6`]
++- **Label Route**: `misc`
++- **Label Field**: `DBS_OFF`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `DBS_OFF` | 0 | Deep brain stimulation turned OFF during recording |
+ - **Evidence**:
+   - DOI: 10.1038/s41467-019-09557-4
+ - **Kernel Notes**: DBS ON/OFF is a sustained experimental condition stored as subject-level metadata (participants.tsv), NOT as inline EEG events. All three event types (event_2, event_4, event_6) share the same DBS condition within a recording session. Use epoch_by_long_event_hdf5 with tmin=0, tmax=4.9s matching trial duration. Implement metadata lookup table mapping subject/session/run to DBS_ON/DBS_OFF for label assignment.
+ 
+-### Classical Task 3: AFMSIT task classification (active foreground MSIT)
++<!-- MIGRATION: single-class classification, needs review -->
++### Classical Task 5: AFMSIT task classification (active foreground MSIT)
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -1.5 s, tmax = 3.4 s, target_events = [`event_6`]
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `afmsit_trial` (event_6)`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-----|---------|
+-  | `afmsit_trial` (event_6) | 0 | Active foreground MSIT task trial |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `afmsit_trial` (event_6) | 0 | Active foreground MSIT task trial |  |
+ - **Evidence**:
+   - DOI: 10.18112/openneuro.ds001784.v1.1.2
+ - **Kernel Notes**: Use task label 'afmsit' from BIDS dataset. Event_6 (1296 occurrences) corresponds to afmsit task trials. Verify timing aligns with MSIT trial structure (4.9s total duration). Epoch window -1.5s to +3.4s captures stimulus-locked neural activity for cognitive control assessment.
+ 
+-### Potential Task 1: Task engagement decoding
++### Potential Task 1: Task engagement decoding — engaged
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -1.0 s, tmax = 2.0 s, target_events = [`event_2`, `event_4`, `event_6`]
+-- **Label Route**: `Annotation`
++- **Label Route**: `info`
++- **Label Field**: `engaged`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-----|---------|
+-  | `engaged` | 1 | Actively performing MSIT task |
+-  | `passive` | 0 | Free behavior or rest periods |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `engaged` | 1 | Actively performing MSIT task |  |
+ - **Evidence**:
+   - DOI: 10.1088/1741-2552/ab2c58
+ - **Kernel Notes**: Related work from same research group (Widge et al.) demonstrates continuous mental effort detection using conflict-based behavioral tasks. Implement fixed CCA decoder for continuous task engagement estimation. Requires annotation of behavioral segments or use of inter-trial intervals for passive baseline.
+ 
+-### Potential Task 2: Cognitive performance regression (RT/accuracy prediction)
++### Potential Task 2: Task engagement decoding — passive
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -1.0 s, tmax = 2.0 s, target_events = [`event_2`, `event_4`, `event_6`]
++- **Label Route**: `info`
++- **Label Field**: `passive`
++- **Meta Level**: super
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `passive` | 0 | Free behavior or rest periods |  |
++- **Evidence**:
++  - DOI: 10.1088/1741-2552/ab2c58
++- **Kernel Notes**: Related work from same research group (Widge et al.) demonstrates continuous mental effort detection using conflict-based behavioral tasks. Implement fixed CCA decoder for continuous task engagement estimation. Requires annotation of behavioral segments or use of inter-trial intervals for passive baseline.
++
++### Potential Task 3: Cognitive performance regression (RT/accuracy prediction)
+ - **Task Type**: regression
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -1.5 s, tmax = 1.0 s, target_events = [`event_2`, `event_4`, `event_6`]
+-- **Label Route**: `Annotation`
++- **Label Route**: `misc`
++- **Label Field**: `trial_outcome`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-----|---------|
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `trial_outcome` | RT (ms) or accuracy (%) | Behavioral performance metrics per trial |
+ - **Evidence**:
+   - DOI: 10.1088/1741-2552/acd0d5

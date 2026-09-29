@@ -1,0 +1,340 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 6,
+    "category": "",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 40,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 14,
+    "task_synthesis": 12,
+    "kernel_loop": 10,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T05:29:27.099619+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds004022.v1.0.0.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds004022.v1.0.0",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds004022.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1016_j_bspc_2025_108597.pdf",
+      "ref": "10.1016/j.bspc.2025.108597",
+      "title": "EGDN-KL: Dynamic graph–deviation network for EEG anomaly detection",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper proposes EGDN-KL for EEG anomaly detection and mentions evaluation on 'two public datasets,' but the extracted text does not identify these datasets as OpenNeuro ds004022. The paper focuses on anomaly detection in general EEG data, not specifically on the orthopedic impairment motor imagery dataset. No explicit mention of ds004022 or the specific 'Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment' dataset is found in the provided content.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10_1371_journal_pone_0335364.pdf",
+      "ref": "10.1371/journal.pone.0335364",
+      "title": "Conditional VAE for personalized neurofeedback in cognitive training",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly identifies OpenNeuro accession ds004022 as 'The orthopedic-impairment dataset' with DOI 10.18112/openneuro.ds004022.v1.0.0 in the Data Availability Statement. It defines a concrete binary classification ML task: distinguishing healthy vs. orthopedic impairment using a Conditional VAE with six extracted features (STFT, HE, DFA, CD, KS-proxy, LLE) from 11 channels. The paper reports 93% accuracy with precision, recall, and F1-score all at 93%.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "Motor Imagery (MI) tasks with event-related desynchronization (ERD) and synchronization (ERS) across mu and beta wave spectra",
+      "epoch_method_hint": "segmentation",
+      "epoch_params": "Per-window feature extraction with six descriptors (STFT, HE, DFA, CD, KS-proxy, LLE) extracted channel-wise and concatenated; 11 scalp channels retained (C3, Cz, C4, FC3, FCz, FC4, CP3, CPz, CP4, F3, F4); seven subjects selected from each cohort to match",
+      "target_events": [
+        "motor imagery task execution"
+      ],
+      "label_mapping": "healthy=0, orthopedic impairment=1 (binary health label injected as conditional input to CVAE encoder and decoder)",
+      "meta_level": "super",
+      "super_meta_note": "Uses handcrafted features (STFT, HE, DFA, CD, KS-proxy, LLE) extracted from raw EEG windows, not raw EEG signals directly. Derived per-window feature matrices with train/test splits.",
+      "evidence_desc": "Explicitly names ds004022 with full OpenNeuro accession and DOI; describes binary classification of healthy vs orthopedic impairment; reports 93% accuracy, precision, recall, F1-score"
+    },
+    {
+      "filename": "paper_10_3389_fnhum_2025_1583342.pdf",
+      "ref": "10.3389/fnhum.2025.1583342",
+      "title": "Adversarial denoising of EEG signals: a comparative analysis of standard GAN and WGAN-GP approaches",
+      "classification": "partial",
+      "cot_reasoning": "This paper describes using two EEG datasets: a 'healthy' 64-channel motor/imagery dataset and an 'unhealthy' 18-channel dataset from individuals with orthopedic impairments. The description matches ds004022 (orthopedic impairment, motor imagery, 18 channels originally though paper mentions 11 channels retained in related work). However, the paper does not explicitly name the OpenNeuro accession ds004022 in the extracted text, referring to it only as 'unhealthy' set. The task is signal denoising/reconstruction (GAN-based), not classification with discrete labels, so the ML task definition differs from standard supervised learning.",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 0,
+      "paradigm": "Motor/imagery tasks (healthy) and orthopedic impairment (unhealthy); band-pass filtering 8-30 Hz",
+      "epoch_method_hint": "segmentation",
+      "epoch_params": "Band-pass filtering (8-30 Hz), channel standardization, artifact trimming; adversarial learning with generator reconstructing clean EEG signals",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "Focuses on signal-level denoising rather than classification; uses raw EEG signals as input to GAN frameworks for reconstruction quality metrics (SNR, PSNR, correlation, mutual information, DTW)",
+      "evidence_desc": "Describes 'unhealthy' 18-channel orthopedic impairment dataset with motor imagery context matching ds004022 characteristics, but does not explicitly cite OpenNeuro accession number in extracted text"
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "ref": "10.1371/journal.pone.0335364",
+      "title": "Conditional VAE for personalized neurofeedback in cognitive training",
+      "classification": "relevant",
+      "cot_reasoning": "This is the same paper as FILE 2 (PLOS ONE, DOI 10.1371/journal.pone.0335364) accessed via Europe PMC. It explicitly identifies OpenNeuro accession ds004022 as 'The orthopedic-impairment dataset' with DOI 10.18112/openneuro.ds004022.v1.0.0. Identical content to FILE 2 with same binary classification task using CVAE, six features, 11 channels, and 93% reported performance metrics.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "Motor Imagery (MI) tasks with event-related desynchronization (ERD) and synchronization (ERS) across mu and beta wave spectra",
+      "epoch_method_hint": "segmentation",
+      "epoch_params": "Per-window feature extraction with six descriptors (STFT, HE, DFA, CD, KS-proxy, LLE) extracted channel-wise and concatenated; 11 scalp channels retained (C3, Cz, C4, FC3, FCz, FC4, CP3, CPz, CP4, F3, F4); seven subjects selected from each cohort to match",
+      "target_events": [
+        "motor imagery task execution"
+      ],
+      "label_mapping": "healthy=0, orthopedic impairment=1 (binary health label injected as conditional input to CVAE encoder and decoder)",
+      "meta_level": "super",
+      "super_meta_note": "Uses handcrafted features (STFT, HE, DFA, CD, KS-proxy, LLE) extracted from raw EEG windows, not raw EEG signals directly. Derived per-window feature matrices with train/test splits.",
+      "evidence_desc": "Explicitly names ds004022 with full OpenNeuro accession and DOI; describes binary classification of healthy vs orthopedic impairment; reports 93% accuracy, precision, recall, F1-score"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset contains a clear 4-class motor imagery paradigm (reaching, grasping, lifting, twisting) with structured trial timing (fixation, cue, ready, imagery periods) and phase markers that define classifiable epochs. Multiple references confirm MI classification tasks are supported, including one paper explicitly citing ds004022 for binary classification and another describing regression on this impairment dataset.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 21,
+    "total_n": 21,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "S  1": 21,
+      "S  2": 840,
+      "S  3": 210,
+      "S  4": 210,
+      "S  5": 210,
+      "S  6": 210,
+      "S  7": 840,
+      "S  8": 840,
+      "S  9": 840,
+      "S 10": 840,
+      "boundary": 21,
+      "condition 12": 21
+    },
+    "subject_info": {
+      "record_count": 21,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "S  1",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Run/session start marker",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "S  2",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial onset marker",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "S  3",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Motor imagery task type marker (one of four right-upper limb movements: reaching, grasping, lifting, twisting)",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "S  4",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Motor imagery task type marker (one of four right-upper limb movements: reaching, grasping, lifting, twisting)",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "S  5",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Motor imagery task type marker (one of four right-upper limb movements: reaching, grasping, lifting, twisting)",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "S  6",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Motor imagery task type marker (one of four right-upper limb movements: reaching, grasping, lifting, twisting)",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "S  7",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: fixation cross (3s)",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "S  8",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: visual cue (4s)",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "S  9",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: ready state (3s)",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "S 10",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: motor imagery execution (5s)",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "boundary",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Data boundary marker between runs",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "condition 12",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Run boundary or condition block marker",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      }
+    ],
+    "notes": "Event mappings inferred from: (1) task_motorimagery_eeg.json and task_motorimagery_nirs.json describing four motor imagery tasks (reaching, grasping, lifting, twisting) for right-upper limb; (2) README describing trial structure with 40 trials per run, 3s fixation + 4s visual cue + 3s ready state + 5s MI execution; (3) event count patterns: S 1=21 (7 subjects × 3 runs), S 2=840 (7×3×40 trials), S 3-6=210 each (840/4 task types), S 7-10=840 each (one per trial phase), boundary=21 and condition 12=21 (run boundaries); (4) consistent annotation types across all EEG headers from sub-01 through sub-07 all runs. No events.tsv files exist; events are embedded in EEGLAB .set files which could not be fully parsed with available tools. Specific mapping of S 3-S 6 to individual task types (reaching/grasping/lifting/twisting) and S 7-S 10 to specific phases (fixation/cue/ready/MI) could not be definitively confirmed due to inability to extract event latencies from binary .set files."
+  },
+  "tasks_section": "## Tasks\n\n### Potential Task 1: 4-class right-upper limb motor imagery\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 5 s *, target_events = [`S 10`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `S  3` | 0 | reaching |\n  | `S  4` | 1 | grasping |\n  | `S  5` | 2 | lifting |\n  | `S  6` | 3 | twisting |\n- **Evidence**:\n  - eeg.json TaskDescription — describes four right-upper limb MI tasks: reaching, grasping, lifting, and twisting\n  - README — trial structure with 40 trials per run, 3s fixation + 4s visual cue + 3s ready state + 5s MI execution; S 10 marks 5s MI execution phase\n  - Event count patterns — S 3-6 each appear 210 times (840 total trials / 4 task types), consistent with balanced 4-class design\n- **Notes**: Epochs are anchored to S 10 (MI execution onset) with 0-5s window matching the 5-second MI execution phase described in README. The four motor imagery task types (S 3-S 6) serve as class labels. Specific mapping of S 3-S 6 to individual movements (reaching/grasping/lifting/twisting) could not be definitively confirmed due to inability to extract event latencies from binary .set files; y=0..3 assignment follows the numeric order of event codes.\n\n### Potential Task 2: 4-class motor imagery from trial onset\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = 0 s *, tmax = 15 s *, target_events = [`S  2`, `S  3`, `S  4`, `S  5`, `S  6`]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | S  3 | 0 | Reaching (right-upper limb motor imagery) |\n  | S  4 | 1 | Grasping (right-upper limb motor imagery) |\n  | S  5 | 2 | Lifting (right-upper limb motor imagery) |\n  | S  6 | 3 | Twisting (right-upper limb motor imagery) |\n- **Evidence**:\n  - eeg.json — \"four right-upper limb movements for MI tasks: reaching, grasping, lifting, and twisting\"\n  - README — trial structure: 3s fixation + 4s visual cue + 3s ready state + 5s MI execution = 15s total; 40 trials per run with four MI tasks in random order\n  - Event count analysis — S 2=840 (trial onsets), S 3-S 6=210 each (840/4 task types), consistent with balanced 4-class design\n- **Notes**: Task anchors on S 2 (trial onset marker) with tmin=0, but uses S 3-S 6 as the class labels since these markers appear at trial onset to indicate which of the four MI tasks will be performed. The 15s epoch captures the full trial including preparatory/anticipatory activity (fixation, cue, ready) through MI execution. Specific mapping of S 3-S 6 to reaching/grasping/lifting/twisting is not definitively confirmed due to inability to extract event latencies from binary .set files; the assignment above follows the natural ordering in the task description. S 2 serves as the epoch anchor; the co-occurring S 3-S 6 marker at trial onset provides the class label.\n\n### Potential Task 3: Binary MI Task vs Rest (Fixation Baseline)\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 3 s *, target_events = [`S  7`, `S 10`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `S  7` | 0 | fixation cross (rest baseline, 3s) |\n  | `S 10` | 1 | motor imagery execution (active task, first 3s) |\n- **Evidence**:\n  - events.json / README — trial structure: 3s fixation (S 7) + 4s cue (S 8) + 3s ready (S 9) + 5s MI execution (S 10); 40 trials × 3 runs × 7 subjects = 840 occurrences each of S 7 and S 10\n  - eeg.json — TaskDescription confirms four right-upper limb MI tasks with EEG/fNIRS acquisition for BCI decoding\n- **Notes**: Epochs truncated to 3s to match fixation duration with first 3s of MI execution, creating balanced-length rest vs active comparison for ERD/ERS detection in mu/beta bands. Full MI period is 5s but 3s was chosen per epoch_hint to balance classes; alternative would be 5s MI with 3s fixation yielding unequal epoch lengths.\n\n### Potential Task 4: Age Regression from EEG\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | age | Continuous numeric age in years (48–83); used directly as regression target |\n- **Evidence**:\n- **Notes**: Segmentation-based epoching with 2-second windows and 50% overlap applied to continuous EEG recordings. Each subject's age from participants.tsv serves as the regression target for all segments derived from that subject's recordings, enabling brain-age prediction modeling from motor imagery EEG data.\n\n### Potential Task 5: Years Since Diagnosis regression\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 2.0 s *, overlap = 0.5, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | Years Since Diagnosis | Continuous numeric value in years (range 6–73); directly used as regression target. Higher values indicate longer disease chronicity. |\n- **Evidence**:\n- **Notes**: B3 archetype — uses native participants.tsv column `Years Since Diagnosis` as continuous regression target. Segmentation epoching (2s windows, 50% overlap) applied to continuous EEG to predict disease duration from neural features during motor imagery. No kernel derivation needed; label is pre-existing in dataset metadata.\n\n### Potential Task 6: Sex Classification from Motor Imagery EEG\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | sex | M → 0 (male, n=3); F → 1 (female, n=4) |\n- **Evidence**:\n- **Notes**: Subject-level classification task using 2-second non-overlapping segmented windows of continuous EEG recorded during motor imagery. The label (sex) is drawn from participants.tsv, making this a B3 archetype with raw meta level. Near-balanced classes (3 male, 4 female) support binary classification. The kernel must read the `sex` field from participants.tsv and assign it to all epochs belonging to that subject.\n\n### Potential Task 7: Hand Dominance Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 2 s *, overlap = 0.5, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | Hand Dominance | `R` → y=0 (right-handed, n=6); `L` → y=1 (left-handed, n=1). Severe class imbalance 6:1. |\n- **Evidence**:\n  - participants.tsv — Hand Dominance column: 6 subjects right-handed (R), 1 subject left-handed (L)\n- **Notes**: Segmented windows (2s, 50% overlap) are used since no trial-locked epoching is appropriate for this subject-level demographic classification. The task predicts handedness from resting/task-continuing EEG patterns. Severe imbalance (6:1) makes this a challenging proof-of-concept task; stratified sampling or class weighting is recommended.\n\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "S  2",
+      "S  3",
+      "S  4",
+      "S  5",
+      "S  6",
+      "S  7",
+      "S  8",
+      "S  9",
+      "S 10"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [
+      "Hand Dominance",
+      "Years Since Diagnosis",
+      "age",
+      "sex"
+    ],
+    "derived_misc_channels": [
+      {
+        "name": "age_binned",
+        "source_field": "participants.tsv:age",
+        "derivation": "Read age column from participants.tsv; apply clinical threshold at 65 years to create binary class: 0=younger (<65), 1=older (≥65). Broadcast as constant misc channel per subject across all epochs.",
+        "groundable_evidence": "participants.tsv: age column, dtype=numeric, completeness=complete, sample=[75, 48, 78]",
+        "used_by": [
+          "binned age classification"
+        ]
+      },
+      {
+        "name": "diagnosis_duration_binned",
+        "source_field": "participants.tsv:Years Since Diagnosis",
+        "derivation": "Read Years Since Diagnosis from participants.tsv; apply median split at ~24 years to create binary classes: 0=shorter duration, 1=longer duration. Broadcast as constant misc channel per subject.",
+        "groundable_evidence": "participants.tsv: Years Since Diagnosis column, dtype=numeric, completeness=complete, sample=[21, 32, 73]",
+        "used_by": [
+          "disease chronicity binned classification"
+        ]
+      }
+    ],
+    "_dropped_candidates": [
+      {
+        "paradigm": "native misc channel regression/classification (B1)",
+        "reason": "No continuous native misc channels discovered in raw files (no EMG, EOG, GSR, etc. in misc_channel_names). The dataset contains only 18 EEG channels with no auxiliary biosignals."
+      },
+      {
+        "paradigm": "events.tsv derived misc (B2 from trial-level scalars)",
+        "reason": "No events.tsv files exist in this dataset; events are embedded in EEGLAB .set files which could not be fully parsed. No per-trial numeric columns (response_time, confidence, accuracy) available for derived misc creation."
+      },
+      {
+        "paradigm": "cross-dataset healthy vs impaired with explicit healthy subjects",
+        "reason": "The reference paradigm (10.1371/journal.pone.0335364) requires both healthy and orthopedic impairment subjects, but ds004022 contains only impaired subjects (N=7, all with orthopedic impairment). Within-dataset training is impossible without external healthy data augmentation, which is outside kernel scope."
+      }
+    ]
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/openneuro_ds004022/kernel_final.py",
+  "kernel_code_len": 14317,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds004022.py",
+    "kernel_sha256": "d43095f05fb6439a5255dc17d37791958c5861634f4d131a503054c729c51a1a",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 21,
+    "total_n": 21,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "S  1": 21,
+      "S  2": 840,
+      "S  3": 210,
+      "S  4": 210,
+      "S  5": 210,
+      "S  6": 210,
+      "S  7": 840,
+      "S  8": 840,
+      "S  9": 840,
+      "S 10": 840,
+      "boundary": 21,
+      "condition 12": 21
+    },
+    "subject_info": {
+      "record_count": 21,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds004022.py",
+  "reconcile_patched": true,
+  "status": "wait_manual_review"
+}

@@ -1,0 +1,299 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 9,
+    "category": "",
+    "format_type": "edf",
+    "has_bids_sidecars": false
+  },
+  "budget_used": 26,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 5,
+    "task_synthesis": 8,
+    "kernel_loop": 9,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T07:54:23.494310+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.13026_C2K01R.html",
+      "ref": "10.13026/C2K01R",
+      "title": "CHB-MIT Scalp EEG Database v1.0.0",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is the official PhysioNet dataset description page, not a research paper. While it describes the CHB-MIT dataset in detail including annotations of 198 seizures, it does not define any ML task, epoching strategy, or label mapping for machine learning. It is a data repository metadata page.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "official_physionet.org_content_chbmit_1.0.0.html",
+      "ref": "10.13026/C2K01R",
+      "title": "CHB-MIT Scalp EEG Database v1.0.0",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is the same official PhysioNet dataset description page as File 1, just a different URL. It describes the dataset structure and clinical context but contains no ML task definition, no epoching methodology, and no label mapping for classification experiments.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    },
+    {
+      "filename": "paper_10.54525_bbmd.1526069.pdf",
+      "ref": "10.54525/bbmd.1526069",
+      "title": "Epileptic Seizure Detection Using Convolutional Neural Networks: Multi-class Classification on the CHB-MIT Scalp EEG Dataset",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses the CHB-MIT dataset and defines a concrete three-class classification task (pre-ictal/ictal/inter-ictal) with two labeling techniques (basic and advanced). It experiments with 8/12/20 subject subsets, uses 30-second non-overlapping segmentation, and evaluates CNN models with clear performance metrics (DenseNet121 achieves 85.52% F1).",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 3,
+      "paradigm": "epileptic seizure detection (pre-ictal/ictal/inter-ictal classification)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-second non-overlapping segments; two labeling approaches (basic and advanced)",
+      "target_events": [
+        "seizure onset",
+        "seizure end"
+      ],
+      "label_mapping": "three-class: pre-ictal (before seizure) / ictal (during seizure) / inter-ictal (no seizure)",
+      "meta_level": "super",
+      "super_meta_note": "First work to address three-class classification on CHB-MIT; uses subject subsets of varying sizes (8/12/20 patients)",
+      "evidence_desc": "Explicit 3-class labels with 'basic' and 'advanced' labeling techniques; 30s segmentation; multiple CNN architectures compared"
+    },
+    {
+      "filename": "paper_10_1016_j_bspc_2024_107379.pdf",
+      "ref": "10.1016/j.bspc.2024.107379",
+      "title": "Electroencephalogram (EEG) classification using a bio-inspired deep oscillatory neural network",
+      "classification": "partial",
+      "cot_reasoning": "The paper mentions using CHB-MIT among multiple datasets for epilepsy classification, but the main focus is on the novel DONN/OCNN architecture rather than detailed task specification for CHB-MIT specifically. The CHB-MIT task appears to be binary seizure detection, but epoching details and exact label definitions for this dataset are not clearly specified in the extracted text.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "epilepsy EEG classification",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [
+        "seizure"
+      ],
+      "label_mapping": "binary: epileptic vs normal (inferred from context)",
+      "meta_level": "super",
+      "super_meta_note": "CHB-MIT used as one of multiple datasets to demonstrate model versatility; specific preprocessing details for CHB-MIT not detailed in extracted text",
+      "evidence_desc": "CHB-MIT mentioned in list of datasets with 'approx. 23 subjects'; used for both single-channel and multi-channel classification demonstrations"
+    },
+    {
+      "filename": "paper_10_1038_s41598_025_18479_9.pdf",
+      "ref": "10.1038/s41598-025-18479-9",
+      "title": "Epileptic seizure detection from electroencephalogram signals based on 1D CNN-LSTM deep learning model using discrete wavelet transform",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses CHB-MIT dataset and reports specific performance metrics (96.94% accuracy, 94.33% Kappa, 96.36% GDR). It describes a clear pipeline: DWT for band extraction, 1D CNN for spatial features, LSTM for temporal features, and fully-connected classification. The task is epileptic seizure detection, though exact class labels and epoching parameters need inference from the ictal/interictal description.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "epileptic seizure detection (ictal vs interictal)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "DWT-based feature extraction; 1D CNN-LSTM architecture; specific segment size not stated in extracted text",
+      "target_events": [
+        "seizure onset",
+        "seizure end"
+      ],
+      "label_mapping": "binary: ictal (seizure) vs interictal (between seizures)",
+      "meta_level": "super",
+      "super_meta_note": "Compares performance across three datasets (TUSZ, BONN, CHB-MIT) with reported metrics for each",
+      "evidence_desc": "Explicit CHB-MIT results: 96.94% accuracy, 94.33% Kappa, 96.36% GDR; DWT+CNN+LSTM pipeline described"
+    },
+    {
+      "filename": "paper_10_1038_s41598_025_98389_y.pdf",
+      "ref": "10.1038/s41598-025-98389-y",
+      "title": "Retraining and evaluation of machine learning and deep learning models for seizure classification from EEG data",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses CHB-MIT as one of three public databases for training and evaluation, with specific details: 140 files, 25 channels, 256 Hz sampling. It defines seizure detection task with annotations marking beginning and end of each seizure event. The paper retraines multiple ML and DL models, though exact epoching parameters and train/test splits are in supplementary materials not fully extracted.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "seizure detection (seizure vs non-seizure)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Preprocessing to ensure comparability; 10-20 montage of 18 channels derived; bipolar montage for CHB-MIT; details in supplementary file 1",
+      "target_events": [
+        "seizure onset",
+        "seizure end"
+      ],
+      "label_mapping": "binary: seizure vs non-seizure segments",
+      "meta_level": "super",
+      "super_meta_note": "CHB-MIT used alongside AUB and NICU datasets; models retrained and tested on local HOMI clinical data for generalization assessment",
+      "evidence_desc": "Table 1 shows CHB-MIT specifics (140 files, 25 channels, 256 Hz); explicit mention of seizure annotations with beginning and end marks; preprocessing for heterogeneous dataset comparability"
+    },
+    {
+      "filename": "paper_10_1088_1741_2552_ada0e5.pdf",
+      "ref": "10.1088/1741-2552/ada0e5",
+      "title": "Multi-dimensional hybrid bilinear CNN-LSTM models for epileptic seizure detection and prediction using EEG signals",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses CHB-MIT dataset for both seizure detection (98.84% accuracy) and seizure prediction (98.44% accuracy with 0.02 FPR). It describes a detailed methodology integrating temporal, spatial, and frequency information with periodic/aperiodic component separation. The task definitions are clear: detection (ictal vs interictal) and prediction (preictal vs interictal).",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "epileptic seizure detection and prediction",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Parameterized PSD for periodic/aperiodic separation; synchronization matrix; self-attention filtering; hybrid bilinear CNN-LSTM with bilinear pooling",
+      "target_events": [
+        "seizure onset",
+        "seizure end"
+      ],
+      "label_mapping": "detection: ictal vs interictal; prediction: preictal vs interictal",
+      "meta_level": "super",
+      "super_meta_note": "Novel contribution is multi-dimensional integration (temporal, spatial, frequency) with periodic/aperiodic separation; evaluated on both CHB-MIT and Kaggle iEEG datasets",
+      "evidence_desc": "CHB-MIT detection accuracy 98.84%; prediction accuracy 98.44% with FPR 0.02; explicit dataset description with pediatric intractable seizures"
+    },
+    {
+      "filename": "paper_10_1109_access_2020_2976866.pdf",
+      "ref": "10.1109/ACCESS.2020.2976866",
+      "title": "Epileptic Seizures Prediction Using Deep Learning Techniques",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses CHB-MIT scalp EEG dataset with 24 subjects for seizure prediction. It clearly defines the task as binary classification between preictal and interictal states, with preictal defined as 30-90 minutes before seizure onset. The methodology includes preprocessing, CNN-based automated feature extraction, and SVM classification with reported sensitivity (92.7%) and specificity (90.8%).",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "seizure prediction (preictal vs interictal)",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "Preictal state: 30-90 minutes before seizure onset; interictal state: normal state between postictal and preictal",
+      "target_events": [
+        "seizure onset"
+      ],
+      "label_mapping": "binary: preictal (before seizure) vs interictal (normal/resting state)",
+      "meta_level": "super",
+      "super_meta_note": "Focuses on prediction rather than detection; uses CNN for feature extraction and SVM for classification; 24 subjects from CHB-MIT",
+      "evidence_desc": "Explicit preictal definition (30-90 min before onset); average sensitivity 92.7% and specificity 90.8% on 24 CHB-MIT subjects; clear state definitions with figures"
+    },
+    {
+      "filename": "paper_10_1109_embc46164_2021_9629538.pdf",
+      "ref": "10.1109/EMBC46164.2021.9629538",
+      "title": "Performance Analysis of Entropy Methods in Detecting Epileptic Seizure from Surface Electroencephalograms",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses CHB-MIT database with 23 subjects for epileptic seizure detection. It defines a clear binary classification task with specific epoching: 5-second non-overlapping windows labeled as 'with seizure' or 'without seizure' based on presence/absence of seizure episode. The study analyzes four entropy features across 9 left-hemisphere channels, with explicit segment counts (1,088,705 non-seizure and 14,344 seizure segments).",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "epileptic seizure detection (seizure vs non-seizure)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "5-second non-overlapping windows; 9 left-hemisphere channels selected; 256 Hz sampling",
+      "target_events": [
+        "seizure onset",
+        "seizure end"
+      ],
+      "label_mapping": "binary: 'with seizure' vs 'without seizure' based on presence/absence of seizure in 5-second segment",
+      "meta_level": "super",
+      "super_meta_note": "Focus on entropy feature comparison (DistEn, ShanEn, RenEn, LempelZiv) rather than model architecture; channel-wise and patient-wise AUC analysis",
+      "evidence_desc": "Explicit: 122 records with at least one seizure; 5-second non-overlapping segmentation; 1,088,705 non-seizure and 14,344 seizure segments; 9 left-hemisphere channels; entropy features evaluated with AUC and error graphs"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The CHB-MIT dataset contains explicit seizure onset/offset annotations enabling binary (seizure vs non-seizure) and multi-class (pre-ictal/ictal/inter-ictal) classification tasks. Multiple papers demonstrate validated ML pipelines with clear performance metrics on this exact dataset.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 686,
+    "total_n": 686,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 686,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [],
+    "notes": "No raw event IDs were detected in the pre-scan ('no events detected'). The CHB-MIT Scalp EEG Database (physionet.org/files/chbmit/1.0.0/) does not contain embedded event markers within the EDF files themselves. Instead, seizure annotations are stored externally in: (1) per-subject summary text files (e.g., chb01/chb01-summary.txt, chb02/chb02-summary.txt, chb03/chb03-summary.txt, chb04/chb04-summary.txt, chb05/chb05-summary.txt, chb21/chb21-summary.txt) that specify 'Number of Seizures in File', 'Seizure Start Time', and 'Seizure End Time' in seconds for each recording; and (2) binary .seizures files (e.g., chb21/chb21_19.edf.seizures, chb21/chb21_21.edf.seizures) with a time resolution header (256 Hz). Since no event IDs were extracted from the data files and the annotations exist only as external metadata without discrete event IDs to map, no annotations can be produced. The dataset structure consists of subjects (chb01-chb24) with numbered recording sessions, but all event timing information is stored outside the EDF event channels."
+  },
+  "tasks_section": "## Tasks\n\n",
+  "kernel_requirements": {
+    "required_event_ids": [],
+    "required_native_misc": [],
+    "required_info_fields": [],
+    "derived_misc_channels": [
+      {
+        "name": "seizure_state_label",
+        "source_field": "events.tsv:seizure_start",
+        "derivation": "For each 30-second segment, determine if it falls entirely before a seizure (pre-ictal), during a seizure (ictal, between seizure_start and seizure_end events), or neither (inter-ictal). Requires parsing seizure onset/offset annotations from EDF+ annotations or separate .seizure files in CHB-MIT. Pre-ictal window typically defined as 30-90 min before onset per domain convention.",
+        "groundable_evidence": "No events.tsv columns discovered; annotations are embedded in EDF headers or .seizure companion files. Kernel must extract seizure onset/offset times from native CHB-MIT annotation format.",
+        "used_by": [
+          "3-class seizure state classification"
+        ]
+      },
+      {
+        "name": "seizure_binary_label",
+        "source_field": "events.tsv:seizure_start",
+        "derivation": "For each segment, label=1 if any portion overlaps with seizure interval [seizure_start, seizure_end], else label=0. CHB-MIT annotations are in EDF+ header or .seizure files. Kernel must extract precise onset/offset times and perform overlap check.",
+        "groundable_evidence": "No native events.tsv columns; annotations embedded in EDF headers or companion .seizure files per CHB-MIT documentation.",
+        "used_by": [
+          "2-class ictal vs interictal detection"
+        ]
+      }
+    ],
+    "_dropped_candidates": [
+      {
+        "paradigm": "subject-level demographic regression",
+        "reason": "No participants.tsv columns discovered in grounded catalog. All B3 archetype tasks require native info fields from participants.tsv, which is absent for CHB-MIT."
+      },
+      {
+        "paradigm": "native misc channel regression/classification",
+        "reason": "No continuous non-EEG channels (EMG, EOG, GSR, etc.) discovered in raw EDF files. CHB-MIT contains only EEG channels in standard bipolar montage."
+      },
+      {
+        "paradigm": "events.tsv derived misc tasks",
+        "reason": "No events.tsv numeric columns discovered in pre-scan. CHB-MIT stores annotations in EDF+ headers or separate .seizure files, not in BIDS events.tsv format."
+      },
+      {
+        "paradigm": "event-based epoching with explicit event IDs",
+        "reason": "No events detected in pre-scan of available event IDs. CHB-MIT annotations are embedded in EDF+ format or companion .seizure files, not exposed as discrete event IDs in the standard event extraction pipeline. All tasks must use segmentation-based epoching with derived labels from annotation parsing."
+      }
+    ]
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/physionet_chbmit/kernel_final.py",
+  "kernel_code_len": 20365,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/physionet_chbmit.py",
+    "kernel_sha256": "ed74d8f90db516a158ed18f7b9016b85c7897a0a64cae0dac57a225b960c1100",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 686,
+    "total_n": 686,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 686,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/physionet_chbmit.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

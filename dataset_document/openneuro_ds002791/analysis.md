@@ -1,0 +1,61 @@
+# DataSet1 - Visual Object Naming EEG
+
+**Dataset**: `openneuro_ds002791` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002791
+**Category**: High-level Mental | **Subjects**: N/A | **Files (Completed)**: 92 | **Channels**: 256 | **Sampling Rate**: 1000 Hz | **Manual Review**: Pending
+
+## Paradigm
+
+Participants viewed and named visual objects (pictures presented as bitmap images) during high-density 256-channel EEG recording. Each event label is the filename of the presented image (e.g., GLOVE.bmp, GORILLA.bmp), corresponding to 30 distinct visual object categories. The task likely involved overt or covert naming or picture-word matching. This is DataSet1 of a paired dataset series (see also DataSet2: ds002833).
+
+## File Scan Result
+
+> **Kernel SHA256**: `cfeba9b65173d02d2ad6dd8716c813557a509578dff45d09bc8a4d04c906fdd6`
+> **EEGUnity Version**: `0.8.1`
+> **Scan Type**: Full
+
+### Event Structure
+
+| Event ID | Count (total) | Type | Meta Level | Meaning |
+|----------|---------------|------|------------|---------|
+| `trigger/D249` | 9855829 | event | raw | Stimulus presentation trigger (onset marker) |
+| `trigger/D250` | 9844475 | event | raw | Response/completion trigger (offset marker) |
+
+
+### Info
+| Field | Completeness | Notes |
+|---|---|---|
+| `age` | complete | N/A |
+| `sex` | complete | N/A |
+| `device` | missing | N/A |
+
+## Tasks
+
+### Potential Task 1: Visual Object Naming — Stimulus Category Classification / Response Time Regression
+
+- **Task Type**: regression
+- **Epoch Method**: `epoch_by_long_event_hdf5`
+- **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s
+- **Label Route**: `misc`
+- **Meta Level**: raw
+- **Target Definition**:
+  | MISC Channel Name | Y Mapping Notes |
+  |-------------------|-----------------|
+  | Needs verification | response_time for naming latency (ms); category_id (0–29) for visual object category if available via derived MISC channel — no native MISC channels present in file scan |
+- **Evidence (DOI)**: None (paradigm is plausible; however, neither partial reference explicitly cites this dataset or defines an ML-ready task with labeled epochs)
+- **Kernel Notes**: 
+  - **Critical**: The raw event structure contains only generic trigger markers (`trigger/D249`: ~9.86M, `trigger/D250`: ~9.84M). The 30 visual object categories (e.g., GLOVE.bmp, FEATHER.bmp, GORILLA.bmp) are NOT present as native event IDs.
+  - Stimulus onset events must be **derived** from the continuous EEG stream or metadata channels before epoching; the original paradigm confirms picture stimuli were presented one per trial.
+  - The `response_time` label stored via the `misc` route is available as a regression target for naming latency analysis.
+  - For classification, semantic grouping (animate/inanimate or living/nonliving) is recommended over 30-way identity classification to improve model stability.
+  - 256-channel EGI/HydroCell array provides high spatial resolution for ERP/source analysis.
+
+## Data Quality Notes
+
+- 30 distinct object images (e.g., GLOVE.bmp, CARROT.bmp, FISH.bmp, ALLIGATO.bmp) across 92 files (46 files containing stimulus events each).
+- High-density 256-channel EEG; verify electrode positions and bad channel rejection per subject before pooling.
+- Stimulus event derivation required prior to epoching; verify alignment between derived stimulus onsets and response_time labels.
+
+## Kernel Responsibilities
+
+> **Super Meta Required**: No
+> **Status**: wait_manual_review

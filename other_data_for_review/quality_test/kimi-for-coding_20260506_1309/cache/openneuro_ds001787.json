@@ -1,0 +1,262 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 11,
+    "category": "",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 25,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 8,
+    "task_synthesis": 7,
+    "kernel_loop": 5,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-06T13:45:03.060745+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds001787.v1.1.1.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds001787.v1.1.1",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds001787.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10.1007_s10484-018-9391-7.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1007/s10484-018-9391-7",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1007_s10484_025_09753_7.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1007/s10484.025.09753.7",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1038_s41598_026_37142_5.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1038/s41598.026.37142.5",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1038_s41598_026_41310_y.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1038/s41598.026.41310.y",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1088_1741_2552_ae2b0f.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1088/1741.2552.ae2b0f",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3389_fnhum_2023_1008490.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fnhum.2023.1008490",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3389_fnins_2022_765585.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fnins.2022.765585",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3389_fnsys_2025_1718733.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fnsys.2025.1718733",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_europepmc.org_backend_ptpmcrender.fcgi.pdf",
+      "ref": "https://doi.org/10.1162/imag_a_00103",
+      "title": "The past, present, and future of the brain imaging data structure (BIDS)",
+      "classification": "irrelevant",
+      "cot_reasoning": "This is a review paper about the BIDS (Brain Imaging Data Structure) standard itself, authored by Poldrack et al. While it discusses OpenNeuro and BIDS datasets in general terms as examples of data organization, it is a methodological/infrastructure paper about the BIDS specification rather than a study that uses ds001787 for any specific ML task. There is no mention of ds001787 specifically, nor any EEG analysis task defined.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset contains clear event markers with a defined structure: stimulus onsets (value=128, 'First question onset') and subject responses (values 2, 4, 8 for three response options, plus 16 for involuntary responses). These responses indicate levels of concentration and mind wandering during meditation, enabling classification of cognitive states from EEG. The trial_type and value mappings in events.tsv provide authoritative ground-truth labels for a meaningful ML task.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 40,
+    "total_n": 40,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_128": 983,
+      "event_2": 1131,
+      "event_4": 754,
+      "event_8": 258,
+      "event_254": 4,
+      "event_16": 2
+    },
+    "subject_info": {
+      "record_count": 40,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "event_128",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: First question onset / stimulus (probe interruption to indicate concentration and mind-wandering level)",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_2",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Response 1 (subject response to probe question)",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_4",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Response 2 (subject response to probe question)",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_8",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Response 3 (subject response to probe question)",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_16",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Indicate involuntary response",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_254",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Undefined system marker (not defined in events.json, rare occurrences)",
+        "confidence": "unclear",
+        "session_task_scope": "all"
+      }
+    ],
+    "notes": "Mappings confirmed by task-meditation_events.json which explicitly defines values 2, 4, 8, 16, and 128. Value 128 consistently appears with trial_type='stimulus' across all sampled events.tsv files (sub-001 through sub-005, sub-022; ses-01, ses-02, ses-03). Values 2, 4, 8 consistently appear with trial_type='response'. README states subjects were interrupted every ~2 minutes to indicate concentration/mind-wandering levels. Value 16 defined in JSON as 'Indicate involuntary response' but not observed in 700+ sampled rows (only 2 global occurrences). Value 254 is not defined in JSON and was not observed in samples (4 global occurrences); classified as admin due to undefined status and rarity suggesting non-experimental system marker."
+  },
+  "tasks_section": "## Tasks\n\n### Potential Task 1: 3-class meditation response\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s *, tmax = 2.0 s *, target_events = [`2`, `4`, `8`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `2` | 0 | Response 1 (subject response to probe question) |\n  | `4` | 1 | Response 2 (subject response to probe question) |\n  | `8` | 2 | Response 3 (subject response to probe question) |\n- **Evidence**:\n  - task-meditation_events.json — defines values 2, 4, 8 as Response 1, Response 2, Response 3 to probe questions about concentration and mind-wandering levels\n  - events.tsv samples (sub-001, ses-01) — values 2, 4, 8 consistently appear with trial_type='response'\n  - README — subjects interrupted every ~2 minutes during meditation to indicate concentration and mind-wandering levels\n- **Notes**: Response-locked epochs for meditation probe responses. The three response options represent subject self-reports of concentration/mind-wandering states. Event 128 (stimulus/question onset) is excluded as it is the probe interruption, not the response. Events 16 (involuntary response, n=2 globally) and 254 (undefined admin marker, n=4 globally) are excluded due to rarity and non-experimental status.\n\n### Potential Task 2: Meditation State vs Probe Interruption\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = -1 s *, tmax = 3 s *, target_events = [`128`, `2`, `4`, `8`]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `128` | 0 | Probe interruption onset (first question) — meditation interruption event |\n  | `2` | 1 | Response 1 (to probe question) — post-interruption response state |\n  | `4` | 1 | Response 2 (to probe question) — post-interruption response state |\n  | `8` | 1 | Response 3 (to probe question) — post-interruption response state |\n- **Evidence**:\n  - task-meditation_events.json — Value 128 defined as \"First question onset (most important marker)\" with trial_type \"stimulus\"; values 2, 4, 8 defined as responses with trial_type \"response\"\n  - sub-001_ses-01_task-meditation_events.tsv — Confirmed pattern: 128 events alternate with 2/4/8 response events every ~2 minutes during continuous recording\n  - README — \"Subjects were meditating and were interrupted about every 2 minutes to indicate their level of concentration and mind wandering\"\n- **Notes**: This task contrasts the probe interruption state (y=0, event 128) against response states following interruption (y=1, events 2/4/8 merged). True \"ongoing meditation\" epochs without interruption markers are not directly available as event-locked targets; the continuous meditation state between probes would require segmentation (not implemented here). The merged y=1 class captures the post-probe cognitive engagement period rather than pure uninterrupted meditation. Event 16 (involuntary response, n=2 globally) and event 254 (undefined admin marker, n=4) are excluded due to extreme rarity. All epoch parameters are inferred from the ~2 minute inter-probe interval and typical ERP analysis windows for stimulus-locked responses.\n\n### Potential Task 3: Expert vs Novice Meditator Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 30 s *, overlap = 0.0 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | group | 0=expert, 1=novice (binary classification from participants.tsv 'group' column) |\n- **Evidence**:\n- **Notes**: Continuous meditation EEG segmented into 30-second windows. No trial structure exists for the expertise contrast; the 'group' column in participants.tsv provides subject-level binary labels (expert/novice, N=12 each). Segment length and overlap inferred from Category SKILL defaults for naturalistic continuous paradigms.\n\n### Potential Task 4: Age Regression from Meditation EEG\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 30 s *, overlap = 0.0, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | age | Numeric age in years (29–78). One subject (sub-024) missing age data; must be excluded. Values used directly as regression target. |\n- **Evidence**:\n  - participants.tsv — Contains 'age' column with numeric values ranging 29-78; completeness 23/24 subjects (sub-001 through sub-023)\n  - eeg.json — RecordingType=continuous, TaskName=meditation, supports segmentation approach for continuous meditation recordings\n  - README — Describes continuous meditation paradigm with ~2-minute probe interruptions; EEG recorded during sustained meditation\n- **Notes**: Segmentation-based epoching appropriate for continuous meditation EEG without trial-boundary events. 30-second segments with no overlap chosen as default for continuous resting-state-like paradigms. Age prediction from EEG is a well-established neurodevelopmental/neuroaging benchmark; the meditation context provides a controlled cognitive state. One subject with missing age must be excluded at the kernel level.\n\n### Potential Task 5: Gender Classification from Meditation EEG\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 30 s *, overlap = 0.0 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | gender | 0 = 'F' (female), 1 = 'M' (male); binary classification from participants.tsv |\n- **Evidence**:\n  - participants.tsv — 'gender' column with complete data: 12 'M' and 12 'F' across 24 subjects\n- **Notes**: Segmentation-based epoching used for continuous meditation EEG; 30-second non-overlapping segments with label assigned per-subject from participants.tsv gender field. Task treats subject-level demographic as classification target from resting-state-like continuous neural activity.\n\n### Potential Task 6: Meditation Segmentation with Group Label\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 30 s *, overlap = 0.0, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | group | `expert` → y=0, `novice` → y=1 |\n- **Evidence**:\n- **Notes**: Segmentation-based task for continuous naturalistic meditation recording. The entire continuous EEG is divided into 30-second non-overlapping segments. Each segment inherits the subject-level group label from participants.tsv (expert/novice), creating a subject-stratified classification problem. No trial structure is used for epoching since the paradigm is continuous with only intermittent probe interruptions (~2 min) that do not define meaningful task epochs.\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "128",
+      "2",
+      "4",
+      "8"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [
+      "age",
+      "gender",
+      "group"
+    ],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "response time regression",
+        "reason": "events.json explicitly states 'response_time column not use for this data' and all sampled values are 'n/a'. No usable per-trial numeric column exists for B2 derivation."
+      },
+      {
+        "paradigm": "involuntary response detection",
+        "reason": "event_16 ('Indicate involuntary response') has only 2 global occurrences across entire dataset (N=24 subjects, ~40 sessions). Insufficient samples for any trainable task."
+      },
+      {
+        "paradigm": "native misc regression",
+        "reason": "No native misc channels discovered in raw files (EMG, EOG, GSR, etc. all absent per eeg.json: EOGChannelCount=0, ECGChannelCount=0, EMGChannelCount=0, and no misc_channel_names in grounded catalog)."
+      }
+    ]
+  },
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/openneuro_ds001787/kernel_final.py",
+  "kernel_code_len": 9572,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/openneuro_ds001787.py",
+    "kernel_sha256": "400231ef4729d465a3cd37073c29c02ea3e4a1774941918a88f1ddae4582756c",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 40,
+    "total_n": 40,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "128": 983,
+      "2": 1131,
+      "4": 754,
+      "8": 258,
+      "254": 5,
+      "16": 2
+    },
+    "subject_info": {
+      "record_count": 40,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/openneuro_ds001787.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

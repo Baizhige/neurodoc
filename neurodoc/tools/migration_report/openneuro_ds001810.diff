@@ -1,0 +1,90 @@
+--- openneuro_ds001810/analysis.md (pre-v3)
++++ openneuro_ds001810/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds001810` | **Year**: 2019 | **URL**: https://openneuro.org/datasets/ds001810
+ **Category**: Sensory/Response | **Subjects**: 40 | **Files (Completed)**: 527 | **Channels**: 73 | **Sampling Rate**: 512 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -33,6 +33,13 @@
+ | `stimulus_lag_variant` | 17062 | event | raw | Stimulus lag variant marker |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `response_time` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -51,10 +58,10 @@
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|-------|-|-------|-------|
+-| T2_onset_variant1 | 0 | T2 at AB-susceptible lag (lag-3) |
+-| T2_onset_variant2 | 1 | T2 at control lag (lag-8) |
++  | Event ID | y | Meaning |
++  |---|---|---|
++  | T2_onset_variant1 | 0 | T2 at AB-susceptible lag (lag-3) |
++  | T2_onset_variant2 | 1 | T2 at control lag (lag-8) |
+ 
+ - **Evidence** (DOI): None available for this dataset; task supported by paradigm description and event structure alignment.
+ - **Kernel Notes**: T2_onset_variant1 (~23.3k) and T2_onset_variant2 (~27.6k) likely encode T2 at different lag positions. The ~51k STATUS/61450 events represent RSVP stream items. CM_in_range (61440) and CM_out_of_range (61694) are BioSemi hardware markers excluded from analysis.
+@@ -68,10 +75,10 @@
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|-------|-|-------|-------|
+-| response_hit | 0 | Correct T2 detection |
+-| response_miss | 1 | Incorrect T2 detection (missed within AB window) |
++  | Event ID | y | Meaning |
++  |---|---|---|
++  | response_hit | 0 | Correct T2 detection |
++  | response_miss | 1 | Incorrect T2 detection (missed within AB window) |
+ 
+ - **Evidence** (DOI): None available for this dataset; task plausible from paradigm (RSVP AB task with response recording).
+ - **Kernel Notes**: response_hit (~40.8k) and response_miss (~10.2k) encode behavioral outcomes. Epochs should be aligned to T2 onset, then labeled by subsequent response. The ~31k imbalance between total T2 trials and responses may reflect no-response catch trials.
+@@ -82,16 +89,18 @@
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2 s, tmax = 1.0 s, target_events = [T2_onset_variant1, T2_onset_variant2]
+ - **Label Route**: `misc`
++- **Label Field**: `response_time`
+ - **Meta Level**: super
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|-------|-|-------|-------|
+-| response_time | continuous | RT from T2 onset to behavioral response |
++  | MISC Channel | Value | Notes |
++  |---|---|---|
++  | response_time | continuous | RT from T2 onset to behavioral response |
+ 
+ - **Evidence** (DOI): None available for this dataset; continuous RT labels stored in misc route.
+ - **Kernel Notes**: response_time is a continuous variable stored via misc route. Preserve derivation metadata (unit: likely seconds/ms, version) for regression modeling. RT may vary as a function of tDCS phase (pre/during/post) and stimulation type (anodal/cathodal).
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 4: T1 Processing Event-Related Potential
+ 
+ - **Task Type**: classification
+@@ -101,9 +110,9 @@
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|-------|-|-------|-------|
+-| T1_onset | 0 | T1 target onset |
++  | Event ID | y | Meaning |
++  |---|---|---|
++  | T1_onset | 0 | T1 target onset |
+ 
+ - **Evidence** (DOI): None available; task plausible from paradigm (T1 is first target in RSVP stream).
+ - **Kernel Notes**: T1_onset (~34k) marks first target identification. Useful for examining T1 processing as baseline for AB effect. Combined with T2 onset epochs, enables lag-dependent comparison of ERP components (e.g., N2pc, P3).

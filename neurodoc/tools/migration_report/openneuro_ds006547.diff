@@ -1,0 +1,98 @@
+--- openneuro_ds006547/analysis.md (pre-v3)
++++ openneuro_ds006547/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds006547` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds006547
+ **Category**: Sensory/Response | **Subjects**: 31 | **Files (Completed)**: 31 | **Channels**: 67 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -81,46 +81,46 @@
+ - **Meta Level**: raw
+ - **Target Definition**:
+ 
+-| Event | y | Meaning |
+-|---|---|---|
+-| `Stimulus/S  1` | 0 | Visual condition S1 |
+-| `Stimulus/S  2` | 1 | Visual condition S2 |
+-| `Stimulus/S  3` | 2 | Visual condition S3 |
+-| `Stimulus/S  4` | 3 | Visual condition S4 |
+-| `Stimulus/S  5` | 4 | Visual condition S5 |
+-| `Stimulus/S  6` | 5 | Visual condition S6 |
+-| `Stimulus/S  7` | 6 | Visual condition S7 |
+-| `Stimulus/S  8` | 7 | Visual condition S8 |
+-| `Stimulus/S  9` | 8 | Visual condition S9 |
+-| `Stimulus/S 10` | 9 | Visual condition S10 |
+-| `Stimulus/S 11` | 10 | Visual condition S11 |
+-| `Stimulus/S 12` | 11 | Visual condition S12 |
+-| `Stimulus/S 13` | 12 | Visual condition S13 |
+-| `Stimulus/S 14` | 13 | Visual condition S14 |
+-| `Stimulus/S 15` | 14 | Visual condition S15 |
+-| `Stimulus/S 16` | 15 | Visual condition S16 |
+-| `Stimulus/S 17` | 16 | Visual condition S17 |
+-| `Stimulus/S 18` | 17 | Visual condition S18 |
+-| `Stimulus/S 19` | 18 | Visual condition S19 |
+-| `Stimulus/S 20` | 19 | Visual condition S20 |
+-| `Stimulus/S 21` | 20 | Visual condition S21 |
+-| `Stimulus/S 22` | 21 | Visual condition S22 |
+-| `Stimulus/S 41` | 22 | Visual condition S41 |
+-| `Stimulus/S 42` | 23 | Visual condition S42 |
+-| `Stimulus/S 43` | 24 | Visual condition S43 |
+-| `Stimulus/S 44` | 25 | Visual condition S44 |
+-| `Stimulus/S 45` | 26 | Visual condition S45 |
+-| `Stimulus/S 46` | 27 | Visual condition S46 |
+-| `Stimulus/S 47` | 28 | Visual condition S47 |
+-| `Stimulus/S 48` | 29 | Visual condition S48 |
+-| `Stimulus/S 49` | 30 | Visual condition S49 |
+-| `Stimulus/S 50` | 31 | Visual condition S50 |
+-| `Stimulus/S 51` | 32 | Visual condition S51 |
+-| `Stimulus/S 52` | 33 | Visual condition S52 |
+-| `Stimulus/S 53` | 34 | Visual condition S53 |
+-| `Stimulus/S 54` | 35 | Visual condition S54 |
+-| `Stimulus/S 55` | 36 | Visual condition S55 |
+-| `Stimulus/S 56` | 37 | Visual condition S56 |
++  | Event ID | y | Meaning |
++  |---|---|---|
++  | `Stimulus/S  1` | 0 | Visual condition S1 |
++  | `Stimulus/S  2` | 1 | Visual condition S2 |
++  | `Stimulus/S  3` | 2 | Visual condition S3 |
++  | `Stimulus/S  4` | 3 | Visual condition S4 |
++  | `Stimulus/S  5` | 4 | Visual condition S5 |
++  | `Stimulus/S  6` | 5 | Visual condition S6 |
++  | `Stimulus/S  7` | 6 | Visual condition S7 |
++  | `Stimulus/S  8` | 7 | Visual condition S8 |
++  | `Stimulus/S  9` | 8 | Visual condition S9 |
++  | `Stimulus/S 10` | 9 | Visual condition S10 |
++  | `Stimulus/S 11` | 10 | Visual condition S11 |
++  | `Stimulus/S 12` | 11 | Visual condition S12 |
++  | `Stimulus/S 13` | 12 | Visual condition S13 |
++  | `Stimulus/S 14` | 13 | Visual condition S14 |
++  | `Stimulus/S 15` | 14 | Visual condition S15 |
++  | `Stimulus/S 16` | 15 | Visual condition S16 |
++  | `Stimulus/S 17` | 16 | Visual condition S17 |
++  | `Stimulus/S 18` | 17 | Visual condition S18 |
++  | `Stimulus/S 19` | 18 | Visual condition S19 |
++  | `Stimulus/S 20` | 19 | Visual condition S20 |
++  | `Stimulus/S 21` | 20 | Visual condition S21 |
++  | `Stimulus/S 22` | 21 | Visual condition S22 |
++  | `Stimulus/S 41` | 22 | Visual condition S41 |
++  | `Stimulus/S 42` | 23 | Visual condition S42 |
++  | `Stimulus/S 43` | 24 | Visual condition S43 |
++  | `Stimulus/S 44` | 25 | Visual condition S44 |
++  | `Stimulus/S 45` | 26 | Visual condition S45 |
++  | `Stimulus/S 46` | 27 | Visual condition S46 |
++  | `Stimulus/S 47` | 28 | Visual condition S47 |
++  | `Stimulus/S 48` | 29 | Visual condition S48 |
++  | `Stimulus/S 49` | 30 | Visual condition S49 |
++  | `Stimulus/S 50` | 31 | Visual condition S50 |
++  | `Stimulus/S 51` | 32 | Visual condition S51 |
++  | `Stimulus/S 52` | 33 | Visual condition S52 |
++  | `Stimulus/S 53` | 34 | Visual condition S53 |
++  | `Stimulus/S 54` | 35 | Visual condition S54 |
++  | `Stimulus/S 55` | 36 | Visual condition S55 |
++  | `Stimulus/S 56` | 37 | Visual condition S56 |
+ 
+ - **Evidence**: N/A (no references available)
+ - **Kernel Notes**: 

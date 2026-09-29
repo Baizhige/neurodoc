@@ -1,0 +1,323 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 11,
+    "category": "",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 36,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 12,
+    "task_synthesis": 10,
+    "kernel_loop": 9,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T05:55:44.786317+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_openneuro.org_datasets_ds005178.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "paper_10_1016_j_smrv_2024_101951.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.smrv.2024.101951",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1109_embc58623_2025_11254754.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1109/embc58623.2025.11254754",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "auto_primary_reference_01.pdf",
+      "ref": "10.3389/fnins.2023.987578",
+      "title": "At-home sleep monitoring using generic ear-EEG",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly describes the EESM23 study (generic ear-EEG sleep monitoring) which corresponds to OpenNeuro ds005178. It defines automatic sleep scoring as a concrete ML task with 5-class sleep stage labels (Wake, REM, N1, N2, N3) validated against PSG manual scoring using Cohen's kappa. The paper describes 10 subjects with 2 PSG+ear-EEG nights and 10 ear-EEG only nights, matching the dataset structure.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "sleep monitoring, at-home longitudinal recording with generic ear-EEG",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-second non-overlapping epochs aligned with PSG scoring",
+      "target_events": [
+        "sleep stage transitions",
+        "PSG-aligned epochs"
+      ],
+      "label_mapping": "Wake=0, N1=1, N2=2, N3=3, REM=4 (AASM standard 5-stage)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicit description of automatic sleep scoring with 5-class classification, PSG validation, 30s epochs, 10 subjects/12 nights each (2 PSG+EEG, 10 EEG-only)"
+    },
+    {
+      "filename": "official_doi.org_10.3389_fnins.2023.987578.html",
+      "ref": "10.3389/fnins.2023.987578",
+      "title": "At-home sleep monitoring using generic ear-EEG",
+      "classification": "relevant",
+      "cot_reasoning": "This is the HTML version of the same paper as File 1, describing the EESM23 dataset (OpenNeuro ds005178). It confirms the same ML task: automatic 5-stage sleep scoring with ear-EEG validated against manual PSG scoring. Contains identical methodological details about epoching and labeling.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "sleep monitoring, at-home longitudinal recording with generic ear-EEG",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-second non-overlapping epochs aligned with PSG scoring",
+      "target_events": [
+        "sleep stage transitions",
+        "PSG-aligned epochs"
+      ],
+      "label_mapping": "Wake=0, N1=1, N2=2, N3=3, REM=4 (AASM standard 5-stage)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Same content as File 1 confirming 5-class sleep stage classification, generic ear-EEG device, 10 subjects, PSG validation with Cohen's kappa=0.71 average"
+    },
+    {
+      "filename": "paper_10.1038_s41597-025-04579-8.pdf",
+      "ref": "10.1038/s41597-025-04579-8",
+      "title": "Ear-EEG sleep monitoring data sets",
+      "classification": "relevant",
+      "cot_reasoning": "This is the data descriptor paper that explicitly introduces and describes the OpenNeuro ds005178 dataset (EESM23) along with EESM19. It details the dataset structure, including 320 total nights across two studies, with EESM23 having 10 subjects, 2 PSG+ear-EEG nights and 10 ear-EEG only nights with generic earpieces. It describes the sleep scoring task with manual PSG labels as ground truth and mentions automatic scoring applications.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "sleep monitoring, at-home longitudinal recording with ear-EEG (both individualized and generic earpieces)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-second epochs for PSG manual scoring; ear-EEG recordings aligned to PSG epochs",
+      "target_events": [
+        "sleep stage transitions",
+        "PSG scoring epochs"
+      ],
+      "label_mapping": "Wake, N1, N2, N3, REM (AASM standard) plus 'unscored' option used for 3% of epochs in EESM23",
+      "meta_level": "raw",
+      "super_meta_note": "This is the primary data descriptor for ds005178; explicitly states this is the largest open mobile EEG dataset",
+      "evidence_desc": "Data descriptor explicitly naming EESM23 dataset with generic earpieces, 10 subjects, 20 PSG-scored nights + 100 ear-EEG only nights, manual PSG scoring by trained technicians, 5-class sleep stages"
+    },
+    {
+      "filename": "paper_10.1111_jsr.13853.pdf",
+      "ref": "10.1111/jsr.13853",
+      "title": "Long-term ear-EEG monitoring of sleep – A case study during shift work",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper describes a single-subject case study using ear-EEG for shift work sleep monitoring with individualized (custom-molded) earpieces connected to a TMSi Mobita amplifier. It does not mention the EESM23 dataset, generic earpieces, or the in-house device used in ds005178. This appears to be a separate study with different equipment and no connection to OpenNeuro ds005178.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Single-subject case study with custom-molded earpieces, different device (Mobita), shift work context; no mention of ds005178 or generic earpieces"
+    },
+    {
+      "filename": "paper_10_1038_s41597_025_04579_8.pdf",
+      "ref": "10.1038/s41597-025-04579-8",
+      "title": "Ear-EEG sleep monitoring data sets",
+      "classification": "relevant",
+      "cot_reasoning": "This is a duplicate of File 3 (same DOI, same content) - the data descriptor for the OpenNeuro ds005178 dataset. It explicitly describes EESM23 with generic earpieces, 10 subjects, and the sleep scoring task with manual PSG labels.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "sleep monitoring, at-home longitudinal recording with ear-EEG",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-second epochs for PSG manual scoring; ear-EEG recordings aligned to PSG epochs",
+      "target_events": [
+        "sleep stage transitions",
+        "PSG scoring epochs"
+      ],
+      "label_mapping": "Wake, N1, N2, N3, REM (AASM standard) plus 'unscored' option",
+      "meta_level": "raw",
+      "super_meta_note": "Duplicate of File 3 - primary data descriptor for ds005178",
+      "evidence_desc": "Identical to File 3: explicit data descriptor for EESM23 (ds005178), generic earpieces, 10 subjects, 120 total nights, manual PSG scoring with 5-class sleep stages"
+    },
+    {
+      "filename": "paper_10_1109_embc58623_2025_11251745.pdf",
+      "ref": "10.1109/embc58623.2025.11251745",
+      "title": "Sleep Analysis Using Longitudinal Ear-EEG Recordings",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper describes a study of 24 chronic pain patients using 'NeuroBuds' ear-EEG device with a different electrode configuration (e0, e1 left; e2, e3 right) and different study protocol (NCT06368531, PSG at hospital). It does not mention OpenNeuro ds005178, EESM23, or the generic earpiece design. The dataset is from a clinical trial with chronic pain patients, not healthy subjects.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Different study (NCT06368531) with chronic pain patients, NeuroBuds device, 24 subjects, different electrode setup; no mention of ds005178 or EESM23 dataset"
+    },
+    {
+      "filename": "paper_10_1109_embc58623_2025_11252780.pdf",
+      "ref": "10.1109/embc58623.2025.11252780",
+      "title": "Benefits of Different Strategies to Adapt Sleep Scoring Models from Scalp- to Ear-EEG",
+      "classification": "partial",
+      "cot_reasoning": "This paper uses three ear-EEG datasets including 'Ear-EEG 2' which matches the description of EESM23 (10 healthy younger subjects, μ=27.4y, range 22-35, 2 nights, generic earpieces, 3 left + 2 right electrodes, 250Hz, left ear reference). The paper describes sleep scoring as a 5-class classification task and evaluates model adaptation strategies. However, it does not explicitly name OpenNeuro ds005178 or EESM23, referring only to 'Ear-EEG 2'. The dataset details strongly suggest this is ds005178 but without explicit dataset identifier.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "sleep monitoring with ear-EEG, model adaptation from scalp-EEG to ear-EEG",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-second non-overlapping epochs, resampled to 128Hz",
+      "target_events": [
+        "sleep stage transitions"
+      ],
+      "label_mapping": "Wake, N1, N2, N3, REM (AASM standard 5-stage)",
+      "meta_level": "raw",
+      "super_meta_note": "Strongly implied to be EESM23/ds005178 based on subject count, age range, generic earpieces, and electrode configuration, but not explicitly named",
+      "evidence_desc": "Describes 'Ear-EEG 2' with 10 subjects, generic earpieces, 3L+2R electrodes, 250Hz, left ear reference, ages 22-35, 2 nights - matches EESM23/ds005178 characteristics; 5-class sleep scoring with PSG labels"
+    },
+    {
+      "filename": "s41597-025-04579-8.pdf",
+      "ref": "10.1038/s41597-025-04579-8",
+      "title": "Ear-EEG sleep monitoring data sets",
+      "classification": "relevant",
+      "cot_reasoning": "This is another duplicate of the data descriptor paper (Files 3 and 5) with the same DOI 10.1038/s41597-025-04579-8. It explicitly describes the OpenNeuro ds005178 dataset (EESM23) with generic earpieces, 10 subjects, 2 PSG+ear-EEG nights and 10 ear-EEG only nights, and the 5-class sleep scoring task with manual PSG labels.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "sleep monitoring, at-home longitudinal recording with ear-EEG",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "30-second epochs for PSG manual scoring; ear-EEG recordings aligned to PSG epochs",
+      "target_events": [
+        "sleep stage transitions",
+        "PSG scoring epochs"
+      ],
+      "label_mapping": "Wake, N1, N2, N3, REM (AASM standard) plus 'unscored' option used for 3% of epochs in EESM23",
+      "meta_level": "raw",
+      "super_meta_note": "Third duplicate of the data descriptor for ds005178",
+      "evidence_desc": "Identical content to Files 3 and 5: explicit data descriptor naming EESM23 with generic earpieces, 10 subjects, manual PSG scoring, 5-class sleep stages, largest open mobile EEG dataset"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset contains explicit sleep stage scoring annotations with 6 classes (Wake, REM, N1, N2, N3, Artefact) in the scoring_idx/scoring columns of task-sleep_acq-scoring_events.json, which directly supports 5-class sleep stage classification (excluding Artefact). Multiple references confirm this is the EESM23 dataset with PSG-validated manual sleep scoring for 10 subjects across 120 nights.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 159,
+    "total_n": 159,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_2": 72,
+      "trigger": 175
+    },
+    "subject_info": {
+      "record_count": 159,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "event_2",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Sleep scoring epoch onset (30-second sleep stage annotation)",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-scoring"
+      },
+      {
+        "event_id": "trigger",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: trigger (video/sleep sequence boundary marker)",
+        "confidence": "confirmed",
+        "session_task_scope": "task-sleep_acq-PSGtrigger"
+      }
+    ],
+    "notes": "Mappings confirmed from direct inspection of BIDS events.tsv files and their corresponding JSON sidecars. 'trigger' maps to *_acq-PSGtrigger_events.tsv files (onset/duration=0, 4 per file, only in ses-001/ses-002 PSG sessions), with README confirming triggers separate video and sleep sequences. 'event_2' maps to *_acq-scoring_events.tsv files (30-second epochs with scoring_idx 1-6: Wake/REM/N1/N2/N3/Artefact), defined in task-sleep_acq-scoring_events.json, only in ses-001/ses-002 PSG sessions. The 72 count for event_2 matches total scoring epochs across all scoring files; 175 count for trigger matches total PSG trigger events across all PSG sessions. Additional earEEGRecordingFailures events exist but were not present in the raw event IDs. No task-video events exist anywhere in the dataset."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: 5-class sleep stage classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = 0 s, tmax = 30 s, target_events = [event_2]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `event_2` | 0 | Wake |\n  | `event_2` | 1 | REM |\n  | `event_2` | 2 | N1 |\n  | `event_2` | 3 | N2 |\n  | `event_2` | 4 | N3 |\n- **Evidence**:\n  - 10.3389/fnins.2023.987578 — Primary task of the EESM23 dataset: 5-class sleep stage classification using 30-second non-overlapping epochs aligned with PSG manual scoring\n  - 10.1038/s41597-025-04579-8 — Confirms 5-class sleep stage paradigm (Wake, N1, N2, N3, REM) with 30-second epoch duration\n  - 10.1109/embc58623.2025.11252780 — Reports Cohen's kappa of 0.71 for automatic scoring vs PSG; confirms 5-class classification excluding Artefact epochs\n- **Notes**: The scoring_idx column in events.tsv provides labels 1-6 where 1=Wake, 2=REM, 3=N1, 4=N2, 5=N3, 6=Artefact. For standard 5-class classification, Artefact epochs (y=6) are excluded from training/evaluation. The mapping follows standard AASM sleep staging with y values remapped to 0-based sequential integers: Wake→0, REM→1, N1→2, N2→3, N3→4.\n\n### Potential Task 1: 6-class sleep stage with artefact detection\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = 0 s, tmax = 30 s, target_events = [event_2]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | event_2 | 0 | Wake |\n  | event_2 | 1 | REM |\n  | event_2 | 2 | N1 |\n  | event_2 | 3 | N2 |\n  | event_2 | 4 | N3 |\n  | event_2 | 5 | Artefact |\n- **Evidence**:\n  - task-sleep_acq-scoring_events.json — Defines `scoring_idx` levels: 1=Wake, 2=REM, 3=N1, 4=N2, 5=N3, 6=Artefact; duration confirms 30-second epochs\n  - README — Confirms sleep scoring annotations present in first two PSG recordings (ses-001/ses-002)\n- **Notes**: The 6-class variant preserves the full annotation granularity including Artefact (scoring_idx=6) for artefact-aware modeling. The 0-based y mapping follows standard sleep stage ordering: Wake(0), REM(1), N1(2), N2(3), N3(4), Artefact(5). This differs from the 1-based scoring_idx in the source data. The Artefact class represents epochs with signal quality too poor for scoring, enabling joint sleep staging and quality assessment.\n\n### Potential Task 2: 2-class wake vs sleep detection\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = 0 s *, tmax = 30 s *, target_events = [event_2]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | event_2 (scoring_idx=1) | 0 | Wake |\n  | event_2 (scoring_idx=2,3,4,5) | 1 | Sleep (REM/N1/N2/N3 combined) |\n- **Evidence**:\n  - task-sleep_acq-scoring_events.json — scoring_idx levels: 1=Wake, 2=REM, 3=N1, 4=N2, 5=N3, 6=Artefact; confirms 30-second epoch sleep scoring annotations\n  - README — confirms sleep recordings with PSG and ear-EEG, scoring files in ses-001/ses-002\n- **Notes**: Binary collapse of 5-class sleep staging into wake vs sleep detection. Artefact epochs (scoring_idx=6) are excluded from both classes. The 30-second epoch length is standard for sleep scoring (AASM guidelines). Event_2 provides epoch onset markers with scoring_idx values in events.tsv files.\n\n### Potential Task 3: 3-class wake-NREM-REM classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = 0 s *, tmax = 30 s *, target_events = [event_2]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `event_2` | 0 | Wake (scoring_idx=1) |\n  | `event_2` | 1 | NREM (scoring_idx=3,4,5 combined: N1+N2+N3) |\n  | `event_2` | 2 | REM (scoring_idx=2) |\n- **Evidence**:\n  - task-sleep_acq-scoring_events.json — Defines scoring_idx levels: 1=Wake, 2=REM, 3=N1, 4=N2, 5=N3, 6=Artefact; 30-second epoch annotations for sleep scoring\n  - README — Confirms sleep recordings with PSG scoring for first two sessions, video then sleep sequences with triggers separating them\n- **Notes**: Artefact epochs (scoring_idx=6) are excluded. The 3-class collapse (Wake/NREM/REM) follows clinical R&K simplified scoring conventions and consumer sleep device granularity. N1, N2, and N3 are merged into a single NREM class (y=1) as is standard in reduced-complexity sleep staging. Epoch timing inferred from standard 30-second sleep scoring epoch duration.\n\n### Potential Task 4: 4-class sleep stage without N1\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = 0 s *, tmax = 30 s *, target_events = [event_2]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | event_2 | 0 | Wake |\n  | event_2 | 1 | REM |\n  | event_2 | 2 | N2 |\n  | event_2 | 3 | N3 |\n- **Evidence**:\n- **Notes**: The scoring_idx values in events.tsv map to: 1=Wake, 2=REM, 3=N1, 4=N2, 5=N3, 6=Artefact. This task excludes N1 (scoring_idx=3) and Artefact (scoring_idx=6) epochs, keeping only Wake (y=0), REM (y=1), N2 (y=2), and N3 (y=3). N1 exclusion is common practice in sleep scoring due to its poor inter-rater reliability and known difficulty in ear-EEG classification. The kernel must filter epochs based on the scoring_idx column value associated with each event_2 onset.\n\n### Potential Task 5: video-sleep sequence boundary detection\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_long_event_hdf5`\n- **Epoch Parameters**: `tmin = -30 s *, tmax = 30 s *, overlap = 0.0 *, target_events = [trigger]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | trigger | 0 | pre-trigger video epoch (30s before boundary) |\n  | trigger | 1 | post-trigger sleep epoch (30s after boundary) |\n- **Evidence**:\n  - README — \"Each file consists of a video sequence followed by a sleep sequence. After the video sequence, the subject sent triggers to distinguish between the two sequences.\"\n  - sub-001_ses-001_task-sleep_acq-PSGtrigger_events.tsv — trigger events at onset=9664, 69123, 172979, 6079358 with duration=0, confirming sparse boundary markers in PSG sessions\n  - task-sleep_acq-PSGtrigger_events.json scope — triggers limited to ses-001/ses-002 PSG sessions\n- **Notes**: The trigger event marks the boundary between video-watching and sleep recording sequences. Using long-event epoching with symmetric 30-second windows before and after each trigger creates two classes: y=0 captures the pre-sleep video-watching brain state, while y=1 captures the post-trigger sleep-recording state. The 0-duration triggers require long-event epoching since they are sparse temporal boundaries rather than repeated trial markers. Overlap set to 0.0 as default for non-overlapping boundary epochs; tmin/tmax inferred from paradigm rationale (state change windows around transition point).\n\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "event_2",
+      "trigger"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [],
+    "derived_misc_channels": [
+      {
+        "name": "subject_id_label",
+        "source_field": "events.tsv:subject_id",
+        "derivation": "Extract subject identifier from BIDS filename (sub-XXX) and broadcast as constant integer label per recording for subject-level stratification or subject-invariant learning objectives",
+        "groundable_evidence": "No participants.tsv columns available; subject identity inferable from filename structure per BIDS specification",
+        "used_by": [
+          "sleep segmentation with subject-level clustering"
+        ]
+      }
+    ],
+    "_dropped_candidates": [
+      {
+        "paradigm": "EMG/EOG artifact regression",
+        "reason": "Native misc channels (EMGl, EMGr, EOGr, EOGl) exist in PSG files per header sample, but these are only present in ses-001/ses-002 (PSG recordings, 2 nights per subject). The grounded catalog reports 'none discovered in raw files' suggesting these channels may not be consistently available or typed as EEG rather than misc in BIDS. Without confirmed continuous misc channel availability across the dataset, cannot ground archetype B1. Furthermore, no participants.tsv columns exist for derived misc."
+      },
+      {
+        "paradigm": "age-based sleep quality regression",
+        "reason": "No participants.tsv columns were discovered in the grounded catalog. The dataset has 10 subjects but demographic/behavioral data (age, sex, sleep quality metrics) is not present in the BIDS participants.tsv file. Cannot ground archetype B3 or C with info route."
+      },
+      {
+        "paradigm": "response time or confidence prediction",
+        "reason": "No numeric events.tsv columns were discovered in the grounded catalog. The scoring events only contain categorical scoring_idx and scoring columns; the trigger events contain only onset/duration. No per-trial behavioral metrics exist to derive as archetype B2 misc channels."
+      },
+      {
+        "paradigm": "error detection from ear-EEG recording failures",
+        "reason": "The task-sleep_acq-earEEGRecordingFailures_events.json defines Error -10, Error -100, and oLED events, but these events were not present in the raw event IDs pre-scan (event_2 and trigger only). The grounded catalog confirms these error events exist in sidecar definitions but not in actual data. Cannot ground archetype A without available event IDs."
+      }
+    ]
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/openneuro_ds005178/kernel_final.py",
+  "kernel_code_len": 17133,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds005178.py",
+    "kernel_sha256": "dab6346754952b383c26ffd3a42b63abdc0ed8bade3a05f650229f3968495735",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 159,
+    "total_n": 159,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_2": 72,
+      "trigger": 175,
+      "event": 6223,
+      "error -10": 5723,
+      "error -100": 62,
+      "oLED": 1
+    },
+    "subject_info": {
+      "record_count": 159,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds005178.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

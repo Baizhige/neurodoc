@@ -1,0 +1,254 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 12,
+    "category": "",
+    "format_type": "mat",
+    "has_bids_sidecars": false
+  },
+  "budget_used": 22,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 5,
+    "task_synthesis": 4,
+    "kernel_loop": 8,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-06T13:23:17.678469+00:00",
+  "ref_extractions": [
+    {
+      "filename": "paper_10_1007_s11571_024_10167_0.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1007/s11571.024.10167.0",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_22266_ijies2021_0228_14.pdf",
+      "classification": "irrelevant",
+      "ref": "10.22266/ijies2021.0228.14",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3389_fnbot_2025_1704111.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fnbot.2025.1704111",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3389_fnhum_2023_1194751.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fnhum.2023.1194751",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3389_fnins_2023_1219988.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fnins.2023.1219988",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3390_s20174749.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3390/s20174749",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3390_s25154657.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3390/s25154657",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_3390_s25175291.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3390/s25175291",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "desc_4.pdf",
+      "ref": "Schalk, G., Kubanek, J., Miller, K.J., Anderson, N.R., Leuthardt, E.C., Ojemann, J.G., Limbrick, D., Moran, D.W., Gerhardt, L.A., and Wolpaw, J.R. Decoding Two-Dimensional Movement Trajectories Using Electrocorticographic Signals in Humans, J Neural Eng, 4: 264-275, 2007.",
+      "title": "Prediction of Finger Flexion - 4th Brain-Computer Interface Data Competition",
+      "classification": "relevant",
+      "cot_reasoning": "This is the official competition description document for BCI Competition IV Dataset 4 (bcic_iv_4). It explicitly defines the dataset, the task (predicting finger flexion from ECoG signals), and the evaluation criteria (correlation coefficient between predicted and actual finger trajectories). The task is clearly a regression problem with continuous finger position labels for 5 fingers.",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 0,
+      "paradigm": "cued finger movement with data glove recording",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "continuous 10-minute recording per subject; first 2/3 (6min 40s, 400,000 samples) for training, last 1/3 (3min 20s, 200,000 samples) for testing; 30 cues per finger (150 total), each cue 2s followed by 2s rest; finger flexion recorded continuously at 1kHz (super-sampled from 25Hz dataglove)",
+      "target_events": [
+        "finger flexion cues (thumb, index, middle, ring, little) - 30 per finger"
+      ],
+      "label_mapping": "continuous finger flexion trajectories (0-1 normalized position) for 5 fingers: thumb, index, middle, ring, little; ring finger excluded from evaluation due to correlation with middle/little",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Official competition document describing the bcic_iv_4 dataset with complete task specification: ECoG signals from 3 subjects (62, 48, 64 channels), 1000Hz sampling, 0.15-200Hz bandpass, finger flexion recorded via dataglove, evaluation by correlation coefficient on 4 fingers (excluding ring)"
+    },
+    {
+      "filename": "paper_10_1109_i2ct61223_2024_10543868.pdf",
+      "ref": "10.1109/i2ct61223.2024.10543868",
+      "title": "Identification of Finger Movement from ECoG Signal Using Machine Learning Model",
+      "classification": "partial",
+      "cot_reasoning": "The paper explicitly states use of BCI Competition IV Dataset 4 (bcic_iv_4) with three subjects and five classes. However, there is a fundamental contradiction: the original dataset is a regression task (continuous finger flexion trajectories), but this paper frames it as classification with 'five classes' and reports 'classification accuracy of 80%'. The paper does not clearly explain how continuous trajectories were discretized into classes, making the task definition vague and potentially incorrect.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 5,
+      "paradigm": "cued finger movement",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "states '48 channels from each subject' used; mentions preprocessing with bandpass 0.15-200Hz, ICA for artifact removal; DWT and entropy features; but unclear how continuous data was segmented or labeled for classification",
+      "target_events": [
+        "thumb",
+        "index",
+        "middle",
+        "ring",
+        "little"
+      ],
+      "label_mapping": "claims 5 classes for 5 fingers, but original dataset has continuous trajectories not discrete classes; discretization method not described",
+      "meta_level": "unclear",
+      "super_meta_note": "Paper contradicts original dataset nature: claims classification with 80% accuracy on a regression dataset without explaining label discretization. May have incorrectly treated the problem or used undisclosed preprocessing to create discrete labels.",
+      "evidence_desc": "Uses bcic_iv_4 explicitly but task definition is problematic: original dataset has continuous finger flexion trajectories (regression), yet paper claims 5-class classification with 80% accuracy. No explanation of how continuous signals were converted to discrete classes. Methods mention DWT, entropy, RF/LDA/SVM/LR/CNN classifiers."
+    },
+    {
+      "filename": "paper_10_1109_ieeeconf58974_2023_10405112.pdf",
+      "ref": "10.1109/ieeeconf58974.2023.10405112",
+      "title": "FingerFlex: High-precision Finger Movement Decoding using ECoG",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses BCI Competition IV dataset 4 (bcic_iv_4) for finger movement regression. It clearly defines the task as regression (predicting finger trajectories, not classes), uses the standard evaluation metric (correlation coefficient), and describes the data split (6.5/3.5 minutes train/validation). The preprocessing pipeline is well-documented with specific parameters.",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 0,
+      "paradigm": "cued finger movement with data glove",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "time-frequency transform with Morlet wavelets (40 wavelets, 40-200 Hz gamma/ultra-high gamma); bandpass 40-300 Hz and 50 Hz harmonics filtering; downsampling from 1000 Hz to 100 Hz via decimation; RobustScaler; signal shift by 20ms delay hyperparameter; 6.5/3.5 min train/validation split per subject; trained per subject individually",
+      "target_events": [
+        "finger flexion trajectories for 5 fingers"
+      ],
+      "label_mapping": "continuous finger flexion trajectories (thumb, index, middle, ring, little); bicubic interpolation upsampling from 40 Hz to 100 Hz; MinMax scaling",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicit bcic_iv_4 usage with proper regression framing. Achieves state-of-the-art correlation coefficient of 0.67 average (0.66, 0.62, 0.74 per subject). Uses encoder-decoder CNN architecture. Also tested on additional dataset [4] Miller 2019 for generalization."
+    },
+    {
+      "filename": "paper_10_1109_tim_2025_3644562.pdf",
+      "ref": "10.1109/tim.2025.3644562",
+      "title": "DeepFingerNet Predicts Finger Trajectory From ECoG Measurements",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly evaluates on BCI Competition IV Dataset 4 (bcic_iv_4) for finger trajectory prediction. It clearly defines the task as regression (predicting continuous finger trajectories), reports correlation coefficient of 0.69 as the performance metric, and compares against prior work on the same dataset. The architecture (nested U-Nets) and loss function (cosine similarity + MSE) are specifically designed for this regression task.",
+      "supports_task": true,
+      "task_type": "regression",
+      "n_classes": 0,
+      "paradigm": "cued finger movement with data glove",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "nested U-Net architecture; hybrid loss function (cosine similarity + MSE); evaluates on BCI Competition IV Dataset 4 achieving CC=0.69 (17% improvement over baseline); also tested on Stanford University dataset (CC=0.54); specific epoching details not fully described but follows standard continuous trajectory prediction approach",
+      "target_events": [
+        "finger flexion trajectories"
+      ],
+      "label_mapping": "continuous finger trajectories for multiple fingers; specific finger count not detailed in excerpt but implied to follow competition standard (5 fingers, 4 evaluated)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Explicit bcic_iv_4 usage with proper regression framing. Achieves CC=0.69 on BCI Competition IV Dataset 4, comparing against Flamary 2012 (0.42), Yao et al. 2022 (0.53), Xie et al. 2018, Lomtev et al. 2023 (FingerFlex, 0.67). Also uses Stanford University dataset for additional validation."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The bcic_iv_4 dataset is a well-known BCI Competition IV dataset with clear task structure: ECoG recordings during cued finger movements with continuous finger flexion trajectories recorded via data glove. The official description (desc_4.pdf) confirms this supports regression tasks predicting continuous finger movement, and multiple papers demonstrate successful regression approaches with correlation coefficient metrics.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 0,
+    "total_n": 0,
+    "cache_source": "live_full_scan",
+    "event_counts": {},
+    "subject_info": {
+      "record_count": 0,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [],
+    "notes": "No discrete event IDs exist in this dataset. The three .mat files (sub1_comp.mat, sub2_comp.mat, sub3_comp.mat) contain only continuous data variables: train_data, test_data (neural signals with varying channel counts: 48 or 64), and train_dg (5 continuous regression targets, float64). The train_dg variable holds continuous values (e.g., -2.6 to 0.3 range in sub3, -0.24 to 0.29 in sub2), not discrete event markers. No events.tsv, annotations, or marker files were found. No BIDS structure exists. The dataset is a continuous regression/decoding design with no experimental events, trial phases, or admin markers present in the files."
+  },
+  "tasks_section": "## Tasks\n\n",
+  "kernel_requirements": {
+    "required_event_ids": [],
+    "required_native_misc": [
+      "train_dg"
+    ],
+    "required_info_fields": [],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "subject-level demographic/behavioral prediction",
+        "reason": "No participants.tsv columns discovered (info route unavailable). No events.tsv numeric columns for derived misc. Cannot create B3 or C archetype tasks."
+      },
+      {
+        "paradigm": "native misc channel regression (EMG, EOG, etc.)",
+        "reason": "No native misc channels discovered in raw files. Only EEG/ECoG channels (train_data, test_data) and dataglove output (train_dg) present. train_dg is the task target, not auxiliary misc."
+      },
+      {
+        "paradigm": "event-locked classification with explicit markers",
+        "reason": "No events detected in pre-scan. Raw .mat files contain only continuous data matrices without event markers. The 150 cues (30 per finger × 5 fingers) are described in documentation but not embedded as literal event IDs in the data files."
+      }
+    ]
+  },
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/bcic_iv_4/kernel_final.py",
+  "kernel_code_len": 6218,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/bcic_iv_4.py",
+    "kernel_sha256": "b4608621080accfb2db482cebebc6ad2224669d3e80dabffd80c1fc36192ac8e",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 3,
+    "total_n": 3,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "continuous_finger_flexion": 3
+    },
+    "subject_info": {
+      "record_count": 3,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": [
+      "train_dg_0",
+      "train_dg_1",
+      "train_dg_2",
+      "train_dg_3",
+      "train_dg_4"
+    ]
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/bcic_iv_4.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

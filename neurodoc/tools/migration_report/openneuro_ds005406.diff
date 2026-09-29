@@ -1,0 +1,33 @@
+--- openneuro_ds005406/analysis.md (pre-v3)
++++ openneuro_ds005406/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds005406` | **Year**: 2024 | **URL**: https://openneuro.org/datasets/ds005406
+ **Category**: Sensory/Response | **Subjects**: 29 | **Files (Completed)**: 29 | **Channels**: 64 | **Sampling Rate**: 1000 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -48,8 +48,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: super
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Stimulus/S 11` | 0 | Same movement, 1 person (condition 1) |
+   | `Stimulus/S 21` | 1 | Different movement, 1 person (condition 2) |
+   | `Stimulus/S 31` | 2 | Same movement, 2 people (condition 3) |
+@@ -67,8 +67,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Stimulus/S 11` | 0 | Action condition 1 start |
+   | `Stimulus/S 12` | 1 | Action condition 1 end |
+   | `Stimulus/S 21` | 2 | Action condition 2 start |

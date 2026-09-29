@@ -1,0 +1,230 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 1,
+    "category": "",
+    "format_type": "mat",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 25,
+  "budget_breakdown": {
+    "ref_analysis": 1,
+    "feasibility": 1,
+    "event_annotation": 7,
+    "task_synthesis": 6,
+    "kernel_loop": 8,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T07:09:01.307316+00:00",
+  "ref_extractions": [
+    {
+      "filename": "paper_10_1093_braincomms_fcab061.pdf",
+      "ref": "10.1093/braincomms.fcab061",
+      "title": "Abnormalities in cortical pattern of coherence in migraine detected using ultra high-density EEG",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper studies migraine using a custom high-density EEG system with 128 electrodes, analyzing cortical coherence patterns in interictal migraineurs versus healthy controls during visual/auditory stimulation and rest. However, there is no mention of 'other_migrainedb' or any specific named dataset. The study appears to use its own collected data with a custom-designed cap, not a publicly shared database. The analysis is purely statistical (repeated measures ANOVA, Pearson correlations) without any machine learning task definition.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": ""
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset contains a clear experimental paradigm with identifiable conditions: visual stimulation (vertical grating at 4Hz and 6Hz), auditory stimulation (modulated tone at 4Hz and 6Hz), and rest periods, recorded from both migraine patients and healthy controls. This structure supports multiple ML tasks including stimulus type classification, frequency discrimination, and migraine vs. control classification based on neural responses.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 117,
+    "total_n": 117,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_1": 7694,
+      "event_2": 7722,
+      "event_5": 27,
+      "event_11": 828,
+      "event_20": 70,
+      "event_22": 628,
+      "event_30": 83,
+      "event_65536": 9,
+      "event_65538": 1,
+      "event_23": 1
+    },
+    "subject_info": {
+      "record_count": 117,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "event_1",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus condition 1 onset (frequency condition 1, e.g., 4Hz)",
+        "confidence": "inferred",
+        "session_task_scope": "SSAEP, SSVEP"
+      },
+      {
+        "event_id": "event_2",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Stimulus condition 2 onset (frequency condition 2, e.g., 6Hz)",
+        "confidence": "inferred",
+        "session_task_scope": "SSAEP, SSVEP"
+      },
+      {
+        "event_id": "event_11",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Auditory trial onset marker",
+        "confidence": "inferred",
+        "session_task_scope": "SSAEP"
+      },
+      {
+        "event_id": "event_20",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Block boundary or run segment marker",
+        "confidence": "inferred",
+        "session_task_scope": "SSAEP, SSVEP"
+      },
+      {
+        "event_id": "event_22",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Visual trial onset marker",
+        "confidence": "inferred",
+        "session_task_scope": "SSVEP"
+      },
+      {
+        "event_id": "event_23",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System marker (rare, possibly recording sync or error)",
+        "confidence": "unclear",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_30",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "Block start/end marker or condition transition",
+        "confidence": "inferred",
+        "session_task_scope": "SSAEP, SSVEP"
+      },
+      {
+        "event_id": "event_5",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System marker (possibly recording start/stop or subject/session identifier)",
+        "confidence": "unclear",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_65536",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System trigger or status flag (high-value code, likely hardware status)",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "event_65538",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System trigger or status flag (high-value code, likely hardware status)",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      }
+    ],
+    "notes": "Evidence derived from analysis of .txt annotation files across 11 subjects (C1-C6, C10, C14, C15, C20, C21). The .txt files contain 3 rows: condition codes (1,2), event onset markers (0/1/2), and timing values. The high-count event IDs (event_1: 7694, event_2: 7722) match the ~200 trials × ~40 subjects/runs with two conditions, corresponding to the two frequency conditions in Row 1 of .txt files. event_11 (828) and event_22 (628) counts approximate auditory and visual trial counts respectively. event_20 (70) and event_30 (83) appear at block boundaries (where '100' appears in .txt timing rows). event_5, event_23, event_65536, event_65538 are rare system markers. No direct BDF event reading was possible (tool unavailable), so mappings are inferred from .txt file structure and event ID count distributions. Resting task has no .txt files and thus no stimulus events. Two subjects (C3, C14) have second auditory runs."
+  },
+  "tasks_section": "## Tasks\n\n### Potential Task 1: SSVEP 2-class frequency discrimination\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 2 s *, target_events = [`event_1`, `event_2`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | event_1 | 0 | Stimulus condition 1 onset (frequency condition 1, e.g., 4Hz) |\n  | event_2 | 1 | Stimulus condition 2 onset (frequency condition 2, e.g., 6Hz) |\n- **Evidence**:\n  - README — \"visual (vertical grating pattern) ... stimulation which varied in temporal frequency (4 and 6Hz)\"\n  - events.json/sidecar analysis — event_1 and event_2 are the high-count stimulus condition onsets matching the two frequency conditions; event_22 marks visual trial onsets but does not distinguish conditions\n- **Notes**: SSVEP paradigm with two temporal frequencies (4Hz and 6Hz) indicated by event_1 and event_2. Epoch timing inferred from standard SSVEP analysis windows; 2-second epochs provide sufficient cycles for frequency discrimination (8 cycles at 4Hz, 12 cycles at 6Hz).\n\n### Potential Task 2: SSAEP 2-class frequency discrimination\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 2 s *, target_events = [`event_1`, `event_2`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `event_1` | 0 | Stimulus condition 1 onset (frequency condition 1, e.g., 4Hz) |\n  | `event_2` | 1 | Stimulus condition 2 onset (frequency condition 2, e.g., 6Hz) |\n- **Evidence**:\n  - Dataset README and events.json sidecar — SSAEP paradigm with two temporal frequency conditions (4Hz and 6Hz) indicated by event_1 and event_2 onset markers; ~828 auditory trials (event_11) across subjects with condition markers event_1 (7694 occurrences) and event_2 (7722 occurrences) representing the two frequency discrimination classes.\n- **Notes**: Epoch timing inferred from standard SSAEP analysis windows (1-2s) to allow frequency resolution of steady-state auditory evoked potentials; no explicit epoch timing in sidecars. The two high-count event IDs (event_1, event_2) correspond to the two frequency conditions in the .txt annotation file condition codes (1,2), with counts matching ~200 trials × multiple runs across subjects.\n\n### Potential Task 3: Visual vs auditory modality classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 1 s *, target_events = [`event_11`, `event_22`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | event_11 | 0 | Auditory trial onset |\n  | event_22 | 1 | Visual trial onset |\n- **Evidence**:\n  - Event count analysis — event_11 (n≈828) and event_22 (n≈628) approximate auditory and visual trial counts respectively from .txt annotation files across 11 subjects\n  - README — \"visual (vertical grating pattern) and auditory (modulated tone) stimulation which varied in temporal frequency (4 and 6Hz)\"\n  - events.json sidecar — event_11: \"Auditory trial onset marker\", event_22: \"Visual trial onset marker\"\n- **Notes**: Early sensory evoked differences between visual and auditory processing occur within first 100-300ms; 1s epoch captures initial transient and some steady-state. No explicit timing in sidecars, so parameters are inferred from typical evoked response latencies for cross-modal sensory discrimination.\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "event_1",
+      "event_11",
+      "event_2",
+      "event_22"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "migraine vs control classification",
+        "reason": "No participants.tsv columns discovered (no 'group', 'diagnosis', or similar field in grounded catalog). Cannot ground subject-level label for archetype B3 or C."
+      },
+      {
+        "paradigm": "age regression",
+        "reason": "No participants.tsv columns discovered. Age information mentioned in README as matching criterion but not present in extractable form."
+      },
+      {
+        "paradigm": "gender classification",
+        "reason": "No participants.tsv columns discovered. Gender mentioned in README as matching criterion but not present in extractable form."
+      },
+      {
+        "paradigm": "native misc regression (EOG/EMG)",
+        "reason": "No continuous misc channels discovered in raw files. Channel list shows only EEG electrodes (Fp1, AFp1, etc., 128 custom locations). No EOG, EMG, or GSR channels present."
+      },
+      {
+        "paradigm": "derived misc from events.tsv columns",
+        "reason": "No per-trial numeric columns discovered in events.tsv. Only event IDs with onset times available; no response_time, confidence, or similar scalar fields."
+      }
+    ]
+  },
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/other_migrainedb/kernel_final.py",
+  "kernel_code_len": 12364,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/other_migrainedb.py",
+    "kernel_sha256": "7e281f0c4ead5dc222ef49e6e346c1aa27c0d9861b19754c7db38cb51bef0fac",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 117,
+    "total_n": 117,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "event_1": 7754,
+      "event_2": 7754,
+      "event_5": 27,
+      "event_11": 828,
+      "event_20": 70,
+      "event_22": 628,
+      "event_30": 83,
+      "event_23": 1
+    },
+    "subject_info": {
+      "record_count": 117,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": [
+      "Status"
+    ]
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/other_migrainedb.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

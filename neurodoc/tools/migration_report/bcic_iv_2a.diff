@@ -1,0 +1,34 @@
+﻿--- bcic_iv_2a/analysis.md (pre-v3)
++++ bcic_iv_2a/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `bcic_iv_2a` | **Year**: 2008 | **URL**: https://www.bbci.de/competition/iv/desc_2a.pdf
+ **Category**: Action/Output | **Subjects**: 9 | **Files (Completed)**: 18 | **Channels**: 25 | **Sampling Rate**: 250 Hz
+-**Manual Review**: anonymous for review
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -45,8 +45,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Cue onset left (class 1)` | 0 | Left-hand motor imagery |
+   | `Cue onset right (class 2)` | 1 | Right-hand motor imagery |
+   | `Cue onset foot (class 3)` | 2 | Feet motor imagery |
+@@ -64,8 +64,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Cue onset left (class 1)` | 0 | Left-hand motor imagery |
+   | `Cue onset right (class 2)` | 1 | Right-hand motor imagery |
+ - **Evidence**:
+

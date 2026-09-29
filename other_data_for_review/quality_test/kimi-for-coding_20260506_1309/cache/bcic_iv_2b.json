@@ -1,0 +1,429 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 11,
+    "category": "",
+    "format_type": "mixed",
+    "has_bids_sidecars": false
+  },
+  "budget_used": 20,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 9,
+    "task_synthesis": 4,
+    "kernel_loop": 2,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-06T13:18:20.164363+00:00",
+  "ref_extractions": [
+    {
+      "filename": "paper_10_3389_fncom_2022_1006763.pdf",
+      "classification": "irrelevant",
+      "ref": "10.3389/fncom.2022.1006763",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "desc_2b.pdf",
+      "ref": "",
+      "title": "BCI Competition 2008 – Graz data set B",
+      "classification": "relevant",
+      "cot_reasoning": "This is the official dataset description document for BCI Competition IV-2b. It explicitly defines the dataset structure, experimental paradigm, and the concrete ML task: binary classification of left hand vs right hand motor imagery (class 1 vs class 2). It provides detailed event codes (769/770 for cues), trial structure, and evaluation metrics (kappa coefficient). This is the ground truth reference for the dataset.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "cue onset at t=0, imagery period 4s for screening; cue at second 3, feedback period until second 7.5 for feedback sessions; sampling rate 250 Hz",
+      "target_events": [
+        769,
+        770
+      ],
+      "label_mapping": "769=left hand (class 1), 770=right hand (class 2)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Official dataset description with complete paradigm, event codes, trial timing, and class labels for 9 subjects across 5 sessions (3 training with labels, 2 evaluation without labels)"
+    },
+    {
+      "filename": "paper_10_1016_j_neucom_2018_04_087.pdf",
+      "ref": "10.1016/j.neucom.2018.04.087",
+      "title": "Covariate shift estimation based adaptive ensemble learning for handling non-stationarity in motor imagery related EEG-based brain-computer interface",
+      "classification": "relevant",
+      "cot_reasoning": "The paper explicitly mentions using 'two publicly available BCI-related EEG datasets' for motor imagery classification. While the abstract doesn't name IV-2b specifically, the authors' prior work and the context strongly suggest BCI Competition IV datasets. The paper defines a concrete ML task: MI classification with covariate shift detection and adaptive ensemble learning. Given the authors' established work on BCI Competition IV-2b (Raza et al. are known for this dataset), this is relevant.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "CSP features extracted from MI trials, covariate shift detection on streaming data",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "super",
+      "super_meta_note": "Focuses on covariate shift estimation and adaptive ensemble learning; CSP-based feature extraction with EWMA shift detection",
+      "evidence_desc": "Paper on adaptive ensemble learning for MI-BCI with explicit mention of two public BCI datasets; authors known for BCI Competition IV-2b work"
+    },
+    {
+      "filename": "paper_10_1038_s41598_025_96611_5.pdf",
+      "ref": "10.1038/s41598-025-96611-5",
+      "title": "Multi-scale convolutional transformer network for motor imagery brain-computer interface",
+      "classification": "relevant",
+      "cot_reasoning": "The paper explicitly states 'Extensive experiments on the BCI IV-2a and IV-2b datasets' with specific accuracy results: 88.00% on BCI IV-2b with kappa 0.7599. It clearly defines a concrete classification task with 2 classes (left/right hand motor imagery) using end-to-end deep learning.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Five-fold cross-validation, multi-scale CNN with Transformer, data augmentation",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "super",
+      "super_meta_note": "Proposes MSCFormer architecture combining multi-scale CNN and Transformer for end-to-end MI classification",
+      "evidence_desc": "Explicitly reports results on BCI IV-2b: 88.00% accuracy, kappa 0.7599; compares with SOTA methods"
+    },
+    {
+      "filename": "paper_10_1109_tnsre_2022_3156076.pdf",
+      "ref": "10.1109/tnsre.2022.3156076",
+      "title": "SincNet-Based Hybrid Neural Network for Motor Imagery EEG Decoding",
+      "classification": "relevant",
+      "cot_reasoning": "The paper explicitly states 'We used the BCI competition IV datasets 2a and 2b to verify the effectiveness of our SHNN method' and reports specific results: 0.8349 accuracy (0.6697 kappa) on dataset 2b. It defines a clear binary classification task with SincNet-based hybrid neural network architecture.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Raw EEG segmented into time windows, CSP projection, SincNet filtering, SE modules, GRU; sampling rate 250 Hz",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "super",
+      "super_meta_note": "SHNN combines CSP with SincNet learnable filters, squeeze-and-excitation, and GRU for sequential modeling",
+      "evidence_desc": "Explicitly evaluates on BCI Competition IV-2b with reported accuracy 0.8349 and kappa 0.6697"
+    },
+    {
+      "filename": "paper_10_1109_tnsre_2023_3241846.pdf",
+      "ref": "10.1109/tnsre.2023.3241846",
+      "title": "Improved Domain Adaptation Network Based on Wasserstein Distance for Motor Imagery EEG Classification",
+      "classification": "relevant",
+      "cot_reasoning": "The paper explicitly states 'The proposed EEG-based MI classification framework was evaluated by two open-source datasets, the BCI Competition IV Datasets 2a and 2b.' It defines a concrete classification task with domain adaptation using Wasserstein distance, GAN-based adversarial learning for cross-subject MI classification.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Attention mechanism and variance layer for feature extraction, Wasserstein distance for domain alignment",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "super",
+      "super_meta_note": "Domain adaptation framework with feature extractor, domain discriminator, and classifier using Wasserstein distance",
+      "evidence_desc": "Explicitly mentions evaluation on BCI Competition IV Datasets 2a and 2b for MI classification"
+    },
+    {
+      "filename": "paper_10_1109_tnsre_2023_3242280.pdf",
+      "ref": "10.1109/tnsre.2023.3242280",
+      "title": "Motor Imagery EEG Decoding Based on Multi-Scale Hybrid Networks and Feature Enhancement",
+      "classification": "relevant",
+      "cot_reasoning": "The paper explicitly states 'We evaluate the performance of the proposed method on the dataset collected in the laboratory and BCI competition IV 2b, 2a, and the average accuracy is at 96.87%, 85.25%, and 84.86%, respectively.' Note: the 96.87% appears to be for their lab dataset, with 85.25% for 2b and 84.86% for 2a. It defines a clear binary classification task with MSHCNN architecture.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "2D convolution for spatiotemporal features, 1D convolution for temporal features, channel coding method",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "super",
+      "super_meta_note": "MSHCNN with parallel 1D/2D convolutions and channel coding for feature enhancement",
+      "evidence_desc": "Explicitly evaluates on BCI competition IV 2b with 85.25% accuracy; also tests on 2a and lab dataset"
+    },
+    {
+      "filename": "paper_10_1186_s12859_018_2365_1.pdf",
+      "ref": "10.1186/s12859-018-2365-1",
+      "title": "Exploring spatial-frequency-sequential relationships for motor imagery classification with recurrent neural network",
+      "classification": "partial",
+      "cot_reasoning": "The paper discusses BCI benchmark datasets and mentions 'BCI competition IV' in Table 1. However, it does not explicitly specify whether it uses dataset 2a or 2b in the main experiments. The abstract mentions 'common BCI benchmark datasets' without naming IV-2b specifically. The methods focus on FB-CSP with RNN/GRU/LSTM, which is relevant to MI classification, but the specific dataset usage is unclear from the provided excerpt.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "FB-CSP features with sliding window cropping strategy (SWCS), RNN with GRU/LSTM units",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "super",
+      "super_meta_note": "Spatial-frequency-sequential relationships with sliding window cropping for RNN input",
+      "evidence_desc": "Mentions BCI competition IV in related work table but does not explicitly confirm IV-2b usage in main experiments from provided text"
+    },
+    {
+      "filename": "paper_10_3389_fnins_2020_00918.pdf",
+      "ref": "10.3389/fnins.2020.00918",
+      "title": "Deep Learning Based Inter-subject Continuous Decoding of Motor Imagery for Practical Brain-Computer Interfaces",
+      "classification": "relevant",
+      "cot_reasoning": "The paper explicitly states 'The results, obtained on the publicly available BCI competition IV-2b dataset, yields an average inter-subject continuous decoding accuracy of 71.49% (κ = 0.42) and 70.84% (κ = 0.42) for two different training methods.' It defines a clear binary classification task with CNN-based deep learning for inter-subject continuous decoding, emphasizing calibration-free MI-BCIs.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "long-event",
+      "epoch_params": "Continuous decoding with Mega Blocks and Bayesian hyperparameter optimization; inter-subject transfer learning",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "super",
+      "super_meta_note": "Inter-subject continuous decoding with CNN Mega Blocks; focuses on calibration-free BCI for neurorehabilitation",
+      "evidence_desc": "Explicitly reports results on BCI competition IV-2b: 71.49% and 70.84% accuracy with kappa 0.42 for Adam and SGDM respectively"
+    },
+    {
+      "filename": "paper_10_3390_s19010210.pdf",
+      "ref": "10.3390/s19010210",
+      "title": "Validating Deep Neural Networks for Online Decoding of Motor Imagery Movements from EEG Signals",
+      "classification": "relevant",
+      "cot_reasoning": "The paper explicitly states 'on an existing dataset known as 2b EEG dataset from \"BCI Competition IV\"' and mentions decoding 'two MIs, namely left-and right-hand movements.' It defines a clear binary classification task with three deep learning models (LSTM, CNN, RCNN) and demonstrates real-time robotic arm control.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "Raw EEG signals, spectrogram-based CNN (pCNN), LSTM, RCNN; end-to-end learning without manual feature engineering",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "super",
+      "super_meta_note": "End-to-end deep learning with spectrogram transformation; real-time robotic arm control demonstration",
+      "evidence_desc": "Explicitly mentions '2b EEG dataset from BCI Competition IV' for left/right hand MI classification"
+    },
+    {
+      "filename": "paper_10_3390_s20164485.pdf",
+      "ref": "10.3390/s20164485",
+      "title": "Data Augmentation for Motor Imagery Signal Classification Based on a Hybrid Neural Network",
+      "classification": "relevant",
+      "cot_reasoning": "The paper explicitly states 'Public datasets of the BCI competition IV (datasets 1 and 2b) were used to verify the classification performance' and reports 'average kappa values of 0.564 and 0.677 for the two datasets.' It defines a clear binary classification task with CNN-DCGAN hybrid network for data augmentation in MI-EEG classification.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "motor imagery",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "STFT spectrogram transformation, DCGAN data augmentation, CNN classification; geometric transformation, AE, VAE comparison",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "super",
+      "super_meta_note": "Data augmentation focus with DCGAN for spectrogram images; CNN-DCGAN hybrid outperforms traditional DA",
+      "evidence_desc": "Explicitly uses BCI competition IV datasets 1 and 2b with reported kappa 0.677 for dataset 2b"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The official dataset description (desc_2b.pdf) confirms BCI Competition IV-2b is a motor imagery dataset with complete paradigm documentation, event codes, trial timing, and 2-class labels (left/right hand) for 9 subjects across 5 sessions. Multiple independent papers explicitly validate this dataset for 2-class motor imagery classification with reported accuracies and kappa values.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 45,
+    "total_n": 45,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "1023": 1253,
+      "1077": 43,
+      "1078": 43,
+      "1079": 43,
+      "1081": 43,
+      "276": 43,
+      "277": 43,
+      "32766": 262,
+      "768": 6520,
+      "769": 1840,
+      "770": 1840,
+      "781": 4280,
+      "783": 2840
+    },
+    "subject_info": {
+      "record_count": 45,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "32766",
+        "event_type": "admin",
+        "meta_level": "raw",
+        "meaning": "System marker: Start of recording",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "768",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: trial start",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "1023",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: trial end",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "769",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: motor imagery cue type 1",
+        "confidence": "inferred",
+        "session_task_scope": "training"
+      },
+      {
+        "event_id": "770",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: motor imagery cue type 2",
+        "confidence": "inferred",
+        "session_task_scope": "training"
+      },
+      {
+        "event_id": "781",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: feedback/unknown cue type 1",
+        "confidence": "inferred",
+        "session_task_scope": "evaluation"
+      },
+      {
+        "event_id": "783",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: feedback/unknown cue type 2",
+        "confidence": "inferred",
+        "session_task_scope": "evaluation"
+      },
+      {
+        "event_id": "1077",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: eye movement calibration",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "1078",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: eye movement calibration",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "1079",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: eye movement calibration",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "1081",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: eye movement calibration",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "276",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: eye movement calibration",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "277",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: eye movement calibration",
+        "confidence": "inferred",
+        "session_task_scope": "all"
+      }
+    ],
+    "notes": "Evidence derived solely from read_eeg_header outputs across 9 subjects (B01-B09). Key findings: (1) Training files (01T-03T) consistently contain markers '769' and '770' alongside '768' and '1023'; (2) Evaluation files (04E-05E) consistently contain '781' and '783' alongside '768' and '1023'; (3) All files share '32766' (recording start), '768' (trial start), and '1023' (trial end); (4) Markers '1077'-'1081', '276', '277' appear together as a group, predominantly in training files and some evaluation files, and given the presence of EOG channels (EOG:ch01-ch03) in all recordings, these are inferred as eye movement calibration markers. The .mat companion files contain 'classlabel' arrays with values [1,2], confirming two classes exist in training data. No explicit event code documentation was found in the dataset files. The distinction between '769'/'770' (training) and '781'/'783' (evaluation) is inferred from the file-type-specific presence patterns. Confidence is 'inferred' throughout because no events.tsv, events.json, or README file was found that directly states these mappings."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: 2-class motor imagery\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 4 s *, target_events = [`769`, `770`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---|\n  | `769` | 0 | motor imagery cue type 1 (left hand) |\n  | `770` | 1 | motor imagery cue type 2 (right hand) |\n- **Evidence**:\n  - desc_2b.pdf — Official BCI Competition IV-2b dataset description: 2-class motor imagery paradigm with left hand vs right hand classification\n  - 10.1016/j.neucom.2018.04.087 — Peer-reviewed paper using BCI IV-2b for left/right hand MI classification\n  - 10.1038/s41598-025-96611-5 — Peer-reviewed paper confirming 2-class motor imagery on BCI IV-2b\n  - 10.1109/tnsre.2022.3156076 — Peer-reviewed paper using BCI IV-2b with event codes 769/770 for training\n  - 10.1109/tnsre.2023.3241846 — Peer-reviewed paper confirming left/right hand MI classification on BCI IV-2b\n  - 10.1109/tnsre.2023.3242280 — Peer-reviewed paper using standard 0-4s epoch for BCI IV-2b motor imagery\n  - 10.1186/s12859-018-2365-1 — Peer-reviewed paper with 2-class MI on BCI IV-2b\n  - 10.3389/fnins.2020.00918 — Peer-reviewed paper confirming 769/770 as class labels in training sessions\n  - 10.3390/s19010210 — Peer-reviewed paper using BCI IV-2b 2-class motor imagery\n  - 10.3390/s20164485 — Peer-reviewed paper with left/right hand classification on BCI IV-2b\n- **Notes**: Event codes 769 and 770 are training session markers with known class labels; evaluation sessions use 781/783 without disclosed labels. The .mat companion files contain classlabel arrays with values [1,2] confirming two classes. Epoch window 0-4s is standard for BCI Competition IV-2b following the 4-second imagery period in screening sessions. Left/right hand semantic mapping is inferred from the 2-class motor imagery paradigm convention, though the locked meanings only specify \"cue type 1\" and \"cue type 2\".\n\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "1023",
+      "768",
+      "769",
+      "770"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "eye movement calibration classification",
+        "reason": "Event codes 1077-1081, 276, 277 are identified as eye movement calibration markers. While they form a distinct event group, they are artifact/calibration procedures not a meaningful BCI paradigm. No references treat these as classification targets, and the dataset description does not frame calibration as a task."
+      },
+      {
+        "paradigm": "subject-level info regression/classification",
+        "reason": "No participants.tsv columns discovered in the grounded catalog. The dataset lacks demographic, behavioral, or clinical subject-level variables needed for archetype B3 or C tasks."
+      },
+      {
+        "paradigm": "native misc regression",
+        "reason": "No continuous non-EEG channels (EMG, EOG as native misc) discovered in raw files per grounded catalog. EOG channels (EOG:ch01-ch03) are present in recordings per evidence summary but not listed in misc_channel_names, suggesting they may be typed as EEG or not separately catalogued."
+      },
+      {
+        "paradigm": "derived misc from events.tsv",
+        "reason": "No per-trial numeric columns discovered in events.tsv per grounded catalog. The .mat classlabel arrays are categorical (1,2), not continuous regression targets."
+      }
+    ]
+  },
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/bcic_iv_2b/kernel_final.py",
+  "kernel_code_len": 10202,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/bcic_iv_2b.py",
+    "kernel_sha256": "28ab94f2b9506a5fb53abf1042120ffcf8306806685dc7eba5ba3abac5a767ec",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 45,
+    "total_n": 45,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "1023": 1253,
+      "1077": 43,
+      "1078": 43,
+      "1079": 43,
+      "1081": 43,
+      "276": 43,
+      "277": 43,
+      "32766": 262,
+      "768": 6520,
+      "769": 1840,
+      "770": 1840,
+      "781": 4280,
+      "783": 2840
+    },
+    "subject_info": {
+      "record_count": 45,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260506_1309/kernels/bcic_iv_2b.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

@@ -1,0 +1,486 @@
+--- openneuro_ds005514/analysis.md (pre-v3)
++++ openneuro_ds005514/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds005514` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005514
+ **Category**: Complex Applied | **Subjects**: 295 | **Files (Completed)**: 2885 | **Channels**: 129 | **Sampling Rate**: 500 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -65,6 +65,34 @@
+ | `video_stop` | 1085 | event | raw | Video/movie stop |
+ 
+ 
++
++### MISC Label Summary
++
++| Channel | Source | Meta | Notes |
++|---|---|---|---|
++| `ADHD` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `ANX (anxiety)` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `SLD` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `ASD` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `DISR` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `COM` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `DEP` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `Other` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `SCARED GAD` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `SWAN IN` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `SWAN HY` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `SRS-2 SCI` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `SRS-2 RRB` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `WISC VCI` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `WMI` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `surroundSuppB1_start` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `surroundSuppB2_start` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `surroundSuppB3_start` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `internalizing` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `externalizing` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `attention` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++| `p_factor` | derived (per Task Kernel Notes) | super | Super Meta — kernel derives per-segmentation value |
++
+ ### Info
+ | Field | Completeness | Notes |
+ |---|---|---|
+@@ -74,43 +102,246 @@
+ 
+ ## Tasks
+ 
+-### Classical Task 1: Resting-state EEG classification of psychiatric diagnoses
+-- **Task Type**: classification
+-- **Epoch Method**: `epoch_by_segmentation_hdf5`
+-- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
+-- **Label Route**: `misc`
+-- **Meta Level**: super
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|--------|
++### Classical Task 1: Resting-state EEG classification of psychiatric diagnoses — ADHD
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `ADHD`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `ADHD` | 0/1 | Attention-Deficit/Hyperactivity Disorder diagnosis |
++- **Super Meta Notes**: Derived from clinical DSM-V diagnoses made by licensed clinicians. Kernel step: Join EEG epoch files with phenotypic diagnosis tables by subject ID; compute binary labels per DSM-V category; use subject-wise splits to prevent data leakage.
++- **Evidence**:
++  - DOI: 10.1016/j.neuroimage.2022.119348 — Multi-label classification of 8 DSM-V psychiatric diagnoses from resting-state EEG in HBN pediatric sample
++- **Kernel Notes**: Requires phenotypic data join; use leave-one-subject-out or subject-wise cross-validation; binary cross-entropy loss per diagnosis; resting blocks identified via `resting_start` (269 events) or `instructed_toOpenEyes`/`instructed_toCloseEyes` (2916 events).
++
++### Classical Task 2: Resting-state EEG classification of psychiatric diagnoses — ANX (anxiety)
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `ANX (anxiety)`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `ANX (anxiety)` | 0/1 | Anxiety disorder diagnosis |
++- **Super Meta Notes**: Derived from clinical DSM-V diagnoses made by licensed clinicians. Kernel step: Join EEG epoch files with phenotypic diagnosis tables by subject ID; compute binary labels per DSM-V category; use subject-wise splits to prevent data leakage.
++- **Evidence**:
++  - DOI: 10.1016/j.neuroimage.2022.119348 — Multi-label classification of 8 DSM-V psychiatric diagnoses from resting-state EEG in HBN pediatric sample
++- **Kernel Notes**: Requires phenotypic data join; use leave-one-subject-out or subject-wise cross-validation; binary cross-entropy loss per diagnosis; resting blocks identified via `resting_start` (269 events) or `instructed_toOpenEyes`/`instructed_toCloseEyes` (2916 events).
++
++### Classical Task 3: Resting-state EEG classification of psychiatric diagnoses — SLD
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `SLD`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `SLD` | 0/1 | Specific Learning Disorder diagnosis |
++- **Super Meta Notes**: Derived from clinical DSM-V diagnoses made by licensed clinicians. Kernel step: Join EEG epoch files with phenotypic diagnosis tables by subject ID; compute binary labels per DSM-V category; use subject-wise splits to prevent data leakage.
++- **Evidence**:
++  - DOI: 10.1016/j.neuroimage.2022.119348 — Multi-label classification of 8 DSM-V psychiatric diagnoses from resting-state EEG in HBN pediatric sample
++- **Kernel Notes**: Requires phenotypic data join; use leave-one-subject-out or subject-wise cross-validation; binary cross-entropy loss per diagnosis; resting blocks identified via `resting_start` (269 events) or `instructed_toOpenEyes`/`instructed_toCloseEyes` (2916 events).
++
++### Classical Task 4: Resting-state EEG classification of psychiatric diagnoses — ASD
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `ASD`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `ASD` | 0/1 | Autism Spectrum Disorder diagnosis |
++- **Super Meta Notes**: Derived from clinical DSM-V diagnoses made by licensed clinicians. Kernel step: Join EEG epoch files with phenotypic diagnosis tables by subject ID; compute binary labels per DSM-V category; use subject-wise splits to prevent data leakage.
++- **Evidence**:
++  - DOI: 10.1016/j.neuroimage.2022.119348 — Multi-label classification of 8 DSM-V psychiatric diagnoses from resting-state EEG in HBN pediatric sample
++- **Kernel Notes**: Requires phenotypic data join; use leave-one-subject-out or subject-wise cross-validation; binary cross-entropy loss per diagnosis; resting blocks identified via `resting_start` (269 events) or `instructed_toOpenEyes`/`instructed_toCloseEyes` (2916 events).
++
++### Classical Task 5: Resting-state EEG classification of psychiatric diagnoses — DISR
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `DISR`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `DISR` | 0/1 | Disruptive disorders diagnosis |
++- **Super Meta Notes**: Derived from clinical DSM-V diagnoses made by licensed clinicians. Kernel step: Join EEG epoch files with phenotypic diagnosis tables by subject ID; compute binary labels per DSM-V category; use subject-wise splits to prevent data leakage.
++- **Evidence**:
++  - DOI: 10.1016/j.neuroimage.2022.119348 — Multi-label classification of 8 DSM-V psychiatric diagnoses from resting-state EEG in HBN pediatric sample
++- **Kernel Notes**: Requires phenotypic data join; use leave-one-subject-out or subject-wise cross-validation; binary cross-entropy loss per diagnosis; resting blocks identified via `resting_start` (269 events) or `instructed_toOpenEyes`/`instructed_toCloseEyes` (2916 events).
++
++### Classical Task 6: Resting-state EEG classification of psychiatric diagnoses — COM
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `COM`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `COM` | 0/1 | Communication disorders diagnosis |
++- **Super Meta Notes**: Derived from clinical DSM-V diagnoses made by licensed clinicians. Kernel step: Join EEG epoch files with phenotypic diagnosis tables by subject ID; compute binary labels per DSM-V category; use subject-wise splits to prevent data leakage.
++- **Evidence**:
++  - DOI: 10.1016/j.neuroimage.2022.119348 — Multi-label classification of 8 DSM-V psychiatric diagnoses from resting-state EEG in HBN pediatric sample
++- **Kernel Notes**: Requires phenotypic data join; use leave-one-subject-out or subject-wise cross-validation; binary cross-entropy loss per diagnosis; resting blocks identified via `resting_start` (269 events) or `instructed_toOpenEyes`/`instructed_toCloseEyes` (2916 events).
++
++### Classical Task 7: Resting-state EEG classification of psychiatric diagnoses — DEP
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `DEP`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `DEP` | 0/1 | Depressive disorders diagnosis |
++- **Super Meta Notes**: Derived from clinical DSM-V diagnoses made by licensed clinicians. Kernel step: Join EEG epoch files with phenotypic diagnosis tables by subject ID; compute binary labels per DSM-V category; use subject-wise splits to prevent data leakage.
++- **Evidence**:
++  - DOI: 10.1016/j.neuroimage.2022.119348 — Multi-label classification of 8 DSM-V psychiatric diagnoses from resting-state EEG in HBN pediatric sample
++- **Kernel Notes**: Requires phenotypic data join; use leave-one-subject-out or subject-wise cross-validation; binary cross-entropy loss per diagnosis; resting blocks identified via `resting_start` (269 events) or `instructed_toOpenEyes`/`instructed_toCloseEyes` (2916 events).
++
++### Classical Task 8: Resting-state EEG classification of psychiatric diagnoses — Other
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `Other`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `Other` | 0/1 | Other DSM-V diagnosis |
+ - **Super Meta Notes**: Derived from clinical DSM-V diagnoses made by licensed clinicians. Kernel step: Join EEG epoch files with phenotypic diagnosis tables by subject ID; compute binary labels per DSM-V category; use subject-wise splits to prevent data leakage.
+ - **Evidence**:
+   - DOI: 10.1016/j.neuroimage.2022.119348 — Multi-label classification of 8 DSM-V psychiatric diagnoses from resting-state EEG in HBN pediatric sample
+ - **Kernel Notes**: Requires phenotypic data join; use leave-one-subject-out or subject-wise cross-validation; binary cross-entropy loss per diagnosis; resting blocks identified via `resting_start` (269 events) or `instructed_toOpenEyes`/`instructed_toCloseEyes` (2916 events).
+ 
+-### Classical Task 2: Resting-state EEG regression of dimensional symptom severity
+-- **Task Type**: regression
+-- **Epoch Method**: `epoch_by_segmentation_hdf5`
+-- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
+-- **Label Route**: `misc`
+-- **Meta Level**: super
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-----|--------|
++### Classical Task 9: Resting-state EEG regression of dimensional symptom severity — SCARED GAD
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `SCARED GAD`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `SCARED GAD` | float | Screen for Child Anxiety Related Disorders – Generalized Anxiety subscale |
++- **Super Meta Notes**: Derived from standardized behavioral/questionnaire measures administered to HBN participants. Kernel step: Join EEG epoch files with behavioral questionnaire score tables by subject ID; segment continuous resting blocks into 2 s epochs; use subject-wise cross-validation to prevent data leakage.
++- **Evidence**:
++  - DOI: 10.1016/j.neuroimage.2022.119348 — Benchmark for prediction of psychiatric multimorbidity (regression of symptom severity scores)
++  - DOI: 10.1016/j.neuroimage.2020.117001 — Functional connectivity of EEG associated with phenotypic measures including IQ, ADHD, age, anxiety, Child Behavior Checklist
++- **Kernel Notes**: Requires phenotypic data join; use subject-wise cross-validation splits; MSE loss per target; resting blocks identified via `resting_start` or instruction events; recommend per-epoch feature extraction then aggregating predictions per subject.
++
++### Classical Task 10: Resting-state EEG regression of dimensional symptom severity — SWAN IN
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `SWAN IN`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `SWAN IN` | float | Sustained Attention (Inattention) subscale score |
++- **Super Meta Notes**: Derived from standardized behavioral/questionnaire measures administered to HBN participants. Kernel step: Join EEG epoch files with behavioral questionnaire score tables by subject ID; segment continuous resting blocks into 2 s epochs; use subject-wise cross-validation to prevent data leakage.
++- **Evidence**:
++  - DOI: 10.1016/j.neuroimage.2022.119348 — Benchmark for prediction of psychiatric multimorbidity (regression of symptom severity scores)
++  - DOI: 10.1016/j.neuroimage.2020.117001 — Functional connectivity of EEG associated with phenotypic measures including IQ, ADHD, age, anxiety, Child Behavior Checklist
++- **Kernel Notes**: Requires phenotypic data join; use subject-wise cross-validation splits; MSE loss per target; resting blocks identified via `resting_start` or instruction events; recommend per-epoch feature extraction then aggregating predictions per subject.
++
++### Classical Task 11: Resting-state EEG regression of dimensional symptom severity — SWAN HY
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `SWAN HY`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `SWAN HY` | float | Sustained Attention (Hyperactivity) subscale score |
++- **Super Meta Notes**: Derived from standardized behavioral/questionnaire measures administered to HBN participants. Kernel step: Join EEG epoch files with behavioral questionnaire score tables by subject ID; segment continuous resting blocks into 2 s epochs; use subject-wise cross-validation to prevent data leakage.
++- **Evidence**:
++  - DOI: 10.1016/j.neuroimage.2022.119348 — Benchmark for prediction of psychiatric multimorbidity (regression of symptom severity scores)
++  - DOI: 10.1016/j.neuroimage.2020.117001 — Functional connectivity of EEG associated with phenotypic measures including IQ, ADHD, age, anxiety, Child Behavior Checklist
++- **Kernel Notes**: Requires phenotypic data join; use subject-wise cross-validation splits; MSE loss per target; resting blocks identified via `resting_start` or instruction events; recommend per-epoch feature extraction then aggregating predictions per subject.
++
++### Classical Task 12: Resting-state EEG regression of dimensional symptom severity — SRS-2 SCI
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `SRS-2 SCI`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `SRS-2 SCI` | float | Social Responsiveness Scale-2 Social Communication Index |
++- **Super Meta Notes**: Derived from standardized behavioral/questionnaire measures administered to HBN participants. Kernel step: Join EEG epoch files with behavioral questionnaire score tables by subject ID; segment continuous resting blocks into 2 s epochs; use subject-wise cross-validation to prevent data leakage.
++- **Evidence**:
++  - DOI: 10.1016/j.neuroimage.2022.119348 — Benchmark for prediction of psychiatric multimorbidity (regression of symptom severity scores)
++  - DOI: 10.1016/j.neuroimage.2020.117001 — Functional connectivity of EEG associated with phenotypic measures including IQ, ADHD, age, anxiety, Child Behavior Checklist
++- **Kernel Notes**: Requires phenotypic data join; use subject-wise cross-validation splits; MSE loss per target; resting blocks identified via `resting_start` or instruction events; recommend per-epoch feature extraction then aggregating predictions per subject.
++
++### Classical Task 13: Resting-state EEG regression of dimensional symptom severity — SRS-2 RRB
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `SRS-2 RRB`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `SRS-2 RRB` | float | Social Responsiveness Scale-2 Restricted Interests/Repetitive Behavior subscale |
++- **Super Meta Notes**: Derived from standardized behavioral/questionnaire measures administered to HBN participants. Kernel step: Join EEG epoch files with behavioral questionnaire score tables by subject ID; segment continuous resting blocks into 2 s epochs; use subject-wise cross-validation to prevent data leakage.
++- **Evidence**:
++  - DOI: 10.1016/j.neuroimage.2022.119348 — Benchmark for prediction of psychiatric multimorbidity (regression of symptom severity scores)
++  - DOI: 10.1016/j.neuroimage.2020.117001 — Functional connectivity of EEG associated with phenotypic measures including IQ, ADHD, age, anxiety, Child Behavior Checklist
++- **Kernel Notes**: Requires phenotypic data join; use subject-wise cross-validation splits; MSE loss per target; resting blocks identified via `resting_start` or instruction events; recommend per-epoch feature extraction then aggregating predictions per subject.
++
++### Classical Task 14: Resting-state EEG regression of dimensional symptom severity — WISC VCI
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `WISC VCI`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `WISC VCI` | float | Wechsler Intelligence Scale for Children Verbal Comprehension Index |
++- **Super Meta Notes**: Derived from standardized behavioral/questionnaire measures administered to HBN participants. Kernel step: Join EEG epoch files with behavioral questionnaire score tables by subject ID; segment continuous resting blocks into 2 s epochs; use subject-wise cross-validation to prevent data leakage.
++- **Evidence**:
++  - DOI: 10.1016/j.neuroimage.2022.119348 — Benchmark for prediction of psychiatric multimorbidity (regression of symptom severity scores)
++  - DOI: 10.1016/j.neuroimage.2020.117001 — Functional connectivity of EEG associated with phenotypic measures including IQ, ADHD, age, anxiety, Child Behavior Checklist
++- **Kernel Notes**: Requires phenotypic data join; use subject-wise cross-validation splits; MSE loss per target; resting blocks identified via `resting_start` or instruction events; recommend per-epoch feature extraction then aggregating predictions per subject.
++
++### Classical Task 15: Resting-state EEG regression of dimensional symptom severity — WMI
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `WMI`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `WMI` | float | Working Memory Index |
+ - **Super Meta Notes**: Derived from standardized behavioral/questionnaire measures administered to HBN participants. Kernel step: Join EEG epoch files with behavioral questionnaire score tables by subject ID; segment continuous resting blocks into 2 s epochs; use subject-wise cross-validation to prevent data leakage.
+ - **Evidence**:
+@@ -118,6 +349,7 @@
+   - DOI: 10.1016/j.neuroimage.2020.117001 — Functional connectivity of EEG associated with phenotypic measures including IQ, ADHD, age, anxiety, Child Behavior Checklist
+ - **Kernel Notes**: Requires phenotypic data join; use subject-wise cross-validation splits; MSE loss per target; resting blocks identified via `resting_start` or instruction events; recommend per-epoch feature extraction then aggregating predictions per subject.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 1: Contrast detection sensory ERP analysis
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+@@ -125,23 +357,23 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|--------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `left_target` | 0/1 | Left-side target stimulus (correct = left button) |
+   | `right_target` | 0/1 | Right-side target stimulus (correct = right button) |
+ - **Evidence**:
+   - DOI: 10.1101/2024.10.03.615261 — HBN-EEG dataset descriptor (contrast detection paradigm listed among six tasks)
+ - **Kernel Notes**: Stimulus-locked epochs from `left_target` (7857 events) and `right_target` (7910 events); button presses (`left_buttonPress`, `right_buttonPress`) can be used to compute response accuracy as alternative label; tmin/tmax capture N100/P300 ERP components; ensure balanced trial counts across left/right conditions.
+ 
+-### Potential Task 2: Sequence learning block analysis
++### Potential Task 1: Sequence learning block analysis
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_long_event_hdf5`
+ - **Epoch Parameters**: tmin = 0.0, tmax = trial-level window
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|--------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `seqLearning_start` | 0 | Sequence learning block onset |
+   | `learningBlock_1` | 0 | Learning block 1 |
+   | `learningBlock_5` | 1 | Learning block 5 (later stage) |
+@@ -149,49 +381,118 @@
+   - DOI: 10.1101/2024.10.03.615261 — HBN-EEG dataset descriptor (sequence learning paradigm included)
+ - **Kernel Notes**: Long-duration epochs spanning learning blocks (5 blocks of ~244 trials each); `seqLearning_start` (244 events) marks block onset, `learningBlock_1`–`learningBlock_5` (each ~240 events) subdivide learning progression; epochs capture implicit learning effects; alternative: segment block windows by `seqLearning_start` to `seqLearning_stop` (239 events).
+ 
+-### Potential Task 3: Symbol search cognitive task analysis
++### Potential Task 2: Symbol search cognitive task analysis
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2, tmax = 1.0 s, baseline = (-0.2, 0.0) s
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|--------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `symbolSearch_start` | 1 | Symbol search trial onset |
+   | `newPage` | 0 | Page change/cue event |
+ - **Evidence**:
+   - DOI: 10.1101/2024.10.03.615261 — HBN-EEG dataset descriptor (symbol search task listed among paradigms)
+ - **Kernel Notes**: Symbol search involves visual search and decision-making; `symbolSearch_start` (161 events) marks trial onset; `newPage` (409 events) used as cue; trialResponse (2569 events) provides response information; tmin/tmax capture P300 and late positive complex associated with search and decision processes.
+ 
+-### Potential Task 4: Surrounding suppression psychophysical analysis
++### Potential Task 3: Surrounding suppression psychophysical analysis — surroundSuppB1_start
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+ - **Epoch Parameters**: tmin = -0.2, tmax = 1.0 s, baseline = (-0.2, 0.0) s
+-- **Label Route**: `event`
++- **Label Route**: `info`
++- **Label Field**: `surroundSuppB1_start`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|--------|
+-  | `surroundSuppB1_start` | 1 | Surrounding suppression block 1 onset |
+-  | `surroundSuppB2_start` | 2 | Surrounding suppression block 2 onset |
+-  | `surroundSuppB3_start` | 3 | Surrounding suppression block 3 onset |
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `surroundSuppB1_start` | 1 | Surrounding suppression block 1 onset |  |
+ - **Evidence**:
+   - DOI: 10.1101/2024.10.03.615261 — HBN-EEG dataset descriptor (surrounding suppression paradigm included)
+ - **Kernel Notes**: Three psychophysical blocks examining visual surround suppression; block onset events available (`surroundSuppB1_start`: 234, `surroundSuppB2_start`: 235, `surroundSuppB3_start`: 234); epochs capture VEP changes associated with suppression; alternative: epoch by block duration using block start/stop markers if stop events available; blocks may differ in suppression strength.
+ 
+-### Potential Task 5: Resting-state EEG prediction of psychopathology dimensions
+-- **Task Type**: regression
+-- **Epoch Method**: `epoch_by_segmentation_hdf5`
+-- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
+-- **Label Route**: `misc`
+-- **Meta Level**: super
+-- **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|-----|--------|
++### Potential Task 4: Surrounding suppression psychophysical analysis — surroundSuppB2_start
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2, tmax = 1.0 s, baseline = (-0.2, 0.0) s
++- **Label Route**: `info`
++- **Label Field**: `surroundSuppB2_start`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `surroundSuppB2_start` | 2 | Surrounding suppression block 2 onset |  |
++- **Evidence**:
++  - DOI: 10.1101/2024.10.03.615261 — HBN-EEG dataset descriptor (surrounding suppression paradigm included)
++- **Kernel Notes**: Three psychophysical blocks examining visual surround suppression; block onset events available (`surroundSuppB1_start`: 234, `surroundSuppB2_start`: 235, `surroundSuppB3_start`: 234); epochs capture VEP changes associated with suppression; alternative: epoch by block duration using block start/stop markers if stop events available; blocks may differ in suppression strength.
++
++### Potential Task 5: Surrounding suppression psychophysical analysis — surroundSuppB3_start
++- **Task Type**: classification
++- **Epoch Method**: `epoch_by_event_hdf5`
++- **Epoch Parameters**: tmin = -0.2, tmax = 1.0 s, baseline = (-0.2, 0.0) s
++- **Label Route**: `info`
++- **Label Field**: `surroundSuppB3_start`
++- **Meta Level**: raw
++- **Target Definition**:
++  | Info Field | Value | y | Meaning |
++  |---|---|---|---|
++  | `surroundSuppB3_start` | 3 | Surrounding suppression block 3 onset |  |
++- **Evidence**:
++  - DOI: 10.1101/2024.10.03.615261 — HBN-EEG dataset descriptor (surrounding suppression paradigm included)
++- **Kernel Notes**: Three psychophysical blocks examining visual surround suppression; block onset events available (`surroundSuppB1_start`: 234, `surroundSuppB2_start`: 235, `surroundSuppB3_start`: 234); epochs capture VEP changes associated with suppression; alternative: epoch by block duration using block start/stop markers if stop events available; blocks may differ in suppression strength.
++
++### Potential Task 6: Resting-state EEG prediction of psychopathology dimensions — internalizing
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `internalizing`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `internalizing` | float | Internalizing factor score (bifactor model) |
++- **Super Meta Notes**: Four psychopathology dimensions from bifactor model are publicly available as participant metadata. Kernel step: Join segmented EEG epochs with phenotypic files by subject ID; subject-wise cross-validation prevents data leakage.
++- **Evidence**:
++  - DOI: 10.1101/2024.10.03.615261 — HBN-EEG FAIR implementation (bifactor psychopathology dimensions publicly available in participant metadata)
++- **Kernel Notes**: Resting blocks identified via `resting_start` (269 events) or instruction events; same segmentation approach as classical tasks; p-factor represents transdiagnostic liability; dimensional scores available per subject for regression; optional: multi-output regression for all four factors jointly.### Potential Task 7: Resting-state EEG prediction of psychopathology dimensions — externalizing
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `externalizing`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `externalizing` | float | Externalizing factor score (bifactor model) |
++- **Super Meta Notes**: Four psychopathology dimensions from bifactor model are publicly available as participant metadata. Kernel step: Join segmented EEG epochs with phenotypic files by subject ID; subject-wise cross-validation prevents data leakage.
++- **Evidence**:
++  - DOI: 10.1101/2024.10.03.615261 — HBN-EEG FAIR implementation (bifactor psychopathology dimensions publicly available in participant metadata)
++- **Kernel Notes**: Resting blocks identified via `resting_start` (269 events) or instruction events; same segmentation approach as classical tasks; p-factor represents transdiagnostic liability; dimensional scores available per subject for regression; optional: multi-output regression for all four factors jointly.### Potential Task 8: Resting-state EEG prediction of psychopathology dimensions — attention
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `attention`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `attention` | float | Attention factor score (bifactor model) |
++- **Super Meta Notes**: Four psychopathology dimensions from bifactor model are publicly available as participant metadata. Kernel step: Join segmented EEG epochs with phenotypic files by subject ID; subject-wise cross-validation prevents data leakage.
++- **Evidence**:
++  - DOI: 10.1101/2024.10.03.615261 — HBN-EEG FAIR implementation (bifactor psychopathology dimensions publicly available in participant metadata)
++- **Kernel Notes**: Resting blocks identified via `resting_start` (269 events) or instruction events; same segmentation approach as classical tasks; p-factor represents transdiagnostic liability; dimensional scores available per subject for regression; optional: multi-output regression for all four factors jointly.### Potential Task 9: Resting-state EEG prediction of psychopathology dimensions — p_factor
++- **Task Type**: regression
++- **Epoch Method**: `epoch_by_segmentation_hdf5`
++- **Epoch Parameters**: segment_length = 2 s, overlap = 0.0
++- **Label Route**: `misc`
++- **Label Field**: `p_factor`
++- **Meta Level**: super
++- **Target Definition**:
++  | MISC Channel | Value | Notes |
++  |---|---|---|
+   | `p_factor` | float | General psychopathology factor (p-factor) |
+ - **Super Meta Notes**: Four psychopathology dimensions from bifactor model are publicly available as participant metadata. Kernel step: Join segmented EEG epochs with phenotypic files by subject ID; subject-wise cross-validation prevents data leakage.
+ - **Evidence**:

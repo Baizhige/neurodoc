@@ -1,0 +1,399 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 6,
+    "category": "",
+    "format_type": "bids",
+    "has_bids_sidecars": true
+  },
+  "budget_used": 38,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 12,
+    "task_synthesis": 12,
+    "kernel_loop": 9,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T04:50:48.539283+00:00",
+  "ref_extractions": [
+    {
+      "filename": "official_doi.org_10.18112_openneuro.ds001971.v1.1.1.html",
+      "classification": "uncertain",
+      "ref": "10.18112/openneuro.ds001971.v1.1.1",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "official_openneuro.org_datasets_ds001971.html",
+      "classification": "uncertain",
+      "ref": "",
+      "error": "Extracted text too short (9 chars) — likely SPA shell."
+    },
+    {
+      "filename": "2212.full.extracted.txt",
+      "classification": "irrelevant",
+      "ref": "",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "2212.full.pdf",
+      "classification": "irrelevant",
+      "ref": "",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1523_jneurosci_3543_15_2016.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1523/jneurosci.3543.15.2016",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1038_s41597_019_0223_2.pdf",
+      "ref": "10.1038/s41597-019-0223-2",
+      "title": "High-density EEG mobile brain/body imaging data recorded during a challenging auditory gait pacing task",
+      "classification": "relevant",
+      "cot_reasoning": "This is the original data descriptor paper for openneuro_ds001971. It explicitly describes the dataset, recording paradigm, and published analyses. The authors state they 'used this dataset to investigate top-down inhibitory control in gait adaptation modeling source-resolved oscillatory cortical dynamics and event-related potentials time locked to cue tones and heel strikes following cue rate shifts', indicating concrete ML/analysis tasks with defined event types and labels.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 0,
+      "paradigm": "rhythmic auditory cueing gait adaptation with tempo shifts",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "time-locked to cue tones and heel strikes following cue rate shifts",
+      "target_events": [
+        "cue tones",
+        "heel strikes",
+        "cue rate shifts (faster/slower tempo)"
+      ],
+      "label_mapping": "tempo shift direction (faster/slower), synchronization success/failure",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Data descriptor paper: 20 participants, 108-channel EEG during treadmill walking with auditory pacing; tempo shifts to faster/slower; event markers for heel strikes, heel off, cue tones; authors analyzed ERPs and oscillatory dynamics time-locked to shifts and heel strikes"
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "The dataset has rich, clearly labeled event structure with multiple classifiable conditions: cued vs uncued walking, preferred cadence vs step advance vs step delay tempo conditions, and left/right heel strike markers. The events.tsv shows 'trial_type' column with 'UncuedWalking' and the value→instruction mapping defines 20+ distinct event codes for cues and heel strikes across different tempo conditions, supporting classification of gait phase, tempo condition, or cued vs uncued states.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 273,
+    "total_n": 273,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "100": 32100,
+      "101": 26354,
+      "103": 20237,
+      "109": 20692,
+      "113": 1154,
+      "114": 2368,
+      "119": 1154,
+      "151": 26402,
+      "153": 20441,
+      "159": 20635,
+      "200": 34011,
+      "201": 28708,
+      "203": 20365,
+      "209": 21070,
+      "251": 28730,
+      "253": 20482,
+      "259": 20683,
+      "333": 1154,
+      "444": 2368,
+      "999": 1153,
+      "171": 5715,
+      "271": 5678
+    },
+    "subject_info": {
+      "record_count": 273,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "100",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Right heel strike during uncued walking",
+        "confidence": "confirmed",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "101",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Right cued heel strikes during preferred cadence",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "103",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Right cued heel strikes during step advance",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "109",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Right cued heel strikes during step delay",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "113",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Right auditory cue during preferred cadence",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "114",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Right auditory cue during step advance",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "119",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Right auditory cue during step delay",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "151",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Right auditory cue during preferred cadence",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "153",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Right auditory cue during step advance",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "159",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Right auditory cue during step delay",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "171",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Right cue during standing (STATUS trial phase)",
+        "confidence": "confirmed",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "200",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Left heel strike during uncued walking",
+        "confidence": "confirmed",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "201",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Left cued heel strikes during preferred cadence",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "203",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Left cued heel strikes during step advance",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "209",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Left cued heel strikes during step delay",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "251",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Left auditory cue during preferred cadence",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "253",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Left auditory cue during step advance",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "259",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Left auditory cue during step delay",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "271",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Left cue during standing (STATUS trial phase)",
+        "confidence": "confirmed",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "333",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Left auditory cue during preferred cadence",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "444",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Left auditory cue during step advance",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      },
+      {
+        "event_id": "999",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Left auditory cue during step delay",
+        "confidence": "inferred",
+        "session_task_scope": "task-AudioCueWalkingStudy"
+      }
+    ],
+    "notes": "Confirmed mappings from direct observation in events.tsv files: 100/200 appear in 'UncuedWalking' trial_type (alternating right/left heel strikes), 171/271 appear in 'STATUS' trial_type (alternating right/left cues during standing). The events.json file provided definitions for additional codes (101/201, 151/251, 153/253, 103/203, 109/209, 159/259, 113/333, 114/444, 119, 999) corresponding to cued walking conditions (preferred cadence, step advance, step delay) with right/left pairs, but these codes were not encountered in any of 22+ sampled runs across 4 subjects. The 100-series codes (100, 101, 103, 109, 113, 114, 119, 151, 153, 159, 171) consistently map to right-side events and 200-series codes (200, 201, 203, 209, 251, 253, 259, 271, 333, 444, 999) to left-side events based on the established pattern from confirmed codes and events.json structure. All inferred annotations follow the documented pairing convention in the dataset's events.json."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: 3-class walking condition classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = -0.5 s *, tmax = 1.0 s *, target_events = ['113', '114', '119']`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `114` | 0 | preferred cadence |\n  | `113` | 1 | step advance |\n  | `119` | 2 | step delay |\n- **Evidence**:\n  - 10.1038/s41597-019-0223-2 — Three distinct walking conditions with first-heel-strike markers: 114/444 for preferred cadence, 113/333 for step advance, 119/999 for step delay; right-side first markers (114, 113, 119) used as condition onsets for 3-class classification\n- **Notes**: The task uses right-side first markers (114, 113, 119) to define the three gait adaptation conditions. Left-side equivalents (444, 333, 999) are also valid per the dataset documentation but not included in the target_events list to avoid duplicate condition onsets; the kernel must extract epochs anchored at these event IDs. The epoch window (-0.5 to 1.0 s) captures preparatory activity and early gait adaptation dynamics following tempo shifts, with values inferred from the paradigm description.\n\n### Classical Task 2: 2-class tempo shift direction classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -1.0 s *, tmax = 2.0 s *, target_events = [`113`, `119`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | 113 | 0 | step advance (faster tempo shift) — first right heel strike relative to step advance tempo shift |\n  | 119 | 1 | step delay (slower tempo shift) — first right heel strike relative to step delay tempo shift |\n- **Evidence**:\n  - 10.1038/s41597-019-0223-2 — Core experimental manipulation involves tempo shifts to faster (step advance) or slower (step delay) pacing; first markers for these shifts are 113/333 (right/left for step advance) and 119/999 (right/left for step delay); using right-side markers 113 and 119 for the fundamental faster-vs-slower contrast.\n- **Notes**: Right-side event codes (113, 119) selected for symmetry and balanced trial counts (1154 each). Left-side equivalents (333, 999) exist but are omitted to avoid duplicate conditions. The task captures ERP time-locked to tempo shift onset during cued walking, with an anticipatory baseline (-1 s) and post-shift adaptation window (2 s).\n\n### Potential Task 1: 2-class standing cue laterality\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s *, tmax = 0.5 s *, target_events = [`171`, `271`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | 171 | 0 | Right cue during standing (STATUS trial phase) |\n  | 271 | 1 | Left cue during standing (STATUS trial phase) |\n- **Evidence**:\n  - events.json — \"171\": \"Cue during standing previously associated with right heel strike\"; \"271\": \"Cue during standing previously associated with left heel strike\"\n  - sub-001_task-AudioCueWalkingStudy_run-01_events.tsv — 171 and 271 appear in 'STATUS' trial_type, confirming standing-phase lateralized auditory cues\n- **Notes**: Auditory ERP epoch window (-200 to +500 ms) inferred from standard auditory ERP analysis conventions; no explicit timing documentation in dataset. Task discriminates right vs left lateralized cues presented during standing still, forming a simple 2-class laterality classification.\n\n### Potential Task 2: 4-class cued heel strike laterality by condition\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = -0.2 s *, tmax = 0.8 s *, target_events = [`101`, `201`, `103`, `109`]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | 101 | 0 | Right cued heel strike during preferred cadence |\n  | 201 | 1 | Left cued heel strike during preferred cadence |\n  | 103 | 2 | Right cued heel strike during step advance |\n  | 109 | 3 | Right cued heel strike during step delay |\n- **Evidence**:\n  - `task-AudioCueWalkingStudy_events.json` — Defines event codes 101/201 as right/left cued heel strikes during preferred cadence walking, 103/203 as right/left during step advance pacing tempo, and 109/209 as right/left during step delay pacing tempo\n  - `events.tsv` samples — Confirm 100/200 (uncued) and 101/201/103/113/114/151/251/333 (cued conditions) appear in actual recordings; right/left pairing pattern confirmed across all documented codes\n  - `eeg.json` — TaskDescription confirms participants stepped to auditory tones with tempo shifts (advance/delay conditions), matching the three pacing conditions in the event codes\n- **Notes**: This 4-class task selects a balanced subset of cued heel strike conditions: preferred cadence (both right and left) plus right-side only for step advance and step delay. The left-side equivalents (203, 209) are excluded to avoid class imbalance since right-side events are more consistently documented. The epoch window (-0.2 to 0.8 s) is inferred from biomechanical ERP literature for heel strike responses during treadmill walking.\n\n### Potential Task 3: 2-class sex classification from EEG\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.0, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | `sex` | 0=F (female), 1=M (male) |\n- **Evidence**:\n- **Notes**: Subject-level trait classification using non-overlapping 10-second windows. The entire continuous recording is segmented and all windows from a given subject share the same label from participants.tsv `sex` column (9F, 11M). No kernel derivation needed — label is read directly from native BIDS info field.\n\n### Potential Task 4: Age Regression from EEG\n- **Task Type**: regression\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: `segment_length = 10 s *, overlap = 0.0 *, target_events = []`\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|-----------------|\n  | `age` | Continuous age in years. Exact values used where available (28, 32). For range entries '18-38', midpoint 28 is used as approximate age, yielding limited variance across subjects. Most subjects have age≈28; exact ages 28 and 32 provide minor spread. Small-sample regression expected. |\n- **Evidence**:\n  - participants.tsv — age column contains exact values (28, 32) and range '18-38' for 18 of 20 subjects; midpoint approximation yields groundable continuous target\n- **Notes**: Subject-level trait regression using segmentation epochs. The age variable is native to participants.tsv (info route, Meta Level=raw). Range midpoints introduce approximation; kernel simply reads the pre-existing info field. Limited variance in age (most subjects ~28 years) makes this a challenging small-sample regression task.\n\n### Potential Task 5: Segmented Gait Adaptation Sex Classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_segmentation_hdf5`\n- **Epoch Parameters**: segment_length = 30 s *, overlap = 0.5 *, target_events = []\n- **Label Route**: `info`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Info Field | Y Mapping Notes |\n  |------------|---------------|\n  | sex | 0 = F (female), 1 = M (male); binary classification from participants.tsv |\n- **Evidence**:\n  - participants.tsv — N=20 subjects with sex field complete: F=9, M=11\n  - dataset_description.json — \"Audiocue walking study\" with continuous treadmill walking and tempo adaptation\n  - README — describes MoBI gait adaptation experiment with auditory tone sequence and tempo shifts\n- **Notes**: Segmentation-based approach (archetype C) using 30-second windows with 50% overlap to capture gait cycle dynamics and tempo adaptation periods without event-locking. The sex label is drawn from the native participants.tsv info field, requiring no kernel derivation. Longer segments are chosen to encompass multiple gait cycles and potential tempo shift adaptations, allowing the model to learn whether gait-related neural dynamics carry subject trait information in a continuous walking paradigm.\n\n### Potential Task 6: 2-class cued vs uncued walking\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.2 s *, tmax = 0.8 s *, target_events = [`100`, `101`, `200`, `201`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | 100 | 0 | Right heel strike during uncued walking |\n  | 200 | 0 | Left heel strike during uncued walking |\n  | 101 | 1 | Right cued heel strikes during preferred cadence |\n  | 201 | 1 | Left cued heel strikes during preferred cadence |\n- **Evidence**:\n  - events.tsv samples (sub-001 run-01) — Shows `100`/`200` appear in `UncuedWalking` trial_type as alternating right/left heel strikes\n  - task-AudioCueWalkingStudy_events.json — Defines `100` as \"Right heel strikes during uncued walking\", `200` as \"Left heel strikes during uncued walking\", `101` as \"Right cued heel strikes during preferred cadence walking\", `201` as \"Left cued heel strikes during preferred cadence walking\"\n  - EEG File Header Sample — Confirms `100`, `101`, `200`, `201` all present as annotations in actual recordings\n- **Notes**: Merges right/left heel strikes per condition to create a 2-class cue presence discrimination (uncued=0, cued=1), balancing limb laterality within each class. Preferred cadence (101/201) selected as the most basic cued condition among multiple cued variants (advance/delay not used). Epoch window centered on heel strike captures contact-related ERPs with pre-strike baseline.\n\n### Potential Task 7: 3-class auditory cue condition classification\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -0.1 s *, tmax = 0.5 s *, target_events = [`151`, `153`, `159`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | 151 | 0 | Right auditory cue during preferred cadence walking |\n  | 153 | 1 | Right auditory cue during step advance pacing tempo |\n  | 159 | 2 | Right auditory cue during step delay pacing tempo |\n- **Evidence**:\n  - task-AudioCueWalkingStudy_events.json — Defines 151 as \"Auditory cues for right step during preferred cadence walking\", 153 as \"Auditory cues for right heel strikes during step advance pacing tempo\", 159 as \"Auditory cues for right heel strikes during step delay pacing tempo\"\n  - events.tsv samples — Confirmed presence of event codes 151 (26402 occurrences), 153 (20441 occurrences), 159 (20635 occurrences) across dataset\n  - EEG File Header Sample — Annotations include 151, demonstrating these events are present in actual recording files\n  - README — Describes paradigm: participants step in time to auditory tone sequence with occasional shifts to faster (advance) or slower (delay) tempo\n- **Notes**: Using right-side ongoing auditory cues (151/153/159) rather than first-markers (113/333, 114/444, 119/999) because the ongoing cues provide substantially more samples for model training. The three conditions correspond to preferred cadence (baseline), step advance (faster tempo), and step delay (slower tempo). Epoch window [-0.1, 0.5] s captures pre-stimulus baseline and early auditory ERP components (P1, N1, P2) plus attentional modulation relevant to gait adaptation processing.\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "100",
+      "101",
+      "103",
+      "109",
+      "113",
+      "114",
+      "119",
+      "151",
+      "153",
+      "159",
+      "171",
+      "200",
+      "201",
+      "271"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [
+      "age",
+      "sex"
+    ],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "response time regression",
+        "reason": "events.json lists 'response_time' column but states 'Response time column not used for this data'. The events.tsv samples confirm response_time is always 'n/a'. No usable values exist for regression."
+      },
+      {
+        "paradigm": "handedness classification",
+        "reason": "participants.tsv 'handedness' column has 100% 'R' values (all right-handed). Only 1 distinct value violates H2 (classification requires ≥2 classes)."
+      },
+      {
+        "paradigm": "native misc channel regression/classification",
+        "reason": "No native continuous misc channels (EMG, EOG, GSR, etc.) were discovered in the raw EEG files. The grounded catalog shows empty native misc channels list."
+      }
+    ]
+  },
+  "kernel_ok": false,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/openneuro_ds001971/kernel_final.py",
+  "kernel_code_len": 14253,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds001971.py",
+    "kernel_sha256": "91586ebcf2a3d4c9e3c6351416847edc5b00dc2d68765dcea0d3e7fd05e5372b",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 273,
+    "total_n": 273,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "100": 32100,
+      "101": 26354,
+      "103": 20237,
+      "109": 20692,
+      "113": 1154,
+      "114": 2368,
+      "119": 1154,
+      "151": 26402,
+      "153": 20441,
+      "159": 20635,
+      "200": 34011,
+      "201": 28708,
+      "203": 20365,
+      "209": 21070,
+      "251": 28730,
+      "253": 20482,
+      "259": 20683,
+      "333": 1154,
+      "444": 2368,
+      "999": 1153,
+      "171": 5715,
+      "271": 5678
+    },
+    "subject_info": {
+      "record_count": 273,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": [
+      "ANKLE",
+      "HIP",
+      "KNEE"
+    ]
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/openneuro_ds001971.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}

@@ -1,0 +1,209 @@
+{
+  "phase": "scan",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 9,
+    "category": "",
+    "format_type": "unknown",
+    "has_bids_sidecars": false
+  },
+  "budget_used": 11,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "task_synthesis": 7,
+    "kernel_loop": 1
+  },
+  "timestamp": "2026-05-05T08:46:35.935372+00:00",
+  "ref_extractions": [
+    {
+      "filename": "paper_10_1016_j_clinph_2020_02_032.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.clinph.2020.02.032",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2022_119521.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.neuroimage.2022.119521",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "official_doi.org_10.3389_fnins.2016.00196.html",
+      "ref": "10.3389/fnins.2016.00196",
+      "title": "The Temple University Hospital EEG Data Corpus",
+      "classification": "partial",
+      "cot_reasoning": "This is the foundational data report introducing the TUH-EEG Corpus itself. It explicitly describes the dataset structure, patient demographics, and data organization. However, it does not define a specific ML task with labels—it is purely a data release paper describing the corpus creation and characteristics without any predictive modeling framework.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "Dataset description paper; no ML task defined",
+      "evidence_desc": "Describes 16,986 sessions from 10,874 subjects, EDF format, clinician reports, file structure. No labels for classification beyond raw data and free-text reports."
+    },
+    {
+      "filename": "official_isip.piconepress.com_projects_tuh_eeg.html",
+      "ref": "",
+      "title": "Temple University EEG Corpus",
+      "classification": "partial",
+      "cot_reasoning": "This is the official project landing page for TUH-EEG. It mentions the corpus and related subsets like TUH Seizure Detection Corpus (TUSZ), and references a seizure detection system with ResNet-18. However, it does not explicitly define a concrete ML task with labels for the core TUH-EEG dataset; it is primarily an access portal.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "super",
+      "super_meta_note": "Project homepage referencing multiple corpus versions and subsets; mentions seizure detection as application but not as core dataset task definition",
+      "evidence_desc": "Mentions 60,000+ EEGs, TUSZ v2.0.2, real-time seizure detection system. No explicit task labels for the main TUH-EEG corpus."
+    },
+    {
+      "filename": "paper_10.3389_fnins.2016.00196.pdf",
+      "ref": "10.3389/fnins.2016.00196",
+      "title": "The Temple University Hospital EEG Data Corpus",
+      "classification": "partial",
+      "cot_reasoning": "Identical to the HTML version—this is the original data report paper introducing TUH-EEG. It provides detailed corpus statistics and structure but does not establish a labeled ML task. The paper's purpose is data dissemination, not predictive modeling.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "raw",
+      "super_meta_note": "Dataset description paper; no ML task defined",
+      "evidence_desc": "16,986 sessions, 10,874 subjects, age range <1 to >90 years, variable channels (EEG-only mean ~31 channels), EDF format with paired clinician reports. No classification labels mentioned."
+    },
+    {
+      "filename": "paper_10_1016_j_bspc_2020_102215.pdf",
+      "ref": "10.1016/j.bspc.2020.102215",
+      "title": "A robust deep learning approach for automatic classification of seizures against non-seizures",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper develops a BiLSTM+attention model for seizure/non-seizure classification, but explicitly uses the CHB-MIT dataset, not TUH-EEG. The abstract and methods clearly state experiments on 'the noisy data of CHB-MIT' with 17 common channels and 23s segments. No mention of TUH-EEG anywhere.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Uses CHB-MIT dataset exclusively; 87.3% sensitivity, 88.3% specificity in cross-validation. No TUH-EEG usage."
+    },
+    {
+      "filename": "paper_10_1016_j_patrec_2020_03_009.pdf",
+      "ref": "10.1016/j.patrec.2020.03.009",
+      "title": "Automated detection of abnormal EEG signals using localized wavelet filter banks",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly uses 'a single-channel EEG dataset of Temple University Hospital' for binary classification of normal vs. abnormal EEG signals. It defines a concrete ML task with SVM classifier, reports accuracy metrics (78.4% training, 79.34% evaluation), and mentions 2130 distinct subjects. The task is clearly stated as automated detection of abnormal EEG signals.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "normal vs. abnormal EEG detection",
+      "epoch_method_hint": "segmentation",
+      "epoch_params": "single-channel, 60s segments mentioned in related work (Acharya et al.); paper does not explicitly state segment duration for own experiments but implies segment-level classification",
+      "target_events": [
+        "normal EEG",
+        "abnormal EEG"
+      ],
+      "label_mapping": "normal = 0, abnormal = 1 (implied binary)",
+      "meta_level": "super",
+      "super_meta_note": "Subject-level labels inferred from clinician reports; single-channel analysis",
+      "evidence_desc": "Uses TUH-EEG single-channel dataset with 2130 subjects; SVM classifier with wavelet features; 78.4% training accuracy, 79.34% evaluation accuracy, F1-score 0.88. Normal vs abnormal binary classification task."
+    },
+    {
+      "filename": "paper_10_1109_jbhi_2020_2971610.pdf",
+      "ref": "10.1109/JBHI.2020.2971610",
+      "title": "Adversarial Representation Learning for Robust Patient-Independent Epileptic Seizure Detection",
+      "classification": "relevant",
+      "cot_reasoning": "This paper explicitly evaluates over 'the Temple University Hospital EEG (TUH EEG) database' for patient-independent epileptic seizure detection. It defines a concrete ML task with adversarial training to separate seizure-related from patient-related components. Uses attention mechanism for channel importance, and reports outperforming state-of-the-art baselines. The task is binary seizure detection with explicit patient-independent design.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 2,
+      "paradigm": "seizure detection (patient-independent)",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "raw EEG signals, non-invasive, multi-channel; specific window size not stated in excerpt but implies event-based segmentation",
+      "target_events": [
+        "seizure",
+        "non-seizure"
+      ],
+      "label_mapping": "seizure = 1, non-seizure = 0 (binary)",
+      "meta_level": "super",
+      "super_meta_note": "Uses annotated seizure events from TUH-EEG subset (likely TUSZ); patient-independent design with adversarial decomposition",
+      "evidence_desc": "TUH EEG database explicitly named; adversarial representation learning; attention mechanism for channel importance; outperforms state-of-the-art with low latency; robust patient-independent seizure detection."
+    },
+    {
+      "filename": "paper_10_1109_spmb52430_2021_9672302.pdf",
+      "ref": "10.1109/SPMB52430.2021.9672302",
+      "title": "Recent Advances in the TUH EEG Corpus: Improving the Interrater Agreement for Artifacts and Epileptiform Events",
+      "classification": "partial",
+      "cot_reasoning": "This poster discusses improvements to TUH-EEG subsets (TUSZ and TUAR) with focus on annotation quality, interrater agreement, and data partitioning. It mentions seizure detection and artifact detection as applications but is primarily a corpus improvement report rather than a paper defining a specific ML task. It describes the dataset infrastructure and annotation process, not a concrete modeling framework.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "files split to max 60 mins; seizure events annotated; v1.5.3 has 1239 events vs 673 in v1.5.2",
+      "target_events": [
+        "seizure",
+        "artifact"
+      ],
+      "label_mapping": "",
+      "meta_level": "super",
+      "super_meta_note": "Dataset annotation and quality improvement paper; describes TUSZ and TUAR subsets with manual annotations for seizure and artifact events",
+      "evidence_desc": "TUSZ v1.5.3: 1239 seizure events, dev/eval/train splits now mutually exclusive; TUAR v2.0.0 with hierarchical XML annotations; kappa >0.8 interrater agreement. No specific ML task or model training described."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "Multiple references confirm TUH-EEG supports concrete ML tasks: paper_10_1016_j_patrec_2020_03_009.pdf demonstrates normal vs. abnormal EEG binary classification (79.34% accuracy, F1=0.88), and paper_10_1109_jbhi_2020_2971610.pdf shows patient-independent seizure detection with adversarial representation learning. The dataset contains 16,986+ sessions with clinician reports and derived subsets like TUSZ (seizure annotations) and TUAR (hierarchical XML annotations) that provide structured labels.",
+  "pre_scan_result": {
+    "event_counts": {},
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [],
+    "notes": "No data_dir available."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: Seizure Detection from TUSZ Annotations\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = -5 s *, tmax = 15 s *, target_events = [`seizure`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `seizure` | 1 | seizure onset (annotated seizure event) |\n  | (implicit background) | 0 | non-seizure / interictal (all other epochs) |\n- **Evidence**:\n  - 10.1109/JBHI.2020.2971610 — Patient-independent seizure detection using adversarial representation learning with attention mechanism on TUH-EEG Seizure Corpus (TUSZ); binary seizure vs non-seizure classification with multi-channel raw EEG analysis.\n- **Notes**: Binary classification derived from TUSZ seizure annotations. The y=0 class is constructed implicitly by the epoching process: any epochs extracted from non-seizure periods (or via a separate background epoching strategy) serve as the negative class. The 5s pre-onset and 15s post-onset window (20s total) is a standard clinical default for seizure detection tasks, though not explicitly stated in the reference; values are marked inferred.\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "seizure"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "age prediction from EEG",
+        "reason": "Age information mentioned in dataset description (<1 to >90 years) but no participants.tsv column discovered in grounded catalog. Without structured age field, cannot ground as B3 (native info) or derive as B2. Free-text reports may contain age but extraction would be unreliable."
+      },
+      {
+        "paradigm": "multi-class motor imagery",
+        "reason": "No motor imagery events in available event IDs, no references support this paradigm for TUH-EEG, and no relevant participants.tsv or events.tsv columns for derivation. TUH-EEG is a clinical corpus, not a BCI dataset."
+      },
+      {
+        "paradigm": "sleep stage classification",
+        "reason": "No sleep stage annotations in available event IDs, no references mention sleep staging for TUH-EEG, and no structured sleep labels in grounded catalog. Clinical EEG may contain drowsiness mentions in reports but no standardized sleep scoring."
+      }
+    ]
+  },
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/tuh_eeg/kernel_final.py",
+  "kernel_code_len": 21956,
+  "status": "error",
+  "last_error": "Dataset 'tuh_eeg' not found in any configured directory: /home/public/eeg_dataset/openneuro_raw, /home/public/eeg_dataset/raw_datasets"
+}

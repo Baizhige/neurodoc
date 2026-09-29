@@ -1,0 +1,41 @@
+--- openneuro_ds004603/analysis.md (pre-v3)
++++ openneuro_ds004603/analysis.md (v3)
+@@ -2,7 +2,7 @@
+ 
+ **Dataset**: `openneuro_ds004603` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004603
+ **Category**: Sensory/Response | **Subjects**: 37 | **Files (Completed)**: 37 | **Channels**: 65 | **Sampling Rate**: 1024 Hz
+-**Manual Review**: Pending
++**Manual Review**:
+ 
+ ## Paradigm
+ 
+@@ -51,8 +51,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Stimulus/S   40` | 0 | No-trajectory control condition |
+   | `Stimulus/S   20` | 1 | Size trajectory violation |
+   | `Stimulus/S   30` | 2 | Orientation trajectory violation |
+@@ -78,6 +78,7 @@
+   - DOI: `10.1016/j.cortex.2023.08.004` — The paradigm is designed to test predictive coding mechanisms; the paper analyzes how expectation signals develop across the trajectory sequence. While the primary publication focuses on violation decoding, the step-by-step sequence structure enables investigation of prediction build-up via ERPs or multivariate patterns across step positions.
+ - **Kernel Notes**: Analyze each step position separately to examine how prediction strength builds across the sequence. Step_4 represents maximum expectation before the terminal stimulus. Baseline correction applied -100 to 0 ms pre-stimulus. Slight count imbalance (step_1=31368 vs others=31367) suggests some trials terminated early.
+ 
++<!-- MIGRATION: single-class classification, needs review -->
+ ### Potential Task 1: Catch Trial Response Detection
+ - **Task Type**: classification
+ - **Epoch Method**: `epoch_by_event_hdf5`
+@@ -85,8 +86,8 @@
+ - **Label Route**: `event`
+ - **Meta Level**: raw
+ - **Target Definition**:
+-  | Event | y | Meaning |
+-  |-------|---|---------|
++  | Event ID | y | Meaning |
++  |---|---|---|
+   | `Stimulus/S   50` | 1 | Catch trial requiring button-press response |
+ - **Evidence**:
+   - Plausible from paradigm: Catch trials test whether participants detect violations and require motor responses, enabling reaction time and hit rate analysis alongside EEG correlates of response preparation and execution.

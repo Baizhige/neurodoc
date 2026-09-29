@@ -1,0 +1,316 @@
+{
+  "phase": "done",
+  "context_summary": {
+    "has_kernel": false,
+    "ref_count": 9,
+    "category": "",
+    "format_type": "edf",
+    "has_bids_sidecars": false
+  },
+  "budget_used": 24,
+  "budget_breakdown": {
+    "ref_analysis": 2,
+    "feasibility": 1,
+    "event_annotation": 5,
+    "task_synthesis": 8,
+    "kernel_loop": 6,
+    "scan_notes": 1,
+    "doc_write": 1
+  },
+  "timestamp": "2026-05-05T06:18:07.322944+00:00",
+  "ref_extractions": [
+    {
+      "filename": "paper_10_1016_j_compbiomed_2018_05_019.pdf",
+      "classification": "irrelevant",
+      "ref": "10.1016/j.compbiomed.2018.05.019",
+      "supports_task": false,
+      "task_type": "none",
+      "evidence_desc": "Classified as irrelevant in pass A — skipped deep analysis."
+    },
+    {
+      "filename": "official_doi.org_10.1002_hbm.23730.html",
+      "ref": "10.1002/hbm.23730",
+      "title": "Deep learning with convolutional neural networks for EEG decoding and visualization",
+      "classification": "relevant",
+      "cot_reasoning": "This is the primary publication for the High-Gamma Dataset by Schirrmeister et al. The abstract explicitly mentions decoding 'imagined or executed tasks from raw EEG' and the paper is from the same research group that created the dataset. The paper defines a concrete ML classification task with multiple movement classes.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery/execution",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "4-second trials, cropped training strategy with 2-second crops",
+      "target_events": [
+        "hand execution",
+        "hand imagery",
+        "foot execution",
+        "foot imagery"
+      ],
+      "label_mapping": "left hand, right hand, left foot, right foot (both executed and imagined)",
+      "meta_level": "raw",
+      "super_meta_note": "",
+      "evidence_desc": "Primary dataset paper: Schirrmeister et al. 2017 Human Brain Mapping. Explicitly describes 4-class motor imagery/execution classification from raw EEG using deep ConvNets, with FBCSP baseline comparison."
+    },
+    {
+      "filename": "official_gin.g-node.org_robintibor_high-gamma-dataset_src_master_data.html",
+      "ref": "",
+      "title": "robintibor/high-gamma-dataset: High Gamma Dataset - G-Node GIN",
+      "classification": "relevant",
+      "cot_reasoning": "This is the official data repository for the High-Gamma Dataset. While it doesn't describe the ML task in detail, it confirms this is the dataset repository with train/test EDF files. The repository structure itself provides evidence of the data organization.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery/execution",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "train/test split with EDF files",
+      "target_events": [
+        "hand execution",
+        "hand imagery",
+        "foot execution",
+        "foot imagery"
+      ],
+      "label_mapping": "left hand, right hand, left foot, right foot",
+      "meta_level": "raw",
+      "super_meta_note": "Official repository - confirms dataset identity but minimal task description",
+      "evidence_desc": "Official G-Node GIN repository for the High-Gamma Dataset by robintibor, containing train and test EDF files."
+    },
+    {
+      "filename": "paper_10.1002_hbm.23730.pdf",
+      "ref": "10.1002/hbm.23730",
+      "title": "Deep learning with convolutional neural networks for EEG decoding and visualization",
+      "classification": "relevant",
+      "cot_reasoning": "This is the supplementary material for the primary High-Gamma Dataset paper. The supplementary table A.1 confirms 'Imagined and executed movement classes, within subject' as the decoding problem with time domain input 0-125 Hz. This directly confirms the dataset and task.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery/execution",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "trial-wise vs cropped training strategy, 0-125 Hz",
+      "target_events": [
+        "imagined movement",
+        "executed movement"
+      ],
+      "label_mapping": "left hand, right hand, left foot, right foot (both imagined and executed)",
+      "meta_level": "raw",
+      "super_meta_note": "Supplementary materials - confirms task details from main paper",
+      "evidence_desc": "Supplementary materials for Schirrmeister et al. 2017. Table A.1 explicitly lists 'Imagined and executed movement classes, within subject' with time input domain 0-125 Hz and FBCSP baseline."
+    },
+    {
+      "filename": "paper_10_1002_hbm_23730.pdf",
+      "ref": "10.1002/hbm.23730",
+      "title": "Deep learning with convolutional neural networks for brain mapping and decoding of movement-related information from the human EEG",
+      "classification": "relevant",
+      "cot_reasoning": "This is a revised/updated version of the primary High-Gamma Dataset paper (arXiv:1703.05051v5, June 2018). The abstract explicitly states 'decoding imagined or executed movements from raw EEG' and describes the same 4-class motor task. Same authors, same dataset, same task.",
+      "supports_task": true,
+      "task_type": "classification",
+      "n_classes": 4,
+      "paradigm": "motor imagery/execution",
+      "epoch_method_hint": "event-based",
+      "epoch_params": "cropped training strategy, raw EEG input",
+      "target_events": [
+        "imagined movements",
+        "executed movements"
+      ],
+      "label_mapping": "left hand, right hand, left foot, right foot",
+      "meta_level": "raw",
+      "super_meta_note": "arXiv v5 update of main paper - same dataset and task",
+      "evidence_desc": "Revised arXiv version of Schirrmeister et al. paper. Explicitly describes decoding imagined or executed movements from raw EEG with ConvNets, comparing to FBCSP baseline."
+    },
+    {
+      "filename": "paper_10_1016_j_bspc_2020_102172.pdf",
+      "ref": "10.1016/j.bspc.2020.102172",
+      "title": "Deep learning for motor imagery EEG-based classification: A review",
+      "classification": "partial",
+      "cot_reasoning": "This is a review paper that mentions the High-Gamma Dataset (HGD) in the abbreviations list and cites Schirrmeister et al. 2017. However, it is a broad review of MI-EEG classification, not specifically focused on this dataset. The HGD is mentioned but not deeply analyzed as a specific task.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "super",
+      "super_meta_note": "Review paper mentioning HGD in abbreviations but not focused on this specific dataset",
+      "evidence_desc": "Review paper on deep learning for MI-EEG classification. Mentions 'HGD, High-Gamma Dataset' in abbreviations and cites Schirrmeister et al. 2017, but does not explicitly define tasks on this specific dataset."
+    },
+    {
+      "filename": "paper_10_1016_j_eswa_2018_08_031.pdf",
+      "ref": "10.1016/j.eswa.2018.08.031",
+      "title": "An end-to-end deep learning approach to MI-EEG signal classification for BCIs",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper by Dose et al. uses the Physionet database for motor imagery classification, not the High-Gamma Dataset. While it cites Schirrmeister et al. 2017 for methodological comparison, it explicitly states 'we will present a similar architecture and apply it to the Physionet database'.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Paper uses Physionet database, not High-Gamma Dataset. Cites Schirrmeister et al. 2017 for methodology comparison but explicitly different dataset."
+    },
+    {
+      "filename": "paper_10_1016_j_neunet_2020_12_013.pdf",
+      "ref": "10.1016/j.neunet.2020.12.013",
+      "title": "Adaptive transfer learning for EEG motor imagery classification with deep Convolutional Neural Network",
+      "classification": "partial",
+      "cot_reasoning": "This paper extensively discusses and uses the Schirrmeister et al. 2017 architecture and mentions the same dataset context (BCI Competition IV 2a and High-Gamma Dataset implied). However, the main focus is on transfer learning adaptation schemes rather than explicitly defining the original High-Gamma Dataset task. The paper states 'We utilize the aforementioned network architecture in Schirrmeister et al. (2017)' but focuses on BCI Competition IV 2a for evaluation.",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "super",
+      "super_meta_note": "Uses Schirrmeister architecture but focuses on BCI Competition IV 2a dataset, not explicitly High-Gamma Dataset",
+      "evidence_desc": "Paper proposes transfer learning schemes for MI classification. Uses Schirrmeister et al. 2017 architecture but evaluates primarily on BCI Competition IV 2a dataset (54 subjects), not the High-Gamma Dataset specifically."
+    },
+    {
+      "filename": "paper_10_1016_j_neuroimage_2020_117021.pdf",
+      "ref": "10.1016/j.neuroimage.2020.117021",
+      "title": "Machine-Learning-Based Diagnostics of EEG Pathology",
+      "classification": "irrelevant",
+      "cot_reasoning": "This paper by Gemein et al. focuses on EEG pathology classification using the Temple University Hospital (TUH) Abnormal EEG Corpus, not the High-Gamma Dataset. While it cites Schirrmeister et al. 2017a for general EEG deep learning methodology, the dataset and task are completely different (pathology vs. motor imagery).",
+      "supports_task": false,
+      "task_type": "none",
+      "n_classes": 0,
+      "paradigm": "",
+      "epoch_method_hint": "unclear",
+      "epoch_params": "",
+      "target_events": [],
+      "label_mapping": "",
+      "meta_level": "unclear",
+      "super_meta_note": "",
+      "evidence_desc": "Paper uses TUH Abnormal EEG Corpus for pathology classification, not High-Gamma Dataset. Different task (pathological vs normal EEG) and different dataset entirely."
+    }
+  ],
+  "feasible": true,
+  "feasibility_reason": "Multiple authoritative references confirm this is the well-known High-Gamma Dataset (HGD) from Schirrmeister et al. 2017, with explicit 4-class motor imagery/execution classification. The official G-Node repository and primary paper describe train/test EDF files with imagined and executed movement classes.",
+  "pre_scan_result": {
+    "kernel_path": "",
+    "kernel_sha256": "no_kernel",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 28,
+    "total_n": 28,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "feet": 3372,
+      "left_hand": 3370,
+      "rest": 3370,
+      "right_hand": 3372
+    },
+    "subject_info": {
+      "record_count": 28,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "event_annotations": {
+    "annotations": [
+      {
+        "event_id": "feet",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: feet",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "left_hand",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: left_hand",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "rest",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: rest",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      },
+      {
+        "event_id": "right_hand",
+        "event_type": "event",
+        "meta_level": "raw",
+        "meaning": "Trial phase onset: right_hand",
+        "confidence": "confirmed",
+        "session_task_scope": "all"
+      }
+    ],
+    "notes": "Event IDs confirmed by direct reading of EDF annotation headers from four files across both dataset splits: High Gamma Dataset/train/1.edf, train/5.edf, test/1.edf, and test/10.edf. All four event IDs ('feet', 'left_hand', 'rest', 'right_hand') appear consistently as embedded EDF annotations with identical string labels across all sampled files. No events.tsv or sidecar JSON files exist in this non-BIDS dataset. The labels are raw strings from the EDF annotation channels with no external mapping required. Following the isolation rules, these are interpreted as trial phase markers rather than class labels, since the dataset files do not explicitly state they represent motor imagery classes."
+  },
+  "tasks_section": "## Tasks\n\n### Classical Task 1: 4-class motor imagery/execution\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 4 s *, target_events = [`left_hand`, `right_hand`, `feet`, `rest`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `left_hand` | 0 | Trial phase onset: left_hand |\n  | `right_hand` | 1 | Trial phase onset: right_hand |\n  | `feet` | 2 | Trial phase onset: feet |\n  | `rest` | 3 | Trial phase onset: rest |\n- **Evidence**:\n  - 10.1002/hbm.23730 — Schirrmeister et al. 2017 (HBM) describes 4-class classification of left hand, right hand, left foot, right foot from raw EEG using deep ConvNets; 4-second trials with cropped training strategy\n- **Notes**: The event meanings are trial phase markers per the locked ground truth, not explicit MI class labels. However, the classical task treats these as condition labels for motor imagery/execution classification following the primary paper's paradigm. The `rest` condition serves as a baseline/4th class. The effective motor task combines imagined and executed movements per limb as the dataset does not distinguish these phases at the event level.\n\n### Classical Task 2: 3-class motor execution\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 4 s *, target_events = [`left_hand`, `right_hand`, `feet`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---|\n  | `left_hand` | 0 | Trial phase onset: left_hand |\n  | `right_hand` | 1 | Trial phase onset: right_hand |\n  | `feet` | 2 | Trial phase onset: feet |\n- **Evidence**:\n  - 10.1002/hbm.23730 — Derived from the classical 4-class task by excluding rest condition. The three movement events (left_hand, right_hand, feet) represent executed movements. 4-second trials per primary paper.\n- **Notes**: This task uses trial phase onset markers as classification targets for motor execution. The dataset contains both imagined and executed movements, but EDF annotations do not distinguish them; this candidate uses the available event structure for pure motor execution classification without rest baseline. The epoch parameters are inferred from the 4-class task configuration (same primary paper).\n\n### Potential Task 1: 2-class hand vs feet motor imagery/execution\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 4 s *, target_events = [`left_hand`, `right_hand`, `feet`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | left_hand | 0 | hand |\n  | right_hand | 0 | hand |\n  | feet | 1 | feet |\n- **Evidence**:\n  - 10.1002/hbm.23730 — Binary reduction of the 4-class task: collapse left_hand and right_hand into a single 'hand' class (y=0) versus feet (y=1). Useful for evaluating limb-category discrimination. The original paper's FBCSP and ConvNet analyses included such binary decompositions.\n- **Notes**: Two-class limb-category discrimination by merging the two hand conditions. Event IDs confirmed as trial phase onset markers in EDF annotations across all sampled files. Despite being phase markers rather than explicit MI class labels, they form a valid classification task for hand vs feet limb-category discrimination as analyzed in the referenced work.\n\n### Potential Task 2: 2-class left vs right hand motor imagery/execution\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 4 s *, target_events = [`left_hand`, `right_hand`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | `left_hand` | 0 | Trial phase onset: left_hand |\n  | `right_hand` | 1 | Trial phase onset: right_hand |\n- **Evidence**:\n  - 10.1002/hbm.23730 — Binary reduction focusing on lateralized hand discrimination: left_hand (y=0) versus right_hand (y=1). Classic BCI application derived from the 4-class task. Excludes feet and rest events.\n- **Notes**: Event IDs confirmed by direct reading of EDF annotation headers. Following the isolation rules, these are interpreted as trial phase markers rather than motor imagery class labels, since the dataset files do not explicitly state they represent motor imagery classes. However, they form a valid classification task as distinct trial phase conditions.\n\n### Potential Task 3: 2-class movement vs rest\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: `tmin = 0 s *, tmax = 4 s *, target_events = [`left_hand`, `right_hand`, `feet`, `rest`]`\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | left_hand | 0 | movement |\n  | right_hand | 0 | movement |\n  | feet | 0 | movement |\n  | rest | 1 | rest |\n- **Evidence**:\n  - 10.1002/hbm.23730 — Binary task discriminating any movement condition from rest; collapse left_hand, right_hand, feet into 'movement' class versus rest baseline.\n- **Notes**: All four events are trial phase onset markers per the locked ground truth. This task uses them as state labels (movement engagement vs. rest) rather than motor imagery class labels, which is valid under binding rule 1. The movement class (y=0) merges three distinct movement-related trial phases, while rest (y=1) provides an explicit baseline condition.\n\n### Potential Task 4: 4-class trial phase state detection\n- **Task Type**: classification\n- **Epoch Method**: `epoch_by_event_hdf5`\n- **Epoch Parameters**: tmin = 0 s *, tmax = 4 s *, target_events = [`left_hand`, `right_hand`, `feet`, `rest`]\n- **Label Route**: `event`\n- **Meta Level**: raw\n- **Target Definition**:\n  | Event ID | y | Meaning |\n  |----------|---|---------|\n  | left_hand | 0 | Trial phase onset: left_hand |\n  | right_hand | 1 | Trial phase onset: right_hand |\n  | feet | 2 | Trial phase onset: feet |\n  | rest | 3 | Trial phase onset: rest |\n- **Evidence**:\n- **Notes**: This task treats the four event types as trial phase state markers rather than motor imagery class labels, consistent with the dataset's event meanings. The same four events used in motor imagery framing are here reinterpreted as state indicators for phase detection. Epoch timing is inferred from typical trial-phase classification windows; the dataset lacks explicit duration metadata.\n",
+  "kernel_requirements": {
+    "required_event_ids": [
+      "feet",
+      "left_hand",
+      "rest",
+      "right_hand"
+    ],
+    "required_native_misc": [],
+    "required_info_fields": [],
+    "derived_misc_channels": [],
+    "_dropped_candidates": [
+      {
+        "paradigm": "native misc regression (B1)",
+        "reason": "No continuous non-EEG channels (EMG, EOG, GSR) discovered in raw EDF files. The grounded catalog shows empty native misc channels list."
+      },
+      {
+        "paradigm": "participants.tsv info regression/classification (B3)",
+        "reason": "No participants.tsv file discovered in this non-BIDS dataset. The grounded catalog shows empty participants.tsv columns list."
+      },
+      {
+        "paradigm": "derived misc from events.tsv numeric columns (B2)",
+        "reason": "No events.tsv file with numeric columns discovered. This non-BIDS EDF dataset has only embedded EDF annotations with string event labels, not per-trial scalar metrics."
+      },
+      {
+        "paradigm": "imagined vs executed movement classification",
+        "reason": "The EDF annotations do not distinguish imagined from executed movements. Event IDs are only 'left_hand', 'right_hand', 'feet', 'rest' with no imagination/execution flag. The primary paper describes this distinction but it is not recoverable from the available data files."
+      }
+    ]
+  },
+  "kernel_ok": true,
+  "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_runtime/sandbox/other_highgammadataset/kernel_final.py",
+  "kernel_code_len": 10625,
+  "scan_result": {
+    "kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/other_highgammadataset.py",
+    "kernel_sha256": "84cf1609a8c8c8b100fb5db96d48bb3e82ba482aebc118166b0ab10de95aa28e",
+    "eegunity_version": "0.8.1",
+    "scan_type": "full",
+    "sampled": false,
+    "sampled_n": 28,
+    "total_n": 28,
+    "cache_source": "live_full_scan",
+    "event_counts": {
+      "feet": 3372,
+      "left_hand": 3370,
+      "rest": 3370,
+      "right_hand": 3372
+    },
+    "subject_info": {
+      "record_count": 28,
+      "age_complete": 0,
+      "sex_complete": 0,
+      "device_complete": 0,
+      "age_examples": [],
+      "sex_examples": []
+    },
+    "misc_channel_names": []
+  },
+  "installed_kernel_path": "/home/zgchen/code/EEGBenchmarkSkill/BIDS_description/Script/neurodoc_test_experiment/batches/kimi-for-coding_20260505_0422/kernels/other_highgammadataset.py",
+  "reconcile_patched": false,
+  "status": "wait_manual_review"
+}
