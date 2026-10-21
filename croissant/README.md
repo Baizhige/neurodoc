@@ -17,7 +17,7 @@ The package describes derived benchmark documents, task interfaces, and provenan
 - `documents_53.csv`: one row per released benchmark entry
 - `tasks_245.csv`: one row per released task definition
 
-The two CSV files are derived from the reviewed `analysis.md` documents in this snapshot. Their SHA256 values are recorded in the Croissant JSON.
+The two CSV files are derived from the reviewed `analysis.md` documents in this snapshot. Their lowercase SHA-256 values are recorded in the Croissant JSON and match the exact bytes served by the public `raw.githubusercontent.com` URLs.
 
 ## Public locations
 
@@ -27,7 +27,15 @@ The two CSV files are derived from the reviewed `analysis.md` documents in this 
 
 ## Validation
 
-Keep the JSON and both CSV files together for local validation. Before uploading the Croissant file to OpenReview, validate this exact package with the current MLCommons Croissant validator and confirm that the public distribution URLs resolve without authentication.
+The uploaded metadata file is `neurodoc_eeg_benchmark_corpus_53.croissant.json`. Its two distributions use branch-pinned public URLs, so OpenReview's validator can download and verify the release tables without authentication.
+
+Validate the exact file with MLCommons `mlcroissant` 1.1.1 or newer:
+
+```bash
+mlcroissant validate --jsonld croissant/neurodoc_eeg_benchmark_corpus_53.croissant.json
+mlcroissant load --jsonld croissant/neurodoc_eeg_benchmark_corpus_53.croissant.json --record_set documents-recordset --num_records 3
+mlcroissant load --jsonld croissant/neurodoc_eeg_benchmark_corpus_53.croissant.json --record_set tasks-recordset --num_records 3
+```
 
 ## Provenance
 

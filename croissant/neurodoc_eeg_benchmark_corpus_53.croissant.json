@@ -1,27 +1,69 @@
 {
   "@context": {
+    "@language": "en",
     "@vocab": "https://schema.org/",
-    "sc": "https://schema.org/",
-    "cr": "http://mlcommons.org/croissant/",
-    "dct": "http://purl.org/dc/terms/",
-    "prov": "http://www.w3.org/ns/prov#",
-    "rai": "http://mlcommons.org/croissant/RAI/",
-    "recordSet": "cr:recordSet",
-    "field": "cr:field",
-    "source": "cr:source",
-    "extract": "cr:extract",
+    "arrayShape": "cr:arrayShape",
+    "citeAs": "cr:citeAs",
     "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "containedIn": "cr:containedIn",
+    "cr": "http://mlcommons.org/croissant/",
+    "rai": "http://mlcommons.org/croissant/RAI/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "description": {
+      "@container": "@language"
+    },
+    "equivalentProperty": "cr:equivalentProperty",
+    "examples": {
+      "@id": "cr:examples",
+      "@type": "@json"
+    },
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileProperty": "cr:fileProperty",
     "fileObject": "cr:fileObject",
-    "sha256": "cr:sha256"
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isArray": "cr:isArray",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "name": {
+      "@container": "@language"
+    },
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "prov": "http://www.w3.org/ns/prov#",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "samplingRate": "cr:samplingRate",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
   },
   "@type": "sc:Dataset",
   "name": "NeuroDoc EEG Benchmark Corpus (NeurIPS 2026 Camera-Ready Snapshot)",
   "description": "A human-reviewed EEG benchmark corpus for dataset-to-task mapping. Each released entry pairs a structured task document with a dataset-specific normalization kernel. This versioned camera-ready snapshot contains the 53 completed benchmark entries and 245 task definitions evaluated in the NeurIPS 2026 submission.",
   "url": "https://github.com/Baizhige/neurodoc/",
   "license": "https://creativecommons.org/licenses/by-nc/4.0/",
-  "version": "neurips-2026-camera-ready-53-entries",
+  "version": "1.0.0",
   "datePublished": "2026-10-21",
-  "citation": "Qin, Chengxuan, et al. EEG Benchmarking Needs a Task Specification Layer: NeuroDoc for Rulebook-Guided, Executable Benchmark Construction. NeurIPS 2026 Evaluations and Datasets Track.",
+  "citeAs": "Qin, Chengxuan, et al. EEG Benchmarking Needs a Task Specification Layer: NeuroDoc for Rulebook-Guided, Executable Benchmark Construction. NeurIPS 2026 Evaluations and Datasets Track.",
   "creator": [
     {"@type": "sc:Person", "name": "Chengxuan Qin", "affiliation": "Xi'an Jiaotong-Liverpool University; University of Liverpool"},
     {"@type": "sc:Person", "name": "Zhige Chen", "affiliation": "Hong Kong Polytechnic University"},
@@ -44,19 +86,11 @@
     "human review",
     "executable benchmark"
   ],
-  "dct:conformsTo": [
+  "conformsTo": [
     "http://mlcommons.org/croissant/1.1",
     "http://mlcommons.org/croissant/RAI/1.0"
   ],
   "distribution": [
-    {
-      "@id": "dataset-landing-page",
-      "@type": "cr:FileObject",
-      "name": "NeuroDoc public repository",
-      "description": "Public repository containing the camera-ready benchmark snapshot, code, documentation, and provenance.",
-      "contentUrl": "https://github.com/Baizhige/neurodoc/tree/camera-ready-snapshot",
-      "encodingFormat": "text/html"
-    },
     {
       "@id": "documents-csv",
       "@type": "cr:FileObject",
@@ -64,7 +98,7 @@
       "description": "Entry-level metadata for the 53 completed benchmark documents included in the camera-ready release.",
       "contentUrl": "https://raw.githubusercontent.com/Baizhige/neurodoc/camera-ready-snapshot/croissant/documents_53.csv",
       "encodingFormat": "text/csv",
-      "sha256": "58AFB2E825B1F2DEF1CF9C94E9B73BA817BBDD4B17555E9A8001E8F21BFF52B6"
+      "sha256": "58afb2e825b1f2def1cf9c94e9b73ba817bbdd4b17555e9a8001e8f21bff52b6"
     },
     {
       "@id": "tasks-csv",
@@ -73,7 +107,7 @@
       "description": "Task-level metadata for the 245 task definitions belonging to the completed camera-ready entries.",
       "contentUrl": "https://raw.githubusercontent.com/Baizhige/neurodoc/camera-ready-snapshot/croissant/tasks_245.csv",
       "encodingFormat": "text/csv",
-      "sha256": "647BE53F31F66ECB3235804CBDCD757CA271BE956DB97CF4030C8A95A053F9B3"
+      "sha256": "a8f1d9f9b253dd23023b36c18132e39baffd0368ff8e79690f9459a9f0f55f75"
     }
   ],
   "recordSet": [
@@ -616,11 +650,7 @@
     "Research on dataset-to-task mapping, benchmark documentation, review workflows, and auditable task operationalization.",
     "Educational and methodological inspection of how public EEG datasets can be converted into reusable benchmark tasks."
   ],
-  "rai:dataSocialImpact": [
-    "Positive impacts include improved transparency, reproducibility, and auditability in EEG benchmarking by reducing undocumented task engineering and making task assumptions explicit.",
-    "Potential risks include overclaiming generalization from benchmark performance, propagating source-dataset imbalance, or applying released task interfaces outside the documented evidence scope.",
-    "The structured human-review workflow and shared rulebook are intended to mitigate hallucinated task claims, undocumented label engineering, and inconsistent benchmark construction."
-  ],
+  "rai:dataSocialImpact": "Positive impacts include improved transparency, reproducibility, and auditability in EEG benchmarking by reducing undocumented task engineering and making task assumptions explicit. Potential risks include overclaiming generalization from benchmark performance, propagating source-dataset imbalance, or applying released task interfaces outside the documented evidence scope. The structured human-review workflow and shared rulebook are intended to mitigate hallucinated task claims, undocumented label engineering, and inconsistent benchmark construction.",
   "rai:hasSyntheticData": false,
   "rai:annotationsPerItem": "This benchmark is not a per-record human-label dataset. Review happens at the document and task-definition level. Each released entry was reviewed by at least one trained human reviewer and one repository administrator within the NeuroAudit workflow. Reviews were not independent multiple ratings, and no inter-rater agreement statistic was collected.",
   "rai:annotatorDemographics": [
