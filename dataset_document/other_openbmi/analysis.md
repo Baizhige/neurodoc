@@ -1,7 +1,7 @@
 # OpenBMI Motor Imagery EEG Dataset
 
 **Dataset**: `other_openbmi` | **Year**: 2019 | **URL**: https://gigadb.org/dataset/100542
-**Category**: Action/Output | **Subjects**: 54 | **Files (Completed)**: 108 | **Channels**: 62 | **Sampling Rate**: 1000 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 54 | **Files (Completed)**: 108 | **Channels**: 62 | **Sampling Rate**: 1000 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 

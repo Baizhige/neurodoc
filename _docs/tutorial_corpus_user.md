@@ -1,4 +1,4 @@
-﻿# Corpus User Guide
+# Corpus User Guide
 
 This guide shows you how to browse the EEG corpus, select datasets, export data to HDF5 with EEGUnity, and feed it into a PyTorch training loop.
 
@@ -63,8 +63,9 @@ You can mix and match datasets from multiple categories. A few common patterns:
 ## Step 4 — Clone the Repository and Copy Kernels
 
 ```bash
-git clone https://github.com/<anonymous-org>/<anonymous-repo>.git
-cd <anonymous-repo>
+git clone https://github.com/Baizhige/neurodoc.git
+cd neurodoc
+git switch camera-ready-snapshot
 ```
 
 The kernels live in `neurodoc/kernels/`. Copy the ones you need to your project, or add the repo to your Python path:
@@ -75,7 +76,7 @@ cp neurodoc/kernels/bcic_iv_2a.py  /your/project/kernels/
 cp neurodoc/kernels/physionet_mi.py /your/project/kernels/
 
 # Option B — use the repo kernels in-place (add to sys.path)
-export PYTHONPATH="/path/to/<anonymous-repo>:$PYTHONPATH"
+export PYTHONPATH="/path/to/neurodoc:$PYTHONPATH"
 ```
 
 ---
@@ -83,10 +84,13 @@ export PYTHONPATH="/path/to/<anonymous-repo>:$PYTHONPATH"
 ## Step 5 — Install EEGUnity
 
 ```bash
+pip install -r requirements.txt
 pip install eegunity
 # or from source:
 pip install -e /path/to/eegunity
 ```
+
+Install the PyTorch build appropriate for your operating system and CPU/CUDA environment before using the dataset API examples below.
 
 > [!NOTE]
 > EEGUnity is the scan and export engine behind this corpus. All kernel files in `neurodoc/kernels/` are written to its `KERNEL` interface. Make sure the EEGUnity version matches the one used to generate the corpus documents (see `## File Scan Result → EEGUnity Version` in each `analysis.md`).

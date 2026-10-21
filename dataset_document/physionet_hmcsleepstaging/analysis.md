@@ -1,7 +1,7 @@
 # HMC Sleep Staging Database
 
 **Dataset**: `physionet_hmcsleepstaging` | **Year**: 2021-2022 | **URL**: https://physionet.org/content/hmc-sleep-staging/1.1/
-**Category**: Biological State | **Subjects**: 151 | **Files (Completed)**: 151 | **Channels**: 8 | **Sampling Rate**: 256 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 151 | **Files (Completed)**: 151 | **Channels**: 8 | **Sampling Rate**: 256 Hz | **Manual Review**: Jiping Cui
 
 ## Paradigm
 

@@ -1,7 +1,7 @@
 # Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging
 
 **Dataset**: `openneuro_ds002158` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002158
-**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 119 | **Channels**: 63 | **Sampling Rate**: 5000 Hz | **Manual Review**: anonymous for review
+**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 119 | **Channels**: 63 | **Sampling Rate**: 5000 Hz | **Manual Review**: Liu Peng
 
 ## Paradigm
 

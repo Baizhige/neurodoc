@@ -1,7 +1,7 @@
 # The BMI-HDEEG dataset 3
 
 **Dataset**: `openneuro_ds004447` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004447
-**Category**: Action/Output | **Subjects**: 22 | **Files (Completed)**: 418 | **Channels**: 130 | **Sampling Rate**: 1000 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 22 | **Files (Completed)**: 418 | **Channels**: 130 | **Sampling Rate**: 1000 Hz | **Manual Review**: Yikai Dong
 
 ## Paradigm
 

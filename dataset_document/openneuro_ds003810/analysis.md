@@ -1,7 +1,7 @@
 # Motor Imagery vs Rest - Low-Cost EEG System
 
 **Dataset**: `openneuro_ds003810` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003810
-**Category**: Action/Output | **Subjects**: 10 | **Files (Completed)**: 50 | **Channels**: 15 | **Sampling Rate**: 125 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 10 | **Files (Completed)**: 50 | **Channels**: 15 | **Sampling Rate**: 125 Hz | **Manual Review**: Yikai Dong
 
 ## Paradigm
 

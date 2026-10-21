@@ -3,10 +3,20 @@
 /.pdf_archive/
 /_archive/
 # Script/ stores per-machine runtime data and archives that should not sync via Git.
+/app/config.json
 /neuroaudit/config.json
 # neuroaudit/config.json stores local endpoint, model, key, and proxy settings.
+**/machine_config/*.json
+**/locator_cache/
 **/references/
 **/references/**
+
+# Secrets and local environment files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
 
 # Editor and workspace files
 .vscode/
@@ -40,3 +50,4 @@ __pycache__/
 *.tmp
 *.temp
 *~
+venv/

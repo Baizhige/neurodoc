@@ -1,7 +1,7 @@
 # Ear-EEG Sleep Monitoring 2023 (EESM23)
 
 **Dataset**: `openneuro_ds005178` | **Year**: 2020-2022/2023/2024 | **URL**: https://openneuro.org/datasets/ds005178
-**Category**: Biological State | **Subjects**: 10 | **Files (Completed)**: 159 | **Channels**: 4/13 | **Sampling Rate**: 250 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 10 | **Files (Completed)**: 159 | **Channels**: 4/13 | **Sampling Rate**: 250 Hz | **Manual Review**: Yikai Dong
 
 ## Paradigm
 

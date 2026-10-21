@@ -1,7 +1,7 @@
 # EEG Motor Movement/Imagery Database
 
 **Dataset**: `physionet_eegmmidb` | **Year**: 2009 | **URL**: https://physionet.org/content/eegmmidb/1.0.0/
-**Category**: Action/Output | **Subjects**: 109 | **Files (Completed)**: 1526 | **Channels**: 64 | **Sampling Rate**: 160 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 109 | **Files (Completed)**: 1526 | **Channels**: 64 | **Sampling Rate**: 160 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 

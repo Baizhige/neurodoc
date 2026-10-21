@@ -1,7 +1,7 @@
 # BCI Competition IV Dataset 2b (Left/Right Hand Motor Imagery)
 
 **Dataset**: `bcic_iv_2b` | **Year**: 2008 | **URL**: https://www.bbci.de/competition/iv/desc_2b.pdf
-**Category**: Action/Output | **Subjects**: 9 | **Files (Completed)**: 46 | **Channels**: 6 | **Sampling Rate**: 250 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 9 | **Files (Completed)**: 46 | **Channels**: 6 | **Sampling Rate**: 250 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 

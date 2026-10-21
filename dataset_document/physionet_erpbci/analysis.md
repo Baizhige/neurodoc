@@ -1,7 +1,7 @@
 # ERP-Based Brain-Computer Interface Recordings
 
 **Dataset**: `physionet_erpbci` | **Year**: 2014 | **URL**: https://physionet.org/content/erpbci/1.0.0/
-**Category**: Action/Output | **Subjects**: 10 | **Files (Completed)**: 245 | **Channels**: 70 | **Sampling Rate**: 2048 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 10 | **Files (Completed)**: 245 | **Channels**: 70 | **Sampling Rate**: 2048 Hz | **Manual Review**: Liu Peng
 
 ## Paradigm
 

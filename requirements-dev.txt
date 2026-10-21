@@ -1,0 +1,5 @@
+-r requirements.txt
+pytest>=8,<10
+
+# Install the platform-appropriate PyTorch build separately:
+# https://pytorch.org/get-started/locally/

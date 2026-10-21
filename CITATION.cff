@@ -1,0 +1,53 @@
+cff-version: 1.2.0
+message: "If you use this corpus or toolchain, please cite the associated NeurIPS 2026 paper."
+title: "NeuroDoc EEG Benchmark Corpus"
+type: software
+version: "neurips-2026-camera-ready"
+date-released: 2026-10-21
+license: CC-BY-NC-4.0
+repository-code: "https://github.com/Baizhige/neurodoc"
+url: "https://neurodoc.eeg.fm"
+authors:
+  - family-names: Qin
+    given-names: Chengxuan
+    affiliation: "School of Advanced Technology, Xi'an Jiaotong-Liverpool University; School of Electrical Engineering, Electronics and Computer Science, University of Liverpool"
+  - family-names: Chen
+    given-names: Zhige
+    affiliation: "Department of Data Science and Artificial Intelligence, Hong Kong Polytechnic University"
+  - family-names: Peng
+    given-names: Shu
+    affiliation: "Department of Data Science and Artificial Intelligence, Hong Kong Polytechnic University"
+  - family-names: Yang
+    given-names: Rui
+    affiliation: "School of Advanced Technology, Xi'an Jiaotong-Liverpool University; School of Electrical Engineering, Electronics and Computer Science, University of Liverpool"
+  - family-names: Cui
+    given-names: Jiping
+    affiliation: "School of Advanced Technology, Xi'an Jiaotong-Liverpool University; School of Electrical Engineering, Electronics and Computer Science, University of Liverpool"
+  - family-names: Dong
+    given-names: Yikai
+    affiliation: "School of Advanced Technology, Xi'an Jiaotong-Liverpool University; School of Electrical Engineering, Electronics and Computer Science, University of Liverpool"
+  - family-names: Li
+    given-names: Jun
+    affiliation: "School of Advanced Technology, Xi'an Jiaotong-Liverpool University; School of Electrical Engineering, Electronics and Computer Science, University of Liverpool"
+  - family-names: Peng
+    given-names: Liu
+    affiliation: "School of Advanced Technology, Xi'an Jiaotong-Liverpool University; School of Electrical Engineering, Electronics and Computer Science, University of Liverpool"
+  - family-names: Shang
+    given-names: Zhida
+    affiliation: "School of Advanced Technology, Xi'an Jiaotong-Liverpool University; School of Computer Science and Informatics, University of Liverpool"
+  - family-names: Tang
+    given-names: Mingze
+    affiliation: "Department of Data Science and Artificial Intelligence, Hong Kong Polytechnic University"
+  - family-names: Tan
+    given-names: Kay Chen
+    affiliation: "Department of Data Science and Artificial Intelligence, Hong Kong Polytechnic University"
+  - family-names: Wu
+    given-names: Jibin
+    affiliation: "Department of Data Science and Artificial Intelligence, Hong Kong Polytechnic University"
+keywords:
+  - EEG
+  - benchmark
+  - task specification
+  - foundation models
+  - dataset documentation
+  - human review

@@ -1,4 +1,4 @@
-﻿# Kernel & Dataset Contributor Guide
+# Kernel & Dataset Contributor Guide
 
 This guide is for contributors who want to **add a new dataset**, **fix or improve an existing kernel**, or **re-run the full generation pipeline** — using the **NeuroDoc** CLI.
 
@@ -17,13 +17,13 @@ You will need access to the raw EEG data files and an LLM API key.
 
 ## Step 1 — Fork & Clone
 
-1. Go to the anonymous review repository on your Git hosting platform
+1. Go to [github.com/Baizhige/neurodoc](https://github.com/Baizhige/neurodoc/)
 2. Click **Fork** and fork to your personal account
 3. Clone your fork:
 
 ```bash
-git clone https://github.com/<your-username>/<anonymous-repo>.git
-cd <anonymous-repo>
+git clone https://github.com/Baizhige/neurodoc.git
+cd neurodoc
 ```
 
 4. Create a feature branch:
@@ -37,8 +37,8 @@ git checkout -b contrib/<dataset-name>
 ## Step 2 — Install NeuroDoc
 
 ```bash
-pip install -r neurodoc/requirements.txt   # if present
-# or install EEGUnity separately:
+pip install -r requirements.txt
+# Install EEGUnity separately if it is not already available:
 pip install -e /path/to/eegunity
 ```
 
@@ -96,7 +96,7 @@ Supported formats: PDF, TXT. These are used by the pipeline's **Phase 1 (Build C
 python -m neurodoc.generate --dataset <dataset-name>
 ```
 
-The pipeline runs three phases automatically:
+The candidate-generation pipeline runs three assisted phases:
 
 | Phase | What happens |
 |---|---|
@@ -157,7 +157,7 @@ git push origin contrib/<dataset-name>
 ```
 
 Then open a Pull Request on GitHub:
-- **Base repository**: `<anonymous-org>/<anonymous-repo>`
+- **Base repository**: `Baizhige/neurodoc`
 - **Base branch**: `dev`
 - **Compare branch**: `contrib/<dataset-name>` on your fork
 

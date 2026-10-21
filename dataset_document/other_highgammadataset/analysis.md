@@ -1,7 +1,7 @@
 # High-Gamma EEG Motor Imagery Dataset
 
 **Dataset**: `other_highgammadataset` | **Year**: 2017 | **URL**: https://gin.g-node.org/robintibor/high-gamma-dataset/src/master/data
-**Category**: Action/Output | **Subjects**: 14 | **Files (Completed)**: 28 | **Channels**: 133 | **Sampling Rate**: 500 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 14 | **Files (Completed)**: 28 | **Channels**: 133 | **Sampling Rate**: 500 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 

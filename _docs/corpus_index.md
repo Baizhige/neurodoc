@@ -1,4 +1,4 @@
-﻿# EEG Corpus — Complete Documentation
+# EEG Corpus — Complete Documentation
 > **53 completed datasets** · generated 2026-05-07
 > Regenerate: completed-only index generated from `dataset_document/*/analysis.md`
 
@@ -75,7 +75,7 @@
 # A dataset recorded during development of a tempo-based brain-computer music interface
 
 **Dataset**: `openneuro_ds002720` | **Year**: 2018 | **URL**: https://openneuro.org/datasets/ds002720
-**Category**: Action/Output | **Subjects**: 18 | **Files (Completed)**: 165 | **Channels**: 19 | **Sampling Rate**: 1000 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 18 | **Files (Completed)**: 165 | **Channels**: 19 | **Sampling Rate**: 1000 Hz | **Manual Review**: Jun Li
 
 ## Paradigm
 
@@ -170,7 +170,7 @@ Participants used EEG self-regulation to control the tempo of music in a tempo-b
 # A Large EEG Motor Imagery Dataset for EEG-BCI
 
 **Dataset**: `figshare_largemi` | **Year**: 2018 | **URL**: https://figshare.com/collections/A_large_electroencephalographic_motor_imagery_dataset_for_electroencephalographic_brain_computer_interfaces/3917698
-**Category**: Action/Output | **Subjects**: 13 | **Files (Completed)**: 73 | **Channels**: 22 | **Sampling Rate**: 200/1000 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 13 | **Files (Completed)**: 73 | **Channels**: 22 | **Sampling Rate**: 200/1000 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -319,7 +319,7 @@ For the synchronous paradigms, each recording session began with an initial rela
 # BCI Competition IV Dataset 1 (Motor Imagery, Uncued Classifier Application)
 
 **Dataset**: `bcic_iv_1` | **Year**: 2008 | **URL**: https://www.bbci.de/competition/iv/desc_1.html
-**Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 14 | **Channels**: 59 | **Sampling Rate**: 1000 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 14 | **Channels**: 59 | **Sampling Rate**: 1000 Hz | **Manual Review**: Zhida Shang
 
 ## Paradigm
 
@@ -387,7 +387,7 @@ Seven subject datasets are provided for two-class motor imagery without feedback
 # BCI Competition IV Dataset 2a (4-Class Motor Imagery)
 
 **Dataset**: `bcic_iv_2a` | **Year**: 2008 | **URL**: https://www.bbci.de/competition/iv/desc_2a.pdf
-**Category**: Action/Output | **Subjects**: 9 | **Files (Completed)**: 18 | **Channels**: 25 | **Sampling Rate**: 250 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 9 | **Files (Completed)**: 18 | **Channels**: 25 | **Sampling Rate**: 250 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -475,7 +475,7 @@ Nine subjects (A01-A09) performed four-class cued motor imagery (BCI Competition
 # BCI Competition IV Dataset 2b (Left/Right Hand Motor Imagery)
 
 **Dataset**: `bcic_iv_2b` | **Year**: 2008 | **URL**: https://www.bbci.de/competition/iv/desc_2b.pdf
-**Category**: Action/Output | **Subjects**: 9 | **Files (Completed)**: 46 | **Channels**: 6 | **Sampling Rate**: 250 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 9 | **Files (Completed)**: 46 | **Channels**: 6 | **Sampling Rate**: 250 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -549,7 +549,7 @@ Nine subjects (B01-B09) performed two-class cued motor imagery of the left and r
 # BCI Competition IV Dataset 4 (ECoG Finger Flexion Prediction)
 
 **Dataset**: `bcic_iv_4` | **Year**: 2008 | **URL**: https://www.bbci.de/competition/iv/desc_4.pdf
-**Category**: Action/Output | **Subjects**: 3 | **Files (Completed)**: 3 | **Channels**: 53/67/69 (48/62/64 ECoG + 5 misc) | **Sampling Rate**: 1000 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 3 | **Files (Completed)**: 3 | **Channels**: 53/67/69 (48/62/64 ECoG + 5 misc) | **Sampling Rate**: 1000 Hz | **Manual Review**: Zhida Shang
 
 ## Paradigm
 
@@ -706,7 +706,7 @@ BCI Competition IV Dataset 4 is an ECoG finger flexion prediction dataset, not a
 # EEG Dataset for Cursor BCI (Meng 2019)
 
 **Dataset**: `figshare_meng2019` | **Year**: 2019 | **URL**: https://doi.org/10.6084/m9.figshare.7959572
-**Category**: Action/Output | **Subjects**: 42 | **Files (Completed)**: 126 | **Channels**: 62/64 | **Sampling Rate**: 100/128 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 42 | **Files (Completed)**: 126 | **Channels**: 62/64 | **Sampling Rate**: 100/128 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -769,7 +769,7 @@ Participants performed a one-dimensional cursor BCI task using mental imagery in
 # EEG Datasets of Stroke Patients (Motor Imagery)
 
 **Dataset**: `figshare_stroke` | **Year**: 2022 | **URL**: https://figshare.com/articles/dataset/EEG_datasets_of_stroke_patients/21679035/5
-**Category**: Action/Output | **Subjects**: 50 | **Files (Completed)**: 50 | **Channels**: 33 | **Sampling Rate**: 500 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 50 | **Files (Completed)**: 50 | **Channels**: 33 | **Sampling Rate**: 500 Hz | **Manual Review**: Jiping Cui
 
 ## Paradigm
 
@@ -838,7 +838,7 @@ Fifty stroke patients (sub-01 to sub-50) performed a cued left/right hand motor 
 # EEG Motor Movement/Imagery Database
 
 **Dataset**: `physionet_eegmmidb` | **Year**: 2009 | **URL**: https://physionet.org/content/eegmmidb/1.0.0/
-**Category**: Action/Output | **Subjects**: 109 | **Files (Completed)**: 1526 | **Channels**: 64 | **Sampling Rate**: 160 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 109 | **Files (Completed)**: 1526 | **Channels**: 64 | **Sampling Rate**: 160 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -981,7 +981,7 @@ One hundred and nine volunteers performed a series of motor movement and motor i
 # ERP-Based Brain-Computer Interface Recordings
 
 **Dataset**: `physionet_erpbci` | **Year**: 2014 | **URL**: https://physionet.org/content/erpbci/1.0.0/
-**Category**: Action/Output | **Subjects**: 10 | **Files (Completed)**: 245 | **Channels**: 70 | **Sampling Rate**: 2048 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 10 | **Files (Completed)**: 245 | **Channels**: 70 | **Sampling Rate**: 2048 Hz | **Manual Review**: Liu Peng
 
 ## Paradigm
 
@@ -1063,7 +1063,7 @@ Participants spelled characters using a standard 6x6 matrix speller while EEG wa
 # High-Gamma EEG Motor Imagery Dataset
 
 **Dataset**: `other_highgammadataset` | **Year**: 2017 | **URL**: https://gin.g-node.org/robintibor/high-gamma-dataset/src/master/data
-**Category**: Action/Output | **Subjects**: 14 | **Files (Completed)**: 28 | **Channels**: 133 | **Sampling Rate**: 500 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 14 | **Files (Completed)**: 28 | **Channels**: 133 | **Sampling Rate**: 500 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -1143,7 +1143,7 @@ The High-Gamma Dataset contains EEG recordings from 14 healthy participants perf
 # Kaggle BCI Challenge (INRIA) Dataset
 
 **Dataset**: `kaggle_inria` | **Year**: 2015 | **URL**: https://www.kaggle.com/c/inria-bci-challenge
-**Category**: Action/Output | **Subjects**: 26 | **Files (Completed)**: 130 | **Channels**: 58 | **Sampling Rate**: 200 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 26 | **Files (Completed)**: 130 | **Channels**: 58 | **Sampling Rate**: 200 Hz | **Manual Review**: Mingze Tang
 
 ## Paradigm
 
@@ -1211,7 +1211,7 @@ Twenty-six subjects (ages 20-37) performed a P300-based BCI feedback task using 
 # Motor Imagery vs Rest - Low-Cost EEG System
 
 **Dataset**: `openneuro_ds003810` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds003810
-**Category**: Action/Output | **Subjects**: 10 | **Files (Completed)**: 50 | **Channels**: 15 | **Sampling Rate**: 125 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 10 | **Files (Completed)**: 50 | **Channels**: 15 | **Sampling Rate**: 125 Hz | **Manual Review**: Yikai Dong
 
 ## Paradigm
 
@@ -1380,7 +1380,7 @@ Participants without prior BCI experience performed a motor imagery vs rest prot
 # Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment
 
 **Dataset**: `openneuro_ds004022` | **Year**: 2022 | **URL**: https://openneuro.org/datasets/ds004022
-**Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 21 | **Channels**: 18 | **Sampling Rate**: 500 | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 21 | **Channels**: 18 | **Sampling Rate**: 500 | **Manual Review**: Zhida Shang
 ## Paradigm
 
 Seven participants with orthopedic impairment performed four right-upper-limb motor imagery tasks (reaching, grasping, lifting, and twisting) while 18-channel EEG and fNIRS were recorded simultaneously. Each participant completed three sessions; each session contained 40 trials with the four MI tasks presented in random order. Each trial consisted of 3 s fixation, a 4 s visual cue indicating the movement task, a 3 s ready/gray-screen period to reduce afterimage effects, and a 5 s instructed motor imagery period. Event markers `S 7`-`S 10` label the four MI task types, but their exact mapping to reaching/grasping/lifting/twisting is not recoverable from the available metadata.
@@ -1456,7 +1456,7 @@ Seven participants with orthopedic impairment performed four right-upper-limb mo
 # OpenBMI Motor Imagery EEG Dataset
 
 **Dataset**: `other_openbmi` | **Year**: 2019 | **URL**: https://gigadb.org/dataset/100542
-**Category**: Action/Output | **Subjects**: 54 | **Files (Completed)**: 108 | **Channels**: 62 | **Sampling Rate**: 1000 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 54 | **Files (Completed)**: 108 | **Channels**: 62 | **Sampling Rate**: 1000 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -1517,7 +1517,7 @@ Fifty-four healthy subjects (24–35 years old; 25 females) participated in the 
 # Real-time EEG feedback on alpha power lateralization leads to behavioral improvements in a covert attention task
 
 **Dataset**: `openneuro_ds002034` | **Year**: 2019/2022 | **URL**: https://openneuro.org/datasets/ds002034
-**Category**: Action/Output | **Subjects**: 14 | **Files (Completed)**: 167 | **Channels**: 64 | **Sampling Rate**: 512 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 14 | **Files (Completed)**: 167 | **Channels**: 64 | **Sampling Rate**: 512 Hz | **Manual Review**: Liu Peng
 
 ## Paradigm
 
@@ -1640,7 +1640,7 @@ Participants performed a covert spatial attention task where they were trained t
 # SHU Motor Imagery EEG Dataset
 
 **Dataset**: `figshare_shudb` | **Year**: 2022 | **URL**: https://figshare.com/articles/software/shu_dataset/19228725/1
-**Category**: Action/Output | **Subjects**: 25 | **Files (Completed)**: 232 | **Channels**: 32 | **Sampling Rate**: 250 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 25 | **Files (Completed)**: 232 | **Channels**: 32 | **Sampling Rate**: 250 Hz | **Manual Review**: Zhida Shang, Chengxuan Qin
 
 ## Paradigm
 
@@ -1699,7 +1699,7 @@ The MI experiment was divided into three stages. In the first stage, 0-2s was th
 # The BMI-HDEEG dataset 3
 
 **Dataset**: `openneuro_ds004447` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004447
-**Category**: Action/Output | **Subjects**: 22 | **Files (Completed)**: 418 | **Channels**: 130 | **Sampling Rate**: 1000 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 22 | **Files (Completed)**: 418 | **Channels**: 130 | **Sampling Rate**: 1000 Hz | **Manual Review**: Yikai Dong
 
 ## Paradigm
 
@@ -1867,7 +1867,7 @@ A brain-computer interface (BCI) study investigating neural correlates of motor 
 # The BMI-HDEEG dataset 4
 
 **Dataset**: `openneuro_ds004448` | **Year**: 2023 | **URL**: https://openneuro.org/datasets/ds004448
-**Category**: Action/Output | **Subjects**: 56 | **Files (Completed)**: 280 | **Channels**: 130 | **Sampling Rate**: 1000 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 56 | **Files (Completed)**: 280 | **Channels**: 130 | **Sampling Rate**: 1000 Hz | **Manual Review**: Yikai Dong
 
 ## Paradigm
 
@@ -1944,7 +1944,7 @@ This is the fourth BMI-HDEEG sensorimotor rhythm-based BCI dataset. Scientific D
 # Go-nogo categorization and detection task
 
 **Dataset**: `openneuro_ds002680` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002680
-**Category**: Sensory/Response | **Subjects**: 14 | **Files (Completed)**: 350 | **Channels**: 31 | **Sampling Rate**: 1000 Hz | **Manual Review**: anonymous for review
+**Category**: Sensory/Response | **Subjects**: 14 | **Files (Completed)**: 350 | **Channels**: 31 | **Sampling Rate**: 1000 Hz | **Manual Review**: Jun Li
 
 ## Paradigm
 
@@ -2143,7 +2143,7 @@ Participants performed two alternating visual go/no-go tasks: an animal categori
 # Visual Oddball Task (256 channels)
 
 **Dataset**: `openneuro_ds002578` | **Year**: 2004/2021 | **URL**: https://openneuro.org/datasets/ds002578
-**Category**: Sensory/Response | **Subjects**: 2 | **Files (Completed)**: 2 | **Channels**: 256 | **Sampling Rate**: 256 Hz | **Manual Review**: anonymous for review
+**Category**: Sensory/Response | **Subjects**: 2 | **Files (Completed)**: 2 | **Channels**: 256 | **Sampling Rate**: 256 Hz | **Manual Review**: Jun Li
 
 ## Paradigm
 
@@ -2319,7 +2319,7 @@ A continuous visual oddball / selective-attention task recorded with 256-channel
 # A dataset recorded during development of an affective brain-computer music interface: calibration session
 
 **Dataset**: `openneuro_ds002722` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002722
-**Category**: High-level Mental | **Subjects**: 19 | **Files (Completed)**: 94 | **Channels**: 37 | **Sampling Rate**: 1000 Hz | **Manual Review**: anonymous for review
+**Category**: High-level Mental | **Subjects**: 19 | **Files (Completed)**: 94 | **Channels**: 37 | **Sampling Rate**: 1000 Hz | **Manual Review**: Mingze Tang
 
 ## Paradigm
 
@@ -2847,7 +2847,7 @@ Twenty volunteers (s01-s20) aged 21-31 participated in a multipurpose EEG study 
 # Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging
 
 **Dataset**: `openneuro_ds002158` | **Year**: 2020 | **URL**: https://openneuro.org/datasets/ds002158
-**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 119 | **Channels**: 63 | **Sampling Rate**: 5000 Hz | **Manual Review**: anonymous for review
+**Category**: High-level Mental | **Subjects**: 20 | **Files (Completed)**: 119 | **Channels**: 63 | **Sampling Rate**: 5000 Hz | **Manual Review**: Liu Peng
 
 ## Paradigm
 
@@ -2958,7 +2958,7 @@ Participants performed speeded perceptual judgments and subsequently reported th
 # EEG During Mental Arithmetic Task
 
 **Dataset**: `physionet_eegmat` | **Year**: 2018 | **URL**: https://physionet.org/content/eegmat/1.0.0/
-**Category**: High-level Mental | **Subjects**: 36 | **Files (Completed)**: 72 | **Channels**: 23 | **Sampling Rate**: 500 Hz | **Manual Review**: anonymous for review
+**Category**: High-level Mental | **Subjects**: 36 | **Files (Completed)**: 72 | **Channels**: 23 | **Sampling Rate**: 500 Hz | **Manual Review**: Liu Peng
 
 ## Paradigm
 
@@ -3138,7 +3138,7 @@ Thirty-six healthy subjects (Subject00-Subject35, ages 16-26, predominantly fema
 # Face processing EEG dataset for EEGLAB
 
 **Dataset**: `openneuro_ds002718` | **Year**: 2015 | **URL**: https://openneuro.org/datasets/ds002718
-**Category**: High-level Mental | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 74 | **Sampling Rate**: 250 Hz | **Manual Review**: anonymous for review
+**Category**: High-level Mental | **Subjects**: 18 | **Files (Completed)**: 18 | **Channels**: 74 | **Sampling Rate**: 250 Hz | **Manual Review**: Jun Li
 
 ## Paradigm
 
@@ -3391,7 +3391,7 @@ Participants viewed famous faces, unfamiliar faces, and scrambled faces while ma
 # Healthy Brain Network (HBN) EEG - Release 1
 
 **Dataset**: `openneuro_ds005505` | **Year**: 2017/2025 | **URL**: https://openneuro.org/datasets/ds005505
-**Category**: Complex Applied | **Subjects**: 136 | **Files (Completed)**: 1342 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: anonymous for review
+**Category**: Complex Applied | **Subjects**: 136 | **Files (Completed)**: 1342 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -3677,7 +3677,7 @@ The Healthy Brain Network (HBN) EEG Release 1 is a large-scale developmental EEG
 # Healthy Brain Network (HBN) EEG - Release 10
 
 **Dataset**: `openneuro_ds005515` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005515
-**Category**: Complex Applied | **Subjects**: 533 | **Files (Completed)**: 2515 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: anonymous for review
+**Category**: Complex Applied | **Subjects**: 533 | **Files (Completed)**: 2515 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -3766,7 +3766,7 @@ The Healthy Brain Network (HBN) EEG Release 10 is a large-scale, multi-task deve
 | `contrastChangeDetection_2` | complete | e.g. unavailable, caution, available |
 | `contrastChangeDetection_3` | complete | e.g. caution, unavailable, available |
 | `dataset` | complete | e.g. openneuro_ds005515 |
-| `dataset_root` | complete | e.g. /home/public/eeg_dataset/openneuro_raw/ds005515 |
+| `dataset_root` | complete | e.g. <DATA_ROOT>/openneuro_raw/ds005515 |
 | `device` | complete | e.g. Magtism EGI 128-channel GSN 200 v.2.1 |
 | `eeg_reference` | complete | e.g. Cz |
 | `ehq_total` | complete | e.g. 55.63, 100.05, -86.71 |
@@ -3963,7 +3963,7 @@ The Healthy Brain Network (HBN) EEG Release 10 is a large-scale, multi-task deve
 # Healthy Brain Network (HBN) EEG - Release 11
 
 **Dataset**: `openneuro_ds005516` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005516
-**Category**: Complex Applied | **Subjects**: 3000 | **Files (Completed)**: 3396 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: anonymous for review
+**Category**: Complex Applied | **Subjects**: 3000 | **Files (Completed)**: 3396 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -4054,7 +4054,7 @@ The Healthy Brain Network (HBN) EEG Release 11 is a large-scale, multi-task deve
 | `contrastChangeDetection_2` | complete | e.g. available, unavailable, caution |
 | `contrastChangeDetection_3` | complete | e.g. available, unavailable, caution |
 | `dataset` | complete | e.g. openneuro_ds005516 |
-| `dataset_root` | complete | e.g. /home/public/eeg_dataset/openneuro_raw/ds005516 |
+| `dataset_root` | complete | e.g. <DATA_ROOT>/openneuro_raw/ds005516 |
 | `device` | complete | e.g. Magtism EGI 128-channel GSN 200 v.2.1 |
 | `eeg_reference` | complete | e.g. Cz |
 | `ehq_total` | complete | e.g. 100, 33.35, 80.04 |
@@ -4251,7 +4251,7 @@ The Healthy Brain Network (HBN) EEG Release 11 is a large-scale, multi-task deve
 # Healthy Brain Network (HBN) EEG - Release 2
 
 **Dataset**: `openneuro_ds005506` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005506
-**Category**: Complex Applied | **Subjects**: 152 | **Files (Completed)**: 1405 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: anonymous for review
+**Category**: Complex Applied | **Subjects**: 152 | **Files (Completed)**: 1405 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -4338,7 +4338,7 @@ The Healthy Brain Network (HBN) EEG Release 2 is a large-scale, multi-task devel
 | `contrastChangeDetection_2` | complete | e.g. available, unavailable, caution |
 | `contrastChangeDetection_3` | complete | e.g. available, unavailable, caution |
 | `dataset` | complete | e.g. openneuro_ds005506 |
-| `dataset_root` | complete | e.g. /home/public/eeg_dataset/openneuro_raw/ds005506 |
+| `dataset_root` | complete | e.g. <DATA_ROOT>/openneuro_raw/ds005506 |
 | `device` | complete | e.g. Magtism EGI 128-channel GSN 200 v.2.1 |
 | `eeg_reference` | complete | e.g. Cz |
 | `ehq_total` | partial (1364/1405) | e.g. -83.38, 55.63, 53.36 |
@@ -4535,7 +4535,7 @@ The Healthy Brain Network (HBN) EEG Release 2 is a large-scale, multi-task devel
 # Healthy Brain Network (HBN) EEG - Release 3
 
 **Dataset**: `openneuro_ds005507` | **Year**: 2017/2025 | **URL**: https://openneuro.org/datasets/ds005507
-**Category**: Complex Applied | **Subjects**: 183 | **Files (Completed)**: 1812 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: anonymous for review
+**Category**: Complex Applied | **Subjects**: 183 | **Files (Completed)**: 1812 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -4622,7 +4622,7 @@ The Healthy Brain Network (HBN) EEG Release 3 is a large-scale, multi-task devel
 | `contrastChangeDetection_2` | complete | e.g. available, caution, unavailable |
 | `contrastChangeDetection_3` | complete | e.g. available, caution, unavailable |
 | `dataset` | complete | e.g. openneuro_ds005507 |
-| `dataset_root` | complete | e.g. /home/public/eeg_dataset/openneuro_raw/ds005507 |
+| `dataset_root` | complete | e.g. <DATA_ROOT>/openneuro_raw/ds005507 |
 | `device` | complete | e.g. Magtism EGI 128-channel GSN 200 v.2.1 |
 | `eeg_reference` | complete | e.g. Cz |
 | `ehq_total` | partial (1760/1812) | e.g. 90.05, 83.38, 93.38 |
@@ -4819,7 +4819,7 @@ The Healthy Brain Network (HBN) EEG Release 3 is a large-scale, multi-task devel
 # Healthy Brain Network (HBN) EEG - Release 4
 
 **Dataset**: `openneuro_ds005508` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005508
-**Category**: Complex Applied | **Subjects**: 324 | **Files (Completed)**: 3342 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: anonymous for review
+**Category**: Complex Applied | **Subjects**: 324 | **Files (Completed)**: 3342 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -4906,7 +4906,7 @@ The Healthy Brain Network (HBN) EEG Release 4 is a large-scale, multi-task devel
 | `contrastChangeDetection_2` | complete | e.g. available, unavailable, caution |
 | `contrastChangeDetection_3` | complete | e.g. available, unavailable, caution |
 | `dataset` | complete | e.g. openneuro_ds005508 |
-| `dataset_root` | complete | e.g. /home/public/eeg_dataset/openneuro_raw/ds005508 |
+| `dataset_root` | complete | e.g. <DATA_ROOT>/openneuro_raw/ds005508 |
 | `device` | complete | e.g. Magtism EGI 128-channel GSN 200 v.2.1 |
 | `eeg_reference` | complete | e.g. Cz |
 | `ehq_total` | complete | e.g. 86.71, 66.77, 80.04 |
@@ -5103,7 +5103,7 @@ The Healthy Brain Network (HBN) EEG Release 4 is a large-scale, multi-task devel
 # Healthy Brain Network (HBN) EEG - Release 5
 
 **Dataset**: `openneuro_ds005509` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005509
-**Category**: Complex Applied | **Subjects**: 330 | **Files (Completed)**: 3326 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: anonymous for review
+**Category**: Complex Applied | **Subjects**: 330 | **Files (Completed)**: 3326 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -5191,7 +5191,7 @@ The Healthy Brain Network (HBN) EEG Release 5 is a large-scale, multi-task devel
 | `contrastChangeDetection_2` | complete | e.g. available, unavailable, caution |
 | `contrastChangeDetection_3` | complete | e.g. available, unavailable, caution |
 | `dataset` | complete | e.g. openneuro_ds005509 |
-| `dataset_root` | complete | e.g. /home/public/eeg_dataset/openneuro_raw/ds005509 |
+| `dataset_root` | complete | e.g. <DATA_ROOT>/openneuro_raw/ds005509 |
 | `device` | complete | e.g. Magtism EGI 128-channel GSN 200 v.2.1 |
 | `eeg_reference` | complete | e.g. Cz |
 | `ehq_total` | complete | e.g. 46.69, 53.36, 96.72 |
@@ -5388,7 +5388,7 @@ The Healthy Brain Network (HBN) EEG Release 5 is a large-scale, multi-task devel
 # Healthy Brain Network (HBN) EEG - Release 6
 
 **Dataset**: `openneuro_ds005510` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005510
-**Category**: Complex Applied | **Subjects**: 3000 | **Files (Completed)**: 1227 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: anonymous for review
+**Category**: Complex Applied | **Subjects**: 3000 | **Files (Completed)**: 1227 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -5475,7 +5475,7 @@ The Healthy Brain Network (HBN) EEG Release 6 is a large-scale, multi-task devel
 | `contrastChangeDetection_2` | complete | e.g. available, unavailable, caution |
 | `contrastChangeDetection_3` | complete | e.g. available, unavailable, caution |
 | `dataset` | complete | e.g. openneuro_ds005510 |
-| `dataset_root` | complete | e.g. /home/public/eeg_dataset/openneuro_raw/ds005510 |
+| `dataset_root` | complete | e.g. <DATA_ROOT>/openneuro_raw/ds005510 |
 | `device` | complete | e.g. Magtism EGI 128-channel GSN 200 v.2.1 |
 | `eeg_reference` | complete | e.g. Cz |
 | `ehq_total` | complete | e.g. 60.03, 80.04, 33.35 |
@@ -5672,7 +5672,7 @@ The Healthy Brain Network (HBN) EEG Release 6 is a large-scale, multi-task devel
 # Healthy Brain Network (HBN) EEG - Release 7
 
 **Dataset**: `openneuro_ds005511` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005511
-**Category**: Complex Applied | **Subjects**: 381 | **Files (Completed)**: 3100 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: anonymous for review
+**Category**: Complex Applied | **Subjects**: 381 | **Files (Completed)**: 3100 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -5759,7 +5759,7 @@ The Healthy Brain Network (HBN) EEG Release 7 is a large-scale, multi-task devel
 | `contrastChangeDetection_2` | complete | e.g. available, unavailable, caution |
 | `contrastChangeDetection_3` | complete | e.g. available, unavailable, caution |
 | `dataset` | complete | e.g. openneuro_ds005511 |
-| `dataset_root` | complete | e.g. /home/public/eeg_dataset/openneuro_raw/ds005511 |
+| `dataset_root` | complete | e.g. <DATA_ROOT>/openneuro_raw/ds005511 |
 | `device` | complete | e.g. Magtism EGI 128-channel GSN 200 v.2.1 |
 | `eeg_reference` | complete | e.g. Cz, common |
 | `ehq_total` | complete | e.g. 100.05, -20.01, -71.17 |
@@ -5956,7 +5956,7 @@ The Healthy Brain Network (HBN) EEG Release 7 is a large-scale, multi-task devel
 # Healthy Brain Network (HBN) EEG - Release 8
 
 **Dataset**: `openneuro_ds005512` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005512
-**Category**: Complex Applied | **Subjects**: 257 | **Files (Completed)**: 2320 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: anonymous for review
+**Category**: Complex Applied | **Subjects**: 257 | **Files (Completed)**: 2320 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -6043,7 +6043,7 @@ The Healthy Brain Network (HBN) EEG Release 8 is a large-scale, multi-task devel
 | `contrastChangeDetection_2` | complete | e.g. available, unavailable, caution |
 | `contrastChangeDetection_3` | complete | e.g. available, unavailable, caution |
 | `dataset` | complete | e.g. openneuro_ds005512 |
-| `dataset_root` | complete | e.g. /home/public/eeg_dataset/openneuro_raw/ds005512 |
+| `dataset_root` | complete | e.g. <DATA_ROOT>/openneuro_raw/ds005512 |
 | `device` | complete | e.g. Magtism EGI 128-channel GSN 200 v.2.1 |
 | `eeg_reference` | complete | e.g. Cz |
 | `ehq_total` | complete | e.g. 6.67, 73.34, 80.04 |
@@ -6240,7 +6240,7 @@ The Healthy Brain Network (HBN) EEG Release 8 is a large-scale, multi-task devel
 # Healthy Brain Network (HBN) EEG - Release 9
 
 **Dataset**: `openneuro_ds005514` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005514
-**Category**: Complex Applied | **Subjects**: 295 | **Files (Completed)**: 2885 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: anonymous for review
+**Category**: Complex Applied | **Subjects**: 295 | **Files (Completed)**: 2885 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -6327,7 +6327,7 @@ The Healthy Brain Network (HBN) EEG Release 9 is a large-scale, multi-task devel
 | `contrastChangeDetection_2` | complete | e.g. available, caution, unavailable |
 | `contrastChangeDetection_3` | complete | e.g. available, caution, unavailable |
 | `dataset` | complete | e.g. openneuro_ds005514 |
-| `dataset_root` | complete | e.g. /home/public/eeg_dataset/openneuro_raw/ds005514 |
+| `dataset_root` | complete | e.g. <DATA_ROOT>/openneuro_raw/ds005514 |
 | `device` | complete | e.g. Magtism EGI 128-channel GSN 200 v.2.1 |
 | `eeg_reference` | complete | e.g. Cz |
 | `ehq_total` | complete | e.g. 93.38, -66.67, 96.67 |
@@ -6524,7 +6524,7 @@ The Healthy Brain Network (HBN) EEG Release 9 is a large-scale, multi-task devel
 # CAP Sleep Database
 
 **Dataset**: `physionet_capslpdb` | **Year**: 2012 | **URL**: https://physionet.org/content/capslpdb/1.0.0/
-**Category**: Biological State | **Subjects**: 108 | **Files (Completed)**: 108 | **Channels**: 5-36 | **Sampling Rate**: 100-512 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 108 | **Files (Completed)**: 108 | **Channels**: 5-36 | **Sampling Rate**: 100-512 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -6650,7 +6650,7 @@ The CAP Sleep Database comprises 108 overnight polysomnographic (PSG) recordings
 # CHB-MIT Scalp EEG Database
 
 **Dataset**: `physionet_chbmit` | **Year**: 2010 | **URL**: https://physionet.org/content/chbmit/1.0.0/
-**Category**: Biological State | **Subjects**: 23 | **Files (Completed)**: 686 | **Channels**: 23 | **Sampling Rate**: 256 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 23 | **Files (Completed)**: 686 | **Channels**: 23 | **Sampling Rate**: 256 Hz | **Manual Review**: Zhida Shang
 
 ## Paradigm
 
@@ -6757,7 +6757,7 @@ Twenty-three pediatric subjects (22 original cases plus chb24 added later; 5 mal
 # Ear-EEG Sleep Monitoring 2019 (EESM19)
 
 **Dataset**: `openneuro_ds005185` | **Year**: 2018-2020/2019/2024/2025 | **URL**: https://openneuro.org/datasets/ds005185
-**Category**: Biological State | **Subjects**: 20 | **Files (Completed)**: 516 | **Channels**: 25 | **Sampling Rate**: 256/500 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 20 | **Files (Completed)**: 516 | **Channels**: 25 | **Sampling Rate**: 256/500 Hz | **Manual Review**: Yikai Dong
 
 ## Paradigm
 
@@ -7004,7 +7004,7 @@ This dataset records home-based ear-EEG sleep monitoring from 20 healthy partici
 # Ear-EEG Sleep Monitoring 2023 (EESM23)
 
 **Dataset**: `openneuro_ds005178` | **Year**: 2020-2022/2023/2024 | **URL**: https://openneuro.org/datasets/ds005178
-**Category**: Biological State | **Subjects**: 10 | **Files (Completed)**: 159 | **Channels**: 4/13 | **Sampling Rate**: 250 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 10 | **Files (Completed)**: 159 | **Channels**: 4/13 | **Sampling Rate**: 250 Hz | **Manual Review**: Yikai Dong
 
 ## Paradigm
 
@@ -7085,7 +7085,7 @@ Naturalistic nightly sleep monitoring using ear-EEG (in-ear electrodes) and poly
 # EEG Meditation Study
 
 **Dataset**: `openneuro_ds001787` | **Year**: 2018/2024 | **URL**: https://openneuro.org/datasets/ds001787
-**Category**: Biological State | **Subjects**: 24 | **Files (Completed)**: 40 | **Channels**: 80 | **Sampling Rate**: 256 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 24 | **Files (Completed)**: 40 | **Channels**: 80 | **Sampling Rate**: 256 Hz | **Manual Review**: Mingze Tang
 
 ## Paradigm
 
@@ -7214,7 +7214,7 @@ Twenty-four meditators (12 expert with ≥10 years daily practice, 12 novices) e
 # HMC Sleep Staging Database
 
 **Dataset**: `physionet_hmcsleepstaging` | **Year**: 2021-2022 | **URL**: https://physionet.org/content/hmc-sleep-staging/1.1/
-**Category**: Biological State | **Subjects**: 151 | **Files (Completed)**: 151 | **Channels**: 8 | **Sampling Rate**: 256 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 151 | **Files (Completed)**: 151 | **Channels**: 8 | **Sampling Rate**: 256 Hz | **Manual Review**: Jiping Cui
 
 ## Paradigm
 
@@ -7325,7 +7325,7 @@ One hundred and fifty-one (151) overnight polysomnographic recordings from the H
 # sleepdata_shhs
 
 **Dataset**: `sleepdata_shhs` | **Year**: 1995-2003 | **URL**: https://sleepdata.org/datasets/shhs
-**Category**: Biological State | **Subjects**: ~5804 | **Files (Completed)**: 8444 | **Channels**: 14 | **Sampling Rate**: 1-256 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: ~5804 | **Files (Completed)**: 8444 | **Channels**: 14 | **Sampling Rate**: 1-256 Hz | **Manual Review**: Jiping Cui
 
 ## Paradigm
 
@@ -7508,7 +7508,7 @@ The Sleep Heart Health Study (SHHS) is a multi-center NIH/NHLBI cohort investiga
 # Sleep-EDF Database Expanded
 
 **Dataset**: `physionet_sleepedfx` | **Year**: 1987-1991/1994 | **URL**: https://physionet.org/content/sleep-edfx/1.0.0/
-**Category**: Biological State | **Subjects**: 106 | **Files (Completed)**: 197 | **Channels**: 7 | **Sampling Rate**: 100 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 106 | **Files (Completed)**: 197 | **Channels**: 7 | **Sampling Rate**: 100 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -7599,7 +7599,7 @@ The sleep-edf database contains 197 whole-night PolySomnoGraphic sleep recording
 # TUH EEG Abnormal Corpus
 
 **Dataset**: `tuh_eeg_abnormal` | **Year**: 2016-2017/2024 | **URL**: https://isip.piconepress.com/projects/nedc/html/tuh_eeg/
-**Category**: Biological State | **Subjects**: 2383 | **Files (Completed)**: 2983 | **Channels**: 27-36 | **Sampling Rate**: 250 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 2383 | **Files (Completed)**: 2983 | **Channels**: 27-36 | **Sampling Rate**: 250 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -7660,7 +7660,7 @@ The TUH EEG Abnormal Corpus (v3.0.1) is a clinically annotated subset of the TUH
 # TUH EEG Corpus (Base)
 
 **Dataset**: `tuh_eeg` | **Year**: 2002-2017 | **URL**: https://isip.piconepress.com/projects/nedc/html/tuh_eeg/
-**Category**: Biological State | **Subjects**: 10874 | **Files (Completed)**: 69652 | **Channels**: 17-128 | **Sampling Rate**: 250-1000 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 10874 | **Files (Completed)**: 69652 | **Channels**: 17-128 | **Sampling Rate**: 250-1000 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -7705,7 +7705,7 @@ The Temple University Hospital EEG Corpus (v2.0.1) is the largest publicly avail
 # TUH EEG Events Corpus
 
 **Dataset**: `tuh_eeg_events` | **Year**: 2015-2016 | **URL**: https://isip.piconepress.com/projects/nedc/html/tuh_eeg/
-**Category**: Biological State | **Subjects**: 290 | **Files (Completed)**: 518 | **Channels**: 24-33 | **Sampling Rate**: 250 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 290 | **Files (Completed)**: 518 | **Channels**: 24-33 | **Sampling Rate**: 250 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -7794,7 +7794,7 @@ This corpus is primarily used for EEG event classification, which is valuable fo
 # TUH EEG Seizure Corpus
 
 **Dataset**: `tuh_eeg_seizure` | **Year**: 2018 | **URL**: https://isip.piconepress.com/projects/nedc/html/tuh_eeg
-**Category**: Biological State | **Subjects**: 675 | **Files (Completed)**: 7361 | **Channels**: 17-128 | **Sampling Rate**: 250/256/400/1000 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 675 | **Files (Completed)**: 7361 | **Channels**: 17-128 | **Sampling Rate**: 250/256/400/1000 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -7899,7 +7899,7 @@ The TUSZ corpus plays a vital role in the development and testing of advanced se
 # TUH EEG Slowing Corpus
 
 **Dataset**: `tuh_eeg_slowing` | **Year**: 2017 | **URL**: https://isip.piconepress.com/projects/nedc/html/tuh_eeg
-**Category**: Biological State | **Subjects**: 38 | **Files (Completed)**: 112 | **Channels**: 27-41 | **Sampling Rate**: 250/256/400/512 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 38 | **Files (Completed)**: 112 | **Channels**: 27-41 | **Sampling Rate**: 250/256/400/512 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -7977,7 +7977,7 @@ Clinical EEGs in the dataset utilize two common reference configurations: averag
 # UCD Sleep Apnea Database
 
 **Dataset**: `physionet_ucddb` | **Year**: 2007 | **URL**: https://physionet.org/content/ucddb/1.0.0/
-**Category**: Biological State | **Subjects**: 25 | **Files (Completed)**: 50 | **Channels**: 14/16 | **Sampling Rate**: 8/64/128 | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 25 | **Files (Completed)**: 50 | **Channels**: 14/16 | **Sampling Rate**: 8/64/128 | **Manual Review**: Jiping Cui
 
 ## Paradigm
 
@@ -8088,7 +8088,7 @@ Companion `_lifecard.edf` files contain simultaneous three-channel Holter ECG re
 # Ultra High-Density EEG - Interictal Migraine and Controls
 
 **Dataset**: `other_migrainedb` | **Year**: 2020 | **URL**: https://kilthub.cmu.edu/articles/dataset/Ultra_high-density_EEG_recording_of_interictal_migraine_and_controls_sensory_and_rest/12636731
-**Category**: Biological State | **Subjects**: 35 | **Files (Completed)**: 117 | **Channels**: 128 | **Sampling Rate**: 512 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 35 | **Files (Completed)**: 117 | **Channels**: 128 | **Sampling Rate**: 512 Hz | **Manual Review**: Jiping Cui
 
 ## Paradigm
 
@@ -8206,7 +8206,7 @@ The dataset enables comparison of sensory processing and resting-state EEG activ
 # TUH EEG Artifact Corpus
 
 **Dataset**: `tuh_eeg_artifact` | **Year**: 2021-2020/2024 | **URL**: https://isip.piconepress.com/projects/nedc/html/tuh_eeg/
-**Category**: Others | **Subjects**: 213 | **Files (Completed)**: 310 | **Channels**: 27-41 | **Sampling Rate**: 250/256/400/512 Hz | **Manual Review**: anonymous for review
+**Category**: Others | **Subjects**: 213 | **Files (Completed)**: 310 | **Channels**: 27-41 | **Sampling Rate**: 250/256/400/512 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 

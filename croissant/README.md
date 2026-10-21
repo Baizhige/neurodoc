@@ -1,54 +1,34 @@
-## NeuroDoc Croissant Package
+# NeuroDoc Croissant package
 
-This folder contains a submission-ready Croissant package for the NeurIPS 2026
-Evaluations and Datasets Track.
+This directory contains the Croissant package for the NeurIPS 2026 camera-ready release of the NeuroDoc EEG Benchmark Corpus.
 
-### Scope
+## Scope
 
-The Croissant file describes the review release of the NeuroDoc EEG benchmark
-corpus used in the paper:
+- 53 human-reviewed `completed` benchmark entries
+- 134 classical tasks
+- 111 potential tasks
+- 245 task definitions in total
 
-- `53` completed benchmark entries
-- `245` task definitions
-- benchmark metadata and task-interface summaries derived from the released
-  `analysis.md` documents and paired kernels
+The package describes derived benchmark documents, task interfaces, and provenance. It does not redistribute raw EEG recordings. Source-data access and use remain governed by the original providers and licenses.
 
-This package describes the benchmark corpus as a derived documentation and task
-resource. It does not redistribute raw EEG recordings.
+## Files
 
-### Files
+- `neurodoc_eeg_benchmark_corpus_53.croissant.json`: Croissant 1.1 and RAI 1.0 metadata
+- `documents_53.csv`: one row per released benchmark entry
+- `tasks_245.csv`: one row per released task definition
 
-- `neurodoc_eeg_benchmark_corpus_53.croissant.json`
-  - main Croissant metadata file (conforms to Croissant 1.1 + RAI 1.0)
-- `documents_53.csv`
-  - one row per completed benchmark entry (53 rows)
-- `tasks_245.csv`
-  - one row per task definition belonging to the completed entries (245 rows)
+The two CSV files are derived from the reviewed `analysis.md` documents in this snapshot. Their SHA256 values are recorded in the Croissant JSON.
 
-### Important assumption
+## Public locations
 
-The dataset URL used in the Croissant file is:
+- Repository: <https://github.com/Baizhige/neurodoc/>
+- Camera-ready branch: <https://github.com/Baizhige/neurodoc/tree/camera-ready-snapshot>
+- Project website: <https://neurodoc.eeg.fm>
 
-- `https://anonymous.4open.science/r/anonymous_reviewe_neurodoc`
+## Validation
 
-This package assumes that the anonymous review branch exposes the released
-benchmark resources from the `BIDS_description` repository, including
-`dataset_document/<dataset_name>/analysis.md` and the corresponding
-dataset-specific kernels.
+Keep the JSON and both CSV files together for local validation. Before uploading the Croissant file to OpenReview, validate this exact package with the current MLCommons Croissant validator and confirm that the public distribution URLs resolve without authentication.
 
-### Validation note
+## Provenance
 
-The Croissant file references `documents_53.csv` and `tasks_245.csv` via local
-relative paths. Keep these three files together when running a validator or
-when packaging them into a ZIP for OpenReview upload.
-
-### Provenance
-
-`documents_53.csv` and `tasks_245.csv` were generated from the local benchmark
-summary tables in:
-
-- `pull_data_script/docment_figures/tables/documents.csv`
-- `pull_data_script/docment_figures/tables/tasks.csv`
-
-They were filtered to the completed release subset and cleaned to remove local
-absolute paths. SHA256 hashes in the Croissant JSON were computed after export.
+This package is derived from the peer-review artifact at commit `eeede588ff2d3c0c07c20a58e150e5f6fd122573`. Camera-ready changes restore public attribution, public URLs, and release metadata without expanding the reviewed 53-entry/245-task scope.

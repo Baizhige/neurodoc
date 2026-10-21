@@ -1,7 +1,7 @@
 # Healthy Brain Network (HBN) EEG - Release 6
 
 **Dataset**: `openneuro_ds005510` | **Year**: 2025 | **URL**: https://openneuro.org/datasets/ds005510
-**Category**: Complex Applied | **Subjects**: 3000 | **Files (Completed)**: 1227 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: anonymous for review
+**Category**: Complex Applied | **Subjects**: 3000 | **Files (Completed)**: 1227 | **Channels**: 129 | **Sampling Rate**: 500 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
@@ -88,7 +88,7 @@ The Healthy Brain Network (HBN) EEG Release 6 is a large-scale, multi-task devel
 | `contrastChangeDetection_2` | complete | e.g. available, unavailable, caution |
 | `contrastChangeDetection_3` | complete | e.g. available, unavailable, caution |
 | `dataset` | complete | e.g. openneuro_ds005510 |
-| `dataset_root` | complete | e.g. /home/public/eeg_dataset/openneuro_raw/ds005510 |
+| `dataset_root` | complete | e.g. <DATA_ROOT>/openneuro_raw/ds005510 |
 | `device` | complete | e.g. Magtism EGI 128-channel GSN 200 v.2.1 |
 | `eeg_reference` | complete | e.g. Cz |
 | `ehq_total` | complete | e.g. 60.03, 80.04, 33.35 |

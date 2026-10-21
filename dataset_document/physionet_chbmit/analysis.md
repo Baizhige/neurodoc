@@ -1,7 +1,7 @@
 # CHB-MIT Scalp EEG Database
 
 **Dataset**: `physionet_chbmit` | **Year**: 2010 | **URL**: https://physionet.org/content/chbmit/1.0.0/
-**Category**: Biological State | **Subjects**: 23 | **Files (Completed)**: 686 | **Channels**: 23 | **Sampling Rate**: 256 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 23 | **Files (Completed)**: 686 | **Channels**: 23 | **Sampling Rate**: 256 Hz | **Manual Review**: Zhida Shang
 
 ## Paradigm
 

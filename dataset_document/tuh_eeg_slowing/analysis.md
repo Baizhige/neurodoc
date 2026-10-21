@@ -1,7 +1,7 @@
 # TUH EEG Slowing Corpus
 
 **Dataset**: `tuh_eeg_slowing` | **Year**: 2017 | **URL**: https://isip.piconepress.com/projects/nedc/html/tuh_eeg
-**Category**: Biological State | **Subjects**: 38 | **Files (Completed)**: 112 | **Channels**: 27-41 | **Sampling Rate**: 250/256/400/512 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 38 | **Files (Completed)**: 112 | **Channels**: 27-41 | **Sampling Rate**: 250/256/400/512 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 

@@ -1,7 +1,7 @@
 # BCI Competition IV Dataset 1 (Motor Imagery, Uncued Classifier Application)
 
 **Dataset**: `bcic_iv_1` | **Year**: 2008 | **URL**: https://www.bbci.de/competition/iv/desc_1.html
-**Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 14 | **Channels**: 59 | **Sampling Rate**: 1000 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 7 | **Files (Completed)**: 14 | **Channels**: 59 | **Sampling Rate**: 1000 Hz | **Manual Review**: Zhida Shang
 
 ## Paradigm
 

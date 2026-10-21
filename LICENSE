@@ -1,6 +1,11 @@
 Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
 
-Copyright (c) 2024 repository contributors
+Copyright (c) 2026 NeuroDoc contributors
+
+This license applies to the repository's original code, documentation, and
+derived benchmark metadata. It does not grant rights to, replace, or modify
+the licenses and data-use conditions of upstream EEG datasets referenced by
+the corpus. Raw EEG recordings are not redistributed by this repository.
 
 You are free to:
 

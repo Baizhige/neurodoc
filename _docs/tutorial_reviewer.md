@@ -1,4 +1,4 @@
-﻿# Reviewer & Document Contributor Guide
+# Reviewer & Document Contributor Guide
 
 This guide is for contributors who want to **review existing dataset documents**, improve task definitions, fix wording, or add quality notes — using the **NeuroAudit** web UI.
 
@@ -16,13 +16,13 @@ No Python ML background required. You work entirely through a browser-based inte
 
 ## Step 1 — Fork & Clone
 
-1. Go to the anonymous review repository on your Git hosting platform
+1. Go to [github.com/Baizhige/neurodoc](https://github.com/Baizhige/neurodoc/)
 2. Click **Fork** (top-right) and fork to your personal account
 3. Clone your fork:
 
 ```bash
-git clone https://github.com/<your-username>/<anonymous-repo>.git
-cd <anonymous-repo>
+git clone https://github.com/Baizhige/neurodoc.git
+cd neurodoc
 ```
 
 4. Create a feature branch:
@@ -142,7 +142,7 @@ git push origin review/<dataset-name>
 ```
 
 Then open a Pull Request on GitHub:
-- **Base repository**: `<anonymous-org>/<anonymous-repo>`
+- **Base repository**: `Baizhige/neurodoc`
 - **Base branch**: `dev`
 - **Compare branch**: `review/<dataset-name>` on your fork
 

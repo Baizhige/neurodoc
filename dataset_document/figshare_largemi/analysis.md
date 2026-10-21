@@ -1,7 +1,7 @@
 # A Large EEG Motor Imagery Dataset for EEG-BCI
 
 **Dataset**: `figshare_largemi` | **Year**: 2018 | **URL**: https://figshare.com/collections/A_large_electroencephalographic_motor_imagery_dataset_for_electroencephalographic_brain_computer_interfaces/3917698
-**Category**: Action/Output | **Subjects**: 13 | **Files (Completed)**: 73 | **Channels**: 22 | **Sampling Rate**: 200/1000 Hz | **Manual Review**: anonymous for review
+**Category**: Action/Output | **Subjects**: 13 | **Files (Completed)**: 73 | **Channels**: 22 | **Sampling Rate**: 200/1000 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 

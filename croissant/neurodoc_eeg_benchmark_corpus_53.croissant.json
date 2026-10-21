@@ -15,17 +15,33 @@
     "sha256": "cr:sha256"
   },
   "@type": "sc:Dataset",
-  "name": "NeuroDoc EEG Benchmark Corpus (Review Release: 53 Completed Entries)",
-  "description": "A community-reviewed EEG benchmark corpus for dataset-to-task mapping. Each released entry pairs a human-readable task document with a dataset-specific task kernel, turning heterogeneous public EEG datasets into executable benchmark interfaces. This review release summarizes 53 completed benchmark entries and 245 task definitions used in the NeurIPS 2026 submission.",
-  "url": "https://anonymous.4open.science/r/anonymous_reviewe_neurodoc",
+  "name": "NeuroDoc EEG Benchmark Corpus (NeurIPS 2026 Camera-Ready Snapshot)",
+  "description": "A human-reviewed EEG benchmark corpus for dataset-to-task mapping. Each released entry pairs a structured task document with a dataset-specific normalization kernel. This versioned camera-ready snapshot contains the 53 completed benchmark entries and 245 task definitions evaluated in the NeurIPS 2026 submission.",
+  "url": "https://github.com/Baizhige/neurodoc/",
   "license": "https://creativecommons.org/licenses/by-nc/4.0/",
-  "version": "review-release-53-completed-entries",
+  "version": "neurips-2026-camera-ready-53-entries",
+  "datePublished": "2026-10-21",
+  "citation": "Qin, Chengxuan, et al. EEG Benchmarking Needs a Task Specification Layer: NeuroDoc for Rulebook-Guided, Executable Benchmark Construction. NeurIPS 2026 Evaluations and Datasets Track.",
+  "creator": [
+    {"@type": "sc:Person", "name": "Chengxuan Qin", "affiliation": "Xi'an Jiaotong-Liverpool University; University of Liverpool"},
+    {"@type": "sc:Person", "name": "Zhige Chen", "affiliation": "Hong Kong Polytechnic University"},
+    {"@type": "sc:Person", "name": "Shu Peng", "affiliation": "Hong Kong Polytechnic University"},
+    {"@type": "sc:Person", "name": "Rui Yang", "affiliation": "Xi'an Jiaotong-Liverpool University; University of Liverpool"},
+    {"@type": "sc:Person", "name": "Jiping Cui", "affiliation": "Xi'an Jiaotong-Liverpool University; University of Liverpool"},
+    {"@type": "sc:Person", "name": "Yikai Dong", "affiliation": "Xi'an Jiaotong-Liverpool University; University of Liverpool"},
+    {"@type": "sc:Person", "name": "Jun Li", "affiliation": "Xi'an Jiaotong-Liverpool University; University of Liverpool"},
+    {"@type": "sc:Person", "name": "Liu Peng", "affiliation": "Xi'an Jiaotong-Liverpool University; University of Liverpool"},
+    {"@type": "sc:Person", "name": "Zhida Shang", "affiliation": "Xi'an Jiaotong-Liverpool University; University of Liverpool"},
+    {"@type": "sc:Person", "name": "Mingze Tang", "affiliation": "Hong Kong Polytechnic University"},
+    {"@type": "sc:Person", "name": "Kay Chen Tan", "affiliation": "Hong Kong Polytechnic University"},
+    {"@type": "sc:Person", "name": "Jibin Wu", "affiliation": "Hong Kong Polytechnic University"}
+  ],
   "keywords": [
     "EEG",
     "benchmark",
     "dataset-to-task mapping",
     "foundation models",
-    "community review",
+    "human review",
     "executable benchmark"
   ],
   "dct:conformsTo": [
@@ -36,26 +52,26 @@
     {
       "@id": "dataset-landing-page",
       "@type": "cr:FileObject",
-      "name": "Anonymous review repository",
-      "description": "Anonymous repository root for the benchmark review release.",
-      "contentUrl": "https://anonymous.4open.science/r/anonymous_reviewe_neurodoc",
+      "name": "NeuroDoc public repository",
+      "description": "Public repository containing the camera-ready benchmark snapshot, code, documentation, and provenance.",
+      "contentUrl": "https://github.com/Baizhige/neurodoc/tree/camera-ready-snapshot",
       "encodingFormat": "text/html"
     },
     {
       "@id": "documents-csv",
       "@type": "cr:FileObject",
       "name": "documents_53.csv",
-      "description": "Entry-level metadata for the 53 completed benchmark documents included in the review release.",
-      "contentUrl": "documents_53.csv",
+      "description": "Entry-level metadata for the 53 completed benchmark documents included in the camera-ready release.",
+      "contentUrl": "https://raw.githubusercontent.com/Baizhige/neurodoc/camera-ready-snapshot/croissant/documents_53.csv",
       "encodingFormat": "text/csv",
-      "sha256": "97A0BDF6E41F3DFC8B93E979FD582D2E9079D41D85BCAD2E259ECF5DB59E7345"
+      "sha256": "58AFB2E825B1F2DEF1CF9C94E9B73BA817BBDD4B17555E9A8001E8F21BFF52B6"
     },
     {
       "@id": "tasks-csv",
       "@type": "cr:FileObject",
       "name": "tasks_245.csv",
-      "description": "Task-level metadata for the 245 task definitions belonging to the completed review-release entries.",
-      "contentUrl": "tasks_245.csv",
+      "description": "Task-level metadata for the 245 task definitions belonging to the completed camera-ready entries.",
+      "contentUrl": "https://raw.githubusercontent.com/Baizhige/neurodoc/camera-ready-snapshot/croissant/tasks_245.csv",
       "encodingFormat": "text/csv",
       "sha256": "647BE53F31F66ECB3235804CBDCD757CA271BE956DB97CF4030C8A95A053F9B3"
     }
@@ -583,7 +599,7 @@
     }
   ],
   "rai:dataLimitations": [
-    "This review release is limited to 53 completed benchmark entries that passed the current shared rulebook and review process. It does not cover the full broader corpus of 200+ datasets discussed in the paper.",
+    "This release is limited to the 53 completed benchmark entries that passed the shared rulebook and review process at the paper snapshot. It does not cover all 286 attempted workspaces.",
     "The release describes executable task interfaces and benchmark metadata, but it does not redistribute raw EEG recordings. Access to source data depends on the original repositories, licenses, and consent conditions.",
     "Task validity is bounded by the available public documentation, scan-derived evidence, and release-time kernel support. Some potentially useful tasks remain excluded or marked as non-releaseable if the evidence chain is incomplete.",
     "This resource is intended for benchmark construction, dataset-to-task mapping, and downstream model evaluation. It is not recommended for clinical decision making or for claims that go beyond the documented task interfaces and source-dataset scope."
@@ -593,7 +609,7 @@
     "Paradigm coverage is not uniform. Well-documented motor imagery, sleep, seizure, and related benchmark families are more represented than many low-resource or narrowly documented EEG settings.",
     "Some source datasets include demographic, clinical, or task-design skew that may affect downstream model behavior and generalization."
   ],
-  "rai:personalSensitiveInformation": "This review release contains derived benchmark documentation and task metadata, not repackaged raw EEG recordings. However, the benchmark is derived from human-subject EEG datasets that may involve sensitive biomedical or demographic information such as age, sex, diagnosis, sleep state, seizure status, and related metadata. Access to the underlying raw data remains governed by the original repositories and their terms.",
+  "rai:personalSensitiveInformation": "This release contains derived benchmark documentation and task metadata, not repackaged raw EEG recordings. However, the benchmark is derived from human-subject EEG datasets that may involve sensitive biomedical or demographic information such as age, sex, diagnosis, sleep state, seizure status, and related metadata. Access to the underlying raw data remains governed by the original repositories and their terms.",
   "rai:dataUseCases": [
     "Cross-dataset EEG benchmark construction and comparison under explicit task interfaces.",
     "Evaluation of EEG foundation models and other downstream EEG learning systems on documented and executable tasks.",
@@ -603,13 +619,13 @@
   "rai:dataSocialImpact": [
     "Positive impacts include improved transparency, reproducibility, and auditability in EEG benchmarking by reducing undocumented task engineering and making task assumptions explicit.",
     "Potential risks include overclaiming generalization from benchmark performance, propagating source-dataset imbalance, or applying released task interfaces outside the documented evidence scope.",
-    "The community-review workflow and shared rulebook are intended to mitigate hallucinated task claims, undocumented label engineering, and inconsistent benchmark construction."
+    "The structured human-review workflow and shared rulebook are intended to mitigate hallucinated task claims, undocumented label engineering, and inconsistent benchmark construction."
   ],
   "rai:hasSyntheticData": false,
-  "rai:annotationsPerItem": "This benchmark is not a per-record human-label dataset. Review happens at the document and task-definition level. Each released entry was reviewed within the NeuroAudit workflow before inclusion in this release.",
+  "rai:annotationsPerItem": "This benchmark is not a per-record human-label dataset. Review happens at the document and task-definition level. Each released entry was reviewed by at least one trained human reviewer and one repository administrator within the NeuroAudit workflow. Reviews were not independent multiple ratings, and no inter-rater agreement statistic was collected.",
   "rai:annotatorDemographics": [
-    "Annotators and reviewers are project contributors performing EEG dataset documentation and benchmark review.",
-    "Formal demographic metadata about reviewers were not collected for this release."
+    "Eight trained project contributors performed EEG dataset documentation and benchmark review after three 30-minute training sessions.",
+    "The cohort comprised one third-year undergraduate, four second-year Master's students, one research assistant, and two PhD students; no additional demographic metadata were collected."
   ],
   "prov:wasDerivedFrom": [
     "https://openneuro.org/",
@@ -622,8 +638,8 @@
     "https://isip.piconepress.com/projects/tuh_eeg/html/downloads.shtml"
   ],
   "prov:wasGeneratedBy": [
-    "Benchmark entries were generated through a rule-guided workflow that combines source-document review, dataset directory scanning, task synthesis, dataset-specific kernel coding, machine-checkable validation, and community review.",
-    "The review-release metadata tables in this Croissant package were exported from local benchmark summary tables after filtering to the 53 completed entries and 245 task definitions used in the paper.",
+    "Candidate benchmark entries were drafted through a rule-guided workflow combining source-document review, dataset directory scanning, task synthesis, dataset-specific kernel coding, and machine-checkable validation; trained human reviewers and repository administrators retained release authority.",
+    "The metadata tables in this Croissant package were exported after filtering to the 53 completed entries and 245 task definitions used in the paper.",
     "Task documents and kernels are maintained under a shared entry rulebook and revised through NeuroDoc and NeuroAudit workflows when evidence conflicts or executable inconsistencies are identified."
   ]
 }

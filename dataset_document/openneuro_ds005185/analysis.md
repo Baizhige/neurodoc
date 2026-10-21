@@ -1,7 +1,7 @@
 # Ear-EEG Sleep Monitoring 2019 (EESM19)
 
 **Dataset**: `openneuro_ds005185` | **Year**: 2018-2020/2019/2024/2025 | **URL**: https://openneuro.org/datasets/ds005185
-**Category**: Biological State | **Subjects**: 20 | **Files (Completed)**: 516 | **Channels**: 25 | **Sampling Rate**: 256/500 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 20 | **Files (Completed)**: 516 | **Channels**: 25 | **Sampling Rate**: 256/500 Hz | **Manual Review**: Yikai Dong
 
 ## Paradigm
 

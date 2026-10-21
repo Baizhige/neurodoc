@@ -1,6 +1,6 @@
 # NeuroDoc
 
-`neurodoc/` is the automated generation engine for EEG dataset kernel files and `analysis.md` documents. It drives a three-phase LLM pipeline: **(1) Build Context** from local dataset evidence and academic sources, **(2) Task Synthesis** to propose ML task candidates and derive kernel requirements, and **(3) Kernel Coding** to generate and iteratively validate the data-loading kernel in a sandbox, then reconcile synthesized tasks against real scan results.
+`neurodoc/` is an LLM-assisted candidate-generation engine for EEG dataset kernel files and `analysis.md` documents. It drives a three-phase drafting pipeline: **(1) Build Context** from local dataset evidence and academic sources, **(2) Task Synthesis** to propose ML task candidates and derive kernel requirements, and **(3) Kernel Coding** to draft and iteratively check the data-loading kernel in a sandbox, then reconcile synthesized tasks against real scan results. Generated candidates require NeuroAudit review, blocking-rule validation, and human release approval before they can enter the `completed` corpus.
 
 ---
 

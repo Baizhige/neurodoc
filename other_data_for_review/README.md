@@ -1,10 +1,11 @@
-## Review Supplement
+# Paper artifact supplement
 
-This directory is a review supplement for the `anonymous` review branch.
-It is intended to help reviewers inspect the scripts, aggregate experiment records,
+This directory archives the supplement provided during peer review and retained in
+the NeurIPS 2026 camera-ready artifact snapshot. It is intended to help readers inspect
+the scripts, aggregate experiment records,
 representative raw logs, and exported figures that support the paper.
 
-The contents here were copied from the paper working directory and organized for review.
+The contents here were copied from the paper working directory and organized for audit.
 They are not meant to replace the original full experiment workspace.
 
 In particular, this supplement includes material for both:
@@ -81,6 +82,11 @@ families. In addition, the examples align with the current selection logic used 
 This keeps the review supplement tied to the actual plotting workflow rather than an
 ad hoc manual sample.
 
+To avoid Windows path-length failures, each checked-in directory uses a short
+`run_<numeric-id>` name. [`manifest.csv`](experiment_data/representative_runs/manifest.csv)
+maps those directory names to the original immutable run identifiers stored inside
+the raw JSON records.
+
 ### `figures_snapshot/`
 
 This folder contains exported figure files copied for quick visual inspection:
@@ -149,7 +155,10 @@ documentation and evidence gathering.
 
 ## Notes
 
-- The materials here were copied into this repository for review convenience.
+- The materials here were copied into this repository for review and audit convenience.
 - The original, larger paper workspace remains outside this repository.
 - This supplement is intentionally lightweight and should be read together with the
   main repository code and manuscript.
+- Absolute paths appearing inside raw logs or cache records are inert runtime
+  provenance from the original compute environment; they are not required for use
+  of the released corpus and do not imply that those local paths are publicly available.

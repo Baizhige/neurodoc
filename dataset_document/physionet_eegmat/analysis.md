@@ -1,7 +1,7 @@
 # EEG During Mental Arithmetic Task
 
 **Dataset**: `physionet_eegmat` | **Year**: 2018 | **URL**: https://physionet.org/content/eegmat/1.0.0/
-**Category**: High-level Mental | **Subjects**: 36 | **Files (Completed)**: 72 | **Channels**: 23 | **Sampling Rate**: 500 Hz | **Manual Review**: anonymous for review
+**Category**: High-level Mental | **Subjects**: 36 | **Files (Completed)**: 72 | **Channels**: 23 | **Sampling Rate**: 500 Hz | **Manual Review**: Liu Peng
 
 ## Paradigm
 

@@ -1,7 +1,7 @@
 # Go-nogo categorization and detection task
 
 **Dataset**: `openneuro_ds002680` | **Year**: 2021 | **URL**: https://openneuro.org/datasets/ds002680
-**Category**: Sensory/Response | **Subjects**: 14 | **Files (Completed)**: 350 | **Channels**: 31 | **Sampling Rate**: 1000 Hz | **Manual Review**: anonymous for review
+**Category**: Sensory/Response | **Subjects**: 14 | **Files (Completed)**: 350 | **Channels**: 31 | **Sampling Rate**: 1000 Hz | **Manual Review**: Jun Li
 
 ## Paradigm
 

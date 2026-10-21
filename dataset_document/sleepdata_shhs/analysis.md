@@ -1,7 +1,7 @@
 # sleepdata_shhs
 
 **Dataset**: `sleepdata_shhs` | **Year**: 1995-2003 | **URL**: https://sleepdata.org/datasets/shhs
-**Category**: Biological State | **Subjects**: ~5804 | **Files (Completed)**: 8444 | **Channels**: 14 | **Sampling Rate**: 1-256 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: ~5804 | **Files (Completed)**: 8444 | **Channels**: 14 | **Sampling Rate**: 1-256 Hz | **Manual Review**: Jiping Cui
 
 ## Paradigm
 

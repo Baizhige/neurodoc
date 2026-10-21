@@ -1,7 +1,7 @@
 # TUH EEG Corpus (Base)
 
 **Dataset**: `tuh_eeg` | **Year**: 2002-2017 | **URL**: https://isip.piconepress.com/projects/nedc/html/tuh_eeg/
-**Category**: Biological State | **Subjects**: 10874 | **Files (Completed)**: 69652 | **Channels**: 17-128 | **Sampling Rate**: 250-1000 Hz | **Manual Review**: anonymous for review
+**Category**: Biological State | **Subjects**: 10874 | **Files (Completed)**: 69652 | **Channels**: 17-128 | **Sampling Rate**: 250-1000 Hz | **Manual Review**: Chengxuan Qin
 
 ## Paradigm
 
