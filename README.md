@@ -10,6 +10,7 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](https://github.com/EEG-BenchmarkSkill/EEGBenchmarkSKILL/pulls)
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?style=flat-square&logo=python&logoColor=white)](neurodoc/)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey?style=flat-square)](LICENSE)
+[![NeurIPS 2026 Camera-ready Snapshot](https://img.shields.io/badge/NeurIPS%202026-camera--ready%20snapshot-4B44CE?style=flat-square)](https://github.com/Baizhige/neurodoc/tree/camera-ready-snapshot)
 
 </div>
 
